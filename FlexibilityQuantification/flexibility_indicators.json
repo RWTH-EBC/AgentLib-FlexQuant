@@ -1,0 +1,34 @@
+{
+    "id": "FlexibilityIndicator",
+    "modules": [
+        {
+            "module_id": "Ag1Com",
+            "type": "local_broadcast"
+        },
+        {
+            "module_id": "FlexibilityIndicator",
+            "type": {
+                "file": "flexibility_indicators.py",
+                "class_name": "FlexibilityIndicator"
+            },
+            "parameters": [
+                {
+                    "name": "prep_time",
+                    "value": 1000
+                },
+                {
+                    "name": "flex_event_duration",
+                    "value": 1000
+                },
+                {
+                    "name": "time_step",
+                    "value": 100
+                },
+                {
+                    "name": "prediction_horizon",
+                    "value": 50
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,80 @@
+{
+    "id": "FlexModel",
+    "modules": [
+        {
+            "module_id": "Ag1Com",
+            "type": "local_broadcast"
+        },
+        {
+            "module_id": "BaselineMPC",
+            "type": "agentlib_mpc.mpc",
+            "optimization_backend": {
+                "type": "casadi",
+                "model": {
+                    "type": {
+                        "file": "simple_model.py",
+                        "class_name": "BaselineMPCModel"
+                    }
+                },
+                "discretization_options": {
+                    "collocation_order": 2,
+                    "collocation_method": "legendre"
+                },
+                "results_file": "results/mpc.csv",
+                "save_results": true
+            },
+            "time_step": 100,
+            "prediction_horizon": 50,
+            "parameters": [
+                {
+                    "name": "s_T",
+                    "value": 25
+                },
+                {
+                    "name": "r_mDot",
+                    "value": 1
+                }
+            ],
+            "inputs": [
+                {
+                    "name": "load",
+                    "value": 150
+                },
+                {
+                    "name": "T_upper",
+                    "value": 294
+                },
+                {
+                    "name": "T_lower",
+                    "value": 292
+                },
+                {
+                    "name": "T_in",
+                    "value": 280.15
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "T_out",
+                    "alias": "T_out"
+                }
+            ],
+            "controls": [
+                {
+                    "name": "mDot",
+                    "value": 0.02,
+                    "ub": 0.05,
+                    "lb": 0
+                }
+            ],
+            "states": [
+                {
+                    "name": "T",
+                    "value": 298.16,
+                    "ub": 303.15,
+                    "lb": 288.15
+                }
+            ]
+        }
+    ]
+}

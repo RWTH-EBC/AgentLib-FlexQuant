@@ -1,0 +1,45 @@
+{
+    "prep_time": 1800,
+    "market_time": 1800,
+    "flex_event_duration": 7200,
+    "weights": [
+        {
+            "name": "s_T1",
+            "value": 250
+        },
+        {
+            "name": "s_Pel1",
+            "value": 50
+        },
+        {
+            "name": "s_T2",
+            "value": 250
+        },
+        {
+            "name": "s_Pel2",
+            "value": 100
+        }
+    ],
+    "pos_flex_cost_function": "sum([self.s_T1 * self.T_slack, self.s_Pel1 / 3600 * self.P_el_c/ self.COP / 1000])",
+    "neg_flex_cost_function": "sum([self.s_T1 * self.T_slack,-self.s_Pel1 / 3600 * self.P_el_c / self.COP / 1000,])",
+    "standard_cost_function": "sum([self.s_T2 * self.T_slack, (self.r_pel/360000) * self.s_Pel2  * self.P_el_c / self.COP / 1000,])",
+    "acceptable_flexibility_tolerance": 0,
+    "profile_deviation_weight": 100,
+    "random_seed": 1,
+    "pos_neg_rate": 1,
+    "offer_acceptance_rate": 0,
+    "forced_offers": {},
+    "minimum_average_flex": 100,
+    "maximum_time_flex": 5000,
+    "cooldown_timesteps": 0,
+    "power_variable": "P_el_c",
+    "comfort_variable": "T_Air",
+    "comfort_limit_variables": [
+        "T_upper",
+        "T_lower"
+    ],
+    "delete_files": false,
+    "indicator_config": "flexibility_indicators.json",
+    "market_config": "flexibility_market.json",
+    "path_to_flex_files": "../../FlexibilityQuantification"
+}
