@@ -45,50 +45,7 @@
         "collocation_order": 2,
         "name_of_created_file": "indicator.json"
     },
-    "market_config": {
-        "agent_config": {
-            "id": "FlexibilityMarket",
-            "modules": [
-                {
-                    "module_id": "Ag1Com",
-                    "type": "local_broadcast"
-                },
-                {
-                    "module_id": "FlexibilityMarket",
-                    "type": "flexibility_quantification.flexibility_market",
-                    "results_file": "results\\flexibility_market_results.csv",
-                    "parameters": [
-                        {
-                            "name": "random_seed",
-                            "value": 1
-                        },
-                        {
-                            "name": "pos_neg_rate",
-                            "value": 1
-                        },
-                        {
-                            "name": "offer_acceptance_rate",
-                            "value": 1
-                        },
-                        {
-                            "name": "minimum_average_flex",
-                            "value": 100
-                        },
-                        {
-                            "name": "time_step",
-                            "value": 100
-                        },
-                        {
-                            "name": "cooldown",
-                            "value": 2
-                        }
-                    ]
-                }
-            ]
-
-        },
-        "name_of_created_file": "flexibility_market.json"
-    },
+    "market_config": "D:\\01_Git\\02_Python\\flexquant\\Examples\\OneRoom_SimpleMPC\\flex_configs\\market.json",
     "baseline_config_generator_data": {
         "power_variable": "P_el"
     },

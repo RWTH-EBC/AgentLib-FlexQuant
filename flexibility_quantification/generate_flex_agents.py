@@ -69,7 +69,7 @@ class FlexAgentGenerator:
             self.market_config = load_config.load_config(self.flex_config.market_config,
                                                          config_type=FlexibilityMarketConfig)
             # load market module config
-            self.market_agent_config = load_config.load_config(self.flex_config.market_config.agent_config,
+            self.market_agent_config = load_config.load_config(self.market_config.agent_config,
                                                                config_type=AgentConfig)
             self.market_module_config = get_module(config=self.market_agent_config,
                                                    module_type=mmap.MARKET_CONFIG_TYPE)
@@ -115,7 +115,7 @@ class FlexAgentGenerator:
             market_module_config = self.adapt_market_config(module_config=self.market_module_config)
             self.append_module_and_dump_agent(module=market_module_config, agent=self.market_agent_config,
                                               module_type=mmap.MARKET_CONFIG_TYPE,
-                                              config_name=self.flex_config.market_config.name_of_created_file)
+                                              config_name=self.market_config.name_of_created_file)
 
         # generate python files for the shadow mpcs
         self._generate_flex_model_definition(
@@ -174,9 +174,9 @@ class FlexAgentGenerator:
                               self.flex_config.shadow_mpc_config_generator_data.neg_flex.name_of_created_file),
                  os.path.join(self.flex_config.path_to_flex_files,
                               self.flex_config.indicator_config.name_of_created_file)]
-        if self.market_config:
+        if self.flex_config.market_config:
             paths.append(os.path.join(self.flex_config.path_to_flex_files,
-                                      self.flex_config.market_config.name_of_created_file))
+                                      self.market_config.name_of_created_file))
         return paths
 
     def _delete_created_files(self):
