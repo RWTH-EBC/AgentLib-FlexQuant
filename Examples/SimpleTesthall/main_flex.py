@@ -13,11 +13,8 @@ import pickle
 import logging
 from copy import copy
 from scipy import integrate
-os.chdir(os.path.dirname(__file__))
-sys.path.append(os.path.join("..",".."))
-
-from FlexibilityQuantification import generate_flex_agents
-from FlexibilityQuantification.flex_offer import OfferStatus
+from flexibility_quantification.generate_flex_agents import FlexAgentGenerator
+from flexibility_quantification.data_structures.flex_offer import OfferStatus
 
 pd.set_option("display.max_rows", None)
 
@@ -82,7 +79,7 @@ def run_example(agent_configs, env_config, with_plots=False, log_level=logging.I
     mas = LocalMASAgency(
         agent_configs=agent_configs,
         env=env_config,
-        variable_logging=True,
+        variable_logging=False,
     )
     mas.run(until=until)
 
@@ -150,17 +147,8 @@ def set_mean_values(arr):
 
 def get_configs(predictor_config, mpc_config, flex_config, varying_price_signal=2, 
                 start_day=2, duration=1, usecase="Winter",fmu=False):
-    mpc_config_pos, mpc_config_neg, mpc_config, indicator_config, provisor_config = generate_flex_agents.generate_flex_agents(mpc_config, flex_config)
-    agent_configs = [
-
-        mpc_config_pos,
-        mpc_config_neg,
-        mpc_config,
-        predictor_config,
-        indicator_config,
-        provisor_config,
-
-    ]
+    agent_configs = FlexAgentGenerator(flex_config=flex_config,  mpc_agent_config=mpc_config).generate_flex_agents()
+    agent_configs.extend([predictor_config, mpc_config])
     if fmu:
         agent_configs.append("Model//local//fmu//config.json")
     else:

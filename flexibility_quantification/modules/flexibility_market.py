@@ -4,16 +4,18 @@ import pandas as pd
 from io import StringIO
 import numpy as np
 import os
-from flex_offer import OfferStatus
+from flexibility_quantification.data_structures.flex_offer import OfferStatus
+import pydantic
+from pathlib import Path
 
 
-class FlexibilityMarketConfig(agentlib.BaseModuleConfig):
+class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
     parameters: List[agentlib.AgentVariable] = [
         agentlib.AgentVariable(name="random_seed", description="random seed for reproducing experiments", value=None),
         agentlib.AgentVariable(name="pos_neg_rate", description="determines the likelihood positive and the negative flexibility"),
         agentlib.AgentVariable(name="offer_acceptance_rate", description="determines the likelihood of a accepted offer"),
         agentlib.AgentVariable(name="minimum_average_flex", description="minimum average of an accepted offer"),
-        agentlib.AgentVariable(name="maximum_time_flex", description="maximum time flex of an accepted offer"),
+        # TODO: is time_step needed?
         agentlib.AgentVariable(name="time_step", description="timestep of the MPC"),
         agentlib.AgentVariable(name="cooldown", value=6, description="cooldown time (no timesteps) after a provision"),
         agentlib.AgentVariable(name="forced_offers")
@@ -41,14 +43,24 @@ class FlexibilityMarketConfig(agentlib.BaseModuleConfig):
             description="Set if the system is in provision", value=False
         )
     ]
+
+    results_file: Optional[Path] = pydantic.Field(default=None)
+    # TODO: use these two
+    save_results: Optional[bool] = pydantic.Field(validate_default=True, default=None)
+    overwrite_result_file: Optional[bool] = pydantic.Field(default=False, validate_default=True)
+
     shared_variable_fields:List[str] = ["outputs"]
 
 
-class FlexibilityMarket(agentlib.BaseModule):
-    config: FlexibilityMarketConfig
+class FlexibilityMarketModule(agentlib.BaseModule):
+    """Class to emulate flexibility market. Receives flex offers and accepts these.
+
+    """
+    config: FlexibilityMarketModuleConfig
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.results_file: Optional[str] = kwargs.get("results_file") or "flexibility_market_results.csv"
+        self.results_file = self.config.results_file
         self.df = None
         self.end = 0
         for parameter in self.config.parameters:
@@ -60,8 +72,6 @@ class FlexibilityMarket(agentlib.BaseModule):
                 self.offer_acceptance_rate = parameter.value
             elif parameter.name == "minimum_average_flex":
                 self.minimum_average_flex = parameter.value
-            elif parameter.name == "maximum_time_flex":
-                self.maximum_time_flex = parameter.value
 
     def set_random_seed(self, random_seed):
         """set the random seed for reproducability"""
@@ -87,11 +97,10 @@ class FlexibilityMarket(agentlib.BaseModule):
         self.df = None
         self.cooldown_ticker = 0
 
-
     def write_results(self, offer):
         if self.df is None:
             self.df = pd.DataFrame()
-        df = offer.dataframe()
+        df = offer.as_dataframe()
         index_first_level = [self.env.now] * len(df.index)
         multi_index = pd.MultiIndex.from_tuples(zip(index_first_level, df.index))
         self.df = pd.concat((self.df, df.set_index(multi_index)))
@@ -111,11 +120,11 @@ class FlexibilityMarket(agentlib.BaseModule):
             Constraints:
                 cooldown: during $cooldown steps after a flexibility event no offer is accepted
                 minimum_average_flex: min amount of flexibility to be accepted, to account for the model error
-                maximum_time_flex: to be accepted, flexibility must be ready as soon as possible. If most of the
-                    flexibility is only available at the end of the flexibility event, dont accept the offer!
         """
+
+        # TODO: remove power multiplier
         
-        offer =  inp.value
+        offer = inp.value
         # check if there is a flexibility provision and the cooldown is finished
         if str(self.env.time) in self.get("forced_offers").value.keys():
             forced, power_multiplier = self.get("forced_offers").value[str(self.env.time)]
@@ -127,17 +136,14 @@ class FlexibilityMarket(agentlib.BaseModule):
                 profile = None
                 if forced == "positive" or np.average(offer.pos_diff_profile) > self.minimum_average_flex:
                     if forced == "positive"  or self.random_generator.random() < self.pos_neg_rate:
-                        if forced == "positive" or offer.pos_time_flex < self.maximum_time_flex:
-                            profile = offer.base_power_profile - offer.pos_diff_profile * power_multiplier
-                            offer.status = OfferStatus.accepted_positive
+                        profile = offer.base_power_profile - offer.pos_diff_profile * power_multiplier
+                        offer.status = OfferStatus.accepted_positive
                 
                 if forced == "negative" or (profile is None and np.average(offer.neg_diff_profile) > self.minimum_average_flex):
-                    if forced == "negative" or offer.neg_time_flex < self.maximum_time_flex:
-                        profile = offer.base_power_profile + offer.neg_diff_profile * power_multiplier
-                        offer.status = OfferStatus.accepted_negative
+                    profile = offer.base_power_profile + offer.neg_diff_profile * power_multiplier
+                    offer.status = OfferStatus.accepted_negative
 
                 if profile is not None:
-                    offer.power_multiplier = power_multiplier
                     profile = profile.dropna()
                     profile.index += self.env.time
                     self.set("_P_external", profile)
@@ -145,12 +151,10 @@ class FlexibilityMarket(agentlib.BaseModule):
                     self.set("in_provision", True)    
                     self.cooldown_ticker = self.get("cooldown").value
 
-
         elif self.cooldown_ticker > 0:
             self.cooldown_ticker -= 1
         
         self.write_results(offer)
-        
 
     def cleanup_results(self):
         results_file = self.results_file

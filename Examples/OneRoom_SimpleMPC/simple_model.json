@@ -21,10 +21,12 @@
                     "collocation_method": "legendre"
                 },
                 "results_file": "results/mpc.csv",
-                "save_results": true
+                "save_results": true,
+                "overwrite_result_file": true
             },
             "time_step": 100,
             "prediction_horizon": 50,
+            "set_outputs": true,
             "parameters": [
                 {
                     "name": "s_T",
