@@ -1,50 +1,33 @@
+import random
+
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 from agentlib.utils.multi_agent_system import LocalMASAgency
-import sys
-import os
-import agentlib_mpc.modules
-from flexibility_quantification import generate_flex_agents
+import numpy as np
+import agentlib_mpc.utils.plotting.basic as mpcplot
+from agentlib_mpc.utils.analysis import load_sim, load_mpc
+from agentlib_mpc.utils.analysis import mpc_at_time_step
 from flexibility_quantification.generate_flex_agents import FlexAgentGenerator
-
+import logging
 import pandas as pd
 
-
-until = 5000
+# Set the log-level
+logging.basicConfig(level=logging.WARN)
+until = 14400
 
 ENV_CONFIG = {"rt": False, "factor": 0.01, "t_sample": 60}
-_CONVERSION_MAP = {"seconds": 1, "minutes": 60, "hours": 3600, "days": 86400}
 
-
-def get_series_from_predictions(series, convert_to="seconds", fname=None, return_first=False, index_of_return=1):
-    actual_values: dict[float, float] = {}
-    if fname is not None:
-        f = open(fname, "w+")
-    for i, (time, prediction) in enumerate(series.groupby(level=0)):
-        time = time / _CONVERSION_MAP[convert_to]
-        prediction: pd.Series = prediction.dropna().droplevel(0)
-        if return_first:
-            if i == index_of_return:
-                return prediction
-            else: continue
-        if fname is not None:
-            f.write(f"{time} {prediction} \n")
-        actual_values[time] = prediction.iloc[0]
-        prediction.index = (prediction.index + time) / _CONVERSION_MAP[convert_to]
-    if fname is not None:
-        f.close()
-    return pd.Series(actual_values)
-
-
-def run_example(until=until, T_set=295):
+def run_example(until=until):
     results = []
     mpc_config = "mpc_and_sim/simple_model.json"
     sim_config = "mpc_and_sim/simple_sim.json"
     predictor_config = "predictor/predictor_config.json"
     flex_config = "flex_configs/flexibility_agent_config.json"
-    agent_configs = [mpc_config, sim_config, predictor_config]
+    agent_configs = [sim_config, predictor_config]
 
-    config_list = FlexAgentGenerator(flex_config=flex_config, mpc_agent_config=mpc_config).generate_flex_agents()
+    config_list = FlexAgentGenerator(flex_config=flex_config,
+                                     mpc_agent_config=mpc_config).generate_flex_agents()
     agent_configs.extend(config_list)
 
     mas = LocalMASAgency(
@@ -53,61 +36,135 @@ def run_example(until=until, T_set=295):
         variable_logging=False
     )
 
-
     mas.run(until=until)
     results = mas.get_results(cleanup=False)
-    fig, ax = plt.subplots(3, 1, sharex=True)
-    ax[0].plot(results["SimAgent"]["room"]["T_out"], color="black")
-    ax[0].set_ylabel("T_out")
 
-    ax[1].plot(results["SimAgent"]["room"]["mDot"], color="black")
-    ax[1].set_ylabel("mDot")
+    # TODO: outsource plotting in different script
 
-    
-    ax[2].plot(results["SimAgent"]["room"]["P_el"], color="black")
-    ax[2].set_ylabel("P_el")
+    # for external plot script
+    ResultsT = dict[str, dict[str, pd.DataFrame]]
+    res_path = "results"
 
-    ax[0].axhline(T_set, color="grey", linestyle="--", label="Set Point")
- 
-    get_series_from_predictions(results["FlexModel"]["Baseline"]["variable"]["T_out"]).plot(ax=ax[0])
-    get_series_from_predictions(results["FlexModel"]["Baseline"]["variable"]["mDot"]).plot(ax=ax[1])
-    get_series_from_predictions(results["FlexModel"]["Baseline"]["variable"]["P_el"]).plot(ax=ax[2])
-    ax[0].legend(["Simulation", None, "Optimisation"])
+    def load_results() -> ResultsT:
+        results = {
+            "Simulation": {
+                "room": load_sim(Path(res_path, "sim_room.csv"))
+            },
+            "mpc": {
+                "baseline": load_mpc(Path(res_path, "mpc_base.csv")),
+                "pos": load_mpc(Path(res_path, "mpc_neg_flex.csv")),
+                "neg": load_mpc(Path(res_path, "mpc_pos_flex.csv"))
+            },
+            # TODO: implement load functions
+            # "indicator": {"admm_module": load_indicator(Path(res_path, "flexibility_indicator.csv"))},
+            # "market": {"admm_module": load_market(Path(res_path, "flexibility_market.csv"))},
+        }
+        return results
 
-    fig, ax = plt.subplots(4, 1, sharex=True)
-    fig.suptitle(f"Simple MPC Model\nMPC Predictions made in t={3}ts")
+    if results is None:
+        results = load_results()
 
-    baseline = get_series_from_predictions(results["FlexModel"]["Baseline"]["variable"]["P_el"], return_first=True, index_of_return=2)
+    # disturbances
+    fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=2)
+    (ax1, ax2) = axs
+    # load
+    ax1.set_ylabel("$\dot{Q}_{Room}$ in W")
+    results["SimAgent"]["room"]["load"].plot(ax=ax1)
+    # T_in
+    ax2.set_ylabel("$T_{in}$ in K")
+    results["SimAgent"]["room"]["T_in"].plot(ax=ax2)
+    x_ticks = np.arange(0, 3600 * 4 + 1, 3600)
+    x_tick_labels = [int(tick / 3600) for tick in x_ticks]
+    ax2.set_xticks(x_ticks)
+    ax2.set_xticklabels(x_tick_labels)
+    ax2.set_xlabel("Time in hours")
+    for ax in axs:
+        mpcplot.make_grid(ax)
+        ax.set_xlim(0, 3600 * 4)
 
-    pos_flex = (get_series_from_predictions(results["PosFlexMPC"]["PosFlexMPC"]["variable"]["P_el"], return_first=True, index_of_return=2) - baseline) 
+    # room temp
+    fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=1)
+    ax1 = axs[0]
+    # T out
+    ax1.set_ylabel("$T_{room}$ in K")
+    results["SimAgent"]["room"]["T_out"].plot(ax=ax1)
+    results["SimAgent"]["room"]["T_upper"].plot(ax=ax1, color="0.5")
+    results["SimAgent"]["room"]["T_lower"].plot(ax=ax1, color="0.5")
+    mpc_at_time_step(data=results["NegFlexMPC"]["NegFlexMPC"], time_step=3600, variable="T").plot(ax=ax1, label="neg", linestyle="--")
+    mpc_at_time_step(data=results["PosFlexMPC"]["PosFlexMPC"], time_step=3600, variable="T").plot(ax=ax1, label="pos", linestyle="--")
+    ax1.legend()
+    ax1.vlines(3600, ymin=0, ymax=500, colors="black")
+    ax1.vlines(4500, ymin=0, ymax=500, colors="black")
+    ax1.vlines(5400, ymin=0, ymax=500, colors="black")
+    ax1.vlines(12600, ymin=0, ymax=500, colors="black")
+    ax1.set_ylim(289, 299)
+    x_ticks = np.arange(0, 3600 * 4 + 1, 3600)
+    x_tick_labels = [int(tick / 3600) for tick in x_ticks]
+    ax1.set_xticks(x_ticks)
+    ax1.set_xticklabels(x_tick_labels)
+    ax1.set_xlabel("Time in hours")
+    for ax in axs:
+        mpcplot.make_grid(ax)
+        ax.set_xlim(0, 3600 * 4)
 
-    neg_flex = (get_series_from_predictions(results["NegFlexMPC"]["NegFlexMPC"]["variable"]["P_el"], return_first=True, index_of_return=2) - baseline)
-    (baseline - baseline).plot(ax=ax[0], color="black")
-    pos_flex.plot(ax=ax[0], color="red")
-    neg_flex.plot(ax=ax[0], color="blue")
+    # predictions
+    fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=2)
+    (ax1, ax2) = axs
+    # P_el
+    ax1.set_ylabel("$P_{el}$ in W")
+    results["SimAgent"]["room"]["P_el"].plot(ax=ax1)
+    mpc_at_time_step(data=results["NegFlexMPC"]["NegFlexMPC"], time_step=3600, variable="P_el").ffill().plot(ax=ax1, drawstyle="steps-post", label="neg", linestyle="--")
+    mpc_at_time_step(data=results["PosFlexMPC"]["PosFlexMPC"], time_step=3600, variable="P_el").ffill().plot(ax=ax1, drawstyle="steps-post", label="pos", linestyle="--")
+    ax1.legend()
+    ax1.vlines(3600, ymin=-1000, ymax=5000, colors="black")
+    ax1.vlines(4500, ymin=-1000, ymax=5000, colors="black")
+    ax1.vlines(5400, ymin=-1000, ymax=5000, colors="black")
+    ax1.vlines(12600, ymin=-1000, ymax=5000, colors="black")
+    ax1.set_ylim(-100, 1000)
+    # mdot
+    ax2.set_ylabel("$\dot{m}$ in kg/s")
+    results["SimAgent"]["room"]["mDot"].plot(ax=ax2)
+    mpc_at_time_step(data=results["NegFlexMPC"]["NegFlexMPC"], time_step=3600, variable="mDot").ffill().plot(ax=ax2, drawstyle="steps-post", label="neg", linestyle="--")
+    mpc_at_time_step(data=results["PosFlexMPC"]["PosFlexMPC"], time_step=3600, variable="mDot").ffill().plot(ax=ax2, drawstyle="steps-post", label="pos", linestyle="--")
+    ax2.legend()
+    ax2.vlines(3600, ymin=0, ymax=500, colors="black")
+    ax2.vlines(4500, ymin=0, ymax=500, colors="black")
+    ax2.vlines(5400, ymin=0, ymax=500, colors="black")
+    ax2.vlines(12600, ymin=0, ymax=500, colors="black")
+    ax2.set_ylim(0, 0.06)
 
-    # print(results[1]["switch_test"])
-    get_series_from_predictions(results["FlexModel"]["Baseline"]["variable"]["mDot"], return_first=True, index_of_return=2).plot(ax=ax[1], color="black")
-    get_series_from_predictions(results["PosFlexMPC"]["PosFlexMPC"]["variable"]["mDot"], return_first=True, index_of_return=2).plot(ax=ax[1], color="red")
-    get_series_from_predictions(results["NegFlexMPC"]["NegFlexMPC"]["variable"]["mDot"], return_first=True, index_of_return=2).plot(ax=ax[1], color="blue")
-    get_series_from_predictions(results["FlexModel"]["Baseline"]["variable"]["T"], return_first=True, index_of_return=2).plot(ax=ax[2], color="black")
-    get_series_from_predictions(results["PosFlexMPC"]["PosFlexMPC"]["variable"]["T"], return_first=True, index_of_return=2).plot(ax=ax[2], color="red")
-    get_series_from_predictions(results["NegFlexMPC"]["NegFlexMPC"]["variable"]["T"], return_first=True, index_of_return=2).plot(ax=ax[2], color="blue")
-    
-    baseline.plot(ax=ax[3], color="black")
-    get_series_from_predictions(results["PosFlexMPC"]["PosFlexMPC"]["variable"]["P_el"], return_first=True, index_of_return=2).plot(ax=ax[3], color="red")
-    get_series_from_predictions(results["NegFlexMPC"]["NegFlexMPC"]["variable"]["P_el"], return_first=True, index_of_return=2).plot(ax=ax[3], color="blue")
+    x_ticks = np.arange(0, 3600 * 4 + 1, 3600)
+    x_tick_labels = [int(tick / 3600) for tick in x_ticks]
+    ax2.set_xticks(x_ticks)
+    ax2.set_xticklabels(x_tick_labels)
+    ax2.set_xlabel("Time in hours")
+    for ax in axs:
+        mpcplot.make_grid(ax)
+        ax.set_xlim(0, 3600 * 4)
 
-    # get_series_from_predictions(results["FlexModel"]["PosFlexModel"]["variable"]["switch_test"]).plot(ax=ax[4], color="blue")
-    # fig.suptitle("Regelungsergebnisse")
+    # flexibility
+    # get only the first prediction time of each time step
+    ind_res = results["FlexibilityIndicator"]["FlexibilityIndicator"]
+    energy_flex_neg = ind_res.xs("energyflex_neg", axis=1).droplevel(1).dropna()
+    energy_flex_pos = ind_res.xs("energyflex_pos", axis=1).droplevel(1).dropna()
+    fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=1)
+    ax1 = axs[0]
+    ax1.set_ylabel("$\epsilon$ in kWh")
+    energy_flex_neg.plot(ax=ax1, label="neg")
+    energy_flex_pos.plot(ax=ax1, label="pos")
+    ax1.legend()
 
-    ax[0].legend(["Baseline", "Pos. Flex.", "Neg. Flex."])
-    ax[2].set_xlabel("Simulation Time [sec]")
-    ax[0].set_ylabel("Flexibility Prediction [W]")
-    ax[1].set_ylabel("Mass Stream [kg/s]")
-    ax[2].set_ylabel("Temperatur [K]")
-    ax[3].set_ylabel("Leistung [W]")
+    x_ticks = np.arange(0, 3600 * 4 + 1, 3600)
+    x_tick_labels = [int(tick / 3600) for tick in x_ticks]
+    ax1.set_xticks(x_ticks)
+    ax1.set_xticklabels(x_tick_labels)
+    ax1.set_xlabel("Time in hours")
+    for ax in axs:
+        mpcplot.make_grid(ax)
+        ax.set_xlim(0, 3600 * 4)
+
     plt.show()
 
 
-run_example(until, T_set=295)
+if __name__ == "__main__":
+    run_example(until)

@@ -73,17 +73,20 @@ class FlexAgentGenerator:
                                                                config_type=AgentConfig)
             self.market_module_config = get_module(config=self.market_agent_config,
                                                    module_type=mmap.MARKET_CONFIG_TYPE)
+        else:
+            self.flex_config.market_time = 0
 
     def generate_flex_agents(self) -> [MPCConfig, MPCConfig, MPCConfig,
                                        FlexibilityIndicatorModuleConfig,
                                        FlexibilityMarketModuleConfig]:
-        """
-        Generates the configs and the python module for the flexibility agents.
+        """Generates the configs and the python module for the flexibility agents.
+        Power variable must be defined in the mpc config.
 
         """
         # TODO: Add validation (e.g. price is the same for indicator and mpc_config).
         #  Otherwise throw warning or make assumptions
-
+        if self.flex_config.baseline_config_generator_data.power_variable not in [output.name for output in self.baseline_mpc_module_config.outputs]:
+            raise ConfigurationError("Given power variable is not defined in baseline mpc config.")
         # extract the original optiization backend
         baseline_opt_backend = self.baseline_mpc_module_config.optimization_backend["model"]["type"]
 
@@ -223,7 +226,7 @@ class FlexAgentGenerator:
                                                                                     mpc_dataclass.created_flex_mpcs_file),
                                                                "class_name": mpc_dataclass.class_name}
         # update results file with suffix
-        module_config.optimization_backend["results_file"] = self.baseline_mpc_module_config.optimization_backend["results_file"].replace(".csv", mpc_dataclass.results_suffix)
+        module_config.optimization_backend["results_file"] = module_config.optimization_backend["results_file"].replace(".csv", mpc_dataclass.results_suffix)
         # add the control signal of the baseline to outputs (used during market time)
         # and as inputs for the shadow mpcs
         if type(mpc_dataclass) is not BaselineMPCData:
@@ -265,6 +268,8 @@ class FlexAgentGenerator:
         for parameter in module_config.parameters:
             if parameter.name == glbs.PREP_TIME:
                 parameter.value = self.flex_config.prep_time
+            if parameter.name == glbs.MARKET_TIME:
+                parameter.value = self.flex_config.market_time
             if parameter.name == glbs.FLEX_EVENT_DURATION:
                 parameter.value = self.flex_config.flex_event_duration
             if parameter.name == "time_step":

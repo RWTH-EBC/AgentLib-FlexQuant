@@ -23,7 +23,7 @@ class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
 
     ]
     inputs: List[agentlib.AgentVariable] = [
-        # agentlib.AgentVariable(name="PowerFlexibilityOffer")
+        agentlib.AgentVariable(name="PowerFlexibilityOffer")
     ]
     outputs: List[agentlib.AgentVariable] = [
         agentlib.AgentVariable(
@@ -115,32 +115,26 @@ class FlexibilityMarketModule(agentlib.BaseModule):
             The offer is accepted randomly. The factor self.offer_acceptance_rate determines the
                 random factor for offer acceptance. self.pos_neg_rate is the random factor for
                 the direction of the flexibility. A higher rate means that more positive offers will be accepted.
-            Forced offers: if set, than an offer is accepted without the randomness and constraints.
             
             Constraints:
                 cooldown: during $cooldown steps after a flexibility event no offer is accepted
                 minimum_average_flex: min amount of flexibility to be accepted, to account for the model error
         """
-
-        # TODO: remove power multiplier
         
         offer = inp.value
         # check if there is a flexibility provision and the cooldown is finished
-        if str(self.env.time) in self.get("forced_offers").value.keys():
-            forced, power_multiplier = self.get("forced_offers").value[str(self.env.time)]
-        else: 
-            forced = None
-            power_multiplier = 1#np.random.choice([0.4,0.5,0.6,0.7,0.8,0.9,1], p=[0.01, 0.01, 0.05, 0.05, 0.1, 0.1, 0.68])
         if not self.get("in_provision").value and self.cooldown_ticker == 0:
-            if forced is not None or self.random_generator.random() < self.offer_acceptance_rate:  
+            if self.random_generator.random() < self.offer_acceptance_rate:
                 profile = None
-                if forced == "positive" or np.average(offer.pos_diff_profile) > self.minimum_average_flex:
-                    if forced == "positive"  or self.random_generator.random() < self.pos_neg_rate:
-                        profile = offer.base_power_profile - offer.pos_diff_profile * power_multiplier
+                # if random value is above pos_neg_rate, positive offer is accepted.
+                # Otherwise, negative offer
+                if np.average(offer.pos_diff_profile) > self.minimum_average_flex:
+                    if self.random_generator.random() < self.pos_neg_rate:
+                        profile = offer.base_power_profile - offer.pos_diff_profile
                         offer.status = OfferStatus.accepted_positive
                 
-                if forced == "negative" or (profile is None and np.average(offer.neg_diff_profile) > self.minimum_average_flex):
-                    profile = offer.base_power_profile + offer.neg_diff_profile * power_multiplier
+                if np.average(offer.neg_diff_profile) > self.minimum_average_flex:
+                    profile = offer.base_power_profile + offer.neg_diff_profile
                     offer.status = OfferStatus.accepted_negative
 
                 if profile is not None:

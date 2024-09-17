@@ -1,7 +1,7 @@
 {
-    "prep_time": 1000,
-    "flex_event_duration": 1000,
-    "market_time": 1000,
+    "prep_time": 900,
+    "flex_event_duration": 7200,
+    "market_time": 900,
     "indicator_config": {
         "agent_config": {
             "id": "FlexibilityIndicator",
@@ -18,19 +18,23 @@
                     "parameters": [
                         {
                             "name": "prep_time",
-                            "value": 1000
+                            "value": 900
+                        },
+                        {
+                            "name": "market_time",
+                            "value": 900
                         },
                         {
                             "name": "flex_event_duration",
-                            "value": 1000
+                            "value": 7200
                         },
                         {
                             "name": "time_step",
-                            "value": 100
+                            "value": 900
                         },
                         {
                             "name": "prediction_horizon",
-                            "value": 50
+                            "value": 48
                         }
                     ],
                     "inputs": [
@@ -53,10 +57,10 @@
         "weights": [{"name": "s_P", "value": 10}],
         "profile_deviation_weight": 1,
         "pos_flex": {
-            "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, self.s_P * self.P_el])"
+            "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, self.s_P * self.P_el/1000])"
         },
         "neg_flex": {
-            "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, -self.s_P * self.P_el])"
+            "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, -self.s_P * self.P_el/1000])"
         }
     },
     "path_to_flex_files": "created_flex_files",

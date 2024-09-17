@@ -1,6 +1,7 @@
 from agentlib.core.agent import AgentConfig
 from agentlib.core.module import BaseModuleConfig
 import flexibility_quantification.data_structures.module_mapping as mmap
+from copy import deepcopy
 from typing import TypeVar
 import math
 
@@ -13,7 +14,7 @@ def get_module(config: AgentConfig, module_type: str) -> T:
     """
     for module in config.modules:
         if module["type"] == module_type:
-            return mmap.MODULE_TYPES[module["type"]](**module, _agent_id=config.id)
+            return deepcopy(mmap.MODULE_TYPES[module["type"]](**module, _agent_id=config.id))
 
 
 def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig):

@@ -6,19 +6,18 @@ from agentlib_mpc.models.casadi_model import (
     CasadiOutput,
     CasadiModelConfig,
 )
-import casadi as ca
 from typing import List
-import numpy as np
-import agentlib
-
+from math import inf
+# needed for flex agents
 import pandas as pd
+import casadi as ca
 
 
 class BaselineMPCModelConfig(CasadiModelConfig):
     inputs: List[CasadiInput] = [
         # controls
         CasadiInput(
-            name="mDot", value=0.0225, unit="K", description="Air mass flow into zone"
+            name="mDot", value=0.0225, unit="kg/s", description="Air mass flow into zone"
         ),
         # disturbances
         CasadiInput(
@@ -102,21 +101,20 @@ class BaselineMPCModel(CasadiModel):
         self.T.ode = (
             self.cp * self.mDot / self.C * (self.T_in - self.T) + self.load / self.C
         )
-        self.P_el.alg = self.cp * self.mDot * (self.T_in - self.T)
-        ## neue variable
+        self.P_el.alg = self.cp * self.mDot * (self.T - self.T_in)
 
         # Define ae
         self.T_out.alg = self.T  # math operation to get the symbolic variable
         # Constraints: List[(lower bound, function, upper bound)]
         self.constraints = [
             # soft constraints
-            (self.T_lower, self.T + self.T_slack, self.T_upper),
-            #(self.cp * self.mDot / self.C * (self.T_in - self.T), self.P, self.cp * self.mDot / self.C * (self.T_in - self.T))
+            (self.T_lower, self.T + self.T_slack, inf),
+            (-inf, self.T - self.T_slack, self.T_upper),
+            (0, self.T_slack, inf)
         ]
         # Objective function
         objective = sum(
                 [
-                    
                     self.r_mDot * self.mDot,
                     self.s_T * self.T_slack**2,
                 ]
