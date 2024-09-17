@@ -1,8 +1,7 @@
-import random
+
 
 import matplotlib.pyplot as plt
 from pathlib import Path
-
 from agentlib.utils.multi_agent_system import LocalMASAgency
 import numpy as np
 import agentlib_mpc.utils.plotting.basic as mpcplot

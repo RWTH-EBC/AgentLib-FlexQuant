@@ -10,32 +10,17 @@
           "module_id": "FlexibilityMarket",
           "type": "flexibility_quantification.flexibility_market",
           "results_file": "results\\flexibility_market.csv",
-          "parameters": [
-            {
-              "name": "random_seed",
-              "value": 1
-            },
-            {
-              "name": "pos_neg_rate",
-              "value": 1
-            },
-            {
-              "name": "offer_acceptance_rate",
-              "value": 1
-            },
-            {
-              "name": "minimum_average_flex",
-              "value": 100
-            },
-            {
-              "name": "time_step",
-              "value": 900
-            },
-            {
-              "name": "cooldown",
-              "value": 2
+          "time_step": 900,
+          "market_specs": {
+            "type": "random",
+            "cooldown": 6,
+            "minimum_average_flex": 0,
+            "options": {
+              "random_seed": 1,
+              "pos_neg_rate": 1,
+              "offer_acceptance_rate": 0.1
             }
-          ]
+          }
         }
       ]
 

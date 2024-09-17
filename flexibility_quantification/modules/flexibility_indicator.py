@@ -27,7 +27,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
                                description="electricity price")
     ]
     outputs: List[agentlib.AgentVariable] = [
-        agentlib.AgentVariable(name="PowerFlexibilityOffer", type="FlexOffer"),
+        agentlib.AgentVariable(name="FlexibilityOffer", type="FlexOffer"),
         agentlib.AgentVariable(
             name="powerflex_flex_neg", unit='W', type="pd.Series",
             description="Negative Powerflexibility"
@@ -84,6 +84,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         )
     ]
 
+    # TODO: don't use parameters list, but create a IndicatorSpecifications class (see market)
     parameters: List[agentlib.AgentVariable] = [
         agentlib.AgentVariable(name=glbs.PREP_TIME, unit="s",
                                description="Preparation time"),
@@ -118,7 +119,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         super().__init__(*args, **kwargs)
         self.var_list = []
         for variable in self.variables:
-            if variable == "PowerFlexibilityOffer":
+            if variable == "FlexibilityOffer":
                 continue
             self.var_list.append(variable.name)
         self.time = []
@@ -255,7 +256,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             self.time.append(now)
             new_df = pd.DataFrame(results).T
             new_df.columns = self.var_list
-            new_df.index.name = "time"
+            new_df.index.type = "time"
             new_df['time_step'] = now
             new_df.set_index(['time_step', new_df.index], inplace=True)
             df = pd.concat([df, new_df])
@@ -379,7 +380,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         self.set("costs_pos_rel", str(costs_pos_rel))
 
         base_profile = self.base_vals.reindex(index=flex_horizon)
-        self.send_flex_offer("PowerFlexibilityOffer", base_profile,
+        self.send_flex_offer("FlexibilityOffer", base_profile,
                              flex_price_pos, powerflex_profile_pos,
                              flex_price_neg, powerflex_profile_neg)
 
