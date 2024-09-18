@@ -12,7 +12,7 @@
                 "type": "casadi",
                 "model": {
                     "type": {
-                        "file": "simple_model.py",
+                        "file": "mpc_and_sim/simple_model.py",
                         "class_name": "BaselineMPCModel"
                     }
                 },
@@ -20,12 +20,22 @@
                     "collocation_order": 2,
                     "collocation_method": "legendre"
                 },
+                "solver": {
+                    "name": "ipopt",
+                    "options": {
+                        "ipopt": {
+                            "max_iter": 100,
+                            "tol": 1e-4,
+                            "print_level": 0
+                        }
+                    }
+                },
                 "results_file": "results/mpc.csv",
                 "save_results": true,
                 "overwrite_result_file": true
             },
-            "time_step": 100,
-            "prediction_horizon": 50,
+            "time_step": 900,
+            "prediction_horizon": 48,
             "set_outputs": true,
             "parameters": [
                 {
@@ -44,11 +54,11 @@
                 },
                 {
                     "name": "T_upper",
-                    "value": 294
+                    "value": 294.15
                 },
                 {
                     "name": "T_lower",
-                    "value": 292
+                    "value": 292.15
                 },
                 {
                     "name": "T_in",
@@ -59,6 +69,10 @@
                 {
                     "name": "T_out",
                     "alias": "T_out"
+                },
+                {
+                    "name": "P_el",
+                    "alias": "P_el"
                 }
             ],
             "controls": [
