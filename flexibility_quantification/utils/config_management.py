@@ -1,10 +1,31 @@
 from agentlib.core.agent import AgentConfig
 from agentlib.core.module import BaseModuleConfig
-import flexibility_quantification.data_structures.module_mapping as mmap
+import flexibility_quantification.data_structures.globals as glbs
+from copy import deepcopy
 from typing import TypeVar
 import math
+from agentlib.modules import get_all_module_types
+import inspect
+
 
 T = TypeVar('T', bound=BaseModuleConfig)
+
+
+all_module_types = get_all_module_types(["agentlib_mpc", "flexibility_quantification"])
+# remove ML models, since import takes ages
+all_module_types.pop("agentlib_mpc.ann_trainer")
+all_module_types.pop("agentlib_mpc.gpr_trainer")
+all_module_types.pop("agentlib_mpc.linreg_trainer")
+all_module_types.pop("agentlib_mpc.ann_simulator")
+all_module_types.pop("agentlib_mpc.set_point_generator")
+# remove clone since not used
+all_module_types.pop("clonemap")
+
+MODULE_TYPE_DICT = {name: inspect.get_annotations(class_type.import_class())["config"] for name, class_type in all_module_types.items()}
+
+MPC_CONFIG_TYPE: str = "agentlib_mpc.mpc"
+INDICATOR_CONFIG_TYPE: str = "flexibility_quantification.flexibility_indicator"
+MARKET_CONFIG_TYPE: str = "flexibility_quantification.flexibility_market"
 
 
 def get_module(config: AgentConfig, module_type: str) -> T:
@@ -13,7 +34,7 @@ def get_module(config: AgentConfig, module_type: str) -> T:
     """
     for module in config.modules:
         if module["type"] == module_type:
-            return mmap.MODULE_TYPES[module["type"]](**module, _agent_id=config.id)
+            return deepcopy(MODULE_TYPE_DICT[module["type"]](**module, _agent_id=config.id))
 
 
 def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig):

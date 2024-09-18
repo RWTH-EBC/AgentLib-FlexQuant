@@ -5,13 +5,15 @@
             "module_id": "room",
             "type": "simulator",
             "model": {
-                "type": {"file": "simple_model.py", "class_name": "BaselineMPCModel"},
+                "type": {"file": "mpc_and_sim/simple_model.py", "class_name": "BaselineMPCModel"},
                 "states": [{"name": "T", "value": 298}]
                 
             },
             "t_sample": 10,
             "update_inputs_on_callback": false,
             "save_results": true,
+            "result_filename": "results/sim_room.csv",
+            "overwrite_result_file": true,
             "outputs": [
                 {"name": "T_out", "alias": "T"},
                 {"name": "P_el","alias": "P_el_sim"}

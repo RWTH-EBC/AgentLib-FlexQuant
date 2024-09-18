@@ -7,7 +7,7 @@ from enum import Enum
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from agentlib.core.agent import AgentConfig
 from agentlib.core.module import BaseModuleConfig
-from flexibility_quantification.data_structures.mpc_setup import BaseMPCData, PFMPCData, NFMPCData, \
+from flexibility_quantification.data_structures.mpcs import BaseMPCData, PFMPCData, NFMPCData, \
     BaselineMPCData
 from flexibility_quantification.modules.flexibility_indicator import FlexibilityIndicatorModuleConfig
 from flexibility_quantification.modules.flexibility_market import FlexibilityMarketModuleConfig
@@ -56,7 +56,6 @@ class FlexibilityIndicatorConfig(pydantic.BaseModel):
         default="indicator.json",
         description="Name of the config that is created by the generator",
     )
-    # TODO: add type field, to decide which Indicators should be calculated
 
 
 class FlexQuantConfig(pydantic.BaseModel):
