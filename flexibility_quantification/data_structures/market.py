@@ -1,12 +1,9 @@
 import pydantic
+from typing import Union, Literal
 
 
-class MarketOptions(pydantic.BaseModel):
-    name: str
-
-
-class RandomOptions(MarketOptions):
-    name: str = "random"
+class RandomOptions(pydantic.BaseModel):
+    type: Literal["random"]
     random_seed: int = pydantic.Field(
         name="random_seed", default=None,
         description="Random seed for reproducing experiments"
@@ -16,22 +13,22 @@ class RandomOptions(MarketOptions):
         name="pos_neg_rate", default=0,
         description="Determines the likelihood positive and the negative flexibility."
                     "A higher rate means that more positive offers will be accepted.",
-        ub=1, lb=0
+        le=1, ge=0
     )
 
     offer_acceptance_rate: float = pydantic.Field(
         name="offer_acceptance_rate", default=0.5,
         description="Determines the likelihood of an accepted offer",
-        ub=1, lb=0
+        le=1, ge=0
     )
 
 
-class SingleOptions(MarketOptions):
-    name: str = "single"
+class SingleOptions(pydantic.BaseModel):
+    type: Literal["single"]
 
 
-class CustomOptions(MarketOptions):
-    name: str = "custom"
+class CustomOptions(pydantic.BaseModel):
+    type: Literal["custom"]
 
     model_config = pydantic.ConfigDict(extra="allow")
 
@@ -52,29 +49,26 @@ class MarketSpecifications(pydantic.BaseModel):
         description="minimum average of an accepted offer"
     )
 
-    options: MarketOptions = pydantic.Field(...,
-                                            description="Market options, changes depending on 'type'")
+    options: Union[RandomOptions, SingleOptions, CustomOptions] = pydantic.Field(
+        ...,
+        description="Market options, changes depending on 'type'",
+        discriminator='type'
+    )
 
-    # Root validator to dynamically adjust 'options' based on 'type'
-    @pydantic.model_validator(mode="before")
+    # Root validator to automatically populate the options.type from the top-level type
+    @pydantic.model_validator(mode='before')
     @classmethod
-    def validate_and_set_options(cls, values):
+    def set_options_type(cls, values):
         market_type = values.get('type')
-        options_data = values.get('options')
+        options = values.get('options', {})
 
-        if market_type == 'random':
-            values['options'] = RandomOptions(**options_data)
-        elif market_type == 'custom':
-            values['options'] = CustomOptions(**options_data)
-        elif market_type == 'single':
-            values['options'] = SingleOptions(**options_data)
-        else:
-            raise ValueError(f"Unknown market type: {market_type}")
+        # Ensure the options dict contains the correct 'type' field
+        if isinstance(options, dict) and 'type' not in options:
+            options['type'] = market_type
+            values['options'] = options
 
         return values
 
 
 class RandomMarket(MarketSpecifications):
     type: str = "random"
-
-

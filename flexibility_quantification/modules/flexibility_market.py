@@ -123,14 +123,14 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         if not self.get("in_provision").value and self.cooldown_ticker == 0:
             if self.random_generator.random() < self.config.market_specs.options.offer_acceptance_rate:
                 profile = None
-                # if random value is above pos_neg_rate, positive offer is accepted.
+                # if random value is below pos_neg_rate, positive offer is accepted.
                 # Otherwise, negative offer
-                if np.average(offer.pos_diff_profile) > self.config.market_specs.minimum_average_flex:
-                    if self.random_generator.random() < self.config.market_specs.options.pos_neg_rate:
+                if self.random_generator.random() < self.config.market_specs.options.pos_neg_rate:
+                    if np.average(offer.pos_diff_profile) > self.config.market_specs.minimum_average_flex:
                         profile = offer.base_power_profile - offer.pos_diff_profile
                         offer.status = OfferStatus.accepted_positive
 
-                if np.average(offer.neg_diff_profile) > self.config.market_specs.minimum_average_flex:
+                elif np.average(offer.neg_diff_profile) > self.config.market_specs.minimum_average_flex:
                     profile = offer.base_power_profile + offer.neg_diff_profile
                     offer.status = OfferStatus.accepted_negative
 

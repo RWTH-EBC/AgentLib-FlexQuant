@@ -86,11 +86,11 @@ def run_example(until=until):
     ax1 = axs[0]
     # T out
     ax1.set_ylabel("$T_{room}$ in K")
-    results["SimAgent"]["room"]["T_out"].plot(ax=ax1)
     results["SimAgent"]["room"]["T_upper"].plot(ax=ax1, color="0.5")
     results["SimAgent"]["room"]["T_lower"].plot(ax=ax1, color="0.5")
-    mpc_at_time_step(data=results["NegFlexMPC"]["NegFlexMPC"], time_step=3600, variable="T").plot(ax=ax1, label="neg", linestyle="--")
-    mpc_at_time_step(data=results["PosFlexMPC"]["PosFlexMPC"], time_step=3600, variable="T").plot(ax=ax1, label="pos", linestyle="--")
+    results["SimAgent"]["room"]["T_out"].plot(ax=ax1)
+    mpc_at_time_step(data=results["NegFlexMPC"]["NegFlexMPC"], time_step=10800, variable="T").plot(ax=ax1, label="neg", linestyle="--")
+    mpc_at_time_step(data=results["PosFlexMPC"]["PosFlexMPC"], time_step=10800, variable="T").plot(ax=ax1, label="pos", linestyle="--")
     ax1.legend()
     ax1.vlines(3600, ymin=0, ymax=500, colors="black")
     ax1.vlines(4500, ymin=0, ymax=500, colors="black")
@@ -112,8 +112,8 @@ def run_example(until=until):
     # P_el
     ax1.set_ylabel("$P_{el}$ in W")
     results["SimAgent"]["room"]["P_el"].plot(ax=ax1)
-    mpc_at_time_step(data=results["NegFlexMPC"]["NegFlexMPC"], time_step=3600, variable="P_el").ffill().plot(ax=ax1, drawstyle="steps-post", label="neg", linestyle="--")
-    mpc_at_time_step(data=results["PosFlexMPC"]["PosFlexMPC"], time_step=3600, variable="P_el").ffill().plot(ax=ax1, drawstyle="steps-post", label="pos", linestyle="--")
+    mpc_at_time_step(data=results["NegFlexMPC"]["NegFlexMPC"], time_step=10800, variable="P_el").ffill().plot(ax=ax1, drawstyle="steps-post", label="neg", linestyle="--")
+    mpc_at_time_step(data=results["PosFlexMPC"]["PosFlexMPC"], time_step=10800, variable="P_el").ffill().plot(ax=ax1, drawstyle="steps-post", label="pos", linestyle="--")
     ax1.legend()
     ax1.vlines(3600, ymin=-1000, ymax=5000, colors="black")
     ax1.vlines(4500, ymin=-1000, ymax=5000, colors="black")
@@ -123,8 +123,8 @@ def run_example(until=until):
     # mdot
     ax2.set_ylabel("$\dot{m}$ in kg/s")
     results["SimAgent"]["room"]["mDot"].plot(ax=ax2)
-    mpc_at_time_step(data=results["NegFlexMPC"]["NegFlexMPC"], time_step=3600, variable="mDot").ffill().plot(ax=ax2, drawstyle="steps-post", label="neg", linestyle="--")
-    mpc_at_time_step(data=results["PosFlexMPC"]["PosFlexMPC"], time_step=3600, variable="mDot").ffill().plot(ax=ax2, drawstyle="steps-post", label="pos", linestyle="--")
+    mpc_at_time_step(data=results["NegFlexMPC"]["NegFlexMPC"], time_step=10800, variable="mDot").ffill().plot(ax=ax2, drawstyle="steps-post", label="neg", linestyle="--")
+    mpc_at_time_step(data=results["PosFlexMPC"]["PosFlexMPC"], time_step=10800, variable="mDot").ffill().plot(ax=ax2, drawstyle="steps-post", label="pos", linestyle="--")
     ax2.legend()
     ax2.vlines(3600, ymin=0, ymax=500, colors="black")
     ax2.vlines(4500, ymin=0, ymax=500, colors="black")
