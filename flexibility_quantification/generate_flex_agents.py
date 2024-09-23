@@ -244,14 +244,14 @@ class FlexAgentGenerator:
             for control in module_config.controls:
                 module_config.inputs.append(
                     MPCVariable(name=f"_{control.name}", value=control.value))
+
+            # only communicate outputs for the shadow mpcs
+            module_config.shared_variable_fields = ["outputs"]
         else:
             for control in module_config.controls:
                 module_config.outputs.append(
                     MPCVariable(name=control.name + mpc_dataclass.full_trajectory_suffix,
                                 value=control.value))
-
-            # only communicate outputs for the shadow mpcs
-            module_config.shared_variable_fields = ["outputs"]
         # add outputs for the power variables, for easier handling create a lookup dict
         output_dict = {output.name: output for output in module_config.outputs}
         if self.flex_config.baseline_config_generator_data.power_variable in output_dict:
@@ -296,6 +296,8 @@ class FlexAgentGenerator:
                 parameter.value = self.baseline_mpc_module_config.time_step
             if parameter.name == "prediction_horizon":
                 parameter.value = self.baseline_mpc_module_config.prediction_horizon
+        if "method" in self.baseline_mpc_module_config.optimization_backend["discretization_options"]:
+            module_config.discretization = self.baseline_mpc_module_config.optimization_backend["discretization_options"]["method"]
         module_config.model_config["frozen"] = True
         return module_config
 
@@ -589,11 +591,16 @@ class FlexAgentGenerator:
             func_body.body.append(ast.parse(f"self.{control}_full.alg = self.{control}"))
         # add the soft constraint for the provision
         func_body.body.append(obj_std)
-        func_body.body.append(ast.parse("return obj_std + ca.if_else(self.in_provision.sym, "
-                                        "ca.if_else(self.Time.sym < self.rel_start.sym, 0, "
-                                        "ca.if_else(self.Time.sym > self.rel_end.sym, 0, "
-                                        f"sum([{profile_deviation_weight}*(self.{power_variable} - self._P_external)**2]))),0)").body[
+        func_body.body.append(ast.parse("return ca.if_else(self.in_provision.sym, "
+                                        "ca.if_else(self.Time.sym < self.rel_start.sym, obj_std, "
+                                        "ca.if_else(self.Time.sym >= self.rel_end.sym, obj_std, "
+                                        f"sum([{profile_deviation_weight}*(self.{power_variable} - self._P_external)**2]))),obj_std)").body[
                                   0])
+        # func_body.body.append(ast.parse("return obj_std + ca.if_else(self.in_provision.sym, "
+        #                                 "ca.if_else(self.Time.sym < self.rel_start.sym, 0, "
+        #                                 "ca.if_else(self.Time.sym >= self.rel_end.sym, 0, "
+        #                                 f"sum([{profile_deviation_weight}*(self.{power_variable} - self._P_external)**2]))),0)").body[
+        #                           0])
 
         if self.flex_config.overwrite_files:
             try:

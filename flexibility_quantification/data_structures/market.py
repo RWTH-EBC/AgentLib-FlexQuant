@@ -25,6 +25,9 @@ class RandomOptions(pydantic.BaseModel):
 
 class SingleOptions(pydantic.BaseModel):
     type: Literal["single"]
+    start_time: float = pydantic.Field(description="After this time, the first available flex offer"
+                                                   " is accepted")
+    direction: Literal["positive", "negative"] = pydantic.Field(default="positive", description="Direction of the flexibility")
 
 
 class CustomOptions(pydantic.BaseModel):

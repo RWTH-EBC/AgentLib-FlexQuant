@@ -21,12 +21,11 @@
                     "collocation_method": "legendre"
                 },
                 "solver": {
-                    "name": "ipopt",
+                    "name": "fatrop",
                     "options": {
-                        "ipopt": {
+                        "fatrop": {
                             "max_iter": 100,
-                            "tol": 1e-4,
-                            "print_level": 0
+                            "tol": 1e-4
                         }
                     }
                 },
@@ -40,7 +39,7 @@
             "parameters": [
                 {
                     "name": "s_T",
-                    "value": 25
+                    "value": 250
                 },
                 {
                     "name": "r_mDot",
