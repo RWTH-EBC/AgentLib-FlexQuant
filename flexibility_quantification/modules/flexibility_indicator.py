@@ -108,6 +108,10 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         default="r_pel",
         description="Name of the price variable send by a predictor",
     )
+    discretization: str = pydantic.Field(
+        default="collocation",
+        description="Name of the discretization method",
+    )
 
     shared_variable_fields: List[str] = ["outputs"]
 
@@ -290,13 +294,14 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         full_horizon = np.arange(
             0, horizon * time_step, time_step)
 
-        # As the collocation uses the values after each time step, the last value is always none
-        time = self.base_vals.index[:-1]
+        if self.config.discretization == "collocation":
+            # As the collocation uses the values after each time step, the last value is always none
+            time = self.base_vals.index[:-1]
 
-        # use only the values of the full time steps
-        self.base_vals = pd.Series(self.base_vals, index=time).reindex(index=full_horizon)
-        self.neg_vals = pd.Series(self.neg_vals, index=time).reindex(index=full_horizon)
-        self.pos_vals = pd.Series(self.pos_vals, index=time).reindex(index=full_horizon)
+            # use only the values of the full time steps
+            self.base_vals = pd.Series(self.base_vals, index=time).reindex(index=full_horizon)
+            self.neg_vals = pd.Series(self.neg_vals, index=time).reindex(index=full_horizon)
+            self.pos_vals = pd.Series(self.pos_vals, index=time).reindex(index=full_horizon)
 
         powerflex_flex_neg = []
         for i in range(len(self.neg_vals)):

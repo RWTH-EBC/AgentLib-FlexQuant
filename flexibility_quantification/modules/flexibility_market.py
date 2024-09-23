@@ -1,5 +1,5 @@
 import agentlib
-from typing import List, Optional
+from typing import List, Optional, Union
 import pandas as pd
 import numpy as np
 import os
@@ -54,7 +54,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
 
     # TODO: cleanup
     df: pd.DataFrame = None
-    end: int = 0
+    end: Union[int, float] = 0
 
     def set_random_seed(self, random_seed):
         """set the random seed for reproducability"""
@@ -148,9 +148,32 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         self.write_results(offer)
 
     def single_flexibility_callback(self, inp, name):
-        """Callback to activate a single, predefined flexibility offer."""
+        """Callback to activate a single, predefined flexibility offer.
 
-    pass
+        """
+        offer = inp.value
+        profile = None
+        if self.env.now >= self.config.market_specs.options.start_time and not self.get("in_provision").value:
+            if self.config.market_specs.options.direction == "positive":
+                if np.average(offer.pos_diff_profile) > self.config.market_specs.minimum_average_flex:
+                    profile = offer.base_power_profile - offer.pos_diff_profile
+                    offer.status = OfferStatus.accepted_positive
+
+            elif np.average(offer.neg_diff_profile) > self.config.market_specs.minimum_average_flex:
+                profile = offer.base_power_profile + offer.neg_diff_profile
+                offer.status = OfferStatus.accepted_negative
+
+            if profile is not None:
+                profile = profile.dropna()
+                profile.index += self.env.time
+                self.set("_P_external", profile)
+                # only activate a single offer, therefore setting end to inf
+                self.end = np.inf
+                self.set("in_provision", True)
+
+        self.write_results(offer)
+
+
 
     def custom_flexibility_callback(self, inp, name):
         """Placeholder for a custom flexibility callback"""

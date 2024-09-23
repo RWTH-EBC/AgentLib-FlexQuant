@@ -1,39 +1,46 @@
 from agentlib_mpc.modules import mpc_full
 from flexibility_quantification.utils.data_handling import strip_multi_index
+from typing import Dict, Union
+from agentlib.core.datamodels import AgentVariable
 
 
 class FlexibilityShadowMPC(mpc_full.MPC):
+    # TODO: remove string handling
     config: mpc_full.MPCConfig
+    _full_controls: Dict[str, Union[AgentVariable, None]] = {}
 
     def register_callbacks(self):
-        self.__controls = {}
-        for control in self.var_ref.controls:
+        for control_var in self.config.controls:
             self.agent.data_broker.register_callback(
-                name=f"{control}_full", alias=f"{control}_full", callback=self.calc_flex_callback
+                name=f"{control_var.name}_full", alias=f"{control_var.name}_full",
+                callback=self.calc_flex_callback
             )
-            self.__controls[control] = None
+        for input_var in self.config.inputs:
+            if input_var.name.replace("_", "") in [control_var.name for control_var in self.config.controls]:
+                self._full_controls[input_var.name.replace("_", "")] = input_var
+
         super().register_callbacks()
 
     def calc_flex_callback(self, inp, name):
-        """
-        set the control trajectories before calculating the flexibility offer.
+        """set the control trajectories before calculating the flexibility offer.
         self.model should account for flexibility in its cost function
+
         """
-        # during provision dont calculate flex  TODO: calculate after ending of event
+        # during provision dont calculate flex
         if self.get("in_provision").value:
             return
 
         vals = strip_multi_index(inp.value)
 
-        # The MPC Predictions starts at t=env.now not t=0!
+        # the MPC Predictions starts at t=env.now not t=0
         vals.index += self.env.time
-        self.__controls[name.replace("_full", "")] = vals
+        self._full_controls[name.replace("_full", "")].value = vals
         self.set(f"_{name.replace('_full', '')}", vals)
         # make sure all controls are set
-        if all(x is not None for x in self.__controls.values()):
+        if all(x.value is not None for x in self._full_controls.values()):
             self.do_step()
-            for x in self.__controls.keys():
-                self.__controls[x.replace("_full", "")] = None
+            for name in self._full_controls.keys():
+                self._full_controls[name.replace("_full", "")].value = None
 
     def process(self):
         # the shadow mpc should only be run after the results of the baseline are sent

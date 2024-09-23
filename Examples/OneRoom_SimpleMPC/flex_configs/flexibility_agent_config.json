@@ -55,12 +55,12 @@
     },
     "shadow_mpc_config_generator_data": {
         "weights": [{"name": "s_P", "value": 10}],
-        "profile_deviation_weight": 1,
+        "profile_deviation_weight": 100,
         "pos_flex": {
-            "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, self.s_P * self.P_el/1000])"
+            "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, self.s_P * self.P_el])"
         },
         "neg_flex": {
-            "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, -self.s_P * self.P_el/1000])"
+            "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, -self.s_P * self.P_el])"
         }
     },
     "path_to_flex_files": "created_flex_files",

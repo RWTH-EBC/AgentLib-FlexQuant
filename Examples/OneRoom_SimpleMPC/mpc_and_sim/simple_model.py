@@ -101,7 +101,7 @@ class BaselineMPCModel(CasadiModel):
         self.T.ode = (
             self.cp * self.mDot / self.C * (self.T_in - self.T) + self.load / self.C
         )
-        self.P_el.alg = self.cp * self.mDot * (self.T - self.T_in)
+        self.P_el.alg = self.cp * self.mDot * (self.T - self.T_in)/1000
 
         # Define ae
         self.T_out.alg = self.T  # math operation to get the symbolic variable

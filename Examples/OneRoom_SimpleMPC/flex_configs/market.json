@@ -12,13 +12,12 @@
           "results_file": "results\\flexibility_market.csv",
           "time_step": 900,
           "market_specs": {
-            "type": "random",
+            "type": "single",
             "cooldown": 10,
             "minimum_average_flex": 0,
             "options": {
-              "random_seed": 1,
-              "pos_neg_rate": 1,
-              "offer_acceptance_rate": 0.1
+              "start_time": 9000,
+              "direction": "positive"
             }
           }
         }
