@@ -1,22 +1,13 @@
 from pathlib import Path
-from typing import Union, List, Dict, Optional
+from typing import Union
 from flexibility_quantification.utils.data_handling import load_results, res_type
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 import agentlib_mpc.utils.plotting.basic as mpcplot
 from agentlib_mpc.utils.analysis import mpc_at_time_step
 
 
-def plot_results(results: Union[str, Path, res_type]):
-    if isinstance(results, (str, Path)):
-        results = load_results(res_path=results)
-    elif isinstance(results, dict):
-        pass
-    else:
-        raise ValueError("Results must be a path or a dictionary")
-
-    # disturbances
+def plot_disturbances(results: res_type):
     fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=2)
     (ax1, ax2) = axs
     # load
@@ -34,6 +25,8 @@ def plot_results(results: Union[str, Path, res_type]):
         mpcplot.make_grid(ax)
         ax.set_xlim(0, 3600 * 6)
 
+
+def plot_room_temp(results: res_type):
     # room temp
     fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=1)
     ax1 = axs[0]
@@ -66,6 +59,8 @@ def plot_results(results: Union[str, Path, res_type]):
         mpcplot.make_grid(ax)
         ax.set_xlim(0, 3600 * 6)
 
+
+def plot_predictions(results: res_type):
     # predictions
     fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=2)
     (ax1, ax2) = axs
@@ -121,7 +116,8 @@ def plot_results(results: Union[str, Path, res_type]):
         mpcplot.make_grid(ax)
         ax.set_xlim(0, 3600 * 6)
 
-    # flexibility
+
+def plot_flexibility(results: res_type):
     # get only the first prediction time of each time step
     ind_res = results["FlexibilityIndicator"]["FlexibilityIndicator"]
     energy_flex_neg = ind_res.xs("energyflex_neg", axis=1).droplevel(1).dropna()
@@ -141,5 +137,22 @@ def plot_results(results: Union[str, Path, res_type]):
     for ax in axs:
         mpcplot.make_grid(ax)
         ax.set_xlim(0, 3600 * 6)
+
+
+def plot_results(results: Union[str, Path, res_type]):
+    if isinstance(results, (str, Path)):
+        results = load_results(res_path=results)
+    elif isinstance(results, dict):
+        pass
+    else:
+        raise ValueError("Results must be a path or a dictionary")
+
+    plot_disturbances(results=results)
+
+    plot_room_temp(results=results)
+
+    plot_predictions(results=results)
+
+    plot_flexibility(results=results)
 
     plt.show()
