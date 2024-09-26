@@ -1,3 +1,6 @@
+from pathlib import Path
+from typing import Union
+from agentlib_mpc.utils.analysis import load_sim, load_mpc
 import pandas as pd
 import numpy as np
 
@@ -47,3 +50,26 @@ def _set_mean_values(series: pd.Series):
 
     return result
 
+
+res_type = dict[str, dict[str, pd.DataFrame]]
+
+
+def load_results(res_path: Union[str, Path]) -> res_type:
+    results = {
+        "SimAgent": {
+            "room": load_sim(Path(res_path, "sim_room.csv"))
+        },
+        "FlexModel": {
+            "Baseline": load_mpc(Path(res_path, "mpc_base.csv"))
+        },
+        "PosFlexMPC": {
+            "PosFlexMPC": load_mpc(Path(res_path, "mpc_pos_flex.csv"))
+        },
+        "NegFlexMPC": {
+            "NegFlexMPC": load_mpc(Path(res_path, "mpc_neg_flex.csv"))
+        },
+        # TODO: implement load functions
+        # "FlexibilityIndicator": {"FlexibilityIndicator": load_indicator(Path(res_path, "flexibility_indicator.csv"))},
+        # "FlexibilityMarket": {"FlexibilityMarket": load_market(Path(res_path, "flexibility_market.csv"))},
+    }
+    return results

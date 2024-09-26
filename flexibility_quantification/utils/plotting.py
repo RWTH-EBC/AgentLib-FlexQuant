@@ -1,38 +1,20 @@
 from pathlib import Path
+from typing import Union, List, Dict, Optional
+from flexibility_quantification.utils.data_handling import load_results, res_type
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import agentlib_mpc.utils.plotting.basic as mpcplot
-from agentlib_mpc.utils.analysis import load_sim, load_mpc
 from agentlib_mpc.utils.analysis import mpc_at_time_step
 
 
-def plot_results(results):
-
-    # for external plot script
-    ResultsT = dict[str, dict[str, pd.DataFrame]]
-    res_path = "results"
-
-
-    def load_results() -> ResultsT:
-        results = {
-            "Simulation": {
-                "room": load_sim(Path(res_path, "sim_room.csv"))
-            },
-            "mpc": {
-                "baseline": load_mpc(Path(res_path, "mpc_base.csv")),
-                "pos": load_mpc(Path(res_path, "mpc_neg_flex.csv")),
-                "neg": load_mpc(Path(res_path, "mpc_pos_flex.csv"))
-            },
-            # TODO: implement load functions
-            # "indicator": {"admm_module": load_indicator(Path(res_path, "flexibility_indicator.csv"))},
-            # "market": {"admm_module": load_market(Path(res_path, "flexibility_market.csv"))},
-        }
-        return results
-
-
-    if results is None:
-        results = load_results()
+def plot_results(results: Union[str, Path, res_type]):
+    if isinstance(results, (str, Path)):
+        results = load_results(res_path=results)
+    elif isinstance(results, dict):
+        pass
+    else:
+        raise ValueError("Results must be a path or a dictionary")
 
     # disturbances
     fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=2)
