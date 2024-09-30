@@ -17,26 +17,31 @@ class FlexOffer(BaseModel):
     """
     base_power_profile: pd.Series = pydantic.Field(
         default=None,
+        unit="W",
         scalar=False,
         description="Power profile of the baseline MPC",
     )
     pos_price: float = pydantic.Field(
         default=None,
+        unit="ct",
         scalar=True,
         description="Price for positive flexibility",
     )
     pos_diff_profile: pd.Series = pydantic.Field(
         default=None,
+        unit="W",
         scalar=False,
         description="Power profile for the positive difference",
     )
     neg_price: float = pydantic.Field(
         default=None,
+        unit="ct",
         scalar=True,
         description="Price for negative flexibility",
     )
     neg_diff_profile: pd.Series = pydantic.Field(
         default=None,
+        unit="W",
         scalar=False,
         description="Power profile for the negative difference",
     )

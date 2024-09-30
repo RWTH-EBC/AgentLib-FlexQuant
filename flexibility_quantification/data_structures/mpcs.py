@@ -43,10 +43,10 @@ class BaselineMPCData(BaseMPCData):
     )
     # TODO: wie mit diesen Daten umgehen? Vor Aufruf von adapt_mpc_module_config einmal diese Datenklasse initialisieren und Werte entsprechend setzen?
     config_inputs_appendix: MPCVariables = [
-        MPCVariable(name="_P_external", value=0),
+        MPCVariable(name="_P_external", value=0, unit="W"),
         MPCVariable(name="in_provision", value=False),
-        MPCVariable(name="rel_start", value=0),
-        MPCVariable(name="rel_end", value=0)
+        MPCVariable(name="rel_start", value=0, unit="s"),
+        MPCVariable(name="rel_end", value=0, unit="s")
     ]
 
 
@@ -69,9 +69,9 @@ class PFMPCData(BaseMPCData):
     )
     # initialize market parameters with dummy values (0)
     config_parameters_appendix: MPCVariables = [
-        MPCVariable(name="prep_time", value=0),
-        MPCVariable(name="market_time", value=0),
-        MPCVariable(name="flex_event_duration", value=0),
+        MPCVariable(name="prep_time", value=0, unit="s"),
+        MPCVariable(name="market_time", value=0, unit="s"),
+        MPCVariable(name="flex_event_duration", value=0, unit="s"),
     ]
     config_inputs_appendix: MPCVariables = [
         MPCVariable(name="in_provision", value=False),
@@ -97,9 +97,9 @@ class NFMPCData(BaseMPCData):
     )
     # initialize market parameters with dummy values (0)
     config_parameters_appendix: MPCVariables = [
-        MPCVariable(name="prep_time", value=0),
-        MPCVariable(name="market_time", value=0),
-        MPCVariable(name="flex_event_duration", value=0),
+        MPCVariable(name="prep_time", value=0, unit="s"),
+        MPCVariable(name="market_time", value=0, unit="s"),
+        MPCVariable(name="flex_event_duration", value=0, unit="s"),
     ]
     config_inputs_appendix: MPCVariables = [
         MPCVariable(name="in_provision", value=False),
