@@ -66,16 +66,19 @@ class FlexQuantConfig(pydantic.BaseModel):
     prep_time: int = pydantic.Field(
         default=1800,
         ge=0,
+        unit="s",
         description="Preparation time before the flexibility event",
     )
     flex_event_duration: int = pydantic.Field(
         default=7200,
         ge=0,
+        unit="s",
         description="Flexibility event duration",
     )
     market_time: int = pydantic.Field(
         default=900,
         ge=0,
+        unit="s",
         description="Time for market interaction",
     )
     indicator_config: Union[Path, FlexibilityIndicatorConfig] = pydantic.Field(

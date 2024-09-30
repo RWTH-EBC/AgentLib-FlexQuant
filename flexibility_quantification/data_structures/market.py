@@ -49,6 +49,7 @@ class MarketSpecifications(pydantic.BaseModel):
 
     minimum_average_flex: float = pydantic.Field(
         name="minimum_average_flex", default=0,
+        unit="W",
         description="minimum average of an accepted offer"
     )
 
