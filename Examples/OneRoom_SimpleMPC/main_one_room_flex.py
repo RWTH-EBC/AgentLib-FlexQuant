@@ -1,5 +1,5 @@
-
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FormatStrFormatter
 from pathlib import Path
 from agentlib.utils.multi_agent_system import LocalMASAgency
 import numpy as np
@@ -177,6 +177,7 @@ def run_example(until=until):
     ax1.set_ylabel("$\epsilon$ in kWh")
     energy_flex_neg.plot(ax=ax1, label="neg", color=mpcplot.EBCColors.red)
     energy_flex_pos.plot(ax=ax1, label="pos", color=mpcplot.EBCColors.blue)
+    ax1.yaxis.set_major_formatter(FormatStrFormatter('%.4f'))
     ax1.legend()
 
     x_ticks = np.arange(0, 3600 * 6 + 1, 3600)

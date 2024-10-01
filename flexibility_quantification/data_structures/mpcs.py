@@ -41,6 +41,10 @@ class BaselineMPCData(BaseMPCData):
         default="P_el",
         description="Name of the variable representing the electrical power in the baseline config",
     )
+    power_unit: str = pydantic.Field(
+        default="kW",
+        description="Unit of the power variable"
+    )
     # TODO: wie mit diesen Daten umgehen? Vor Aufruf von adapt_mpc_module_config einmal diese Datenklasse initialisieren und Werte entsprechend setzen?
     config_inputs_appendix: MPCVariables = [
         MPCVariable(name="_P_external", value=0, unit="W"),

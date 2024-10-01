@@ -298,6 +298,7 @@ class FlexAgentGenerator:
                 parameter.value = self.baseline_mpc_module_config.prediction_horizon
         if "method" in self.baseline_mpc_module_config.optimization_backend["discretization_options"]:
             module_config.discretization = self.baseline_mpc_module_config.optimization_backend["discretization_options"]["method"]
+        module_config.power_unit = self.flex_config.baseline_config_generator_data.power_unit
         module_config.model_config["frozen"] = True
         return module_config
 
