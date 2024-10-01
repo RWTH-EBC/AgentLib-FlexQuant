@@ -108,6 +108,10 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         default="r_pel",
         description="Name of the price variable send by a predictor",
     )
+    power_unit: str = pydantic.Field(
+        default="kW",
+        description="Unit of the power variable"
+    )
     discretization: str = pydantic.Field(
         default="collocation",
         description="Name of the discretization method",
@@ -243,9 +247,9 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             # Use the power variables averaged for each timestep, not the collocation values
             if name == "__P_el_base":
                 values = self.base_vals
-            elif name == "__P_el_max":
+            elif name == "__P_el_neg":
                 values = self.neg_vals
-            elif name == "__P_el_min":
+            elif name == "__P_el_pos":
                 values = self.pos_vals
             else:
                 values = self.get(name).value
@@ -286,6 +290,11 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         horizon = self.get("prediction_horizon").value
         time_step = self.get("time_step").value
 
+        if self.config.power_unit == "kW":
+            scaler = 1
+        else:
+            scaler = 1000
+
         # generate horizons
         # 1. for the flexibility range
         flex_horizon = np.arange(
@@ -324,11 +333,11 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         self.set("powerflex_flex_neg", powerflex_flex_neg)
         # W -> kW
         # TODO: units anpassen (über Agentvars?)
-        self.set("powerflex_avg_neg", str(np.average(powerflex_flex_neg.dropna()) / 1e3))
-        self.set("powerflex_neg_min", str(min(powerflex_flex_neg.dropna()) / 1e3))
-        self.set("powerflex_neg_max", str(max(powerflex_flex_neg.dropna()) / 1e3))
+        self.set("powerflex_avg_neg", str(np.average(powerflex_flex_neg.dropna()) / scaler))
+        self.set("powerflex_neg_min", str(min(powerflex_flex_neg.dropna()) / scaler))
+        self.set("powerflex_neg_max", str(max(powerflex_flex_neg.dropna()) / scaler))
         # J -> kWh 
-        energyflex_neg = (np.sum(powerflex_flex_neg * time_step) / 3.6e6).round(4)
+        energyflex_neg = (np.sum(powerflex_flex_neg * time_step) / (3600 * scaler)).round(4)
         self.set("energyflex_neg", str(energyflex_neg))
 
         powerflex_flex_pos = []
@@ -346,24 +355,25 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 powerflex_flex_pos.append(diff)
         # save this variable for the cost flexibilty
         powerflex_flex_pos_full = pd.Series(powerflex_flex_pos, index=full_horizon)
+
         # the powerflex is defined only in the flexibility region
         powerflex_profile_pos = powerflex_flex_pos_full.reindex(index=flex_horizon)
         powerflex_flex_pos = powerflex_profile_pos.reindex(index=full_horizon)
 
         self.set("powerflex_flex_pos", powerflex_flex_pos)
         # W -> kW
-        self.set("powerflex_avg_pos", str(np.average(powerflex_flex_pos.dropna()) / 1e3))
-        self.set("powerflex_pos_min", str(min(powerflex_flex_pos.dropna()) / 1e3))
-        self.set("powerflex_pos_max", str(max(powerflex_flex_pos.dropna()) / 1e3))
+        self.set("powerflex_avg_pos", str(np.average(powerflex_flex_pos.dropna()) / scaler))
+        self.set("powerflex_pos_min", str(min(powerflex_flex_pos.dropna()) / scaler))
+        self.set("powerflex_pos_max", str(max(powerflex_flex_pos.dropna()) / scaler))
         # J -> kWh 
-        energyflex_pos = (np.sum(powerflex_flex_pos * time_step) / 3.6e6).round(4)
+        energyflex_pos = (np.sum(powerflex_flex_pos * time_step) / (3600 * scaler)).round(4)
 
         self.set("energyflex_pos", str(energyflex_pos))
 
         elec_prices = self._r_pel.iloc[:horizon]
         elec_prices.index = full_horizon
-        flex_price_neg = sum(powerflex_flex_neg_full * elec_prices * time_step / 3.6e6)
-        flex_price_pos = -1 * sum(powerflex_flex_pos_full * elec_prices * time_step / 3.6e6)
+        flex_price_neg = sum(powerflex_flex_neg_full * elec_prices * time_step / (3600 * scaler))
+        flex_price_pos = -1 * sum(powerflex_flex_pos_full * elec_prices * time_step / (3600 * scaler))
 
         self.set("costs_neg", str(flex_price_neg))
         self.set("costs_pos", str(flex_price_pos))
