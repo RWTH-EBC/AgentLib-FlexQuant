@@ -19,10 +19,10 @@ from agentlib.core.module import BaseModuleConfig
 import ast
 import atexit
 import os
-from itertools import zip_longest
 from typing import Union, List
 from pydantic import FilePath
 from pathlib import Path
+import black
 
 
 class FlexAgentGenerator:
@@ -333,9 +333,6 @@ class FlexAgentGenerator:
         with open(opt_backend["file"], 'r') as f:
             source = f.read()
         tree = ast.parse(source)
-        # add pandas and casadi import statements to file, if not already there
-        tree = add_import_to_tree(name="pandas", alias="pd", tree=tree)
-        tree = add_import_to_tree(name="casadi", alias="ca", tree=tree)
 
         # create modifiers for python file
         modifier_base = SetupSystemModifier(mpc_data=self.flex_config.baseline_config_generator_data,
@@ -354,6 +351,8 @@ class FlexAgentGenerator:
                                   modified_tree_pos.body +
                                   modified_tree_neg.body)
         modified_source = astor.to_source(modified_tree)
+        # Use black to format the generated code
+        formatted_code = black.format_str(modified_source, mode=black.FileMode())
 
         if self.flex_config.overwrite_files:
             try:
@@ -363,7 +362,7 @@ class FlexAgentGenerator:
                 pass
 
         with open(output_file, 'w') as f:
-            f.write(modified_source)
+            f.write(formatted_code)
 
     def check_variables_in_casadi_config(self, config: CasadiModelConfig, expr: str):
         """Check if all variables in the expression are defined in the config.
