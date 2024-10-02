@@ -5,6 +5,52 @@ from flexibility_quantification.data_structures.mpcs import BaseMPCData, PFMPCDa
 from flexibility_quantification.data_structures.globals import SHADOW_MPC_COST_FUNCTION, \
     return_baseline_cost_function
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
+from string import Template
+
+# Constants
+CASADI_INPUT = 'CasadiInput'
+CASADI_PARAMETER = 'CasadiParameter'
+CASADI_OUTPUT = 'CasadiOutput'
+
+# String templates
+INPUT_TEMPLATE = Template("$class_name(name='$name', value=$value, unit='$unit', description='$description')")
+PARAMETER_TEMPLATE = Template("$class_name(name='$name', value=$value, unit='$unit', description='$description')")
+OUTPUT_TEMPLATE = Template("$class_name(name='$name', unit='$unit', type='$type', value=$value, description='$description')")
+
+
+def create_ast_element(template_string):
+    return ast.parse(template_string).body[0].value
+
+
+def add_input(name, value, unit, description):
+    return create_ast_element(INPUT_TEMPLATE.substitute(
+        class_name=CASADI_INPUT,
+        name=name,
+        value=value,
+        unit=unit,
+        description=description
+    ))
+
+
+def add_parameter(name, value, unit, description):
+    return create_ast_element(PARAMETER_TEMPLATE.substitute(
+        class_name=CASADI_PARAMETER,
+        name=name,
+        value=value,
+        unit=unit,
+        description=description
+    ))
+
+
+def add_output(name, unit, type, value, description):
+    return create_ast_element(OUTPUT_TEMPLATE.substitute(
+        class_name=CASADI_OUTPUT,
+        name=name,
+        unit=unit,
+        type=type,
+        value=value,
+        description=description
+    ))
 
 
 class SetupSystemModifier(ast.NodeTransformer):
@@ -75,34 +121,22 @@ class SetupSystemModifier(ast.NodeTransformer):
 
         """
         # loop over config object and modify fields
-        for i, body in enumerate(node.body):
+        for body in node.body:
+            # add the time and control trajectory inputs
             if body.target.id == "inputs":
-                body.value.elts.append(ast.parse(
-                    "CasadiInput(name='Time', value=0, unit='s', description='time trajectory')").body[
-                                           0].value)
+                body.value.elts.append(add_input('Time', 0, 's', 'time trajectory'))
                 for control in self.controls:
-                    # add the control trajectorsy inputs
-                    body.value.elts.append(ast.parse(
-                        f"CasadiInput(name='_{control.name}', unit='W', type='pd.Series', value=pd.Series([0]))").body[
-                                               0].value)
-                body.value.elts.append(
-                    ast.parse(f"CasadiInput(name='in_provision', unit='-', value=False)").body[
-                        0].value)
+                    body.value.elts.append(
+                        add_input(f'_{control.name}', 'pd.Series([0])', 'W', 'control trajectory'))
+                body.value.elts.append(add_input('in_provision', False, '-', 'provision flag'))
             # add the flex variables and the weights
             if body.target.id == "parameters":
-                body.value.elts.append(ast.parse(
-                    "CasadiParameter(name='prep_time', value=0, unit='s', description='time to switch objective')").body[
-                                           0].value)
-                body.value.elts.append(ast.parse(
-                    "CasadiParameter(name='flex_event_duration', value=0, unit='s', description='time to switch objective')").body[
-                                           0].value)
-                body.value.elts.append(ast.parse(
-                    "CasadiParameter(name='market_time', value=0, unit='s', description='time to switch objective')").body[
-                                           0].value)
+                for param_name in ['prep_time', 'flex_event_duration', 'market_time']:
+                    body.value.elts.append(
+                        add_parameter(param_name, 0, 's', 'time to switch objective'))
                 for weight in self.mpc_data.weights:
-                    body.value.elts.append(ast.parse(
-                        f"CasadiParameter(name='{weight.name}', value={weight.value}, unit='-', description='Weight for P in objective function')").body[
-                                               0].value)
+                    body.value.elts.append(add_parameter(weight.name, weight.value, '-',
+                                                         'Weight for P in objective function'))
 
     def modify_config_class_baseline(self, node):
         """Modify the config class of the baseline mpc.
@@ -112,30 +146,24 @@ class SetupSystemModifier(ast.NodeTransformer):
 
         """
         # loop over config object and modify fields
-        for i, body in enumerate(node.body):
-            # Add the fullcontrol trajectories to the baseline config class
+        for body in node.body:
+            # add the fullcontrol trajectories to the baseline config class
             if body.target.id == "outputs":
                 for control in self.controls:
-                    body.value.elts.append(ast.parse(
-                        f"CasadiOutput(name='{control.name}_full', unit='W', type='pd.Series', value=pd.Series([0]), description='full control output')").body[
-                                               0].value)
+                    body.value.elts.append(
+                        add_output(f'{control.name}_full', 'W', 'pd.Series', 'pd.Series([0])',
+                                   'full control output'))
             # add the flexibility inputs
             if body.target.id == "inputs":
-                body.value.elts.append(ast.parse(
-                    "CasadiInput(name='Time', value=0, unit='s', description='time trajectory')").body[
-                                           0].value)
-                body.value.elts.append(ast.parse(
-                    f"CasadiInput(name='_P_external', value=0, unit='W', description='External power profile to be provised')").body[
-                                           0].value)
-                body.value.elts.append(ast.parse(
-                    f"CasadiInput(name='in_provision', value=False, unit='-', description='Flag signaling if the flexibility is in provision')").body[
-                                           0].value)
-                body.value.elts.append(ast.parse(
-                    f"CasadiInput(name='rel_start', value=0, unit='s', description='relative start time of the flexibility event')").body[
-                                           0].value)
-                body.value.elts.append(ast.parse(
-                    f"CasadiInput(name='rel_end', value=0, unit='s', description='relative end time of the flexibility event')").body[
-                                           0].value)
+                body.value.elts.append(add_input('Time', 0, 's', 'time trajectory'))
+                body.value.elts.append(
+                    add_input('_P_external', 0, 'W', 'External power profile to be provided'))
+                body.value.elts.append(add_input('in_provision', False, '-',
+                                                 'Flag signaling if the flexibility is in provision'))
+                body.value.elts.append(
+                    add_input('rel_start', 0, 's', 'relative start time of the flexibility event'))
+                body.value.elts.append(
+                    add_input('rel_end', 0, 's', 'relative end time of the flexibility event'))
 
     def modify_setup_system_shadow(self, node):
         """Modify the setup_system method of the shadow mpc model class.
@@ -190,8 +218,6 @@ class SetupSystemModifier(ast.NodeTransformer):
 
         """
         # set the control trajectories with the respective variables
-        # full_traj_list = [ast.Assign(targets=[ast.Name(id=f"self.{control.name}_full.alg", ctx=ast.Store())],
-        #                              value=ast.parse(f"self.{control.name}")) for control in self.controls]
         full_traj_list = [
             ast.Assign(targets=[ast.Attribute(value=ast.Name(id="self", ctx=ast.Load()),
                                               attr=f"{control.name}_full.alg", ctx=ast.Store())],
