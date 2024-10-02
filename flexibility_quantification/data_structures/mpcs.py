@@ -22,6 +22,10 @@ class BaseMPCData(pydantic.BaseModel):
     power_alias: str
     config_inputs_appendix: MPCVariables = []
     config_parameters_appendix: MPCVariables = []
+    weights: List[MPCVariable] = pydantic.Field(
+        default=[],
+        description="Name and value of weights",
+    )
 
 
 class BaselineMPCData(BaseMPCData):
@@ -33,13 +37,18 @@ class BaselineMPCData(BaseMPCData):
     name_of_created_file: str = "baseline.json"
     # modules
     module_type: str = "flexibility_quantification.baseline_mpc"
-    class_name: str = "BaselineMPC"
+    class_name: str = "BaselineMPCModel"
     module_id: str = "Baseline"
     # variables
     power_alias: str = "__P_el_base"
     power_variable: str = pydantic.Field(
         default="P_el",
         description="Name of the variable representing the electrical power in the baseline config",
+    )
+    # TODO: add this as parameter to the mpc config rather than just writing the value in the cost function
+    profile_deviation_weight: float = pydantic.Field(
+        default=0,
+        description="Weight of soft constraint for deviation from accepted flexible profile",
     )
     power_unit: str = pydantic.Field(
         default="kW",
@@ -52,6 +61,10 @@ class BaselineMPCData(BaseMPCData):
         MPCVariable(name="rel_start", value=0, unit="s"),
         MPCVariable(name="rel_end", value=0, unit="s")
     ]
+    weights: List[MPCVariable] = pydantic.Field(
+        default=[],
+        description="Name and value of weights",
+    )
 
 
 class PFMPCData(BaseMPCData):
@@ -80,6 +93,10 @@ class PFMPCData(BaseMPCData):
     config_inputs_appendix: MPCVariables = [
         MPCVariable(name="in_provision", value=False),
     ]
+    weights: List[MPCVariable] = pydantic.Field(
+        default=[],
+        description="Name and value of weights",
+    )
 
 
 class NFMPCData(BaseMPCData):
@@ -108,4 +125,8 @@ class NFMPCData(BaseMPCData):
     config_inputs_appendix: MPCVariables = [
         MPCVariable(name="in_provision", value=False),
     ]
+    weights: List[MPCVariable] = pydantic.Field(
+        default=[],
+        description="Name and value of weights",
+    )
 

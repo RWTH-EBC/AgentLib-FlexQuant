@@ -8,9 +8,6 @@ from agentlib_mpc.models.casadi_model import (
 )
 from typing import List
 from math import inf
-# needed for flex agents
-import pandas as pd
-import casadi as ca
 
 
 class BaselineMPCModelConfig(CasadiModelConfig):
