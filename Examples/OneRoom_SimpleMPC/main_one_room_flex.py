@@ -1,5 +1,6 @@
+
+
 import matplotlib.pyplot as plt
-from matplotlib.ticker import FormatStrFormatter
 from pathlib import Path
 from agentlib.utils.multi_agent_system import LocalMASAgency
 import numpy as np
@@ -12,7 +13,7 @@ import pandas as pd
 
 # Set the log-level
 logging.basicConfig(level=logging.WARN)
-until = 21600
+until = 14400
 
 ENV_CONFIG = {"rt": False, "factor": 0.01, "t_sample": 60}
 
@@ -69,14 +70,14 @@ def run_example(until=until):
     # T_in
     ax2.set_ylabel("$T_{in}$ in K")
     results["SimAgent"]["room"]["T_in"].plot(ax=ax2)
-    x_ticks = np.arange(0, 3600 * 6 + 1, 3600)
+    x_ticks = np.arange(0, 3600 * 4 + 1, 3600)
     x_tick_labels = [int(tick / 3600) for tick in x_ticks]
     ax2.set_xticks(x_ticks)
     ax2.set_xticklabels(x_tick_labels)
     ax2.set_xlabel("Time in hours")
     for ax in axs:
         mpcplot.make_grid(ax)
-        ax.set_xlim(0, 3600 * 6)
+        ax.set_xlim(0, 3600 * 4)
 
     # room temp
     fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=1)
@@ -103,14 +104,14 @@ def run_example(until=until):
     ax1.vlines(18000, ymin=0, ymax=500, colors="black")
 
     ax1.set_ylim(289, 299)
-    x_ticks = np.arange(0, 3600 * 6 + 1, 3600)
+    x_ticks = np.arange(0, 3600 * 4 + 1, 3600)
     x_tick_labels = [int(tick / 3600) for tick in x_ticks]
     ax1.set_xticks(x_ticks)
     ax1.set_xticklabels(x_tick_labels)
     ax1.set_xlabel("Time in hours")
     for ax in axs:
         mpcplot.make_grid(ax)
-        ax.set_xlim(0, 3600 * 6)
+        ax.set_xlim(0, 3600 * 4)
 
     # predictions
     fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=2)
@@ -191,14 +192,14 @@ def run_example(until=until):
 
     ax2.set_ylim(0, 0.06)
 
-    x_ticks = np.arange(0, 3600 * 6 + 1, 3600)
+    x_ticks = np.arange(0, 3600 * 4 + 1, 3600)
     x_tick_labels = [int(tick / 3600) for tick in x_ticks]
     ax2.set_xticks(x_ticks)
     ax2.set_xticklabels(x_tick_labels)
     ax2.set_xlabel("Time in hours")
     for ax in axs:
         mpcplot.make_grid(ax)
-        ax.set_xlim(0, 3600 * 6)
+        ax.set_xlim(0, 3600 * 4)
 
     # flexibility
     # get only the first prediction time of each time step
@@ -216,14 +217,14 @@ def run_example(until=until):
 
     ax1.legend()
 
-    x_ticks = np.arange(0, 3600 * 6 + 1, 3600)
+    x_ticks = np.arange(0, 3600 * 4 + 1, 3600)
     x_tick_labels = [int(tick / 3600) for tick in x_ticks]
     ax1.set_xticks(x_ticks)
     ax1.set_xticklabels(x_tick_labels)
     ax1.set_xlabel("Time in hours")
     for ax in axs:
         mpcplot.make_grid(ax)
-        ax.set_xlim(0, 3600 * 6)
+        ax.set_xlim(0, 3600 * 4)
 
     plt.show()
 
