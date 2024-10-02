@@ -23,15 +23,22 @@ class ShadowMPCConfigGeneratorConfig(pydantic.BaseModel):
 
     """
     weights: List[MPCVariable] = pydantic.Field(
-        default=[{"name": "s_P", "value": 10}],
+        default=[],
         description="Name and value of weights",
-    )
-    profile_deviation_weight: float = pydantic.Field(
-        default=0,
-        description="Weight of soft constraint for deviation from accepted flexible profile",
     )
     pos_flex: PFMPCData
     neg_flex: NFMPCData
+
+    def __init__(self, **data):
+        # Let Pydantic do its normal initialization first
+        super().__init__(**data)
+        # Automatically call update_weights after initialization
+        self.update_weights()
+
+    def update_weights(self):
+        if self.weights:
+            self.pos_flex.weights = self.weights
+            self.neg_flex.weights = self.weights
 
 
 class FlexibilityMarketConfig(pydantic.BaseModel):

@@ -52,11 +52,11 @@
     "market_config": "flex_configs\\market.json",
     "baseline_config_generator_data": {
         "power_variable": "P_el",
-        "power_unit": "kW"
+        "power_unit": "kW",
+        "profile_deviation_weight": 100
     },
     "shadow_mpc_config_generator_data": {
         "weights": [{"name": "s_P", "value": 10}],
-        "profile_deviation_weight": 100,
         "pos_flex": {
             "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, self.s_P * self.P_el])"
         },
