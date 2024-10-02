@@ -404,6 +404,22 @@ class FlexAgentGenerator:
         with open(fname) as f:
             string_ = f.read()
         parsed = ast.parse(string_)
+        # add pandas and casadi import to file, if not already there
+        import_statement_pd = ast.Import(names=[ast.alias(name='pandas', asname='pd')])
+        import_statement_ca = ast.Import(names=[ast.alias(name='casadi', asname='ca')])
+        for node in parsed.body:
+            if isinstance(node, ast.Import):
+                alias_names = [alias.name for alias in node.names]
+                alias_asnames = [alias.asname for alias in node.names]
+                if "pandas" not in alias_names and "pd" not in alias_asnames:
+                    parsed.body.insert(0, import_statement_pd)
+                if "casadi" not in alias_names and "ca" not in alias_asnames:
+                    parsed.body.insert(0, import_statement_ca)
+                break
+        else:
+            parsed.body.insert(0, import_statement_pd)
+            parsed.body.insert(0, import_statement_ca)
+
 
         class_ind, class_body = get_element_with_name(parsed, config_name)
         # copy the config to be used for the flex case
