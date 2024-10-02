@@ -1,6 +1,5 @@
-
-
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FormatStrFormatter
 from pathlib import Path
 from agentlib.utils.multi_agent_system import LocalMASAgency
 import numpy as np
@@ -13,9 +12,10 @@ import pandas as pd
 
 # Set the log-level
 logging.basicConfig(level=logging.WARN)
-until = 14400
+until = 21600
 
 ENV_CONFIG = {"rt": False, "factor": 0.01, "t_sample": 60}
+
 
 def run_example(until=until):
     results = []
@@ -25,14 +25,13 @@ def run_example(until=until):
     flex_config = "flex_configs/flexibility_agent_config.json"
     agent_configs = [sim_config, predictor_config]
 
-    config_list = FlexAgentGenerator(flex_config=flex_config,
-                                     mpc_agent_config=mpc_config).generate_flex_agents()
+    config_list = FlexAgentGenerator(
+        flex_config=flex_config, mpc_agent_config=mpc_config
+    ).generate_flex_agents()
     agent_configs.extend(config_list)
 
     mas = LocalMASAgency(
-        agent_configs=agent_configs,
-        env=ENV_CONFIG,
-        variable_logging=False
+        agent_configs=agent_configs, env=ENV_CONFIG, variable_logging=False
     )
 
     mas.run(until=until)
@@ -46,17 +45,17 @@ def run_example(until=until):
 
     def load_results() -> ResultsT:
         results = {
-            "Simulation": {
-                "room": load_sim(Path(res_path, "sim_room.csv"))
-            },
+            "Simulation": {"room": load_sim(Path(res_path, "sim_room.csv"))},
             "mpc": {
                 "baseline": load_mpc(Path(res_path, "mpc_base.csv")),
                 "pos": load_mpc(Path(res_path, "mpc_neg_flex.csv")),
-                "neg": load_mpc(Path(res_path, "mpc_pos_flex.csv"))
+                "neg": load_mpc(Path(res_path, "mpc_pos_flex.csv")),
             },
             # TODO: implement load functions
-            # "indicator": {"admm_module": load_indicator(Path(res_path, "flexibility_indicator.csv"))},
-            # "market": {"admm_module": load_market(Path(res_path, "flexibility_market.csv"))},
+            # "indicator": {"admm_module": load_indicator(Path(res_path,
+            # "flexibility_indicator.csv"))},
+            # "market": {"admm_module": load_market(Path(res_path,
+            # "flexibility_market.csv"))},
         }
         return results
 
@@ -72,14 +71,14 @@ def run_example(until=until):
     # T_in
     ax2.set_ylabel("$T_{in}$ in K")
     results["SimAgent"]["room"]["T_in"].plot(ax=ax2)
-    x_ticks = np.arange(0, 3600 * 4 + 1, 3600)
+    x_ticks = np.arange(0, 3600 * 6 + 1, 3600)
     x_tick_labels = [int(tick / 3600) for tick in x_ticks]
     ax2.set_xticks(x_ticks)
     ax2.set_xticklabels(x_tick_labels)
     ax2.set_xlabel("Time in hours")
     for ax in axs:
         mpcplot.make_grid(ax)
-        ax.set_xlim(0, 3600 * 4)
+        ax.set_xlim(0, 3600 * 6)
 
     # room temp
     fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=1)
@@ -88,58 +87,120 @@ def run_example(until=until):
     ax1.set_ylabel("$T_{room}$ in K")
     results["SimAgent"]["room"]["T_upper"].plot(ax=ax1, color="0.5")
     results["SimAgent"]["room"]["T_lower"].plot(ax=ax1, color="0.5")
-    results["SimAgent"]["room"]["T_out"].plot(ax=ax1)
-    mpc_at_time_step(data=results["NegFlexMPC"]["NegFlexMPC"], time_step=10800, variable="T").plot(ax=ax1, label="neg", linestyle="--")
-    mpc_at_time_step(data=results["PosFlexMPC"]["PosFlexMPC"], time_step=10800, variable="T").plot(ax=ax1, label="pos", linestyle="--")
+    results["SimAgent"]["room"]["T_out"].plot(ax=ax1, color=mpcplot.EBCColors.dark_grey)
+    mpc_at_time_step(
+        data=results["NegFlexMPC"]["NegFlexMPC"], time_step=9000, variable="T"
+    ).plot(ax=ax1, label="neg", linestyle="--", color=mpcplot.EBCColors.red)
+    mpc_at_time_step(
+        data=results["PosFlexMPC"]["PosFlexMPC"], time_step=9000, variable="T"
+    ).plot(ax=ax1, label="pos", linestyle="--", color=mpcplot.EBCColors.blue)
+    mpc_at_time_step(
+        data=results["FlexModel"]["Baseline"], time_step=9900, variable="T"
+    ).plot(ax=ax1, label="base", linestyle="--", color=mpcplot.EBCColors.dark_grey)
+
     ax1.legend()
-    ax1.vlines(3600, ymin=0, ymax=500, colors="black")
-    ax1.vlines(4500, ymin=0, ymax=500, colors="black")
-    ax1.vlines(5400, ymin=0, ymax=500, colors="black")
-    ax1.vlines(12600, ymin=0, ymax=500, colors="black")
+    ax1.vlines(9000, ymin=0, ymax=500, colors="black")
+    ax1.vlines(9900, ymin=0, ymax=500, colors="black")
+    ax1.vlines(10800, ymin=0, ymax=500, colors="black")
+    ax1.vlines(18000, ymin=0, ymax=500, colors="black")
+
     ax1.set_ylim(289, 299)
-    x_ticks = np.arange(0, 3600 * 4 + 1, 3600)
+    x_ticks = np.arange(0, 3600 * 6 + 1, 3600)
     x_tick_labels = [int(tick / 3600) for tick in x_ticks]
     ax1.set_xticks(x_ticks)
     ax1.set_xticklabels(x_tick_labels)
     ax1.set_xlabel("Time in hours")
     for ax in axs:
         mpcplot.make_grid(ax)
-        ax.set_xlim(0, 3600 * 4)
+        ax.set_xlim(0, 3600 * 6)
 
     # predictions
     fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=2)
     (ax1, ax2) = axs
     # P_el
-    ax1.set_ylabel("$P_{el}$ in W")
-    results["SimAgent"]["room"]["P_el"].plot(ax=ax1)
-    mpc_at_time_step(data=results["NegFlexMPC"]["NegFlexMPC"], time_step=10800, variable="P_el").ffill().plot(ax=ax1, drawstyle="steps-post", label="neg", linestyle="--")
-    mpc_at_time_step(data=results["PosFlexMPC"]["PosFlexMPC"], time_step=10800, variable="P_el").ffill().plot(ax=ax1, drawstyle="steps-post", label="pos", linestyle="--")
+    ax1.set_ylabel("$P_{el}$ in kW")
+    results["SimAgent"]["room"]["P_el"].plot(ax=ax1, color=mpcplot.EBCColors.dark_grey)
+    mpc_at_time_step(
+        data=results["NegFlexMPC"]["NegFlexMPC"], time_step=9000, variable="P_el"
+    ).ffill().plot(
+        ax=ax1,
+        drawstyle="steps-post",
+        label="neg",
+        linestyle="--",
+        color=mpcplot.EBCColors.red,
+    )
+    mpc_at_time_step(
+        data=results["PosFlexMPC"]["PosFlexMPC"], time_step=9000, variable="P_el"
+    ).ffill().plot(
+        ax=ax1,
+        drawstyle="steps-post",
+        label="pos",
+        linestyle="--",
+        color=mpcplot.EBCColors.blue,
+    )
+    mpc_at_time_step(
+        data=results["FlexModel"]["Baseline"], time_step=9900, variable="P_el"
+    ).ffill().plot(
+        ax=ax1,
+        drawstyle="steps-post",
+        label="base",
+        linestyle="--",
+        color=mpcplot.EBCColors.dark_grey,
+    )
     ax1.legend()
-    ax1.vlines(3600, ymin=-1000, ymax=5000, colors="black")
-    ax1.vlines(4500, ymin=-1000, ymax=5000, colors="black")
-    ax1.vlines(5400, ymin=-1000, ymax=5000, colors="black")
-    ax1.vlines(12600, ymin=-1000, ymax=5000, colors="black")
-    ax1.set_ylim(-100, 1000)
+    ax1.vlines(9000, ymin=-1000, ymax=5000, colors="black")
+    ax1.vlines(9900, ymin=-1000, ymax=5000, colors="black")
+    ax1.vlines(10800, ymin=-1000, ymax=5000, colors="black")
+    ax1.vlines(18000, ymin=-1000, ymax=5000, colors="black")
+    ax1.set_ylim(-0.1, 1)
+
     # mdot
     ax2.set_ylabel("$\dot{m}$ in kg/s")
-    results["SimAgent"]["room"]["mDot"].plot(ax=ax2)
-    mpc_at_time_step(data=results["NegFlexMPC"]["NegFlexMPC"], time_step=10800, variable="mDot").ffill().plot(ax=ax2, drawstyle="steps-post", label="neg", linestyle="--")
-    mpc_at_time_step(data=results["PosFlexMPC"]["PosFlexMPC"], time_step=10800, variable="mDot").ffill().plot(ax=ax2, drawstyle="steps-post", label="pos", linestyle="--")
+    results["SimAgent"]["room"]["mDot"].plot(ax=ax2, color=mpcplot.EBCColors.dark_grey)
+    mpc_at_time_step(
+        data=results["NegFlexMPC"]["NegFlexMPC"], time_step=9000, variable="mDot"
+    ).ffill().plot(
+        ax=ax2,
+        drawstyle="steps-post",
+        label="neg",
+        linestyle="--",
+        color=mpcplot.EBCColors.red,
+    )
+    mpc_at_time_step(
+        data=results["PosFlexMPC"]["PosFlexMPC"], time_step=9000, variable="mDot"
+    ).ffill().plot(
+        ax=ax2,
+        drawstyle="steps-post",
+        label="pos",
+        linestyle="--",
+        color=mpcplot.EBCColors.blue,
+    )
+    mpc_at_time_step(
+        data=results["FlexModel"]["Baseline"], time_step=9900, variable="mDot"
+    ).ffill().plot(
+        ax=ax2,
+        drawstyle="steps-post",
+        label="base",
+        linestyle="--",
+        color=mpcplot.EBCColors.dark_grey,
+    )
+
     ax2.legend()
-    ax2.vlines(3600, ymin=0, ymax=500, colors="black")
-    ax2.vlines(4500, ymin=0, ymax=500, colors="black")
-    ax2.vlines(5400, ymin=0, ymax=500, colors="black")
-    ax2.vlines(12600, ymin=0, ymax=500, colors="black")
+    ax2.vlines(9000, ymin=0, ymax=500, colors="black")
+    ax2.vlines(9900, ymin=0, ymax=500, colors="black")
+    ax2.vlines(10800, ymin=0, ymax=500, colors="black")
+    ax2.vlines(18000, ymin=0, ymax=500, colors="black")
+
     ax2.set_ylim(0, 0.06)
 
-    x_ticks = np.arange(0, 3600 * 4 + 1, 3600)
+    x_ticks = np.arange(0, 3600 * 6 + 1, 3600)
     x_tick_labels = [int(tick / 3600) for tick in x_ticks]
     ax2.set_xticks(x_ticks)
     ax2.set_xticklabels(x_tick_labels)
     ax2.set_xlabel("Time in hours")
     for ax in axs:
         mpcplot.make_grid(ax)
-        ax.set_xlim(0, 3600 * 4)
+        ax.set_xlim(0, 3600 * 6)
 
     # flexibility
     # get only the first prediction time of each time step
@@ -151,16 +212,20 @@ def run_example(until=until):
     ax1.set_ylabel("$\epsilon$ in kWh")
     energy_flex_neg.plot(ax=ax1, label="neg")
     energy_flex_pos.plot(ax=ax1, label="pos")
+    energy_flex_neg.plot(ax=ax1, label="neg", color=mpcplot.EBCColors.red)
+    energy_flex_pos.plot(ax=ax1, label="pos", color=mpcplot.EBCColors.blue)
+    ax1.yaxis.set_major_formatter(FormatStrFormatter("%.4f"))
+
     ax1.legend()
 
-    x_ticks = np.arange(0, 3600 * 4 + 1, 3600)
+    x_ticks = np.arange(0, 3600 * 6 + 1, 3600)
     x_tick_labels = [int(tick / 3600) for tick in x_ticks]
     ax1.set_xticks(x_ticks)
     ax1.set_xticklabels(x_tick_labels)
     ax1.set_xlabel("Time in hours")
     for ax in axs:
         mpcplot.make_grid(ax)
-        ax.set_xlim(0, 3600 * 4)
+        ax.set_xlim(0, 3600 * 6)
 
     plt.show()
 
