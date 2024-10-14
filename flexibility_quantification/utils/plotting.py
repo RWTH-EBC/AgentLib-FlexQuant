@@ -1,8 +1,17 @@
 from pathlib import Path
 from typing import Union
-from flexibility_quantification.utils.data_handling import load_results, res_type
+import socket
+import webbrowser
+
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
+
+from plotly import graph_objects as go
+from plotly import express as px
+from dash import Dash, html, dash_table, dcc, callback, Output, Input
+
+from flexibility_quantification.utils.data_handling import load_results, res_type
 import agentlib_mpc.utils.plotting.basic as mpcplot
 from agentlib_mpc.utils.analysis import mpc_at_time_step
 
@@ -120,6 +129,75 @@ def plot_flexibility(results: res_type):
     format_axes(axs=axs)
 
 
+def get_port():
+    port = 8050
+    while True:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            is_free = s.connect_ex(("localhost", port)) != 0
+        if is_free:
+            return port
+        else:
+            port += 1
+
+
+def plot_temperature(results: res_type, timestamp: int = None) -> go.Figure:
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=results["SimAgent"]["room"].index,
+                                 y=results["SimAgent"]["room"]["T_out"],
+                                 mode="lines",
+                                 name="Sim"))
+        fig.add_trace(go.Scatter(x=results["SimAgent"]["room"].index,
+                                 y=results["SimAgent"]["room"]["T_lower"],
+                                 mode="lines",
+                                 name="T_lower"))
+        fig.add_trace(go.Scatter(x=results["SimAgent"]["room"].index,
+                                 y=results["SimAgent"]["room"]["T_upper"],
+                                 mode="lines",
+                                 name="T_upper"))
+
+        if timestamp is not None:
+            df_neg = mpc_at_time_step(data=results["NegFlexMPC"]["NegFlexMPC"], time_step=timestamp, variable="T")
+            fig.add_trace(go.Scatter(x=df_neg.index,
+                                     y=df_neg,
+                                     mode="lines",
+                                     name="NegFlexMPC"))
+
+            df_pos = mpc_at_time_step(data=results["PosFlexMPC"]["PosFlexMPC"], time_step=timestamp, variable="T")
+            fig.add_trace(go.Scatter(x=df_pos.index,
+                                     y=df_pos,
+                                     mode="lines",
+                                     name="PosFlexMPC"))
+
+            df_mpc = mpc_at_time_step(data=results["FlexModel"]["Baseline"], time_step=timestamp, variable="T")
+            fig.add_trace(go.Scatter(x=df_mpc.index,
+                                     y=df_mpc,
+                                     mode="lines",
+                                     name="Baseline"))
+
+        return fig
+
+
+def interactive(results: res_type):
+    app = Dash(__name__, title="Results")
+
+    mpc_index = results["NegFlexMPC"]["NegFlexMPC"].index.get_level_values(0).unique()
+
+    # Define the layout of the webpage
+    app.layout = [
+            dcc.Slider(id="slider_time", min=mpc_index[0], max=mpc_index[-1], step=mpc_index[1]-mpc_index[0], value=mpc_index[0]),
+            dcc.Graph(id="graph_temperature", figure=plot_temperature(results=results, timestamp=mpc_index[0])),
+    ]
+
+    @callback(
+        Output(component_id="graph_temperature", component_property="figure"),
+        Input(component_id="slider_time", component_property="value")
+    )
+    def update_graph_temperature(timestamp: int):
+        return plot_temperature(results=results, timestamp=timestamp)
+
+    port = get_port()
+    webbrowser.open_new_tab(f"http://localhost:{port}")
+    app.run(debug=False, port=port)
 
 
 def plot_results(results: Union[str, Path, res_type]):
@@ -128,12 +206,11 @@ def plot_results(results: Union[str, Path, res_type]):
     elif not isinstance(results, dict):
         raise ValueError("Results must be a path or a dictionary")
 
-    plot_disturbances(results=results)
+    #plot_disturbances(results=results)
+    #plot_room_temp(results=results)
+    #plot_predictions(results=results)
+    #plot_flexibility(results=results)
 
-    plot_room_temp(results=results)
+    #plt.show()
 
-    plot_predictions(results=results)
-
-    plot_flexibility(results=results)
-
-    plt.show()
+    interactive(results=results)
