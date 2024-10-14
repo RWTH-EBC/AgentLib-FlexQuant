@@ -51,7 +51,7 @@ def _set_mean_values(series: pd.Series):
     return result
 
 
-res_type = dict[str, dict[str, pd.DataFrame]]
+res_type = dict[str, pd.DataFrame]
 
 
 def load_results(res_path: Union[str, Path]) -> res_type:
