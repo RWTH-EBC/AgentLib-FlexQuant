@@ -7,7 +7,11 @@ from agentlib.core.datamodels import AgentVariable
 class FlexibilityShadowMPC(mpc_full.MPC):
     # TODO: remove string handling
     config: mpc_full.MPCConfig
-    _full_controls: Dict[str, Union[AgentVariable, None]] = {}
+
+    def __init__(self, *args, **kwargs):
+        # create instance variable
+        self._full_controls: Dict[str, Union[AgentVariable, None]] = {}
+        super().__init__(*args, **kwargs)
 
     def register_callbacks(self):
         for control_var in self.config.controls:
@@ -16,8 +20,8 @@ class FlexibilityShadowMPC(mpc_full.MPC):
                 callback=self.calc_flex_callback
             )
         for input_var in self.config.inputs:
-            if input_var.name.replace("_", "") in [control_var.name for control_var in self.config.controls]:
-                self._full_controls[input_var.name.replace("_", "")] = input_var
+            if input_var.name.replace("_", "", 1) in [control_var.name for control_var in self.config.controls]:
+                self._full_controls[input_var.name.replace("_", "", 1)] = input_var
 
         super().register_callbacks()
 

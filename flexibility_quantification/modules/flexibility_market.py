@@ -153,7 +153,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         """
         offer = inp.value
         profile = None
-        if self.env.now >= self.config.market_specs.options.start_time and not self.get("in_provision").value:
+        if self.env.now >= self.env.config.offset + self.config.market_specs.options.start_time and not self.get("in_provision").value:
             if self.config.market_specs.options.direction == "positive":
                 if np.average(offer.pos_diff_profile) > self.config.market_specs.minimum_average_flex:
                     profile = offer.base_power_profile - offer.pos_diff_profile

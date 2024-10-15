@@ -9,6 +9,7 @@ until = 21600
 
 ENV_CONFIG = {"rt": False, "factor": 0.01, "t_sample": 60}
 
+
 def run_example(until=until):
     results = []
     mpc_config = "mpc_and_sim/simple_model.json"
@@ -17,14 +18,13 @@ def run_example(until=until):
     flex_config = "flex_configs/flexibility_agent_config.json"
     agent_configs = [sim_config, predictor_config]
 
-    config_list = FlexAgentGenerator(flex_config=flex_config,
-                                     mpc_agent_config=mpc_config).generate_flex_agents()
+    config_list = FlexAgentGenerator(
+        flex_config=flex_config, mpc_agent_config=mpc_config
+    ).generate_flex_agents()
     agent_configs.extend(config_list)
 
     mas = LocalMASAgency(
-        agent_configs=agent_configs,
-        env=ENV_CONFIG,
-        variable_logging=True
+        agent_configs=agent_configs, env=ENV_CONFIG, variable_logging=False
     )
 
     mas.run(until=until)

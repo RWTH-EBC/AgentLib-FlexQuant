@@ -22,6 +22,10 @@ class BaseMPCData(pydantic.BaseModel):
     power_alias: str
     config_inputs_appendix: MPCVariables = []
     config_parameters_appendix: MPCVariables = []
+    weights: List[MPCVariable] = pydantic.Field(
+        default=[],
+        description="Name and value of weights",
+    )
 
 
 class BaselineMPCData(BaseMPCData):
@@ -33,7 +37,7 @@ class BaselineMPCData(BaseMPCData):
     name_of_created_file: str = "baseline.json"
     # modules
     module_type: str = "flexibility_quantification.baseline_mpc"
-    class_name: str = "BaselineMPC"
+    class_name: str = "BaselineMPCModel"
     module_id: str = "Baseline"
     # variables
     power_alias: str = "__P_el_base"
@@ -41,13 +45,26 @@ class BaselineMPCData(BaseMPCData):
         default="P_el",
         description="Name of the variable representing the electrical power in the baseline config",
     )
+    # TODO: add this as parameter to the mpc config rather than just writing the value in the cost function
+    profile_deviation_weight: float = pydantic.Field(
+        default=0,
+        description="Weight of soft constraint for deviation from accepted flexible profile",
+    )
+    power_unit: str = pydantic.Field(
+        default="kW",
+        description="Unit of the power variable"
+    )
     # TODO: wie mit diesen Daten umgehen? Vor Aufruf von adapt_mpc_module_config einmal diese Datenklasse initialisieren und Werte entsprechend setzen?
     config_inputs_appendix: MPCVariables = [
-        MPCVariable(name="_P_external", value=0),
+        MPCVariable(name="_P_external", value=0, unit="W"),
         MPCVariable(name="in_provision", value=False),
-        MPCVariable(name="rel_start", value=0),
-        MPCVariable(name="rel_end", value=0)
+        MPCVariable(name="rel_start", value=0, unit="s"),
+        MPCVariable(name="rel_end", value=0, unit="s")
     ]
+    weights: List[MPCVariable] = pydantic.Field(
+        default=[],
+        description="Name and value of weights",
+    )
 
 
 class PFMPCData(BaseMPCData):
@@ -69,13 +86,17 @@ class PFMPCData(BaseMPCData):
     )
     # initialize market parameters with dummy values (0)
     config_parameters_appendix: MPCVariables = [
-        MPCVariable(name="prep_time", value=0),
-        MPCVariable(name="market_time", value=0),
-        MPCVariable(name="flex_event_duration", value=0),
+        MPCVariable(name="prep_time", value=0, unit="s"),
+        MPCVariable(name="market_time", value=0, unit="s"),
+        MPCVariable(name="flex_event_duration", value=0, unit="s"),
     ]
     config_inputs_appendix: MPCVariables = [
         MPCVariable(name="in_provision", value=False),
     ]
+    weights: List[MPCVariable] = pydantic.Field(
+        default=[],
+        description="Name and value of weights",
+    )
 
 
 class NFMPCData(BaseMPCData):
@@ -97,11 +118,15 @@ class NFMPCData(BaseMPCData):
     )
     # initialize market parameters with dummy values (0)
     config_parameters_appendix: MPCVariables = [
-        MPCVariable(name="prep_time", value=0),
-        MPCVariable(name="market_time", value=0),
-        MPCVariable(name="flex_event_duration", value=0),
+        MPCVariable(name="prep_time", value=0, unit="s"),
+        MPCVariable(name="market_time", value=0, unit="s"),
+        MPCVariable(name="flex_event_duration", value=0, unit="s"),
     ]
     config_inputs_appendix: MPCVariables = [
         MPCVariable(name="in_provision", value=False),
     ]
+    weights: List[MPCVariable] = pydantic.Field(
+        default=[],
+        description="Name and value of weights",
+    )
 
