@@ -1,0 +1,96 @@
+{
+    "id": "myPredictorAgent",
+    "modules": [
+        {
+            "module_id": "Ag4Com",
+            "type": "local_broadcast"
+        },
+        {
+            "module_id": "MyPredictor",
+            "type": {
+                "file": "predictor/simple_predictor.py",
+                "class_name": "PredictorModule"
+            },
+            "parameters": [
+                {
+                    "name": "sampling_time",
+                    "value": 60
+                },
+                {
+                    "name": "time_step",
+                    "value": 900
+                },
+                {
+                    "name": "prediction_horizon",
+                    "value": 49
+                },
+                {
+                    "name": "varying_price_signal",
+                    "value": 2
+                },
+                {
+                    "name": "const_price",
+                    "value": 22.27
+                },
+                {
+                    "name": "power_price_base",
+                    "value": 23.0
+                },
+                {
+                    "name": "power_price_peak",
+                    "value": 28.1
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "T_amb",
+                    "value": 270.14
+                },
+                {
+                    "name": "T_upper",
+                    "value": 299.15
+                },
+                {
+                    "name": "T_lower",
+                    "value": 290.15
+                },
+                {
+                    "name": "Q_RadSol",
+                    "value": 0
+                },
+                {
+                    "name": "T_preTemWin",
+                    "value": 274.25
+                },
+                {
+                    "name": "T_preTemWall",
+                    "value": 272.676
+                },
+                {
+                    "name": "T_preTemRoof",
+                    "value": 272.676
+                },
+                {
+                    "name": "m_flow_ahu",
+                    "value": 0.1
+                },
+                {
+                    "name": "schedule_human",
+                    "value": 0.1
+                },
+                {
+                    "name": "schedule_dev",
+                    "value": 0
+                },
+                {
+                    "name": "schedule_light",
+                    "value": 0
+                },
+                {
+                    "name": "r_pel",
+                    "value": 22.27
+                }
+            ]
+        }
+    ]
+}

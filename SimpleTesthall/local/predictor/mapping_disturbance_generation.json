@@ -1,0 +1,29 @@
+{
+    "states": {
+        "T_Air": "multizone.TAir[1]",
+        "T_IntWall": "multizone.zone[1].ROM.intWallRC.thermCapInt[1].T",
+        "T_ExtWall": "multizone.zone[1].ROM.extWallRC.thermCapExt[1].T",
+        "T_Win": "multizone.zone[1].ROM.resWin.port_b.T",
+        "T_Roof": "multizone.zone[1].ROM.roofRC.thermCapExt[1].T",
+        "T_radiator_m_1": "radiator.multiLayer_HE[1].radiator_wall.heatCapacitor.T",
+        "T_radiator_m_2": "radiator.multiLayer_HE[2].radiator_wall.heatCapacitor.T",
+        "T_radiator_m_3": "radiator.multiLayer_HE[3].radiator_wall.heatCapacitor.T",
+        "T_Floor": "multizone.zone[1].ROM.floorRC.thermCapExt[1].T"
+    },
+    "disturbances": {
+        "T_amb": "multizone.zone[1].weaBus.TDryBul",
+        "T_preTemWall": "realExpression50.y",
+        "T_preTemWin": "realExpression49.y",
+        "T_preTemRoof": "realExpression48.y",
+        "schedule_light": "multizone.zone[1].lights.uRel",
+        "schedule_dev": "multizone.zone[1].machinesSenHea.uRel",
+        "schedule_human": "multizone.zone[1].humanSenHeaDependent.uRel",
+        "Q_RadSol_or_1": "multizone.zone[1].ROM.radHeatSol[1].Q_flow",
+        "Q_RadSol_or_2": "multizone.zone[1].ROM.radHeatSol[2].Q_flow",
+        "Q_RadSol_or_3": "multizone.zone[1].ROM.radHeatSol[3].Q_flow",
+        "Q_RadSol_or_4": "multizone.zone[1].ROM.radHeatSol[4].Q_flow"
+    },
+    "measurements": {
+        "TAirRoom": "TAirRoom"
+    }
+}

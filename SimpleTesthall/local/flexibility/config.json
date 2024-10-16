@@ -1,0 +1,98 @@
+{
+    "id": "myFlexibilityAgent",
+    "modules": [
+        {
+            "module_id": "Ag3Com",
+            "type": "local_broadcast"
+        },
+        {
+            "module_id": "myFlexibility",
+            "type": {
+                "file": "flexibility/flexibilityindicators.py",
+                "class_name": "FlexibilityModule"
+            },
+            "parameters": [
+                {
+                    "name": "sampling_time",
+                    "value": 450
+                },
+                {
+                    "name": "time_step",
+                    "value": 900
+                },
+                {
+                    "name": "prediction_horizon",
+                    "value": 48
+                },
+                {
+                    "name": "flexibility_event",
+                    "value": 7200
+                },
+                {
+                    "name": "preperation_horizon",
+                    "value": 1800
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "powerflex_flex_neg",
+                    "value": 0
+                },
+                {
+                    "name": "powerflex_flex_pos",
+                    "value": 0
+                },
+                {
+                    "name": "powerflex_avg_neg",
+                    "value": 0
+                },
+                {
+                    "name": "powerflex_avg_pos",
+                    "value": 0
+                },
+                {
+                    "name": "energyflex_neg",
+                    "value": 0
+                },
+                {
+                    "name": "energyflex_pos",
+                    "value": 0
+                },
+                {
+                    "name": "costs_neg",
+                    "value": 0
+                },
+                {
+                    "name": "costs_pos",
+                    "value": 0
+                },
+                {
+                    "name": "costs_neg_rel",
+                    "value": 0
+                },
+                {
+                    "name": "costs_pos_rel",
+                    "value": 0
+                }
+            ],
+            "inputs": [
+                {
+                    "name": "P_el_alg",
+                    "value": 5000
+                },
+                {
+                    "name": "P_el_max_alg",
+                    "value": 5000
+                },
+                {
+                    "name": "P_el_min_alg",
+                    "value": 5000
+                },
+                {
+                    "name": "r_pel",
+                    "value": 22.27
+                }
+            ]
+        }
+    ]
+}

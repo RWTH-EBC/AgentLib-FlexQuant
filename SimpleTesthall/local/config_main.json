@@ -1,0 +1,32 @@
+{
+        "with_plots": true,
+        "log_level": "INFO",
+        "sim_days": 0.5,
+        "initial_time": 29376000,
+        "calc_flex": true,
+        "use_scalar": false,
+        "prediction_horizon": 48,
+        "time_sample": 900,
+        "clear_results": false,
+        "price_mode": 2,
+        "update_simulator": true,
+        "building_info":
+        {
+                "Dymola_Work_Dir": "D://sle-gzh//test_project//dymola_workdir",
+                "AixLibPath": "D://sle-gzh//repo//AixLib_0//AixLib//package.mo",
+                "radiator_record": "DataResource/data/Radiator_cosmo_multiV_type22K_2342W.mo",
+                "project_name":"Test_AutoGenTest_1978",
+                "tz_name": "Test_AutoGenTest_EFH_urbanrenet",
+                "location": "Aachen",
+                "standard_outside_temp": 264.55,
+                "weather_file_path": "DataResource//data//TRY_20150101_20151231_Aachen.mos",
+                "methode": "urbanrenet",
+                "usage": "est1a",
+                "year_of_construction": 1978,
+                "height_of_floors": 3.2,
+                "net_leased_area": 30,
+                "ROM_elements": 4,
+                "start_temp": 290.15,
+                "m_flow_radiator": 0.057
+                }
+}

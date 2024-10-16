@@ -1,0 +1,96 @@
+{
+   "id": "SimAgent",
+   "modules": [
+      {
+         "module_id": "Ag2Com",
+         "type": "local_broadcast"
+      },
+      {
+         "module_id": "SimTestHall",
+         "type": "simulator",
+         "model": {
+            "type": "fmu",
+            "path": "fmu/Test_AutoGenTest_EFH_urbanrenet_with_radiator_1978_Aachen.fmu",
+            "only_config_variables": true
+         },
+         "result_causalities": [
+            "input",
+            "output",
+            "local"
+         ],
+         "measurement_uncertainty": 0,
+         "t_sample": 60,
+         "t_start": 0,
+         "update_inputs_on_callback": false,
+         "save_results": true,
+         "result_filename": "results/sim_agent_simple_testhall.csv",
+         "overwrite_result_file": true,
+         "inputs": [
+            {
+               "name": "T_in",
+               "value": 328.15,
+               "alias": "T_flow_in"
+            }
+         ],
+         "outputs": [
+            {
+               "name": "TAirRoom",
+               "alias": "T_Air"
+            },
+            {
+               "name": "T_IntWall"
+            },
+            {
+               "name": "T_ExtWall"
+            },
+            {
+               "name": "T_Win"
+            },
+            {
+               "name": "T_Roof"
+            },
+            {
+               "name": "T_amb",
+               "alias": "c"
+            },
+            {
+               "name": "solar_radiation",
+               "alias": "Q_RadSol_fmu"
+            },
+            {
+               "name": "preTemWall"
+            },
+            {
+               "name": "preTemRoof"
+            },
+            {
+               "name": "preTemWin"
+            },
+            {
+               "name": "T_radiator_m_1"
+            },
+            {
+               "name": "T_radiator_m_2"
+            },
+            {
+               "name": "T_radiator_m_3"
+            },
+            {
+               "name": "T_Floor"
+            },
+            {
+               "name": "T_flow_out"
+            },
+            {
+               "name": "Q_flow_sum"
+            },
+            {
+               "name": "Q_conv"
+            },
+            {
+               "name": "Q_rad"
+            }
+         ]
+      }
+   ]
+}

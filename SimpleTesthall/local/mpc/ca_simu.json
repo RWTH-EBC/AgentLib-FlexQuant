@@ -1,0 +1,180 @@
+{
+    "id": "CasadiSimAgent",
+    "modules": [
+        {
+            "module_id": "Ag2Com",
+            "type": "local_broadcast"
+        },
+        {
+            "module_id": "SimZone",
+            "type": "simulator",
+            "model": {
+                "type": {
+                    "file": "mpc/simple_test_hall.py",
+                    "class_name": "SimpleTestHall"
+                },
+                "states": [
+                    {
+                        "name": "T_Air",
+                        "value": 294.37
+                    },
+                    {
+                        "name": "T_Roof",
+                        "value": 290.79
+                    },
+                    {
+                        "name": "T_ExtWall",
+                        "value": 290.47
+                    },
+                    {
+                        "name": "T_IntWall",
+                        "value": 293.15
+                    },
+                    {
+                        "name": "T_radiator_m_1",
+                        "value": 296.31
+                    },
+                    {
+                        "name": "T_radiator_m_2",
+                        "value": 293.15
+                    },
+                    {
+                        "name": "T_radiator_m_3",
+                        "value": 293.15
+                    },
+                    {
+                        "name": "T_Floor",
+                        "value": 291.6
+                    }
+                ]
+            },
+            "t_sample": 60,
+            "update_inputs_on_callback": false,
+            "save_results": true,
+            "result_filename": "results/sim_agent_scalar.csv",
+            "overwrite_result_file": true,
+            "result_causalities": [
+                "output",
+                "local",
+                "input"
+            ],
+            "inputs": [
+                {
+                    "name": "T_flow_in",
+                    "value": 328.15,
+                    "ub": 373.15,
+                    "lb": 273.15,
+                    "alias": "T_flow_in"
+                },
+                {
+                    "name": "Q_RadSol",
+                    "value": 0,
+                    "alias": "Q_RadSol_scalar"
+                },
+                {
+                    "name": "T_amb",
+                    "value": 270.14,
+                    "alias": "T_amb_scalar"
+                },
+                {
+                    "name": "T_preTemWin",
+                    "value": 270.14,
+                    "alias": "T_preTemWin_scalar"
+                },
+                {
+                    "name": "T_preTemWall",
+                    "value": 267.88,
+                    "alias": "T_preTemWall_scalar"
+                },
+                {
+                    "name": "T_preTemRoof",
+                    "value": 267.88,
+                    "alias": "T_preTemRoof_scalar"
+                },
+                {
+                    "name": "schedule_human",
+                    "value": 0,
+                    "alias": "schedule_human_scalar"
+                },
+                {
+                    "name": "schedule_dev",
+                    "value": 0,
+                    "alias": "schedule_dev_scalar"
+                },
+                {
+                    "name": "schedule_light",
+                    "value": 0,
+                    "alias": "schedule_light_scalar"
+                },
+                {
+                    "name": "T_upper",
+                    "value": 300.15,
+                    "alias": "T_upper_scalar"
+                },
+                {
+                    "name": "T_lower",
+                    "value": 290.15,
+                    "alias": "T_lower_scalar"
+                }
+            ],
+            "states": [
+                {
+                    "name": "T_Air",
+                    "value": 294.37,
+                    "shared": true,
+                    "alias": "T_Air"
+                },
+                {
+                    "name": "T_Roof",
+                    "value": 290.79,
+                    "shared": true,
+                    "alias": "T_Roof"
+                },
+                {
+                    "name": "T_ExtWall",
+                    "value": 290.47,
+                    "shared": true,
+                    "alias": "T_ExtWall"
+                },
+                {
+                    "name": "T_IntWall",
+                    "value": 293.15,
+                    "shared": true,
+                    "alias": "T_IntWall"
+                },
+                {
+                    "name": "T_radiator_m_1",
+                    "value": 296.31,
+                    "shared": true,
+                    "alias": "T_radiator_m_1"
+                },
+                {
+                    "name": "T_radiator_m_2",
+                    "value": 293.15,
+                    "shared": true,
+                    "alias": "T_radiator_m_2"
+                },
+                {
+                    "name": "T_radiator_m_3",
+                    "value": 293.15,
+                    "shared": true,
+                    "alias": "T_radiator_m_3"
+                },
+                {
+                    "name": "T_Floor",
+                    "value": 291.61,
+                    "shared": true,
+                    "alias": "T_Floor"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "P_el_alg"
+                }
+            ],
+            "shared_variable_fields": [
+                "states"
+            ]
+        }
+    ]
+}

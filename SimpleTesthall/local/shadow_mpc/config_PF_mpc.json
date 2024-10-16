@@ -1,0 +1,167 @@
+{
+    "id": "myMPCAgent_positive",
+    "values_only": "False",
+    "modules": [
+        {
+            "module_id": "Ag6Com",
+            "type": "local_broadcast"
+        },
+        {
+            "module_id": "myPFMPC",
+            "type": "agentlib_mpc.mpc",
+            "optimization_backend": {
+                "type": "casadi",
+                "model": {
+                    "type": {
+                        "file": "shadow_mpc/PF_mpc.py",
+                        "class_name": "SimpleTestHall"
+                    }
+                },
+                "build_batch_bat": "D:\\sle-gzh\\repo\\optimization\\SimpleTesthall\\local\\shadow_mpc\\solver_lib\\compile_nlp.bat",
+                "overwrite_result_file": true,
+                "results_file": "results/pf_mpc_simple_building_local_broadcast.csv",
+                "discretization_options": {
+                    "collocation_order": 2,
+                    "collocation_method": "legendre"
+                },
+                "solver": {
+                    "name": "ipopt",
+                    "options": {
+                        "ipopt": {
+                            "max_iter": 1000,
+                            "tol": 0.0001,
+                            "acceptable_tol": 0.001,
+                            "acceptable_constr_viol_tol": 0.01,
+                            "acceptable_iter": 30,
+                            "acceptable_compl_inf_tol": 0.01,
+                            "print_level": 5
+                        }
+                    }
+                }
+            },
+            "time_step": 900,
+            "prediction_horizon": 48,
+            "parameters": [
+                {
+                    "name": "s_T",
+                    "value": 100
+                },
+                {
+                    "name": "s_Pel",
+                    "value": 1
+                },
+                {
+                    "name": "COP",
+                    "value": 3
+                }
+            ],
+            "inputs": [
+                {
+                    "name": "Q_RadSol",
+                    "value": 0
+                },
+                {
+                    "name": "T_amb",
+                    "value": 270.14
+                },
+                {
+                    "name": "T_preTemWin",
+                    "value": 274.25
+                },
+                {
+                    "name": "T_preTemWall",
+                    "value": 272.676
+                },
+                {
+                    "name": "T_preTemRoof",
+                    "value": 272.676
+                },
+                {
+                    "name": "schedule_human",
+                    "value": 0
+                },
+                {
+                    "name": "schedule_dev",
+                    "value": 0
+                },
+                {
+                    "name": "schedule_light",
+                    "value": 0
+                },
+                {
+                    "name": "T_upper",
+                    "value": 300.15,
+                    "interpolation_method": "previous"
+                },
+                {
+                    "name": "T_lower",
+                    "value": 290.15,
+                    "interpolation_method": "previous"
+                },
+                {
+                    "name": "r_pel",
+                    "value": 22.27
+                }
+            ],
+            "controls": [
+                {
+                    "name": "T_flow_in_min",
+                    "value": 328.15,
+                    "ub": 328.15,
+                    "lb": 273.15
+                }
+            ],
+            "states": [
+                {
+                    "name": "T_Air",
+                    "value": 290.15,
+                    "ub": 303.15,
+                    "lb": 288.15
+                },
+                {
+                    "name": "T_Roof",
+                    "value": 290.15,
+                    "ub": 303.15,
+                    "lb": 283.15
+                },
+                {
+                    "name": "T_ExtWall",
+                    "value": 290.15,
+                    "ub": 303.15,
+                    "lb": 283.15
+                },
+                {
+                    "name": "T_Floor",
+                    "value": 290.15,
+                    "ub": 303.15,
+                    "lb": 283.15
+                },
+                {
+                    "name": "T_IntWall",
+                    "value": 290.15,
+                    "ub": 303.15,
+                    "lb": 283.15
+                },
+                {
+                    "name": "T_radiator_m_1",
+                    "value": 293.15
+                },
+                {
+                    "name": "T_radiator_m_2",
+                    "value": 293.15
+                },
+                {
+                    "name": "T_radiator_m_3",
+                    "value": 293.15
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "P_el_min_alg",
+                    "type": "pd.Series"
+                }
+            ],
+            "set_outputs": true
+        }
+    ]
+}
