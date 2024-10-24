@@ -8,8 +8,8 @@ import shutil
 from ebcpy import FMU_API, TimeSeriesData
 from dymola.dymola_interface import DymolaInterface
 import json
-from local.utils.select_radiator import create_radiator_record,find_radiator_type
-from utilities.parse_radiator_record import parse_modelica_record
+from local.utils.select_radiator import create_radiator_record,find_radiator_type,nom_mass_flow
+
 
 
 class gen_building:
@@ -261,16 +261,12 @@ class gen_building:
         parent_directory = pathlib.Path(__file__).parent.parent
         path_rad_record = os.path.normpath(os.path.join(parent_directory, path_rad_record))
 
+        # calculate nominal mass flow of radiator
+        m_flow = nom_mass_flow(path_rad_record)
+
         # adjust and move radiator record to DataBase
         with open(path_rad_record, 'r') as file:
             record_lines = file.readlines()
-
-        # calculate nominal mass flow of radiator
-        para_rad = parse_modelica_record(path_rad_record)
-        nom_power = para_rad['NominalPower'] * para_rad['length']
-        temp = para_rad['RT_nom']
-        delta_temp = temp[0] - temp[1]
-        m_flow = round(nom_power/ (4184 * delta_temp),4)
 
         for i,line in enumerate(record_lines):
             # edit first line in radiator record

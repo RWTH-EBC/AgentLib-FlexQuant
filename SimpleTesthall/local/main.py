@@ -53,7 +53,7 @@ def run_example(setup):
         path_fmu=f"fmu/{setup_building['tz_name']}_with_radiator_{setup_building['year_of_construction']}_{setup_building['location']}.fmu"
         config_modify.update_fmu_config(path_fmu,path_record)
         config_modify.update_predictor_config(path_fmu,path_record,path_radiator_record)
-        config_modify.update_mpc_config(path_record)
+        config_modify.update_mpc_config(path_record,path_radiator_record)
 
     agent_configs = config_modify.choose_agent_configs(cal_flexibility=calc_flex, use_scalar=use_scalar)
     config_modify.config_ts_ph(ts=ts, ph=ph, agent_configs=agent_configs)

@@ -10,7 +10,7 @@ from matplotlib.ticker import FuncFormatter, MultipleLocator
 import tikzplotlib as tikz
 
 warnings.filterwarnings("ignore", message="The label '_nolegend_' of <matplotlib.lines.Line2D object at")
-
+plt.ioff() #Disable interactive mode
 
 def seconds_to_days(min_time: 0):
     def formatter(x, pos):

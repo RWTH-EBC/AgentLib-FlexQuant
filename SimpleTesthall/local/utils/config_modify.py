@@ -1,5 +1,6 @@
 import json
 from utilities.modelica_parser import parse_modelica_record
+from local.utils.select_radiator import nom_mass_flow
 
 
 def choose_agent_configs(cal_flexibility: bool, use_scalar: bool):
@@ -128,8 +129,44 @@ def update_predictor_config(path_fmu, path_zone_record,path_rad_record):
     with open(config_disturbances, 'w') as config_file:
         json.dump(config_data, config_file, indent=4)
 
+def update_mpc_config(path_record, path_rad_record):
+    config_mpc = f'mpc/config.json'
+    with open(config_mpc, 'r') as config_file:
+        config_data = json.load(config_file)
+    m_flow = nom_mass_flow(path_rad_record)
+    new_model_states = {
+                    "name": "T_Floor",
+                    "value": 290.15,
+                    "ub": 303.15,
+                    "lb": 283.15
+                }
+    mflow_para ={
+                    "name": "m_flow",
+                    "value": m_flow
+                }
+    has_floor = parse_modelica_record(path_record)['AFloor'] > 0
 
-def update_mpc_config(path_record):
+    module_config = config_data["modules"][1]
+    states = module_config["states"]
+    parameters = module_config["parameters"]
+
+    if has_floor:
+        if not any(item["name"] == "T_Floor" for item in states):
+            states.append(new_model_states)
+    else:
+        states = [item for item in states if item["name"] != "T_Floor"]
+
+    parameters = [item for item in parameters if item["name"] != "m_flow"]
+    parameters.append(mflow_para)
+
+    module_config["states"] = states
+    module_config["parameters"] = parameters
+    config_data["modules"][1] = module_config
+
+    with open(config_mpc, 'w') as config_file:
+        json.dump(config_data, config_file, indent=4)
+
+def update_ca_simu_config(path_record):
     config_ca_simu = f'mpc/ca_simu.json'
     config_mpc = f'mpc/config.json'
     with open(config_ca_simu, 'r') as config_file:

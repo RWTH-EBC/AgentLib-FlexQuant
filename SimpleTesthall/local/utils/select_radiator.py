@@ -2,6 +2,7 @@ import json
 import pathlib
 import os
 import re
+from utilities.parse_radiator_record import parse_modelica_record
 
 
 def find_radiator_type(min_demand_heat):
@@ -61,7 +62,6 @@ def find_radiator_type(min_demand_heat):
 
     return radiator_info
 
-#TODO: add select weight
 def create_radiator_record(radiator):
     """
     using a template raditaor record to create a new one depending on given radiator information
@@ -83,9 +83,8 @@ def create_radiator_record(radiator):
     record_template['LambdaSteel'] = 60.0 # currently constant
     # ## editing radiator type
     type_number = ''.join(re.findall(r'\d+', radiator['type']))
-    # ## in aixlib no type 33 support, if using type 33 transfer it to 32
-    if type_number == 33:
-        type_number == 32
+    # ## since AixLib does not support type 33 , use 32 instead
+    type_number = '32' if int(type_number) == 33 else type_number
     record_template['Type'] =f"AixLib.Fluid.HeatExchangers.Radiators.BaseClasses.RadiatorTypes.PanelRadiator{type_number}"
     record_template['length'] = round(lengh, 2)  # [m]
     record_template['height'] = round(float(radiator['height'])*0.001, 2)  # [m]
@@ -96,6 +95,8 @@ def create_radiator_record(radiator):
     abs_path = os.path.normpath(os.path.join(parent_directory,rel_path))
     with open(abs_path,'w') as f:
         f.write(format_radiator_record(record_template, radiator_name))
+
+    print(f"selection of radiator done, record stored at {abs_path}")
 
     return rel_path
 
@@ -120,6 +121,16 @@ def format_radiator_record(record,radiator_name):
     record_lines.append(f"end {radiator_name};")
 
     return "\n".join(record_lines)
+
+def nom_mass_flow(path_rad_record):
+    # calculate nominal mass flow of radiator
+    para_rad = parse_modelica_record(path_rad_record)
+    nom_power = para_rad['NominalPower'] * para_rad['length']
+    temp = para_rad['RT_nom']
+    delta_temp = temp[0] - temp[1]
+    m_flow = round(nom_power / (4184 * delta_temp), 4)
+
+    return m_flow
 
 
 if __name__ == '__main__':

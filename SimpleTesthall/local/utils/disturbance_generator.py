@@ -34,7 +34,6 @@ class DisturbanceGenerator:
 
         self.path_record = self.setup['path_zone_record']
         nOrientations = int(parse_modelica_record(self.path_record)['nOrientations'])
-        has_floor = parse_modelica_record(self.path_record)['AFloor'] > 0
 
         # fmu setup
         self.fmu = fmu_handler.fmu_handler(start_time=start_time,
@@ -52,12 +51,7 @@ class DisturbanceGenerator:
         for i in range(1, nOrientations + 1):
             #mapping['disturbances'][f'Q_RadSol_or_{i}'] = f'thermalZone1.ROM.radHeatSol[{i}].Q_flow'
             mapping['disturbances'][f'Q_RadSol_or_{i}'] = f'multizone.zone[1].ROM.radHeatSol[{i}].Q_flow'
-        # adjust T_Floor in mapping states
-        mapping['states'] = {k: v for k, v in mapping['states'].items() if k != "T_Floor"}
-        if has_floor:
-            #new_state = {"T_Floor": "thermalZone1.ROM.floorRC.thermCapExt[1].T"}
-            new_state = {"T_Floor": "multizone.zone[1].ROM.floorRC.thermCapExt[1].T"}
-            mapping['states'].update(new_state)
+
 
         # Save the updated mapping_disturbance configuration
         with open(path_mapping, 'w') as f:
@@ -78,7 +72,6 @@ class DisturbanceGenerator:
         :return:
         """
         self.fmu.setup()
-        #TODO: config this initial value as a config to let fmu run!!
         self.fmu.set_variables({'T_in': 328.15})
         self.fmu.initialize()
         finished = False
@@ -106,9 +99,7 @@ class DisturbanceGenerator:
 
         write_pickle(self.save_name, self.disturbances)
 
-    def generate_boundaries(self, LB_emp=290.15, LB_use=293.15, UB_emp=299.15, UB_use=295.15,
-                            m_flow_ahu_emp=12000 * 1 / 3600 * 1.224, m_flow_ahu_use=12000 * 3 / 3600 * 1.224, opening=7,
-                            closing=17, appendix=''):
+    def generate_index(self):
         """
         Generate Boundaries for Room temperature
         :return:
@@ -116,28 +107,12 @@ class DisturbanceGenerator:
 
         start = datetime.datetime(year=2018, month=1, day=1)
         time_list = [start]
-        LB_list = [LB_emp]
-        UB_list = [UB_emp]
-        m_flow_ahu_list = [m_flow_ahu_emp]
+
         numSteps = len(self.disturbances)
         for i in range(1, numSteps):
             time_list.append(start + datetime.timedelta(seconds=i * self.step_size))
-            if datetime.date.weekday(time_list[i]) < 5 and time_list[i].hour >= opening and time_list[
-                i].hour < closing + 1:
-                LB_list.append(LB_use)
-                UB_list.append(UB_use)
-                m_flow_ahu_list.append(m_flow_ahu_use)
-            else:
-                LB_list.append(LB_emp)
-                UB_list.append(UB_emp)
-                m_flow_ahu_list.append(m_flow_ahu_emp)
-        ComfortCon = pd.DataFrame({'UB': UB_list, 'LB': LB_list, 'm_flow_ahu': m_flow_ahu_list}, index=time_list)
 
-        self.disturbances.index = ComfortCon.index
-
-        self.disturbances['T_Air_UB' + appendix] = ComfortCon['UB']
-        self.disturbances['T_Air_LB' + appendix] = ComfortCon['LB']
-        self.disturbances['m_flow_ahu' + appendix] = ComfortCon['m_flow_ahu']
+        self.disturbances.index = time_list
 
     def create_disturbances(self):
         """
@@ -150,22 +125,8 @@ class DisturbanceGenerator:
         else:
             self.disturbances = read_pickle(self.save_name)
 
-       #try:
-        #    self.disturbances = read_pickle(self.save_name)
-        #except:
-       #     self.perform_initial_simulation()
-        # Generate Boundaries for TZ_1
-        self.generate_boundaries(LB_emp=self.setup["T_LB_emp"],
-                                 LB_use=self.setup["T_LB_use"],
-                                 UB_emp=self.setup["T_UB_emp"],
-                                 UB_use=self.setup["T_UB_use"],
-                                 m_flow_ahu_emp=self.setup["m_flow_ahu_emp"],
-                                 m_flow_ahu_use=self.setup["m_flow_ahu_use"],
-                                 opening=self.setup["opening"],
-                                 closing=self.setup["closing"],
-                                 appendix='')
+        self.generate_index()
 
-        self.create_relaxed_bounds()
         # save disturbance file
         write_pickle(self.save_name, self.disturbances)
         script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -175,35 +136,8 @@ class DisturbanceGenerator:
 
         return csv_path
 
-    def create_relaxed_bounds(self, rel=6):
-        """
-
-        :param rel: relaxation in hours
-        :return:
-        """
-
-        self.generate_boundaries(LB_emp=self.setup["T_LB_emp"],
-                                 LB_use=self.setup["T_LB_use"],
-                                 UB_emp=self.setup["T_UB_emp"],
-                                 UB_use=self.setup["T_UB_use"],
-                                 m_flow_ahu_emp=self.setup["m_flow_ahu_emp"],
-                                 m_flow_ahu_use=self.setup["m_flow_ahu_use"],
-                                 opening=self.setup["opening"] - rel / 2,
-                                 closing=self.setup["closing"] + rel / 2,
-                                 appendix='_rel')
-
-        self.disturbances['T_Air_UB_rel'] = self.disturbances['T_Air_UB_rel'].rolling(
-            window=int(rel * 60 / 5), center=True).mean()
-        self.disturbances['T_Air_UB_rel'] = self.disturbances['T_Air_UB_rel'].bfill()
-        self.disturbances['T_Air_UB_rel'] = self.disturbances['T_Air_UB_rel'].ffill()
-        self.disturbances['T_Air_LB_rel'] = self.disturbances['T_Air_LB_rel'].rolling(
-            window=int(rel * 60 / 5), center=True).mean()
-        self.disturbances['T_Air_LB_rel'] = self.disturbances['T_Air_LB_rel'].bfill()
-        self.disturbances['T_Air_LB_rel'] = self.disturbances['T_Air_LB_rel'].ffill()
-
 
 if __name__ == '__main__':
-    import matplotlib.pyplot as plt
 
     Dist = DisturbanceGenerator(setup=r"setup_disturbances.json")
     Dist.create_disturbances()
