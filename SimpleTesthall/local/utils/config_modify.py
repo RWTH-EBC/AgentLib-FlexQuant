@@ -5,12 +5,13 @@ from utilities.modelica_parser import parse_modelica_record
 def choose_agent_configs(cal_flexibility: bool, use_scalar: bool):
     if cal_flexibility:
         agent_configs = [
-            "fmu//config.json",
+            "flex_configs/flexibility_agent_config.json",
             "mpc//config.json",
+            "fmu//config.json",
             "predictor//config.json",
-            "shadow_mpc//config_NF_mpc.json",
-            "shadow_mpc//config_PF_mpc.json",
-            "flexibility//config.json"
+            #"shadow_mpc//config_NF_mpc.json",
+            #"shadow_mpc//config_PF_mpc.json",
+            #"flexibility//config.json"
         ]
     else:
         if use_scalar:#casadi-simulator
@@ -21,8 +22,8 @@ def choose_agent_configs(cal_flexibility: bool, use_scalar: bool):
             ]
         else:
             agent_configs = [
-                "fmu//config.json",
                 "mpc//config.json",
+                "fmu//config.json",
                 "predictor//config.json"
             ]
     return agent_configs

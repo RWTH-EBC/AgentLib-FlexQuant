@@ -114,6 +114,14 @@ class SimpleTestHallModelConfig(CasadiModelConfig):
                         value=tz_par['ratioConvectiveHeatLighting'],
                         unit="-",
                         description="Ratio of convective heat from overall heat output for lights"),
+        CasadiParameter(name="useConstantACHrate",
+                        value=tz_par['useConstantACHrate'],
+                        unit="-",
+                        description="if using a constant infiltration rate is used"),
+        CasadiParameter(name="baseACH",
+                        value=tz_par['baseACH'],
+                        unit="-",
+                        description="base ACH rate for ventilation controller"),
         CasadiParameter(name="air_rho", value=1.2,
                         unit="kg/m**3", description="density of air"),  #mo中暂无
         CasadiParameter(name="air_cp", value=1006,
@@ -210,7 +218,7 @@ class SimpleTestHallModelConfig(CasadiModelConfig):
 
         # Parameters of radiator:
         CasadiParameter(name="N",value=3,unit="-", description="radiator layer"),
-        CasadiParameter(name="m_flow", value=0.057, unit="kg/s", description="mass flow for radiator"),
+        CasadiParameter(name="m_flow", value=0.058, unit="kg/s", description="mass flow for radiator"),
         CasadiParameter(name="T_ref", value=289.15,
                         unit="K",
                         description="reference temperature"),
@@ -494,8 +502,10 @@ class SimpleTestHall(CasadiModel):
         heat_lights_conv = self.AZone * self.lightingPowerSpecific * self.schedule_light * self.ratioConvectiveHeatLighting
         heat_lights_rad = (heat_lights_conv *
                            (1 - self.ratioConvectiveHeatLighting) / self.ratioConvectiveHeatLighting)
+        #Q_flow[W] =ventRate*VAir*air_cp*air_rho*(port_a.T - port_b.T)/hToS
+        heat_ACH = self.baseACH * self.VAir * 1000 * 1.25 * (self.T_amb - self.T_Air) / 3600
         q_ig_rad = heat_humans_rad + heat_devices_rad + heat_lights_rad  #+ q_radiator_rad_total
-        q_ig_conv = heat_humans_conv + heat_devices_conv + heat_lights_conv + q_radiator_conv_total
+        q_ig_conv = heat_humans_conv + heat_devices_conv + heat_lights_conv + q_radiator_conv_total + heat_ACH
 
         # parameters
         # heat capacities of air in the room in [J/K]

@@ -40,6 +40,14 @@ def create_mpc_one_predition_series(results_mpc: pd.DataFrame, variable_mpc: str
     series = series.reset_index(level=0, drop=True)
     return series
 
+def create_mpc_one_predition_series_without_kollo(results_mpc: pd.DataFrame, variable_mpc: str, value_type: str, initial):
+    res_mpc = results_mpc.copy()
+    value = res_mpc[value_type][variable_mpc]
+    series = value[value.index.get_level_values(0) == initial + 900]
+    series = series.reset_index(level=0, drop=True)
+    filtered_s = series[series.index % 900 == 0]
+    return filtered_s
+
 
 def create_pel_series_one_predition(results_mpc: pd.DataFrame, variable_mpc: str, initial):
     res_mpc = results_mpc.copy()
@@ -273,6 +281,24 @@ def Q_parts(results, partsFMU: str, partsCasadi: str, initial: int):
     plt.savefig(f"plots/{partsFMU}.svg", format='svg')
     plt.show()
 
+def t_del_temp(results, initial, ts, until):
+    plt.figure(figsize=(10, 4))
+    t_flow_in_series = create_mpc_series(results_mpc=results["myMPCAgent"]['myMPC'], variable_mpc="T_flow_in",
+                                         value_type="variable")
+    T_in_del_series = create_mpc_series(results_mpc=results["myMPCAgent"]['myMPC'], variable_mpc="T_in_del",
+                                           value_type="variable")
+    plt.plot(t_flow_in_series, label="input temperature of radiator", color=red)
+    plt.plot(T_in_del_series, label="input temperature delay", color=black1)
+    plt.ylabel(fr"T in K")
+    plt.xlabel('Zeit')
+    plt.legend()
+    if not os.path.exists('plots/MPC'):
+        os.makedirs('plots/MPC')
+
+    # Saving the plot using a relative path
+    plt.savefig(f"plots/MPC/T_flow_in_T_del", format='svg')
+    tikz.save("plots/MPC/T_flow_in_T_del.tex")
+    plt.show()
 
 def input_output_temp(results, initial, ts, until):
     plt.figure(figsize=(10, 4))
@@ -483,9 +509,6 @@ def t_rad_debug(t_rad_series, results, initial, until):
     plt.plot(t_rad_series, label="Prediction", color=blau1)
     plt.ylabel(r"T$_{zone}$  in K")
     plt.xlabel('Zeit in Tagen')
-    # plt.savefig('plots/t_zone_air.svg', format='svg')
-    # tikz.clean_figure()
-    # tikz.save("plots/t_zone_air.tex")
     plt.legend()
 
     # 设置x轴为天数显示，刻度间隔为1天
@@ -1140,6 +1163,38 @@ def t_zone_one_prediction(results, initial, time_step):
 
     plt.savefig("plots/flexs/T_Air_one_prediction.svg", format='svg')
     tikz.save("plots/flexs/T_Air_one_prediction.tex")
+    plt.show()
+
+
+def t_del_one_prediction(results, initial, time_step):
+    """
+    plot and compare room temperature T_Air from MPC and FMU
+    Args:
+        t_lower_series:
+        t_upper_series:
+        results:
+
+    Returns:
+
+    """
+    plt.figure(figsize=(10, 4))
+    t_in_del_one = create_mpc_one_predition_series_without_kollo(results_mpc=results["myMPCAgent"]['myMPC'],
+                                                         variable_mpc="T_in_del",
+                                                         value_type="variable", initial=initial + time_step)
+    t_flow_in_series = create_mpc_one_predition_series_without_kollo(results_mpc=results["myMPCAgent"]['myMPC'], variable_mpc="T_flow_in",
+                                         value_type="variable",initial=initial + time_step)
+    plt.plot(t_flow_in_series, label="t_in", color=black1)
+    plt.plot(t_in_del_one, label="t_in_del", color=blau1)
+
+    plt.ylabel(r"T$_{zone}$  in K")
+    plt.xlabel('Zeit')
+
+    plt.legend()
+    if not os.path.exists('plots/MPC'):
+        os.makedirs('plots/MPC', exist_ok=True)
+
+    plt.savefig("plots/MPC/T_del_one_prediction.svg", format='svg')
+    tikz.save("plots/MPC/T_del_one_prediction.tex")
     plt.show()
 
 

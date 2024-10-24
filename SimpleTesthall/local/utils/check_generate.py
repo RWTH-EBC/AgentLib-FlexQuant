@@ -7,8 +7,9 @@ def hash_conditions(building, simulation):
     conditions_str = str(building) + str(simulation)
     return hashlib.md5(conditions_str.encode('utf-8')).hexdigest()
 
-def check_and_generate_file(disturbances_file):
-    hash_file = disturbances_file + ".hash"  # store hash file
+def check_and_generate_file(file):
+    hash_file = file + ".hash"  # store hash file
+
     parent_directory = pathlib.Path(__file__).parent.parent
     setup_main = os.path.normpath(os.path.join(parent_directory, "config_main.json"))
     with open(setup_main, 'r') as f:
@@ -21,7 +22,7 @@ def check_and_generate_file(disturbances_file):
         setup = json.load(f)
     setup_sim_disturbances = str(setup['days'])+str(setup['sim_tolerance'])+str(setup['start_time'])+str(setup['step_size'])
 
-    # 计算当前条件的哈希值
+    # calculate hash with current parameters
     current_hash = hash_conditions(setup_building_str, setup_sim_disturbances)
 
     # Check if the hash file exists

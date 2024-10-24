@@ -255,7 +255,7 @@ class gen_building:
                                        self.tz_name,
                                          f"{self.tz_name}_DataBase")
         shutil.copy2(path_rad_record, path_to_DataBase)
-        record_in_Database = os.path.join(path_to_DataBase, f"{rad_type}".strip())
+        record_in_Database = os.path.join(path_to_DataBase, f"{rad_type.strip()}.mo")
         with open(record_in_Database, 'w') as file:
             file.writelines(record_lines)
 
@@ -351,7 +351,7 @@ class gen_building:
         # 逐行遍历文件内容
         for line in lines:
             if 'zone(ROM(' in line:
-                # 遇到 'zone(ROM('，开始忽略内容
+                #
                 inside_zone_rom = True
             if inside_zone_rom:
                 # 在 'zone(ROM(...))' 块中，直到遇到闭合的 ')'

@@ -183,7 +183,7 @@ def calc_resistances(tz_par, rad_par, split_sol, split_ig):
 if __name__ == "__main__":
     from utilities.parse_radiator_record import parse_rad_record, parse_modelica_record
 
-    path_to_mos = r"/local/mpc/Achieve_record/ASHRAE140_900.mo"
+    path_to_mos = r"D:/sle-gzh/repo/optimization/SimpleTesthall/local/mpc/ASHRAE140_900.mo"
     path_to_rad = r"D:\sle-gzh\repo\optimization\SimpleTesthall\local\mpc\Radiator_Bathroom.mo"
     tz_par = parse_modelica_record(path_to_mos)
     rad_par = parse_rad_record(path_to_rad)

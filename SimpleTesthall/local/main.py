@@ -8,10 +8,12 @@ from agentlib.utils.multi_agent_system import LocalMASAgency
 from agentlib_mpc.utils.plotting.interactive import show_dashboard
 from local.utils import calc
 from local.utils.building_gen_teaser import gen_building
+from flexibility_quantification.generate_flex_agents import FlexAgentGenerator
+
 
 
 # Environment config
-env_config = {"rt": False, "t_sample": 200, "offset": 29376000}
+env_config = {"rt": False, "t_sample": 200, "offset": 30585600}
 
 def run_example(setup):
     with open(setup, 'r') as f:
@@ -58,7 +60,17 @@ def run_example(setup):
 
     #TODO: utilize simulation time and sim disturbance time
     # Set the log-level
+
+
+
     agent_configs = config_modify.choose_agent_configs(cal_flexibility=calc_flex, use_scalar=use_scalar)
+    if calc_flex:
+        config_list = FlexAgentGenerator(
+            flex_config=agent_configs[0], mpc_agent_config=agent_configs[1]
+        ).generate_flex_agents()
+        agent_configs.extend(config_list)
+        agent_configs = agent_configs[2:8]
+
     config_modify.config_ts_ph(ts=ts, ph=ph, agent_configs=agent_configs)
     config_modify.choose_mode(price_mode=price_mode)
     #config_modify.config_time_traj(ts=ts,n=ph,config_name="NF_mpc")

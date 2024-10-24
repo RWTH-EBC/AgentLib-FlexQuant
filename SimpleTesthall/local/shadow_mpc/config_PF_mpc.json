@@ -25,15 +25,13 @@
                     "collocation_method": "legendre"
                 },
                 "solver": {
-                    "name": "ipopt",
+                    "name": "fatrop",
                     "options": {
-                        "ipopt": {
+                        "fatrop": {
                             "max_iter": 1000,
                             "tol": 0.0001,
                             "acceptable_tol": 0.001,
-                            "acceptable_constr_viol_tol": 0.01,
                             "acceptable_iter": 30,
-                            "acceptable_compl_inf_tol": 0.01,
                             "print_level": 5
                         }
                     }
@@ -44,7 +42,7 @@
             "parameters": [
                 {
                     "name": "s_T",
-                    "value": 100
+                    "value": 1000
                 },
                 {
                     "name": "s_Pel",
