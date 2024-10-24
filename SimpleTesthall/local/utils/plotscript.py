@@ -129,11 +129,11 @@ def t_zone_fmu(t_lower_series, t_upper_series, results, initial, until):
     #plt.xticks(xticks_pos, xticks_labels)  # 设置x轴的刻度位置和标签
 
     plt.legend()
-    if not os.path.exists('plots/MPC'):
-        os.makedirs('plots/MPC', exist_ok=True)
+    if not os.path.exists('../plots/MPC'):
+        os.makedirs('../plots/MPC', exist_ok=True)
 
     plt.savefig("plots/MPC/MPC_T_Air.svg", format='svg')
-    tikz.save("plots/MPC/MPC_T_Air.tex")
+    tikz.save("../plots/MPC/MPC_T_Air.tex")
     plt.show()
 
 
@@ -198,8 +198,8 @@ def t_zone_casadi(results, initial):
     #plt.gca().xaxis.set_major_locator(MultipleLocator(3600))  # 每1h显示一个刻度
     #plt.gca().xaxis.set_major_formatter(FuncFormatter(seconds_to_hours(initial)))
 
-    if not os.path.exists('plots'):
-        os.makedirs('plots')
+    if not os.path.exists('../plots'):
+        os.makedirs('../plots')
 
     # Saving the plot using a relative path
     plt.savefig(f"plots/T_Air.svg", format='svg')
@@ -240,8 +240,8 @@ def t_parts(results, partsFMU, partsCasadi, initial):
     plt.gca().xaxis.set_major_formatter(FuncFormatter(seconds_to_days(initial)))
 
     # Ensure the 'plots' directory exists
-    if not os.path.exists('plots'):
-        os.makedirs('plots')
+    if not os.path.exists('../plots'):
+        os.makedirs('../plots')
 
     # Saving the plot using a relative path
     plt.savefig(f"plots/{partsFMU}.svg", format='svg')
@@ -274,8 +274,8 @@ def Q_parts(results, partsFMU: str, partsCasadi: str, initial: int):
     plt.gca().xaxis.set_major_locator(MultipleLocator(86400))  # 每1天显示一个刻度
     plt.gca().xaxis.set_major_formatter(FuncFormatter(seconds_to_days(initial)))
     # Ensure the 'plots' directory exists
-    if not os.path.exists('plots'):
-        os.makedirs('plots')
+    if not os.path.exists('../plots'):
+        os.makedirs('../plots')
 
     # Saving the plot using a relative path
     plt.savefig(f"plots/{partsFMU}.svg", format='svg')
@@ -292,8 +292,8 @@ def t_del_temp(results, initial, ts, until):
     plt.ylabel(fr"T in K")
     plt.xlabel('Zeit')
     plt.legend()
-    if not os.path.exists('plots/MPC'):
-        os.makedirs('plots/MPC')
+    if not os.path.exists('../plots/MPC'):
+        os.makedirs('../plots/MPC')
 
     # Saving the plot using a relative path
     plt.savefig(f"plots/MPC/T_flow_in_T_del", format='svg')
@@ -322,12 +322,12 @@ def input_output_temp(results, initial, ts, until):
     plt.xticks(xticks_pos, xticks_labels)  # 设置x轴的刻度位置和标签
 
     # Ensure the 'plots' directory exists
-    if not os.path.exists('plots/MPC'):
-        os.makedirs('plots/MPC')
+    if not os.path.exists('../plots/MPC'):
+        os.makedirs('../plots/MPC')
 
     # Saving the plot using a relative path
     plt.savefig(f"plots/MPC/MPC_SET_T_flow_in_and_out.svg", format='svg')
-    tikz.save("plots/MPC/MPC_SET_T_flow_in_and_out.tex")
+    tikz.save("../plots/MPC/MPC_SET_T_flow_in_and_out.tex")
     plt.show()
 
 
@@ -383,12 +383,12 @@ def ambient(results, until, initial, time_step):
     ax1.legend(lines1 + lines2, labels1 + labels2, loc='best')
 
     # Ensure the 'plots' directory exists
-    if not os.path.exists('plots/MPC'):
-        os.makedirs('plots/MPC')
+    if not os.path.exists('../plots/MPC'):
+        os.makedirs('../plots/MPC')
 
     # Saving the plot using a relative path
     plt.savefig("plots/MPC/disturbance.svg", format='svg')
-    tikz.save("plots/MPC/disturbance.tex")
+    tikz.save("../plots/MPC/disturbance.tex")
     plt.show()
 
 
@@ -483,11 +483,11 @@ def p_el_price(p_el_series, r_pel_series, until, initial):
     ax1.legend(lines1 + lines2, labels1 + labels2, loc='best')
     #tikz.clean_figure()
     #tikz.save("plots/p_el_price.tex")
-    if not os.path.exists('plots/MPC'):
-        os.makedirs('plots/MPC', exist_ok=True)
+    if not os.path.exists('../plots/MPC'):
+        os.makedirs('../plots/MPC', exist_ok=True)
 
     plt.savefig("plots/MPC/el_price.svg", format='svg')
-    tikz.save("plots/MPC/el_price.tex")
+    tikz.save("../plots/MPC/el_price.tex")
     plt.show()
 
 
@@ -542,11 +542,11 @@ def t_out_debug(t_baseline_series, t_PF_series, t_NF_series, initial, until):
 
     plt.xticks(xticks_pos, xticks_labels)  # 设置x轴的刻度位置和标签
 
-    if not os.path.exists('plots/MPC'):
-        os.makedirs('plots/MPC', exist_ok=True)
+    if not os.path.exists('../plots/MPC'):
+        os.makedirs('../plots/MPC', exist_ok=True)
 
     plt.savefig("plots/MPC/MPC_T_flow_out.svg", format='svg')
-    tikz.save("plots/MPC/MPC_T_flow_out.tex")
+    tikz.save("../plots/MPC/MPC_T_flow_out.tex")
     plt.show()
 
 
@@ -571,11 +571,11 @@ def pel_all_mpcs(p_el_series, p_el_series_maxpel, p_el_series_minpel, price, unt
     #xticks_labels = [f"Tag {day + 1}" for day in range(num_days)]  # 从Tag 1开始
     #plt.xticks(xticks_pos, xticks_labels)
 
-    if not os.path.exists('plots/flexs'):
-        os.makedirs('plots/flexs', exist_ok=True)
+    if not os.path.exists('../plots/flexs'):
+        os.makedirs('../plots/flexs', exist_ok=True)
 
     plt.savefig("plots/flexs/pel_min_max.svg", format='svg')
-    tikz.save("plots/flexs/pel_min_max.tex")
+    tikz.save("../plots/flexs/pel_min_max.tex")
 
     plt.show()
 
@@ -694,11 +694,11 @@ def t_zone_all_mpc(t_lower_series, t_upper_series, results, until, initial):
     plt.xticks(xticks_pos, xticks_labels)  # 设置x轴的刻度位置和标签
 
     plt.legend()
-    if not os.path.exists('plots/flexs'):
-        os.makedirs('plots/flexs', exist_ok=True)
+    if not os.path.exists('../plots/flexs'):
+        os.makedirs('../plots/flexs', exist_ok=True)
 
     plt.savefig("plots/flexs/T_Airroom_all_mpcs.svg", format='svg')
-    tikz.save("plots/flexs/T_Airroom_all_mpcs.tex")
+    tikz.save("../plots/flexs/T_Airroom_all_mpcs.tex")
     plt.show()
 
 
@@ -728,12 +728,12 @@ def input_temp_all_mpc(results, initial, until):
     plt.xticks(xticks_pos, xticks_labels)  # 设置x轴的刻度位置和标签
 
     # Ensure the 'plots' directory exists
-    if not os.path.exists('plots/flexs'):
-        os.makedirs('plots/flexs')
+    if not os.path.exists('../plots/flexs'):
+        os.makedirs('../plots/flexs')
 
     # Saving the plot using a relative path
     plt.savefig(f"plots/flexs/T_flow_in.svg", format='svg')
-    tikz.save("plots/flexs/T_flow_in.tex")
+    tikz.save("../plots/flexs/T_flow_in.tex")
     plt.show()
 
 
@@ -785,11 +785,11 @@ def plot_energyflexibility_costs_bar(eps_neg, eps_pos, costs_neg, costs_pos, ts,
     xticks_labels = [f"Tag {day + 1}" for day in range(num_days)]  # 从Tag 1开始
     plt.xticks(xticks_pos, xticks_labels)
 
-    if not os.path.exists('plots/flexs'):
-        os.makedirs('plots/flexs', exist_ok=True)
+    if not os.path.exists('../plots/flexs'):
+        os.makedirs('../plots/flexs', exist_ok=True)
 
     plt.savefig("plots/flexs/energ_cost_neg.svg", format='svg')
-    tikz.save("plots/flexs/energ_cost_neg.tex")
+    tikz.save("../plots/flexs/energ_cost_neg.tex")
 
     # Save or show the plot
     # plt.savefig('plots/energyflex_costs_neg.svg', format='svg')
@@ -824,11 +824,11 @@ def plot_energyflexibility_costs_bar(eps_neg, eps_pos, costs_neg, costs_pos, ts,
     lines_4, labels_4 = ax2_2.get_legend_handles_labels()
     ax2.legend(lines_3 + lines_4, labels_3 + labels_4, loc='upper left')
 
-    if not os.path.exists('plots/flexs'):
-        os.makedirs('plots/flexs', exist_ok=True)
+    if not os.path.exists('../plots/flexs'):
+        os.makedirs('../plots/flexs', exist_ok=True)
 
     plt.savefig("plots/flexs/energ_cost_pos.svg", format='svg')
-    tikz.save("plots/flexs/energ_cost_pos.tex")
+    tikz.save("../plots/flexs/energ_cost_pos.tex")
     # Save or show the plot
     # plt.savefig('plots/energyflex_costs_pos.svg', format='svg')
     # tikz.save("plots/energyflex_costs_pos.tex")
@@ -883,11 +883,11 @@ def plot_poweravg_min_max(pi_neg, pi_pos, pi_neg_max, pi_neg_min, pi_pos_max, pi
     xticks_labels = [f"Tag {day + 1}" for day in range(num_days)]  # 从Tag 1开始
     plt.xticks(xticks_pos, xticks_labels)
 
-    if not os.path.exists('plots/flexs'):
-        os.makedirs('plots/flexs', exist_ok=True)
+    if not os.path.exists('../plots/flexs'):
+        os.makedirs('../plots/flexs', exist_ok=True)
 
     plt.savefig("plots/flexs/powerflex_avg.svg", format='svg')
-    tikz.save("plots/flexs/powerflex_avg.tex")
+    tikz.save("../plots/flexs/powerflex_avg.tex")
 
     plt.show()
 
@@ -916,11 +916,11 @@ def plot_poweravg_min_max(pi_neg, pi_pos, pi_neg_max, pi_neg_min, pi_pos_max, pi
     #ax.set_ylim(y_min, y_max)
     plt.xticks(xticks_pos, xticks_labels)  # 设置x轴的刻度位置和标签
 
-    if not os.path.exists('plots/flexs'):
-        os.makedirs('plots/flexs', exist_ok=True)
+    if not os.path.exists('../plots/flexs'):
+        os.makedirs('../plots/flexs', exist_ok=True)
 
     plt.savefig("plots/flexs/powerflex_max.svg", format='svg')
-    tikz.save("plots/flexs/powerflex_max.tex")
+    tikz.save("../plots/flexs/powerflex_max.tex")
 
     plt.show()
     #plt.hlines(y=0, xmin=0, xmax=until, color=colors[("black", 75)])
@@ -957,11 +957,11 @@ def plot_energyflex_neg_pos(eps_neg, eps_pos, until, initial):
     xticks_labels = [f"Tag {day + 1}" for day in range(num_days)]  # 从Tag 1开始
     plt.xticks(xticks_pos, xticks_labels)  # 设置x轴的刻度位置和标签
 
-    if not os.path.exists('plots/flexs'):
-        os.makedirs('plots/flexs', exist_ok=True)
+    if not os.path.exists('../plots/flexs'):
+        os.makedirs('../plots/flexs', exist_ok=True)
 
     plt.savefig("plots/flexs/energyflex.svg", format='svg')
-    tikz.save("plots/flexs/energyflex.tex")
+    tikz.save("../plots/flexs/energyflex.tex")
     # y_max = max(eps_pos.values) + max(eps_pos.values) * 0.1
     # y_min = min(eps_neg.values) - min(eps_neg.values) * 0.1
     # plt.ylim(y_min, y_max)
@@ -1045,11 +1045,11 @@ def plot_costs_price(costs_neg_rel, costs_pos_rel, r_pel_series, until, initial)
     xticks_labels = [f"Tag {day + 1}" for day in range(num_days)]  # 从Tag 1开始
     plt.xticks(xticks_pos, xticks_labels)  # 设置x轴的刻度位置和标签
 
-    if not os.path.exists('plots/flexs'):
-        os.makedirs('plots/flexs', exist_ok=True)
+    if not os.path.exists('../plots/flexs'):
+        os.makedirs('../plots/flexs', exist_ok=True)
 
     plt.savefig(f"plots/flexs/costs_price_neg.svg", format='svg')
-    tikz.save("plots/flexs/costs_price_neg.tex")
+    tikz.save("../plots/flexs/costs_price_neg.tex")
     plt.show()
 
     fig2, ax2 = plt.subplots(figsize=(10, 4))
@@ -1062,7 +1062,7 @@ def plot_costs_price(costs_neg_rel, costs_pos_rel, r_pel_series, until, initial)
     plt.xticks(xticks_pos, xticks_labels)  # 设置x轴的刻度位置和标签
 
     plt.savefig("plots/flexs/costs_price_pos.svg", format='svg')
-    tikz.save("plots/flexs/costs_price_pos.tex")
+    tikz.save("../plots/flexs/costs_price_pos.tex")
 
     plt.show()
 
@@ -1104,11 +1104,11 @@ def t_zone_all_mpc(t_lower_series, t_upper_series, results, until, initial):
     plt.xticks(xticks_pos, xticks_labels)  # 设置x轴的刻度位置和标签
 
     plt.legend()
-    if not os.path.exists('plots/flexs'):
-        os.makedirs('plots/flexs', exist_ok=True)
+    if not os.path.exists('../plots/flexs'):
+        os.makedirs('../plots/flexs', exist_ok=True)
 
     plt.savefig("plots/flexs/T_Airroom_all_mpcs.svg", format='svg')
-    tikz.save("plots/flexs/T_Airroom_all_mpcs.tex")
+    tikz.save("../plots/flexs/T_Airroom_all_mpcs.tex")
     plt.show()
 
 
@@ -1158,11 +1158,11 @@ def t_zone_one_prediction(results, initial, time_step):
     plt.xticks(xticks_pos, xticks_labels)  # 设置x轴的刻度位置和标签
 
     plt.legend()
-    if not os.path.exists('plots/flexs'):
-        os.makedirs('plots/flexs', exist_ok=True)
+    if not os.path.exists('../plots/flexs'):
+        os.makedirs('../plots/flexs', exist_ok=True)
 
     plt.savefig("plots/flexs/T_Air_one_prediction.svg", format='svg')
-    tikz.save("plots/flexs/T_Air_one_prediction.tex")
+    tikz.save("../plots/flexs/T_Air_one_prediction.tex")
     plt.show()
 
 
@@ -1190,8 +1190,8 @@ def t_del_one_prediction(results, initial, time_step):
     plt.xlabel('Zeit')
 
     plt.legend()
-    if not os.path.exists('plots/MPC'):
-        os.makedirs('plots/MPC', exist_ok=True)
+    if not os.path.exists('../plots/MPC'):
+        os.makedirs('../plots/MPC', exist_ok=True)
 
     plt.savefig("plots/MPC/T_del_one_prediction.svg", format='svg')
     tikz.save("plots/MPC/T_del_one_prediction.tex")
@@ -1240,11 +1240,11 @@ def p_el_one_prediction(results, initial, time_step):
     plt.xticks(xticks_pos, xticks_labels)  # 设置x轴的刻度位置和标签
 
     plt.legend()
-    if not os.path.exists('plots/flexs'):
-        os.makedirs('plots/flexs', exist_ok=True)
+    if not os.path.exists('../plots/flexs'):
+        os.makedirs('../plots/flexs', exist_ok=True)
 
     plt.savefig("plots/flexs/pel_one_prediction.svg", format='svg')
-    tikz.save("plots/flexs/pel_one_prediction.tex")
+    tikz.save("../plots/flexs/pel_one_prediction.tex")
     plt.show()
 
 
@@ -1274,10 +1274,10 @@ def input_temp_all_mpc(results, initial, until):
     plt.xticks(xticks_pos, xticks_labels)  # 设置x轴的刻度位置和标签
 
     # Ensure the 'plots' directory exists
-    if not os.path.exists('plots/flexs'):
-        os.makedirs('plots/flexs')
+    if not os.path.exists('../plots/flexs'):
+        os.makedirs('../plots/flexs')
 
     # Saving the plot using a relative path
     plt.savefig(f"plots/flexs/T_flow_in.svg", format='svg')
-    tikz.save("plots/flexs/T_flow_in.tex")
+    tikz.save("../plots/flexs/T_flow_in.tex")
     plt.show()

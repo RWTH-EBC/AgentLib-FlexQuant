@@ -1,7 +1,7 @@
 {
         "with_plots": true,
         "log_level": "INFO",
-        "sim_days": 0.5,
+        "sim_days": 1.5,
         "initial_time": 30585600,
         "calc_flex": true,
         "use_scalar": false,
@@ -9,14 +9,12 @@
         "time_sample": 900,
         "clear_results": false,
         "price_mode": 2,
-        "update_simulator": false,
         "building_info":
         {
                 "Dymola_Work_Dir": "D://sle-gzh//test_project//dymola_workdir",
                 "AixLibPath": "D://sle-gzh//repo//AixLib_0//AixLib//package.mo",
-                "radiator_record": "DataResource/data/Radiator_2415W.mo",
-                "project_name":"Test_AutoGenTest_1978_30m2",
-                "tz_name": "Test_AutoGenTest_1978_30m2_EFH_tabula_de",
+                "project_name":"Test_add_rad",
+                "tz_name": "Test_add_rad",
                 "location": "Aachen",
                 "standard_outside_temp": 264.55,
                 "weather_file_path": "DataResource//data//TRY_20150101_20151231_Aachen.mos",

@@ -145,7 +145,7 @@ class DisturbanceGenerator:
         :return:
         """
 
-        if check_and_generate_file(self.save_name):
+        if check_and_generate_file(self.save_name, "disturbance"):
             self.perform_initial_simulation()
         else:
             self.disturbances = read_pickle(self.save_name)

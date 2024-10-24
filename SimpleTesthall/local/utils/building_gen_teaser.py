@@ -8,6 +8,7 @@ import shutil
 from ebcpy import FMU_API, TimeSeriesData
 from dymola.dymola_interface import DymolaInterface
 import json
+from local.utils.select_radiator import create_radiator_record,find_radiator_type
 
 
 class gen_building:
@@ -49,6 +50,11 @@ class gen_building:
 
 
     def thermal_zone_from_teaser(self):
+        """
+        creating building by TEASER
+        Returns:
+
+        """
         prj = Project(load_data=True)
         prj.name = self.prj_name
         prj.add_residential(
@@ -77,7 +83,16 @@ class gen_building:
             internal_id=None,
             path=self.export_prj_path)
         return path
+
     def replace_t_set_idealheater(self,t_set=295.15):
+        """
+        Overwrite the internally interpreted 'TsetHeat' in TEASER.
+        Args:
+            t_set: set temperature for heating
+
+        Returns:
+
+        """
         path_to_tsetheat = os.path.join(self.export_prj_path,
                                          self.prj_name,
                                          self.tz_name,
@@ -105,6 +120,14 @@ class gen_building:
         return print("modified set temperature for ideal heater")
 
     def create_model_idealheater(self,baseACH=0.4):
+        """
+        creating a building model with ideal heater with desired ACH rate, adjusted from original TEASER output.
+        Args:
+            baseACH:
+
+        Returns:
+
+        """
         start_temp = self.setup['start_temp']
 
         self.modify_zone_para_record(need_idealheater=True,start_temp=start_temp, baseACH=baseACH)
@@ -387,21 +410,24 @@ class gen_building:
             output_interval=3600,
             standard_outside_temp=264.15
     ):
+
         """
-        Arguments of this example:
-        :param str working_directory:
-            Path in which to store the output.
-            Default is the examples\results folder
-        :param int n_cpu:
-            Number of processes to use
-        :param bool log_fmu:
-            Whether to get the FMU log output
-        :param int n_sim:
-            Number of simulations to run
-        :param int output_interval:
-            Output interval / step size of the simulation
-        :param bool with_plot:
-            Show the plot at the end of the script. Default is True.
+        Exports an FMU from the building model with an ideal heater, runs the FMU,
+        and reads the results to find the minimal heat demand required to maintain
+        the desired room temperature under standard outside temperature for this location.
+        The FMU file 'building_max_heatdemand.fmu' is stored within the building package.
+
+        Args:
+            working_directory: dymola working directory
+            n_cpu:  Number of processes to use
+            log_fmu: Whether to get the FMU log output
+            n_sim: Number of simulations to run
+            output_interval: Output interval / step size of the simulation
+            standard_outside_temp: standard outside temp at this location
+
+        Returns:
+            mininal required heat demand in W
+
         """
 
         # General settings
@@ -447,20 +473,20 @@ class gen_building:
         fmu_api.close()
 
         results_pheat = results['PHeater1[1]']
+        # drop results at beginning because it is too high
         filtered_data = results_pheat[results_pheat.index >= 432000]
         max_pheat = filtered_data.max()
         print(f"Heat power {filtered_data.max().values[0]} W is needed to keep room temperature")
-        # Save the data for later reproduction
-        #file = fmu_api.save_for_reproduction(
-        #    title="FMUTest",
-        #    log_message="This is just an example.")
-        #print("ZIP-File to reproduce all this:", file)
+
+        return max_pheat
 
     def fmu_export(self, AixLibPath,ModelPath,FMUname, ProjPath=None, WorkDirPath=None, FMUOutputPath=None):
         """
-        :param AixLibPath: path of your local ixLibPath, end with package.mo
-        :param ModelPath: full name of to be opened model, example "AixLib.Systems.EONERC_MainBuilding.Examples.RoomModels.Ashrae140_ideal_heater"
-        :param ProjPath: path of generated building model project, default local/DataResource/building_projects/prj_name/package.mo
+        :param AixLibPath: path of your local AixLibPath, end with package.mo
+        :param ModelPath: full name of to be opened model, example
+                        "AixLib.Systems.EONERC_MainBuilding.Examples.RoomModels.Ashrae140_ideal_heater"
+        :param ProjPath: path of generated building model project,
+                        default local/DataResource/building_projects/prj_name/package.mo
         :param WorkDirPath: work directory for dymola, all support data for FMU translation will be located here.
         :param FMUOutputPath: output path of generated FMU, default local/fmu
         """
@@ -495,6 +521,11 @@ class gen_building:
         dymola.close()
 
     def reloc_zone_record(self):
+        """
+        move generated record to "DataResource/data"
+        Returns:
+
+        """
         if self.methode == 'urbanrenet':
             path_to_zone_para = os.path.join(self.export_prj_path,
                                      self.prj_name,
@@ -521,10 +552,9 @@ class gen_building:
         shutil.copy2(path_to_zone_para, aim_path)
 
 if __name__ == '__main__':
-    setup =r"D:\sle-gzh\repo\TestWriteMO\local\config_main.json"
+    setup =r"local\config_main.json"
     with open(setup, 'r') as f:
         setup = json.load(f)
-
 
     setup_building = setup['building_info']
     standard_outside_temp = setup_building['standard_outside_temp']
@@ -535,12 +565,13 @@ if __name__ == '__main__':
     # TODO: select radiator type after that
     building_model.replace_t_set_idealheater(t_set=295.15)
     building_model.create_model_idealheater(baseACH=0.4)
-    building_model.find_max_power(n_cpu=1, log_fmu=False, n_sim=1, output_interval=3600, standard_outside_temp=standard_outside_temp)
+    heat_demand = building_model.find_max_power(n_cpu=1, log_fmu=False, n_sim=1, output_interval=3600, standard_outside_temp=standard_outside_temp)
     # ### end finding max. Power
-
     # ### generate model with radiator and export FMU
     building_model.create_model_w_radiator(baseACH=0.4)
-    building_model.rad_record_to_model(path_rad_record=r"DataResource/data/Radiator_cosmo_multiV_type33.mo",change_mflow=True)
+    path_record = create_radiator_record(find_radiator_type(heat_demand))
+    #path_record = create_radiator_record(find_radiator_type(2373))
+    building_model.rad_record_to_model(path_rad_record=path_record,change_mflow=True)
     building_model.reloc_zone_record()
 
     print("Successfully exported Building Model!")

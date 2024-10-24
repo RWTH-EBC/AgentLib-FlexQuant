@@ -7,7 +7,7 @@ def hash_conditions(building, simulation):
     conditions_str = str(building) + str(simulation)
     return hashlib.md5(conditions_str.encode('utf-8')).hexdigest()
 
-def check_and_generate_file(file):
+def check_and_generate_file(file,name):
     hash_file = file + ".hash"  # store hash file
 
     parent_directory = pathlib.Path(__file__).parent.parent
@@ -31,12 +31,12 @@ def check_and_generate_file(file):
             previous_hash = f.read()
         # If the hash values are the same, the conditions haven't changed
         if previous_hash == current_hash:
-            print(f"Conditions have not changed, skipping disturbances.csv generation")
+            print(f"Conditions have not changed, skipping {name} generation")
             return False
         else:
-            print(f"Conditions have changed, regenerating disturbances.csv")
+            print(f"Conditions have changed, regenerating {name}")
     else:
-        print(f"First time generating disturbances.csv")
+        print(f"First time generating {file}")
 
     # Write the current hash value to the hash file
     with open(hash_file, 'w') as f:
