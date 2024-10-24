@@ -41,7 +41,7 @@ def parse_modelica_record(path):
                         # If it's not a float, treat it as a string
                         constants[name] = value
             except:
-                continue  # Ignore malformed lines and continue
+                continue
 
     return constants
 

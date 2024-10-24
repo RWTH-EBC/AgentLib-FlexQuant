@@ -9,6 +9,7 @@ from ebcpy import FMU_API, TimeSeriesData
 from dymola.dymola_interface import DymolaInterface
 import json
 from local.utils.select_radiator import create_radiator_record,find_radiator_type
+from utilities.parse_radiator_record import parse_modelica_record
 
 
 class gen_building:
@@ -259,11 +260,18 @@ class gen_building:
                                 change_mflow=False):
         parent_directory = pathlib.Path(__file__).parent.parent
         path_rad_record = os.path.normpath(os.path.join(parent_directory, path_rad_record))
-        m_flow = self.setup['m_flow_radiator']
 
         # adjust and move radiator record to DataBase
         with open(path_rad_record, 'r') as file:
             record_lines = file.readlines()
+
+        # calculate nominal mass flow of radiator
+        para_rad = parse_modelica_record(path_rad_record)
+        nom_power = para_rad['NominalPower'] * para_rad['length']
+        temp = para_rad['RT_nom']
+        delta_temp = temp[0] - temp[1]
+        m_flow = round(nom_power/ (4184 * delta_temp),4)
+
         for i,line in enumerate(record_lines):
             # edit first line in radiator record
             if "within" in line:
@@ -330,16 +338,14 @@ class gen_building:
 
         with open(path_to_zone_para, 'r') as file:
             lines = file.readlines()
-            # 新内容，需要插入的两行
+
         add_para = [
             "    heaLoadFacOut=0,\n",
-            "    heaLoadFacGrd=0);\n"  # 注意这里的 ';' 改为 ')'
+            "    heaLoadFacGrd=0);\n"
         ]
 
-        # 找到要插入的位置
         for i, line in enumerate(lines):
             if "T_start =" in line:
-                # 找到目标行，将其中的数值部分替换为变量 start_temp 的值
                 new_line = f"    T_start = {start_temp},\n"
                 lines[i] = new_line
             elif need_idealheater is False and "HeaterOn" in line:
@@ -347,16 +353,13 @@ class gen_building:
             elif "useConstantACHrate" in line:
                 lines[i] = line.replace("false", "true")
             elif "baseACH" in line:
-                # 找到目标行，将其中的数值部分替换为变量 start_temp 的值
                 new_line = f"    baseACH = {baseACH},\n"
                 lines[i] = new_line
             elif "TThresholdCooler = " in line:
-                # 替换 ');' 为 ','，然后插入新的两行
-                lines[i] = line.replace(");", ",")  # 保证这里是 ',' 而不是多余的换行符
-                lines[i + 1:i + 1] = add_para  # 插入新内容时避免重复换行符
+                lines[i] = line.replace(");", ",")
+                lines[i + 1:i + 1] = add_para
                 break
 
-            # 将修改后的内容写回文件
         with open(path_to_zone_para, 'w') as file:
             file.writelines(lines)
 
@@ -367,7 +370,7 @@ class gen_building:
         with open(model_path, 'r') as file:
             lines = file.readlines()
 
-        # 标记是否处于 'zone(ROM(...))' 块中
+        # mark if in block 'zone(ROM(...))'
         inside_zone_rom = False
         cleaned_lines = []
 
@@ -377,15 +380,13 @@ class gen_building:
                 #
                 inside_zone_rom = True
             if inside_zone_rom:
-                # 在 'zone(ROM(...))' 块中，直到遇到闭合的 ')'
+                # until meet ')'
                 if '))))),' in line:
-                    inside_zone_rom = False  # 结束忽略块
-                continue  # 跳过该行，不加入 cleaned_lines
+                    inside_zone_rom = False
+                continue
             else:
-                # 不在 'zone(ROM(...))' 块中，保留该行
                 cleaned_lines.append(line)
 
-        # 将修改后的内容写回文件
         with open(model_path, 'w') as file:
             file.writelines(cleaned_lines)
 
@@ -475,8 +476,8 @@ class gen_building:
         results_pheat = results['PHeater1[1]']
         # drop results at beginning because it is too high
         filtered_data = results_pheat[results_pheat.index >= 432000]
-        max_pheat = filtered_data.max()
-        print(f"Heat power {filtered_data.max().values[0]} W is needed to keep room temperature")
+        max_pheat = filtered_data.max().values[0]
+        print(f"Heat power {max_pheat} W is needed to keep room temperature")
 
         return max_pheat
 

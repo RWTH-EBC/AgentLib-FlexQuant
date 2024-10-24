@@ -38,11 +38,12 @@ def run_example(setup):
         building_model = gen_building(setup_building)
         building_model.thermal_zone_from_teaser()
         # ### figure out minimal heat demand with standard outside temperature, select radiator type
-        building_model.replace_t_set_idealheater()
-        building_model.create_model_idealheater()
-        heat_demand = building_model.find_max_power(standard_outside_temp=standard_outside_temp)
+        building_model.replace_t_set_idealheater(t_set=295.15)
+        building_model.create_model_idealheater(baseACH=0.4)
+        heat_demand = building_model.find_max_power(n_cpu=1, log_fmu=False, n_sim=1, output_interval=3600,
+                                                    standard_outside_temp=standard_outside_temp)
         # ### generate model with radiator and export FMU
-        building_model.create_model_w_radiator()
+        building_model.create_model_w_radiator(baseACH=0.4)
         path_radiator_record = create_radiator_record(find_radiator_type(heat_demand))
         building_model.rad_record_to_model(path_rad_record=path_radiator_record, change_mflow=True)
         building_model.reloc_zone_record()
