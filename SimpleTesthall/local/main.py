@@ -7,7 +7,7 @@ from agentlib_mpc.utils.plotting.interactive import show_dashboard
 from local.utils import calc
 from local.utils.building_gen_teaser import gen_building
 from local.utils.check_generate import check_and_generate_file
-import plot_mpc
+from plot_mpc import plot_results
 
 
 with open(r"config_main.json", 'r') as f:
@@ -71,7 +71,7 @@ def run_example(setup):
 
     # Plotting
     if with_plots:
-        plot_mpc(setup,results)
+        plot_results(setup,results)
 
     show_dashboard(data=results["myMPCAgent"]['myMPC'], scale="hours")
 
