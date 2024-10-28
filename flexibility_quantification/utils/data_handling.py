@@ -51,7 +51,17 @@ def _set_mean_values(series: pd.Series):
     return result
 
 
-res_type = dict[str, pd.DataFrame]
+def load_indicator(file: Path) -> pd.DataFrame:
+    df = pd.read_csv(file, header=0, index_col=[0, 1])
+    return df
+
+
+def load_market(file: Path) -> pd.DataFrame:
+    df = pd.read_csv(file, header=0, index_col=[0, 1])
+    return df
+
+
+res_type = dict[str, dict[str, pd.DataFrame]]
 
 
 def load_results(res_path: Union[str, Path]) -> res_type:
@@ -68,8 +78,29 @@ def load_results(res_path: Union[str, Path]) -> res_type:
         "NegFlexMPC": {
             "NegFlexMPC": load_mpc(Path(res_path, "mpc_neg_flex.csv"))
         },
-        # TODO: implement load functions
-        # "FlexibilityIndicator": {"FlexibilityIndicator": load_indicator(Path(res_path, "flexibility_indicator.csv"))},
-        # "FlexibilityMarket": {"FlexibilityMarket": load_market(Path(res_path, "flexibility_market.csv"))},
+        "FlexibilityIndicator": {
+            "FlexibilityIndicator": load_indicator(Path(res_path, "flexibility_indicator.csv"))
+        },
+        "FlexibilityMarket": {
+            "FlexibilityMarket": load_market(Path(res_path, "flexibility_market.csv"))
+        },
     }
+    return results
+
+
+conv_factor = {
+    "s": 1,
+    "min": 60,
+    "h": 3600,
+    "d": 86400,
+}
+
+
+def convert_timescale(results: res_type, unit: str = "h") -> res_type:
+    for key, value in results.items():
+        for sub_key, sub_value in value.items():
+            if isinstance(sub_value.index, pd.MultiIndex):
+                sub_value.index = pd.MultiIndex.from_arrays([sub_value.index.get_level_values(level)/conv_factor[unit] for level in range(sub_value.index.nlevels)])
+            else:
+                sub_value.index = sub_value.index / conv_factor[unit]
     return results
