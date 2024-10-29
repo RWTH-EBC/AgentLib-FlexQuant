@@ -96,11 +96,11 @@ conv_factor = {
 }
 
 
-def convert_timescale(results: res_type, unit: str = "h") -> res_type:
+def convert_timescale_index(results: res_type, time_unit: str = "h") -> res_type:
     for key, value in results.items():
         for sub_key, sub_value in value.items():
             if isinstance(sub_value.index, pd.MultiIndex):
-                sub_value.index = pd.MultiIndex.from_arrays([sub_value.index.get_level_values(level)/conv_factor[unit] for level in range(sub_value.index.nlevels)])
+                sub_value.index = pd.MultiIndex.from_arrays([sub_value.index.get_level_values(level)/conv_factor[time_unit] for level in range(sub_value.index.nlevels)])
             else:
-                sub_value.index = sub_value.index / conv_factor[unit]
+                sub_value.index = sub_value.index / conv_factor[time_unit]
     return results
