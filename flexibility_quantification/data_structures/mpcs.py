@@ -1,6 +1,7 @@
 import pydantic
 from typing import List
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariables, MPCVariable
+import flexibility_quantification.data_structures.globals as glbs
 
 
 #TODO: add validators for these
@@ -86,9 +87,9 @@ class PFMPCData(BaseMPCData):
     )
     # initialize market parameters with dummy values (0)
     config_parameters_appendix: MPCVariables = [
-        MPCVariable(name="prep_time", value=0, unit="s"),
-        MPCVariable(name="market_time", value=0, unit="s"),
-        MPCVariable(name="flex_event_duration", value=0, unit="s"),
+        MPCVariable(name=glbs.PREP_TIME, value=0, unit="s"),
+        MPCVariable(name=glbs.MARKET_TIME, value=0, unit="s"),
+        MPCVariable(name=glbs.FLEX_EVENT_DURATION, value=0, unit="s"),
     ]
     config_inputs_appendix: MPCVariables = [
         MPCVariable(name="in_provision", value=False),
@@ -118,9 +119,9 @@ class NFMPCData(BaseMPCData):
     )
     # initialize market parameters with dummy values (0)
     config_parameters_appendix: MPCVariables = [
-        MPCVariable(name="prep_time", value=0, unit="s"),
-        MPCVariable(name="market_time", value=0, unit="s"),
-        MPCVariable(name="flex_event_duration", value=0, unit="s"),
+        MPCVariable(name=glbs.PREP_TIME, value=0, unit="s"),
+        MPCVariable(name=glbs.MARKET_TIME, value=0, unit="s"),
+        MPCVariable(name=glbs.FLEX_EVENT_DURATION, value=0, unit="s"),
     ]
     config_inputs_appendix: MPCVariables = [
         MPCVariable(name="in_provision", value=False),

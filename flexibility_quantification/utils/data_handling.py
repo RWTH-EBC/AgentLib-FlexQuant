@@ -1,8 +1,11 @@
 from pathlib import Path
 from typing import Union
-from agentlib_mpc.utils.analysis import load_sim, load_mpc
+
 import pandas as pd
 import numpy as np
+
+from agentlib_mpc.utils.analysis import load_sim, load_mpc
+from flexibility_quantification.data_structures.mpcs import BaselineMPCData, PFMPCData, NFMPCData
 
 
 def strip_multi_index(series: pd.Series):
@@ -51,32 +54,46 @@ def _set_mean_values(series: pd.Series):
     return result
 
 
-def load_indicator(file: Path) -> pd.DataFrame:
-    df = pd.read_csv(file, header=0, index_col=[0, 1])
+def load_indicator(file_path: Path) -> pd.DataFrame:
+    """Load the flexibility indicator results from the given file path
+    """
+    df = pd.read_csv(file_path, header=0, index_col=[0, 1])
     return df
 
 
-def load_market(file: Path) -> pd.DataFrame:
-    df = pd.read_csv(file, header=0, index_col=[0, 1])
+def load_market(file_path: Path) -> pd.DataFrame:
+    """Load the market results from the given file path
+    """
+    df = pd.read_csv(file_path, header=0, index_col=[0, 1])
     return df
 
 
-res_type = dict[str, dict[str, pd.DataFrame]]
+RES_TYPE = dict[str, dict[str, pd.DataFrame]]
+
+baselineID = BaselineMPCData().module_id
+posFlexID = PFMPCData().module_id
+negFlexID = NFMPCData().module_id
 
 
-def load_results(res_path: Union[str, Path]) -> res_type:
+def load_results(res_path: Union[str, Path]) -> RES_TYPE:
+    """
+    Load the results from the given path in the same format as the results from the agentlib
+
+    Keyword arguments:
+    res_path -- The path to the results folder as string or pathlib.Path object
+    """
     results = {
         "SimAgent": {
             "room": load_sim(Path(res_path, "sim_room.csv"))
         },
         "FlexModel": {
-            "Baseline": load_mpc(Path(res_path, "mpc_base.csv"))
+            baselineID: load_mpc(Path(res_path, f"mpc{BaselineMPCData().results_suffix}"))
         },
-        "PosFlexMPC": {
-            "PosFlexMPC": load_mpc(Path(res_path, "mpc_pos_flex.csv"))
+        posFlexID: {
+            posFlexID: load_mpc(Path(res_path, f"mpc{PFMPCData().results_suffix}"))
         },
-        "NegFlexMPC": {
-            "NegFlexMPC": load_mpc(Path(res_path, "mpc_neg_flex.csv"))
+        negFlexID: {
+            negFlexID: load_mpc(Path(res_path, f"mpc{NFMPCData().results_suffix}"))
         },
         "FlexibilityIndicator": {
             "FlexibilityIndicator": load_indicator(Path(res_path, "flexibility_indicator.csv"))
@@ -88,7 +105,7 @@ def load_results(res_path: Union[str, Path]) -> res_type:
     return results
 
 
-conv_factor = {
+TIME_CONV_FACTOR = {
     "s": 1,
     "min": 60,
     "h": 3600,
@@ -96,11 +113,18 @@ conv_factor = {
 }
 
 
-def convert_timescale_index(results: res_type, time_unit: str = "h") -> res_type:
+def convert_timescale_index(results: RES_TYPE, time_unit: str = "h") -> RES_TYPE:
+    """
+    Convert the timescale of a dataframe index (from seconds) to the given time unit
+
+    Keyword arguments:
+    results -- The dictionary of the results with the dataframes
+    time_unit -- The time unit to convert the index to (default "h"; options: "s", "min", "h", "d"; assumption: index is in seconds)
+    """
     for key, value in results.items():
         for sub_key, sub_value in value.items():
             if isinstance(sub_value.index, pd.MultiIndex):
-                sub_value.index = pd.MultiIndex.from_arrays([sub_value.index.get_level_values(level)/conv_factor[time_unit] for level in range(sub_value.index.nlevels)])
+                sub_value.index = pd.MultiIndex.from_arrays([sub_value.index.get_level_values(level) / TIME_CONV_FACTOR[time_unit] for level in range(sub_value.index.nlevels)])
             else:
-                sub_value.index = sub_value.index / conv_factor[time_unit]
+                sub_value.index = sub_value.index / TIME_CONV_FACTOR[time_unit]
     return results
