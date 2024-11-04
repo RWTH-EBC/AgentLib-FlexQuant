@@ -70,7 +70,7 @@ def mark_characteristic_times_of_accepted_offers(fig: go.Figure, results: RES_TY
     return fig
 
 
-def create_plot_for_mpc_variable(results: RES_TYPE, fig: go.Figure, variable: str, timestamp: int, show_bounds: bool) -> go.Figure:
+def create_plot_for_mpc_variable(results: RES_TYPE, fig: go.Figure, variable: str, timestamp: int) -> go.Figure:
     """
     Create a plot for the mpc variable
 
@@ -79,23 +79,21 @@ def create_plot_for_mpc_variable(results: RES_TYPE, fig: go.Figure, variable: st
     fig -- The figure to plot the results into
     variable -- The variable to plot
     timestamp -- The timestamp to show the mpc predictions
-    show_bounds -- Whether to show the bounds of the variable
 
     Returns:
     fig -- The figure with the added plot
     """
-    if show_bounds:
-        if variable in ["T", "T_out"]:
-            df_lb = results["FlexModel"][baselineID][("parameter", "T_lower")].copy().xs(0, level=1)
+    if variable in ["T", "T_out"]:
+        df_lb = results["FlexModel"][baselineID][("parameter", "T_lower")].copy().xs(0, level=1)
+        fig.add_trace(go.Scatter(name="T_lower", x=df_lb.index, y=df_lb, mode="lines", line=dict(color="grey")))
+        df_ub = results["FlexModel"][baselineID][("parameter", "T_upper")].copy().xs(0, level=1)
+        fig.add_trace(go.Scatter(name="T_upper", x=df_ub.index, y=df_ub, mode="lines", line=dict(color="grey")))
+    else:
+        df_lb = results["FlexModel"][baselineID][("lower", variable)].copy().xs(0, level=1)
+        df_ub = results["FlexModel"][baselineID][("upper", variable)].copy().xs(0, level=1)
+        if df_lb.notna().all() and df_ub.notna().all():
             fig.add_trace(go.Scatter(name="T_lower", x=df_lb.index, y=df_lb, mode="lines", line=dict(color="grey")))
-            df_ub = results["FlexModel"][baselineID][("parameter", "T_upper")].copy().xs(0, level=1)
             fig.add_trace(go.Scatter(name="T_upper", x=df_ub.index, y=df_ub, mode="lines", line=dict(color="grey")))
-        else:
-            df_lb = results["FlexModel"][baselineID][("lower", variable)].copy().xs(0, level=1)
-            df_ub = results["FlexModel"][baselineID][("upper", variable)].copy().xs(0, level=1)
-            if df_lb.notna().all() and df_ub.notna().all():
-                fig.add_trace(go.Scatter(name="T_lower", x=df_lb.index, y=df_lb, mode="lines", line=dict(color="grey")))
-                fig.add_trace(go.Scatter(name="T_upper", x=df_ub.index, y=df_ub, mode="lines", line=dict(color="grey")))
 
     df_sim = results["SimAgent"]["room"][variable].copy()
     df_neg = mpc_at_time_step(data=results[negFlexID][negFlexID], time_step=timestamp, variable=variable).dropna()
@@ -146,7 +144,7 @@ def create_plot_for_energyflex(results: RES_TYPE, fig: go.Figure) -> go.Figure:
     return fig
 
 
-def create_plot_for_one_variable(results: RES_TYPE, variable: str, time_unit: str, timestamp: int, show_bounds: bool, show_characteristic_times: bool, show_characteristic_times_accepted: bool = True) -> go.Figure:
+def create_plot_for_one_variable(results: RES_TYPE, variable: str, time_unit: str, timestamp: int, show_characteristic_times: bool) -> go.Figure:
     """
     Create a plot for one variable
 
@@ -155,17 +153,14 @@ def create_plot_for_one_variable(results: RES_TYPE, variable: str, time_unit: st
     variable -- The variable to plot
     time_unit -- The time unit to convert the index to (options: "s", "min", "h", "d"; assumption: index is in seconds)
     timestamp -- The timestamp to show the mpc predictions and the characteristic times
-    show_bounds -- Whether to show the bounds of the variable
     show_characteristic_times -- Whether to show the characteristic times
-    show_characteristic_times_accepted -- Whether to show the characteristic times for accepted offers (default True)
 
     Returns:
     fig -- The figure with the added plot
     """
     fig = go.Figure()
 
-    if show_characteristic_times_accepted:
-        mark_characteristic_times_of_accepted_offers(fig=fig, results=results, time_unit=time_unit)
+    mark_characteristic_times_of_accepted_offers(fig=fig, results=results, time_unit=time_unit)
 
     if variable == ENERGYFLEX:
         fig = create_plot_for_energyflex(results=results, fig=fig)
@@ -174,9 +169,11 @@ def create_plot_for_one_variable(results: RES_TYPE, variable: str, time_unit: st
     else:
         if show_characteristic_times:
             mark_characteristic_times(fig=fig, results=results, timestamp=timestamp, time_unit=time_unit)
-        fig = create_plot_for_mpc_variable(results=results, fig=fig, variable=variable, timestamp=timestamp, show_bounds=show_bounds)
+        fig = create_plot_for_mpc_variable(results=results, fig=fig, variable=variable, timestamp=timestamp)
 
-    fig.update_layout(title=variable, yaxis_title=variable, xaxis_title=f"Time in {time_unit}", xaxis_range=[results["SimAgent"]["room"].index[0], results["SimAgent"]["room"].index[-1]])
+    x_left = results["SimAgent"]["room"].index[0]
+    x_right = results["SimAgent"]["room"].index[-1] + results["FlexModel"][baselineID].index[-1][-1]
+    fig.update_layout(yaxis_title=variable, xaxis_title=f"Time in {time_unit}", xaxis_range=[x_left, x_right])
 
     return fig
 
@@ -202,14 +199,13 @@ def get_variable_options(results: RES_TYPE) -> list[str]:
     options.append(ENERGYFLEX)
     options.append(PRICE)
 
-    # TODO: more variable options even if its just the simulation without predictions
-
     return options
 
 
 def show_flex_dashboard(results: RES_TYPE, time_unit: str = "h"):
     """
     Interactive dashboard to plot the flexibility results
+    Primarily for debugging
 
     Keyword arguments:
     results -- The results as a dictionary of the dataframes
@@ -224,18 +220,11 @@ def show_flex_dashboard(results: RES_TYPE, time_unit: str = "h"):
         html.H1("Results"),
         html.Div(
             children=[
-                html.H2("Options"),
-                dcc.Checklist(id="bounds",
-                              options=[{"label": "Show bounds", "value": True}],
-                              value=[True]),
-                dcc.Checklist(id="characteristic_times ",
+                html.H3("Options"),
+                dcc.Checklist(id="characteristic_times",
                               options=[{"label": "Show characteristic times (current)", "value": False}],
                               value=[False]),
-                # dcc.Checklist(id="variable_options",
-                #               options=get_variable_options(results=results),
-                #               value=get_variable_options(results=results),
-                #               inline=True),
-                html.H2("Time"),
+                html.H3("Time"),
                 dcc.Slider(id="slider_time",
                            min=mpc_index[0], max=mpc_index[-1], step=mpc_index[1] - mpc_index[0],
                            value=mpc_index[0], updatemode="drag")
@@ -251,16 +240,17 @@ def show_flex_dashboard(results: RES_TYPE, time_unit: str = "h"):
     # Callbacks
     @callback(
         Output(component_id="graphs_container_div", component_property="children"),
-        Input(component_id="bounds", component_property="value"),
-        Input(component_id="characteristic_times ", component_property="value"),
+        Input(component_id="characteristic_times", component_property="value"),
         Input(component_id="slider_time", component_property="value"),
-        # Input(component_id="variable_options", component_property="value")
     )
-    def update_graph(show_bounds: bool, characteristic_times: bool, timestamp: int):    # variable_options: list[str]
+    def update_graph(characteristic_times: bool, timestamp: int):
         variable_options = get_variable_options(results=results)
         figs = []
         for variable in variable_options:
-            fig = create_plot_for_one_variable(results=results, variable=variable, timestamp=timestamp, show_bounds=show_bounds, show_characteristic_times=characteristic_times, time_unit=time_unit)
+            fig = create_plot_for_one_variable(
+                results=results, variable=variable,
+                timestamp=timestamp, show_characteristic_times=characteristic_times, time_unit=time_unit
+            )
             figs.append(dcc.Graph(id=f"graph_{variable}", figure=fig))
         return figs
 
