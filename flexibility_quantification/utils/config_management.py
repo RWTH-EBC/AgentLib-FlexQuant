@@ -1,8 +1,10 @@
 from agentlib.core.agent import AgentConfig
 from agentlib.core.module import BaseModuleConfig
-import flexibility_quantification.data_structures.globals as glbs
+from agentlib.utils.load_config import load_config
+
+from pathlib import Path
 from copy import deepcopy
-from typing import TypeVar
+from typing import TypeVar, Union
 import math
 from agentlib.modules import get_all_module_types
 import inspect
@@ -24,8 +26,44 @@ all_module_types.pop("clonemap")
 MODULE_TYPE_DICT = {name: inspect.get_annotations(class_type.import_class())["config"] for name, class_type in all_module_types.items()}
 
 MPC_CONFIG_TYPE: str = "agentlib_mpc.mpc"
+BASELINEMPC_CONFIG_TYPE: str = "flexibility_quantification.baseline_mpc"
+SHADOWMPC_CONFIG_TYPE: str = "flexibility_quantification.shadow_mpc"
 INDICATOR_CONFIG_TYPE: str = "flexibility_quantification.flexibility_indicator"
 MARKET_CONFIG_TYPE: str = "flexibility_quantification.flexibility_market"
+SIMULATOR_CONFIG_TYPE: str = "simulator"
+
+SIMULATOR_AGENT_KEY: str = "simulator"
+BASELINE_AGENT_KEY: str = "baseline"
+NEG_FLEX_AGENT_KEY: str = "neg_flex"
+POS_FLEX_AGENT_KEY: str = "pos_flex"
+INDICATOR_AGENT_KEY: str = "indicator"
+FLEX_MARKET_AGENT_KEY: str = "flexibility_market"
+SIMULATOR_AGENT_KEY: str = "simulator"
+
+
+def load_agent_configs_of_flexquant_simulation(file_paths: Union[list[str], list[Path]]) -> dict[str, AgentConfig]:
+    """
+    Load the agent configurations from the given file paths
+    return a dictionary with the agent type as key and the agent config as value
+    """
+    agent_configs = {}
+    for file_path in file_paths:
+        agent = load_config(file_path, AgentConfig)
+        for module in agent.modules:
+            if module["type"] == BASELINEMPC_CONFIG_TYPE:
+                agent_configs[BASELINE_AGENT_KEY] = agent
+            elif module["type"] == SHADOWMPC_CONFIG_TYPE:
+                if "neg".casefold() in module["module_id"].casefold():
+                    agent_configs[NEG_FLEX_AGENT_KEY] = agent
+                elif "pos".casefold() in module["module_id"].casefold():
+                    agent_configs[POS_FLEX_AGENT_KEY] = agent
+            elif module["type"] == INDICATOR_CONFIG_TYPE:
+                agent_configs[INDICATOR_AGENT_KEY] = agent
+            elif module["type"] == MARKET_CONFIG_TYPE:
+                agent_configs[FLEX_MARKET_AGENT_KEY] = agent
+            elif module["type"] == SIMULATOR_CONFIG_TYPE:
+                agent_configs[SIMULATOR_AGENT_KEY] = agent
+    return agent_configs
 
 
 def get_module(config: AgentConfig, module_type: str) -> T:

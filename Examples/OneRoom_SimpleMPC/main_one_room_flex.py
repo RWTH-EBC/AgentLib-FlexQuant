@@ -30,8 +30,10 @@ def run_example(until=until):
     mas.run(until=until)
     results = mas.get_results(cleanup=False)
 
-    plot_results(results)
+    plot_results(agent_configs=agent_configs, results=results)
 
 
 if __name__ == "__main__":
     run_example(until)
+    # plot_results(agent_configs=['mpc_and_sim/simple_sim.json', 'predictor/predictor_config.json', 'created_flex_files\\baseline.json', 'created_flex_files\\pos_flex.json', 'created_flex_files\\neg_flex.json', 'created_flex_files\\indicator.json', 'created_flex_files\\flexibility_market.json'],
+    #              results=r"C:\Users\fwu-pkr\PycharmProjects\flexquant\Examples\OneRoom_SimpleMPC\results")
