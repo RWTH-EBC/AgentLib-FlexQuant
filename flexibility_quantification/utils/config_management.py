@@ -32,13 +32,13 @@ INDICATOR_CONFIG_TYPE: str = "flexibility_quantification.flexibility_indicator"
 MARKET_CONFIG_TYPE: str = "flexibility_quantification.flexibility_market"
 SIMULATOR_CONFIG_TYPE: str = "simulator"
 
+# keys for accessing the agent configs and results dictionary
 SIMULATOR_AGENT_KEY: str = "simulator"
 BASELINE_AGENT_KEY: str = "baseline"
 NEG_FLEX_AGENT_KEY: str = "neg_flex"
 POS_FLEX_AGENT_KEY: str = "pos_flex"
 INDICATOR_AGENT_KEY: str = "indicator"
 FLEX_MARKET_AGENT_KEY: str = "flexibility_market"
-SIMULATOR_AGENT_KEY: str = "simulator"
 
 
 def load_agent_configs_of_flexquant_simulation(file_paths: Union[list[str], list[Path]]) -> dict[str, AgentConfig]:

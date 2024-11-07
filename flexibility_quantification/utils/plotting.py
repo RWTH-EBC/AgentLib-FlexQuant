@@ -8,7 +8,10 @@ from plotly import graph_objects as go
 from dash import Dash, html, dcc, callback, Output, Input
 
 from agentlib.core.agent import AgentConfig
-from flexibility_quantification.utils.data_loading import load_agent_configs_and_results, convert_timescale_index, TIME_CONV_FACTOR
+
+from flexibility_quantification.utils.data_loading import load_agent_configs_and_results, convert_timescale_index, STATS_KEY
+from agentlib_mpc.utils import TimeConversionTypes, TIME_CONVERSION
+from agentlib_mpc.utils.plotting.interactive import solver_return, obj_plot
 from flexibility_quantification.utils.config_management import (
     SIMULATOR_AGENT_KEY,
     BASELINE_AGENT_KEY,
@@ -16,7 +19,6 @@ from flexibility_quantification.utils.config_management import (
     NEG_FLEX_AGENT_KEY,
     INDICATOR_AGENT_KEY,
     FLEX_MARKET_AGENT_KEY,
-    SIMULATOR_AGENT_KEY,
 )
 import flexibility_quantification.data_structures.globals as glbs
 
@@ -24,7 +26,7 @@ from agentlib_mpc.utils.analysis import mpc_at_time_step
 from agentlib_mpc.utils.plotting.interactive import get_port
 
 
-def show_flex_dashboard(results: dict[str, dict[str, pd.DataFrame]], agent_configs: dict[str, AgentConfig], time_unit: str = "h"):
+def show_flex_dashboard(results: dict[str, dict[str, pd.DataFrame]], agent_configs: dict[str, AgentConfig], time_unit: TimeConversionTypes = "seconds"):
     """
     Interactive dashboard to plot the flexibility results
     Primarily for debugging
@@ -32,7 +34,7 @@ def show_flex_dashboard(results: dict[str, dict[str, pd.DataFrame]], agent_confi
     Keyword arguments:
     results -- The results as a dictionary of the dataframes
     agent_configs -- The agent configurations as a dictionary with the agent key and the agent config as value
-    time_unit -- The time unit to convert the index to (default "h"; options: "s", "min", "h", "d"; assumption: index is in seconds)
+    time_unit -- The unit to scale the time to
     """
     # convert results to the desired time unit
     results = convert_timescale_index(results=results, time_unit=time_unit)
@@ -54,31 +56,32 @@ def show_flex_dashboard(results: dict[str, dict[str, pd.DataFrame]], agent_confi
     # get dataframes
     df_simulation = results[simulator_agent_id][simulator_module_id]
     df_baseline = results[baseline_agent_id][baseline_module_id]
+    df_baseline_stats = results[baseline_agent_id][STATS_KEY]
     df_pos_flex = results[pos_flex_agent_id][pos_flex_module_id]
+    df_pos_flex_stats = results[pos_flex_agent_id][STATS_KEY]
     df_neg_flex = results[neg_flex_agent_id][neg_flex_module_id]
+    df_neg_flex_stats = results[neg_flex_agent_id][STATS_KEY]
     df_indicator = results[indicator_agent_id][indicator_module_id]
     df_flex_market = results[flex_market_agent_id][flex_market_module_id]
     
     # define constants
     ENERGYFLEX = "energyflex"
     PRICE = "price"
+    MPC_ITERATIONS = "iterations"
     
     # define line properties
     LINE_PROPERTIES = {
-        SIMULATOR_AGENT_KEY: {
+        simulator_agent_id: {
             "color": "black",
         },
-        BASELINE_AGENT_KEY: {
+        baseline_agent_id: {
             "color": "black",
-            "dash": "dash",
         },
-        NEG_FLEX_AGENT_KEY: {
+        neg_flex_agent_id: {
             "color": "red",
-            "dash": "dash",
         },
-        POS_FLEX_AGENT_KEY: {
+        pos_flex_agent_id: {
             "color": "blue",
-            "dash": "dash",
         },
         "bounds": {
             "color": "grey",
@@ -106,9 +109,9 @@ def show_flex_dashboard(results: dict[str, dict[str, pd.DataFrame]], agent_confi
             line_prop = LINE_PROPERTIES["characteristic_times_current"]
         try:
             offer_time = timestamp
-            rel_market_time = df_indicator.loc[(timestamp, 0), glbs.MARKET_TIME] / TIME_CONV_FACTOR[time_unit]
-            rel_prep_time = df_indicator.loc[(timestamp, 0), glbs.PREP_TIME] / TIME_CONV_FACTOR[time_unit]
-            flex_event_duration = df_indicator.loc[(timestamp, 0), glbs.FLEX_EVENT_DURATION] / TIME_CONV_FACTOR[time_unit]
+            rel_market_time = df_indicator.loc[(timestamp, 0), glbs.MARKET_TIME] / TIME_CONVERSION[time_unit]
+            rel_prep_time = df_indicator.loc[(timestamp, 0), glbs.PREP_TIME] / TIME_CONVERSION[time_unit]
+            flex_event_duration = df_indicator.loc[(timestamp, 0), glbs.FLEX_EVENT_DURATION] / TIME_CONVERSION[time_unit]
 
             fig.add_vline(x=offer_time, line=line_prop)
             fig.add_vline(x=offer_time + rel_prep_time, line=line_prop)
@@ -152,28 +155,29 @@ def show_flex_dashboard(results: dict[str, dict[str, pd.DataFrame]], agent_confi
         df_pos = mpc_at_time_step(data=df_pos_flex, time_step=timestamp, variable=variable).dropna()
         df_bas = mpc_at_time_step(data=df_baseline, time_step=timestamp, variable=variable).dropna()
 
-        fig.add_trace(go.Scatter(name=simulator_agent_id, x=df_sim.index, y=df_sim, mode="lines", line=LINE_PROPERTIES[SIMULATOR_AGENT_KEY]))
-        fig.add_trace(go.Scatter(name=neg_flex_agent_id, x=df_neg.index, y=df_neg, mode="lines", line=LINE_PROPERTIES[NEG_FLEX_AGENT_KEY]))
-        fig.add_trace(go.Scatter(name=pos_flex_agent_id, x=df_pos.index, y=df_pos, mode="lines", line=LINE_PROPERTIES[POS_FLEX_AGENT_KEY]))
-        fig.add_trace(go.Scatter(name=baseline_agent_id, x=df_bas.index, y=df_bas, mode="lines", line=LINE_PROPERTIES[BASELINE_AGENT_KEY]))
+        fig.add_trace(go.Scatter(name=simulator_agent_id, x=df_sim.index, y=df_sim, mode="lines", line=LINE_PROPERTIES[simulator_agent_id]))
+        fig.add_trace(go.Scatter(name=neg_flex_agent_id, x=df_neg.index, y=df_neg, mode="lines", line=LINE_PROPERTIES[neg_flex_agent_id] | {"dash": "dash"}))
+        fig.add_trace(go.Scatter(name=pos_flex_agent_id, x=df_pos.index, y=df_pos, mode="lines", line=LINE_PROPERTIES[pos_flex_agent_id] | {"dash": "dash"}))
+        fig.add_trace(go.Scatter(name=baseline_agent_id, x=df_bas.index, y=df_bas, mode="lines", line=LINE_PROPERTIES[baseline_agent_id] | {"dash": "dash"}))
 
         return fig
 
     def plot_flexprices(fig: go.Figure) -> go.Figure:
         df_flex_market_index = df_flex_market.index.droplevel("time")
-        fig.add_trace(go.Scatter(name="positive", x=df_flex_market_index, y=df_flex_market["pos_price"], mode="lines+markers", line=LINE_PROPERTIES[POS_FLEX_AGENT_KEY]))
-        fig.add_trace(go.Scatter(name="negative", x=df_flex_market_index, y=df_flex_market["neg_price"], mode="lines+markers", line=LINE_PROPERTIES[NEG_FLEX_AGENT_KEY]))
+        fig.add_trace(go.Scatter(name="positive", x=df_flex_market_index, y=df_flex_market["pos_price"], mode="lines+markers", line=LINE_PROPERTIES[pos_flex_agent_id]))
+        fig.add_trace(go.Scatter(name="negative", x=df_flex_market_index, y=df_flex_market["neg_price"], mode="lines+markers", line=LINE_PROPERTIES[neg_flex_agent_id]))
         return fig
 
     def plot_energyflex(fig: go.Figure) -> go.Figure:
         df_ind = df_indicator.xs(0, level=1)
-        fig.add_trace(go.Scatter(name="Energyflex: positive", x=df_ind.index, y=df_ind["energyflex_pos"], mode="lines+markers", line=LINE_PROPERTIES[POS_FLEX_AGENT_KEY]))
-        fig.add_trace(go.Scatter(name="Energyflex: negative", x=df_ind.index, y=df_ind["energyflex_neg"], mode="lines+markers", line=LINE_PROPERTIES[NEG_FLEX_AGENT_KEY]))
+        fig.add_trace(go.Scatter(name="Energyflex: positive", x=df_ind.index, y=df_ind["energyflex_pos"], mode="lines+markers", line=LINE_PROPERTIES[pos_flex_agent_id]))
+        fig.add_trace(go.Scatter(name="Energyflex: negative", x=df_ind.index, y=df_ind["energyflex_neg"], mode="lines+markers", line=LINE_PROPERTIES[neg_flex_agent_id]))
         return fig
 
-    def plot_stats(fig: go.Figure) -> go.Figure:
-        # todo: plotting statistics (solver)
-        # add to get_variables and create_plot_for_one_variable
+    def plot_mpc_iterations(fig: go.Figure) -> go.Figure:
+        fig.add_trace(go.Scatter(name=baseline_agent_id, x=df_baseline_stats.index, y=df_baseline_stats["iter_count"], mode="markers", line=LINE_PROPERTIES[baseline_agent_id]))
+        fig.add_trace(go.Scatter(name=pos_flex_agent_id, x=df_pos_flex_stats.index, y=df_pos_flex_stats["iter_count"], mode="markers", line=LINE_PROPERTIES[pos_flex_agent_id]))
+        fig.add_trace(go.Scatter(name=neg_flex_agent_id, x=df_neg_flex_stats.index, y=df_neg_flex_stats["iter_count"], mode="markers", line=LINE_PROPERTIES[neg_flex_agent_id]))
         return fig
 
     def create_plot_for_one_variable(variable: str, timestamp: int, show_characteristic_times: bool, complete_predction_horizon: bool = False) -> go.Figure:
@@ -189,7 +193,9 @@ def show_flex_dashboard(results: dict[str, dict[str, pd.DataFrame]], agent_confi
         mark_characteristic_times_of_accepted_offers(fig=fig)
 
         # plot variable
-        if variable == ENERGYFLEX:
+        if variable == MPC_ITERATIONS:
+            plot_mpc_iterations(fig=fig)
+        elif variable == ENERGYFLEX:
             plot_energyflex(fig=fig)
         elif variable == PRICE:
             plot_flexprices(fig=fig)
@@ -220,6 +226,7 @@ def show_flex_dashboard(results: dict[str, dict[str, pd.DataFrame]], agent_confi
         # add custom variables
         variables.append(ENERGYFLEX)
         variables.append(PRICE)
+        variables.append(MPC_ITERATIONS)
 
         return variables
 
@@ -249,12 +256,12 @@ def show_flex_dashboard(results: dict[str, dict[str, pd.DataFrame]], agent_confi
                 "position": "sticky", "top": "0", "overflow-y": "visible", "z-index": "100", "background-color": "white"
             }
         ),
-        html.Div(id="graphs_container_div", children=[]),
+        html.Div(id="graphs_container_variables", children=[]),
     ]
 
     # Callbacks
     @callback(
-        Output(component_id="graphs_container_div", component_property="children"),
+        Output(component_id="graphs_container_variables", component_property="children"),
         Input(component_id="characteristic_times_current", component_property="value"),
         Input(component_id="complete_predction_horizon", component_property="value"),
         Input(component_id="slider_time", component_property="value"),
@@ -283,4 +290,4 @@ def plot_results(agent_configs: Union[list[str], list[Path]], results: Union[str
 
     # space for further plotting scripts
 
-    show_flex_dashboard(results=results, agent_configs=agent_configs, time_unit="h")
+    show_flex_dashboard(results=results, agent_configs=agent_configs, time_unit="hours")
