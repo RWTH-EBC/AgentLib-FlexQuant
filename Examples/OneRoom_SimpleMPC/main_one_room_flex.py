@@ -1,7 +1,7 @@
 import logging
 from flexibility_quantification.generate_flex_agents import FlexAgentGenerator
 from agentlib.utils.multi_agent_system import LocalMASAgency
-from flexibility_quantification.utils.plotting import plot_results
+from flexibility_quantification.utils.interactive import show_flex_dashboard
 
 # Set the log-level
 logging.basicConfig(level=logging.WARN)
@@ -30,10 +30,14 @@ def run_example(until=until):
     mas.run(until=until)
     results = mas.get_results(cleanup=False)
 
-    plot_results(agent_configs=agent_configs, results=results)
+    show_flex_dashboard(agent_configs_paths=agent_configs, results=results, timescale="hours")
 
 
 if __name__ == "__main__":
-    run_example(until)
-    # plot_results(agent_configs=['mpc_and_sim/simple_sim.json', 'predictor/predictor_config.json', 'created_flex_files\\baseline.json', 'created_flex_files\\pos_flex.json', 'created_flex_files\\neg_flex.json', 'created_flex_files\\indicator.json', 'created_flex_files\\flexibility_market.json'],
-    #              results=r"C:\Users\fwu-pkr\PycharmProjects\flexquant\Examples\OneRoom_SimpleMPC\results")
+   run_example(until)
+   # show_flex_dashboard(
+   #     # one way to get the agent config paths is by printing agent_configs after generating the agents
+   #     agent_configs_paths=['mpc_and_sim/simple_sim.json', 'predictor/predictor_config.json', 'created_flex_files\\baseline.json', 'created_flex_files\\pos_flex.json', 'created_flex_files\\neg_flex.json', 'created_flex_files\\indicator.json', 'created_flex_files\\flexibility_market.json'],
+   #     results=r"C:\Users\fwu-pkr\PycharmProjects\flexquant\Examples\OneRoom_SimpleMPC\results",
+   #     timescale="hours"
+   # )

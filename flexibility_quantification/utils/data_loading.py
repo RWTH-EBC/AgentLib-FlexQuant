@@ -35,8 +35,7 @@ def load_market(file_path: Union[str, Path]) -> pd.DataFrame:
 
 
 def load_agent_configs_and_results(agent_configs_paths: Union[list[str], list[Path]], results: Union[str, Path, dict[str, dict[str, pd.DataFrame]]]) -> tuple[dict[str, AgentConfig], dict[str, dict[str, pd.DataFrame]]]:
-    """
-    Load the agent configurations and results ands stats from the given file paths if necessary
+    """Load the agent configurations and results ands stats from the given file paths if necessary
     """
 
     # Load the agent configurations
@@ -94,7 +93,7 @@ def load_agent_configs_and_results(agent_configs_paths: Union[list[str], list[Pa
     return agent_configs, results
 
 
-def convert_timescale_index(results: dict[str, dict[str, pd.DataFrame]], time_unit: TimeConversionTypes) -> dict[str, dict[str, pd.DataFrame]]:
+def convert_timescale_index(results: dict[str, dict[str, pd.DataFrame]], timescale: TimeConversionTypes) -> dict[str, dict[str, pd.DataFrame]]:
     """ Convert the timescale of a dataframe index (from seconds) to the given time unit
 
     Keyword arguments:
@@ -104,7 +103,7 @@ def convert_timescale_index(results: dict[str, dict[str, pd.DataFrame]], time_un
     for key, value in results.items():
         for sub_key, sub_value in value.items():
             if isinstance(sub_value.index, pd.MultiIndex):
-                sub_value.index = pd.MultiIndex.from_arrays([sub_value.index.get_level_values(level) / TIME_CONVERSION[time_unit] for level in range(sub_value.index.nlevels)])
+                sub_value.index = pd.MultiIndex.from_arrays([sub_value.index.get_level_values(level) / TIME_CONVERSION[timescale] for level in range(sub_value.index.nlevels)])
             else:
-                sub_value.index = sub_value.index / TIME_CONVERSION[time_unit]
+                sub_value.index = sub_value.index / TIME_CONVERSION[timescale]
     return results

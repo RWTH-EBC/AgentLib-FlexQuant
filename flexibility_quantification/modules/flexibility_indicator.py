@@ -61,11 +61,11 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
             description="Positive Minimal Powerflexibility"
         ),
         agentlib.AgentVariable(
-            name="energyflex_neg", unit='kWh', type="pd.Series",
+            name=glbs.ENERGYFLEX_NEG, unit='kWh', type="pd.Series",
             description="Negative Energyflexibility"
         ),
         agentlib.AgentVariable(
-            name="energyflex_pos", unit='kWh', type="pd.Series",
+            name=glbs.ENERGYFLEX_POS, unit='kWh', type="pd.Series",
             description="Positive Energyflexibility"
         ),
         agentlib.AgentVariable(
@@ -294,6 +294,13 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             scaler = 1
         else:
             scaler = 1000
+
+        # 1. create uniform data structure, if necessary
+        # todo: data = uniform(self.df)
+        # 2. create functions for different KPIs, also write res object
+        # todo: calc(energy_flex(data))
+        # 3. write res file
+        # todo: pd.to_csv(self.res)
 
         # generate horizons
         # 1. for the flexibility range
