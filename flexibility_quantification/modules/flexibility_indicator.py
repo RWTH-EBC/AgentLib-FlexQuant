@@ -229,8 +229,14 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             return None
 
     def flexibility(self):
+        """
+        Calculate the flexibility, the costs, send the offer and write and save the results
+        """
+        # check if the dataframe is already initialized
         if self.df is None:
             self.df = pd.DataFrame(columns=self.var_list)
+
+        # get parameter
         prep_time = self.get(glbs.PREP_TIME).value
         market_time = self.get(glbs.MARKET_TIME).value
         switch_time = prep_time + market_time
@@ -246,13 +252,8 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         full_horizon = np.arange(
             0, horizon * time_step, time_step)
 
-        # 1. create uniform data structure, if necessary
-        # todo: data = uniform(self.df)
         self.uniform_data(full_horizon=full_horizon)
-        # 2. create functions for different KPIs, also write res object
-        # todo: calc(energy_flex(data))
         self.calculate_and_send_offer(full_horizon=full_horizon, flex_horizon=flex_horizon, time_step=time_step, horizon=horizon)
-        self.write_results(df=self.df, ts=time_step, n=horizon)
         self.safe_results()
 
         # set the values to None to reset the callback
@@ -261,7 +262,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         self.pos_vals = None
         self._r_pel = None
 
-    def uniform_data(self, full_horizon: np.ndarray):
+    def uniform_data(self, full_horizon: np.ndarray):   # todo
         """Uniform data to the same length
         """
         # uniform regarding discretization
@@ -338,24 +339,34 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             return
         os.remove(results_file)
 
-    def _diff_negative_flexibility(self) -> pd.Series:
+    def _diff_negative_flexibility(self) -> np.ndarray:
         diff = self.neg_vals.values - self.base_vals.values
         return diff
 
-    def _diff_positive_flexibility(self) -> pd.Series:
+    def _diff_positive_flexibility(self) -> np.ndarray:
         diff = self.base_vals.values - self.pos_vals.values
         return diff
 
     def calculate_flexibility(self, abbrev: str, diff_func: callable, full_horizon: np.ndarray, flex_horizon: np.ndarray, ts: float):
         """calculate flexibility by differentiate the baseline and shadow mpc
         """
-        df = pd.DataFrame(index=full_horizon)
-        df["abs_diff"] = diff_func
-        df["rel_diff"] = df["abs_diff"] / self.base_vals.values
-        df.loc[df["rel_diff"] < 1, "abs_diff"] = 0
+        powerflex_flex = []
+        difference = diff_func
+        for i in range(len(self.neg_vals)):
+            diff = difference[i]
+
+            if diff < 0:
+                percentage_diff = (abs(diff) / self.base_vals.values[i]) * 100
+
+                if percentage_diff < 1:
+                    powerflex_flex.append(0)
+                else:
+                    powerflex_flex.append(diff)
+            else:
+                powerflex_flex.append(diff)
 
         # save this variable for the cost flexibilty
-        powerflex_flex_full = df["abs_diff"]
+        powerflex_flex_full = pd.Series(powerflex_flex, index=full_horizon)
         # the powerflex is defined only in the flexibility region
         powerflex_profile = powerflex_flex_full.reindex(index=flex_horizon)
         powerflex_flex = powerflex_profile.reindex(index=full_horizon)
@@ -390,6 +401,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             costs_neg_rel = flex_price / energyflex
 
         self.set(f"costs_{abbrev}_rel", str(costs_neg_rel))
+
         return flex_price
 
     def calculate_and_send_offer(self, full_horizon: np.ndarray, flex_horizon: np.ndarray, time_step: float, horizon):
@@ -423,3 +435,6 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         self.send_flex_offer("FlexibilityOffer", base_profile,
                              flex_price_pos, powerflex_profile_pos,
                              flex_price_neg, powerflex_profile_neg)
+
+        # write results
+        self.df = self.write_results(df=self.df, ts=time_step, n=horizon)
