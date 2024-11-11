@@ -1,10 +1,9 @@
 import os
 import sys
-from typing import Optional, List
+from typing import Optional, Union, List
 import agentlib
 import numpy as np
 import pandas as pd
-from typing import Optional, Union
 from pathlib import Path
 import pydantic
 import flexibility_quantification.data_structures.globals as glbs
@@ -92,7 +91,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
                                description="Market time"),
         agentlib.AgentVariable(name=glbs.FLEX_EVENT_DURATION, unit="s",
                                description="time to switch objective"),
-        agentlib.AgentVariable(name="time_step", unit="s",
+        agentlib.AgentVariable(name=glbs.TIME_STEP, unit="s",
                                description="timestep of the mpc solution"),
         agentlib.AgentVariable(name="prediction_horizon", unit="-",
                                description="prediction horizon of the mpc solution"),
@@ -214,7 +213,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
 
             if all(var is not None for var in
                    (self.base_vals, self.neg_vals, self.pos_vals, self._r_pel)):
-                self.calc_flex()
+                self.flexibility()
 
     def get_results(self) -> Optional[pd.DataFrame]:
         """
@@ -228,6 +227,62 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         except FileNotFoundError:
             self.logger.error("Results file %s was not found.", results_file)
             return None
+
+    def flexibility(self):
+        if self.df is None:
+            self.df = pd.DataFrame(columns=self.var_list)
+        prep_time = self.get(glbs.PREP_TIME).value
+        market_time = self.get(glbs.MARKET_TIME).value
+        switch_time = prep_time + market_time
+        flex_event_duration = self.get(glbs.FLEX_EVENT_DURATION).value
+        horizon = self.get("prediction_horizon").value
+        time_step = self.get(glbs.TIME_STEP).value
+
+        # generate horizons
+        # 1. for the flexibility range
+        flex_horizon = np.arange(
+            switch_time, switch_time + flex_event_duration, time_step)
+        # 2. for the full range of prediction
+        full_horizon = np.arange(
+            0, horizon * time_step, time_step)
+
+        # 1. create uniform data structure, if necessary
+        # todo: data = uniform(self.df)
+        self.uniform_data(full_horizon=full_horizon)
+        # 2. create functions for different KPIs, also write res object
+        # todo: calc(energy_flex(data))
+        self.calculate_and_send_offer(full_horizon=full_horizon, flex_horizon=flex_horizon, time_step=time_step, horizon=horizon)
+        self.write_results(df=self.df, ts=time_step, n=horizon)
+        self.safe_results()
+
+        # set the values to None to reset the callback
+        self.base_vals = None
+        self.neg_vals = None
+        self.pos_vals = None
+        self._r_pel = None
+
+    def uniform_data(self, full_horizon: np.ndarray):
+        """Uniform data to the same length
+        """
+        # uniform regarding discretization
+        if self.config.discretization == "collocation":
+            # As the collocation uses the values after each time step, the last value is always none
+            time = self.base_vals.index[:-1]
+
+            # use only the values of the full time steps
+            self.base_vals = pd.Series(self.base_vals, index=time).reindex(index=full_horizon)
+            self.neg_vals = pd.Series(self.neg_vals, index=time).reindex(index=full_horizon)
+            self.pos_vals = pd.Series(self.pos_vals, index=time).reindex(index=full_horizon)
+
+        # TODO: units anpassen (über Agentvars?)
+        # convert unit of power variables in kW
+        if self.config.power_unit == "kW":
+            scaler = 1
+        else:
+            scaler = 1000
+        self.base_vals = self.base_vals / scaler
+        self.neg_vals = self.neg_vals / scaler
+        self.pos_vals = self.pos_vals / scaler
 
     def write_results(self, df, ts, n):
         """
@@ -265,14 +320,17 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             new_df = pd.DataFrame(results).T
             new_df.columns = self.var_list
             new_df.index.type = "time"
-            new_df['time_step'] = now
-            new_df.set_index(['time_step', new_df.index], inplace=True)
+            new_df[glbs.TIME_STEP] = now
+            new_df.set_index([glbs.TIME_STEP, new_df.index], inplace=True)
             df = pd.concat([df, new_df])
             # set the indices once again as concat cant handle indices properly
-            indices = pd.MultiIndex.from_tuples(df.index, names=["time_step", "time"])
+            indices = pd.MultiIndex.from_tuples(df.index, names=[glbs.TIME_STEP, "time"])
             df.set_index(indices, inplace=True)
 
         return df
+
+    def safe_results(self):
+        self.df.to_csv(self.config.results_file)
 
     def cleanup_results(self):
         results_file = self.config.results_file
@@ -280,129 +338,88 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             return
         os.remove(results_file)
 
-    def calc_flex(self):
-        if self.df is None:
-            self.df = pd.DataFrame(columns=self.var_list)
-        prep_time = self.get(glbs.PREP_TIME).value
-        market_time = self.get(glbs.MARKET_TIME).value
-        switch_time = prep_time + market_time
-        flex_event_duration = self.get(glbs.FLEX_EVENT_DURATION).value
-        horizon = self.get("prediction_horizon").value
-        time_step = self.get("time_step").value
+    def _diff_negative_flexibility(self) -> pd.Series:
+        diff = self.neg_vals.values - self.base_vals.values
+        return diff
 
-        if self.config.power_unit == "kW":
-            scaler = 1
-        else:
-            scaler = 1000
+    def _diff_positive_flexibility(self) -> pd.Series:
+        diff = self.base_vals.values - self.pos_vals.values
+        return diff
 
-        # generate horizons
-        # 1. for the flexibility range
-        flex_horizon = np.arange(
-            switch_time, switch_time + flex_event_duration, time_step)
-        # 2. for the full range of prediction
-        full_horizon = np.arange(
-            0, horizon * time_step, time_step)
+    def calculate_flexibility(self, abbrev: str, diff_func: callable, full_horizon: np.ndarray, flex_horizon: np.ndarray, ts: float):
+        """calculate flexibility by differentiate the baseline and shadow mpc
+        """
+        df = pd.DataFrame(index=full_horizon)
+        df["abs_diff"] = diff_func
+        df["rel_diff"] = df["abs_diff"] / self.base_vals.values
+        df.loc[df["rel_diff"] < 1, "abs_diff"] = 0
 
-        if self.config.discretization == "collocation":
-            # As the collocation uses the values after each time step, the last value is always none
-            time = self.base_vals.index[:-1]
-
-            # use only the values of the full time steps
-            self.base_vals = pd.Series(self.base_vals, index=time).reindex(index=full_horizon)
-            self.neg_vals = pd.Series(self.neg_vals, index=time).reindex(index=full_horizon)
-            self.pos_vals = pd.Series(self.pos_vals, index=time).reindex(index=full_horizon)
-
-        powerflex_flex_neg = []
-        for i in range(len(self.neg_vals)):
-            diff = self.neg_vals.values[i] - self.base_vals.values[i]
-
-            if diff < 0:
-                percentage_diff = (abs(diff) / self.base_vals.values[i]) * 100
-
-                if percentage_diff < 1:
-                    powerflex_flex_neg.append(0)
-                else:
-                    powerflex_flex_neg.append(diff)
-            else:
-                powerflex_flex_neg.append(diff)
         # save this variable for the cost flexibilty
-        powerflex_flex_neg_full = pd.Series(powerflex_flex_neg, index=full_horizon)
+        powerflex_flex_full = df["abs_diff"]
         # the powerflex is defined only in the flexibility region
-        powerflex_profile_neg = powerflex_flex_neg_full.reindex(index=flex_horizon)
-        powerflex_flex_neg = powerflex_profile_neg.reindex(index=full_horizon)
-        self.set("powerflex_flex_neg", powerflex_flex_neg)
-        # W -> kW
-        # TODO: units anpassen (über Agentvars?)
-        self.set("powerflex_avg_neg", str(np.average(powerflex_flex_neg.dropna()) / scaler))
-        self.set("powerflex_neg_min", str(min(powerflex_flex_neg.dropna()) / scaler))
-        self.set("powerflex_neg_max", str(max(powerflex_flex_neg.dropna()) / scaler))
-        # J -> kWh 
-        energyflex_neg = (np.sum(powerflex_flex_neg * time_step) / (3600 * scaler)).round(4)
-        self.set("energyflex_neg", str(energyflex_neg))
+        powerflex_profile = powerflex_flex_full.reindex(index=flex_horizon)
+        powerflex_flex = powerflex_profile.reindex(index=full_horizon)
 
-        powerflex_flex_pos = []
-        for i in range(len(self.pos_vals)):
-            diff = self.base_vals.values[i] - self.pos_vals.values[i]
+        # calculate characteristics
+        powerflex_avg = np.average(powerflex_flex.dropna())
+        powerflex_min = min(powerflex_flex.dropna())
+        powerflex_max = max(powerflex_flex.dropna())
+        energyflex = (np.sum(powerflex_flex * ts)).round(4)
 
-            if diff < 0:
-                percentage_diff = (abs(diff) / self.base_vals.values[i]) * 100
+        # set characteristics
+        self.set(f"powerflex_flex_{abbrev}", powerflex_flex)
+        self.set(f"powerflex_avg_{abbrev}", str(powerflex_avg))
+        self.set(f"powerflex_{abbrev}_min", str(powerflex_min))
+        self.set(f"powerflex_{abbrev}_max", str(powerflex_max))
+        self.set(f"energyflex_{abbrev}", str(energyflex))
 
-                if percentage_diff < 1:
-                    powerflex_flex_pos.append(0)
-                else:
-                    powerflex_flex_pos.append(diff)
-            else:
-                powerflex_flex_pos.append(diff)
-        # save this variable for the cost flexibilty
-        powerflex_flex_pos_full = pd.Series(powerflex_flex_pos, index=full_horizon)
+        return powerflex_profile, powerflex_flex_full, energyflex
 
-        # the powerflex is defined only in the flexibility region
-        powerflex_profile_pos = powerflex_flex_pos_full.reindex(index=flex_horizon)
-        powerflex_flex_pos = powerflex_profile_pos.reindex(index=full_horizon)
-
-        self.set("powerflex_flex_pos", powerflex_flex_pos)
-        # W -> kW
-        self.set("powerflex_avg_pos", str(np.average(powerflex_flex_pos.dropna()) / scaler))
-        self.set("powerflex_pos_min", str(min(powerflex_flex_pos.dropna()) / scaler))
-        self.set("powerflex_pos_max", str(max(powerflex_flex_pos.dropna()) / scaler))
-        # J -> kWh 
-        energyflex_pos = (np.sum(powerflex_flex_pos * time_step) / (3600 * scaler)).round(4)
-
-        self.set("energyflex_pos", str(energyflex_pos))
-
+    def calculate_price(self, abbrev, horizon, full_horizon, powerflex_flex_full, ts, energyflex):
         elec_prices = self._r_pel.iloc[:horizon]
         elec_prices.index = full_horizon
-        flex_price_neg = sum(powerflex_flex_neg_full * elec_prices * time_step / (3600 * scaler))
-        flex_price_pos = -1 * sum(powerflex_flex_pos_full * elec_prices * time_step / (3600 * scaler))
 
-        self.set("costs_neg", str(flex_price_neg))
-        self.set("costs_pos", str(flex_price_pos))
+        flex_price = sum(powerflex_flex_full * elec_prices * ts)
+        self.set(f"costs_{abbrev}", str(flex_price))
 
         # Relative Flexibility Costs as deviation of absolute costs for whole prediction horizon
         # and energy flexibility during flexibility event
-
-        if energyflex_neg == 0:
+        if energyflex == 0:
             costs_neg_rel = 0
         else:
-            costs_neg_rel = flex_price_neg / energyflex_neg
+            costs_neg_rel = flex_price / energyflex
 
-        if energyflex_pos == 0:
-            costs_pos_rel = 0
-        else:
-            costs_pos_rel = flex_price_pos / energyflex_pos
+        self.set(f"costs_{abbrev}_rel", str(costs_neg_rel))
+        return flex_price
 
-        self.set("costs_neg_rel", str(costs_neg_rel))
-        self.set("costs_pos_rel", str(costs_pos_rel))
+    def calculate_and_send_offer(self, full_horizon: np.ndarray, flex_horizon: np.ndarray, time_step: float, horizon):
+        # convert timestep from seconds to hours for calculations
+        ts = time_step / 3600
 
+        # calculate flexibility
+        if len(self.base_vals) != len(self.neg_vals) or len(self.base_vals) != len(self.pos_vals):
+            raise ValueError("Length of power profiles do not match")
+        powerflex_profile_neg, powerflex_flex_neg_full, energyflex_neg = self.calculate_flexibility(
+            abbrev="neg", diff_func=self._diff_negative_flexibility(),
+            full_horizon=full_horizon, flex_horizon=flex_horizon, ts=ts
+        )
+        powerflex_profile_pos, powerflex_flex_pos_full, energyflex_pos = self.calculate_flexibility(
+            abbrev="pos", diff_func=self._diff_positive_flexibility(),
+            full_horizon=full_horizon, flex_horizon=flex_horizon, ts=ts
+        )
+
+        # calculate prices
+        flex_price_neg = self.calculate_price(
+            abbrev="neg", powerflex_flex_full=powerflex_flex_neg_full, energyflex=energyflex_neg,
+            horizon=horizon, full_horizon=full_horizon, ts=ts
+        )
+        flex_price_pos = self.calculate_price(
+            abbrev="pos", powerflex_flex_full=powerflex_flex_pos_full, energyflex=energyflex_pos,
+            horizon=horizon, full_horizon=full_horizon, ts=ts
+        )
+
+        # send flex offer
         base_profile = self.base_vals.reindex(index=flex_horizon)
         self.send_flex_offer("FlexibilityOffer", base_profile,
                              flex_price_pos, powerflex_profile_pos,
                              flex_price_neg, powerflex_profile_neg)
-
-        self.df = self.write_results(df=self.df, ts=time_step, n=horizon)
-        self.df.to_csv(self.config.results_file)
-        # set the values to None to reset the callback
-        self.base_vals = None
-        self.neg_vals = None
-        self.pos_vals = None
-        self._r_pel = None
