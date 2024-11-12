@@ -17,7 +17,7 @@ from flexibility_quantification.modules.flexibility_indicator import (
 from flexibility_quantification.modules.flexibility_market import (
     FlexibilityMarketModuleConfig,
 )
-from agentlib_mpc.modules.mpc_full import MPCConfig
+from agentlib_mpc.modules.mpc_full import BaseMPCConfig
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from agentlib_mpc.models.casadi_model import CasadiModelConfig
 from agentlib.core.agent import AgentConfig
@@ -32,10 +32,10 @@ import black
 
 
 class FlexAgentGenerator:
-    orig_mpc_module_config: MPCConfig
-    baseline_mpc_module_config: MPCConfig
-    pos_flex_mpc_module_config: MPCConfig
-    neg_flex_mpc_module_config: MPCConfig
+    orig_mpc_module_config: BaseMPCConfig
+    baseline_mpc_module_config: BaseMPCConfig
+    pos_flex_mpc_module_config: BaseMPCConfig
+    neg_flex_mpc_module_config: BaseMPCConfig
     indicator_module_config: FlexibilityIndicatorModuleConfig
     market_module_config: FlexibilityMarketModuleConfig
 
@@ -62,19 +62,23 @@ class FlexAgentGenerator:
 
         # original mpc module
         self.orig_mpc_module_config = cmng.get_module(
-            config=self.orig_mpc_agent_config, module_type=cmng.MPC_CONFIG_TYPE
+            config=self.orig_mpc_agent_config,
+            module_type=cmng.get_orig_module_type(self.orig_mpc_agent_config)
         )
         # baseline module
         self.baseline_mpc_module_config = cmng.get_module(
-            config=self.baseline_mpc_agent_config, module_type=cmng.MPC_CONFIG_TYPE
+            config=self.baseline_mpc_agent_config,
+            module_type=cmng.get_orig_module_type(self.orig_mpc_agent_config)
         )
         # pos module
         self.pos_flex_mpc_module_config = cmng.get_module(
-            config=self.pos_flex_mpc_agent_config, module_type=cmng.MPC_CONFIG_TYPE
+            config=self.pos_flex_mpc_agent_config,
+            module_type=cmng.get_orig_module_type(self.orig_mpc_agent_config)
         )
         # neg module
         self.neg_flex_mpc_module_config = cmng.get_module(
-            config=self.neg_flex_mpc_agent_config, module_type=cmng.MPC_CONFIG_TYPE
+            config=self.neg_flex_mpc_agent_config,
+            module_type=cmng.get_orig_module_type(self.orig_mpc_agent_config)
         )
         # load indicator config
         self.indicator_config = load_config.load_config(
@@ -105,9 +109,9 @@ class FlexAgentGenerator:
     def generate_flex_agents(
         self,
     ) -> [
-        MPCConfig,
-        MPCConfig,
-        MPCConfig,
+        BaseMPCConfig,
+        BaseMPCConfig,
+        BaseMPCConfig,
         FlexibilityIndicatorModuleConfig,
         FlexibilityMarketModuleConfig,
     ]:
@@ -142,19 +146,19 @@ class FlexAgentGenerator:
         self.append_module_and_dump_agent(
             module=baseline_mpc_config,
             agent=self.baseline_mpc_agent_config,
-            module_type=cmng.MPC_CONFIG_TYPE,
+            module_type=cmng.get_orig_module_type(self.orig_mpc_agent_config),
             config_name=self.flex_config.baseline_config_generator_data.name_of_created_file,
         )
         self.append_module_and_dump_agent(
             module=pf_mpc_config,
             agent=self.pos_flex_mpc_agent_config,
-            module_type=cmng.MPC_CONFIG_TYPE,
+            module_type=cmng.get_orig_module_type(self.orig_mpc_agent_config),
             config_name=self.flex_config.shadow_mpc_config_generator_data.pos_flex.name_of_created_file,
         )
         self.append_module_and_dump_agent(
             module=nf_mpc_config,
             agent=self.neg_flex_mpc_agent_config,
-            module_type=cmng.MPC_CONFIG_TYPE,
+            module_type=cmng.get_orig_module_type(self.orig_mpc_agent_config),
             config_name=self.flex_config.shadow_mpc_config_generator_data.neg_flex.name_of_created_file,
         )
 
@@ -268,8 +272,8 @@ class FlexAgentGenerator:
         Path(self.flex_config.path_to_flex_files).rmdir()
 
     def adapt_mpc_module_config(
-        self, module_config: MPCConfig, mpc_dataclass: BaseMPCData
-    ) -> MPCConfig:
+        self, module_config: BaseMPCConfig, mpc_dataclass: BaseMPCData
+    ) -> BaseMPCConfig:
         """Adapts the mpc module config for automated flexibility quantification.
         Things adapted among others are:
         - the file name/path of the mpc config file
@@ -296,7 +300,8 @@ class FlexAgentGenerator:
                 module_config.parameters.append(weight)
 
         # set new MPC type
-        module_config.type = mpc_dataclass.module_type
+        module_config.type = mpc_dataclass.module_types[
+            cmng.get_orig_module_type(self.orig_mpc_agent_config)]
         # set new id (needed for plotting)
         module_config.module_id = mpc_dataclass.module_id
         # update optimization backend to use the created mpc files and classes

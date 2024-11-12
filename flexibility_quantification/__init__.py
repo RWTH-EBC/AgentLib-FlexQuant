@@ -12,9 +12,17 @@ MODULE_TYPES = {
         import_path="flexibility_quantification.modules.shadow_mpc",
         class_name=shadow_mpc.FlexibilityShadowMPC.__name__
     ),
+    'shadow_minlp_mpc': ModuleImport(
+        import_path="flexibility_quantification.modules.shadow_mpc",
+        class_name=shadow_mpc.FlexibilityShadowMINLPMPC.__name__
+    ),
     'baseline_mpc': ModuleImport(
         import_path="flexibility_quantification.modules.baseline_mpc",
         class_name=baseline_mpc.FlexibilityBaselineMPC.__name__
+    ),
+    'baseline_minlp_mpc': ModuleImport(
+        import_path="flexibility_quantification.modules.baseline_mpc",
+        class_name=baseline_mpc.FlexibilityBaselineMINLPMPC.__name__
     ),
     'flexibility_indicator': ModuleImport(
         import_path="flexibility_quantification.modules.flexibility_indicator",
