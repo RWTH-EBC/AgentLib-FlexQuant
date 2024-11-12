@@ -28,6 +28,53 @@ INDICATOR_CONFIG_TYPE: str = "flexibility_quantification.flexibility_indicator"
 MARKET_CONFIG_TYPE: str = "flexibility_quantification.flexibility_market"
 
 
+def get_module_type_matching_dict(dictionary: dict):
+    """Creates two dictionaries, which map the modules types of the agentlib_mpc modules
+        to those of the flexquant modules. This is done by using the MODULE_TYPE_DICT
+
+    """
+    # Create dictionaries to store keys grouped by values
+    value_to_keys = {}
+    for k, v in dictionary.items():
+        if k.startswith(('agentlib_mpc.', 'flexibility_quantification.')):
+            if v not in value_to_keys:
+                value_to_keys[v] = {'agentlib': [], 'flex': []}
+            if k.startswith('agentlib_mpc.'):
+                value_to_keys[v]['agentlib'].append(k)
+            else:
+                value_to_keys[v]['flex'].append(k)
+
+    # Create result dictionaries
+    baseline_matches = {}
+    shadow_matches = {}
+
+    for v, keys in value_to_keys.items():
+        # Check if we have both agentlib and flexibility keys for this value
+        if keys['agentlib'] and keys['flex']:
+            # Map each agentlib key to corresponding flexibility key
+            for agent_key in keys['agentlib']:
+                for flex_key in keys['flex']:
+                    if 'baseline' in flex_key:
+                        baseline_matches[agent_key] = flex_key
+                    elif 'shadow' in flex_key:
+                        shadow_matches[agent_key] = flex_key
+
+    return baseline_matches, shadow_matches
+
+
+BASELINE_MODULE_TYPE_DICT, SHADOW_MODULE_TYPE_DICT = (
+    get_module_type_matching_dict(MODULE_TYPE_DICT))
+
+
+def get_orig_module_type(config: AgentConfig):
+    """Returns the config type of the original MPC
+
+    """
+    for module in config.modules:
+        if module["type"].startswith("agentlib_mpc"):
+            return module["type"]
+
+
 def get_module(config: AgentConfig, module_type: str) -> T:
     """Extracts a module from a config based on its name
 
