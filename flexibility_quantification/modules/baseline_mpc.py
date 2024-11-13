@@ -1,4 +1,4 @@
-from agentlib_mpc.modules import mpc_full
+from agentlib_mpc.modules import mpc_full, minlp_mpc
 
 
 class FlexibilityBaselineMPC(mpc_full.MPC):
