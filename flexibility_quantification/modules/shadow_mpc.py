@@ -1,4 +1,4 @@
-from agentlib_mpc.modules import mpc_full
+from agentlib_mpc.modules import mpc_full, minlp_mpc
 from flexibility_quantification.utils.data_handling import strip_multi_index
 from typing import Dict, Union
 from agentlib.core.datamodels import AgentVariable
