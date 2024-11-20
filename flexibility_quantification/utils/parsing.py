@@ -9,6 +9,8 @@ from flexibility_quantification.data_structures.mpcs import (
 from flexibility_quantification.data_structures.globals import (
     SHADOW_MPC_COST_FUNCTION,
     return_baseline_cost_function,
+    full_trajectory_prefix,
+    full_trajectory_suffix,
 )
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from string import Template
@@ -168,16 +170,18 @@ class SetupSystemModifier(ast.NodeTransformer):
         """
         # loop over config object and modify fields
         for body in node.body:
-            # add the time and control trajectory inputs
+            # add the time and full control trajectory inputs
             if body.target.id == "inputs":
                 body.value.elts.append(add_input("Time", 0, "s", "time trajectory"))
                 for control in self.controls:
                     body.value.elts.append(
-                        add_input(
-                            f"_{control.name}",
-                            "pd.Series([0])",
+                        add_output(
+                            f"{full_trajectory_prefix}{control.name}"
+                            f"{full_trajectory_suffix}",
                             "W",
-                            "control trajectory",
+                            "pd.Series",
+                            "pd.Series([0])",
+                            "full control output",
                         )
                     )
                 body.value.elts.append(
@@ -213,7 +217,8 @@ class SetupSystemModifier(ast.NodeTransformer):
                 for control in self.controls:
                     body.value.elts.append(
                         add_output(
-                            f"{control.name}_full",
+                            f"{full_trajectory_prefix}{control.name}"
+                            f"{full_trajectory_suffix}",
                             "W",
                             "pd.Series",
                             "pd.Series([0])",
@@ -273,13 +278,17 @@ class SetupSystemModifier(ast.NodeTransformer):
                         node.body.insert(
                             0,
                             ast.parse(
-                                f"{control.name}_upper = ca.if_else(self.Time.sym < self.market_time.sym, self._{control.name}.sym, self.{control.name}.ub)"
+                                f"{control.name}_upper = ca.if_else(self.Time.sym < self.market_time.sym, "
+                                f"self.{full_trajectory_prefix}{control.name}{full_trajectory_suffix}.sym, "
+                                f"self.{control.name}.ub)"
                             ).body[0],
                         )
                         node.body.insert(
                             0,
                             ast.parse(
-                                f"{control.name}_lower = ca.if_else(self.Time.sym < self.market_time.sym, self._{control.name}.sym, self.{control.name}.lb)"
+                                f"{control.name}_lower = ca.if_else(self.Time.sym < self.market_time.sym, "
+                                f"self.{full_trajectory_prefix}{control.name}{full_trajectory_suffix}.sym, "
+                                f"self.{control.name}.lb)"
                             ).body[0],
                         )
                         # append to constraints
@@ -333,7 +342,8 @@ class SetupSystemModifier(ast.NodeTransformer):
                 targets=[
                     ast.Attribute(
                         value=ast.Name(id="self", ctx=ast.Load()),
-                        attr=f"{control.name}_full.alg",
+                        attr=f"{full_trajectory_prefix}{control.name}"
+                        f"{full_trajectory_suffix}.alg",
                         ctx=ast.Store(),
                     )
                 ],

@@ -323,7 +323,11 @@ class FlexAgentGenerator:
         if type(mpc_dataclass) is not BaselineMPCData:
             for control in module_config.controls:
                 module_config.inputs.append(
-                    MPCVariable(name=f"_{control.name}", value=control.value)
+                    MPCVariable(
+                        name=glbs.full_trajectory_prefix + control.name +
+                             glbs.full_trajectory_suffix,
+                        value=control.value,
+                    )
                 )
 
             # only communicate outputs for the shadow mpcs
@@ -332,7 +336,8 @@ class FlexAgentGenerator:
             for control in module_config.controls:
                 module_config.outputs.append(
                     MPCVariable(
-                        name=control.name + mpc_dataclass.full_trajectory_suffix,
+                        name=glbs.full_trajectory_prefix + control.name +
+                             glbs.full_trajectory_suffix,
                         value=control.value,
                     )
                 )
