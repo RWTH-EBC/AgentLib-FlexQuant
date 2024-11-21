@@ -19,7 +19,6 @@ class BaseMPCData(pydantic.BaseModel):
     class_name: str
     module_id: str
     # variables
-    full_trajectory_suffix: str = "_full"
     power_alias: str
     config_inputs_appendix: MPCVariables = []
     config_parameters_appendix: MPCVariables = []

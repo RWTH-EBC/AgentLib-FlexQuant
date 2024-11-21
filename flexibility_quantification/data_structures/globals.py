@@ -9,6 +9,8 @@ SHADOW_MPC_COST_FUNCTION = ("return ca.if_else(self.Time.sym < self.prep_time.sy
                             "(self.prep_time.sym + self.flex_event_duration.sym + "
                             "self.market_time.sym), obj_flex, obj_std))")
 
+full_trajectory_suffix: str = "_full"
+full_trajectory_prefix: str = "_"
 
 def return_baseline_cost_function(profile_deviation_weight, power_variable):
     cost_func = ("return ca.if_else(self.in_provision.sym, "

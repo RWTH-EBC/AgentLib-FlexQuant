@@ -210,8 +210,6 @@ def run_example(until=until):
     fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=1)
     ax1 = axs[0]
     ax1.set_ylabel("$\epsilon$ in kWh")
-    energy_flex_neg.plot(ax=ax1, label="neg")
-    energy_flex_pos.plot(ax=ax1, label="pos")
     energy_flex_neg.plot(ax=ax1, label="neg", color=mpcplot.EBCColors.red)
     energy_flex_pos.plot(ax=ax1, label="pos", color=mpcplot.EBCColors.blue)
     ax1.yaxis.set_major_formatter(FormatStrFormatter("%.4f"))
