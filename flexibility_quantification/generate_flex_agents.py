@@ -63,22 +63,22 @@ class FlexAgentGenerator:
         # original mpc module
         self.orig_mpc_module_config = cmng.get_module(
             config=self.orig_mpc_agent_config,
-            module_type=cmng.get_orig_module_type(self.orig_mpc_agent_config)
+            module_type=cmng.get_orig_module_type(self.orig_mpc_agent_config),
         )
         # baseline module
         self.baseline_mpc_module_config = cmng.get_module(
             config=self.baseline_mpc_agent_config,
-            module_type=cmng.get_orig_module_type(self.orig_mpc_agent_config)
+            module_type=cmng.get_orig_module_type(self.orig_mpc_agent_config),
         )
         # pos module
         self.pos_flex_mpc_module_config = cmng.get_module(
             config=self.pos_flex_mpc_agent_config,
-            module_type=cmng.get_orig_module_type(self.orig_mpc_agent_config)
+            module_type=cmng.get_orig_module_type(self.orig_mpc_agent_config),
         )
         # neg module
         self.neg_flex_mpc_module_config = cmng.get_module(
             config=self.neg_flex_mpc_agent_config,
-            module_type=cmng.get_orig_module_type(self.orig_mpc_agent_config)
+            module_type=cmng.get_orig_module_type(self.orig_mpc_agent_config),
         )
         # load indicator config
         self.indicator_config = load_config.load_config(
@@ -301,7 +301,8 @@ class FlexAgentGenerator:
 
         # set new MPC type
         module_config.type = mpc_dataclass.module_types[
-            cmng.get_orig_module_type(self.orig_mpc_agent_config)]
+            cmng.get_orig_module_type(self.orig_mpc_agent_config)
+        ]
         # set new id (needed for plotting)
         module_config.module_id = mpc_dataclass.module_id
         # update optimization backend to use the created mpc files and classes
@@ -318,17 +319,36 @@ class FlexAgentGenerator:
                 ".csv", mpc_dataclass.results_suffix
             )
         )
+        # change cia backend to custom backend of flexquant
+        if module_config.optimization_backend["type"] == "casadi_cia":
+            module_config.optimization_backend["type"] = "casadi_cia_cons"
+            module_config.optimization_backend["market_time"] = (
+                self.flex_config.market_time
+            )
+
         # add the control signal of the baseline to outputs (used during market time)
         # and as inputs for the shadow mpcs
         if type(mpc_dataclass) is not BaselineMPCData:
             for control in module_config.controls:
                 module_config.inputs.append(
                     MPCVariable(
-                        name=glbs.full_trajectory_prefix + control.name +
-                             glbs.full_trajectory_suffix,
+                        name=glbs.full_trajectory_prefix
+                        + control.name
+                        + glbs.full_trajectory_suffix,
                         value=control.value,
                     )
                 )
+            # also include binary controls
+            if hasattr(module_config, "binary_controls"):
+                for control in module_config.binary_controls:
+                    module_config.inputs.append(
+                        MPCVariable(
+                            name=glbs.full_trajectory_prefix
+                            + control.name
+                            + glbs.full_trajectory_suffix,
+                            value=control.value,
+                        )
+                    )
 
             # only communicate outputs for the shadow mpcs
             module_config.shared_variable_fields = ["outputs"]
@@ -336,12 +356,24 @@ class FlexAgentGenerator:
             for control in module_config.controls:
                 module_config.outputs.append(
                     MPCVariable(
-                        name=glbs.full_trajectory_prefix + control.name +
-                             glbs.full_trajectory_suffix,
+                        name=glbs.full_trajectory_prefix
+                        + control.name
+                        + glbs.full_trajectory_suffix,
                         value=control.value,
                     )
                 )
-            module_config.set_outputs = True
+            # also include binary controls
+            if hasattr(module_config, "binary_controls"):
+                for control in module_config.binary_controls:
+                    module_config.outputs.append(
+                        MPCVariable(
+                            name=glbs.full_trajectory_prefix
+                            + control.name
+                            + glbs.full_trajectory_suffix,
+                            value=control.value,
+                        )
+                    )
+        module_config.set_outputs = True
         # add outputs for the power variables, for easier handling create a lookup dict
         output_dict = {output.name: output for output in module_config.outputs}
         if (
@@ -471,14 +503,17 @@ class FlexAgentGenerator:
         modifier_base = SetupSystemModifier(
             mpc_data=self.flex_config.baseline_config_generator_data,
             controls=self.baseline_mpc_module_config.controls,
+            binary_controls=self.baseline_mpc_module_config.binary_controls if hasattr(self.baseline_mpc_module_config, "binary_controls") else None,
         )
         modifier_pos = SetupSystemModifier(
             mpc_data=self.flex_config.shadow_mpc_config_generator_data.pos_flex,
             controls=self.pos_flex_mpc_module_config.controls,
+            binary_controls=self.pos_flex_mpc_module_config.binary_controls if hasattr(self.pos_flex_mpc_module_config, "binary_controls") else None,
         )
         modifier_neg = SetupSystemModifier(
             mpc_data=self.flex_config.shadow_mpc_config_generator_data.neg_flex,
             controls=self.neg_flex_mpc_module_config.controls,
+            binary_controls=self.neg_flex_mpc_module_config.binary_controls if hasattr(self.neg_flex_mpc_module_config, "binary_controls") else None,
         )
         # run the modification
         modified_tree_base = modifier_base.visit(deepcopy(tree))

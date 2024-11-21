@@ -1,0 +1,44 @@
+{
+    "id": "myMPCAgent",
+    "modules": [
+        {"module_id": "Ag1Com", "type": "local_broadcast"},
+        {
+            "module_id": "myMPC",
+            "type": "agentlib_mpc.minlp_mpc",
+            "optimization_backend": {
+                "type": "casadi_cia",
+                "model": {"type": {"file": "mpc_and_sim/mixed_integer_mpc_cia.py", "class_name": "MyCasadiModel"}},
+                "discretization_options": {
+                    "collocation_order": 2,
+                    "collocation_method": "legendre"
+                },
+                "solver": {
+                    "name": "ipopt"
+                },
+                "overwrite_result_file": true,
+                "results_file": "results//mpc.csv",
+                "save_results": true
+            },
+            "time_step": 300,
+            "prediction_horizon": 16,
+            "parameters": [
+                {"name": "s_T", "value": 3},
+                {"name": "r_cooling", "value": 0.33},
+                {"name": "cooler_mod_limit", "value": 250}
+            ],
+            "inputs": [
+                {"name": "load", "value": 150},
+                {"name": "T_upper", "value": 295.15},
+                {"name": "T_in", "value": 290.15}
+            ],
+            "controls": [
+                {"name": "cooling_power", "value": 250, "ub": 500, "lb": 0}
+            ],
+            "binary_controls": [
+                {"name": "cooler_on", "value": 0, "ub": 1, "lb": 0}
+            ],
+            "states": [{"name": "T", "value": 298.16, "ub": 303.15, "lb": 288.15}],
+            "outputs": [{"name": "P_el", "value": 0}]
+        }
+    ]
+}
