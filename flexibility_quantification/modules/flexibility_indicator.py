@@ -17,11 +17,11 @@ from flexibility_quantification.data_structures.flex_offer import FlexOffer
 
 class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
     inputs: List[agentlib.AgentVariable] = [
-        agentlib.AgentVariable(name="__P_el_pos", unit="W",
+        agentlib.AgentVariable(name="__P_el_pos", unit="W", type="pd.Series",
                                description="The power input to the system"),
-        agentlib.AgentVariable(name="__P_el_base", unit="W",
+        agentlib.AgentVariable(name="__P_el_base", unit="W", type="pd.Series",
                                description="The power input to the system"),
-        agentlib.AgentVariable(name="__P_el_neg", unit="W",
+        agentlib.AgentVariable(name="__P_el_neg", unit="W", type="pd.Series",
                                description="The power input to the system"),
         agentlib.AgentVariable(name="r_pel", unit="ct/kWh", type="pd.Series",
                                description="electricity price")
@@ -118,11 +118,11 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
 
     shared_variable_fields: List[str] = ["outputs"]
 
-    indicator_data: IndicatorData = None
-
 
 class FlexibilityIndicatorModule(agentlib.BaseModule):
     config: FlexibilityIndicatorModuleConfig
+
+    data: IndicatorData
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -139,7 +139,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         self.in_provision = False
         self.df = pd.DataFrame(columns=self.var_list)
         self.offer_count = 0
-        self.indicator_data = IndicatorData(
+        self.data = IndicatorData(
             prep_time=self.get(glbs.PREP_TIME).value,
             market_time=self.get(glbs.MARKET_TIME).value,
             flex_event_duration=self.get(glbs.FLEX_EVENT_DURATION).value,
@@ -258,6 +258,44 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             return
         os.remove(results_file)
 
+    def flexibility(self):
+        self.unify_input_data()
+
+        # Calculate the flexibility KPIs for current predictions
+        self.data.calculate(
+            power_profile_base=self.base_vals,
+            power_profile_flex_pos=self.pos_vals,
+            power_profile_flex_neg=self.neg_vals,
+            costs_profile_electricity=self._r_pel
+        )
+
+        # Send flex offer
+        self.send_flex_offer(name=glbs.FlexibilityOffer, indicator_data=self.data)
+
+        # write results
+        self.df = self.write_results(df=self.df, ts=self.get(glbs.TIME_STEP).value,
+                                     n=self.get(glbs.PREDICTION_HORIZON).value)
+        self.df.to_csv(self.config.results_file)
+
+        # set outputs
+        # todo: remove hardcoded strings
+        # todo: loop over all outputs
+        self.set("power_flex_neg", self.data.kpis_neg.power_flex_offer.value)
+        self.set("power_flex_neg_avg", self.data.kpis_neg.power_flex_offer.mean())
+        self.set("power_flex_neg_max", self.data.kpis_neg.power_flex_offer.max())
+        self.set("power_flex_neg_min", self.data.kpis_neg.power_flex_offer.min())
+        self.set("energyflex_neg", self.data.kpis_neg.energy_flex.value)
+        self.set("costs_neg", self.data.kpis_neg.costs.value)
+        self.set("costs_neg_rel", self.data.kpis_neg.costs_rel.value)
+
+        self.set("power_flex_pos", self.data.kpis_pos.power_flex_offer.value)
+        self.set("power_flex_pos_avg", self.data.kpis_pos.power_flex_offer.mean())
+        self.set("power_flex_pos_max", self.data.kpis_pos.power_flex_offer.max())
+        self.set("power_flex_pos_min", self.data.kpis_pos.power_flex_offer.min())
+        self.set("energyflex_pos", self.data.kpis_pos.energy_flex.value)
+        self.set("costs_pos", self.data.kpis_pos.costs.value)
+        self.set("costs_pos_rel", self.data.kpis_pos.costs_rel.value)
+
     def send_flex_offer(
             self, name,
             indicator_data: IndicatorData,
@@ -290,39 +328,17 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             )
         self.offer_count += 1
 
-    def flexibility(self):
-        # Calculate the flexibility KPIs for current predictions
-        self.indicator_data.calculate(
-            power_profile_base=self.base_vals,
-            power_profile_flex_pos=self.pos_vals,
-            power_profile_flex_neg=self.neg_vals,
-            costs_profile_electricity=self._r_pel
-        )
+    def unify_input_data(self):
+        """
+        Unify the input data to the same time index
+        """
+        if self.config.discretization == "collocation":
+            # As the collocation uses the values after each time step, the last value is always none
+            time = self.base_vals.index[:-1]
 
-        # Send flex offer
-        self.send_flex_offer(name=glbs.FlexibilityOffer, indicator_data=self.indicator_data)
-
-        # write results
-        self.df = self.write_results(df=self.df, ts=self.get(glbs.TIME_STEP).value,
-                                     n=self.get(glbs.PREDICTION_HORIZON).value)
-        self.df.to_csv(self.config.results_file)
-
-        # set outputs
-        # todo: remove hardcoded strings
-        # todo: loop over all outputs
-        self.set("power_flex_neg", self.indicator_data.kpis_neg.power_flex_offer.value)
-        self.set("power_flex_neg_avg", self.indicator_data.kpis_neg.power_flex_offer.mean())
-        self.set("power_flex_neg_max", self.indicator_data.kpis_neg.power_flex_offer.max())
-        self.set("power_flex_neg_min", self.indicator_data.kpis_neg.power_flex_offer.min())
-        self.set("energyflex_neg", self.indicator_data.kpis_neg.energy_flex.value)
-        self.set("costs_neg", self.indicator_data.kpis_neg.costs.value)
-        self.set("costs_neg_rel", self.indicator_data.kpis_neg.costs_rel.value)
-
-        self.set("power_flex_pos", self.indicator_data.kpis_pos.power_flex_offer.value)
-        self.set("power_flex_pos_avg", self.indicator_data.kpis_pos.power_flex_offer.mean())
-        self.set("power_flex_pos_max", self.indicator_data.kpis_pos.power_flex_offer.max())
-        self.set("power_flex_pos_min", self.indicator_data.kpis_pos.power_flex_offer.min())
-        self.set("energyflex_pos", self.indicator_data.kpis_pos.energy_flex.value)
-        self.set("costs_pos", self.indicator_data.kpis_pos.costs.value)
-        self.set("costs_pos_rel", self.indicator_data.kpis_pos.costs_rel.value)
+            # use only the values of the full time steps
+            self.base_vals = pd.Series(self.base_vals, index=time).reindex(index=self.data.full_horizon)
+            self.neg_vals = pd.Series(self.neg_vals, index=time).reindex(index=self.data.full_horizon)
+            self.pos_vals = pd.Series(self.pos_vals, index=time).reindex(index=self.data.full_horizon)
+            self._r_pel = pd.Series(self._r_pel, index=time).reindex(index=self.data.full_horizon)
 
