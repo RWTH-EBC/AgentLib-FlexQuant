@@ -4,7 +4,9 @@ import pydantic
 import numpy as np
 import pandas as pd
 
-KPITypes = Literal["positive", "negative"]
+KPIDirections = Literal["positive", "negative"]
+
+# todo: Units
 
 
 class KPI(pydantic.BaseModel):
@@ -23,20 +25,15 @@ class KPI(pydantic.BaseModel):
         default=None,
         description="Unit of the indicator KPI",
     )
-    type: str = pydantic.Field(
-        default=None,
-        description="Type of the indicator KPI",
-    )
 
     class Config:
         arbitrary_types_allowed = True
 
-    def __init__(self, name: str, value: Union[float, pd.Series], unit: str, type: str, **data):
+    def __init__(self, name: str, value: Union[float, pd.Series], unit: str, **data):
         super().__init__(**data)
         self.name = name
         self.value = value
         self.unit = unit
-        self.type = type
 
     def min(self) -> float:
         if isinstance(self.value, pd.Series):
@@ -62,31 +59,42 @@ class KPI(pydantic.BaseModel):
         Only possible for pd.Series
         """
         if isinstance(self.value, pd.Series):
-            return (self.value * self._get_dt()).sum()
+            return (self.value * self._get_dt()).sum() / (60*60)
         else:
             raise ValueError("Integration only possible for pd.Series")
 
-    def _get_dt(self) -> float:     # -> pd.Series:
+    def _get_dt(self) -> pd.Series:
         """
         Calculate the time difference between the values of the series.
         """
         if isinstance(self.value, pd.Series):
-            dt = self.value.index[1] - self.value.index[0]  # pd.Series(index=self.value.index, data=self.value.index).diff().shift(-1).ffill()
+            dt = pd.Series(index=self.value.index, data=self.value.index).diff().shift(-1).ffill()
             return dt
         else:
-            raise ValueError("Integration only possible for pd.Series")
+            raise ValueError("Time difference only possible for Series")
 
 
 class IndicatorKPIs(pydantic.BaseModel):
     """
     Class defining the indicator KPIs.
     """
-    power_flex: KPI = pydantic.Field(
+    direction: KPIDirections = pydantic.Field(
+        default="positive",
+        description="Direction of the shadow mpc",
+    )
+    power_flex_full: KPI = pydantic.Field(
         default=KPI(
-            name="power_flex",
+            name="power_flex_full",
             value=pd.Series(),
-            unit="kW",
-            type="positive"
+            unit="kW"
+        ),
+        description="Power flexibility",
+    )
+    power_flex_offer: KPI = pydantic.Field(
+        default=KPI(
+            name="power_flex_offer",
+            value=pd.Series(),
+            unit="kW"
         ),
         description="Power flexibility",
     )
@@ -94,8 +102,7 @@ class IndicatorKPIs(pydantic.BaseModel):
         default=KPI(
             name="energy_flex",
             value=0,
-            unit="kWh",
-            type="positive"
+            unit="kWh"
         ),
         description="Energy flexibility",
     )
@@ -103,8 +110,7 @@ class IndicatorKPIs(pydantic.BaseModel):
         default=KPI(
             name="costs",
             value=0,
-            unit="ct",
-            type="positive"
+            unit="ct"
         ),
         description="Costs of flexibility",
     )
@@ -112,51 +118,61 @@ class IndicatorKPIs(pydantic.BaseModel):
         default=KPI(
             name="costs_rel",
             value=0,
-            unit="ct/kWh",
-            type="positive"
+            unit="ct/kWh"
         ),
         description="Costs of flexibility per energy",
     )
 
-    def __init__(self, type: KPITypes, **data):
+    def __init__(self, direction: KPIDirections, **data):
         super().__init__(**data)
-        self.power_flex.type = type
-        self.energy_flex.type = type
-        self.costs.type = type
-        self.costs_rel.type = type
+        self.direction = direction
 
-    def calculate(self, power_profile_base: pd.Series, power_profile_flex: pd.Series, costs_profile_electricity: pd.Series):
-        self.power_flex.value = self._calculate_powerflex(power_profile_base=power_profile_base, power_profile_flex=power_profile_flex)
+    def calculate(self, power_profile_base: pd.Series, power_profile_flex: pd.Series, costs_profile_electricity: pd.Series,
+                  horizon_full: np.ndarray, horizon_offer: np.ndarray):
+        self.power_flex_full.value = self._calculate_powerflex(power_profile_base=power_profile_base, power_profile_flex=power_profile_flex)
+        self.power_flex_offer.value = self.power_flex_full.value.reindex(horizon_offer)
         self.energy_flex.value = self._calculate_energyflex()
         self.costs.value = self._calculate_costs(costs_profile_electricity=costs_profile_electricity)
         self.costs_rel.value = self._calculate_costs_rel()
 
     def _calculate_powerflex(self, power_profile_base: pd.Series, power_profile_flex: pd.Series) -> pd.Series:
-        difference = power_profile_flex - power_profile_base
-        difference_rel = (difference / power_profile_base).abs() * 100
-        difference.loc[(difference < 0) & (difference_rel < 1)] = 0
+        if not power_profile_flex.index.equals(power_profile_base.index):
+            raise ValueError("Indices of power profiles do not match")
+
+        if self.direction == "positive":
+            difference = power_profile_base - power_profile_flex
+        elif self.direction == "negative":
+            difference = power_profile_flex - power_profile_base
+        else:
+            raise ValueError("Direction of KPIs not defined")
+
+        difference_rel = (difference / power_profile_base).abs()
+        difference.loc[(difference < 0) & (difference_rel < 0.01)] = 0
+
         return difference
 
     def _calculate_energyflex(self) -> float:
-        energyflex = self.power_flex.integrate()
-        return energyflex
+        energy_flex = self.power_flex_offer.integrate()
+        return energy_flex
 
-    def _calculate_costs(self, costs_profile_electricity: pd.Series) -> pd.Series:
-        costs = costs_profile_electricity * self.power_flex.value
+    def _calculate_costs(self, costs_profile_electricity: pd.Series) -> float:
+        costs_series = costs_profile_electricity * self.power_flex_full.value
+        costs = KPI(name=self.costs.name, value=costs_series, unit=self.costs.unit).integrate()
         return costs
 
     def _calculate_costs_rel(self) -> float:
         if self.energy_flex == 0:
             costs_rel = 0
         else:
-            costs_rel = self.costs.integrate() / self.energy_flex.value
+            costs_rel = self.costs.value / self.energy_flex.value
         return costs_rel
 
 
-class IndicatorCalculator(pydantic.BaseModel):
+class IndicatorData(pydantic.BaseModel):
     """
     Class
     """
+    # Parameter
     prep_time: int = pydantic.Field(
         default=1800,
         ge=0,
@@ -215,12 +231,12 @@ class IndicatorCalculator(pydantic.BaseModel):
     )
 
     # KPIs
-    pos_kpis: IndicatorKPIs = pydantic.Field(
-        default=IndicatorKPIs(type="positive"),
+    kpis_pos: IndicatorKPIs = pydantic.Field(
+        default=IndicatorKPIs(direction="positive"),
         description="KPIs for positive flexibility",
     )
-    neg_kpis: IndicatorKPIs = pydantic.Field(
-        default=IndicatorKPIs(type="negative"),
+    kpis_neg: IndicatorKPIs = pydantic.Field(
+        default=IndicatorKPIs(direction="negative"),
         description="KPIs for negative flexibility",
     )
 
@@ -229,37 +245,16 @@ class IndicatorCalculator(pydantic.BaseModel):
 
     def __init__(self, prep_time: int, market_time: int, flex_event_duration: int, time_step: int, prediction_horizon: int, **data):
         super().__init__(**data)
+
         self.prep_time = prep_time
         self.market_time = market_time
         self.flex_event_duration = flex_event_duration
         self.time_step = time_step
         self.prediction_horizon = prediction_horizon
-        self.flex_horizon, self.full_horizon = self._generate_horizons()
-
-    def _generate_horizons(self) -> tuple[np.ndarray, np.ndarray]:
-        switch_time = self.prep_time + self.market_time
-        # generate horizons
-        # 1. for the flexibility range
-        flex_horizon = np.arange(
-            switch_time, switch_time + self.flex_event_duration, self.time_step)
-        # 2. for the full range of prediction
-        full_horizon = np.arange(
-            0, self.prediction_horizon * self.time_step, self.time_step)
-        return flex_horizon, full_horizon
-    
-    def _uniform_data(self):   # todo
-        """Uniform data to the same length
-        """
-        # uniform regarding discretization
-        if True: # self.config.discretization == "collocation":
-            # As the collocation uses the values after each time step, the last value is always none
-            time = self.power_profile_base.index[:-1]
-
-            # use only the values of the full time steps
-            self.power_profile_base = pd.Series(self.power_profile_base, index=time).reindex(index=self.full_horizon)
-            self.power_profile_flex_neg = pd.Series(self.power_profile_flex_neg, index=time).reindex(index=self.full_horizon)
-            self.power_profile_flex_pos = pd.Series(self.power_profile_flex_pos, index=time).reindex(index=self.full_horizon)
-            self.costs_profile_electricity = pd.Series(self.costs_profile_electricity, index=time).reindex(index=self.full_horizon)
+        
+        switch_time = prep_time + market_time
+        self.flex_horizon = np.arange(switch_time, switch_time + flex_event_duration, time_step)
+        self.full_horizon = np.arange(0, prediction_horizon * time_step, time_step)
 
     def calculate(self, power_profile_base: pd.Series, power_profile_flex_pos: pd.Series, power_profile_flex_neg: pd.Series, costs_profile_electricity: pd.Series):
         self.power_profile_base = power_profile_base
@@ -267,9 +262,14 @@ class IndicatorCalculator(pydantic.BaseModel):
         self.power_profile_flex_neg = power_profile_flex_neg
         self.costs_profile_electricity = costs_profile_electricity
 
-        self._uniform_data()
-
-        self.pos_kpis.calculate(power_profile_base=self.power_profile_base, power_profile_flex=self.power_profile_flex_pos, costs_profile_electricity=self.costs_profile_electricity)
-        self.neg_kpis.calculate(power_profile_base=self.power_profile_base, power_profile_flex=self.power_profile_flex_pos, costs_profile_electricity=self.costs_profile_electricity)
-        pass
-
+        self.kpis_pos.calculate(
+            power_profile_base=self.power_profile_base, power_profile_flex=self.power_profile_flex_pos,
+            costs_profile_electricity=self.costs_profile_electricity,
+            horizon_full=self.full_horizon, horizon_offer=self.flex_horizon
+        )
+        self.kpis_neg.calculate(
+            power_profile_base=self.power_profile_base, power_profile_flex=self.power_profile_flex_neg,
+            costs_profile_electricity=self.costs_profile_electricity,
+            horizon_full=self.full_horizon, horizon_offer=self.flex_horizon
+        )
+        return self
