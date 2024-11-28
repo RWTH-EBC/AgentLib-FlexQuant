@@ -7,6 +7,7 @@ import pandas as pd
 from pathlib import Path
 import pydantic
 import flexibility_quantification.data_structures.globals as glbs
+from flexibility_quantification.data_structures.indicator import IndicatorCalculator
 
 from flexibility_quantification.utils.data_handling import strip_multi_index
 sys.path.append(os.path.dirname(__file__))
@@ -117,6 +118,20 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
     )
 
     shared_variable_fields: List[str] = ["outputs"]
+
+    # # Quatsch von felix
+    # indicator_meta: IndicatorMeta(df).energy_flex.calc()
+    #         energy_flex_pos(IndicatorKPI)
+    #         energy_flex_neg(IndicatorKPI)
+    #                 IndicatorKPI
+    #                     name
+    #                     value
+    #                     unit
+    #                     type
+    #
+    # for output in self.config.outputs:
+    #     if output.name in [kpi.name for kpi in self.indicator_meta.energylfex]
+    #         self.set("name", value)
 
 
 class FlexibilityIndicatorModule(agentlib.BaseModule):
@@ -243,6 +258,23 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         flex_event_duration = self.get(glbs.FLEX_EVENT_DURATION).value
         horizon = self.get("prediction_horizon").value
         time_step = self.get(glbs.TIME_STEP).value
+
+        # test = IndicatorCalculator(
+            # prep_time=self.get(glbs.PREP_TIME).value,
+            # market_time=self.get(glbs.MARKET_TIME).value,
+            # flex_event_duration=self.get(glbs.FLEX_EVENT_DURATION).value,
+            #  time_step=self.get(glbs.TIME_STEP).value,
+            #     prediction_horizon=self.get("prediction_horizon").value
+        # )
+        # print(test)
+        # test.calculate(
+        #     power_profile_base=self.base_vals,
+        #     power_profile_flex_pos=self.pos_vals,
+        #     power_profile_flex_neg=self.neg_vals,
+        #     costs_profile_electricity=self._r_pel
+        # )
+        # print(test)
+        # print()
 
         # generate horizons
         # 1. for the flexibility range
