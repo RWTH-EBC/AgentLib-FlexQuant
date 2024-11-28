@@ -29,57 +29,57 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
     outputs: List[agentlib.AgentVariable] = [
         agentlib.AgentVariable(name="FlexibilityOffer", type="FlexOffer"),
         agentlib.AgentVariable(
-            name="powerflex_flex_neg", unit='W', type="pd.Series",
+            name="power_flex_neg", unit='W', type="pd.Series",
             description="Negative Powerflexibility"
         ),
         agentlib.AgentVariable(
-            name="powerflex_flex_pos", unit='W', type="pd.Series",
+            name="power_flex_pos", unit='W', type="pd.Series",
             description="Positive Powerflexibility"
         ),
         agentlib.AgentVariable(
-            name="powerflex_avg_neg", unit='kW', type="pd.Series",
+            name="power_flex_neg_avg", unit='kW', type="float",
             description="Negative Average Powerflexibility"
         ),
         agentlib.AgentVariable(
-            name="powerflex_avg_pos", unit='kW', type="pd.Series",
+            name="power_flex_pos_avg", unit='kW', type="float",
             description="Positive Average Powerflexibility"
         ),
         agentlib.AgentVariable(
-            name="powerflex_neg_max", unit='kW', type="pd.Series",
+            name="power_flex_neg_max", unit='kW', type="float",
             description="Negative Maximal Powerflexibility"
         ),
         agentlib.AgentVariable(
-            name="powerflex_neg_min", unit='kW', type="pd.Series",
+            name="power_flex_neg_min", unit='kW', type="float",
             description="Negative Minimal Powerflexibility"
         ),
         agentlib.AgentVariable(
-            name="powerflex_pos_max", unit='kW', type="pd.Series",
+            name="power_flex_pos_max", unit='kW', type="float",
             description="Positive Maximal Powerflexibility"
         ),
         agentlib.AgentVariable(
-            name="powerflex_pos_min", unit='kW', type="pd.Series",
+            name="power_flex_pos_min", unit='kW', type="float",
             description="Positive Minimal Powerflexibility"
         ),
         agentlib.AgentVariable(
-            name="energyflex_neg", unit='kWh', type="pd.Series",
+            name="energyflex_neg", unit='kWh', type="float",
             description="Negative Energyflexibility"
         ),
         agentlib.AgentVariable(
-            name="energyflex_pos", unit='kWh', type="pd.Series",
+            name="energyflex_pos", unit='kWh', type="float",
             description="Positive Energyflexibility"
         ),
         agentlib.AgentVariable(
-            name="costs_neg", unit='ct', type="pd.Series", description="Saved costs due to baseline"
+            name="costs_neg", unit='ct', type="float", description="Saved costs due to baseline"
         ),
         agentlib.AgentVariable(
-            name="costs_pos", unit='ct', type="pd.Series", description="Saved costs due to baseline"
+            name="costs_pos", unit='ct', type="float", description="Saved costs due to baseline"
         ),
         agentlib.AgentVariable(
-            name="costs_neg_rel", unit='ct/kWh', type="pd.Series",
+            name="costs_neg_rel", unit='ct/kWh', type="float",
             description="Saved costs due to baseline"
         ),
         agentlib.AgentVariable(
-            name="costs_pos_rel", unit='ct/kWh', type="pd.Series",
+            name="costs_pos_rel", unit='ct/kWh', type="float",
             description="Saved costs due to baseline"
         )
     ]
@@ -277,6 +277,25 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             power_profile_diff_neg=self.indicator_meta.neg_kpis.power_flex.value, neg_price=self.indicator_meta.neg_kpis.costs.integrate(),
             power_profile_diff_pos=self.indicator_meta.pos_kpis.power_flex.value, pos_price=self.indicator_meta.pos_kpis.costs.integrate(),
         )
+
+        # set outputs
+        # todo: remove hardcoded strings
+        # todo: loop over all outputs
+        self.set("power_flex_neg", self.indicator_meta.neg_kpis.power_flex.value)
+        self.set("power_flex_neg_avg", self.indicator_meta.neg_kpis.power_flex.mean())
+        self.set("power_flex_neg_max", self.indicator_meta.neg_kpis.power_flex.max())
+        self.set("power_flex_neg_min", self.indicator_meta.neg_kpis.power_flex.min())
+        self.set("energyflex_neg", self.indicator_meta.neg_kpis.energy_flex.value)
+        self.set("costs_neg", self.indicator_meta.neg_kpis.costs.integrate())
+        self.set("costs_neg_rel", self.indicator_meta.neg_kpis.costs_rel.value)
+
+        self.set("power_flex_pos", self.indicator_meta.pos_kpis.power_flex.value)
+        self.set("power_flex_pos_avg", self.indicator_meta.pos_kpis.power_flex.mean())
+        self.set("power_flex_pos_max", self.indicator_meta.pos_kpis.power_flex.max())
+        self.set("power_flex_pos_min", self.indicator_meta.pos_kpis.power_flex.min())
+        self.set("energyflex_pos", self.indicator_meta.pos_kpis.energy_flex.value)
+        self.set("costs_pos", self.indicator_meta.pos_kpis.costs.integrate())
+        self.set("costs_pos_rel", self.indicator_meta.pos_kpis.costs_rel.value)
 
         # write results
         self.df = self.write_results(df=self.df, ts=self.get(glbs.TIME_STEP).value, n=self.get(glbs.PREDICTION_HORIZON).value)
