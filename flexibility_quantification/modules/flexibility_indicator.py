@@ -94,7 +94,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
                                description="time to switch objective"),
         agentlib.AgentVariable(name=glbs.TIME_STEP, unit="s",
                                description="timestep of the mpc solution"),
-        agentlib.AgentVariable(name="prediction_horizon", unit="-",
+        agentlib.AgentVariable(name=glbs.PREDICTION_HORIZON, unit="-",
                                description="prediction horizon of the mpc solution"),
 
     ]
@@ -132,6 +132,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
     # for output in self.config.outputs:
     #     if output.name in [kpi.name for kpi in self.indicator_meta.energylfex]
     #         self.set("name", value)
+    indicator_meta: IndicatorCalculator = None
 
 
 class FlexibilityIndicatorModule(agentlib.BaseModule):
@@ -150,12 +151,23 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         self.neg_vals = None
         self._r_pel = None
         self.in_provision = False
-        self.df = None
+        self.df = pd.DataFrame(columns=self.var_list)
         self.offer_count = 0
+        self.indicator_meta = IndicatorCalculator(
+            prep_time=self.get(glbs.PREP_TIME).value,
+            market_time=self.get(glbs.MARKET_TIME).value,
+            flex_event_duration=self.get(glbs.FLEX_EVENT_DURATION).value,
+            time_step=self.get(glbs.TIME_STEP).value,
+            prediction_horizon=self.get(glbs.PREDICTION_HORIZON).value
+        )
 
     def send_flex_offer(
-            self, name, base_power_profile, pos_price, pos_diff_profile,
-            neg_price, neg_diff_profile, timestamp: float = None):
+            self, name,
+            power_profile_base,
+            power_profile_diff_neg, neg_price,
+            power_profile_diff_pos, pos_price,
+            timestamp: float = None
+    ):
         """
         Send a flex offer as an agent Variable. The first offer is dismissed,
         because the 
@@ -163,22 +175,22 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         Inputs:
 
         name: name of the agent variable
-        base_power_profile: power profile from the base MPC
+        power_profile_base: power profile from the base MPC
         pos_price: price to provise the positive flex profile
-        pos_diff_profile: difference profile (pos flex MPC - base MPC)
+        power_profile_diff_pos: difference profile (pos flex MPC - base MPC)
         neg_price: price to provise the negative flex profile
-        neg_diff_profile: difference profile (neg flex MPC - base MPC)
+        power_profile_diff_neg: difference profile (neg flex MPC - base MPC)
         timestamp: the time offer was generated
 
         """
         if self.offer_count > 0:
             var = self._variables_dict[name]
             var.value = FlexOffer(
-                base_power_profile=base_power_profile,
+                base_power_profile=power_profile_base,
                 pos_price=pos_price,
-                pos_diff_profile=pos_diff_profile,
+                pos_diff_profile=power_profile_diff_pos,
                 neg_price=neg_price,
-                neg_diff_profile=neg_diff_profile
+                neg_diff_profile=power_profile_diff_neg
             )
             if timestamp is None:
                 timestamp = self.env.time
@@ -230,6 +242,12 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                    (self.base_vals, self.neg_vals, self.pos_vals, self._r_pel)):
                 self.flexibility()
 
+                # set the values to None to reset the callback
+                self.base_vals = None
+                self.neg_vals = None
+                self.pos_vals = None
+                self._r_pel = None
+
     def get_results(self) -> Optional[pd.DataFrame]:
         """
         Opens results file of flexibilityindicators.py
@@ -244,78 +262,25 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             return None
 
     def flexibility(self):
-        """
-        Calculate the flexibility, the costs, send the offer and write and save the results
-        """
-        # check if the dataframe is already initialized
-        if self.df is None:
-            self.df = pd.DataFrame(columns=self.var_list)
+        # Calculate the flexibility KPIs for current predictions
+        self.indicator_meta.calculate(
+            power_profile_base=self.base_vals,
+            power_profile_flex_pos=self.pos_vals,
+            power_profile_flex_neg=self.neg_vals,
+            costs_profile_electricity=self._r_pel
+        )
 
-        # get parameter
-        prep_time = self.get(glbs.PREP_TIME).value
-        market_time = self.get(glbs.MARKET_TIME).value
-        switch_time = prep_time + market_time
-        flex_event_duration = self.get(glbs.FLEX_EVENT_DURATION).value
-        horizon = self.get("prediction_horizon").value
-        time_step = self.get(glbs.TIME_STEP).value
+        # Send flex offer
+        self.send_flex_offer(
+            name="FlexibilityOffer",
+            power_profile_base=self.indicator_meta.power_profile_base,
+            power_profile_diff_neg=self.indicator_meta.neg_kpis.power_flex.value, neg_price=self.indicator_meta.neg_kpis.costs.integrate(),
+            power_profile_diff_pos=self.indicator_meta.pos_kpis.power_flex.value, pos_price=self.indicator_meta.pos_kpis.costs.integrate(),
+        )
 
-        # test = IndicatorCalculator(
-            # prep_time=self.get(glbs.PREP_TIME).value,
-            # market_time=self.get(glbs.MARKET_TIME).value,
-            # flex_event_duration=self.get(glbs.FLEX_EVENT_DURATION).value,
-            #  time_step=self.get(glbs.TIME_STEP).value,
-            #     prediction_horizon=self.get("prediction_horizon").value
-        # )
-        # print(test)
-        # test.calculate(
-        #     power_profile_base=self.base_vals,
-        #     power_profile_flex_pos=self.pos_vals,
-        #     power_profile_flex_neg=self.neg_vals,
-        #     costs_profile_electricity=self._r_pel
-        # )
-        # print(test)
-        # print()
-
-        # generate horizons
-        # 1. for the flexibility range
-        flex_horizon = np.arange(
-            switch_time, switch_time + flex_event_duration, time_step)
-        # 2. for the full range of prediction
-        full_horizon = np.arange(
-            0, horizon * time_step, time_step)
-
-        self.uniform_data(full_horizon=full_horizon)
-        self.calculate_and_send_offer(full_horizon=full_horizon, flex_horizon=flex_horizon, time_step=time_step, horizon=horizon)
-        self.safe_results()
-
-        # set the values to None to reset the callback
-        self.base_vals = None
-        self.neg_vals = None
-        self.pos_vals = None
-        self._r_pel = None
-
-    def uniform_data(self, full_horizon: np.ndarray):   # todo
-        """Uniform data to the same length
-        """
-        # uniform regarding discretization
-        if self.config.discretization == "collocation":
-            # As the collocation uses the values after each time step, the last value is always none
-            time = self.base_vals.index[:-1]
-
-            # use only the values of the full time steps
-            self.base_vals = pd.Series(self.base_vals, index=time).reindex(index=full_horizon)
-            self.neg_vals = pd.Series(self.neg_vals, index=time).reindex(index=full_horizon)
-            self.pos_vals = pd.Series(self.pos_vals, index=time).reindex(index=full_horizon)
-
-        # TODO: units anpassen (über Agentvars?)
-        # convert unit of power variables in kW
-        if self.config.power_unit == "kW":
-            scaler = 1
-        else:
-            scaler = 1000
-        self.base_vals = self.base_vals / scaler
-        self.neg_vals = self.neg_vals / scaler
-        self.pos_vals = self.pos_vals / scaler
+        # write results
+        self.df = self.write_results(df=self.df, ts=self.get(glbs.TIME_STEP).value, n=self.get(glbs.PREDICTION_HORIZON).value)
+        self.df.to_csv(self.config.results_file)
 
     def write_results(self, df, ts, n):
         """
@@ -362,111 +327,9 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
 
         return df
 
-    def safe_results(self):
-        self.df.to_csv(self.config.results_file)
-
     def cleanup_results(self):
         results_file = self.config.results_file
         if not results_file:
             return
         os.remove(results_file)
 
-    def _diff_negative_flexibility(self) -> np.ndarray:
-        diff = self.neg_vals.values - self.base_vals.values
-        return diff
-
-    def _diff_positive_flexibility(self) -> np.ndarray:
-        diff = self.base_vals.values - self.pos_vals.values
-        return diff
-
-    def calculate_flexibility(self, abbrev: str, diff_func: callable, full_horizon: np.ndarray, flex_horizon: np.ndarray, ts: float):
-        """calculate flexibility by differentiate the baseline and shadow mpc
-        """
-        powerflex_flex = []
-        difference = diff_func
-        for i in range(len(self.neg_vals)):
-            diff = difference[i]
-
-            if diff < 0:
-                percentage_diff = (abs(diff) / self.base_vals.values[i]) * 100
-
-                if percentage_diff < 1:
-                    powerflex_flex.append(0)
-                else:
-                    powerflex_flex.append(diff)
-            else:
-                powerflex_flex.append(diff)
-
-        # save this variable for the cost flexibilty
-        powerflex_flex_full = pd.Series(powerflex_flex, index=full_horizon)
-        # the powerflex is defined only in the flexibility region
-        powerflex_profile = powerflex_flex_full.reindex(index=flex_horizon)
-        powerflex_flex = powerflex_profile.reindex(index=full_horizon)
-
-        # calculate characteristics
-        powerflex_avg = np.average(powerflex_flex.dropna())
-        powerflex_min = min(powerflex_flex.dropna())
-        powerflex_max = max(powerflex_flex.dropna())
-        energyflex = (np.sum(powerflex_flex * ts)).round(4)
-
-        # set characteristics
-        self.set(f"powerflex_flex_{abbrev}", powerflex_flex)
-        self.set(f"powerflex_avg_{abbrev}", str(powerflex_avg))
-        self.set(f"powerflex_{abbrev}_min", str(powerflex_min))
-        self.set(f"powerflex_{abbrev}_max", str(powerflex_max))
-        self.set(f"energyflex_{abbrev}", str(energyflex))
-
-        return powerflex_profile, powerflex_flex_full, energyflex
-
-    def calculate_price(self, abbrev, horizon, full_horizon, powerflex_flex_full, ts, energyflex):
-        elec_prices = self._r_pel.iloc[:horizon]
-        elec_prices.index = full_horizon
-
-        flex_price = sum(powerflex_flex_full * elec_prices * ts)
-        self.set(f"costs_{abbrev}", str(flex_price))
-
-        # Relative Flexibility Costs as deviation of absolute costs for whole prediction horizon
-        # and energy flexibility during flexibility event
-        if energyflex == 0:
-            costs_neg_rel = 0
-        else:
-            costs_neg_rel = flex_price / energyflex
-
-        self.set(f"costs_{abbrev}_rel", str(costs_neg_rel))
-
-        return flex_price
-
-    def calculate_and_send_offer(self, full_horizon: np.ndarray, flex_horizon: np.ndarray, time_step: float, horizon):
-        # convert timestep from seconds to hours for calculations
-        ts = time_step / 3600
-
-        # calculate flexibility
-        if len(self.base_vals) != len(self.neg_vals) or len(self.base_vals) != len(self.pos_vals):
-            raise ValueError("Length of power profiles do not match")
-        powerflex_profile_neg, powerflex_flex_neg_full, energyflex_neg = self.calculate_flexibility(
-            abbrev="neg", diff_func=self._diff_negative_flexibility(),
-            full_horizon=full_horizon, flex_horizon=flex_horizon, ts=ts
-        )
-        powerflex_profile_pos, powerflex_flex_pos_full, energyflex_pos = self.calculate_flexibility(
-            abbrev="pos", diff_func=self._diff_positive_flexibility(),
-            full_horizon=full_horizon, flex_horizon=flex_horizon, ts=ts
-        )
-
-        # calculate prices
-        flex_price_neg = self.calculate_price(
-            abbrev="neg", powerflex_flex_full=powerflex_flex_neg_full, energyflex=energyflex_neg,
-            horizon=horizon, full_horizon=full_horizon, ts=ts
-        )
-        flex_price_pos = self.calculate_price(
-            abbrev="pos", powerflex_flex_full=powerflex_flex_pos_full, energyflex=energyflex_pos,
-            horizon=horizon, full_horizon=full_horizon, ts=ts
-        )
-
-        # send flex offer
-        base_profile = self.base_vals.reindex(index=flex_horizon)
-        self.send_flex_offer("FlexibilityOffer", base_profile,
-                             flex_price_pos, powerflex_profile_pos,
-                             flex_price_neg, powerflex_profile_neg)
-
-        # write results
-        self.df = self.write_results(df=self.df, ts=time_step, n=horizon)

@@ -6,6 +6,7 @@ import pandas as pd
 
 KPITypes = Literal["positive", "negative"]
 
+
 class KPI(pydantic.BaseModel):
     """
     Class defining attributes of the indicator KPI.
@@ -65,12 +66,12 @@ class KPI(pydantic.BaseModel):
         else:
             raise ValueError("Integration only possible for pd.Series")
 
-    def _get_dt(self) -> float: # -> pd.Series:
+    def _get_dt(self) -> float:     # -> pd.Series:
         """
         Calculate the time difference between the values of the series.
         """
         if isinstance(self.value, pd.Series):
-            dt = self.value.index[1] - self.value.index[0] # pd.Series(index=self.value.index, data=self.value.index).diff().shift(-1).ffill()
+            dt = self.value.index[1] - self.value.index[0]  # pd.Series(index=self.value.index, data=self.value.index).diff().shift(-1).ffill()
             return dt
         else:
             raise ValueError("Integration only possible for pd.Series")
@@ -83,7 +84,7 @@ class IndicatorKPIs(pydantic.BaseModel):
     power_flex: KPI = pydantic.Field(
         default=KPI(
             name="power_flex",
-            value=0,
+            value=pd.Series(),
             unit="kW",
             type="positive"
         ),
@@ -116,6 +117,7 @@ class IndicatorKPIs(pydantic.BaseModel):
         ),
         description="Costs of flexibility per energy",
     )
+
     def __init__(self, type: KPITypes, **data):
         super().__init__(**data)
         self.power_flex.type = type
@@ -123,29 +125,24 @@ class IndicatorKPIs(pydantic.BaseModel):
         self.costs.type = type
         self.costs_rel.type = type
 
-
     def calculate(self, power_profile_base: pd.Series, power_profile_flex: pd.Series, costs_profile_electricity: pd.Series):
-        self._calculate_powerflex(power_profile_base=power_profile_base, power_profile_flex=power_profile_flex)
-        self._calculate_energyflex()
-        self._calculate_costs(costs_profile_electricity=costs_profile_electricity)
-        self._calculate_costs_rel()
+        self.power_flex.value = self._calculate_powerflex(power_profile_base=power_profile_base, power_profile_flex=power_profile_flex)
+        self.energy_flex.value = self._calculate_energyflex()
+        self.costs.value = self._calculate_costs(costs_profile_electricity=costs_profile_electricity)
+        self.costs_rel.value = self._calculate_costs_rel()
 
     def _calculate_powerflex(self, power_profile_base: pd.Series, power_profile_flex: pd.Series) -> pd.Series:
-        powerflex = power_profile_flex - power_profile_base
-        self.power_flex.value = powerflex
-        return powerflex
+        difference = power_profile_flex - power_profile_base
+        difference_rel = (difference / power_profile_base).abs() * 100
+        difference.loc[(difference < 0) & (difference_rel < 1)] = 0
+        return difference
 
     def _calculate_energyflex(self) -> float:
         energyflex = self.power_flex.integrate()
-        self.energy_flex.value = energyflex
         return energyflex
 
     def _calculate_costs(self, costs_profile_electricity: pd.Series) -> pd.Series:
-        print(costs_profile_electricity)
-        print(self.power_flex.value)
         costs = costs_profile_electricity * self.power_flex.value
-        print(costs)
-        self.costs.value = costs
         return costs
 
     def _calculate_costs_rel(self) -> float:
@@ -153,7 +150,6 @@ class IndicatorKPIs(pydantic.BaseModel):
             costs_rel = 0
         else:
             costs_rel = self.costs.integrate() / self.energy_flex.value
-        self.costs_rel.value = costs_rel
         return costs_rel
 
 
