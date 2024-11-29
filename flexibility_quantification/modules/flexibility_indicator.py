@@ -7,7 +7,7 @@ import pandas as pd
 from pathlib import Path
 import pydantic
 import flexibility_quantification.data_structures.globals as glbs
-from flexibility_quantification.data_structures.indicator import IndicatorData
+from flexibility_quantification.data_structures.indicator import IndicatorData, IndicatorKPIs
 
 from flexibility_quantification.utils.data_handling import strip_multi_index
 sys.path.append(os.path.dirname(__file__))
@@ -69,10 +69,12 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
             description="Positive Energyflexibility"
         ),
         agentlib.AgentVariable(
-            name="costs_neg", unit='ct', type="float", description="Saved costs due to baseline"
+            name="costs_neg", unit='ct', type="float",
+            description="Saved costs due to baseline"
         ),
         agentlib.AgentVariable(
-            name="costs_pos", unit='ct', type="float", description="Saved costs due to baseline"
+            name="costs_pos", unit='ct', type="float",
+            description="Saved costs due to baseline"
         ),
         agentlib.AgentVariable(
             name="costs_neg_rel", unit='ct/kWh', type="float",
@@ -266,6 +268,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             power_profile_base=self.base_vals,
             power_profile_flex_pos=self.pos_vals,
             power_profile_flex_neg=self.neg_vals,
+            power_unit=self.config.power_unit,
             costs_profile_electricity=self._r_pel
         )
 
