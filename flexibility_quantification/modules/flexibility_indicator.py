@@ -9,7 +9,6 @@ import pydantic
 import flexibility_quantification.data_structures.globals as glbs
 from flexibility_quantification.data_structures.indicator import IndicatorData, IndicatorKPIs, DiscretizationTypes
 
-from flexibility_quantification.utils.data_handling import strip_multi_index
 sys.path.append(os.path.dirname(__file__))
 
 from flexibility_quantification.data_structures.flex_offer import FlexOffer
@@ -127,12 +126,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 continue
             self.var_list.append(variable.name)
         self.time = []
-        self.base_vals = None
-        self.pos_vals = None
-        self.neg_vals = None
-        self._r_pel = None
         self.in_provision = False
-        self.df = pd.DataFrame(columns=pd.Series(self.var_list))
         self.offer_count = 0
         self.data = IndicatorData(
             prep_time=self.get(glbs.PREP_TIME).value,
@@ -140,8 +134,9 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             flex_event_duration=self.get(glbs.FLEX_EVENT_DURATION).value,
             time_step=self.get(glbs.TIME_STEP).value,
             prediction_horizon=self.get(glbs.PREDICTION_HORIZON).value,
-            discretisation_type=self.config.discretization,
+            discretisation_type=self.config.discretization
         )
+        self.df = pd.DataFrame(columns=pd.Series(self.var_list))
 
     def register_callbacks(self):
         inputs = self.config.inputs
@@ -160,35 +155,32 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         if name == "in_provision":
             self.in_provision = inp.value
             if self.in_provision:
-                self.base_vals = None
-                self.neg_vals = None
-                self.pos_vals = None
-                self._r_pel = None
+                self._set_inputs_to_none()
+
         # TODO: remove hardcoded strings
         if not self.in_provision:
             if name == "__P_el_base":
-                self.base_vals = inp.value
-                self.base_vals = strip_multi_index(self.base_vals)
+                self.data.power_profile_base = inp.value
             elif name == "__P_el_neg":
-                self.neg_vals = inp.value
-                self.neg_vals = strip_multi_index(self.neg_vals)
+                self.data.power_profile_flex_neg = inp.value
             elif name == "__P_el_pos":
-                self.pos_vals = inp.value
-                self.pos_vals = strip_multi_index(self.pos_vals)
+                self.data.power_profile_flex_pos = inp.value
             elif name == self.config.price_variable:
                 # price comes from predictor, so no stripping needed
                 # TODO: add other sources for price signal?
-                self._r_pel = inp.value
+                self.data.costs_profile_electricity = inp.value
 
-            if all(var is not None for var in
-                   (self.base_vals, self.neg_vals, self.pos_vals, self._r_pel)):
+            if all(var is not None for var in (
+                    self.data.power_profile_base,
+                    self.data.power_profile_flex_neg,
+                    self.data.power_profile_flex_pos,
+                    self.data.costs_profile_electricity
+            )):
+                # Calculate the flexibility, send the offer, write and save the results
                 self.flexibility()
 
                 # set the values to None to reset the callback
-                self.base_vals = None
-                self.neg_vals = None
-                self.pos_vals = None
-                self._r_pel = None
+                self._set_inputs_to_none()
 
     def get_results(self) -> Optional[pd.DataFrame]:
         """
@@ -220,11 +212,11 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         for name in self.var_list:
             # Use the power variables averaged for each timestep, not the collocation values
             if name == "__P_el_base":
-                values = self.base_vals
+                values = self.data.power_profile_base
             elif name == "__P_el_neg":
-                values = self.neg_vals
+                values = self.data.power_profile_flex_neg
             elif name == "__P_el_pos":
-                values = self.pos_vals
+                values = self.data.power_profile_flex_pos
             else:
                 values = self.get(name).value
 
@@ -255,14 +247,10 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         os.remove(results_file)
 
     def flexibility(self):
+        self.data.uniform_input_data(discretisation_type=self.config.discretization)
+
         # Calculate the flexibility KPIs for current predictions
-        self.data.calculate(
-            power_profile_base=self.base_vals,
-            power_profile_flex_pos=self.pos_vals,
-            power_profile_flex_neg=self.neg_vals,
-            power_unit=self.config.power_unit,
-            costs_profile_electricity=self._r_pel
-        )
+        self.data.calculate()
 
         # Send flex offer
         self.send_flex_offer(
@@ -323,3 +311,9 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 copy=False,
             )
         self.offer_count += 1
+
+    def _set_inputs_to_none(self):
+        self.data.power_profile_base = None
+        self.data.power_profile_flex_neg = None
+        self.data.power_profile_flex_pos = None
+        self.data.costs_profile_electricity = None
