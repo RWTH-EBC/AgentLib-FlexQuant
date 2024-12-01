@@ -15,8 +15,15 @@ MultipleShooting: str = "multiple_shooting"
 DiscretizationTypes = Literal["collocation", "multiple_shooting"]
 
 # todo: Units
-ureg = UnitRegistry()
+# ureg = UnitRegistry()
 
+def _convert_units(magnitude: Union[float, pd.Series], is_unit: str, to_unit: str) -> Union[float, pd.Series]:
+    if isinstance(magnitude, pd.Series):
+        series = magnitude.apply(_convert_units, is_unit=is_unit, to_unit=to_unit)
+        return series
+    else:
+        scalar = Quantity(magnitude, is_unit).to(to_unit).magnitude
+        return scalar
 
 class KPI(pydantic.BaseModel):
     """
@@ -348,6 +355,13 @@ class IndicatorData(pydantic.BaseModel):
             self.power_profile_flex_pos = power_profile_flex_pos.reindex(self.full_horizon)
             self.power_profile_flex_neg = power_profile_flex_neg.reindex(self.full_horizon)
             self.costs_profile_electricity = costs_profile_electricity.reindex(self.full_horizon)
+        elif self.discretisation_type == MultipleShooting:
+            self.power_profile_base = power_profile_base
+            self.power_profile_flex_pos = power_profile_flex_pos
+            self.power_profile_flex_neg = power_profile_flex_neg
+            self.costs_profile_electricity = costs_profile_electricity.reindex(self.full_horizon)
+
+        return power_profile_base, power_profile_flex_pos, power_profile_flex_neg, costs_profile_electricity
 
     def get_kpis(self) -> dict[str, KPI]:
         kpis_dict = self.kpis_pos.get_kpi_dict() | self.kpis_neg.get_kpi_dict()
