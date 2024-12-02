@@ -107,8 +107,8 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         default="kW",
         description="Unit of the power variable"
     )
-    discretization: DiscretizationTypes = pydantic.Field(
-        default="collocation",
+    discretization: str = pydantic.Field(
+        default=glbs.COLLOCATION,
         description="Name of the discretization method",
     )
 
@@ -262,11 +262,9 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             neg_price=self.data.kpis_neg.costs.value,
         )
 
-        # set outputs
-        for kpi in self.data.get_kpis().values():
-            for output in self.config.outputs:
-                if output.name == kpi.get_name():
-                    self.set(output.name, kpi.value)
+        if self.config.discretization == glbs.COLLOCATION:
+            # As the collocation uses the values after each time step, the last value is always none
+            time = self.base_vals.index[:-1]
 
         # write results
         self.df = self.write_results(
