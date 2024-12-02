@@ -200,16 +200,13 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         if not self.in_provision:
             if name == "__P_el_base":
                 self.base_vals = inp.value
-                # self.base_vals = strip_multi_index(self.base_vals)
-                self.base_vals = fill_nans(self.base_vals)
+                self.base_vals = strip_multi_index(self.base_vals)
             elif name == "__P_el_neg":
                 self.neg_vals = inp.value
-                # self.neg_vals = strip_multi_index(self.neg_vals)
-                self.neg_vals = fill_nans(self.neg_vals)
+                self.neg_vals = strip_multi_index(self.neg_vals)
             elif name == "__P_el_pos":
                 self.pos_vals = inp.value
-                # self.pos_vals = strip_multi_index(self.pos_vals)
-                self.pos_vals = fill_nans(self.pos_vals)
+                self.pos_vals = strip_multi_index(self.pos_vals)
             elif name == self.config.price_variable:
                 # price comes from predictor, so no stripping needed
                 # TODO: add other sources for price signal?
