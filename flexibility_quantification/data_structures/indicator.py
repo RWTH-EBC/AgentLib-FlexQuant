@@ -5,14 +5,8 @@ import numpy as np
 import pandas as pd
 
 from agentlib_mpc.utils import TimeConversionTypes, TIME_CONVERSION
-from flexibility_quantification.utils.data_handling import strip_multi_index
 
 ShadowDirections = Literal["positive", "negative"]
-
-Collocation: str = "collocation"
-MultipleShooting: str = "multiple_shooting"
-DiscretizationTypes = Literal["collocation", "multiple_shooting"]
-
 
 class KPI(pydantic.BaseModel):
     """ Class defining attributes of the indicator KPI. """
@@ -256,21 +250,47 @@ class IndicatorData(pydantic.BaseModel):
         self.flex_horizon = np.arange(switch_time, switch_time + flex_event_duration, time_step)
         self.full_horizon = np.arange(0, prediction_horizon * time_step, time_step)
 
-    def uniform_input_data(self, discretisation_type: DiscretizationTypes):
-        # todo
-        self.power_profile_base = strip_multi_index(self.power_profile_base)
-        self.power_profile_flex_pos = strip_multi_index(self.power_profile_flex_pos)
-        self.power_profile_flex_neg = strip_multi_index(self.power_profile_flex_neg)
+    def format_predictor_inputs(self, series: pd.Series) -> pd.Series:
+        series = series.reindex(self.full_horizon)
+        return series
 
-        if discretisation_type == Collocation:
-            self.power_profile_base = self.power_profile_base.reindex(self.full_horizon)
-            self.power_profile_flex_pos = self.power_profile_flex_pos.reindex(self.full_horizon)
-            self.power_profile_flex_neg = self.power_profile_flex_neg.reindex(self.full_horizon)
-            self.costs_profile_electricity = self.costs_profile_electricity.reindex(self.full_horizon)
-        elif discretisation_type == MultipleShooting:
-            self.costs_profile_electricity = self.costs_profile_electricity.reindex(self.full_horizon)
+    def format_mpc_inputs(self, series: pd.Series) -> pd.Series:
+        series = self.strip_multi_index(series)
+        series = self.fill_na(series)
+        series = series.reindex(self.full_horizon)
+        return series
 
-        return self.power_profile_base, self.power_profile_flex_pos, self.power_profile_flex_neg, self.costs_profile_electricity
+    def fill_na(self, series: pd.Series):
+        """ Fills intervals including the nan with the mean of the following values. """
+        def get_intervals(s: pd.Series) -> list[pd.Interval]:
+            intervals = []
+            start: int = None
+            end: int
+            for index, value in s.items():
+                if pd.isna(value):
+                    if pd.isna(start):
+                        start = index
+                    else:
+                        end = index
+                        intervals.append(pd.Interval(left=start, right=end, closed="right"))
+                        start = end
+            return intervals
+
+        # Fill one interval (values and nan) with mean value
+        for interval in get_intervals(series):
+            interval_index = (interval.left <= series.index) & (series.index < interval.right)
+            series[interval_index] = series[interval_index].mean(skipna=True)
+
+        return series
+
+    def strip_multi_index(self, series: pd.Series):
+        # Convert the index (communicated as string) into a MultiIndex
+        series.index = series.index.map(lambda x: eval(x))
+        series.index = pd.MultiIndex.from_tuples(series.index)
+        # vals is multicolumn so get rid of first value (start time of predictions)
+        series.index = series.index.get_level_values(1).astype(float)
+        return series
+
 
     def calculate(self):
         self.kpis_pos.calculate(

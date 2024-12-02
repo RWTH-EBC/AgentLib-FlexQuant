@@ -1,13 +1,15 @@
 import os
 import sys
-from typing import Optional, List
+from typing import Optional, List, Literal
 import agentlib
 import numpy as np
 import pandas as pd
 from pathlib import Path
 import pydantic
 import flexibility_quantification.data_structures.globals as glbs
-from flexibility_quantification.data_structures.indicator import IndicatorData, IndicatorKPIs, DiscretizationTypes
+from flexibility_quantification.data_structures.indicator import IndicatorData, IndicatorKPIs
+
+DiscretizationTypes = Literal["collocation", "multiple_shooting"]
 
 sys.path.append(os.path.dirname(__file__))
 
@@ -160,15 +162,15 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         # TODO: remove hardcoded strings
         if not self.in_provision:
             if name == "__P_el_base":
-                self.data.power_profile_base = inp.value
+                self.data.power_profile_base = self.data.format_mpc_inputs(inp.value)
             elif name == "__P_el_neg":
-                self.data.power_profile_flex_neg = inp.value
+                self.data.power_profile_flex_neg = self.data.format_mpc_inputs(inp.value)
             elif name == "__P_el_pos":
-                self.data.power_profile_flex_pos = inp.value
+                self.data.power_profile_flex_pos = self.data.format_mpc_inputs(inp.value)
             elif name == self.config.price_variable:
                 # price comes from predictor, so no stripping needed
                 # TODO: add other sources for price signal?
-                self.data.costs_profile_electricity = inp.value
+                self.data.costs_profile_electricity = self.data.format_predictor_inputs(inp.value)
 
             if all(var is not None for var in (
                     self.data.power_profile_base,
@@ -247,8 +249,6 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         os.remove(results_file)
 
     def flexibility(self):
-        self.data.uniform_input_data(discretisation_type=self.config.discretization)
-
         # Calculate the flexibility KPIs for current predictions
         self.data.calculate()
 
