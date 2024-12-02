@@ -95,7 +95,7 @@ def run_example(until=until):
         data=results["PosFlexMPC"]["PosFlexMPC"], time_step=9000, variable="T"
     ).plot(ax=ax1, label="pos", linestyle="--", color=mpcplot.EBCColors.blue)
     mpc_at_time_step(
-        data=results["FlexModel"]["Baseline"], time_step=9900, variable="T"
+        data=results["FlexModel"]["Baseline"], time_step=9000, variable="T"
     ).plot(ax=ax1, label="base", linestyle="--", color=mpcplot.EBCColors.dark_grey)
 
     ax1.legend()

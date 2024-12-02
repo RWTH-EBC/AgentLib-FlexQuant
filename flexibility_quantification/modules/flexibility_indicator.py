@@ -7,7 +7,7 @@ import pandas as pd
 from pathlib import Path
 import pydantic
 import flexibility_quantification.data_structures.globals as glbs
-from flexibility_quantification.data_structures.indicator import IndicatorData, IndicatorKPIs
+from flexibility_quantification.data_structures.indicator import FlexibilityData, FlexibilityKPIs
 
 DiscretizationTypes = Literal["collocation", "multiple_shooting"]
 
@@ -15,8 +15,8 @@ sys.path.append(os.path.dirname(__file__))
 
 from flexibility_quantification.data_structures.flex_offer import FlexOffer
 
-kpis_pos = IndicatorKPIs(direction="positive")
-kpis_neg = IndicatorKPIs(direction="negative")
+kpis_pos = FlexibilityKPIs(direction="positive")
+kpis_neg = FlexibilityKPIs(direction="negative")
 
 class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
     inputs: List[agentlib.AgentVariable] = [
@@ -118,7 +118,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
 class FlexibilityIndicatorModule(agentlib.BaseModule):
     config: FlexibilityIndicatorModuleConfig
 
-    data: IndicatorData
+    data: FlexibilityData
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -130,7 +130,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         self.time = []
         self.in_provision = False
         self.offer_count = 0
-        self.data = IndicatorData(
+        self.data = FlexibilityData(
             prep_time=self.get(glbs.PREP_TIME).value,
             market_time=self.get(glbs.MARKET_TIME).value,
             flex_event_duration=self.get(glbs.FLEX_EVENT_DURATION).value,

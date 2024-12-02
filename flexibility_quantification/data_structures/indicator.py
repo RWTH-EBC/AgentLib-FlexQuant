@@ -8,6 +8,7 @@ from agentlib_mpc.utils import TimeConversionTypes, TIME_CONVERSION
 
 ShadowDirections = Literal["positive", "negative"]
 
+
 class KPI(pydantic.BaseModel):
     """ Class defining attributes of the indicator KPI. """
 
@@ -65,7 +66,7 @@ class KPI(pydantic.BaseModel):
             raise ValueError("Time difference only possible for Series")
 
 
-class IndicatorKPIs(pydantic.BaseModel):
+class FlexibilityKPIs(pydantic.BaseModel):
     """
     Class defining the indicator KPIs.
     """
@@ -139,6 +140,10 @@ class IndicatorKPIs(pydantic.BaseModel):
             horizon_full: np.ndarray,
             horizon_offer: np.ndarray
     ):
+        """
+        Calculate the KPIs based on the power and electricity input profiles.
+        Horizons needed for indexing of the power flexibility profiles.
+        """
         # Power / energy KPIs
         self.power_flex_full.value = self._calculate_power_flex(power_profile_base=power_profile_base, power_profile_flex=power_profile_flex)
         self.power_flex_offer.value = self.power_flex_full.value.reindex(horizon_offer)
@@ -148,7 +153,13 @@ class IndicatorKPIs(pydantic.BaseModel):
         self.costs.value = self._calculate_costs(costs_profile_electricity=costs_profile_electricity)
         self.costs_rel.value = self._calculate_costs_rel()
 
+        # change index for offer
+        self.power_flex_offer.value = self.power_flex_full.value.reindex(horizon_full)
+
     def _calculate_power_flex(self, power_profile_base: pd.Series, power_profile_flex: pd.Series) -> pd.Series:
+        """
+        Calculate the power flexibility based on the base and flexibility power profiles.
+        """
         # Check if indices of profiles match
         if not power_profile_flex.index.equals(power_profile_base.index):
             raise ValueError("Indices of power profiles do not match")
@@ -167,10 +178,16 @@ class IndicatorKPIs(pydantic.BaseModel):
         return power_flex
 
     def _calculate_energy_flex(self) -> float:
+        """
+        Calculate the energy flexibility by integrating the power flexibility of the offer window.
+        """
         energy_flex = self.power_flex_offer.integrate(time_unit="hours")
         return energy_flex
 
     def _calculate_costs(self, costs_profile_electricity: pd.Series) -> float:
+        """
+        Calculate the costs of the flexibility event based on the electricity costs profile and the power flexibility profile.
+        """
         # Check if indices of profiles match
         if not self.power_flex_full.value.index.equals(costs_profile_electricity.index):
             raise ValueError("Indices of profiles do not match")
@@ -178,9 +195,12 @@ class IndicatorKPIs(pydantic.BaseModel):
         # Calculate costs
         costs_series = costs_profile_electricity * self.power_flex_full.value
         costs = KPI(name="", value=costs_series, unit="", direction=self.direction).integrate(time_unit="hours")
-        return costs
+        return abs(costs)
 
     def _calculate_costs_rel(self) -> float:
+        """
+        Calculate the relative costs of the flexibility event per energy flexibility.
+        """
         if self.energy_flex == 0:
             costs_rel = 0
         else:
@@ -188,16 +208,21 @@ class IndicatorKPIs(pydantic.BaseModel):
         return costs_rel
 
     def get_kpi_dict(self) -> dict[str, KPI]:
+        """
+        Get the KPIs as a dictionary with names depending on the direction as keys.
+        """
         kpi_dict = {}
         for kpi in vars(self).values():
             if isinstance(kpi, KPI):
                 kpi_dict[kpi.get_name()] = kpi
         return kpi_dict
 
-class IndicatorData(pydantic.BaseModel):
+
+class FlexibilityData(pydantic.BaseModel):
     """
-    Class
+    Class containing the data for the calculation of the flexibility.
     """
+
     # Time parameters
     full_horizon: np.ndarray = pydantic.Field(
         default=None,
@@ -211,28 +236,28 @@ class IndicatorData(pydantic.BaseModel):
     # Profiles
     power_profile_base: pd.Series = pydantic.Field(
         default=None,
-        description="Base profile of the flexibility event",
+        description="Base power profile",
     )
     power_profile_flex_neg: pd.Series = pydantic.Field(
         default=None,
-        description="Negative flexibility profile",
+        description="Power profile of the negative flexibility",
     )
     power_profile_flex_pos: pd.Series = pydantic.Field(
         default=None,
-        description="Positive flexibility profile",
+        description="Power profile of the positive flexibility",
     )
     costs_profile_electricity: pd.Series = pydantic.Field(
         default=None,
-        description="Costs of the flexibility event",
+        description="Profile of the electricity costs",
     )
 
     # KPIs
-    kpis_pos: IndicatorKPIs = pydantic.Field(
-        default=IndicatorKPIs(direction="positive"),
+    kpis_pos: FlexibilityKPIs = pydantic.Field(
+        default=FlexibilityKPIs(direction="positive"),
         description="KPIs for positive flexibility",
     )
-    kpis_neg: IndicatorKPIs = pydantic.Field(
-        default=IndicatorKPIs(direction="negative"),
+    kpis_neg: FlexibilityKPIs = pydantic.Field(
+        default=FlexibilityKPIs(direction="negative"),
         description="KPIs for negative flexibility",
     )
 
@@ -256,11 +281,11 @@ class IndicatorData(pydantic.BaseModel):
 
     def format_mpc_inputs(self, series: pd.Series) -> pd.Series:
         series = self.strip_multi_index(series)
-        series = self.fill_na(series)
+        series = self.fill_nans(series)
         series = series.reindex(self.full_horizon)
         return series
 
-    def fill_na(self, series: pd.Series):
+    def fill_nans(self, series: pd.Series):
         """ Fills intervals including the nan with the mean of the following values. """
         def get_intervals(s: pd.Series) -> list[pd.Interval]:
             intervals = []
@@ -290,7 +315,6 @@ class IndicatorData(pydantic.BaseModel):
         # vals is multicolumn so get rid of first value (start time of predictions)
         series.index = series.index.get_level_values(1).astype(float)
         return series
-
 
     def calculate(self):
         self.kpis_pos.calculate(
