@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 import pydantic
+from flexibility_quantification.data_structures.mpcs import BaselineMPCData, PFMPCData, NFMPCData
 import flexibility_quantification.data_structures.globals as glbs
 from flexibility_quantification.data_structures.indicator import FlexibilityData, FlexibilityKPIs
 
@@ -18,13 +19,17 @@ from flexibility_quantification.data_structures.flex_offer import FlexOffer
 kpis_pos = FlexibilityKPIs(direction="positive")
 kpis_neg = FlexibilityKPIs(direction="negative")
 
+power_alias_base = BaselineMPCData().power_alias
+power_alias_neg = NFMPCData().power_alias
+power_alias_pos = PFMPCData().power_alias
+
 class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
     inputs: List[agentlib.AgentVariable] = [
-        agentlib.AgentVariable(name="__P_el_pos", unit="W", type="pd.Series",
+        agentlib.AgentVariable(name=power_alias_base, unit="W", type="pd.Series",
                                description="The power input to the system"),
-        agentlib.AgentVariable(name="__P_el_base", unit="W", type="pd.Series",
+        agentlib.AgentVariable(name=power_alias_neg, unit="W", type="pd.Series",
                                description="The power input to the system"),
-        agentlib.AgentVariable(name="__P_el_neg", unit="W", type="pd.Series",
+        agentlib.AgentVariable(name=power_alias_pos, unit="W", type="pd.Series",
                                description="The power input to the system"),
         agentlib.AgentVariable(name="r_pel", unit="ct/kWh", type="pd.Series",
                                description="electricity price")
@@ -159,13 +164,12 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             if self.in_provision:
                 self._set_inputs_to_none()
 
-        # TODO: remove hardcoded strings
         if not self.in_provision:
-            if name == "__P_el_base":
+            if name == power_alias_base:
                 self.data.power_profile_base = self.data.format_mpc_inputs(inp.value)
-            elif name == "__P_el_neg":
+            elif name == power_alias_neg:
                 self.data.power_profile_flex_neg = self.data.format_mpc_inputs(inp.value)
-            elif name == "__P_el_pos":
+            elif name == power_alias_pos:
                 self.data.power_profile_flex_pos = self.data.format_mpc_inputs(inp.value)
             elif name == self.config.price_variable:
                 # price comes from predictor, so no stripping needed
@@ -213,11 +217,11 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         now = self.env.now
         for name in self.var_list:
             # Use the power variables averaged for each timestep, not the collocation values
-            if name == "__P_el_base":
+            if name == power_alias_base:
                 values = self.data.power_profile_base
-            elif name == "__P_el_neg":
+            elif name == power_alias_neg:
                 values = self.data.power_profile_flex_neg
-            elif name == "__P_el_pos":
+            elif name == power_alias_pos:
                 values = self.data.power_profile_flex_pos
             else:
                 values = self.get(name).value
