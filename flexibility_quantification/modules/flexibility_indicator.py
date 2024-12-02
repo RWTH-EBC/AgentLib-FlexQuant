@@ -113,7 +113,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         description="Unit of the power variable"
     )
     discretization: str = pydantic.Field(
-        default="collocation",
+        default=glbs.COLLOCATION,
         description="Name of the discretization method",
     )
 
@@ -303,7 +303,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         full_horizon = np.arange(
             0, horizon * time_step, time_step)
 
-        if self.config.discretization == "collocation":
+        if self.config.discretization == glbs.COLLOCATION:
             # As the collocation uses the values after each time step, the last value is always none
             time = self.base_vals.index[:-1]
 

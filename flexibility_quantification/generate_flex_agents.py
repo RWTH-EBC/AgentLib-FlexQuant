@@ -388,17 +388,11 @@ class FlexAgentGenerator:
                 parameter.value = self.baseline_mpc_module_config.time_step
             if parameter.name == "prediction_horizon":
                 parameter.value = self.baseline_mpc_module_config.prediction_horizon
-        if (
-            "method"
-            in self.baseline_mpc_module_config.optimization_backend[
-                "discretization_options"
-            ]
-        ):
-            module_config.discretization = (
-                self.baseline_mpc_module_config.optimization_backend[
-                    "discretization_options"
-                ]["method"]
-            )
+        # set the optimization backend method from the mpc
+        if "method" in self.baseline_mpc_module_config.optimization_backend["discretization_options"]:
+            module_config.discretization = self.baseline_mpc_module_config.optimization_backend["discretization_options"]["method"]
+        elif "collocation_order" in self.baseline_mpc_module_config.optimization_backend["discretization_options"]:
+            module_config.discretization = glbs.COLLOCATION
         module_config.power_unit = (
             self.flex_config.baseline_config_generator_data.power_unit
         )
