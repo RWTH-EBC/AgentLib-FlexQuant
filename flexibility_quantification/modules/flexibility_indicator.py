@@ -112,10 +112,6 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         default="kW",
         description="Unit of the power variable"
     )
-    discretization: str = pydantic.Field(
-        default=glbs.COLLOCATION,
-        description="Name of the discretization method",
-    )
 
     shared_variable_fields: List[str] = ["outputs"]
 
@@ -140,8 +136,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             market_time=self.get(glbs.MARKET_TIME).value,
             flex_event_duration=self.get(glbs.FLEX_EVENT_DURATION).value,
             time_step=self.get(glbs.TIME_STEP).value,
-            prediction_horizon=self.get(glbs.PREDICTION_HORIZON).value,
-            discretisation_type=self.config.discretization
+            prediction_horizon=self.get(glbs.PREDICTION_HORIZON).value
         )
         self.df = pd.DataFrame(columns=pd.Series(self.var_list))
 
@@ -265,10 +260,6 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             neg_diff_profile=self.data.kpis_neg.power_flex_offer.value,
             neg_price=self.data.kpis_neg.costs.value,
         )
-
-        if self.config.discretization == glbs.COLLOCATION:
-            # As the collocation uses the values after each time step, the last value is always none
-            time = self.base_vals.index[:-1]
 
         # write results
         self.df = self.write_results(
