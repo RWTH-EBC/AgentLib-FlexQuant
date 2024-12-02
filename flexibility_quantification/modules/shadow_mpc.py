@@ -1,5 +1,5 @@
 from agentlib_mpc.modules import mpc_full
-from flexibility_quantification.utils.data_handling import strip_multi_index
+from flexibility_quantification.utils.data_handling import strip_multi_index, fill_nans, MEAN, INTERPOLATE
 from typing import Dict, Union
 from agentlib.core.datamodels import AgentVariable
 
@@ -34,7 +34,7 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         if self.get("in_provision").value:
             return
 
-        vals = strip_multi_index(inp.value)
+        vals = fill_nans(strip_multi_index(inp.value), method=MEAN)
 
         # the MPC Predictions starts at t=env.now not t=0
         vals.index += self.env.time

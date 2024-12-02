@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 
 from agentlib_mpc.utils import TimeConversionTypes, TIME_CONVERSION
+from flexibility_quantification.utils.data_handling import strip_multi_index, fill_nans, MEAN, INTERPOLATE
 
 ShadowDirections = Literal["positive", "negative"]
 
@@ -280,40 +281,9 @@ class FlexibilityData(pydantic.BaseModel):
         return series
 
     def format_mpc_inputs(self, series: pd.Series) -> pd.Series:
-        series = self.strip_multi_index(series)
-        series = self.fill_nans(series)
+        series = strip_multi_index(series)
+        series = fill_nans(series=series, method=MEAN)
         series = series.reindex(self.full_horizon)
-        return series
-
-    def fill_nans(self, series: pd.Series):
-        """ Fills intervals including the nan with the mean of the following values. """
-        def get_intervals(s: pd.Series) -> list[pd.Interval]:
-            intervals = []
-            start: int = None
-            end: int
-            for index, value in s.items():
-                if pd.isna(value):
-                    if pd.isna(start):
-                        start = index
-                    else:
-                        end = index
-                        intervals.append(pd.Interval(left=start, right=end, closed="right"))
-                        start = end
-            return intervals
-
-        # Fill one interval (values and nan) with mean value
-        for interval in get_intervals(series):
-            interval_index = (interval.left <= series.index) & (series.index < interval.right)
-            series[interval_index] = series[interval_index].mean(skipna=True)
-
-        return series
-
-    def strip_multi_index(self, series: pd.Series):
-        # Convert the index (communicated as string) into a MultiIndex
-        series.index = series.index.map(lambda x: eval(x))
-        series.index = pd.MultiIndex.from_tuples(series.index)
-        # vals is multicolumn so get rid of first value (start time of predictions)
-        series.index = series.index.get_level_values(1).astype(float)
         return series
 
     def calculate(self):
