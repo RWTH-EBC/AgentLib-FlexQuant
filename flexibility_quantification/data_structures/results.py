@@ -1,10 +1,13 @@
 from typing import Union
+
+import agentlib
 from pydantic import FilePath
 from pathlib import Path
 
 import pandas as pd
 
 from agentlib.core.agent import AgentConfig
+from agentlib.core.module import BaseModuleConfig
 from agentlib.utils import load_config
 from agentlib_mpc.modules.mpc_full import MPCConfig
 from flexibility_quantification.data_structures.flexquant import FlexQuantConfig, FlexibilityIndicatorConfig, FlexibilityMarketConfig
@@ -232,3 +235,36 @@ class Results:
             convert_timescale_of_index(df=df, from_unit=self.current_timescale, to_unit=to_timescale)
 
         self.current_timescale = to_timescale
+
+        print(get_alias_name_dict(self.baseline_mpc_module_config))
+
+
+    def get_names_of_shared_variables(self) -> dict:
+        # aliases as keys, {id: names} as values
+        # plot all shared aliases
+        simulator_variables = self.simulator_module_config.get_variables()
+        baseline_variables = self.baseline_mpc_module_config.get_variables()
+        pos_flex_variables = self.pos_flex_mpc_module_config.get_variables()
+        neg_flex_variables = self.neg_flex_mpc_module_config.get_variables()
+        indicator_variables = self.indicator_module_config.get_variables()
+        market_variables = self.market_module_config.get_variables()
+
+
+        shared_variables = get_shared_aliases()
+
+
+
+        return shared_variables
+
+def get_shared_aliases(agent_vars: list[list[agentlib.AgentVariables]]):
+    aliases = []
+    for variables in agent_vars[0]:
+        for variable in variables:
+            aliases.append(variable.alias)
+
+
+def get_alias_name_dict(module_config: BaseModuleConfig):
+    name_alias_dict = {}
+    for variable in module_config.get_variables():
+        name_alias_dict[variable.alias] = variable.name
+    return name_alias_dict
