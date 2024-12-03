@@ -12,8 +12,13 @@ def strip_multi_index(series: pd.Series):
     return vals
 
 
+def fill_nans(series: pd.Series):
+    return pd.Series(_set_mean_values(series), index=series.index[:-1])
+
+
 def _set_mean_values(series: pd.Series):
-    """ Helper function to set the mean values for the collocation points
+    """Helper function to set the mean values for the collocation points
+
     """
     # TODO: find a better solution, like using the simulator for the values
     # TODO: clean up

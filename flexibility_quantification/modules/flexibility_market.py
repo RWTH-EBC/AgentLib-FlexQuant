@@ -173,8 +173,6 @@ class FlexibilityMarketModule(agentlib.BaseModule):
 
         self.write_results(offer)
 
-
-
     def custom_flexibility_callback(self, inp, name):
         """Placeholder for a custom flexibility callback"""
         pass

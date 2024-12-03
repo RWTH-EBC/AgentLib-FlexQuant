@@ -9,7 +9,7 @@ from pathlib import Path
 import pydantic
 import flexibility_quantification.data_structures.globals as glbs
 
-from flexibility_quantification.utils.data_handling import strip_multi_index
+from flexibility_quantification.utils.data_handling import strip_multi_index, fill_nans
 sys.path.append(os.path.dirname(__file__))
 
 from flexibility_quantification.data_structures.flex_offer import FlexOffer
@@ -352,12 +352,15 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             diff = self.base_vals.values[i] - self.pos_vals.values[i]
 
             if diff < 0:
-                percentage_diff = (abs(diff) / self.base_vals.values[i]) * 100
-
-                if percentage_diff < 1:
-                    powerflex_flex_pos.append(0)
-                else:
+                if self.base_vals.values[i] == 0:
                     powerflex_flex_pos.append(diff)
+                else:
+                    percentage_diff = (abs(diff) / self.base_vals.values[i]) * 100
+
+                    if percentage_diff < 1:
+                        powerflex_flex_pos.append(0)
+                    else:
+                        powerflex_flex_pos.append(diff)
             else:
                 powerflex_flex_pos.append(diff)
         # save this variable for the cost flexibilty

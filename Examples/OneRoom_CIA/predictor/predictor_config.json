@@ -1,0 +1,26 @@
+{
+    "id": "myPredictorAgent",
+    "modules": [
+        {
+            "module_id": "Ag4Com",
+            "type": "local_broadcast"
+        },
+        {
+            "module_id": "MyPredictor",
+            "type": {
+                "file": "predictor/simple_predictor.py",
+                "class_name": "PredictorModule"
+            },
+            "parameters": [
+                {
+                    "name": "time_step",
+                    "value": 300
+                },
+                {
+                    "name": "prediction_horizon",
+                    "value": 25
+                }
+            ]
+        }
+    ]
+}

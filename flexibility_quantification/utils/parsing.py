@@ -1,5 +1,5 @@
 import ast
-from typing import Union, List
+from typing import Union, List, Optional
 from flexibility_quantification.data_structures.mpcs import (
     BaseMPCData,
     PFMPCData,
@@ -9,6 +9,8 @@ from flexibility_quantification.data_structures.mpcs import (
 from flexibility_quantification.data_structures.globals import (
     SHADOW_MPC_COST_FUNCTION,
     return_baseline_cost_function,
+    full_trajectory_prefix,
+    full_trajectory_suffix,
 )
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from string import Template
@@ -34,7 +36,7 @@ def create_ast_element(template_string):
     return ast.parse(template_string).body[0].value
 
 
-def add_input(name, value, unit, description):
+def add_input(name, value, unit, description, type):
     return create_ast_element(
         INPUT_TEMPLATE.substitute(
             class_name=CASADI_INPUT,
@@ -42,6 +44,7 @@ def add_input(name, value, unit, description):
             value=value,
             unit=unit,
             description=description,
+            type=type,
         )
     )
 
@@ -82,9 +85,15 @@ class SetupSystemModifier(ast.NodeTransformer):
 
     """
 
-    def __init__(self, mpc_data: BaseMPCData, controls: List[MPCVariable]):
+    def __init__(
+        self,
+        mpc_data: BaseMPCData,
+        controls: List[MPCVariable],
+        binary_controls: Optional[List[MPCVariable]],
+    ):
         self.mpc_data = mpc_data
         self.controls = controls
+        self.binary_controls = binary_controls
         # create object for ast parsing for both, the config and the model
         self.config_obj: Union[None, ast.expr] = None
         self.model_obj: Union[None, ast.expr] = None
@@ -168,20 +177,37 @@ class SetupSystemModifier(ast.NodeTransformer):
         """
         # loop over config object and modify fields
         for body in node.body:
-            # add the time and control trajectory inputs
+            # add the time and full control trajectory inputs
             if body.target.id == "inputs":
-                body.value.elts.append(add_input("Time", 0, "s", "time trajectory"))
+                body.value.elts.append(
+                    add_input("Time", 0, "s", "time trajectory", "list")
+                )
                 for control in self.controls:
                     body.value.elts.append(
                         add_input(
-                            f"_{control.name}",
+                            f"{full_trajectory_prefix}{control.name}"
+                            f"{full_trajectory_suffix}",
                             "pd.Series([0])",
                             "W",
-                            "control trajectory",
+                            "pd.Series",
+                            "full control output",
                         )
                     )
+                # also include binary controls
+                if self.binary_controls:
+                    for control in self.binary_controls:
+                        body.value.elts.append(
+                            add_input(
+                                f"{full_trajectory_prefix}{control.name}"
+                                f"{full_trajectory_suffix}",
+                                "pd.Series([0])",
+                                "W",
+                                "full control output",
+                                "pd.Series",
+                            )
+                        )
                 body.value.elts.append(
-                    add_input("in_provision", False, "-", "provision flag")
+                    add_input("in_provision", False, "-", "provision flag", "bool")
                 )
             # add the flex variables and the weights
             if body.target.id == "parameters":
@@ -213,19 +239,39 @@ class SetupSystemModifier(ast.NodeTransformer):
                 for control in self.controls:
                     body.value.elts.append(
                         add_output(
-                            f"{control.name}_full",
+                            f"{full_trajectory_prefix}{control.name}"
+                            f"{full_trajectory_suffix}",
                             "W",
                             "pd.Series",
                             "pd.Series([0])",
                             "full control output",
                         )
                     )
+                # also include binary controls
+                if self.binary_controls:
+                    for control in self.binary_controls:
+                        body.value.elts.append(
+                            add_output(
+                                f"{full_trajectory_prefix}{control.name}"
+                                f"{full_trajectory_suffix}",
+                                "W",
+                                "pd.Series",
+                                "pd.Series([0])",
+                                "full control output",
+                            )
+                        )
             # add the flexibility inputs
             if body.target.id == "inputs":
-                body.value.elts.append(add_input("Time", 0, "s", "time trajectory"))
+                body.value.elts.append(
+                    add_input("Time", 0, "s", "time trajectory", "list")
+                )
                 body.value.elts.append(
                     add_input(
-                        "_P_external", 0, "W", "External power profile to be provided"
+                        "_P_external",
+                        0,
+                        "W",
+                        "External power profile to be provided",
+                        "pd.Series",
                     )
                 )
                 body.value.elts.append(
@@ -234,6 +280,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                         False,
                         "-",
                         "Flag signaling if the flexibility is in provision",
+                        "bool",
                     )
                 )
                 body.value.elts.append(
@@ -242,11 +289,16 @@ class SetupSystemModifier(ast.NodeTransformer):
                         0,
                         "s",
                         "relative start time of the flexibility event",
+                        "int",
                     )
                 )
                 body.value.elts.append(
                     add_input(
-                        "rel_end", 0, "s", "relative end time of the flexibility event"
+                        "rel_end",
+                        0,
+                        "s",
+                        "relative end time of the flexibility event",
+                        "int",
                     )
                 )
 
@@ -273,13 +325,17 @@ class SetupSystemModifier(ast.NodeTransformer):
                         node.body.insert(
                             0,
                             ast.parse(
-                                f"{control.name}_upper = ca.if_else(self.Time.sym < self.market_time.sym, self._{control.name}.sym, self.{control.name}.ub)"
+                                f"{control.name}_upper = ca.if_else(self.Time.sym < self.market_time.sym, "
+                                f"self.{full_trajectory_prefix}{control.name}{full_trajectory_suffix}.sym, "
+                                f"self.{control.name}.ub)"
                             ).body[0],
                         )
                         node.body.insert(
                             0,
                             ast.parse(
-                                f"{control.name}_lower = ca.if_else(self.Time.sym < self.market_time.sym, self._{control.name}.sym, self.{control.name}.lb)"
+                                f"{control.name}_lower = ca.if_else(self.Time.sym < self.market_time.sym, "
+                                f"self.{full_trajectory_prefix}{control.name}{full_trajectory_suffix}.sym, "
+                                f"self.{control.name}.lb)"
                             ).body[0],
                         )
                         # append to constraints
@@ -291,6 +347,35 @@ class SetupSystemModifier(ast.NodeTransformer):
                             .value
                         )
                         item.value.elts.append(new_element)
+                    # also include binary controls
+                    if self.binary_controls:
+                        for ind, control in enumerate(self.binary_controls):
+                            # insert control boundaries at beginning of function
+                            node.body.insert(
+                                0,
+                                ast.parse(
+                                    f"{control.name}_upper = ca.if_else(self.Time.sym < self.market_time.sym, "
+                                    f"self.{full_trajectory_prefix}{control.name}{full_trajectory_suffix}.sym, "
+                                    f"self.{control.name}.ub)"
+                                ).body[0],
+                            )
+                            node.body.insert(
+                                0,
+                                ast.parse(
+                                    f"{control.name}_lower = ca.if_else(self.Time.sym < self.market_time.sym, "
+                                    f"self.{full_trajectory_prefix}{control.name}{full_trajectory_suffix}.sym, "
+                                    f"self.{control.name}.lb)"
+                                ).body[0],
+                            )
+                            # append to constraints
+                            new_element = (
+                                ast.parse(
+                                    f"({control.name}_lower, self.{control.name}, {control.name}_upper)"
+                                )
+                                .body[0]
+                                .value
+                            )
+                            item.value.elts.append(new_element)
                     break
         # loop through setup_system function to find return statement
         for i, stmt in enumerate(node.body):
@@ -328,12 +413,17 @@ class SetupSystemModifier(ast.NodeTransformer):
 
         """
         # set the control trajectories with the respective variables
+        if self.binary_controls:
+            controls_list = self.controls + self.binary_controls
+        else:
+            controls_list = self.controls
         full_traj_list = [
             ast.Assign(
                 targets=[
                     ast.Attribute(
                         value=ast.Name(id="self", ctx=ast.Load()),
-                        attr=f"{control.name}_full.alg",
+                        attr=f"{full_trajectory_prefix}{control.name}"
+                        f"{full_trajectory_suffix}.alg",
                         ctx=ast.Store(),
                     )
                 ],
@@ -343,7 +433,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                     ctx=ast.Load(),
                 ),
             )
-            for control in self.controls
+            for control in controls_list
         ]
         # loop through setup_system function to find return statement
         for i, stmt in enumerate(node.body):

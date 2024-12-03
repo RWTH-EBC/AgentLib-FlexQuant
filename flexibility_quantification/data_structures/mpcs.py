@@ -2,6 +2,7 @@ import pydantic
 from typing import List
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariables, MPCVariable
 import flexibility_quantification.data_structures.globals as glbs
+import flexibility_quantification.utils.config_management as cmng
 
 
 #TODO: add validators for these
@@ -15,11 +16,10 @@ class BaseMPCData(pydantic.BaseModel):
     name_of_created_file: str
     results_suffix: str
     # modules
-    module_type: str
+    module_types: dict
     class_name: str
     module_id: str
     # variables
-    full_trajectory_suffix: str = "_full"
     power_alias: str
     config_inputs_appendix: MPCVariables = []
     config_parameters_appendix: MPCVariables = []
@@ -37,7 +37,7 @@ class BaselineMPCData(BaseMPCData):
     results_suffix: str = "_base.csv"
     name_of_created_file: str = "baseline.json"
     # modules
-    module_type: str = "flexibility_quantification.baseline_mpc"
+    module_types: dict = cmng.BASELINE_MODULE_TYPE_DICT
     class_name: str = "BaselineMPCModel"
     module_id: str = "Baseline"
     # variables
@@ -76,7 +76,7 @@ class PFMPCData(BaseMPCData):
     results_suffix: str = "_pos_flex.csv"
     name_of_created_file: str = "pos_flex.json"
     # modules
-    module_type: str = "flexibility_quantification.shadow_mpc"
+    module_types: dict = cmng.SHADOW_MODULE_TYPE_DICT
     class_name: str = "PosFlexModel"
     module_id: str = "PosFlexMPC"
     # variables
@@ -108,7 +108,7 @@ class NFMPCData(BaseMPCData):
     results_suffix: str = "_neg_flex.csv"
     name_of_created_file: str = "neg_flex.json"
     # modules
-    module_type: str = "flexibility_quantification.shadow_mpc"
+    module_types: dict = cmng.SHADOW_MODULE_TYPE_DICT
     class_name: str = "NegFlexModel"
     module_id: str = "NegFlexMPC"
     # variables
