@@ -9,6 +9,8 @@ from agentlib.utils import load_config
 from agentlib_mpc.modules.mpc_full import MPCConfig
 from flexibility_quantification.data_structures.flexquant import FlexQuantConfig, FlexibilityIndicatorConfig, FlexibilityMarketConfig
 from flexibility_quantification.data_structures.mpcs import BaselineMPCData, NFMPCData, PFMPCData
+from flexibility_quantification.utils.data_handling import convert_timescale_of_index
+from agentlib_mpc.utils import TimeConversionTypes
 from agentlib_mpc.utils.analysis import load_sim, load_mpc, load_mpc_stats
 
 from flexibility_quantification.modules.flexibility_indicator import FlexibilityIndicatorModuleConfig
@@ -52,12 +54,16 @@ class FlexResults:
     df_neg_flex_stats: pd.DataFrame()
     df_indicator: pd.DataFrame()
     df_flex_market: pd.DataFrame()
+
+    # time conversion
+    current_timescale: TimeConversionTypes = "seconds"
     
     def __init__(
             self,
             flex_config: Union[str, FilePath, FlexQuantConfig],
             simulator_agent_config: Union[str, FilePath, AgentConfig],
-            results: Union[str, FilePath, dict[str, dict[str, pd.DataFrame]]] = None
+            results: Union[str, FilePath, dict[str, dict[str, pd.DataFrame]]] = None,
+            to_timescale: TimeConversionTypes = "seconds"
     ):
         # load configs of agents and modules
         # flex config
@@ -175,6 +181,9 @@ class FlexResults:
             Path(results_path, Path(self.neg_flex_mpc_module_config.optimization_backend["results_file"]).name)
         )
 
+        # Convert the time in the dataframes to the desired timescale
+        self.convert_timescale_of_dataframe_index(to_timescale=to_timescale)
+
     def _load_results(self, res_path: Union[str, Path]) -> dict[str, dict[str, pd.DataFrame]]:
         res = {}
         res[self.simulator_agent_config.id] = {
@@ -203,5 +212,21 @@ class FlexResults:
         }
         return res
 
+    def convert_timescale_of_dataframe_index(self, to_timescale: TimeConversionTypes):
+        """ Convert the time in the dataframes to the desired timescale
 
+        Keyword arguments:
+        timescale -- The timescale to convert the data to
+        """
+        # Convert the time in the dataframes
+        self.df_simulation = convert_timescale_of_index(df=self.df_simulation, from_unit=self.current_timescale, to_unit=to_timescale)
+        self.df_baseline = convert_timescale_of_index(df=self.df_baseline, from_unit=self.current_timescale, to_unit=to_timescale)
+        self.df_pos_flex = convert_timescale_of_index(df=self.df_pos_flex, from_unit=self.current_timescale, to_unit=to_timescale)
+        self.df_neg_flex = convert_timescale_of_index(df=self.df_neg_flex, from_unit=self.current_timescale, to_unit=to_timescale)
+        self.df_indicator = convert_timescale_of_index(df=self.df_indicator, from_unit=self.current_timescale, to_unit=to_timescale)
+        self.df_flex_market = convert_timescale_of_index(df=self.df_flex_market, from_unit=self.current_timescale, to_unit=to_timescale)
+        self.df_baseline_stats = convert_timescale_of_index(df=self.df_baseline_stats, from_unit=self.current_timescale, to_unit=to_timescale)
+        self.df_pos_flex_stats = convert_timescale_of_index(df=self.df_pos_flex_stats, from_unit=self.current_timescale, to_unit=to_timescale)
+        self.df_neg_flex_stats = convert_timescale_of_index(df=self.df_neg_flex_stats, from_unit=self.current_timescale, to_unit=to_timescale)
 
+        self.current_timescale = to_timescale
