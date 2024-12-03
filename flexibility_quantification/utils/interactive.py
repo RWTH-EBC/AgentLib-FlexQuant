@@ -31,7 +31,7 @@ class FlexDashboard(flexresults.FlexResults):
     label_positive: str = "positive"
     label_negative: str = "negative"
 
-    timescale: TimeConversionTypes = "seconds"  # todo: time convertion
+    timescale: TimeConversionTypes = "hours"  # todo: time convertion
 
     def __init__(
             self,
@@ -68,7 +68,7 @@ class FlexDashboard(flexresults.FlexResults):
 
     def show(self):
 
-        def mark_characteristic_times(fig: go.Figure, time_step: int, line_prop: dict = None) -> go.Figure:
+        def mark_characteristic_times(fig: go.Figure, at_time_step: int, line_prop: dict = None) -> go.Figure:
             """Add markers of the characteristic times to the plot for a time step
 
             Keyword arguments:
@@ -79,10 +79,13 @@ class FlexDashboard(flexresults.FlexResults):
             if line_prop is None:
                 line_prop = self.LINE_PROPERTIES["characteristic_times_current"]
             try:
-                offer_time = time_step
-                rel_market_time = self.df_indicator.loc[(time_step, 0), glbs.MARKET_TIME] / TIME_CONVERSION[self.timescale]
-                rel_prep_time = self.df_indicator.loc[(time_step, 0), glbs.PREP_TIME] / TIME_CONVERSION[self.timescale]
-                flex_event_duration = self.df_indicator.loc[(time_step, 0), glbs.FLEX_EVENT_DURATION] / TIME_CONVERSION[self.timescale]
+                df_characteristic_times = self.df_indicator.xs(0, level="time")
+                df_characteristic_times.index = df_characteristic_times.index / TIME_CONVERSION[self.timescale]
+
+                offer_time = at_time_step
+                rel_market_time = df_characteristic_times.loc[at_time_step, glbs.MARKET_TIME] / TIME_CONVERSION[self.timescale]
+                rel_prep_time = df_characteristic_times.loc[at_time_step, glbs.PREP_TIME] / TIME_CONVERSION[self.timescale]
+                flex_event_duration = df_characteristic_times.loc[at_time_step, glbs.FLEX_EVENT_DURATION] / TIME_CONVERSION[self.timescale]
 
                 fig.add_vline(x=offer_time, line=line_prop)
                 fig.add_vline(x=offer_time + rel_prep_time, line=line_prop)
@@ -98,7 +101,7 @@ class FlexDashboard(flexresults.FlexResults):
             df_accepted_offers = self.df_flex_market["status"].str.contains(pat="OfferStatus.accepted")
             for i in df_accepted_offers.index.to_list():
                 if df_accepted_offers[i]:
-                    fig = mark_characteristic_times(fig=fig, time_step=i[0], line_prop=self.LINE_PROPERTIES["characteristic_times_accepted"])
+                    fig = mark_characteristic_times(fig=fig, at_time_step=i[0] / TIME_CONVERSION[self.timescale], line_prop=self.LINE_PROPERTIES["characteristic_times_accepted"])
             return fig
 
         def plot_one_mpc_variable(fig: go.Figure, variable: str, time_step: int) -> go.Figure:
@@ -127,37 +130,37 @@ class FlexDashboard(flexresults.FlexResults):
 
             # Get the data for the plot
             df_sim = self.df_simulation[variable]
-            df_neg = mpc_at_time_step(data=self.df_neg_flex, time_step=time_step, variable=variable, index_offset=False).dropna()
-            df_pos = mpc_at_time_step(data=self.df_pos_flex, time_step=time_step, variable=variable, index_offset=False).dropna()
-            df_bas = mpc_at_time_step(data=self.df_baseline, time_step=time_step, variable=variable, index_offset=False).dropna()
+            df_neg = mpc_at_time_step(data=self.df_neg_flex, time_step=time_step * TIME_CONVERSION[self.timescale], variable=variable, index_offset=False).dropna()
+            df_pos = mpc_at_time_step(data=self.df_pos_flex, time_step=time_step * TIME_CONVERSION[self.timescale], variable=variable, index_offset=False).dropna()
+            df_bas = mpc_at_time_step(data=self.df_baseline, time_step=time_step * TIME_CONVERSION[self.timescale], variable=variable, index_offset=False).dropna()
 
             # Plot the data
-            fig.add_trace(go.Scatter(name=self.simulator_agent_id, x=df_sim.index, y=df_sim, mode="lines", line=self.LINE_PROPERTIES[self.simulator_agent_id]))
-            fig.add_trace(go.Scatter(name=self.neg_flex_agent_id, x=df_neg.index, y=df_neg, mode="lines", line=self.LINE_PROPERTIES[self.neg_flex_agent_id] | {"dash": "dash"}))
-            fig.add_trace(go.Scatter(name=self.pos_flex_agent_id, x=df_pos.index, y=df_pos, mode="lines", line=self.LINE_PROPERTIES[self.pos_flex_agent_id] | {"dash": "dash"}))
-            fig.add_trace(go.Scatter(name=self.baseline_agent_id, x=df_bas.index, y=df_bas, mode="lines", line=self.LINE_PROPERTIES[self.baseline_agent_id] | {"dash": "dash"}))
+            fig.add_trace(go.Scatter(name=self.simulator_agent_id, x=df_sim.index / TIME_CONVERSION[self.timescale], y=df_sim, mode="lines", line=self.LINE_PROPERTIES[self.simulator_agent_id]))
+            fig.add_trace(go.Scatter(name=self.neg_flex_agent_id, x=df_neg.index / TIME_CONVERSION[self.timescale], y=df_neg, mode="lines", line=self.LINE_PROPERTIES[self.neg_flex_agent_id] | {"dash": "dash"}))
+            fig.add_trace(go.Scatter(name=self.pos_flex_agent_id, x=df_pos.index / TIME_CONVERSION[self.timescale], y=df_pos, mode="lines", line=self.LINE_PROPERTIES[self.pos_flex_agent_id] | {"dash": "dash"}))
+            fig.add_trace(go.Scatter(name=self.baseline_agent_id, x=df_bas.index / TIME_CONVERSION[self.timescale], y=df_bas, mode="lines", line=self.LINE_PROPERTIES[self.baseline_agent_id] | {"dash": "dash"}))
 
             return fig
 
         def plot_flexprices(fig: go.Figure) -> go.Figure:
-            df_flex_market_index = self.df_flex_market.index.droplevel("time")
+            df_flex_market_index = self.df_flex_market.index.droplevel("time") / TIME_CONVERSION[self.timescale]
             fig.add_trace(go.Scatter(name=self.label_positive, x=df_flex_market_index, y=self.df_flex_market["pos_price"], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_id]))
             fig.add_trace(go.Scatter(name=self.label_negative, x=df_flex_market_index, y=self.df_flex_market["neg_price"], mode="lines+markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_id]))
             return fig
 
         def plot_energyflex(fig: go.Figure) -> go.Figure:
             df_ind = self.df_indicator.xs(0, level=1)
-            fig.add_trace(go.Scatter(name=self.label_positive, x=df_ind.index, y=df_ind[glbs.ENERGYFLEX_POS], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_id]))
-            fig.add_trace(go.Scatter(name=self.label_negative, x=df_ind.index, y=df_ind[glbs.ENERGYFLEX_NEG], mode="lines+markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_id]))
+            fig.add_trace(go.Scatter(name=self.label_positive, x=df_ind.index / TIME_CONVERSION[self.timescale], y=df_ind[glbs.ENERGYFLEX_POS], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_id]))
+            fig.add_trace(go.Scatter(name=self.label_negative, x=df_ind.index / TIME_CONVERSION[self.timescale], y=df_ind[glbs.ENERGYFLEX_NEG], mode="lines+markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_id]))
             return fig
 
         def plot_mpc_iterations(fig: go.Figure) -> go.Figure:
-            fig.add_trace(go.Scatter(name=self.baseline_agent_id, x=self.df_baseline_stats.index, y=self.df_baseline_stats["iter_count"], mode="markers", line=self.LINE_PROPERTIES[self.baseline_agent_id]))
-            fig.add_trace(go.Scatter(name=self.pos_flex_agent_id, x=self.df_pos_flex_stats.index, y=self.df_pos_flex_stats["iter_count"], mode="markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_id]))
-            fig.add_trace(go.Scatter(name=self.neg_flex_agent_id, x=self.df_neg_flex_stats.index, y=self.df_neg_flex_stats["iter_count"], mode="markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_id]))
+            fig.add_trace(go.Scatter(name=self.baseline_agent_id, x=self.df_baseline_stats.index / TIME_CONVERSION[self.timescale], y=self.df_baseline_stats["iter_count"], mode="markers", line=self.LINE_PROPERTIES[self.baseline_agent_id]))
+            fig.add_trace(go.Scatter(name=self.pos_flex_agent_id, x=self.df_pos_flex_stats.index / TIME_CONVERSION[self.timescale], y=self.df_pos_flex_stats["iter_count"], mode="markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_id]))
+            fig.add_trace(go.Scatter(name=self.neg_flex_agent_id, x=self.df_neg_flex_stats.index / TIME_CONVERSION[self.timescale], y=self.df_neg_flex_stats["iter_count"], mode="markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_id]))
             return fig
 
-        def create_plot_for_one_variable(variable: str, time_step: int, show_current_characteristic_times: bool, zoom_to_prediction_interval: bool = False) -> go.Figure:
+        def create_plot_for_one_variable(variable: str, at_time_step: int, show_current_characteristic_times: bool, zoom_to_prediction_interval: bool = False) -> go.Figure:
             """ Create a plot for one variable
 
             Keyword arguments:
@@ -178,16 +181,18 @@ class FlexDashboard(flexresults.FlexResults):
                 plot_flexprices(fig=fig)
             else:
                 if show_current_characteristic_times:
-                    mark_characteristic_times(fig=fig, time_step=time_step)
-                plot_one_mpc_variable(fig=fig, variable=variable, time_step=time_step)
+                    mark_characteristic_times(fig=fig, at_time_step=at_time_step)
+                plot_one_mpc_variable(fig=fig, variable=variable, time_step=at_time_step)
 
             # set layout
             if zoom_to_prediction_interval:
-                xlim_left = time_step
-                xlim_right = time_step + self.df_baseline.index[-1][-1]
+                xlim_left = at_time_step
+                xlim_right = at_time_step + self.df_baseline.index[-1][-1]
             else:
                 xlim_left = self.df_simulation.index[0]
                 xlim_right = self.df_simulation.index[-1] + self.df_baseline.index[-1][-1]
+            xlim_left /= TIME_CONVERSION[self.timescale]
+            xlim_right /= TIME_CONVERSION[self.timescale]
             fig.update_layout(yaxis_title=variable, xaxis_title=f"Time in {self.timescale}", xaxis_range=[xlim_left, xlim_right])
 
             return fig
@@ -213,7 +218,7 @@ class FlexDashboard(flexresults.FlexResults):
 
         # Create the app
         # Get the mpc index for slider
-        mpc_index = self.df_baseline.index.get_level_values(0).unique()
+        mpc_index = self.df_baseline.index.get_level_values(0).unique() / TIME_CONVERSION[self.timescale]
 
         app = Dash(__name__, title="Results")
         app.layout = [
@@ -280,7 +285,7 @@ class FlexDashboard(flexresults.FlexResults):
             """
             figs = []
             for variable in variables_for_plotting:
-                fig = create_plot_for_one_variable(variable=variable, time_step=time_step, show_current_characteristic_times=current_characteristic_times, zoom_to_prediction_interval=zoom_to_prediction_interval)
+                fig = create_plot_for_one_variable(variable=variable, at_time_step=time_step, show_current_characteristic_times=current_characteristic_times, zoom_to_prediction_interval=zoom_to_prediction_interval)
                 figs.append(dcc.Graph(id=f"graph_{variable}", figure=fig))
             return figs
 
