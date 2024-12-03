@@ -32,7 +32,7 @@ def load_market(file_path: Union[str, FilePath]) -> pd.DataFrame:
     return df
 
 
-class FlexResults:
+class Results:
     # Configs
     # Generator
     flex_config: FlexQuantConfig
@@ -75,7 +75,8 @@ class FlexResults:
         self.simulator_agent_config = load_config.load_config(
             config=simulator_agent_config, config_type=AgentConfig
         )
-        self.simulator_module_config = self.simulator_agent_config.modules[1]   # todo: find solution why below doesnt work
+        self.simulator_module_config = self.simulator_agent_config.modules[1]
+        # didn't work out:
         # self.simulator_module_config = cmng.get_module(
         #     config=self.simulator_agent_config, module_type=cmng.SIMULATOR_CONFIG_TYPE
         # )
@@ -185,30 +186,31 @@ class FlexResults:
         self.convert_timescale_of_dataframe_index(to_timescale=to_timescale)
 
     def _load_results(self, res_path: Union[str, Path]) -> dict[str, dict[str, pd.DataFrame]]:
-        res = {}
-        res[self.simulator_agent_config.id] = {
-            self.simulator_module_config["module_id"]:
-                load_sim(Path(res_path, Path(self.simulator_module_config["result_filename"]).name))
-        }
-        res[self.baseline_mpc_agent_config.id] = {
-            self.baseline_mpc_module_config.module_id:
-                load_mpc(Path(res_path, Path(self.baseline_mpc_module_config.optimization_backend["results_file"]).name))
-        }
-        res[self.pos_flex_mpc_agent_config.id] = {
-            self.pos_flex_mpc_module_config.module_id:
-                load_mpc(Path(res_path, Path(self.pos_flex_mpc_module_config.optimization_backend["results_file"]).name))
-        }
-        res[self.neg_flex_mpc_agent_config.id] = {
-            self.neg_flex_mpc_module_config.module_id:
-                load_mpc(Path(res_path, Path(self.neg_flex_mpc_module_config.optimization_backend["results_file"]).name))
-        }
-        res[self.indicator_agent_config.id] = {
-            self.indicator_module_config.module_id:
-                load_indicator(Path(res_path, Path(self.indicator_module_config.results_file).name))
-        }
-        res[self.market_agent_config.id] = {
-            self.market_module_config.module_id:
-                load_market(Path(res_path, Path(self.market_module_config.results_file).name))
+        res = {
+            self.simulator_agent_config.id: {
+                self.simulator_module_config["module_id"]:
+                    load_sim(Path(res_path, Path(self.simulator_module_config["result_filename"]).name))
+            },
+            self.baseline_mpc_agent_config.id: {
+                self.baseline_mpc_module_config.module_id:
+                    load_mpc(Path(res_path, Path(self.baseline_mpc_module_config.optimization_backend["results_file"]).name))
+            },
+            self.pos_flex_mpc_agent_config.id: {
+                self.pos_flex_mpc_module_config.module_id:
+                    load_mpc(Path(res_path, Path(self.pos_flex_mpc_module_config.optimization_backend["results_file"]).name))
+            },
+            self.neg_flex_mpc_agent_config.id: {
+                self.neg_flex_mpc_module_config.module_id:
+                    load_mpc(Path(res_path, Path(self.neg_flex_mpc_module_config.optimization_backend["results_file"]).name))
+            },
+            self.indicator_agent_config.id: {
+                self.indicator_module_config.module_id:
+                    load_indicator(Path(res_path, Path(self.indicator_module_config.results_file).name))
+            },
+            self.market_agent_config.id: {
+                self.market_module_config.module_id:
+                    load_market(Path(res_path, Path(self.market_module_config.results_file).name))
+            }
         }
         return res
 
@@ -219,14 +221,14 @@ class FlexResults:
         timescale -- The timescale to convert the data to
         """
         # Convert the time in the dataframes
-        self.df_simulation = convert_timescale_of_index(df=self.df_simulation, from_unit=self.current_timescale, to_unit=to_timescale)
-        self.df_baseline = convert_timescale_of_index(df=self.df_baseline, from_unit=self.current_timescale, to_unit=to_timescale)
-        self.df_pos_flex = convert_timescale_of_index(df=self.df_pos_flex, from_unit=self.current_timescale, to_unit=to_timescale)
-        self.df_neg_flex = convert_timescale_of_index(df=self.df_neg_flex, from_unit=self.current_timescale, to_unit=to_timescale)
-        self.df_indicator = convert_timescale_of_index(df=self.df_indicator, from_unit=self.current_timescale, to_unit=to_timescale)
-        self.df_flex_market = convert_timescale_of_index(df=self.df_flex_market, from_unit=self.current_timescale, to_unit=to_timescale)
-        self.df_baseline_stats = convert_timescale_of_index(df=self.df_baseline_stats, from_unit=self.current_timescale, to_unit=to_timescale)
-        self.df_pos_flex_stats = convert_timescale_of_index(df=self.df_pos_flex_stats, from_unit=self.current_timescale, to_unit=to_timescale)
-        self.df_neg_flex_stats = convert_timescale_of_index(df=self.df_neg_flex_stats, from_unit=self.current_timescale, to_unit=to_timescale)
+        for df in [
+            self.df_simulation,
+            self.df_baseline, self.df_baseline_stats,
+            self.df_pos_flex, self.df_pos_flex_stats,
+            self.df_neg_flex, self.df_neg_flex_stats,
+            self.df_indicator,
+            self.df_flex_market
+        ]:
+            convert_timescale_of_index(df=df, from_unit=self.current_timescale, to_unit=to_timescale)
 
         self.current_timescale = to_timescale

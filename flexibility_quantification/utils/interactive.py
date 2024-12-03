@@ -14,18 +14,18 @@ from agentlib_mpc.utils.plotting.interactive import get_port    # solver_return,
 
 from flexibility_quantification.data_structures.flexquant import FlexQuantConfig
 import flexibility_quantification.data_structures.globals as glbs
-import flexibility_quantification.data_structures.flexresults as flexresults
+import flexibility_quantification.data_structures.results as flex_results
 
 
-class FlexDashboard(flexresults.FlexResults):
+class Dashboard(flex_results.Results):
     """
     Class for the dashboard of flexquant
     """
 
     # Constants for plotting variables
-    energyflex: str = "energyflex"
-    price: str = "price"
-    mpc_iterations: str = "iterations"
+    energyflex: str = "energy_flexibility"
+    price: str = "flexibility_price"
+    mpc_iterations: str = "mpc_iterations"
 
     # Label for the positive and negative flexibilities
     label_positive: str = "positive"
@@ -68,8 +68,10 @@ class FlexDashboard(flexresults.FlexResults):
 
     def show(self):
 
+        # Plotting functions
         def mark_characteristic_times(fig: go.Figure, at_time_step: float, line_prop: dict = None) -> go.Figure:
-            """Add markers of the characteristic times to the plot for a time step
+            """
+            Add markers of the characteristic times to the plot for a time step
 
             Keyword arguments:
             fig -- The figure to plot the results into
@@ -104,13 +106,6 @@ class FlexDashboard(flexresults.FlexResults):
             return fig
 
         def plot_one_mpc_variable(fig: go.Figure, variable: str, time_step: float) -> go.Figure:
-            """ Create a plot for the mpc variable
-
-            Keyword arguments:
-            fig -- The figure to plot the results into
-            variable -- The variable to plot
-            time_step -- The timestep from when the mpc predictions should be shown
-            """
             # Plot bounds # todo
             # if variable in ["T", "T_out"]:
             #     # In the simulation the bounds set in the constraints doesn't affect the bounds of the state, so they need to be plotted manually
@@ -141,67 +136,71 @@ class FlexDashboard(flexresults.FlexResults):
 
             return fig
 
-        def plot_flexprices(fig: go.Figure) -> go.Figure:
-            df_flex_market_index = self.df_flex_market.index.droplevel("time")
-            fig.add_trace(go.Scatter(name=self.label_positive, x=df_flex_market_index, y=self.df_flex_market["pos_price"], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_id]))
-            fig.add_trace(go.Scatter(name=self.label_negative, x=df_flex_market_index, y=self.df_flex_market["neg_price"], mode="lines+markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_id]))
-            return fig
-
-        def plot_energyflex(fig: go.Figure) -> go.Figure:
-            df_ind = self.df_indicator.xs(0, level=1)
-            fig.add_trace(go.Scatter(name=self.label_positive, x=df_ind.index, y=df_ind[glbs.ENERGYFLEX_POS], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_id]))
-            fig.add_trace(go.Scatter(name=self.label_negative, x=df_ind.index, y=df_ind[glbs.ENERGYFLEX_NEG], mode="lines+markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_id]))
-            return fig
-
         def plot_mpc_iterations(fig: go.Figure) -> go.Figure:
             fig.add_trace(go.Scatter(name=self.baseline_agent_id, x=self.df_baseline_stats.index, y=self.df_baseline_stats["iter_count"], mode="markers", line=self.LINE_PROPERTIES[self.baseline_agent_id]))
             fig.add_trace(go.Scatter(name=self.pos_flex_agent_id, x=self.df_pos_flex_stats.index, y=self.df_pos_flex_stats["iter_count"], mode="markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_id]))
             fig.add_trace(go.Scatter(name=self.neg_flex_agent_id, x=self.df_neg_flex_stats.index, y=self.df_neg_flex_stats["iter_count"], mode="markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_id]))
             return fig
 
+        def plot_energy_flexibility(fig: go.Figure) -> go.Figure:
+            df_ind = self.df_indicator.xs(0, level=1)
+            fig.add_trace(go.Scatter(name=self.label_positive, x=df_ind.index, y=df_ind[glbs.ENERGYFLEX_POS], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_id]))
+            fig.add_trace(go.Scatter(name=self.label_negative, x=df_ind.index, y=df_ind[glbs.ENERGYFLEX_NEG], mode="lines+markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_id]))
+            return fig
+
+        def plot_flexibility_prices(fig: go.Figure) -> go.Figure:
+            df_flex_market_index = self.df_flex_market.index.droplevel("time")
+            fig.add_trace(go.Scatter(name=self.label_positive, x=df_flex_market_index, y=self.df_flex_market["pos_price"], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_id]))
+            fig.add_trace(go.Scatter(name=self.label_negative, x=df_flex_market_index, y=self.df_flex_market["neg_price"], mode="lines+markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_id]))
+            return fig
+
         def create_plot_for_one_variable(variable: str, at_time_step: float, show_current_characteristic_times: bool, zoom_to_prediction_interval: bool = False) -> go.Figure:
-            """ Create a plot for one variable
+            """
+            Create a plot for one variable
 
             Keyword arguments:
             variable -- The variable to plot
             time_step -- The time_step to show the mpc predictions and the characteristic times
             show_current_characteristic_times -- Whether to show the characteristic times
             """
+            # Create the figure
             fig = go.Figure()
 
+            # Plot characteristic times
             mark_characteristic_times_of_accepted_offers(fig=fig)
 
             # Plot variable
             if variable == self.mpc_iterations:
                 plot_mpc_iterations(fig=fig)
             elif variable == self.energyflex:
-                plot_energyflex(fig=fig)
+                plot_energy_flexibility(fig=fig)
             elif variable == self.price:
-                plot_flexprices(fig=fig)
+                plot_flexibility_prices(fig=fig)
             else:
                 if show_current_characteristic_times:
                     mark_characteristic_times(fig=fig, at_time_step=at_time_step)
                 plot_one_mpc_variable(fig=fig, variable=variable, time_step=at_time_step)
 
-            # set layout
+            # Set layout
             if zoom_to_prediction_interval:
                 xlim_left = at_time_step
                 xlim_right = at_time_step + self.df_baseline.index[-1][-1]
             else:
                 xlim_left = self.df_simulation.index[0]
                 xlim_right = self.df_simulation.index[-1] + self.df_baseline.index[-1][-1]
-            fig.update_layout(yaxis_title=variable, xaxis_title=f"Time in {self.current_timescale}", xaxis_range=[xlim_left, xlim_right])
+            fig.update_layout(yaxis_title=variable, xaxis_title=f"Time in {self.current_timescale}", xaxis_range=[xlim_left, xlim_right],
+                              height=350, margin=dict(t=20, b=20))
 
             return fig
 
         def get_variables_for_plotting() -> list[str]:
             # Get the intersection of quantities from sim and mpcs
             # if using a fmu for the simulation, make sure to change the column names to the ones used in the mpc, e.g. with a mapping
-            variables_sim = self.df_simulation.columns.to_list()
-            variables_mpc = self.df_baseline["variable"].columns.to_list()
-            variables_posflex = self.df_pos_flex["variable"].columns.to_list()
-            variables_negflex = self.df_neg_flex["variable"].columns.to_list()
-            variables = list(set(variables_sim) & set(variables_mpc) & set(variables_posflex) & set(variables_negflex))
+            var_sim = self.df_simulation.columns.to_list()
+            var_baseline = self.df_baseline["variable"].columns.to_list()
+            var_positive_flex = self.df_pos_flex["variable"].columns.to_list()
+            var_negative_flex = self.df_neg_flex["variable"].columns.to_list()
+            variables = list(set(var_sim) & set(var_baseline) & set(var_positive_flex) & set(var_negative_flex))
 
             # Add custom variables
             variables.append(self.energyflex)
@@ -210,13 +209,7 @@ class FlexDashboard(flexresults.FlexResults):
 
             return variables
 
-        # Get variables for plotting
-        variables_for_plotting = get_variables_for_plotting()
-
         # Create the app
-        # Get the mpc index for slider
-        time_index = self.df_baseline.index.get_level_values(0).unique()
-
         app = Dash(__name__, title="Results")
         app.layout = [
             html.H1("Results"),
@@ -243,8 +236,7 @@ class FlexDashboard(flexresults.FlexResults):
                                 style={"display": "inline-block", "padding-right": "10px"}),
                             dcc.Input(
                                 id="time_typing", type="number",
-                                min=time_index[0], max=time_index[-1], step=time_index[1] - time_index[0],
-                                value=time_index[0],
+                                min=0, max=1, value=0,  # will be updated in the callback
                                 style={"display": "inline-block"}),
                             dcc.Dropdown(
                                 id="time_unit",
@@ -254,30 +246,33 @@ class FlexDashboard(flexresults.FlexResults):
                         ],
                     ),
                     dcc.Slider(id="time_slider",
-                               min=time_index[0], max=time_index[-1], step=time_index[1] - time_index[0],
+                               min=0, max=1, value=0,   # will be updated in the callback
                                tooltip={"placement": "bottom", "always_visible": True},
-                               value=time_index[0], updatemode="drag")
+                               marks=None,
+                               updatemode="drag")
                 ], style={
                     "width": "88%", "padding-left": "0%", "padding-right": "12%",
-                    # make the options sticky to the top of the page
+                    # Make the options sticky to the top of the page
                     "position": "sticky", "top": "0", "overflow-y": "visible", "z-index": "100", "background-color": "white"
                 }
             ),
-            # Container for the graphs
+            # Container for the graphs, will be updated in the callback
             html.Div(id="graphs_container_variables", children=[]),
         ]
 
         # Callbacks
-        # Update the time index
+        # Update the time value or the time unit
         @callback(
+            Output(component_id="time_slider", component_property="value"),
             Output(component_id="time_slider", component_property="min"),
             Output(component_id="time_slider", component_property="max"),
             Output(component_id="time_slider", component_property="step"),
-            Output(component_id="time_slider", component_property="value"),
+
+            Output(component_id="time_typing", component_property="value"),
             Output(component_id="time_typing", component_property="min"),
             Output(component_id="time_typing", component_property="max"),
             Output(component_id="time_typing", component_property="step"),
-            Output(component_id="time_typing", component_property="value"),
+
             Input(component_id="time_typing", component_property="value"),
             Input(component_id="time_slider", component_property="value"),
             Input(component_id="time_unit", component_property="value")
@@ -287,14 +282,12 @@ class FlexDashboard(flexresults.FlexResults):
             trigger_id = ctx.triggered[0]["prop_id"].split(".")[0]
 
             # Get the value for the sliders
-            if trigger_id == "time_typing":
-                value = time_typing
-            elif trigger_id == "time_slider":
+            if trigger_id == "time_slider":
                 value = time_slider
             elif trigger_id == "time_unit":
                 value = time_typing * TIME_CONVERSION[self.current_timescale] / TIME_CONVERSION[time_unit]
             else:
-                raise ValueError(f"Unknown trigger_id: {trigger_id}")
+                value = time_typing
 
             # Convert the index to the given time unit if necessary
             if trigger_id == "time_unit":
@@ -306,7 +299,8 @@ class FlexDashboard(flexresults.FlexResults):
             maximum = times[-1]
             step = times[1] - times[0]
 
-            return minimum, maximum, step, value, minimum, maximum, step, value
+            return (value, minimum, maximum, step,
+                    value, minimum, maximum, step)
 
         # Update the graphs
         @callback(
@@ -319,7 +313,7 @@ class FlexDashboard(flexresults.FlexResults):
             """ Update all graphs based on the options and slider values
             """
             figs = []
-            for variable in variables_for_plotting:
+            for variable in get_variables_for_plotting():
                 fig = create_plot_for_one_variable(
                     variable=variable,
                     at_time_step=time_step,
