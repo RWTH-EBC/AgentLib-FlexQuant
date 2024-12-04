@@ -40,6 +40,7 @@ class Dashboard(flex_results.Results):
     ):
         super().__init__(flex_config=flex_config, simulator_agent_config=simulator_agent_config, results=results, to_timescale=to_timescale)
         self.current_timescale_input = self.current_timescale_of_data
+        self.intersection_mpcs_sim = self.get_intersection_mpcs_sim()
 
         # Define line properties
         self.LINE_PROPERTIES: dict = {
@@ -89,10 +90,10 @@ class Dashboard(flex_results.Results):
                 rel_prep_time = df_characteristic_times.loc[at_time_step, glbs.PREP_TIME] / TIME_CONVERSION[self.current_timescale_of_data]
                 flex_event_duration = df_characteristic_times.loc[at_time_step, glbs.FLEX_EVENT_DURATION] / TIME_CONVERSION[self.current_timescale_of_data]
 
-                fig.add_vline(x=offer_time, line=line_prop)
-                fig.add_vline(x=offer_time + rel_prep_time, line=line_prop)
-                fig.add_vline(x=offer_time + rel_prep_time + rel_market_time, line=line_prop)
-                fig.add_vline(x=offer_time + rel_prep_time + rel_market_time + flex_event_duration, line=line_prop)
+                fig.add_vline(x=offer_time, line=line_prop, layer="below")
+                fig.add_vline(x=offer_time + rel_prep_time, line=line_prop, layer="below")
+                fig.add_vline(x=offer_time + rel_prep_time + rel_market_time, line=line_prop, layer="below")
+                fig.add_vline(x=offer_time + rel_prep_time + rel_market_time + flex_event_duration, line=line_prop, layer="below")
             except KeyError:
                 pass  # No data of characteristic times available, e.g. if offer accepted
             return fig
@@ -124,13 +125,16 @@ class Dashboard(flex_results.Results):
             #         fig.add_trace(go.Scatter(name="T_upper", x=df_ub.index, y=df_ub, mode="lines", line=self.LINE_PROPERTIES["bounds"]))
 
             # Get the data for the plot
-            df_sim = self.df_simulation[variable]
-            df_neg = mpc_at_time_step(data=self.df_neg_flex, time_step=time_step, variable=variable, index_offset=False).dropna()
-            df_pos = mpc_at_time_step(data=self.df_pos_flex, time_step=time_step, variable=variable, index_offset=False).dropna()
-            df_bas = mpc_at_time_step(data=self.df_baseline, time_step=time_step, variable=variable, index_offset=False).dropna()
+            df_sim = self.df_simulation[self.intersection_mpcs_sim[variable][self.simulator_agent_config.id]]
+            df_neg = mpc_at_time_step(data=self.df_neg_flex, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.neg_flex_agent_config.id], index_offset=False).dropna()
+            df_pos = mpc_at_time_step(data=self.df_pos_flex, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.pos_flex_agent_config.id], index_offset=False).dropna()
+            df_bas = mpc_at_time_step(data=self.df_baseline, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.baseline_agent_config.id], index_offset=False).dropna()
 
             # Plot the data
-            fig.add_trace(go.Scatter(name=self.simulator_agent_config.id, x=df_sim.index, y=df_sim, mode="lines", line=self.LINE_PROPERTIES[self.simulator_agent_config.id], zorder=0))
+            try:
+                fig.add_trace(go.Scatter(name=self.simulator_agent_config.id, x=df_sim.index, y=df_sim, mode="lines", line=self.LINE_PROPERTIES[self.simulator_agent_config.id], zorder=0))
+            except KeyError:
+                pass    # When the simulator variable name was not found from the intersection
             fig.add_trace(go.Scatter(name=self.neg_flex_agent_config.id, x=df_neg.index, y=df_neg, mode="lines", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id] | {"dash": "dash"}, zorder=2))
             fig.add_trace(go.Scatter(name=self.pos_flex_agent_config.id, x=df_pos.index, y=df_pos, mode="lines", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id] | {"dash": "dash"}, zorder=2))
             fig.add_trace(go.Scatter(name=self.baseline_agent_config.id, x=df_bas.index, y=df_bas, mode="lines", line=self.LINE_PROPERTIES[self.baseline_agent_config.id] | {"dash": "dash"}, zorder=1))
@@ -168,9 +172,6 @@ class Dashboard(flex_results.Results):
             # Create the figure
             fig = go.Figure()
 
-            # Plot characteristic times
-            mark_characteristic_times_of_accepted_offers(fig=fig)
-
             # Plot variable
             if variable == self.mpc_iterations:
                 plot_mpc_iterations(fig=fig)
@@ -178,10 +179,15 @@ class Dashboard(flex_results.Results):
                 plot_energy_flexibility(fig=fig)
             elif variable == self.price:
                 plot_flexibility_prices(fig=fig)
-            else:
-                if show_current_characteristic_times:
-                    mark_characteristic_times(fig=fig, at_time_step=at_time_step)
+            elif variable in self.intersection_mpcs_sim.keys():
                 plot_one_mpc_variable(fig=fig, variable=variable, time_step=at_time_step)
+            else:
+                raise ValueError(f"No plotting function found for variable {variable}")
+
+            # Plot characteristic times
+            mark_characteristic_times_of_accepted_offers(fig=fig)
+            if show_current_characteristic_times and variable in self.intersection_mpcs_sim.keys():
+                mark_characteristic_times(fig=fig, at_time_step=at_time_step)
 
             # Set layout
             if zoom_to_prediction_interval:
@@ -190,19 +196,15 @@ class Dashboard(flex_results.Results):
             else:
                 xlim_left = self.df_simulation.index[0]
                 xlim_right = self.df_simulation.index[-1] + self.df_baseline.index[-1][-1]
-            fig.update_layout(yaxis_title=variable, xaxis_title=f"Time in {self.current_timescale_of_data}", xaxis_range=[xlim_left, xlim_right],
-                              height=350, margin=dict(t=20, b=20))
 
+            fig.update_layout(yaxis_title=variable,
+                              xaxis_title=f"Time in {self.current_timescale_of_data}",
+                              xaxis_range=[xlim_left, xlim_right],
+                              height=350, margin=dict(t=20, b=20))
             return fig
 
         def get_variables_for_plotting() -> list[str]:
-            # Get the intersection of quantities from sim and mpcs
-            # if using a fmu for the simulation, make sure to change the column names to the ones used in the mpc, e.g. with a mapping
-            var_sim = self.df_simulation.columns.to_list()
-            var_baseline = self.df_baseline["variable"].columns.to_list()
-            var_positive_flex = self.df_pos_flex["variable"].columns.to_list()
-            var_negative_flex = self.df_neg_flex["variable"].columns.to_list()
-            variables = list(set(var_sim) & set(var_baseline) & set(var_positive_flex) & set(var_negative_flex))
+            variables = [key for key in self.intersection_mpcs_sim.keys()]
 
             # Add custom variables
             variables.append(self.energyflex)
