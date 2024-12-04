@@ -84,7 +84,12 @@ def get_module(config: AgentConfig, module_type: str) -> T:
     """
     for module in config.modules:
         if module["type"] == module_type:
-            return deepcopy(MODULE_TYPE_DICT[module["type"]](**module, _agent_id=config.id))
+            # deepcopy -> avoid changing the original config, when editing the module
+            # deepcopy the args of the constructor instead of the module object,
+            # because the simulator module exceeds the recursion limit
+            config_id = deepcopy(config.id)
+            mod = deepcopy(module)
+            return MODULE_TYPE_DICT[module["type"]](**mod, _agent_id=config_id)
 
 
 def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig):

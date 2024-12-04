@@ -78,11 +78,9 @@ class Results:
         self.simulator_agent_config = load_config.load_config(
             config=simulator_agent_config, config_type=AgentConfig
         )
-        self.simulator_module_config = self.simulator_agent_config.modules[1]
-        # didn't work out:
-        # self.simulator_module_config = cmng.get_module(
-        #     config=self.simulator_agent_config, module_type=cmng.SIMULATOR_CONFIG_TYPE
-        # )
+        self.simulator_module_config = cmng.get_module(
+            config=self.simulator_agent_config, module_type=cmng.SIMULATOR_CONFIG_TYPE
+        )
 
         # get names of the config files
         baseline_name_of_created_file = BaselineMPCData().name_of_created_file
@@ -143,7 +141,7 @@ class Results:
 
         # Get agent and module ids  # todo: cleanup
         self.simulator_agent_id = self.simulator_agent_config.id
-        self.simulator_module_id = self.simulator_module_config["module_id"]
+        self.simulator_module_id = self.simulator_module_config.module_id
         self.baseline_agent_id = self.baseline_mpc_agent_config.id
         self.baseline_module_id = self.baseline_mpc_module_config.module_id
         self.pos_flex_agent_id = self.pos_flex_mpc_agent_config.id
@@ -168,7 +166,7 @@ class Results:
             raise ValueError("results must be a path or dict")
 
         # Get dataframes
-        self.df_simulation = results[self.simulator_agent_config.id][self.simulator_module_config["module_id"]]
+        self.df_simulation = results[self.simulator_agent_config.id][self.simulator_module_config.module_id]
         self.df_baseline = results[self.baseline_mpc_agent_config.id][self.baseline_mpc_module_config.module_id]
         self.df_pos_flex = results[self.pos_flex_mpc_agent_config.id][self.pos_flex_mpc_module_config.module_id]
         self.df_neg_flex = results[self.neg_flex_mpc_agent_config.id][self.neg_flex_mpc_module_config.module_id]
@@ -191,8 +189,8 @@ class Results:
     def _load_results(self, res_path: Union[str, Path]) -> dict[str, dict[str, pd.DataFrame]]:
         res = {
             self.simulator_agent_config.id: {
-                self.simulator_module_config["module_id"]:
-                    load_sim(Path(res_path, Path(self.simulator_module_config["result_filename"]).name))
+                self.simulator_module_config.module_id:
+                    load_sim(Path(res_path, Path(self.simulator_module_config.result_filename).name))
             },
             self.baseline_mpc_agent_config.id: {
                 self.baseline_mpc_module_config.module_id:
