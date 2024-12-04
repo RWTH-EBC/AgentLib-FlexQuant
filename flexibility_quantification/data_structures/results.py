@@ -9,7 +9,8 @@ import pandas as pd
 from agentlib.core.agent import AgentConfig
 from agentlib.core.module import BaseModuleConfig
 from agentlib.utils import load_config
-from agentlib_mpc.modules.mpc_full import MPCConfig
+from agentlib_mpc.modules.mpc import BaseMPCConfig
+from agentlib.modules.simulator import SimulatorConfig
 from flexibility_quantification.data_structures.flexquant import FlexQuantConfig, FlexibilityIndicatorConfig, FlexibilityMarketConfig
 from flexibility_quantification.data_structures.mpcs import BaselineMPCData, NFMPCData, PFMPCData
 from flexibility_quantification.utils.data_handling import convert_timescale_of_index
@@ -22,14 +23,16 @@ import flexibility_quantification.utils.config_management as cmng
 
 
 def load_indicator(file_path: Union[str, FilePath]) -> pd.DataFrame:
-    """Load the flexibility indicator results from the given file path
+    """
+    Load the flexibility indicator results from the given file path
     """
     df = pd.read_csv(file_path, header=0, index_col=[0, 1])
     return df
 
 
 def load_market(file_path: Union[str, FilePath]) -> pd.DataFrame:
-    """Load the market results from the given file path
+    """
+    Load the market results from the given file path
     """
     df = pd.read_csv(file_path, header=0, index_col=[0, 1])
     return df
@@ -38,28 +41,37 @@ def load_market(file_path: Union[str, FilePath]) -> pd.DataFrame:
 class Results:
     # Configs
     # Generator
-    flex_config: FlexQuantConfig
-    # Agents/modules
-    simulator_module_config: AgentConfig
-    baseline_mpc_module_config: MPCConfig
-    pos_flex_mpc_module_config: MPCConfig
-    neg_flex_mpc_module_config: MPCConfig
+    generator_config: FlexQuantConfig
+    # Agents
+    simulator_agent_config: AgentConfig
+    baseline_agent_config: AgentConfig
+    pos_flex_agent_config: AgentConfig
+    neg_flex_agent_config: AgentConfig
+    indicator_agent_config: AgentConfig
+    market_agent_config: AgentConfig
+    # Modules
+    simulator_module_config: SimulatorConfig
+    baseline_module_config: BaseMPCConfig
+    pos_flex_module_config: BaseMPCConfig
+    neg_flex_module_config: BaseMPCConfig
     indicator_module_config: FlexibilityIndicatorModuleConfig
     market_module_config: FlexibilityMarketModuleConfig
 
     # Dataframes
     df_simulation: pd.DataFrame()
     df_baseline: pd.DataFrame()
-    df_baseline_stats: pd.DataFrame()
     df_pos_flex: pd.DataFrame()
-    df_pos_flex_stats: pd.DataFrame()
     df_neg_flex: pd.DataFrame()
-    df_neg_flex_stats: pd.DataFrame()
     df_indicator: pd.DataFrame()
-    df_flex_market: pd.DataFrame()
+    df_market: pd.DataFrame()
+
+    # Stats of the MPCs
+    df_baseline_stats: pd.DataFrame()
+    df_pos_flex_stats: pd.DataFrame()
+    df_neg_flex_stats: pd.DataFrame()
 
     # time conversion
-    current_timescale: TimeConversionTypes = "seconds"
+    current_timescale_of_data: TimeConversionTypes = "seconds"
     
     def __init__(
             self,
@@ -69,8 +81,8 @@ class Results:
             to_timescale: TimeConversionTypes = "seconds"
     ):
         # load configs of agents and modules
-        # flex config
-        self.flex_config = load_config.load_config(
+        # Generator config
+        self.generator_config = load_config.load_config(
             config=flex_config, config_type=FlexQuantConfig
         )
 
@@ -83,75 +95,45 @@ class Results:
         )
 
         # get names of the config files
-        baseline_name_of_created_file = BaselineMPCData().name_of_created_file
-        pos_flex_name_of_created_file = PFMPCData().name_of_created_file
-        neg_flex_name_of_created_file = NFMPCData().name_of_created_file
-        indicator_name_of_created_file = self.flex_config.indicator_config.name_of_created_file
-        market_name_of_created_file = FlexibilityMarketConfig(agent_config="").name_of_created_file     # todo: clean solution to prevent pydantic ValidationError https://errors.pydantic.dev/2.9/v/missing
+        config_filename_baseline = BaselineMPCData().name_of_created_file
+        config_filename_pos_flex = PFMPCData().name_of_created_file
+        config_filename_neg_flex = NFMPCData().name_of_created_file
+        config_filename_indicator = self.generator_config.indicator_config.name_of_created_file
+        config_filename_market = FlexibilityMarketConfig(agent_config="").name_of_created_file
 
-        for file_path in Path(self.flex_config.path_to_flex_files).rglob("*.json"):
-            if file_path.name in baseline_name_of_created_file:
-                self.baseline_mpc_agent_config = load_config.load_config(
-                    config=file_path, config_type=AgentConfig
-                )
-                self.baseline_mpc_module_config = cmng.get_module(
-                    config=self.baseline_mpc_agent_config, module_type=cmng.BASELINEMPC_CONFIG_TYPE
-                )
+        for file_path in Path(self.generator_config.path_to_flex_files).rglob("*.json"):
+            if file_path.name in config_filename_baseline :
+                self.baseline_agent_config = load_config.load_config(
+                    config=file_path, config_type=AgentConfig)
+                self.baseline_module_config = cmng.get_module(
+                    config=self.baseline_agent_config, module_type=cmng.BASELINEMPC_CONFIG_TYPE)
 
-            elif file_path.name in pos_flex_name_of_created_file:
-                self.pos_flex_mpc_agent_config = load_config.load_config(
-                    config=file_path, config_type=AgentConfig
-                )
-                self.pos_flex_mpc_module_config = cmng.get_module(
-                    config=self.pos_flex_mpc_agent_config, module_type=cmng.SHADOWMPC_CONFIG_TYPE
-                )
+            elif file_path.name in config_filename_pos_flex:
+                self.pos_flex_agent_config = load_config.load_config(
+                    config=file_path, config_type=AgentConfig)
+                self.pos_flex_module_config = cmng.get_module(
+                    config=self.pos_flex_agent_config, module_type=cmng.SHADOWMPC_CONFIG_TYPE)
 
-            elif file_path.name in neg_flex_name_of_created_file:
-                self.neg_flex_mpc_agent_config = load_config.load_config(
-                    config=file_path, config_type=AgentConfig
-                )
-                self.neg_flex_mpc_module_config = cmng.get_module(
-                    config=self.neg_flex_mpc_agent_config, module_type=cmng.SHADOWMPC_CONFIG_TYPE
-                )
+            elif file_path.name in config_filename_neg_flex:
+                self.neg_flex_agent_config = load_config.load_config(
+                    config=file_path, config_type=AgentConfig)
+                self.neg_flex_module_config = cmng.get_module(
+                    config=self.neg_flex_agent_config, module_type=cmng.SHADOWMPC_CONFIG_TYPE)
 
-            elif file_path.name in indicator_name_of_created_file:
-                self.indicator_config = load_config.load_config(
-                    config=self.flex_config.indicator_config, config_type=FlexibilityIndicatorConfig
-                )
+            elif file_path.name in config_filename_indicator:
                 self.indicator_agent_config = load_config.load_config(
-                    config=file_path, config_type=AgentConfig
-                )
+                    config=file_path, config_type=AgentConfig)
                 self.indicator_module_config = cmng.get_module(
-                    config=self.indicator_agent_config, module_type=cmng.INDICATOR_CONFIG_TYPE
-                )
+                    config=self.indicator_agent_config, module_type=cmng.INDICATOR_CONFIG_TYPE)
 
-            elif file_path.name in market_name_of_created_file:
-                self.market_config = load_config.load_config(
-                    config=self.flex_config.market_config, config_type=FlexibilityMarketConfig
-                )
+            elif file_path.name in config_filename_market:
                 self.market_agent_config = load_config.load_config(
-                    config=file_path, config_type=AgentConfig
-                )
+                    config=file_path, config_type=AgentConfig)
                 self.market_module_config = cmng.get_module(
-                    config=self.market_agent_config, module_type=cmng.MARKET_CONFIG_TYPE
-                )
+                    config=self.market_agent_config, module_type=cmng.MARKET_CONFIG_TYPE)
 
             else:
                 raise ValueError(f"Unexpected json-file found: {file_path.name}")
-
-        # Get agent and module ids  # todo: cleanup
-        self.simulator_agent_id = self.simulator_agent_config.id
-        self.simulator_module_id = self.simulator_module_config.module_id
-        self.baseline_agent_id = self.baseline_mpc_agent_config.id
-        self.baseline_module_id = self.baseline_mpc_module_config.module_id
-        self.pos_flex_agent_id = self.pos_flex_mpc_agent_config.id
-        self.pos_flex_module_id = self.pos_flex_mpc_module_config.module_id
-        self.neg_flex_agent_id = self.neg_flex_mpc_agent_config.id
-        self.neg_flex_module_id = self.neg_flex_mpc_module_config.module_id
-        self.indicator_agent_id = self.indicator_agent_config.id
-        self.indicator_module_id = self.indicator_module_config.module_id
-        self.flex_market_agent_id = self.market_agent_config.id
-        self.flex_market_module_id = self.market_module_config.module_id
 
         # load results
         if results is None:
@@ -165,23 +147,21 @@ class Results:
         else:
             raise ValueError("results must be a path or dict")
 
-        # Get dataframes
+        # Get result dataframes
         self.df_simulation = results[self.simulator_agent_config.id][self.simulator_module_config.module_id]
-        self.df_baseline = results[self.baseline_mpc_agent_config.id][self.baseline_mpc_module_config.module_id]
-        self.df_pos_flex = results[self.pos_flex_mpc_agent_config.id][self.pos_flex_mpc_module_config.module_id]
-        self.df_neg_flex = results[self.neg_flex_mpc_agent_config.id][self.neg_flex_mpc_module_config.module_id]
+        self.df_baseline = results[self.baseline_agent_config.id][self.baseline_module_config.module_id]
+        self.df_pos_flex = results[self.pos_flex_agent_config.id][self.pos_flex_module_config.module_id]
+        self.df_neg_flex = results[self.neg_flex_agent_config.id][self.neg_flex_module_config.module_id]
         self.df_indicator = results[self.indicator_agent_config.id][self.indicator_module_config.module_id]
-        self.df_flex_market = results[self.market_agent_config.id][self.market_module_config.module_id]
+        self.df_market = results[self.market_agent_config.id][self.market_module_config.module_id]
 
+        # Load the statistics
         self.df_baseline_stats = load_mpc_stats(
-            Path(results_path, Path(self.baseline_mpc_module_config.optimization_backend["results_file"]).name)
-        )
+            Path(results_path, Path(self.baseline_module_config.optimization_backend["results_file"]).name))
         self.df_pos_flex_stats = load_mpc_stats(
-            Path(results_path, Path(self.pos_flex_mpc_module_config.optimization_backend["results_file"]).name)
-        )
+            Path(results_path, Path(self.pos_flex_module_config.optimization_backend["results_file"]).name))
         self.df_neg_flex_stats = load_mpc_stats(
-            Path(results_path, Path(self.neg_flex_mpc_module_config.optimization_backend["results_file"]).name)
-        )
+            Path(results_path, Path(self.neg_flex_module_config.optimization_backend["results_file"]).name))
 
         # Convert the time in the dataframes to the desired timescale
         self.convert_timescale_of_dataframe_index(to_timescale=to_timescale)
@@ -192,17 +172,17 @@ class Results:
                 self.simulator_module_config.module_id:
                     load_sim(Path(res_path, Path(self.simulator_module_config.result_filename).name))
             },
-            self.baseline_mpc_agent_config.id: {
-                self.baseline_mpc_module_config.module_id:
-                    load_mpc(Path(res_path, Path(self.baseline_mpc_module_config.optimization_backend["results_file"]).name))
+            self.baseline_agent_config.id: {
+                self.baseline_module_config.module_id:
+                    load_mpc(Path(res_path, Path(self.baseline_module_config.optimization_backend["results_file"]).name))
             },
-            self.pos_flex_mpc_agent_config.id: {
-                self.pos_flex_mpc_module_config.module_id:
-                    load_mpc(Path(res_path, Path(self.pos_flex_mpc_module_config.optimization_backend["results_file"]).name))
+            self.pos_flex_agent_config.id: {
+                self.pos_flex_module_config.module_id:
+                    load_mpc(Path(res_path, Path(self.pos_flex_module_config.optimization_backend["results_file"]).name))
             },
-            self.neg_flex_mpc_agent_config.id: {
-                self.neg_flex_mpc_module_config.module_id:
-                    load_mpc(Path(res_path, Path(self.neg_flex_mpc_module_config.optimization_backend["results_file"]).name))
+            self.neg_flex_agent_config.id: {
+                self.neg_flex_module_config.module_id:
+                    load_mpc(Path(res_path, Path(self.neg_flex_module_config.optimization_backend["results_file"]).name))
             },
             self.indicator_agent_config.id: {
                 self.indicator_module_config.module_id:
@@ -228,41 +208,48 @@ class Results:
             self.df_pos_flex, self.df_pos_flex_stats,
             self.df_neg_flex, self.df_neg_flex_stats,
             self.df_indicator,
-            self.df_flex_market
+            self.df_market
         ]:
-            convert_timescale_of_index(df=df, from_unit=self.current_timescale, to_unit=to_timescale)
+            convert_timescale_of_index(df=df, from_unit=self.current_timescale_of_data, to_unit=to_timescale)
 
-        self.current_timescale = to_timescale
+        # Update current unit
+        self.current_timescale_of_data = to_timescale
 
-        print(get_alias_name_dict(self.baseline_mpc_module_config))
-
-
-    def get_names_of_shared_variables(self) -> dict:
-        # aliases as keys, {id: names} as values
-        # plot all shared aliases
+    def get_intersection_mpcs_sim(self) -> dict[str, dict[str, str]]:
+        """
+        Get the intersection of the MPCs and the simulator variables.
+        returns a dictionary with the following structure:
+        Key: variable alias (from baseline)
+        Value: {agent id: variable name}
+        """
         simulator_variables = self.simulator_module_config.get_variables()
-        baseline_variables = self.baseline_mpc_module_config.get_variables()
-        pos_flex_variables = self.pos_flex_mpc_module_config.get_variables()
-        neg_flex_variables = self.neg_flex_mpc_module_config.get_variables()
-        indicator_variables = self.indicator_module_config.get_variables()
-        market_variables = self.market_module_config.get_variables()
+        baseline_variables = self.baseline_module_config.get_variables()
+        pos_flex_variables = self.pos_flex_module_config.get_variables()
+        neg_flex_variables = self.neg_flex_module_config.get_variables()
 
+        id_alias_name_dict = {}
 
-        shared_variables = get_shared_aliases()
+        def get_id_alias_name_dict_element(alias: str):
+            # id as key, {id: name} as value
+            id_alias_name_dict[alias] = {}
+            for var in simulator_variables:
+                if var.alias == alias or var.name == alias:
+                    id_alias_name_dict[alias][self.simulator_agent_config.id] = var.name
+            for var in baseline_variables:
+                if var.alias == alias or var.name == alias:
+                    id_alias_name_dict[alias][self.baseline_agent_config.id] = var.name
+            for var in pos_flex_variables:
+                if var.alias == alias or var.name == alias:
+                    id_alias_name_dict[alias][self.pos_flex_agent_config.id] = var.name
+            for var in neg_flex_variables:
+                if var.alias == alias or var.name == alias:
+                    id_alias_name_dict[alias][self.neg_flex_agent_config.id] = var.name
 
+        # States, controls and power variable
+        for variables in [self.baseline_module_config.states,
+                          self.baseline_module_config.controls]:
+            for variable in variables:
+                get_id_alias_name_dict_element(variable.alias)
+        get_id_alias_name_dict_element(self.generator_config.baseline_config_generator_data.power_variable)
 
-
-        return shared_variables
-
-def get_shared_aliases(agent_vars: list[list[agentlib.AgentVariables]]):
-    aliases = []
-    for variables in agent_vars[0]:
-        for variable in variables:
-            aliases.append(variable.alias)
-
-
-def get_alias_name_dict(module_config: BaseModuleConfig):
-    name_alias_dict = {}
-    for variable in module_config.get_variables():
-        name_alias_dict[variable.alias] = variable.name
-    return name_alias_dict
+        return id_alias_name_dict
