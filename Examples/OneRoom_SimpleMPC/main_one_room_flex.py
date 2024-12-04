@@ -34,7 +34,11 @@ def run_example(until=until):
         flex_config="flex_configs/flexibility_agent_config.json",
         simulator_agent_config="mpc_and_sim/simple_sim.json",
         results=results
-    ).show()
+    ).show(
+        temperature_var_name="T",
+        ub_comfort_var_name="T_upper",
+        lb_comfort_var_name="T_lower",
+    )
 
 
 if __name__ == "__main__":

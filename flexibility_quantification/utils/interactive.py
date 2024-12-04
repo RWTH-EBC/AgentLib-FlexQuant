@@ -23,11 +23,13 @@ class Dashboard(flex_results.Results):
     """
 
     # Constants for plotting variables
+    # todo: get names from the kpis (after merge)
     energyflex: str = "energy_flexibility"
     price: str = "flexibility_price"
     mpc_iterations: str = "mpc_iterations"
 
     # Label for the positive and negative flexibilities
+    # todo: get names from the directions (after merge)
     label_positive: str = "positive"
     label_negative: str = "negative"
 
@@ -68,7 +70,19 @@ class Dashboard(flex_results.Results):
             },
         }
 
-    def show(self):
+    def show(self, temperature_var_name: str = None, ub_comfort_var_name: str = None, lb_comfort_var_name: str = None):
+        """
+        Shows the dashboard in a web browser containing:
+        -- Statistics of the MPCs
+        -- The states, controls, and the power variable of the MPCs and the simulator
+        -- KPIs of the flexibility quantification
+        -- Markings of the characteristic flexibility times
+
+        Optional arguments to show the comfort bounds:
+        -- temperature_var_name: The name of the temperature variable in the MPC
+        -- ub_comfort_var_name: The name of the upper comfort bound variable in the MPC
+        -- lb_comfort_var_name: The name of the lower comfort bound variable in the MPC
+        """
 
         # Plotting functions
         def mark_characteristic_times(fig: go.Figure, at_time_step: float, line_prop: dict = None) -> go.Figure:
@@ -108,21 +122,37 @@ class Dashboard(flex_results.Results):
             return fig
 
         def plot_one_mpc_variable(fig: go.Figure, variable: str, time_step: float) -> go.Figure:
-            # Plot bounds # todo
-            # if variable in ["T", "T_out"]:
-            #     # In the simulation the bounds set in the constraints doesn't affect the bounds of the state, so they need to be plotted manually
-            #     df_lb = self.df_baseline[("parameter", "T_lower")].xs(0, level=1)
-            #     fig.add_trace(go.Scatter(name="T_lower", x=df_lb.index, y=df_lb, mode="lines", line=self.LINE_PROPERTIES["bounds"]))
-            #     df_ub = self.df_baseline[("parameter", "T_upper")].xs(0, level=1)
-            #     fig.add_trace(go.Scatter(name="T_upper", x=df_ub.index, y=df_ub, mode="lines", line=self.LINE_PROPERTIES["bounds"]))
-            # else:
-            #     # Default case
-            #     df_lb = self.df_baseline[("lower", variable)].xs(0, level=1)
-            #     df_ub = self.df_baseline[("upper", variable)].xs(0, level=1)
-            #     if df_lb.notna().all():
-            #         fig.add_trace(go.Scatter(name="T_lower", x=df_lb.index, y=df_lb, mode="lines", line=self.LINE_PROPERTIES["bounds"]))
-            #     if df_ub.notna().all():
-            #         fig.add_trace(go.Scatter(name="T_upper", x=df_ub.index, y=df_ub, mode="lines", line=self.LINE_PROPERTIES["bounds"]))
+            # Get bounds
+            def _get_bound(var_type: str, var_name: str):
+                return self.df_baseline[(var_type, var_name)].xs(0, level=1)
+
+            if variable == temperature_var_name:
+                if lb_comfort_var_name is None:
+                    df_lb = None
+                else:
+                    try:
+                        df_lb = _get_bound(var_type="variable", var_name=lb_comfort_var_name)
+                    except KeyError:
+                        df_lb = _get_bound(var_type="parameter", var_name=lb_comfort_var_name)
+                if ub_comfort_var_name is None:
+                    df_ub = None
+                else:
+                    try:
+                        df_ub = _get_bound(var_type="variable", var_name=ub_comfort_var_name)
+                    except KeyError:
+                        df_ub = _get_bound(var_type="parameter", var_name=ub_comfort_var_name)
+            elif variable in [control.name for control in self.baseline_module_config.controls]:
+                df_lb = _get_bound(var_type="lower", var_name=variable)
+                df_ub = _get_bound(var_type="upper", var_name=variable)
+            else:
+                df_lb = None
+                df_ub = None
+
+            # Plot bounds
+            if df_lb is not None:
+                fig.add_trace(go.Scatter(name="Lower bound", x=df_lb.index, y=df_lb, mode="lines", line=self.LINE_PROPERTIES["bounds"], zorder=1))
+            if df_ub is not None:
+                fig.add_trace(go.Scatter(name="Upper bound", x=df_ub.index, y=df_ub, mode="lines", line=self.LINE_PROPERTIES["bounds"], zorder=1))
 
             # Get the data for the plot
             df_sim = self.df_simulation[self.intersection_mpcs_sim[variable][self.simulator_agent_config.id]]
@@ -132,12 +162,12 @@ class Dashboard(flex_results.Results):
 
             # Plot the data
             try:
-                fig.add_trace(go.Scatter(name=self.simulator_agent_config.id, x=df_sim.index, y=df_sim, mode="lines", line=self.LINE_PROPERTIES[self.simulator_agent_config.id], zorder=0))
+                fig.add_trace(go.Scatter(name=self.simulator_agent_config.id, x=df_sim.index, y=df_sim, mode="lines", line=self.LINE_PROPERTIES[self.simulator_agent_config.id], zorder=2))
             except KeyError:
                 pass    # When the simulator variable name was not found from the intersection
-            fig.add_trace(go.Scatter(name=self.neg_flex_agent_config.id, x=df_neg.index, y=df_neg, mode="lines", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id] | {"dash": "dash"}, zorder=2))
-            fig.add_trace(go.Scatter(name=self.pos_flex_agent_config.id, x=df_pos.index, y=df_pos, mode="lines", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id] | {"dash": "dash"}, zorder=2))
-            fig.add_trace(go.Scatter(name=self.baseline_agent_config.id, x=df_bas.index, y=df_bas, mode="lines", line=self.LINE_PROPERTIES[self.baseline_agent_config.id] | {"dash": "dash"}, zorder=1))
+            fig.add_trace(go.Scatter(name=self.baseline_agent_config.id, x=df_bas.index, y=df_bas, mode="lines", line=self.LINE_PROPERTIES[self.baseline_agent_config.id] | {"dash": "dash"}, zorder=3))
+            fig.add_trace(go.Scatter(name=self.neg_flex_agent_config.id, x=df_neg.index, y=df_neg, mode="lines", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id] | {"dash": "dash"}, zorder=4))
+            fig.add_trace(go.Scatter(name=self.pos_flex_agent_config.id, x=df_pos.index, y=df_pos, mode="lines", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id] | {"dash": "dash"}, zorder=4))
 
             return fig
 
@@ -204,12 +234,17 @@ class Dashboard(flex_results.Results):
             return fig
 
         def get_variables_for_plotting() -> list[str]:
-            variables = [key for key in self.intersection_mpcs_sim.keys()]
+            variables = []
+            # MPC stats
+            variables.append(self.mpc_iterations)
 
-            # Add custom variables
+            # MPC and sim variables
+            variables.extend([key for key in self.intersection_mpcs_sim.keys()])
+
+            # Flexibility kpis
+            # todo: get names from the kpis (after merge)
             variables.append(self.energyflex)
             variables.append(self.price)
-            variables.append(self.mpc_iterations)
 
             return variables
 
@@ -230,6 +265,9 @@ class Dashboard(flex_results.Results):
                             dcc.Checklist(id="zoom_to_prediction_interval",
                                           options=[{"label": "Zoom to mpc prediction interval", "value": False}],
                                           style={"display": "inline-block"}),
+                            # dcc.Dropdown(id="additional_variables",
+                            #              options=[], multi=True,
+                            #              placeholder="Additional variables"),
                         ],
                     ),
                     # Time input
