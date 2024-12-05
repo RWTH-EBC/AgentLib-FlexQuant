@@ -6,7 +6,6 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 import pydantic
-from flexibility_quantification.data_structures.mpcs import BaselineMPCData, PFMPCData, NFMPCData
 import flexibility_quantification.data_structures.globals as glbs
 from flexibility_quantification.data_structures.indicator import FlexibilityData, FlexibilityKPIs
 
@@ -19,9 +18,10 @@ from flexibility_quantification.data_structures.flex_offer import FlexOffer
 kpis_pos = FlexibilityKPIs(direction="positive")
 kpis_neg = FlexibilityKPIs(direction="negative")
 
-power_alias_base = BaselineMPCData().power_alias
-power_alias_neg = NFMPCData().power_alias
-power_alias_pos = PFMPCData().power_alias
+# todo: import without circle
+power_alias_base = "__P_el_base"
+power_alias_neg = "__P_el_neg"
+power_alias_pos = "__P_el_pos"
 
 class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
     inputs: List[agentlib.AgentVariable] = [
