@@ -45,7 +45,6 @@ class Dashboard(flex_results.Results):
     MPC_ITERATIONS: str = "iter_count"
 
     # Label for the positive and negative flexibilities
-    # todo: get names from the directions
     label_positive: str = "positive"
     label_negative: str = "negative"
 
@@ -199,7 +198,7 @@ class Dashboard(flex_results.Results):
         def plot_market_results(fig: go.Figure, variable: str) -> go.Figure:
             df_flex_market_index = self.df_market.index.droplevel("time")
             if variable in self.df_market.columns:
-                fig.add_trace(go.Scatter(name=self.label_positive, x=df_flex_market_index, y=self.df_market[variable], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]))
+                fig.add_trace(go.Scatter(x=df_flex_market_index, y=self.df_market[variable], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]))
             else:
                 pos_var = f"pos_{variable}"
                 neg_var = f"neg_{variable}"

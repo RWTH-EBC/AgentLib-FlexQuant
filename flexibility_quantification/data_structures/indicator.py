@@ -5,9 +5,10 @@ import numpy as np
 import pandas as pd
 
 from agentlib_mpc.utils import TimeConversionTypes, TIME_CONVERSION
+from flexibility_quantification.data_structures.globals import FlexibilityDirections
 from flexibility_quantification.utils.data_handling import strip_multi_index, fill_nans, MEAN, INTERPOLATE
 
-ShadowDirections = Literal["positive", "negative"]
+
 
 
 class KPI(pydantic.BaseModel):
@@ -25,7 +26,7 @@ class KPI(pydantic.BaseModel):
         default=None,
         description="Unit of the indicator KPI",
     )
-    direction: ShadowDirections = pydantic.Field(
+    direction: FlexibilityDirections = pydantic.Field(
         default=None,
         description="Direction of the shadow mpc"
     )
@@ -33,7 +34,7 @@ class KPI(pydantic.BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
-    def __init__(self, name: str, value: Union[float, pd.Series], unit: str, direction: ShadowDirections, **data):
+    def __init__(self, name: str, value: Union[float, pd.Series], unit: str, direction: FlexibilityDirections, **data):
         super().__init__(**data)
         self.name = name
         self.value = value
@@ -72,7 +73,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
     Class defining the indicator KPIs.
     """
     # Direction
-    direction: ShadowDirections = pydantic.Field(
+    direction: FlexibilityDirections = pydantic.Field(
         default=None,
         description="Direction of the shadow mpc"
     )
@@ -126,7 +127,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         description="Costs of flexibility per energy",
     )
 
-    def __init__(self, direction: ShadowDirections, **data):
+    def __init__(self, direction: FlexibilityDirections, **data):
         super().__init__(**data)
         self.direction = direction
         for kpi in vars(self).values():
