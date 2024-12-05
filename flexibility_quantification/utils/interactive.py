@@ -12,9 +12,10 @@ from agentlib_mpc.utils import TimeConversionTypes, TIME_CONVERSION
 from agentlib_mpc.utils.analysis import mpc_at_time_step
 from agentlib_mpc.utils.plotting.interactive import get_port    # solver_return, obj_plot  -> didn't work out for stats
 
-from flexibility_quantification.data_structures.flexquant import FlexQuantConfig
 import flexibility_quantification.data_structures.globals as glbs
 import flexibility_quantification.data_structures.flex_results as flex_results
+from flexibility_quantification.data_structures.flexquant import FlexQuantConfig
+from flexibility_quantification.data_structures.indicator import FlexibilityKPIs
 
 
 class CustomBound:
@@ -92,15 +93,21 @@ class Dashboard(flex_results.Results):
             },
         }
 
+        # KPIS
+        kpis_pos = FlexibilityKPIs(direction="positive")
+        self.kpi_names_pos = kpis_pos.get_name_dict()
+        kpis_neg = FlexibilityKPIs(direction="negative")
+        self.kpi_names_neg = kpis_neg.get_name_dict()
+
         # Get variables for plotting
         # MPC stats
         self.plotting_variables = [self.MPC_ITERATIONS]
         # MPC and sim variables
         self.intersection_mpcs_sim = self.get_intersection_mpcs_sim()
         self.plotting_variables.extend([key for key in self.intersection_mpcs_sim.keys()])
-        # Flexibility kpis  # todo: get names from the kpis
-        self.plotting_variables.append("energyflex")
-        self.plotting_variables.append("costs")
+        # Flexibility kpis
+        self.plotting_variables.append(kpis_pos.energy_flex.name)
+        self.plotting_variables.append(kpis_pos.costs.name)
 
     def show(self, custom_bounds: Union[CustomBound, list[CustomBound]] = None):
         """
@@ -185,11 +192,8 @@ class Dashboard(flex_results.Results):
 
         def plot_flexibility_kpi(fig: go.Figure, variable) -> go.Figure:
             df_ind = self.df_indicator.xs(0, level=1)
-            # todo: kpi names function with indicator branch
-            pos_var = f"{variable}_pos"
-            neg_var = f"{variable}_neg"
-            fig.add_trace(go.Scatter(name=self.label_positive, x=df_ind.index, y=df_ind[pos_var], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]))
-            fig.add_trace(go.Scatter(name=self.label_negative, x=df_ind.index, y=df_ind[neg_var], mode="lines+markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id]))
+            fig.add_trace(go.Scatter(name=self.label_positive, x=df_ind.index, y=df_ind[self.kpi_names_pos[variable]], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]))
+            fig.add_trace(go.Scatter(name=self.label_negative, x=df_ind.index, y=df_ind[self.kpi_names_neg[variable]], mode="lines+markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id]))
             return fig
 
         def plot_market_results(fig: go.Figure, variable: str) -> go.Figure:

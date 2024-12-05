@@ -221,6 +221,15 @@ class FlexibilityKPIs(pydantic.BaseModel):
                     kpi_dict[kpi.name] = kpi
         return kpi_dict
 
+    def get_name_dict(self) -> dict[str, str]:
+        """
+        Get the KPIs as a dictionary with names depending on the direction as keys.
+        """
+        name_dict = {}
+        for name, kpi in self.get_kpi_dict(direction_name=False).items():
+            name_dict[name] = kpi.get_name()
+        return name_dict
+
 
 class FlexibilityData(pydantic.BaseModel):
     """
