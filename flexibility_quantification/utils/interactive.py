@@ -23,10 +23,11 @@ class Dashboard(flex_results.Results):
     """
 
     # Constants for plotting variables
+    MPC_ITERATIONS: str = "iter_count"
     # todo: get names from the kpis (after merge)
     energyflex: str = "energy_flexibility"
-    price: str = "flexibility_price"
-    mpc_iterations: str = "mpc_iterations"
+    flex_price: str = "costs"
+    market_price: str = "price"
 
     # Label for the positive and negative flexibilities
     # todo: get names from the directions (after merge)
@@ -78,13 +79,13 @@ class Dashboard(flex_results.Results):
     def show(self, temperature_var_name: str = None, ub_comfort_var_name: str = None, lb_comfort_var_name: str = None):
         """
         Shows the dashboard in a web browser containing:
-        -- Statistics of the MPCs
+        -- Statistics of the MPCs solver
         -- The states, controls, and the power variable of the MPCs and the simulator
         -- KPIs of the flexibility quantification
         -- Markings of the characteristic flexibility times
 
         Optional arguments to show the comfort bounds:
-        -- temperature_var_name: The name of the temperature variable in the MPC
+        -- temperature_var_name: The name of the temperature variable in the MPC to plot the comfort bounds into
         -- ub_comfort_var_name: The name of the upper comfort bound variable in the MPC
         -- lb_comfort_var_name: The name of the lower comfort bound variable in the MPC
         """
@@ -176,23 +177,35 @@ class Dashboard(flex_results.Results):
 
             return fig
 
-        def plot_mpc_iterations(fig: go.Figure) -> go.Figure:
-            fig.add_trace(go.Scatter(name=self.baseline_agent_config.id, x=self.df_baseline_stats.index, y=self.df_baseline_stats["iter_count"], mode="markers", line=self.LINE_PROPERTIES[self.baseline_agent_config.id]))
-            fig.add_trace(go.Scatter(name=self.pos_flex_agent_config.id, x=self.df_pos_flex_stats.index, y=self.df_pos_flex_stats["iter_count"], mode="markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]))
-            fig.add_trace(go.Scatter(name=self.neg_flex_agent_config.id, x=self.df_neg_flex_stats.index, y=self.df_neg_flex_stats["iter_count"], mode="markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id]))
+        def plot_mpc_stats(fig: go.Figure, variable: str) -> go.Figure:
+            fig.add_trace(go.Scatter(name=self.baseline_agent_config.id, x=self.df_baseline_stats.index, y=self.df_baseline_stats[variable], mode="markers", line=self.LINE_PROPERTIES[self.baseline_agent_config.id]))
+            fig.add_trace(go.Scatter(name=self.pos_flex_agent_config.id, x=self.df_pos_flex_stats.index, y=self.df_pos_flex_stats[variable], mode="markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]))
+            fig.add_trace(go.Scatter(name=self.neg_flex_agent_config.id, x=self.df_neg_flex_stats.index, y=self.df_neg_flex_stats[variable], mode="markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id]))
             return fig
 
         # todo: generic kpi plot function
-        def plot_energy_flexibility(fig: go.Figure) -> go.Figure:
+        def plot_flexibility_kpi(fig: go.Figure, variable=None) -> go.Figure:
             df_ind = self.df_indicator.xs(0, level=1)
-            fig.add_trace(go.Scatter(name=self.label_positive, x=df_ind.index, y=df_ind[glbs.ENERGYFLEX_POS], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]))
-            fig.add_trace(go.Scatter(name=self.label_negative, x=df_ind.index, y=df_ind[glbs.ENERGYFLEX_NEG], mode="lines+markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id]))
+            fig.add_trace(go.Scatter(name=self.label_positive, x=df_ind.index, y=df_ind["energyflex_pos"], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]))
+            fig.add_trace(go.Scatter(name=self.label_negative, x=df_ind.index, y=df_ind["energyflex_neg"], mode="lines+markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id]))
             return fig
 
-        def plot_flexibility_prices(fig: go.Figure) -> go.Figure:
+        def plot_flexibility_price(fig: go.Figure, variable=None) -> go.Figure:
+            df_ind = self.df_indicator.xs(0, level=1)
+            fig.add_trace(go.Scatter(name=self.label_positive, x=df_ind.index, y=df_ind["costs_pos"], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]))
+            fig.add_trace(go.Scatter(name=self.label_negative, x=df_ind.index, y=df_ind["costs_neg"], mode="lines+markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id]))
+            return fig
+
+        def plot_market_results(fig: go.Figure, variable: str) -> go.Figure:
             df_flex_market_index = self.df_market.index.droplevel("time")
-            fig.add_trace(go.Scatter(name=self.label_positive, x=df_flex_market_index, y=self.df_market["pos_price"], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]))
-            fig.add_trace(go.Scatter(name=self.label_negative, x=df_flex_market_index, y=self.df_market["neg_price"], mode="lines+markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id]))
+            if variable in self.df_market.columns:
+                fig.add_trace(go.Scatter(name=self.label_positive, x=df_flex_market_index, y=self.df_market[variable], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]))
+            else:
+                # todo: solve generic
+                pos_var = f"pos_{variable}"
+                neg_var = f"neg_{variable}"
+                fig.add_trace(go.Scatter(name=self.label_positive, x=df_flex_market_index, y=self.df_market[pos_var], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]))
+                fig.add_trace(go.Scatter(name=self.label_negative, x=df_flex_market_index, y=self.df_market[neg_var], mode="lines+markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id]))
             return fig
 
         def create_plot_for_one_variable(variable: str, at_time_step: float, show_current_characteristic_times: bool, zoom_to_prediction_interval: bool = False) -> go.Figure:
@@ -208,14 +221,16 @@ class Dashboard(flex_results.Results):
             fig = go.Figure()
 
             # Plot variable
-            if variable == self.mpc_iterations:
-                plot_mpc_iterations(fig=fig)
-            elif variable == self.energyflex:
-                plot_energy_flexibility(fig=fig)
-            elif variable == self.price:
-                plot_flexibility_prices(fig=fig)
+            if variable in self.df_baseline_stats.columns:
+                plot_mpc_stats(fig=fig, variable=variable)
             elif variable in self.intersection_mpcs_sim.keys():
                 plot_one_mpc_variable(fig=fig, variable=variable, time_step=at_time_step)
+            elif variable == self.energyflex:   # todo: generic kpi function
+                plot_flexibility_kpi(fig=fig)
+            elif any(variable in label for label in self.df_indicator.columns):
+                plot_flexibility_price(fig=fig)
+            elif any(variable in label for label in self.df_market.columns):
+                plot_market_results(fig=fig, variable=variable)
             else:
                 raise ValueError(f"No plotting function found for variable {variable}")
 
@@ -239,9 +254,8 @@ class Dashboard(flex_results.Results):
             return fig
 
         def get_variables_for_plotting() -> list[str]:
-            variables = []
             # MPC stats
-            variables.append(self.mpc_iterations)
+            variables = [self.MPC_ITERATIONS]
 
             # MPC and sim variables
             variables.extend([key for key in self.intersection_mpcs_sim.keys()])
@@ -249,7 +263,8 @@ class Dashboard(flex_results.Results):
             # Flexibility kpis
             # todo: get names from the kpis (after merge)
             variables.append(self.energyflex)
-            variables.append(self.price)
+            variables.append(self.flex_price)
+            variables.append(self.market_price)
 
             return variables
 
