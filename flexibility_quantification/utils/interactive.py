@@ -14,7 +14,7 @@ from agentlib_mpc.utils.plotting.interactive import get_port    # solver_return,
 
 from flexibility_quantification.data_structures.flexquant import FlexQuantConfig
 import flexibility_quantification.data_structures.globals as glbs
-import flexibility_quantification.data_structures.results as flex_results
+import flexibility_quantification.data_structures.flex_results as flex_results
 
 
 class CustomBound:
@@ -42,13 +42,9 @@ class Dashboard(flex_results.Results):
 
     # Constants for plotting variables
     MPC_ITERATIONS: str = "iter_count"
-    # todo: get names from the kpis (after merge)
-    energyflex: str = "energy_flexibility"
-    flex_price: str = "costs"
-    market_price: str = "price"
 
     # Label for the positive and negative flexibilities
-    # todo: get names from the directions (after merge)
+    # todo: get names from the directions
     label_positive: str = "positive"
     label_negative: str = "negative"
 
@@ -69,7 +65,6 @@ class Dashboard(flex_results.Results):
     ):
         super().__init__(flex_config=flex_config, simulator_agent_config=simulator_agent_config, results=results, to_timescale=to_timescale)
         self.current_timescale_input = self.current_timescale_of_data
-        self.intersection_mpcs_sim = self.get_intersection_mpcs_sim()
 
         # Define line properties
         self.LINE_PROPERTIES: dict = {
@@ -97,6 +92,16 @@ class Dashboard(flex_results.Results):
             },
         }
 
+        # Get variables for plotting
+        # MPC stats
+        self.plotting_variables = [self.MPC_ITERATIONS]
+        # MPC and sim variables
+        self.intersection_mpcs_sim = self.get_intersection_mpcs_sim()
+        self.plotting_variables.extend([key for key in self.intersection_mpcs_sim.keys()])
+        # Flexibility kpis  # todo: get names from the kpis
+        self.plotting_variables.append("energyflex")
+        self.plotting_variables.append("costs")
+
     def show(self, custom_bounds: Union[CustomBound, list[CustomBound]] = None):
         """
         Shows the dashboard in a web browser containing:
@@ -117,48 +122,17 @@ class Dashboard(flex_results.Results):
         else:
             self.custom_bounds = custom_bounds
 
-        # Plotting functions
-        def mark_characteristic_times(fig: go.Figure, at_time_step: float, line_prop: dict = None) -> go.Figure:
-            """
-            Add markers of the characteristic times to the plot for a time step
-
-            Keyword arguments:
-            fig -- The figure to plot the results into
-            time_step -- When to show the markers
-            line_prop -- The graphic properties of the lines as in plotly
-            """
-            if line_prop is None:
-                line_prop = self.LINE_PROPERTIES[self.characteristic_times_current_key]
-            try:
-                df_characteristic_times = self.df_indicator.xs(0, level="time")
-
-                offer_time = at_time_step
-                rel_market_time = df_characteristic_times.loc[at_time_step, glbs.MARKET_TIME] / TIME_CONVERSION[self.current_timescale_of_data]
-                rel_prep_time = df_characteristic_times.loc[at_time_step, glbs.PREP_TIME] / TIME_CONVERSION[self.current_timescale_of_data]
-                flex_event_duration = df_characteristic_times.loc[at_time_step, glbs.FLEX_EVENT_DURATION] / TIME_CONVERSION[self.current_timescale_of_data]
-
-                fig.add_vline(x=offer_time, line=line_prop, layer="below")
-                fig.add_vline(x=offer_time + rel_prep_time, line=line_prop, layer="below")
-                fig.add_vline(x=offer_time + rel_prep_time + rel_market_time, line=line_prop, layer="below")
-                fig.add_vline(x=offer_time + rel_prep_time + rel_market_time + flex_event_duration, line=line_prop, layer="below")
-            except KeyError:
-                pass  # No data of characteristic times available, e.g. if offer accepted
-            return fig
-
-        def mark_characteristic_times_of_accepted_offers(fig: go.Figure) -> go.Figure:
-            """ Add markers of the characteristic times for accepted offers to the plot
-            """
-            df_accepted_offers = self.df_market["status"].str.contains(pat="OfferStatus.accepted")
-            for i in df_accepted_offers.index.to_list():
-                if df_accepted_offers[i]:
-                    fig = mark_characteristic_times(fig=fig, at_time_step=i[0], line_prop=self.LINE_PROPERTIES[self.characteristic_times_accepted_key])
+        def plot_mpc_stats(fig: go.Figure, variable: str) -> go.Figure:
+            fig.add_trace(go.Scatter(name=self.baseline_agent_config.id, x=self.df_baseline_stats.index, y=self.df_baseline_stats[variable], mode="markers", line=self.LINE_PROPERTIES[self.baseline_agent_config.id]))
+            fig.add_trace(go.Scatter(name=self.pos_flex_agent_config.id, x=self.df_pos_flex_stats.index, y=self.df_pos_flex_stats[variable], mode="markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]))
+            fig.add_trace(go.Scatter(name=self.neg_flex_agent_config.id, x=self.df_neg_flex_stats.index, y=self.df_neg_flex_stats[variable], mode="markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id]))
             return fig
 
         def plot_one_mpc_variable(fig: go.Figure, variable: str, time_step: float) -> go.Figure:
             # Get the mpc data for the plot
-            df_neg = mpc_at_time_step(data=self.df_neg_flex, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.neg_flex_agent_config.id], index_offset=False)
-            df_pos = mpc_at_time_step(data=self.df_pos_flex, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.pos_flex_agent_config.id], index_offset=False)
-            df_bas = mpc_at_time_step(data=self.df_baseline, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.baseline_agent_config.id], index_offset=False)
+            df_neg = mpc_at_time_step(data=self.df_neg_flex, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.neg_flex_module_config.module_id], index_offset=False)
+            df_pos = mpc_at_time_step(data=self.df_pos_flex, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.pos_flex_module_config.module_id], index_offset=False)
+            df_bas = mpc_at_time_step(data=self.df_baseline, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.baseline_module_config.module_id], index_offset=False)
 
             # Manage nans
             for df in [df_neg, df_pos, df_bas]:
@@ -169,7 +143,7 @@ class Dashboard(flex_results.Results):
 
             # Plot the data
             try:
-                df_sim = self.df_simulation[self.intersection_mpcs_sim[variable][self.simulator_agent_config.id]]
+                df_sim = self.df_simulation[self.intersection_mpcs_sim[variable][self.simulator_module_config.module_id]]
                 fig.add_trace(go.Scatter(name=self.simulator_agent_config.id, x=df_sim.index, y=df_sim, mode="lines", line=self.LINE_PROPERTIES[self.simulator_agent_config.id], zorder=2))
             except KeyError:
                 pass    # E.g. when the simulator variable name was not found from the intersection
@@ -209,23 +183,13 @@ class Dashboard(flex_results.Results):
 
             return fig
 
-        def plot_mpc_stats(fig: go.Figure, variable: str) -> go.Figure:
-            fig.add_trace(go.Scatter(name=self.baseline_agent_config.id, x=self.df_baseline_stats.index, y=self.df_baseline_stats[variable], mode="markers", line=self.LINE_PROPERTIES[self.baseline_agent_config.id]))
-            fig.add_trace(go.Scatter(name=self.pos_flex_agent_config.id, x=self.df_pos_flex_stats.index, y=self.df_pos_flex_stats[variable], mode="markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]))
-            fig.add_trace(go.Scatter(name=self.neg_flex_agent_config.id, x=self.df_neg_flex_stats.index, y=self.df_neg_flex_stats[variable], mode="markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id]))
-            return fig
-
-        # todo: generic kpi plot function
-        def plot_flexibility_kpi(fig: go.Figure, variable=None) -> go.Figure:
+        def plot_flexibility_kpi(fig: go.Figure, variable) -> go.Figure:
             df_ind = self.df_indicator.xs(0, level=1)
-            fig.add_trace(go.Scatter(name=self.label_positive, x=df_ind.index, y=df_ind["energyflex_pos"], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]))
-            fig.add_trace(go.Scatter(name=self.label_negative, x=df_ind.index, y=df_ind["energyflex_neg"], mode="lines+markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id]))
-            return fig
-
-        def plot_flexibility_price(fig: go.Figure, variable=None) -> go.Figure:
-            df_ind = self.df_indicator.xs(0, level=1)
-            fig.add_trace(go.Scatter(name=self.label_positive, x=df_ind.index, y=df_ind["costs_pos"], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]))
-            fig.add_trace(go.Scatter(name=self.label_negative, x=df_ind.index, y=df_ind["costs_neg"], mode="lines+markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id]))
+            # todo: kpi names function with indicator branch
+            pos_var = f"{variable}_pos"
+            neg_var = f"{variable}_neg"
+            fig.add_trace(go.Scatter(name=self.label_positive, x=df_ind.index, y=df_ind[pos_var], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]))
+            fig.add_trace(go.Scatter(name=self.label_negative, x=df_ind.index, y=df_ind[neg_var], mode="lines+markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id]))
             return fig
 
         def plot_market_results(fig: go.Figure, variable: str) -> go.Figure:
@@ -233,14 +197,50 @@ class Dashboard(flex_results.Results):
             if variable in self.df_market.columns:
                 fig.add_trace(go.Scatter(name=self.label_positive, x=df_flex_market_index, y=self.df_market[variable], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]))
             else:
-                # todo: solve generic
                 pos_var = f"pos_{variable}"
                 neg_var = f"neg_{variable}"
                 fig.add_trace(go.Scatter(name=self.label_positive, x=df_flex_market_index, y=self.df_market[pos_var], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]))
                 fig.add_trace(go.Scatter(name=self.label_negative, x=df_flex_market_index, y=self.df_market[neg_var], mode="lines+markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id]))
             return fig
 
-        def create_plot_for_one_variable(variable: str, at_time_step: float, show_current_characteristic_times: bool, zoom_to_prediction_interval: bool = False) -> go.Figure:
+        # Plotting functions
+        def mark_characteristic_times(fig: go.Figure, at_time_step: float, line_prop: dict = None) -> go.Figure:
+            """
+            Add markers of the characteristic times to the plot for a time step
+
+            Keyword arguments:
+            fig -- The figure to plot the results into
+            time_step -- When to show the markers
+            line_prop -- The graphic properties of the lines as in plotly
+            """
+            if line_prop is None:
+                line_prop = self.LINE_PROPERTIES[self.characteristic_times_current_key]
+            try:
+                df_characteristic_times = self.df_indicator.xs(0, level="time")
+
+                offer_time = at_time_step
+                rel_market_time = df_characteristic_times.loc[at_time_step, glbs.MARKET_TIME] / TIME_CONVERSION[self.current_timescale_of_data]
+                rel_prep_time = df_characteristic_times.loc[at_time_step, glbs.PREP_TIME] / TIME_CONVERSION[self.current_timescale_of_data]
+                flex_event_duration = df_characteristic_times.loc[at_time_step, glbs.FLEX_EVENT_DURATION] / TIME_CONVERSION[self.current_timescale_of_data]
+
+                fig.add_vline(x=offer_time, line=line_prop, layer="below")
+                fig.add_vline(x=offer_time + rel_prep_time, line=line_prop, layer="below")
+                fig.add_vline(x=offer_time + rel_prep_time + rel_market_time, line=line_prop, layer="below")
+                fig.add_vline(x=offer_time + rel_prep_time + rel_market_time + flex_event_duration, line=line_prop, layer="below")
+            except KeyError:
+                pass  # No data of characteristic times available, e.g. if offer accepted
+            return fig
+
+        def mark_characteristic_times_of_accepted_offers(fig: go.Figure) -> go.Figure:
+            """ Add markers of the characteristic times for accepted offers to the plot
+            """
+            df_accepted_offers = self.df_market["status"].str.contains(pat="OfferStatus.accepted")
+            for i in df_accepted_offers.index.to_list():
+                if df_accepted_offers[i]:
+                    fig = mark_characteristic_times(fig=fig, at_time_step=i[0], line_prop=self.LINE_PROPERTIES[self.characteristic_times_accepted_key])
+            return fig
+
+        def create_plot(variable: str, at_time_step: float, show_current_characteristic_times: bool, zoom_to_prediction_interval: bool = False) -> go.Figure:
             """
             Create a plot for one variable
 
@@ -257,10 +257,8 @@ class Dashboard(flex_results.Results):
                 plot_mpc_stats(fig=fig, variable=variable)
             elif variable in self.intersection_mpcs_sim.keys():
                 plot_one_mpc_variable(fig=fig, variable=variable, time_step=at_time_step)
-            elif variable == self.energyflex:   # todo: generic kpi function
-                plot_flexibility_kpi(fig=fig)
             elif any(variable in label for label in self.df_indicator.columns):
-                plot_flexibility_price(fig=fig)
+                plot_flexibility_kpi(fig=fig, variable=variable)
             elif any(variable in label for label in self.df_market.columns):
                 plot_market_results(fig=fig, variable=variable)
             else:
@@ -286,21 +284,6 @@ class Dashboard(flex_results.Results):
             fig.update_xaxes(dtick=round(self.baseline_module_config.prediction_horizon / 6) * self.baseline_module_config.time_step / TIME_CONVERSION[self.current_timescale_of_data])
             return fig
 
-        def get_variables_for_plotting() -> list[str]:
-            # MPC stats
-            variables = [self.MPC_ITERATIONS]
-
-            # MPC and sim variables
-            variables.extend([key for key in self.intersection_mpcs_sim.keys()])
-
-            # Flexibility kpis
-            # todo: get names from the kpis (after merge)
-            variables.append(self.energyflex)
-            variables.append(self.flex_price)
-            variables.append(self.market_price)
-
-            return variables
-
         # Create the app
         app = Dash(__name__, title="Results")
         app.layout = [
@@ -318,9 +301,6 @@ class Dashboard(flex_results.Results):
                             dcc.Checklist(id="zoom_to_prediction_interval",
                                           options=[{"label": "Zoom to mpc prediction interval", "value": False}],
                                           style={"display": "inline-block"}),
-                            # dcc.Dropdown(id="additional_variables",
-                            #              options=[], multi=True,
-                            #              placeholder="Additional variables"),
                         ],
                     ),
                     # Time input
@@ -410,8 +390,8 @@ class Dashboard(flex_results.Results):
             """ Update all graphs based on the options and slider values
             """
             figs = []
-            for variable in get_variables_for_plotting():
-                fig = create_plot_for_one_variable(
+            for variable in self.plotting_variables:
+                fig = create_plot(
                     variable=variable,
                     at_time_step=time_step,
                     show_current_characteristic_times=current_characteristic_times,

@@ -39,7 +39,7 @@ def load_market(file_path: Union[str, FilePath]) -> pd.DataFrame:
 
 
 class Results:
-    # Configs
+    # Configs:
     # Generator
     generator_config: FlexQuantConfig
     # Agents
@@ -83,16 +83,7 @@ class Results:
         # load configs of agents and modules
         # Generator config
         self.generator_config = load_config.load_config(
-            config=flex_config, config_type=FlexQuantConfig
-        )
-
-        # simulator
-        self.simulator_agent_config = load_config.load_config(
-            config=simulator_agent_config, config_type=AgentConfig
-        )
-        self.simulator_module_config = cmng.get_module(
-            config=self.simulator_agent_config, module_type=cmng.SIMULATOR_CONFIG_TYPE
-        )
+            config=flex_config, config_type=FlexQuantConfig)
 
         # get names of the config files
         config_filename_baseline = BaselineMPCData().name_of_created_file
@@ -100,6 +91,14 @@ class Results:
         config_filename_neg_flex = NFMPCData().name_of_created_file
         config_filename_indicator = self.generator_config.indicator_config.name_of_created_file
         config_filename_market = FlexibilityMarketConfig(agent_config="").name_of_created_file
+
+        # load the agent and module configs
+        self.simulator_agent_config = load_config.load_config(
+            config=simulator_agent_config, config_type=AgentConfig
+        )
+        self.simulator_module_config = cmng.get_module(
+            config=self.simulator_agent_config, module_type=cmng.SIMULATOR_CONFIG_TYPE
+        )
 
         for file_path in Path(self.generator_config.path_to_flex_files).rglob("*.json"):
             if file_path.name in config_filename_baseline :
@@ -220,30 +219,20 @@ class Results:
         Get the intersection of the MPCs and the simulator variables.
         returns a dictionary with the following structure:
         Key: variable alias (from baseline)
-        Value: {agent id: variable name}
+        Value: {module id: variable name}
         """
-        simulator_variables = self.simulator_module_config.get_variables()
-        baseline_variables = self.baseline_module_config.get_variables()
-        pos_flex_variables = self.pos_flex_module_config.get_variables()
-        neg_flex_variables = self.neg_flex_module_config.get_variables()
-
         id_alias_name_dict = {}
 
         def get_id_alias_name_dict_element(alias: str):
             # id as key, {id: name} as value
             id_alias_name_dict[alias] = {}
-            for var in simulator_variables:
-                if var.alias == alias or var.name == alias:
-                    id_alias_name_dict[alias][self.simulator_agent_config.id] = var.name
-            for var in baseline_variables:
-                if var.alias == alias or var.name == alias:
-                    id_alias_name_dict[alias][self.baseline_agent_config.id] = var.name
-            for var in pos_flex_variables:
-                if var.alias == alias or var.name == alias:
-                    id_alias_name_dict[alias][self.pos_flex_agent_config.id] = var.name
-            for var in neg_flex_variables:
-                if var.alias == alias or var.name == alias:
-                    id_alias_name_dict[alias][self.neg_flex_agent_config.id] = var.name
+            for config in [self.simulator_module_config,
+                           self.baseline_module_config,
+                           self.pos_flex_module_config,
+                           self.neg_flex_module_config]:
+                for var in config.get_variables():
+                    if var.alias == alias or var.name == alias:
+                        id_alias_name_dict[alias][config.module_id] = var.name
 
         # States, controls and power variable
         for variables in [self.baseline_module_config.states,
