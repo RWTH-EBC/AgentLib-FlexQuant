@@ -23,6 +23,7 @@ power_alias_base = "__P_el_base"
 power_alias_neg = "__P_el_neg"
 power_alias_pos = "__P_el_pos"
 
+
 class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
     inputs: List[agentlib.AgentVariable] = [
         agentlib.AgentVariable(name=power_alias_base, unit="W", type="pd.Series",
@@ -260,6 +261,12 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             neg_diff_profile=self.data.kpis_neg.power_flex_offer.value,
             neg_price=self.data.kpis_neg.costs.value,
         )
+
+        # set outputs
+        for kpi in self.data.get_kpis().values():
+            for output in self.config.outputs:
+                if output.name == kpi.get_name():
+                    self.set(output.name, kpi.value)
 
         # write results
         self.df = self.write_results(
