@@ -46,7 +46,10 @@ class FlexibilityMarketConfig(pydantic.BaseModel):
 
     """
     agent_config: Union[AgentConfig, Path]
-    name_of_created_file: str = "flexibility_market.json"
+    name_of_created_file: str = pydantic.Field(
+        default="flexibility_market.json",
+        description="Name of the config that is created by the generator",
+    )
 
 
 class FlexibilityIndicatorConfig(pydantic.BaseModel):

@@ -1,6 +1,24 @@
 from typing import Literal
 
 import pandas as pd
+from agentlib_mpc.utils import TimeConversionTypes, TIME_CONVERSION
+
+
+def convert_timescale_of_index(df: pd.DataFrame, from_unit: TimeConversionTypes, to_unit: TIME_CONVERSION) -> pd.DataFrame:
+    """ Convert the timescale of a dataframe index (from seconds) to the given time unit
+
+    Keyword arguments:
+    results -- The dictionary of the results with the dataframes
+    time_unit -- The time unit to convert the index to
+    """
+    time_conversion_factor = TIME_CONVERSION[from_unit] / TIME_CONVERSION[to_unit]
+    if isinstance(df.index, pd.MultiIndex):
+        df.index = pd.MultiIndex.from_arrays(
+            [df.index.get_level_values(level) * time_conversion_factor for level in range(df.index.nlevels)]
+        )
+    else:
+        df.index = df.index * time_conversion_factor
+    return df
 
 MEAN = "mean"
 INTERPOLATE = "interpolate"
@@ -46,4 +64,3 @@ def _set_mean_values(series: pd.Series) -> pd.Series:
         series[interval_index] = series[interval_index].mean(skipna=True)
 
     return series
-
