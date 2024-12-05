@@ -251,6 +251,7 @@ class Dashboard(flex_results.Results):
                               xaxis_title=f"Time in {self.current_timescale_of_data}",
                               xaxis_range=[xlim_left, xlim_right],
                               height=350, margin=dict(t=20, b=20))
+            fig.update_xaxes(dtick=round(self.baseline_module_config.prediction_horizon / 6) * self.baseline_module_config.time_step / TIME_CONVERSION[self.current_timescale_of_data])
             return fig
 
         def get_variables_for_plotting() -> list[str]:
