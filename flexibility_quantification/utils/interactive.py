@@ -33,6 +33,11 @@ class Dashboard(flex_results.Results):
     label_positive: str = "positive"
     label_negative: str = "negative"
 
+    # Keys for line properties
+    bounds_key: str = "bounds"
+    characteristic_times_current_key: str = "characteristic_times_current"
+    characteristic_times_accepted_key: str = "characteristic_times_accepted"
+
     def __init__(
             self,
             flex_config: Union[str, FilePath, FlexQuantConfig],
@@ -58,14 +63,14 @@ class Dashboard(flex_results.Results):
             self.pos_flex_agent_config.id: {
                 "color": "blue",
             },
-            "bounds": {
+            self.bounds_key: {
                 "color": "grey",
             },
-            "characteristic_times_current": {
+            self.characteristic_times_current_key: {
                 "color": "grey",
                 "dash": "dash",
             },
-            "characteristic_times_accepted": {
+            self.characteristic_times_accepted_key: {
                 "color": "yellow",
             },
         }
@@ -95,7 +100,7 @@ class Dashboard(flex_results.Results):
             line_prop -- The graphic properties of the lines as in plotly
             """
             if line_prop is None:
-                line_prop = self.LINE_PROPERTIES["characteristic_times_current"]
+                line_prop = self.LINE_PROPERTIES[self.characteristic_times_current_key]
             try:
                 df_characteristic_times = self.df_indicator.xs(0, level="time")
 
@@ -118,7 +123,7 @@ class Dashboard(flex_results.Results):
             df_accepted_offers = self.df_market["status"].str.contains(pat="OfferStatus.accepted")
             for i in df_accepted_offers.index.to_list():
                 if df_accepted_offers[i]:
-                    fig = mark_characteristic_times(fig=fig, at_time_step=i[0], line_prop=self.LINE_PROPERTIES["characteristic_times_accepted"])
+                    fig = mark_characteristic_times(fig=fig, at_time_step=i[0], line_prop=self.LINE_PROPERTIES[self.characteristic_times_accepted_key])
             return fig
 
         def plot_one_mpc_variable(fig: go.Figure, variable: str, time_step: float) -> go.Figure:
@@ -150,9 +155,9 @@ class Dashboard(flex_results.Results):
 
             # Plot bounds
             if df_lb is not None:
-                fig.add_trace(go.Scatter(name="Lower bound", x=df_lb.index, y=df_lb, mode="lines", line=self.LINE_PROPERTIES["bounds"], zorder=1))
+                fig.add_trace(go.Scatter(name="Lower bound", x=df_lb.index, y=df_lb, mode="lines", line=self.LINE_PROPERTIES[self.bounds_key], zorder=1))
             if df_ub is not None:
-                fig.add_trace(go.Scatter(name="Upper bound", x=df_ub.index, y=df_ub, mode="lines", line=self.LINE_PROPERTIES["bounds"], zorder=1))
+                fig.add_trace(go.Scatter(name="Upper bound", x=df_ub.index, y=df_ub, mode="lines", line=self.LINE_PROPERTIES[self.bounds_key], zorder=1))
 
             # Get the data for the plot
             df_sim = self.df_simulation[self.intersection_mpcs_sim[variable][self.simulator_agent_config.id]]
