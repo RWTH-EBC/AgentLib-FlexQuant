@@ -290,6 +290,7 @@ class FlexibilityData(pydantic.BaseModel):
         self.full_horizon = np.arange(0, prediction_horizon * time_step, time_step)
 
     def format_predictor_inputs(self, series: pd.Series) -> pd.Series:
+        series.index = series.index - series.index[0]
         series = series.reindex(self.full_horizon)
         return series
 
