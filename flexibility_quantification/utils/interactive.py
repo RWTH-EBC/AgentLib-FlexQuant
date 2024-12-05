@@ -1,4 +1,4 @@
-from typing import get_args, Union
+from typing import get_args, Union, Optional
 from pydantic import FilePath
 import pandas as pd
 
@@ -15,6 +15,24 @@ from agentlib_mpc.utils.plotting.interactive import get_port    # solver_return,
 from flexibility_quantification.data_structures.flexquant import FlexQuantConfig
 import flexibility_quantification.data_structures.globals as glbs
 import flexibility_quantification.data_structures.results as flex_results
+
+
+class CustomBound:
+    """
+    Dataclass to let the user define custom bounds for the mpc variables
+
+    var_name -- The name of the variable to plot the bounds into
+    lower bound -- The lower bound of the variable as the name of the lower bound variable in the MPC
+    upper bound -- The upper bound of the variable as the name of the upper bound variable in the MPC
+    """
+    for_variable: str
+    lower_bound: Optional[str]
+    upper_bound: Optional[str]
+
+    def __init__(self, for_variable: str, lb_name: Optional[str] = None, ub_name: Optional[str] = None):
+        self.for_variable = for_variable
+        self.lower_bound = lb_name
+        self.upper_bound = ub_name
 
 
 class Dashboard(flex_results.Results):
@@ -38,6 +56,9 @@ class Dashboard(flex_results.Results):
     bounds_key: str = "bounds"
     characteristic_times_current_key: str = "characteristic_times_current"
     characteristic_times_accepted_key: str = "characteristic_times_accepted"
+
+    # Custom settings
+    custom_bounds: list[CustomBound] = []
 
     def __init__(
             self,
@@ -76,7 +97,7 @@ class Dashboard(flex_results.Results):
             },
         }
 
-    def show(self, temperature_var_name: str = None, ub_comfort_var_name: str = None, lb_comfort_var_name: str = None):
+    def show(self, custom_bounds: Union[CustomBound, list[CustomBound]] = None):
         """
         Shows the dashboard in a web browser containing:
         -- Statistics of the MPCs solver
@@ -89,6 +110,12 @@ class Dashboard(flex_results.Results):
         -- ub_comfort_var_name: The name of the upper comfort bound variable in the MPC
         -- lb_comfort_var_name: The name of the lower comfort bound variable in the MPC
         """
+        if custom_bounds is None:
+            self.custom_bounds = []
+        elif isinstance(custom_bounds, CustomBound):
+            self.custom_bounds = [custom_bounds]
+        else:
+            self.custom_bounds = custom_bounds
 
         # Plotting functions
         def mark_characteristic_times(fig: go.Figure, at_time_step: float, line_prop: dict = None) -> go.Figure:
@@ -128,52 +155,57 @@ class Dashboard(flex_results.Results):
             return fig
 
         def plot_one_mpc_variable(fig: go.Figure, variable: str, time_step: float) -> go.Figure:
-            # Get bounds
-            def _get_bound(var_type: str, var_name: str):
+            # Get the mpc data for the plot
+            df_neg = mpc_at_time_step(data=self.df_neg_flex, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.neg_flex_agent_config.id], index_offset=False)
+            df_pos = mpc_at_time_step(data=self.df_pos_flex, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.pos_flex_agent_config.id], index_offset=False)
+            df_bas = mpc_at_time_step(data=self.df_baseline, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.baseline_agent_config.id], index_offset=False)
+
+            # Manage nans
+            for df in [df_neg, df_pos, df_bas]:
+                if variable in [control.name for control in self.baseline_module_config.controls]:
+                    df.ffill(inplace=True)
+                else:
+                    df.dropna(inplace=True)
+
+            # Plot the data
+            try:
+                df_sim = self.df_simulation[self.intersection_mpcs_sim[variable][self.simulator_agent_config.id]]
+                fig.add_trace(go.Scatter(name=self.simulator_agent_config.id, x=df_sim.index, y=df_sim, mode="lines", line=self.LINE_PROPERTIES[self.simulator_agent_config.id], zorder=2))
+            except KeyError:
+                pass    # E.g. when the simulator variable name was not found from the intersection
+            fig.add_trace(go.Scatter(name=self.baseline_agent_config.id, x=df_bas.index, y=df_bas, mode="lines", line=self.LINE_PROPERTIES[self.baseline_agent_config.id] | {"dash": "dash"}, zorder=3))
+            fig.add_trace(go.Scatter(name=self.neg_flex_agent_config.id, x=df_neg.index, y=df_neg, mode="lines", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id] | {"dash": "dash"}, zorder=4))
+            fig.add_trace(go.Scatter(name=self.pos_flex_agent_config.id, x=df_pos.index, y=df_pos, mode="lines", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id] | {"dash": "dash"}, zorder=4))
+
+            # Get the data for the bounds
+            def _get_mpc_series(var_type: str, var_name: str):
                 return self.df_baseline[(var_type, var_name)].xs(0, level=1)
 
-            if variable == temperature_var_name:
-                if lb_comfort_var_name is None:
-                    df_lb = None
-                else:
+            def _get_bound(var_name: str):
+                if var_name in self.df_baseline.columns.get_level_values(1):
                     try:
-                        df_lb = _get_bound(var_type="variable", var_name=lb_comfort_var_name)
+                        bound = _get_mpc_series(var_type="variable", var_name=var_name)
                     except KeyError:
-                        df_lb = _get_bound(var_type="parameter", var_name=lb_comfort_var_name)
-                if ub_comfort_var_name is None:
-                    df_ub = None
+                        bound = _get_mpc_series(var_type="parameter", var_name=var_name)
                 else:
-                    try:
-                        df_ub = _get_bound(var_type="variable", var_name=ub_comfort_var_name)
-                    except KeyError:
-                        df_ub = _get_bound(var_type="parameter", var_name=ub_comfort_var_name)
-            elif variable in [control.name for control in self.baseline_module_config.controls]:
-                df_lb = _get_bound(var_type="lower", var_name=variable)
-                df_ub = _get_bound(var_type="upper", var_name=variable)
-            else:
-                df_lb = None
-                df_ub = None
+                    bound = None
+                return bound
+
+            df_lb = None
+            df_ub = None
+            for custom_bound in self.custom_bounds:
+                if variable == custom_bound.for_variable:
+                    df_lb = _get_bound(custom_bound.lower_bound)
+                    df_ub = _get_bound(custom_bound.upper_bound)
+            if variable in [control.name for control in self.baseline_module_config.controls]:
+                df_lb = _get_mpc_series(var_type="lower", var_name=variable)
+                df_ub = _get_mpc_series(var_type="upper", var_name=variable)
 
             # Plot bounds
             if df_lb is not None:
                 fig.add_trace(go.Scatter(name="Lower bound", x=df_lb.index, y=df_lb, mode="lines", line=self.LINE_PROPERTIES[self.bounds_key], zorder=1))
             if df_ub is not None:
                 fig.add_trace(go.Scatter(name="Upper bound", x=df_ub.index, y=df_ub, mode="lines", line=self.LINE_PROPERTIES[self.bounds_key], zorder=1))
-
-            # Get the data for the plot
-            df_sim = self.df_simulation[self.intersection_mpcs_sim[variable][self.simulator_agent_config.id]]
-            df_neg = mpc_at_time_step(data=self.df_neg_flex, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.neg_flex_agent_config.id], index_offset=False).dropna()
-            df_pos = mpc_at_time_step(data=self.df_pos_flex, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.pos_flex_agent_config.id], index_offset=False).dropna()
-            df_bas = mpc_at_time_step(data=self.df_baseline, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.baseline_agent_config.id], index_offset=False).dropna()
-
-            # Plot the data
-            try:
-                fig.add_trace(go.Scatter(name=self.simulator_agent_config.id, x=df_sim.index, y=df_sim, mode="lines", line=self.LINE_PROPERTIES[self.simulator_agent_config.id], zorder=2))
-            except KeyError:
-                pass    # When the simulator variable name was not found from the intersection
-            fig.add_trace(go.Scatter(name=self.baseline_agent_config.id, x=df_bas.index, y=df_bas, mode="lines", line=self.LINE_PROPERTIES[self.baseline_agent_config.id] | {"dash": "dash"}, zorder=3))
-            fig.add_trace(go.Scatter(name=self.neg_flex_agent_config.id, x=df_neg.index, y=df_neg, mode="lines", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id] | {"dash": "dash"}, zorder=4))
-            fig.add_trace(go.Scatter(name=self.pos_flex_agent_config.id, x=df_pos.index, y=df_pos, mode="lines", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id] | {"dash": "dash"}, zorder=4))
 
             return fig
 

@@ -1,7 +1,7 @@
 import logging
 from flexibility_quantification.generate_flex_agents import FlexAgentGenerator
 from agentlib.utils.multi_agent_system import LocalMASAgency
-from flexibility_quantification.utils.interactive import Dashboard
+from flexibility_quantification.utils.interactive import Dashboard, CustomBound
 
 # Set the log-level
 logging.basicConfig(level=logging.WARN)
@@ -35,9 +35,11 @@ def run_example(until=until):
         simulator_agent_config="mpc_and_sim/simple_sim.json",
         results=results
     ).show(
-        temperature_var_name="T",
-        ub_comfort_var_name="T_upper",
-        lb_comfort_var_name="T_lower",
+        custom_bounds=CustomBound(
+            for_variable="T",
+            lb_name="T_lower",
+            ub_name="T_upper"
+        )
     )
 
 
