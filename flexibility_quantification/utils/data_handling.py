@@ -55,7 +55,7 @@ def _set_mean_values(series: pd.Series) -> pd.Series:
                     start = index
                 else:
                     end = index
-                    intervals.append(pd.Interval(left=start, right=end, closed="right"))
+                    intervals.append(pd.Interval(left=start, right=end, closed="left"))
                     start = end
         return intervals
 
