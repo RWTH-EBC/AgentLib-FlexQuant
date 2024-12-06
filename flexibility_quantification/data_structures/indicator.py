@@ -1,4 +1,4 @@
-from typing import Literal, Union
+from typing import Union
 
 import pydantic
 import numpy as np
@@ -7,8 +7,6 @@ import pandas as pd
 from agentlib_mpc.utils import TimeConversionTypes, TIME_CONVERSION
 from flexibility_quantification.data_structures.globals import FlexibilityDirections
 from flexibility_quantification.utils.data_handling import strip_multi_index, fill_nans, MEAN, INTERPOLATE
-
-
 
 
 class KPI(pydantic.BaseModel):
@@ -137,7 +135,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
     def calculate(
             self,
             power_profile_base: pd.Series,
-            power_profile_flex: pd.Series,
+            power_profile_shadow: pd.Series,
             costs_profile_electricity: pd.Series,
             horizon_full: np.ndarray,
             horizon_offer: np.ndarray
@@ -147,8 +145,8 @@ class FlexibilityKPIs(pydantic.BaseModel):
         Horizons needed for indexing of the power flexibility profiles.
         """
         # Power / energy KPIs
-        self.power_flex_full.value = self._calculate_power_flex(power_profile_base=power_profile_base, power_profile_flex=power_profile_flex)
-        self.power_flex_offer.value = self.power_flex_full.value.reindex(horizon_offer)
+        self.power_flex_full.value = self._calculate_power_flex(power_profile_base=power_profile_base, power_profile_shadow=power_profile_shadow)
+        self.power_flex_offer.value = self.power_flex_full.value.reindex(horizon_offer, copy=True)
         self.energy_flex.value = self._calculate_energy_flex()
 
         # Costs KPIs
@@ -158,18 +156,18 @@ class FlexibilityKPIs(pydantic.BaseModel):
         # change index for offer
         self.power_flex_offer.value = self.power_flex_full.value.reindex(horizon_full)
 
-    def _calculate_power_flex(self, power_profile_base: pd.Series, power_profile_flex: pd.Series) -> pd.Series:
+    def _calculate_power_flex(self, power_profile_base: pd.Series, power_profile_shadow: pd.Series) -> pd.Series:
         """
         Calculate the power flexibility based on the base and flexibility power profiles.
         """
         # Check if indices of profiles match
-        if not power_profile_flex.index.equals(power_profile_base.index):
+        if not power_profile_shadow.index.equals(power_profile_base.index):
             raise ValueError("Indices of power profiles do not match")
 
         if self.direction == "positive":
-            power_flex = power_profile_base - power_profile_flex
+            power_flex = power_profile_base - power_profile_shadow
         elif self.direction == "negative":
-            power_flex = power_profile_flex - power_profile_base
+            power_flex = power_profile_shadow - power_profile_base
         else:
             raise ValueError("Direction of KPIs not defined")
 
@@ -305,13 +303,13 @@ class FlexibilityData(pydantic.BaseModel):
     def calculate(self):
         self.kpis_pos.calculate(
             power_profile_base=self.power_profile_base,
-            power_profile_flex=self.power_profile_flex_pos,
+            power_profile_shadow=self.power_profile_flex_pos,
             costs_profile_electricity=self.costs_profile_electricity,
             horizon_full=self.full_horizon, horizon_offer=self.flex_horizon
         )
         self.kpis_neg.calculate(
             power_profile_base=self.power_profile_base,
-            power_profile_flex=self.power_profile_flex_neg,
+            power_profile_shadow=self.power_profile_flex_neg,
             costs_profile_electricity=self.costs_profile_electricity,
             horizon_full=self.full_horizon, horizon_offer=self.flex_horizon
         )
