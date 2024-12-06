@@ -17,8 +17,8 @@
                     }
                 },
                 "discretization_options": {
-                    "collocation_order": 2,
-                    "collocation_method": "legendre"
+                    "method": "multiple_shooting",
+                    "integrator": "euler"
                 },
                 "solver": {
                     "name": "fatrop",

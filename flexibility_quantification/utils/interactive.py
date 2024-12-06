@@ -137,16 +137,24 @@ class Dashboard(flex_results.Results):
 
         def plot_one_mpc_variable(fig: go.Figure, variable: str, time_step: float) -> go.Figure:
             # Get the mpc data for the plot
-            df_neg = mpc_at_time_step(data=self.df_neg_flex, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.neg_flex_module_config.module_id], index_offset=False)
-            df_pos = mpc_at_time_step(data=self.df_pos_flex, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.pos_flex_module_config.module_id], index_offset=False)
-            df_bas = mpc_at_time_step(data=self.df_baseline, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.baseline_module_config.module_id], index_offset=False)
+            series_neg = mpc_at_time_step(data=self.df_neg_flex, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.neg_flex_module_config.module_id], index_offset=False)
+            series_pos = mpc_at_time_step(data=self.df_pos_flex, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.pos_flex_module_config.module_id], index_offset=False)
+            series_bas = mpc_at_time_step(data=self.df_baseline, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.baseline_module_config.module_id], index_offset=False)
+
+            def _add_step_to_data(s: pd.Series) -> pd.Series:
+                s_concat = s.copy().shift(periods=1)
+                s_concat.index = s.index - 0.01 * (s.index[1] - s.index[0])
+                for ind, val in s_concat.items():
+                   s[ind] = val
+                s.sort_index(inplace=True)
+                return s
 
             # Manage nans
-            for df in [df_neg, df_pos, df_bas]:
+            for series in [series_neg, series_pos, series_bas]:
                 if variable in [control.name for control in self.baseline_module_config.controls]:
-                    df.ffill(inplace=True)
-                else:
-                    df.dropna(inplace=True)
+                    series.dropna(inplace=True)
+                    series = _add_step_to_data(s=series)
+                series.dropna(inplace=True)
 
             # Plot the data
             try:
@@ -154,9 +162,9 @@ class Dashboard(flex_results.Results):
                 fig.add_trace(go.Scatter(name=self.simulator_agent_config.id, x=df_sim.index, y=df_sim, mode="lines", line=self.LINE_PROPERTIES[self.simulator_agent_config.id], zorder=2))
             except KeyError:
                 pass    # E.g. when the simulator variable name was not found from the intersection
-            fig.add_trace(go.Scatter(name=self.baseline_agent_config.id, x=df_bas.index, y=df_bas, mode="lines", line=self.LINE_PROPERTIES[self.baseline_agent_config.id] | {"dash": "dash"}, zorder=3))
-            fig.add_trace(go.Scatter(name=self.neg_flex_agent_config.id, x=df_neg.index, y=df_neg, mode="lines", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id] | {"dash": "dash"}, zorder=4))
-            fig.add_trace(go.Scatter(name=self.pos_flex_agent_config.id, x=df_pos.index, y=df_pos, mode="lines", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id] | {"dash": "dash"}, zorder=4))
+            fig.add_trace(go.Scatter(name=self.baseline_agent_config.id, x=series_bas.index, y=series_bas, mode="lines", line=self.LINE_PROPERTIES[self.baseline_agent_config.id] | {"dash": "dash"}, zorder=3))
+            fig.add_trace(go.Scatter(name=self.neg_flex_agent_config.id, x=series_neg.index, y=series_neg, mode="lines", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id] | {"dash": "dash"}, zorder=4))
+            fig.add_trace(go.Scatter(name=self.pos_flex_agent_config.id, x=series_pos.index, y=series_pos, mode="lines", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id] | {"dash": "dash"}, zorder=4))
 
             # Get the data for the bounds
             def _get_mpc_series(var_type: str, var_name: str):
