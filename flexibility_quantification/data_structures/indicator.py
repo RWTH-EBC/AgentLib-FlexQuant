@@ -291,6 +291,8 @@ class FlexibilityData(pydantic.BaseModel):
 
     def format_predictor_inputs(self, series: pd.Series) -> pd.Series:
         series.index = series.index - series.index[0]
+        if series.index[-1] < self.full_horizon[-2]:
+            raise ValueError(f"Last predictions of predictor is earlier than expected: {series.index[-1]} < {self.full_horizon[-2]}")
         series = series.reindex(self.full_horizon)
         return series
 
