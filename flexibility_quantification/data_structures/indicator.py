@@ -153,9 +153,6 @@ class FlexibilityKPIs(pydantic.BaseModel):
         self.costs.value = self._calculate_costs(costs_profile_electricity=costs_profile_electricity)
         self.costs_rel.value = self._calculate_costs_rel()
 
-        # change index for offer
-        self.power_flex_offer.value = self.power_flex_full.value.reindex(horizon_full)
-
     def _calculate_power_flex(self, power_profile_base: pd.Series, power_profile_shadow: pd.Series) -> pd.Series:
         """
         Calculate the power flexibility based on the base and flexibility power profiles.
