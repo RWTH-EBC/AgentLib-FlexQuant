@@ -122,6 +122,7 @@ class Dashboard(flex_results.Results):
         else:
             self.custom_bounds = custom_bounds
 
+        # Plotting functions
         def plot_mpc_stats(fig: go.Figure, variable: str) -> go.Figure:
             fig.add_trace(go.Scatter(name=self.baseline_agent_config.id, x=self.df_baseline_stats.index, y=self.df_baseline_stats[variable], mode="markers", line=self.LINE_PROPERTIES[self.baseline_agent_config.id]))
             fig.add_trace(go.Scatter(name=self.pos_flex_agent_config.id, x=self.df_pos_flex_stats.index, y=self.df_pos_flex_stats[variable], mode="markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]))
@@ -203,7 +204,11 @@ class Dashboard(flex_results.Results):
                 fig.add_trace(go.Scatter(name=self.label_negative, x=df_flex_market_index, y=self.df_market[neg_var], mode="lines+markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id]))
             return fig
 
-        # Plotting functions
+        # Marking times
+        def mark_time(fig: go.Figure, at_time_step: float, line_prop: dict) -> go.Figure:
+            fig.add_vline(x=at_time_step, line=line_prop, layer="below")
+            return fig
+
         def mark_characteristic_times(fig: go.Figure, at_time_step: float, line_prop: dict = None) -> go.Figure:
             """
             Add markers of the characteristic times to the plot for a time step
@@ -223,10 +228,10 @@ class Dashboard(flex_results.Results):
                 rel_prep_time = df_characteristic_times.loc[at_time_step, glbs.PREP_TIME] / TIME_CONVERSION[self.current_timescale_of_data]
                 flex_event_duration = df_characteristic_times.loc[at_time_step, glbs.FLEX_EVENT_DURATION] / TIME_CONVERSION[self.current_timescale_of_data]
 
-                fig.add_vline(x=offer_time, line=line_prop, layer="below")
-                fig.add_vline(x=offer_time + rel_prep_time, line=line_prop, layer="below")
-                fig.add_vline(x=offer_time + rel_prep_time + rel_market_time, line=line_prop, layer="below")
-                fig.add_vline(x=offer_time + rel_prep_time + rel_market_time + flex_event_duration, line=line_prop, layer="below")
+                mark_time(fig=fig, at_time_step=offer_time, line_prop=line_prop)
+                mark_time(fig=fig, at_time_step=offer_time + rel_prep_time, line_prop=line_prop)
+                mark_time(fig=fig, at_time_step=offer_time + rel_prep_time + rel_market_time, line_prop=line_prop)
+                mark_time(fig=fig, at_time_step=offer_time + rel_prep_time + rel_market_time + flex_event_duration, line_prop=line_prop)
             except KeyError:
                 pass  # No data of characteristic times available, e.g. if offer accepted
             return fig
@@ -240,6 +245,7 @@ class Dashboard(flex_results.Results):
                     fig = mark_characteristic_times(fig=fig, at_time_step=i[0], line_prop=self.LINE_PROPERTIES[self.characteristic_times_accepted_key])
             return fig
 
+        # Master plotting function
         def create_plot(variable: str, at_time_step: float, show_current_characteristic_times: bool, zoom_to_prediction_interval: bool = False) -> go.Figure:
             """
             Create a plot for one variable
@@ -251,6 +257,7 @@ class Dashboard(flex_results.Results):
             """
             # Create the figure
             fig = go.Figure()
+            mark_time(fig=fig, at_time_step=at_time_step, line_prop={"color": "green"})
 
             # Plot variable
             if variable in self.df_baseline_stats.columns:
@@ -282,6 +289,7 @@ class Dashboard(flex_results.Results):
                               xaxis_range=[xlim_left, xlim_right],
                               height=350, margin=dict(t=20, b=20))
             fig.update_xaxes(dtick=round(self.baseline_module_config.prediction_horizon / 6) * self.baseline_module_config.time_step / TIME_CONVERSION[self.current_timescale_of_data])
+            fig.update_yaxes(tickformat="~r")
             return fig
 
         # Create the app
