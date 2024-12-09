@@ -16,7 +16,7 @@ class KPI(pydantic.BaseModel):
         default=None,
         description="Name of the indicator KPI",
     )
-    value: Union[float, pd.Series] = pydantic.Field(
+    value: Union[float, pd.Series, None] = pydantic.Field(
         default=None,
         description="Value of the indicator KPI",
     )
@@ -24,7 +24,7 @@ class KPI(pydantic.BaseModel):
         default=None,
         description="Unit of the indicator KPI",
     )
-    direction: FlexibilityDirections = pydantic.Field(
+    direction: Union[FlexibilityDirections, None] = pydantic.Field(
         default=None,
         description="Direction of the shadow mpc"
     )
@@ -32,7 +32,7 @@ class KPI(pydantic.BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
-    def __init__(self, name: str, value: Union[float, pd.Series], unit: str, direction: FlexibilityDirections, **data):
+    def __init__(self, name: str, unit: str, direction: Union[FlexibilityDirections, None] = None, value: Union[float, pd.Series, None] = None, **data):
         super().__init__(**data)
         self.name = name
         self.value = value
@@ -80,7 +80,6 @@ class FlexibilityKPIs(pydantic.BaseModel):
     power_flex_full: KPI = pydantic.Field(
         default=KPI(
             name="power_flex_full",
-            direction="",
             value=pd.Series(),
             unit="kW"
         ),
@@ -89,28 +88,52 @@ class FlexibilityKPIs(pydantic.BaseModel):
     power_flex_offer: KPI = pydantic.Field(
         default=KPI(
             name="power_flex_offer",
-            direction="",
             value=pd.Series(),
             unit="kW"
         ),
         description="Power flexibility",
     )
+    power_flex_offer_max: KPI = pydantic.Field(
+        default=KPI(
+            name="power_flex_offer_max",
+            unit="kW"
+        ),
+        description="Maximum power flexibility",
+    )
+    power_flex_offer_min: KPI = pydantic.Field(
+        default=KPI(
+            name="power_flex_offer_min",
+            unit="kW"
+        ),
+        description="Minimum power flexibility",
+    )
+    power_flex_offer_avg: KPI = pydantic.Field(
+        default=KPI(
+            name="power_flex_offer_avg",
+            unit="kW"
+        ),
+        description="Average power flexibility",
+    )
     energy_flex: KPI = pydantic.Field(
         default=KPI(
             name="energy_flex",
-            direction="",
-            value=0,
             unit="kWh"
         ),
         description="Energy flexibility",
     )
 
     # Costs KPIs
+    costs_series: KPI = pydantic.Field(
+        default=KPI(
+            name="costs_series",
+            value=pd.Series(),
+            unit="ct"
+        ),
+        description="Costs of flexibility",
+    )
     costs: KPI = pydantic.Field(
         default=KPI(
             name="costs",
-            direction="",
-            value=0,
             unit="ct"
         ),
         description="Costs of flexibility",
@@ -118,8 +141,6 @@ class FlexibilityKPIs(pydantic.BaseModel):
     costs_rel: KPI = pydantic.Field(
         default=KPI(
             name="costs_rel",
-            direction="",
-            value=0,
             unit="ct/kWh"
         ),
         description="Costs of flexibility per energy",
@@ -145,15 +166,15 @@ class FlexibilityKPIs(pydantic.BaseModel):
         Horizons needed for indexing of the power flexibility profiles.
         """
         # Power / energy KPIs
-        self.power_flex_full.value = self._calculate_power_flex(power_profile_base=power_profile_base, power_profile_shadow=power_profile_shadow)
-        self.power_flex_offer.value = self.power_flex_full.value.reindex(horizon_offer, copy=True)
-        self.energy_flex.value = self._calculate_energy_flex()
+        self._calculate_power_flex(power_profile_base=power_profile_base, power_profile_shadow=power_profile_shadow, horizon_offer=horizon_offer)
+        self._calculate_energy_flex()
+        self._calculate_power_flex_stats()
 
         # Costs KPIs
-        self.costs.value = self._calculate_costs(costs_profile_electricity=costs_profile_electricity)
-        self.costs_rel.value = self._calculate_costs_rel()
+        self._calculate_costs(costs_profile_electricity=costs_profile_electricity)
+        self._calculate_costs_rel()
 
-    def _calculate_power_flex(self, power_profile_base: pd.Series, power_profile_shadow: pd.Series) -> pd.Series:
+    def _calculate_power_flex(self, power_profile_base: pd.Series, power_profile_shadow: pd.Series, horizon_offer: np.ndarray) -> pd.Series:
         """
         Calculate the power flexibility based on the base and flexibility power profiles.
         """
@@ -172,27 +193,61 @@ class FlexibilityKPIs(pydantic.BaseModel):
         relative_difference = (power_flex / power_profile_base).abs()
         power_flex.loc[(power_flex < 0) & (relative_difference < 0.01)] = 0
 
+        # Set values
+        self.power_flex_full.value = power_flex
+        self.power_flex_offer.value = power_flex.loc[horizon_offer[0]:horizon_offer[-1]]
         return power_flex
+
+    def _calculate_power_flex_stats(self) -> [float]:
+        """
+        Calculate the characteristic values of the power flexibility for the offer.
+        """
+        if self.power_flex_offer.value.empty:
+            raise ValueError("Power flexibility value is empty")
+        if self.energy_flex.value is None:
+            raise ValueError("Energy flexibility value is empty")
+
+        # Calculate characteristic values
+        power_flex_offer_max = self.power_flex_offer.value.max()
+        power_flex_offer_min = self.power_flex_offer.value.min()
+        delta_t = (self.power_flex_offer.value.index[-1] - self.power_flex_offer.value.index[0]) / TIME_CONVERSION["hours"]
+        power_flex_offer_avg = self.energy_flex.value / delta_t
+
+        # Set values
+        self.power_flex_offer_max.value = power_flex_offer_max
+        self.power_flex_offer_min.value = power_flex_offer_min
+        self.power_flex_offer_avg.value = power_flex_offer_avg
+        return power_flex_offer_max, power_flex_offer_min, power_flex_offer_avg
 
     def _calculate_energy_flex(self) -> float:
         """
         Calculate the energy flexibility by integrating the power flexibility of the offer window.
         """
+        if self.power_flex_offer.value.empty:
+            raise ValueError("Power flexibility value is empty")
+
         energy_flex = self.power_flex_offer.integrate(time_unit="hours")
+
+        # Set value
+        self.energy_flex.value = energy_flex
         return energy_flex
 
-    def _calculate_costs(self, costs_profile_electricity: pd.Series) -> float:
+    def _calculate_costs(self, costs_profile_electricity: pd.Series) -> [float, pd.Series]:
         """
         Calculate the costs of the flexibility event based on the electricity costs profile and the power flexibility profile.
         """
         # Check if indices of profiles match
-        if not self.power_flex_full.value.index.equals(costs_profile_electricity.index):
-            raise ValueError("Indices of profiles do not match")
+        # if not self.power_flex_full.value.index.equals(costs_profile_electricity.index):
+        #     raise ValueError("Indices of profiles do not match")
 
-        # Calculate costs
-        costs_series = costs_profile_electricity * self.power_flex_full.value
-        costs = KPI(name="", value=costs_series, unit="", direction=self.direction).integrate(time_unit="hours")
-        return abs(costs)
+        # Series
+        costs_series = (costs_profile_electricity * self.power_flex_full.value)
+        self.costs_series.value = costs_series
+
+        # Scalar
+        costs = abs(self.costs_series.integrate(time_unit="hours"))
+        self.costs.value = costs
+        return costs, costs_series
 
     def _calculate_costs_rel(self) -> float:
         """
@@ -202,6 +257,9 @@ class FlexibilityKPIs(pydantic.BaseModel):
             costs_rel = 0
         else:
             costs_rel = self.costs.value / self.energy_flex.value
+
+        # Set value
+        self.costs_rel.value = costs_rel
         return costs_rel
 
     def get_kpi_dict(self, direction_name: bool = False) -> dict[str, KPI]:
@@ -240,6 +298,10 @@ class FlexibilityData(pydantic.BaseModel):
     flex_horizon: np.ndarray = pydantic.Field(
         default=None,
         description="Flexibility horizon",
+    )
+    mpc_index: pd.Index = pydantic.Field(
+        default=None,
+        description="Index of the MPC data",
     )
 
     # Profiles
@@ -286,15 +348,15 @@ class FlexibilityData(pydantic.BaseModel):
 
     def format_predictor_inputs(self, series: pd.Series) -> pd.Series:
         series.index = series.index - series.index[0]
-        if series.index[-1] < self.full_horizon[-2]:
-            raise ValueError(f"Last predictions of predictor is earlier than expected: {series.index[-1]} < {self.full_horizon[-2]}")
-        series = series.reindex(self.full_horizon)
+        # if series.index[-1] < self.mpc_index[-1]:
+        #     raise ValueError("Horizon of the predictor series is shorter than the MPC")
         return series
 
     def format_mpc_inputs(self, series: pd.Series) -> pd.Series:
         series = strip_multi_index(series)
+        if self.mpc_index is None:
+            self.mpc_index = series.index
         series = fill_nans(series=series, method=MEAN)
-        series = series.reindex(self.full_horizon)
         return series
 
     def calculate(self):

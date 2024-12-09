@@ -56,6 +56,30 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
             name=kpis_pos.power_flex_offer.get_name(), unit='W', type="pd.Series",
             description="Positive power flexibility"
         ),
+        agentlib.AgentVariable(
+            name=kpis_neg.power_flex_offer_min.get_name(), unit='W', type="float",
+            description="Minimum of negative power flexibility"
+        ),
+        agentlib.AgentVariable(
+            name=kpis_pos.power_flex_offer_min.get_name(), unit='W', type="float",
+            description="Minimum of positive power flexibility"
+        ),
+        agentlib.AgentVariable(
+            name=kpis_neg.power_flex_offer_max.get_name(), unit='W', type="float",
+            description="Maximum of negative power flexibility"
+        ),
+        agentlib.AgentVariable(
+            name=kpis_pos.power_flex_offer_max.get_name(), unit='W', type="float",
+            description="Maximum of positive power flexibility"
+        ),
+        agentlib.AgentVariable(
+            name=kpis_neg.power_flex_offer_avg.get_name(), unit='W', type="float",
+            description="Average of negative power flexibility"
+        ),
+        agentlib.AgentVariable(
+            name=kpis_pos.power_flex_offer_avg.get_name(), unit='W', type="float",
+            description="Average of positive power flexibility"
+        ),
 
         # Energy KPIs
         agentlib.AgentVariable(
