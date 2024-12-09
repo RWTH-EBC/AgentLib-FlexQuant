@@ -307,9 +307,11 @@ class Dashboard(flex_results.Results):
         app = Dash(__name__, title="Results")
         app.layout = [
             html.H1("Results"),
+            html.H3("Settings"),
+            html.Div(children=[html.Code(f"{option}: {setting}, ") for option, setting in self.baseline_module_config.optimization_backend["discretization_options"].items()]),
+            # Options
             html.Div(
                 children=[
-                    # Options
                     html.Div(
                         children=[
                             html.H3("Options"),
