@@ -237,8 +237,8 @@ class FlexibilityKPIs(pydantic.BaseModel):
         Calculate the costs of the flexibility event based on the electricity costs profile and the power flexibility profile.
         """
         # Check if indices of profiles match
-        # if not self.power_flex_full.value.index.equals(costs_profile_electricity.index):
-        #     raise ValueError("Indices of profiles do not match")
+        if not self.power_flex_full.value.index.equals(costs_profile_electricity.index):
+            raise ValueError("Indices of profiles do not match")
 
         # Series
         costs_series = (costs_profile_electricity * self.power_flex_full.value)
@@ -299,10 +299,6 @@ class FlexibilityData(pydantic.BaseModel):
         default=None,
         description="Flexibility horizon",
     )
-    mpc_index: pd.Index = pydantic.Field(
-        default=None,
-        description="Index of the MPC data",
-    )
 
     # Profiles
     power_profile_base: pd.Series = pydantic.Field(
@@ -348,15 +344,15 @@ class FlexibilityData(pydantic.BaseModel):
 
     def format_predictor_inputs(self, series: pd.Series) -> pd.Series:
         series.index = series.index - series.index[0]
-        # if series.index[-1] < self.mpc_index[-1]:
-        #     raise ValueError("Horizon of the predictor series is shorter than the MPC")
+        if series.index[-1] < self.full_horizon[-1]:
+            raise ValueError(f"Last predictions of predictor is earlier than expected: {series.index[-1]} < {self.full_horizon[-1]}")
+        series = series.reindex(self.full_horizon)
         return series
 
     def format_mpc_inputs(self, series: pd.Series) -> pd.Series:
         series = strip_multi_index(series)
-        if self.mpc_index is None:
-            self.mpc_index = series.index
         series = fill_nans(series=series, method=MEAN)
+        series = series.reindex(self.full_horizon)
         return series
 
     def calculate(self):
