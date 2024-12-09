@@ -12,6 +12,7 @@ SHADOW_MPC_COST_FUNCTION = ("return ca.if_else(self.Time.sym < self.prep_time.sy
 full_trajectory_suffix: str = "_full"
 full_trajectory_prefix: str = "_"
 
+
 def return_baseline_cost_function(profile_deviation_weight, power_variable):
     cost_func = ("return ca.if_else(self.in_provision.sym, "
                  "ca.if_else(self.Time.sym < self.rel_start.sym, obj_std, "

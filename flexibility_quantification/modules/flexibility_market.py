@@ -3,9 +3,11 @@ from typing import List, Optional, Union
 import pandas as pd
 import numpy as np
 import os
-from flexibility_quantification.data_structures.flex_offer import OfferStatus
+from flexibility_quantification.data_structures.flex_offer import OfferStatus, FlexOffer
 import pydantic
 from pathlib import Path
+import matplotlib.pyplot as plt
+
 from flexibility_quantification.data_structures.market import MarketSpecifications
 
 
@@ -54,6 +56,8 @@ class FlexibilityMarketModule(agentlib.BaseModule):
 
     # TODO: cleanup
     df: pd.DataFrame = None
+    df_flex_envelop: pd.DataFrame = None
+
     end: Union[int, float] = 0
 
     def set_random_seed(self, random_seed):
@@ -92,6 +96,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         )
 
         self.df = None
+        self.df_flex_envelop = None
         self.cooldown_ticker = 0
 
     def write_results(self, offer):
@@ -104,6 +109,13 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         indices = pd.MultiIndex.from_tuples(self.df.index, names=["time_step", "time"])
         self.df.set_index(indices, inplace=True)
         self.df.to_csv(self.config.results_file)
+
+        # write flex_envelop offers to csv file
+        if self.df_flex_envelop is None:
+            self.df_flex_envelop = pd.DataFrame()
+        df_flex_envelop = offer.flex_envelope
+        self.df_flex_envelop = pd.concat([self.df_flex_envelop, df_flex_envelop])
+        self.df_flex_envelop.to_csv(self.config.market_specs.options.model_extra["results_file_offer"])
 
     def random_flexibility_callback(self, inp, name):
         """
@@ -173,9 +185,165 @@ class FlexibilityMarketModule(agentlib.BaseModule):
 
         self.write_results(offer)
 
-    def custom_flexibility_callback(self, inp, name):
+    def custom_flexibility_callback(self, inp, name) -> None:
         """Placeholder for a custom flexibility callback"""
-        pass
+
+        offer = inp.value
+        profile = None
+        if self.env.now >= self.env.config.offset + self.config.market_specs.options.start_time and not self.get("in_provision").value:
+
+            bDebug: bool = True
+
+            match self.config.market_specs.options.event_type:
+                case "neg":
+                    profile_energy, time_steps = flex_profile_neg(offer)
+
+                    profile_power: pd.Series = convert_profile(profile_energy=profile_energy, time_steps=time_steps)
+                    profile: pd.Series = offer.base_power_profile + profile_power
+
+                    if bDebug:
+                        # create the folder to store the figure
+                        Path("plots").mkdir(parents=True, exist_ok=True)
+                        Path("plots/plots_neg").mkdir(parents=True, exist_ok=True)
+
+                        flex_envelope = offer.flex_envelope
+                        flex_envelope = flex_envelope.drop(columns="time_steps")
+                        plot_flex = flex_envelope.plot(title="Flex Envelope")
+                        plt.xlabel("Zeit in s")
+                        plt.ylabel("Kumulierte Flexibilitäts-Energie $E_{el}$ in kWh")
+                        plt.legend(["energyflex_pos", "energyflex_neg", "energyflex_base"])
+                        plt.savefig("plots/plots_neg/flex_offer_1_selected.svg", format='svg')
+                        plt.close()
+
+                        flex_envelope = offer.flex_envelope
+                        flex_envelope = flex_envelope.drop(columns="time_steps")
+                        plot_flex = flex_envelope.plot(title="Flex Envelope", legend=False)
+                        plot_flex_min = profile_energy.plot(title="Flex Envelope", legend=False)
+                        plt.xlabel("Zeit in s")
+                        plt.ylabel("Kumulierte Flexibilitäts-Energie $E_{el}$ in kWh")
+                        plt.legend(["energyflex_pos", "energyflex_neg", "energyflex_base", "ausgewähltes Angebot"])
+                        plt.savefig("plots/plots_neg/flex_offer_2_selected.svg", format='svg')
+                        plt.close()
+
+                        profile.plot(title="Profile", legend="selected")
+                        base_profile = offer.base_power_profile
+                        base_profile.plot(title="Profile", legend="base")
+                        plt.legend(["ausgewählt", "basis"])
+                        plt.xlabel("Zeit in s")
+                        plt.ylabel("Leistungsprofil $P_{el}$ in kW")
+                        plt.savefig("plots/plots_neg/profile_selected.svg", format='svg')
+                        plt.close()
+
+                case "pos":
+                    profile_energy, time_steps = flex_profile_pos(offer)
+
+                    profile_power: pd.Series = convert_profile(profile_energy=profile_energy, time_steps=time_steps)
+                    profile: pd.Series = offer.base_power_profile - profile_power
+
+                    if bDebug:
+                        # create the folder to store the figure
+                        Path("plots").mkdir(parents=True, exist_ok=True)
+                        Path("plots/plots_pos").mkdir(parents=True, exist_ok=True)
+
+                        flex_envelope = offer.flex_envelope
+                        flex_envelope = flex_envelope.drop(columns="time_steps")
+                        plot_flex = flex_envelope.plot(title="Flex Envelope")
+                        plt.xlabel("Zeit in s")
+                        plt.ylabel("Kumulierte Flexibilitäts-Energie $E_{el}$ in kWh")
+                        plt.legend(["energyflex_pos", "energyflex_neg", "energyflex_base"])
+                        plt.savefig("plots/plots_pos/flex_offer_1_selected.svg", format='svg')
+                        plt.close()
+
+                        flex_envelope = offer.flex_envelope
+                        flex_envelope = flex_envelope.drop(columns="time_steps")
+                        plot_flex = flex_envelope.plot(title="Flex Envelope", legend=False)
+                        plot_flex_max = profile_energy.plot(title="Flex Envelope", legend=False)
+                        plt.xlabel("Zeit in s")
+                        plt.ylabel("Kumulierte Flexibilitäts-Energie $E_{el}$ in kWh")
+                        plt.legend(["energyflex_pos", "energyflex_neg", "energyflex_base", "ausgewähltes Angebot"])
+                        plt.savefig("plots/plots_pos/flex_offer_2_selected.svg", format='svg')
+                        plt.close()
+
+                        profile.plot(title="Profile", legend="selected")
+                        base_profile = offer.base_power_profile
+                        base_profile.plot(title="Profile", legend="base")
+                        plt.legend(["selected", "base"])
+                        plt.xlabel("Zeit in s")
+                        plt.ylabel("Leistungsprofil $P_{el}$ in kW")
+                        plt.savefig("plots/plots_pos/profile_selected.svg", format='svg')
+                        plt.close()
+
+                case "average":
+                    profile_energy, time_steps = flex_profile_average(offer)
+
+                    profile_energy_min, time_steps = flex_profile_neg(offer)
+
+                    profile_power_min: pd.Series = convert_profile(profile_energy=profile_energy_min, time_steps=time_steps)
+                    profile_min: pd.Series = offer.base_power_profile + profile_power_min
+
+                    profile_energy_max, time_steps = flex_profile_pos(offer)
+
+                    profile_power_max: pd.Series = convert_profile(profile_energy=profile_energy_max, time_steps=time_steps)
+                    profile_max: pd.Series = offer.base_power_profile - profile_power_max
+
+                    profile = (profile_min + profile_max)/2
+
+                    if bDebug:
+                        # create the folder to store the figure
+                        Path("plots").mkdir(parents=True, exist_ok=True)
+                        Path("plots/plots_average").mkdir(parents=True, exist_ok=True)
+
+                        flex_envelope = offer.flex_envelope
+                        flex_envelope = flex_envelope.drop(columns="time_steps")
+                        plot_flex = flex_envelope.plot(title="Flex Envelope")
+                        plt.xlabel("Zeit in s")
+                        plt.ylabel("Kumulierte Flexibilitäts-Energie $E_{el}$ in kWh")
+                        plt.legend(["energyflex_pos", "energyflex_neg", "energyflex_base"])
+                        plt.savefig("plots/plots_average/flex_offer_1_selected.svg", format='svg')
+                        plt.close()
+
+                        flex_envelope = offer.flex_envelope
+                        flex_envelope = flex_envelope.drop(columns="time_steps")
+                        plot_flex = flex_envelope.plot(title="Flex Envelope", legend=False)
+                        plot_flex_avg = profile_energy.plot(title="Flex Envelope", legend=False)
+                        plt.xlabel("Zeit in s")
+                        plt.ylabel("Kumulierte Flexibilitäts-Energie $E_{el}$ in kWh")
+                        plt.legend(["energyflex_pos", "energyflex_neg", "energyflex_base", "ausgewähltes Angebot"])
+                        plt.savefig("plots/plots_average/flex_offer_2_selected.svg", format='svg')
+                        plt.close()
+
+                        profile.plot(title="Profile", legend="selected")
+                        base_profile = offer.base_power_profile
+                        base_profile.plot(title="Profile", legend="base")
+                        plt.legend(["selected", "base"])
+                        plt.xlabel("Zeit in s")
+                        plt.ylabel("Leistungsprofil $P_{el}$ in kW")
+                        plt.savefig("plots/plots_average/profile_selected.svg", format='svg')
+                        plt.close()
+
+                case "custom":
+                    profile_energy, time_steps = flex_profile_custom(offer)
+
+                    # TODO: add convert_profile
+                    # TODO: figure out + / -
+
+                case _:
+                    print("Wrong Market Event Type selected ! \nAverage Profile was automatically selected.")
+                    profile_energy, time_steps = flex_profile_average(offer)
+
+                    # TODO: add convert_profile
+                    # TODO: figure out + / -
+                    # TODO: Take code from average case
+
+        if profile is not None:
+            profile = profile.ffill()
+            profile.index += self.env.time
+            self.set("_P_external", profile)
+            # only activate a single offer, therefore setting end to inf
+            self.end = np.inf
+            self.set("in_provision", True)
+
+        self.write_results(offer)
 
     def dummy_callback(self, inp, name):
         """Dummy function, that is included, when market type is not specified"""
@@ -193,3 +361,44 @@ class FlexibilityMarketModule(agentlib.BaseModule):
             if self.end < self.env.time:
                 self.set("in_provision", False)
             yield self.env.timeout(self.env.config.t_sample)
+
+
+def flex_profile_neg(offer: FlexOffer) -> tuple[pd.Series, pd.Series]:
+    return offer.flex_envelope.energyflex_neg, offer.flex_envelope.time_steps
+
+
+def flex_profile_pos(offer: FlexOffer) -> tuple[pd.Series, pd.Series]:
+    return offer.flex_envelope.energyflex_pos, offer.flex_envelope.time_steps
+
+
+def flex_profile_average(offer: FlexOffer) -> tuple[pd.Series, pd.Series]:
+    energyflex_pos: pd.Series = offer.flex_envelope.energyflex_pos
+    energyflex_neg: pd.Series = offer.flex_envelope.energyflex_neg
+
+    return (energyflex_pos + energyflex_neg) / 2, offer.flex_envelope.time_steps
+
+
+def flex_profile_custom(offer: FlexOffer) -> tuple[pd.Series, pd.Series]:
+    # Todo: write a custom profile function
+    pass
+
+
+def convert_profile(profile_energy: pd.Series, time_steps: pd.Series) -> pd.Series:
+    """
+    convert_profile: takes the accumulated energy profile from the selected offer,
+                     computes the slope of the offer to get the kW profile, for passing it to the building.
+    """
+    flex_power = []
+    flex_power_levels = []
+
+    # reset index of profile_energy for easier looping
+    profile_energy = profile_energy.reset_index(drop=True)
+    time_steps = time_steps.reset_index(drop=True)
+
+    # convert the (k)Wh to (k)W before creating a series
+
+    for iIdx in range(len(profile_energy) - 1):
+        flex_power.append(abs((profile_energy[iIdx + 1] - profile_energy[iIdx]) / (900 / 3600)))
+
+    return pd.Series(data=flex_power, index=np.delete(time_steps.values, 0))
+

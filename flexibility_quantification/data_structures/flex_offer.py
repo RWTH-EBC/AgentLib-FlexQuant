@@ -3,6 +3,7 @@ import pydantic
 from agentlib.core.datamodels import _TYPE_MAP
 import pandas as pd
 from enum import Enum
+from typing import Optional
 
 
 class OfferStatus(Enum):
@@ -49,6 +50,11 @@ class FlexOffer(BaseModel):
         default=OfferStatus.not_accepted,
         scalar=True,
         description="Status of the FlexOffer",
+    )
+    flex_envelope: Optional[pd.DataFrame] = pydantic.Field(
+        default=None,
+        scalar=False,
+        description="Flexibility envelope of the FlexOffer",
     )
 
     class Config:

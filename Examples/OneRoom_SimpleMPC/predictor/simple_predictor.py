@@ -26,7 +26,6 @@ class PredictorModuleConfig(al.BaseModuleConfig):
         )
     ]
 
-
     shared_variable_fields:List[str] = ["outputs"]
 
 

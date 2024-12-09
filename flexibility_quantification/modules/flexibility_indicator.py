@@ -141,7 +141,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
 
     def send_flex_offer(
             self, name, base_power_profile, pos_price, pos_diff_profile,
-            neg_price, neg_diff_profile, timestamp: float = None):
+            neg_price, neg_diff_profile, flex_envelope: pd.DataFrame = None, timestamp: float = None):
         """
         Send a flex offer as an agent Variable. The first offer is dismissed,
         because the 
@@ -164,7 +164,8 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 pos_price=pos_price,
                 pos_diff_profile=pos_diff_profile,
                 neg_price=neg_price,
-                neg_diff_profile=neg_diff_profile
+                neg_diff_profile=neg_diff_profile,
+                flex_envelope=flex_envelope
             )
             if timestamp is None:
                 timestamp = self.env.time
@@ -398,9 +399,15 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         self.set("costs_pos_rel", str(costs_pos_rel))
 
         base_profile = self.base_vals.reindex(index=flex_horizon)
+
+        flex_envelope = calc_flex_envelop(powerflex_pos=powerflex_profile_pos, powerflex_neg=powerflex_profile_neg,
+                                          powerflex_base=base_profile, time_step=time_step, horizon=flex_horizon,
+                                          scaler=scaler)
+
         self.send_flex_offer("FlexibilityOffer", base_profile,
                              flex_price_pos, powerflex_profile_pos,
-                             flex_price_neg, powerflex_profile_neg)
+                             flex_price_neg, powerflex_profile_neg,
+                             flex_envelope)
 
         self.df = self.write_results(df=self.df, ts=time_step, n=horizon)
         self.df.to_csv(self.config.results_file)
@@ -409,3 +416,69 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         self.neg_vals = None
         self.pos_vals = None
         self._r_pel = None
+
+
+def calc_flex_envelop(powerflex_pos: pd.Series, powerflex_neg: pd.Series, time_step: int, horizon: np.ndarray, scaler: int, powerflex_base: pd.Series = None) -> pd.DataFrame:
+    """ powerflex_pos, powerflex_neg and powerflex_base are in (k)W, and the result is in (k)Wh. """
+
+    powerflex_pos_prepared = powerflex_pos.to_list()
+    powerflex_neg_prepared = powerflex_neg.to_list()
+    powerflex_base_prepared = powerflex_base.to_list()
+
+    # make the computation
+    energyflex_pos = []
+    powerflex_pos_prepared.insert(0, 0)
+    temp_energy = [x*(time_step/3600) for x in powerflex_pos_prepared]
+    energyflex_pos = np.cumsum(temp_energy)
+
+    energyflex_neg = []
+    powerflex_neg_prepared.insert(0, 0)
+    temp_energy = [x*(time_step/3600) for x in powerflex_neg_prepared]
+    energyflex_neg = np.cumsum(temp_energy)
+
+    energyflex_base = []
+    powerflex_base_prepared.insert(0, 0)
+    temp_energy = [x*(time_step/3600) for x in powerflex_base_prepared]
+    energyflex_base = np.cumsum(temp_energy)
+
+    # TODO: berechnung der Zahl für den ersten Zeitschritt
+    #           d.h. einen Zeitschrit vor dem ersten eigentlichen Schritt, t-1
+    horizon = np.append([900], horizon)
+
+    return pd.DataFrame(data={'energyflex_pos': energyflex_pos.tolist(), 'energyflex_neg': energyflex_neg.tolist(), 'energyflex_base': energyflex_base.tolist(), 'time_steps': horizon}, index=horizon)
+
+
+def prepare_flex_envelope_data(power_flex_pos, power_flex_neg, time_step) -> tuple[list, list]:
+    # no need for this function anymore
+    # This function is no longer used
+    power_flex_pos_prepared = []
+    power_flex_neg_prepared = []
+
+    # TODO: write this code to use both power_flex_pos and _neg with the same code fragment
+    power_flex_pos_time_index = power_flex_pos.index
+    for iIdx, iIdxVal in enumerate(power_flex_pos_time_index):
+        if iIdxVal % time_step == 0:
+            if np.isnan(power_flex_pos[iIdxVal]):
+                if iIdxVal == 0:
+                    power_flex_pos_prepared.append(0)
+                elif iIdxVal == power_flex_pos_time_index[-1]:
+                    power_flex_pos_prepared.append(power_flex_pos[power_flex_pos_time_index[-2]])
+                else:
+                    power_flex_pos_prepared.append((power_flex_pos[power_flex_pos_time_index[iIdx - 1]] + power_flex_pos[power_flex_pos_time_index[iIdx + 1]]) / 2)
+            else:
+                power_flex_pos_prepared.append(power_flex_pos[iIdxVal])
+
+    power_flex_neg_time_index = power_flex_neg.index
+    for iIdx, iIdxVal in enumerate(power_flex_neg_time_index):
+        if iIdxVal % time_step == 0:
+            if np.isnan(power_flex_neg[iIdxVal]):
+                if iIdxVal == 0:
+                    power_flex_neg_prepared.append(0)
+                elif iIdxVal == power_flex_neg_time_index[-1]:
+                    power_flex_neg_prepared.append(power_flex_neg[power_flex_neg_time_index[-2]])
+                else:
+                    power_flex_neg_prepared.append((power_flex_neg[power_flex_neg_time_index[iIdx - 1]] + power_flex_neg[power_flex_neg_time_index[iIdx + 1]]) / 2)
+            else:
+                power_flex_neg_prepared.append(power_flex_neg[iIdxVal])
+
+    return power_flex_pos_prepared, power_flex_neg_prepared
