@@ -13,7 +13,7 @@
                 {
                     "module_id": "FlexibilityIndicator",
                     "type": "flexibility_quantification.flexibility_indicator",
-                    "results_file": "results/flexibility_indicator.csv",
+                    "results_file": "results/flexibility_indicator_average.csv",
                     "price_variable": "r_pel",
                     "parameters": [
                         {
@@ -56,7 +56,12 @@
         "profile_deviation_weight": 1000
     },
     "shadow_mpc_config_generator_data": {
-        "weights": [{"name": "s_P", "value": 10}],
+        "weights": [
+            {
+                "name": "s_P",
+                "value": 10
+            }
+        ],
         "pos_flex": {
             "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, self.s_P * self.P_el])"
         },
