@@ -7,6 +7,7 @@ import pandas as pd
 from pathlib import Path
 import pydantic
 import flexibility_quantification.data_structures.globals as glbs
+from flexibility_quantification.utils.data_handling import strip_multi_index, fill_nans, MEAN, INTERPOLATE
 from flexibility_quantification.data_structures.indicator import FlexibilityData, FlexibilityKPIs
 
 DiscretizationTypes = Literal["collocation", "multiple_shooting"]
@@ -22,6 +23,17 @@ kpis_neg = FlexibilityKPIs(direction="negative")
 power_alias_base = "__P_el_base"
 power_alias_neg = "__P_el_neg"
 power_alias_pos = "__P_el_pos"
+
+
+def format_predictor_inputs(series: pd.Series) -> pd.Series:
+    series.index = series.index - series.index[0]
+    return series
+
+
+def format_mpc_inputs(series: pd.Series) -> pd.Series:
+    series = strip_multi_index(series)
+    series = fill_nans(series=series, method=MEAN)
+    return series
 
 
 class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
@@ -186,15 +198,15 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
 
         if not self.in_provision:
             if name == power_alias_base:
-                self.data.power_profile_base = self.data.format_mpc_inputs(inp.value)
+                self.data.power_profile_base = format_mpc_inputs(inp.value)
             elif name == power_alias_neg:
-                self.data.power_profile_flex_neg = self.data.format_mpc_inputs(inp.value)
+                self.data.power_profile_flex_neg = format_mpc_inputs(inp.value)
             elif name == power_alias_pos:
-                self.data.power_profile_flex_pos = self.data.format_mpc_inputs(inp.value)
+                self.data.power_profile_flex_pos = format_mpc_inputs(inp.value)
             elif name == self.config.price_variable:
                 # price comes from predictor, so no stripping needed
                 # TODO: add other sources for price signal?
-                self.data.costs_profile_electricity = self.data.format_predictor_inputs(inp.value)
+                self.data.costs_profile_electricity = format_predictor_inputs(inp.value)
 
             if all(var is not None for var in (
                     self.data.power_profile_base,

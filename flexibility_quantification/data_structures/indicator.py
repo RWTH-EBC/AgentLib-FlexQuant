@@ -6,7 +6,6 @@ import pandas as pd
 
 from agentlib_mpc.utils import TimeConversionTypes, TIME_CONVERSION
 from flexibility_quantification.data_structures.globals import FlexibilityDirections
-from flexibility_quantification.utils.data_handling import strip_multi_index, fill_nans, MEAN, INTERPOLATE
 
 
 class KPI(pydantic.BaseModel):
@@ -49,7 +48,8 @@ class KPI(pydantic.BaseModel):
         Only possible for pd.Series
         """
         if isinstance(self.value, pd.Series):
-            integral = (self.value * self._get_dt(time_unit=time_unit)).sum()
+            products = self.value * self._get_dt(time_unit=time_unit)
+            integral = products.sum()
             return integral
         else:
             raise ValueError("Integration only possible for pd.Series")
@@ -158,15 +158,14 @@ class FlexibilityKPIs(pydantic.BaseModel):
             power_profile_base: pd.Series,
             power_profile_shadow: pd.Series,
             costs_profile_electricity: pd.Series,
-            horizon_full: np.ndarray,
-            horizon_offer: np.ndarray
+            offer_window: tuple[int, int]
     ):
         """
         Calculate the KPIs based on the power and electricity input profiles.
         Horizons needed for indexing of the power flexibility profiles.
         """
         # Power / energy KPIs
-        self._calculate_power_flex(power_profile_base=power_profile_base, power_profile_shadow=power_profile_shadow, horizon_offer=horizon_offer)
+        self._calculate_power_flex(power_profile_base=power_profile_base, power_profile_shadow=power_profile_shadow, offer_window=offer_window)
         self._calculate_energy_flex()
         self._calculate_power_flex_stats()
 
@@ -174,14 +173,14 @@ class FlexibilityKPIs(pydantic.BaseModel):
         self._calculate_costs(costs_profile_electricity=costs_profile_electricity)
         self._calculate_costs_rel()
 
-    def _calculate_power_flex(self, power_profile_base: pd.Series, power_profile_shadow: pd.Series, horizon_offer: np.ndarray) -> pd.Series:
+    def _calculate_power_flex(self, power_profile_base: pd.Series, power_profile_shadow: pd.Series, offer_window: tuple[int, int]) -> pd.Series:
         """
         Calculate the power flexibility based on the base and flexibility power profiles.
         """
-        # Check if indices of profiles match
         if not power_profile_shadow.index.equals(power_profile_base.index):
             raise ValueError("Indices of power profiles do not match")
 
+        # Calculate flexibility
         if self.direction == "positive":
             power_flex = power_profile_base - power_profile_shadow
         elif self.direction == "negative":
@@ -195,7 +194,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
 
         # Set values
         self.power_flex_full.value = power_flex
-        self.power_flex_offer.value = power_flex.loc[horizon_offer[0]:horizon_offer[-1]]
+        self.power_flex_offer.value = power_flex.loc[offer_window[0]:offer_window[1]]
         return power_flex
 
     def _calculate_power_flex_stats(self) -> [float]:
@@ -226,6 +225,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         if self.power_flex_offer.value.empty:
             raise ValueError("Power flexibility value is empty")
 
+        # Calculate flexibility
         energy_flex = self.power_flex_offer.integrate(time_unit="hours")
 
         # Set value
@@ -236,15 +236,12 @@ class FlexibilityKPIs(pydantic.BaseModel):
         """
         Calculate the costs of the flexibility event based on the electricity costs profile and the power flexibility profile.
         """
-        # Check if indices of profiles match
-        if not self.power_flex_full.value.index.equals(costs_profile_electricity.index):
-            raise ValueError("Indices of profiles do not match")
-
-        # Series
-        costs_series = (costs_profile_electricity * self.power_flex_full.value)
+        # Calculate series
+        costs_profile_electricity = costs_profile_electricity.reindex(index=self.power_flex_full.value.index)
+        costs_series = costs_profile_electricity * self.power_flex_full.value
         self.costs_series.value = costs_series
 
-        # Scalar
+        # Calculate scalar
         costs = abs(self.costs_series.integrate(time_unit="hours"))
         self.costs.value = costs
         return costs, costs_series
@@ -289,15 +286,10 @@ class FlexibilityData(pydantic.BaseModel):
     """
     Class containing the data for the calculation of the flexibility.
     """
-
-    # Time parameters
-    full_horizon: np.ndarray = pydantic.Field(
+    # Offer window
+    offer_window: tuple[int, int] = pydantic.Field(
         default=None,
-        description="Full horizon of the simulation",
-    )
-    flex_horizon: np.ndarray = pydantic.Field(
-        default=None,
-        description="Flexibility horizon",
+        description="Offer window for the flexibility",
     )
 
     # Profiles
@@ -331,44 +323,26 @@ class FlexibilityData(pydantic.BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
-    def __init__(
-            self, prep_time: int, market_time: int, flex_event_duration: int,
-            time_step: int, prediction_horizon: int,
-            **data):
+    def __init__(self, prep_time: int, market_time: int, flex_event_duration: int,
+                 time_step: int, prediction_horizon: int, **data):
         super().__init__(**data)
-
-        # Define horizons
         switch_time = prep_time + market_time
-        self.flex_horizon = np.arange(switch_time, switch_time + flex_event_duration, time_step)
-        self.full_horizon = np.arange(0, prediction_horizon * time_step, time_step)
+        self.offer_window = (switch_time, switch_time + flex_event_duration)
 
-    def format_predictor_inputs(self, series: pd.Series) -> pd.Series:
-        series.index = series.index - series.index[0]
-        if series.index[-1] < self.full_horizon[-1]:
-            raise ValueError(f"Last predictions of predictor is earlier than expected: {series.index[-1]} < {self.full_horizon[-1]}")
-        series = series.reindex(self.full_horizon)
-        return series
-
-    def format_mpc_inputs(self, series: pd.Series) -> pd.Series:
-        series = strip_multi_index(series)
-        series = fill_nans(series=series, method=MEAN)
-        series = series.reindex(self.full_horizon)
-        return series
-
-    def calculate(self):
+    def calculate(self) -> [FlexibilityKPIs, FlexibilityKPIs]:
         self.kpis_pos.calculate(
             power_profile_base=self.power_profile_base,
             power_profile_shadow=self.power_profile_flex_pos,
             costs_profile_electricity=self.costs_profile_electricity,
-            horizon_full=self.full_horizon, horizon_offer=self.flex_horizon
+            offer_window=self.offer_window
         )
         self.kpis_neg.calculate(
             power_profile_base=self.power_profile_base,
             power_profile_shadow=self.power_profile_flex_neg,
             costs_profile_electricity=self.costs_profile_electricity,
-            horizon_full=self.full_horizon, horizon_offer=self.flex_horizon
+            offer_window=self.offer_window
         )
-        return self
+        return self.kpis_pos, self.kpis_neg
 
     def get_kpis(self) -> dict[str, KPI]:
         kpis_dict = self.kpis_pos.get_kpi_dict(direction_name=True) | self.kpis_neg.get_kpi_dict(direction_name=True)
