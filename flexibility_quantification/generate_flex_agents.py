@@ -436,7 +436,7 @@ class FlexAgentGenerator:
         )
         module_config.results_file = Path(
             Path(self.orig_mpc_module_config.optimization_backend["results_file"]).parent,
-            "flexibility_indicator.csv",
+            self.indicator_config.name_of_created_file.replace(".json", ".csv"),
         )
         module_config.model_config["frozen"] = True
         return module_config
@@ -458,7 +458,7 @@ class FlexAgentGenerator:
                 )
         module_config.results_file = Path(
             Path(self.orig_mpc_module_config.optimization_backend["results_file"]).parent,
-            "flexibility_market.csv",
+            self.market_config.name_of_created_file.replace(".json", ".csv"),
         )
         module_config.model_config["frozen"] = True
         return module_config
