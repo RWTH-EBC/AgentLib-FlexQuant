@@ -205,11 +205,18 @@ class Dashboard(flex_results.Results):
             return fig
 
         # Marking times
+        def get_characteristic_times(at_time_step: float) -> [int, int, int]:
+            df_characteristic_times = self.df_indicator.xs(0, level="time")
+            rel_market_time = df_characteristic_times.loc[at_time_step, glbs.MARKET_TIME] / TIME_CONVERSION[self.current_timescale_of_data]
+            rel_prep_time = df_characteristic_times.loc[at_time_step, glbs.PREP_TIME] / TIME_CONVERSION[self.current_timescale_of_data]
+            flex_event_duration = df_characteristic_times.loc[at_time_step, glbs.FLEX_EVENT_DURATION] / TIME_CONVERSION[self.current_timescale_of_data]
+            return rel_market_time, rel_prep_time, flex_event_duration
+
         def mark_time(fig: go.Figure, at_time_step: float, line_prop: dict) -> go.Figure:
             fig.add_vline(x=at_time_step, line=line_prop, layer="below")
             return fig
 
-        def mark_characteristic_times(fig: go.Figure, at_time_step: float, line_prop: dict = None) -> go.Figure:
+        def mark_characteristic_times(fig: go.Figure, offer_time: float, line_prop: dict = None) -> go.Figure:
             """
             Add markers of the characteristic times to the plot for a time step
 
@@ -221,13 +228,7 @@ class Dashboard(flex_results.Results):
             if line_prop is None:
                 line_prop = self.LINE_PROPERTIES[self.characteristic_times_current_key]
             try:
-                df_characteristic_times = self.df_indicator.xs(0, level="time")
-
-                offer_time = at_time_step
-                rel_market_time = df_characteristic_times.loc[at_time_step, glbs.MARKET_TIME] / TIME_CONVERSION[self.current_timescale_of_data]
-                rel_prep_time = df_characteristic_times.loc[at_time_step, glbs.PREP_TIME] / TIME_CONVERSION[self.current_timescale_of_data]
-                flex_event_duration = df_characteristic_times.loc[at_time_step, glbs.FLEX_EVENT_DURATION] / TIME_CONVERSION[self.current_timescale_of_data]
-
+                rel_market_time, rel_prep_time, flex_event_duration = get_characteristic_times(offer_time)
                 mark_time(fig=fig, at_time_step=offer_time, line_prop=line_prop)
                 mark_time(fig=fig, at_time_step=offer_time + rel_prep_time, line_prop=line_prop)
                 mark_time(fig=fig, at_time_step=offer_time + rel_prep_time + rel_market_time, line_prop=line_prop)
@@ -242,11 +243,15 @@ class Dashboard(flex_results.Results):
             df_accepted_offers = self.df_market["status"].str.contains(pat="OfferStatus.accepted")
             for i in df_accepted_offers.index.to_list():
                 if df_accepted_offers[i]:
-                    fig = mark_characteristic_times(fig=fig, at_time_step=i[0], line_prop=self.LINE_PROPERTIES[self.characteristic_times_accepted_key])
+                    fig = mark_characteristic_times(fig=fig, offer_time=i[0], line_prop=self.LINE_PROPERTIES[self.characteristic_times_accepted_key])
             return fig
 
         # Master plotting function
-        def create_plot(variable: str, at_time_step: float, show_current_characteristic_times: bool, zoom_to_prediction_interval: bool = False) -> go.Figure:
+        def create_plot(
+                variable: str, at_time_step: float,
+                show_accepted_characteristic_times: bool = True, show_current_characteristic_times: bool = True,
+                zoom_to_offer_window: bool = False, zoom_to_prediction_interval: bool = False
+        ) -> go.Figure:
             """
             Create a plot for one variable
 
@@ -258,12 +263,16 @@ class Dashboard(flex_results.Results):
             # Create the figure
             fig = go.Figure()
             mark_time(fig=fig, at_time_step=at_time_step, line_prop={"color": "green"})
+            if show_accepted_characteristic_times:
+                mark_characteristic_times_of_accepted_offers(fig=fig)
 
             # Plot variable
             if variable in self.df_baseline_stats.columns:
                 plot_mpc_stats(fig=fig, variable=variable)
             elif variable in self.intersection_mpcs_sim.keys():
                 plot_one_mpc_variable(fig=fig, variable=variable, time_step=at_time_step)
+                if show_current_characteristic_times:
+                    mark_characteristic_times(fig=fig, offer_time=at_time_step)
             elif any(variable in label for label in self.df_indicator.columns):
                 plot_flexibility_kpi(fig=fig, variable=variable)
             elif any(variable in label for label in self.df_market.columns):
@@ -271,13 +280,14 @@ class Dashboard(flex_results.Results):
             else:
                 raise ValueError(f"No plotting function found for variable {variable}")
 
-            # Plot characteristic times
-            mark_characteristic_times_of_accepted_offers(fig=fig)
-            if show_current_characteristic_times and variable in self.intersection_mpcs_sim.keys():
-                mark_characteristic_times(fig=fig, at_time_step=at_time_step)
-
             # Set layout
-            if zoom_to_prediction_interval:
+            if zoom_to_offer_window:
+                rel_market_time, rel_prep_time, flex_event_duration = get_characteristic_times(at_time_step)
+                ts = self.baseline_module_config.time_step / TIME_CONVERSION[self.current_timescale_of_data]
+
+                xlim_left = at_time_step
+                xlim_right = at_time_step + rel_market_time + rel_prep_time + flex_event_duration + 4 * ts
+            elif zoom_to_prediction_interval:
                 xlim_left = at_time_step
                 xlim_right = at_time_step + self.df_baseline.index[-1][-1]
             else:
@@ -298,13 +308,23 @@ class Dashboard(flex_results.Results):
             html.H1("Results"),
             html.Div(
                 children=[
-                    # Options
+                    html.H3("Options"),
                     html.Div(
                         children=[
-                            html.H3("Options"),
+                            dcc.Checklist(id="accepted_characteristic_times",
+                                          options=[{"label": "Show characteristic times (accepted)", "value": True}],
+                                          value=[True],
+                                          style={"display": "inline-block", "padding-right": "10px"}),
                             dcc.Checklist(id="current_characteristic_times",
                                           options=[{"label": "Show characteristic times (current)", "value": True}],
                                           value=[True],
+                                          style={"display": "inline-block", "padding-right": "10px"}),
+                        ],
+                    ),
+                    html.Div(
+                        children=[
+                            dcc.Checklist(id="zoom_to_offer_window",
+                                          options=[{"label": "Zoom to flexibility offer window", "value": False}],
                                           style={"display": "inline-block", "padding-right": "10px"}),
                             dcc.Checklist(id="zoom_to_prediction_interval",
                                           options=[{"label": "Zoom to mpc prediction interval", "value": False}],
@@ -390,19 +410,27 @@ class Dashboard(flex_results.Results):
         # Update the graphs
         @callback(
             Output(component_id="graphs_container_variables", component_property="children"),
+            Input(component_id="time_typing", component_property="value"),
+            Input(component_id="accepted_characteristic_times", component_property="value"),
             Input(component_id="current_characteristic_times", component_property="value"),
+            Input(component_id="zoom_to_offer_window", component_property="value"),
             Input(component_id="zoom_to_prediction_interval", component_property="value"),
-            Input(component_id="time_typing", component_property="value")
         )
-        def update_graph(current_characteristic_times: bool, zoom_to_prediction_interval: bool, time_step: float):
+        def update_graph(
+                at_time_step: float,
+                show_accepted_characteristic_times: bool, show_current_characteristic_times: bool,
+                zoom_to_offer_window: bool, zoom_to_prediction_interval: bool
+        ):
             """ Update all graphs based on the options and slider values
             """
             figs = []
             for variable in self.plotting_variables:
                 fig = create_plot(
                     variable=variable,
-                    at_time_step=time_step,
-                    show_current_characteristic_times=current_characteristic_times,
+                    at_time_step=at_time_step,
+                    show_accepted_characteristic_times=show_accepted_characteristic_times,
+                    show_current_characteristic_times=show_current_characteristic_times,
+                    zoom_to_offer_window=zoom_to_offer_window,
                     zoom_to_prediction_interval=zoom_to_prediction_interval
                 )
                 figs.append(dcc.Graph(id=f"graph_{variable}", figure=fig))
