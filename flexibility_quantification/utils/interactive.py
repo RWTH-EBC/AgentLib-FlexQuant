@@ -15,7 +15,7 @@ from agentlib_mpc.utils.plotting.interactive import get_port    # solver_return,
 import flexibility_quantification.data_structures.globals as glbs
 import flexibility_quantification.data_structures.flex_results as flex_results
 from flexibility_quantification.data_structures.flexquant import FlexQuantConfig
-from flexibility_quantification.data_structures.indicator import FlexibilityKPIs
+from flexibility_quantification.data_structures.flex_kpis import FlexibilityKPIs
 
 
 class CustomBound:

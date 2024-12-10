@@ -8,7 +8,7 @@ from pathlib import Path
 import pydantic
 import flexibility_quantification.data_structures.globals as glbs
 from flexibility_quantification.utils.data_handling import strip_multi_index, fill_nans, MEAN, INTERPOLATE
-from flexibility_quantification.data_structures.indicator import FlexibilityData, FlexibilityKPIs
+from flexibility_quantification.data_structures.flex_kpis import FlexibilityData, FlexibilityKPIs
 
 DiscretizationTypes = Literal["collocation", "multiple_shooting"]
 
