@@ -6,6 +6,7 @@ import pandas as pd
 
 from agentlib_mpc.utils import TimeConversionTypes, TIME_CONVERSION
 from flexibility_quantification.data_structures.globals import FlexibilityDirections
+from flexibility_quantification.utils.data_handling import strip_multi_index, fill_nans, MEAN, INTERPOLATE
 
 
 class KPI(pydantic.BaseModel):
@@ -255,7 +256,6 @@ class FlexibilityKPIs(pydantic.BaseModel):
         Calculate the costs of the flexibility event based on the electricity costs profile and the power flexibility profile.
         """
         # Calculate series
-        costs_profile_electricity = costs_profile_electricity.reindex(index=self.power_flex_full.value.index)
         costs_series = costs_profile_electricity * self.power_flex_full.value
         self.costs_series.value = costs_series
 
@@ -304,7 +304,15 @@ class FlexibilityData(pydantic.BaseModel):
     """
     Class containing the data for the calculation of the flexibility.
     """
-    # Offer window
+    # Time parameters
+    full_horizon: np.ndarray = pydantic.Field(
+        default=None,
+        description="Full horizon of the simulation",
+    )
+    flex_horizon: np.ndarray = pydantic.Field(
+        default=None,
+        description="Flexibility horizon",
+    )
     offer_window: tuple[int, int] = pydantic.Field(
         default=None,
         description="Offer window for the flexibility",
@@ -345,7 +353,24 @@ class FlexibilityData(pydantic.BaseModel):
                  time_step: int, prediction_horizon: int, **data):
         super().__init__(**data)
         switch_time = prep_time + market_time
+        self.flex_horizon = np.arange(switch_time, switch_time + flex_event_duration, time_step)
+        self.full_horizon = np.arange(0, (prediction_horizon - 2) * time_step, time_step)
         self.offer_window = (switch_time, switch_time + flex_event_duration)
+
+    def format_predictor_inputs(self, series: pd.Series) -> pd.Series:
+        series.index = series.index - series.index[0]
+        series = series.reindex(self.full_horizon)
+        if any(series.isna()):
+            raise ValueError("Step widths are not compatible")
+        return series
+
+    def format_mpc_inputs(self, series: pd.Series) -> pd.Series:
+        series = strip_multi_index(series)
+        series = fill_nans(series=series, method=MEAN)
+        series = series.reindex(self.full_horizon)
+        if any(series.isna()):
+            raise ValueError("Step widths are not compatible")
+        return series
 
     def calculate(self) -> [FlexibilityKPIs, FlexibilityKPIs]:
         self.kpis_pos.calculate(
