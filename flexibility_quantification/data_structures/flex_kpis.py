@@ -193,7 +193,8 @@ class FlexibilityKPIs(pydantic.BaseModel):
         self._calculate_costs(costs_profile_electricity=costs_profile_electricity)
         self._calculate_costs_rel()
 
-    def _calculate_power_flex(self, power_profile_base: pd.Series, power_profile_shadow: pd.Series, offer_window: tuple[int, int]) -> pd.Series:
+    def _calculate_power_flex(self, power_profile_base: pd.Series, power_profile_shadow: pd.Series, offer_window: tuple[int, int],
+                              relative_error_acceptance: float = 0.01) -> pd.Series:
         """
         Calculate the power flexibility based on the base and flexibility power profiles.
         """
@@ -208,9 +209,9 @@ class FlexibilityKPIs(pydantic.BaseModel):
         else:
             raise ValueError("Direction of KPIs not defined")
 
-        # Set values to zero if the difference is below 1% of the base profile
+        # Set values to zero if the difference is small
         relative_difference = (power_flex / power_profile_base).abs()
-        power_flex.loc[(power_flex < 0) & (relative_difference < 0.01)] = 0
+        power_flex.loc[relative_difference < relative_error_acceptance] = 0
 
         # Set values
         self.power_flex_full.value = power_flex
