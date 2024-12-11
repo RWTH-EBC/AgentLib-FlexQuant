@@ -354,7 +354,7 @@ class FlexibilityData(pydantic.BaseModel):
         super().__init__(**data)
         switch_time = prep_time + market_time
         self.flex_horizon = np.arange(switch_time, switch_time + flex_event_duration, time_step)
-        self.full_horizon = np.arange(0, (prediction_horizon - 2) * time_step, time_step)
+        self.full_horizon = np.arange(0, prediction_horizon * time_step, time_step)
         self.offer_window = (switch_time, switch_time + flex_event_duration)
 
     def format_predictor_inputs(self, series: pd.Series) -> pd.Series:
