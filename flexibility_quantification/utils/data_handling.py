@@ -27,11 +27,13 @@ FillNaMethods = Literal["mean", "interpolate"]
 
 def strip_multi_index(series: pd.Series) -> pd.Series:
     # Convert the index (communicated as string) into a MultiIndex
-    series.index = series.index.map(lambda x: eval(x))
-    series.index = pd.MultiIndex.from_tuples(series.index)
-    # vals is multicolumn so get rid of first value (start time of predictions)
-    series.index = series.index.get_level_values(1).astype(float)
+    if isinstance(series.index, str):
+        series.index = series.index.map(lambda x: eval(x))
+        series.index = pd.MultiIndex.from_tuples(series.index)
+        # vals is multicolumn so get rid of first value (start time of predictions)
+        series.index = series.index.get_level_values(1).astype(float)
     return series
+
 
 
 def fill_nans(series: pd.Series, method: FillNaMethods) -> pd.Series:

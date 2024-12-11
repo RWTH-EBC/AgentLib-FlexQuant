@@ -2,6 +2,7 @@ import logging
 from flexibility_quantification.generate_flex_agents import FlexAgentGenerator
 from agentlib.utils.multi_agent_system import LocalMASAgency
 from flexibility_quantification.utils.interactive import Dashboard, CustomBound
+from plot_results import plot_results
 
 # Set the log-level
 logging.basicConfig(level=logging.WARN)
@@ -30,6 +31,7 @@ def run_example(until=until):
     mas.run(until=until)
     results = mas.get_results(cleanup=False)
 
+    # plot_results(results_data=results)    # Alternative plotscript using matplotlib,
     Dashboard(
         flex_config="flex_configs/flexibility_agent_config.json",
         simulator_agent_config="mpc_and_sim/simple_sim.json",
