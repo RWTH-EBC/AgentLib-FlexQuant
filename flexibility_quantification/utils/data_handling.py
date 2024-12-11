@@ -23,7 +23,7 @@ def convert_timescale_of_index(df: pd.DataFrame, from_unit: TimeConversionTypes,
 def strip_multi_index(series: pd.Series):
     vals = pd.Series(_set_mean_values(series), index=series.index[:-1])
     # Convert the index (communicated as string) into a MultiIndex
-    if isinstance(vals.index, str):
+    if isinstance(vals.index[0], str):
         vals.index = vals.index.map(lambda x: eval(x))
         vals.index = pd.MultiIndex.from_tuples(vals.index)
         # vals is multicolumn so get rid of first value (start time of predictions)
