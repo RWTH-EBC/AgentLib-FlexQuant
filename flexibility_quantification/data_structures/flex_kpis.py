@@ -13,19 +13,19 @@ class KPI(pydantic.BaseModel):
 
     name: str = pydantic.Field(
         default=None,
-        description="Name of the indicator KPI",
+        description="Name of the flexibility KPI",
     )
-    value: Union[float, pd.Series, None] = pydantic.Field(
+    value: Union[float, None] = pydantic.Field(
         default=None,
-        description="Value of the indicator KPI",
+        description="Value of the flexibility KPI",
     )
     unit: str = pydantic.Field(
         default=None,
-        description="Unit of the indicator KPI",
+        description="Unit of the flexibility KPI",
     )
     direction: Union[FlexibilityDirections, None] = pydantic.Field(
         default=None,
-        description="Direction of the shadow mpc"
+        description="Direction of the shadow mpc / flexibility"
     )
 
     class Config:
@@ -42,17 +42,39 @@ class KPI(pydantic.BaseModel):
         name = f"{self.direction}_{self.name}"
         return name
 
+
+class KPISeries(KPI):
+    value: Union[pd.Series, None] = pydantic.Field(
+        default=None,
+        description="Value of the flexibility KPI",
+    )
+
+    def __init__(self, name: str, unit: str, direction: Union[FlexibilityDirections, None] = None, value: Union[pd.Series, None] = None, **data):
+        super().__init__(name=name, unit=unit, value=None, direction=direction, **data)
+        self.value = value
+
+    def min(self) -> float:
+        return self.value.min()
+
+    def max(self) -> float:
+        return self.value.max()
+
+    def avg(self) -> float:
+        """
+        Calculate the average value of the KPI over time.
+        """
+        delta_t = self._get_dt().sum()
+        avg = self.integrate() / delta_t
+        return avg
+
     def integrate(self, time_unit: TimeConversionTypes = "seconds") -> float:
         """
         Integrate the value of the KPI over time by summing up the product of values and the time difference.
         Only possible for pd.Series
         """
-        if isinstance(self.value, pd.Series):
-            products = self.value * self._get_dt(time_unit=time_unit)
-            integral = products.sum()
-            return integral
-        else:
-            raise ValueError("Integration only possible for pd.Series")
+        products = self.value * self._get_dt(time_unit=time_unit)
+        integral = products.sum()
+        return integral
 
     def _get_dt(self, time_unit: TimeConversionTypes = "seconds") -> pd.Series:
         """
@@ -77,18 +99,16 @@ class FlexibilityKPIs(pydantic.BaseModel):
     )
 
     # Power / energy KPIs
-    power_flex_full: KPI = pydantic.Field(
-        default=KPI(
+    power_flex_full: KPISeries = pydantic.Field(
+        default=KPISeries(
             name="power_flex_full",
-            value=pd.Series(),
             unit="kW"
         ),
         description="Power flexibility",
     )
-    power_flex_offer: KPI = pydantic.Field(
-        default=KPI(
+    power_flex_offer: KPISeries = pydantic.Field(
+        default=KPISeries(
             name="power_flex_offer",
-            value=pd.Series(),
             unit="kW"
         ),
         description="Power flexibility",
@@ -119,14 +139,13 @@ class FlexibilityKPIs(pydantic.BaseModel):
             name="energy_flex",
             unit="kWh"
         ),
-        description="Energy flexibility",
+        description="Energy flexibility equals the integral of the power flexibility",
     )
 
     # Costs KPIs
-    costs_series: KPI = pydantic.Field(
-        default=KPI(
+    costs_series: KPISeries = pydantic.Field(
+        default=KPISeries(
             name="costs_series",
-            value=pd.Series(),
             unit="ct"
         ),
         description="Costs of flexibility",
@@ -201,16 +220,15 @@ class FlexibilityKPIs(pydantic.BaseModel):
         """
         Calculate the characteristic values of the power flexibility for the offer.
         """
-        if self.power_flex_offer.value.empty:
+        if self.power_flex_offer.value is None:
             raise ValueError("Power flexibility value is empty")
         if self.energy_flex.value is None:
             raise ValueError("Energy flexibility value is empty")
 
         # Calculate characteristic values
-        power_flex_offer_max = self.power_flex_offer.value.max()
-        power_flex_offer_min = self.power_flex_offer.value.min()
-        delta_t = (self.power_flex_offer.value.index[-1] - self.power_flex_offer.value.index[0]) / TIME_CONVERSION["hours"]
-        power_flex_offer_avg = self.energy_flex.value / delta_t
+        power_flex_offer_max = self.power_flex_offer.max()
+        power_flex_offer_min = self.power_flex_offer.min()
+        power_flex_offer_avg = self.power_flex_offer.avg()
 
         # Set values
         self.power_flex_offer_max.value = power_flex_offer_max
@@ -222,7 +240,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         """
         Calculate the energy flexibility by integrating the power flexibility of the offer window.
         """
-        if self.power_flex_offer.value.empty:
+        if self.power_flex_offer.value is None:
             raise ValueError("Power flexibility value is empty")
 
         # Calculate flexibility
