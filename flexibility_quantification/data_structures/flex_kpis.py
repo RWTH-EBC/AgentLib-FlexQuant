@@ -178,14 +178,15 @@ class FlexibilityKPIs(pydantic.BaseModel):
             power_profile_base: pd.Series,
             power_profile_shadow: pd.Series,
             costs_profile_electricity: pd.Series,
-            offer_window: tuple[int, int]
+            horizon_full: np.ndarray,
+            horizon_offer: np.ndarray
     ):
         """
         Calculate the KPIs based on the power and electricity input profiles.
         Horizons needed for indexing of the power flexibility profiles.
         """
         # Power / energy KPIs
-        self._calculate_power_flex(power_profile_base=power_profile_base, power_profile_shadow=power_profile_shadow, offer_window=offer_window)
+        self._calculate_power_flex(power_profile_base=power_profile_base, power_profile_shadow=power_profile_shadow, horizon_offer=horizon_offer)
         self._calculate_power_flex_stats()
         self._calculate_energy_flex()
 
@@ -193,7 +194,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         self._calculate_costs(costs_profile_electricity=costs_profile_electricity)
         self._calculate_costs_rel()
 
-    def _calculate_power_flex(self, power_profile_base: pd.Series, power_profile_shadow: pd.Series, offer_window: tuple[int, int],
+    def _calculate_power_flex(self, power_profile_base: pd.Series, power_profile_shadow: pd.Series, horizon_offer: np.ndarray,
                               relative_error_acceptance: float = 0.01) -> pd.Series:
         """
         Calculate the power flexibility based on the base and flexibility power profiles.
@@ -217,7 +218,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
 
         # Set values
         self.power_flex_full.value = power_flex
-        self.power_flex_offer.value = power_flex.loc[offer_window[0]:offer_window[1]]
+        self.power_flex_offer.value = power_flex.loc[horizon_offer[0]:horizon_offer[-1]]
         return power_flex
 
     def _calculate_power_flex_stats(self) -> [float]:
@@ -314,10 +315,6 @@ class FlexibilityData(pydantic.BaseModel):
         default=None,
         description="Flexibility horizon",
     )
-    offer_window: tuple[int, int] = pydantic.Field(
-        default=None,
-        description="Offer window for the flexibility",
-    )
 
     # Profiles
     power_profile_base: pd.Series = pydantic.Field(
@@ -356,7 +353,6 @@ class FlexibilityData(pydantic.BaseModel):
         switch_time = prep_time + market_time
         self.flex_horizon = np.arange(switch_time, switch_time + flex_event_duration, time_step)
         self.full_horizon = np.arange(0, prediction_horizon * time_step, time_step)
-        self.offer_window = (switch_time, switch_time + flex_event_duration)
 
     def format_predictor_inputs(self, series: pd.Series) -> pd.Series:
         series.index = series.index - series.index[0]
@@ -378,13 +374,13 @@ class FlexibilityData(pydantic.BaseModel):
             power_profile_base=self.power_profile_base,
             power_profile_shadow=self.power_profile_flex_pos,
             costs_profile_electricity=self.costs_profile_electricity,
-            offer_window=self.offer_window
+            horizon_full=self.full_horizon, horizon_offer=self.flex_horizon
         )
         self.kpis_neg.calculate(
             power_profile_base=self.power_profile_base,
             power_profile_shadow=self.power_profile_flex_neg,
             costs_profile_electricity=self.costs_profile_electricity,
-            offer_window=self.offer_window
+            horizon_full=self.full_horizon, horizon_offer=self.flex_horizon
         )
         return self.kpis_pos, self.kpis_neg
 
