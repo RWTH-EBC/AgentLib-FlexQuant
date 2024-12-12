@@ -38,71 +38,71 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
 
         # Power KPIs
         agentlib.AgentVariable(
-            name=kpis_neg.power_flex_full.get_name(), unit='W', type="pd.Series",
+            name=kpis_neg.power_flex_full.get_kpi_identifier(), unit='W', type="pd.Series",
             description="Negative power flexibility"
         ),
         agentlib.AgentVariable(
-            name=kpis_pos.power_flex_full.get_name(), unit='W', type="pd.Series",
+            name=kpis_pos.power_flex_full.get_kpi_identifier(), unit='W', type="pd.Series",
             description="Positive power flexibility"
         ),
         agentlib.AgentVariable(
-            name=kpis_neg.power_flex_offer.get_name(), unit='W', type="pd.Series",
+            name=kpis_neg.power_flex_offer.get_kpi_identifier(), unit='W', type="pd.Series",
             description="Negative power flexibility"
         ),
         agentlib.AgentVariable(
-            name=kpis_pos.power_flex_offer.get_name(), unit='W', type="pd.Series",
+            name=kpis_pos.power_flex_offer.get_kpi_identifier(), unit='W', type="pd.Series",
             description="Positive power flexibility"
         ),
         agentlib.AgentVariable(
-            name=kpis_neg.power_flex_offer_min.get_name(), unit='W', type="float",
+            name=kpis_neg.power_flex_offer_min.get_kpi_identifier(), unit='W', type="float",
             description="Minimum of negative power flexibility"
         ),
         agentlib.AgentVariable(
-            name=kpis_pos.power_flex_offer_min.get_name(), unit='W', type="float",
+            name=kpis_pos.power_flex_offer_min.get_kpi_identifier(), unit='W', type="float",
             description="Minimum of positive power flexibility"
         ),
         agentlib.AgentVariable(
-            name=kpis_neg.power_flex_offer_max.get_name(), unit='W', type="float",
+            name=kpis_neg.power_flex_offer_max.get_kpi_identifier(), unit='W', type="float",
             description="Maximum of negative power flexibility"
         ),
         agentlib.AgentVariable(
-            name=kpis_pos.power_flex_offer_max.get_name(), unit='W', type="float",
+            name=kpis_pos.power_flex_offer_max.get_kpi_identifier(), unit='W', type="float",
             description="Maximum of positive power flexibility"
         ),
         agentlib.AgentVariable(
-            name=kpis_neg.power_flex_offer_avg.get_name(), unit='W', type="float",
+            name=kpis_neg.power_flex_offer_avg.get_kpi_identifier(), unit='W', type="float",
             description="Average of negative power flexibility"
         ),
         agentlib.AgentVariable(
-            name=kpis_pos.power_flex_offer_avg.get_name(), unit='W', type="float",
+            name=kpis_pos.power_flex_offer_avg.get_kpi_identifier(), unit='W', type="float",
             description="Average of positive power flexibility"
         ),
 
         # Energy KPIs
         agentlib.AgentVariable(
-            name=kpis_neg.energy_flex.get_name(), unit='kWh', type="float",
+            name=kpis_neg.energy_flex.get_kpi_identifier(), unit='kWh', type="float",
             description="Negative energy flexibility"
         ),
         agentlib.AgentVariable(
-            name=kpis_pos.energy_flex.get_name(), unit='kWh', type="float",
+            name=kpis_pos.energy_flex.get_kpi_identifier(), unit='kWh', type="float",
             description="Positive energy flexibility"
         ),
 
         # Costs KPIs
         agentlib.AgentVariable(
-            name=kpis_neg.costs.get_name(), unit="ct", type="float",
+            name=kpis_neg.costs.get_kpi_identifier(), unit="ct", type="float",
             description="Saved costs due to baseline"
         ),
         agentlib.AgentVariable(
-            name=kpis_pos.costs.get_name(), unit="ct", type="float",
+            name=kpis_pos.costs.get_kpi_identifier(), unit="ct", type="float",
             description="Saved costs due to baseline"
         ),
         agentlib.AgentVariable(
-            name=kpis_neg.costs_rel.get_name(), unit='ct/kWh', type="float",
+            name=kpis_neg.costs_rel.get_kpi_identifier(), unit='ct/kWh', type="float",
             description="Saved costs due to baseline"
         ),
         agentlib.AgentVariable(
-            name=kpis_pos.costs_rel.get_name(), unit='ct/kWh', type="float",
+            name=kpis_pos.costs_rel.get_kpi_identifier(), unit='ct/kWh', type="float",
             description="Saved costs due to baseline"
         )
     ]
@@ -286,7 +286,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         # set outputs
         for kpi in self.data.get_kpis().values():
             for output in self.config.outputs:
-                if output.name == kpi.get_name():
+                if output.name == kpi.get_kpi_identifier():
                     self.set(output.name, kpi.value)
 
         # write results

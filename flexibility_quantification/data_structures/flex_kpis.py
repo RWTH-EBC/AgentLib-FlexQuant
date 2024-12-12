@@ -32,7 +32,7 @@ class KPI(pydantic.BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
-    def get_name(self):
+    def get_kpi_identifier(self):
         name = f"{self.direction}_{self.name}"
         return name
 
@@ -276,7 +276,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         for kpi in vars(self).values():
             if isinstance(kpi, KPI):
                 if direction_name:
-                    kpi_dict[kpi.get_name()] = kpi
+                    kpi_dict[kpi.get_kpi_identifier()] = kpi
                 else:
                     kpi_dict[kpi.name] = kpi
         return kpi_dict
@@ -287,7 +287,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         """
         name_dict = {}
         for name, kpi in self.get_kpi_dict(direction_name=False).items():
-            name_dict[name] = kpi.get_name()
+            name_dict[name] = kpi.get_kpi_identifier()
         return name_dict
 
 
