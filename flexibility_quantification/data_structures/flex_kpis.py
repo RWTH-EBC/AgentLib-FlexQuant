@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Optional
 
 import pydantic
 import numpy as np
@@ -304,6 +304,10 @@ class FlexibilityData(pydantic.BaseModel):
         default=None,
         description="Time frame of the flexibility offer",
     )
+    switch_time: Optional[float] = pydantic.Field(
+        default=None,
+        description="Time of the switch between the preparation and the market time",
+    )
 
     # Profiles
     power_profile_base: pd.Series = pydantic.Field(
@@ -339,8 +343,8 @@ class FlexibilityData(pydantic.BaseModel):
     def __init__(self, prep_time: int, market_time: int, flex_event_duration: int,
                  time_step: int, prediction_horizon: int, **data):
         super().__init__(**data)
-        switch_time = prep_time + market_time
-        self.flex_offer_time_frame = np.arange(switch_time, switch_time + flex_event_duration, time_step)
+        self.switch_time = prep_time + market_time
+        self.flex_offer_time_frame = np.arange(self.switch_time, self.switch_time + flex_event_duration, time_step)
         self.mpc_time_frame = np.arange(0, prediction_horizon * time_step, time_step)
 
     def format_predictor_inputs(self, series: pd.Series) -> pd.Series:
