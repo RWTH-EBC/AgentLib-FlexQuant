@@ -1,6 +1,5 @@
 import os
-import sys
-from typing import Optional, List, Literal
+from typing import Optional, List
 import agentlib
 import numpy as np
 import pandas as pd
@@ -8,17 +7,15 @@ from pathlib import Path
 import pydantic
 import flexibility_quantification.data_structures.globals as glbs
 from flexibility_quantification.data_structures.flex_kpis import FlexibilityData, FlexibilityKPIs
-
-DiscretizationTypes = Literal["collocation", "multiple_shooting"]
-
-sys.path.append(os.path.dirname(__file__))
-
 from flexibility_quantification.data_structures.flex_offer import FlexOffer
 
+# Pos and neg kpis to get the right names for plotting
 kpis_pos = FlexibilityKPIs(direction="positive")
 kpis_neg = FlexibilityKPIs(direction="negative")
 
-# todo: import without circle
+# todo: import  without circle
+# ImportError: Plugin 'flexibility_quantification' has no dictionary called 'MODULE_TYPES' to import plugin types
+# from flexibility_quantification.data_structures.mpcs import BaselineMPCData, PFMPCData, NFMPCData
 power_alias_base = "__P_el_base"
 power_alias_neg = "__P_el_neg"
 power_alias_pos = "__P_el_pos"

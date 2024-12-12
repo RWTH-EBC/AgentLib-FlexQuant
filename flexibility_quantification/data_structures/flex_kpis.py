@@ -6,7 +6,7 @@ import pandas as pd
 
 from agentlib_mpc.utils import TimeConversionTypes, TIME_CONVERSION
 from flexibility_quantification.data_structures.globals import FlexibilityDirections
-from flexibility_quantification.utils.data_handling import strip_multi_index, fill_nans, MEAN, INTERPOLATE
+from flexibility_quantification.utils.data_handling import strip_multi_index, fill_nans, MEAN
 
 
 class KPI(pydantic.BaseModel):
@@ -32,7 +32,7 @@ class KPI(pydantic.BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
-    def __init__(self, name: str, unit: str, direction: Union[FlexibilityDirections, None] = None, value: Union[float, pd.Series, None] = None, **data):
+    def __init__(self, name: str, unit: str, direction: Union[FlexibilityDirections, None] = None, value: Union[float, None] = None, **data):
         super().__init__(**data)
         self.name = name
         self.value = value
@@ -358,7 +358,7 @@ class FlexibilityData(pydantic.BaseModel):
         series.index = series.index - series.index[0]
         series = series.reindex(self.full_horizon)
         if any(series.isna()):
-            raise ValueError("Step widths are not compatible")
+            raise ValueError("The full horizon is not compatible with the predictor input, which leads to NaN values in the series.")
         return series
 
     def format_mpc_inputs(self, series: pd.Series) -> pd.Series:
@@ -366,7 +366,7 @@ class FlexibilityData(pydantic.BaseModel):
         series = fill_nans(series=series, method=MEAN)
         series = series.reindex(self.full_horizon)
         if any(series.isna()):
-            raise ValueError("Step widths are not compatible")
+            raise ValueError("The full horizon is not compatible with the mpc input, which leads to NaN values in the series.")
         return series
 
     def calculate(self) -> [FlexibilityKPIs, FlexibilityKPIs]:

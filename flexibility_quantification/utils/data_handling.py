@@ -35,13 +35,15 @@ def strip_multi_index(series: pd.Series) -> pd.Series:
     return series
 
 
-
 def fill_nans(series: pd.Series, method: FillNaMethods) -> pd.Series:
     if method == MEAN:
         series = _set_mean_values(series=series)
     elif method == INTERPOLATE:
         # Interpolate missing values
         series = series.interpolate(method="index", limit_direction="both")
+
+    if series.isna().any():
+        raise ValueError(f"NaN values are still present in the series after filling them with the method {method}")
     return series
 
 
@@ -49,8 +51,7 @@ def _set_mean_values(series: pd.Series) -> pd.Series:
     """ Fills intervals including the nan with the mean of the following values. """
     def _get_intervals_for_mean(s: pd.Series) -> list[pd.Interval]:
         intervals = []
-        start: int = None
-        end: int
+        start = None
         for index, value in s.items():
             if pd.isna(value):
                 if pd.isna(start):
@@ -63,6 +64,10 @@ def _set_mean_values(series: pd.Series) -> pd.Series:
 
     for interval in _get_intervals_for_mean(series):
         interval_index = (interval.left <= series.index) & (series.index < interval.right)
-        series[interval_index] = series[interval_index].mean(skipna=True)
+        series[interval.left] = series[interval_index].mean(skipna=True)
+
+    # remove last entry if nan, e.g. with collocation
+    if pd.isna(series.iloc[-1]):
+        series = series.iloc[:-1]
 
     return series
