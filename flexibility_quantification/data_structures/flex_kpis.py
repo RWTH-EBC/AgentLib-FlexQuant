@@ -186,8 +186,8 @@ class FlexibilityKPIs(pydantic.BaseModel):
         """
         # Power / energy KPIs
         self._calculate_power_flex(power_profile_base=power_profile_base, power_profile_shadow=power_profile_shadow, offer_window=offer_window)
-        self._calculate_energy_flex()
         self._calculate_power_flex_stats()
+        self._calculate_energy_flex()
 
         # Costs KPIs
         self._calculate_costs(costs_profile_electricity=costs_profile_electricity)
@@ -197,6 +197,8 @@ class FlexibilityKPIs(pydantic.BaseModel):
                               relative_error_acceptance: float = 0.01) -> pd.Series:
         """
         Calculate the power flexibility based on the base and flexibility power profiles.
+
+        relative_error_acceptance: threshold for the relative error between the baseline and shadow mpc to set the power flexibility to zero
         """
         if not power_profile_shadow.index.equals(power_profile_base.index):
             raise ValueError("Indices of power profiles do not match")
@@ -224,8 +226,6 @@ class FlexibilityKPIs(pydantic.BaseModel):
         """
         if self.power_flex_offer.value is None:
             raise ValueError("Power flexibility value is empty")
-        if self.energy_flex.value is None:
-            raise ValueError("Energy flexibility value is empty")
 
         # Calculate characteristic values
         power_flex_offer_max = self.power_flex_offer.max()
