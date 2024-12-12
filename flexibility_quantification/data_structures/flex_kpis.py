@@ -166,7 +166,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
             self,
             power_profile_base: pd.Series,
             power_profile_shadow: pd.Series,
-            costs_profile_electricity: pd.Series,
+            power_costs_profile: pd.Series,
             horizon_full: np.ndarray,
             horizon_offer: np.ndarray
     ):
@@ -180,7 +180,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         self._calculate_energy_flex()
 
         # Costs KPIs
-        self._calculate_costs(costs_profile_electricity=costs_profile_electricity)
+        self._calculate_costs(power_costs_profile=power_costs_profile)
         self._calculate_costs_rel()
 
     def _calculate_power_flex(self, power_profile_base: pd.Series, power_profile_shadow: pd.Series, horizon_offer: np.ndarray,
@@ -242,12 +242,12 @@ class FlexibilityKPIs(pydantic.BaseModel):
         self.energy_flex.value = energy_flex
         return energy_flex
 
-    def _calculate_costs(self, costs_profile_electricity: pd.Series) -> [float, pd.Series]:
+    def _calculate_costs(self, power_costs_profile: pd.Series) -> [float, pd.Series]:
         """
         Calculate the costs of the flexibility event based on the electricity costs profile and the power flexibility profile.
         """
         # Calculate series
-        costs_series = costs_profile_electricity * self.power_flex_full.value
+        costs_series = power_costs_profile * self.power_flex_full.value
         self.costs_series.value = costs_series
 
         # Calculate scalar
@@ -318,7 +318,7 @@ class FlexibilityData(pydantic.BaseModel):
         default=None,
         description="Power profile of the positive flexibility",
     )
-    costs_profile_electricity: pd.Series = pydantic.Field(
+    power_costs_profile: pd.Series = pydantic.Field(
         default=None,
         description="Profile of the electricity costs",
     )
@@ -362,13 +362,13 @@ class FlexibilityData(pydantic.BaseModel):
         self.kpis_pos.calculate(
             power_profile_base=self.power_profile_base,
             power_profile_shadow=self.power_profile_flex_pos,
-            costs_profile_electricity=self.costs_profile_electricity,
+            power_costs_profile=self.power_costs_profile,
             horizon_full=self.full_horizon, horizon_offer=self.flex_horizon
         )
         self.kpis_neg.calculate(
             power_profile_base=self.power_profile_base,
             power_profile_shadow=self.power_profile_flex_neg,
-            costs_profile_electricity=self.costs_profile_electricity,
+            power_costs_profile=self.power_costs_profile,
             horizon_full=self.full_horizon, horizon_offer=self.flex_horizon
         )
         return self.kpis_pos, self.kpis_neg

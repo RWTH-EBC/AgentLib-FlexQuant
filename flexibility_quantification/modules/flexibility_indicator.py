@@ -191,13 +191,13 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             elif name == self.config.price_variable:
                 # price comes from predictor, so no stripping needed
                 # TODO: add other sources for price signal?
-                self.data.costs_profile_electricity = self.data.format_predictor_inputs(inp.value)
+                self.data.power_costs_profile = self.data.format_predictor_inputs(inp.value)
 
             if all(var is not None for var in (
                     self.data.power_profile_base,
                     self.data.power_profile_flex_neg,
                     self.data.power_profile_flex_pos,
-                    self.data.costs_profile_electricity
+                    self.data.power_costs_profile
             )):
                 # Calculate the flexibility, send the offer, write and save the results
                 self.flexibility()
@@ -337,4 +337,4 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         self.data.power_profile_base = None
         self.data.power_profile_flex_neg = None
         self.data.power_profile_flex_pos = None
-        self.data.costs_profile_electricity = None
+        self.data.power_costs_profile = None
