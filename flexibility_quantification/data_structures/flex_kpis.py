@@ -32,13 +32,6 @@ class KPI(pydantic.BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
-    def __init__(self, name: str, unit: str, direction: Union[FlexibilityDirections, None] = None, value: Union[float, None] = None, **data):
-        super().__init__(**data)
-        self.name = name
-        self.value = value
-        self.unit = unit
-        self.direction = direction
-
     def get_name(self):
         name = f"{self.direction}_{self.name}"
         return name
@@ -49,10 +42,6 @@ class KPISeries(KPI):
         default=None,
         description="Value of the flexibility KPI",
     )
-
-    def __init__(self, name: str, unit: str, direction: Union[FlexibilityDirections, None] = None, value: Union[pd.Series, None] = None, **data):
-        super().__init__(name=name, unit=unit, value=None, direction=direction, **data)
-        self.value = value
 
     def min(self) -> float:
         return self.value.min()
