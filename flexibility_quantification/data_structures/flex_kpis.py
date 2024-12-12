@@ -167,15 +167,15 @@ class FlexibilityKPIs(pydantic.BaseModel):
             power_profile_base: pd.Series,
             power_profile_shadow: pd.Series,
             power_costs_profile: pd.Series,
-            horizon_full: np.ndarray,
-            horizon_offer: np.ndarray
+            mpc_time_frame: np.ndarray,
+            flex_offer_time_frame: np.ndarray
     ):
         """
         Calculate the KPIs based on the power and electricity input profiles.
-        Horizons needed for indexing of the power flexibility profiles.
+        Time frames needed for indexing of the power flexibility profiles.
         """
         # Power / energy KPIs
-        self._calculate_power_flex(power_profile_base=power_profile_base, power_profile_shadow=power_profile_shadow, horizon_offer=horizon_offer)
+        self._calculate_power_flex(power_profile_base=power_profile_base, power_profile_shadow=power_profile_shadow, flex_offer_time_frame=flex_offer_time_frame)
         self._calculate_power_flex_stats()
         self._calculate_energy_flex()
 
@@ -183,7 +183,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         self._calculate_costs(power_costs_profile=power_costs_profile)
         self._calculate_costs_rel()
 
-    def _calculate_power_flex(self, power_profile_base: pd.Series, power_profile_shadow: pd.Series, horizon_offer: np.ndarray,
+    def _calculate_power_flex(self, power_profile_base: pd.Series, power_profile_shadow: pd.Series, flex_offer_time_frame: np.ndarray,
                               relative_error_acceptance: float = 0.01) -> pd.Series:
         """
         Calculate the power flexibility based on the base and flexibility power profiles.
@@ -207,7 +207,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
 
         # Set values
         self.power_flex_full.value = power_flex
-        self.power_flex_offer.value = power_flex.loc[horizon_offer[0]:horizon_offer[-1]]
+        self.power_flex_offer.value = power_flex.loc[flex_offer_time_frame[0]:flex_offer_time_frame[-1]]
         return power_flex
 
     def _calculate_power_flex_stats(self) -> [float]:
@@ -296,13 +296,13 @@ class FlexibilityData(pydantic.BaseModel):
     Class containing the data for the calculation of the flexibility.
     """
     # Time parameters
-    full_horizon: np.ndarray = pydantic.Field(
+    mpc_time_frame: np.ndarray = pydantic.Field(
         default=None,
-        description="Full horizon of the simulation",
+        description="Time frame of the mpcs",
     )
-    flex_horizon: np.ndarray = pydantic.Field(
+    flex_offer_time_frame: np.ndarray = pydantic.Field(
         default=None,
-        description="Flexibility horizon",
+        description="Time frame of the flexibility offer",
     )
 
     # Profiles
@@ -340,22 +340,22 @@ class FlexibilityData(pydantic.BaseModel):
                  time_step: int, prediction_horizon: int, **data):
         super().__init__(**data)
         switch_time = prep_time + market_time
-        self.flex_horizon = np.arange(switch_time, switch_time + flex_event_duration, time_step)
-        self.full_horizon = np.arange(0, prediction_horizon * time_step, time_step)
+        self.flex_offer_time_frame = np.arange(switch_time, switch_time + flex_event_duration, time_step)
+        self.mpc_time_frame = np.arange(0, prediction_horizon * time_step, time_step)
 
     def format_predictor_inputs(self, series: pd.Series) -> pd.Series:
         series.index = series.index - series.index[0]
-        series = series.reindex(self.full_horizon)
+        series = series.reindex(self.mpc_time_frame)
         if any(series.isna()):
-            raise ValueError("The full horizon is not compatible with the predictor input, which leads to NaN values in the series.")
+            raise ValueError("The mpc time frame is not compatible with the predictor input, which leads to NaN values in the series.")
         return series
 
     def format_mpc_inputs(self, series: pd.Series) -> pd.Series:
         series = strip_multi_index(series)
         series = fill_nans(series=series, method=MEAN)
-        series = series.reindex(self.full_horizon)
+        series = series.reindex(self.mpc_time_frame)
         if any(series.isna()):
-            raise ValueError("The full horizon is not compatible with the mpc input, which leads to NaN values in the series.")
+            raise ValueError("The mpc time frame is not compatible with the mpc input, which leads to NaN values in the series.")
         return series
 
     def calculate(self) -> [FlexibilityKPIs, FlexibilityKPIs]:
@@ -363,13 +363,15 @@ class FlexibilityData(pydantic.BaseModel):
             power_profile_base=self.power_profile_base,
             power_profile_shadow=self.power_profile_flex_pos,
             power_costs_profile=self.power_costs_profile,
-            horizon_full=self.full_horizon, horizon_offer=self.flex_horizon
+            mpc_time_frame=self.mpc_time_frame,
+            flex_offer_time_frame=self.flex_offer_time_frame
         )
         self.kpis_neg.calculate(
             power_profile_base=self.power_profile_base,
             power_profile_shadow=self.power_profile_flex_neg,
             power_costs_profile=self.power_costs_profile,
-            horizon_full=self.full_horizon, horizon_offer=self.flex_horizon
+            mpc_time_frame=self.mpc_time_frame,
+            flex_offer_time_frame=self.flex_offer_time_frame
         )
         return self.kpis_pos, self.kpis_neg
 
