@@ -191,7 +191,9 @@ class FlexibilityKPIs(pydantic.BaseModel):
         relative_error_acceptance: threshold for the relative error between the baseline and shadow mpc to set the power flexibility to zero
         """
         if not power_profile_shadow.index.equals(power_profile_base.index):
-            raise ValueError("Indices of power profiles do not match")
+            raise ValueError(f"Indices of power profiles do not match.\n"
+                             f"Baseline: {power_profile_base.index}\n"
+                             f"Shadow: {power_profile_shadow.index}")
 
         # Calculate flexibility
         if self.direction == "positive":
@@ -199,7 +201,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         elif self.direction == "negative":
             power_flex = power_profile_shadow - power_profile_base
         else:
-            raise ValueError("Direction of KPIs not defined")
+            raise ValueError(f"Direction of KPIs not properly defined: {self.direction}")
 
         # Set values to zero if the difference is small
         relative_difference = (power_flex / power_profile_base).abs()
@@ -215,7 +217,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         Calculate the characteristic values of the power flexibility for the offer.
         """
         if self.power_flex_offer.value is None:
-            raise ValueError("Power flexibility value is empty")
+            raise ValueError("Power flexibility value is empty.")
 
         # Calculate characteristic values
         power_flex_offer_max = self.power_flex_offer.max()
@@ -233,7 +235,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         Calculate the energy flexibility by integrating the power flexibility of the offer window.
         """
         if self.power_flex_offer.value is None:
-            raise ValueError("Power flexibility value is empty")
+            raise ValueError("Power flexibility value of the offer is empty.")
 
         # Calculate flexibility
         energy_flex = self.power_flex_offer.integrate(time_unit="hours")
@@ -348,21 +350,36 @@ class FlexibilityData(pydantic.BaseModel):
         self.mpc_time_frame = np.arange(0, prediction_horizon * time_step, time_step)
 
     def format_predictor_inputs(self, series: pd.Series) -> pd.Series:
+        """
+        Format the input of the predictor to unify the data.
+        """
         series.index = series.index - series.index[0]
         series = series.reindex(self.mpc_time_frame)
         if any(series.isna()):
-            raise ValueError("The mpc time frame is not compatible with the predictor input, which leads to NaN values in the series.")
+            raise ValueError(f"The mpc time frame is not compatible with the predictor input, which leads to NaN values in the series.\n"
+                             f"MPC time frame:{self.mpc_time_frame}\n"
+                             f"Series index:{series.index}")
         return series
 
     def format_mpc_inputs(self, series: pd.Series) -> pd.Series:
+        """
+        Format the input of the mpc to unify the data.
+        """
         series = strip_multi_index(series)
         series = fill_nans(series=series, method=MEAN)
         series = series.reindex(self.mpc_time_frame)
         if any(series.isna()):
-            raise ValueError("The mpc time frame is not compatible with the mpc input, which leads to NaN values in the series.")
+            raise ValueError(f"The mpc time frame is not compatible with the mpc input, which leads to NaN values in the series.\n"
+                             f"MPC time frame:{self.mpc_time_frame}\n"
+                             f"Series index:{series.index}")
         return series
 
     def calculate(self) -> [FlexibilityKPIs, FlexibilityKPIs]:
+        """
+        Calculate the KPIs for the positive and negative flexibility.
+
+        Returns: positive KPIs, negative KPIs
+        """
         self.kpis_pos.calculate(
             power_profile_base=self.power_profile_base,
             power_profile_shadow=self.power_profile_flex_pos,
