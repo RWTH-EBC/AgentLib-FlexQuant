@@ -37,7 +37,7 @@ def run_example(until=until):
     mas.run(until=until)
     results = mas.get_results(cleanup=False)
 
-    # TODO: outsource plotting in different script
+
 
     # for external plot script
     ResultsT = dict[str, dict[str, pd.DataFrame]]
@@ -51,7 +51,7 @@ def run_example(until=until):
                 "pos": load_mpc(Path(res_path, "mpc_neg_flex.csv")),
                 "neg": load_mpc(Path(res_path, "mpc_pos_flex.csv")),
             },
-            # TODO: implement load functions
+
             # "indicator": {"admm_module": load_indicator(Path(res_path,
             # "flexibility_indicator.csv"))},
             # "market": {"admm_module": load_market(Path(res_path,
