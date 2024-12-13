@@ -7,6 +7,7 @@ import json
 import csv
 from datetime import datetime
 
+
 class PredictorModuleConfig(al.BaseModuleConfig):
     """Module that outputs a prediction of the heat load at a specified
     interval."""
@@ -26,7 +27,7 @@ class PredictorModuleConfig(al.BaseModuleConfig):
         )
     ]
 
-    shared_variable_fields:List[str] = ["outputs"]
+    shared_variable_fields: List[str] = ["outputs"]
 
 
 class PredictorModule(al.BaseModule):

@@ -219,7 +219,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
 
     def get_results(self) -> Optional[pd.DataFrame]:
         """
-        Opens results file of flexibilityindicators.py
+        Opens results file of flexibility_indicators.py
         results_file defined in __init__
         """
         results_file = self.config.results_file
@@ -400,7 +400,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
 
         base_profile = self.base_vals.reindex(index=flex_horizon)
 
-        flex_envelope = calc_flex_envelop(powerflex_pos=powerflex_profile_pos, powerflex_neg=powerflex_profile_neg,
+        flex_envelope = calc_flex_envelop(powerflex_pos=self.pos_vals.reindex(index=flex_horizon), powerflex_neg=self.neg_vals.reindex(index=flex_horizon),
                                           powerflex_base=base_profile, time_step=time_step, horizon=flex_horizon,
                                           scaler=scaler)
 

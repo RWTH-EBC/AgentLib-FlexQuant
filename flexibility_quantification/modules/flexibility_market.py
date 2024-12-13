@@ -199,7 +199,8 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                     profile_energy, time_steps = flex_profile_neg(offer)
 
                     profile_power: pd.Series = convert_profile(profile_energy=profile_energy, time_steps=time_steps)
-                    profile: pd.Series = offer.base_power_profile + profile_power
+                    # profile: pd.Series = offer.base_power_profile + profile_power
+                    profile: pd.Series = profile_power
 
                     if bDebug:
                         # create the folder to store the figure
@@ -238,7 +239,8 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                     profile_energy, time_steps = flex_profile_pos(offer)
 
                     profile_power: pd.Series = convert_profile(profile_energy=profile_energy, time_steps=time_steps)
-                    profile: pd.Series = offer.base_power_profile - profile_power
+                    # profile: pd.Series = offer.base_power_profile - profile_power
+                    profile: pd.Series = profile_power
 
                     if bDebug:
                         # create the folder to store the figure
@@ -276,17 +278,19 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                 case "average":
                     profile_energy, time_steps = flex_profile_average(offer)
 
-                    profile_energy_min, time_steps = flex_profile_neg(offer)
+                    profile_energy_neg, time_steps = flex_profile_neg(offer)
 
-                    profile_power_min: pd.Series = convert_profile(profile_energy=profile_energy_min, time_steps=time_steps)
-                    profile_min: pd.Series = offer.base_power_profile + profile_power_min
+                    profile_power_neg: pd.Series = convert_profile(profile_energy=profile_energy_neg, time_steps=time_steps)
+                    # profile_neg: pd.Series = offer.base_power_profile + profile_power_neg
+                    profile_neg: pd.Series = profile_power_neg
 
-                    profile_energy_max, time_steps = flex_profile_pos(offer)
+                    profile_energy_pos, time_steps = flex_profile_pos(offer)
 
-                    profile_power_max: pd.Series = convert_profile(profile_energy=profile_energy_max, time_steps=time_steps)
-                    profile_max: pd.Series = offer.base_power_profile - profile_power_max
+                    profile_power_pos: pd.Series = convert_profile(profile_energy=profile_energy_pos, time_steps=time_steps)
+                    # profile_pos: pd.Series = offer.base_power_profile - profile_power_pos
+                    profile_pos: pd.Series = profile_power_pos
 
-                    profile = (profile_min + profile_max)/2
+                    profile = (profile_neg + profile_pos)/2
 
                     if bDebug:
                         # create the folder to store the figure
