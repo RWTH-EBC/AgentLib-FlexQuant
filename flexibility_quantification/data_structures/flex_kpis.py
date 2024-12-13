@@ -268,14 +268,14 @@ class FlexibilityKPIs(pydantic.BaseModel):
         self.costs_rel.value = costs_rel
         return costs_rel
 
-    def get_kpi_dict(self, direction_name: bool = False) -> dict[str, KPI]:
+    def get_kpi_dict(self, identifier: bool = False) -> dict[str, KPI]:
         """
         Get the KPIs as a dictionary with names depending on the direction as keys.
         """
         kpi_dict = {}
         for kpi in vars(self).values():
             if isinstance(kpi, KPI):
-                if direction_name:
+                if identifier:
                     kpi_dict[kpi.get_kpi_identifier()] = kpi
                 else:
                     kpi_dict[kpi.name] = kpi
@@ -286,7 +286,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         Get the KPIs as a dictionary with names depending on the direction as keys.
         """
         name_dict = {}
-        for name, kpi in self.get_kpi_dict(direction_name=False).items():
+        for name, kpi in self.get_kpi_dict(identifier=False).items():
             name_dict[name] = kpi.get_kpi_identifier()
         return name_dict
 
@@ -380,5 +380,5 @@ class FlexibilityData(pydantic.BaseModel):
         return self.kpis_pos, self.kpis_neg
 
     def get_kpis(self) -> dict[str, KPI]:
-        kpis_dict = self.kpis_pos.get_kpi_dict(direction_name=True) | self.kpis_neg.get_kpi_dict(direction_name=True)
+        kpis_dict = self.kpis_pos.get_kpi_dict(identifier=True) | self.kpis_neg.get_kpi_dict(identifier=True)
         return kpis_dict
