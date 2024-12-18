@@ -84,7 +84,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         )
     ]
 
-    # TODO: don't use parameters list, but create a IndicatorSpecifications class (see market)
+
     parameters: List[agentlib.AgentVariable] = [
         agentlib.AgentVariable(name=glbs.PREP_TIME, unit="s",
                                description="Preparation time"),

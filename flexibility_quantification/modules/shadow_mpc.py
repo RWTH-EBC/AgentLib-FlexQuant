@@ -9,7 +9,7 @@ from agentlib.core.datamodels import AgentVariable
 
 
 class FlexibilityShadowMPC(mpc_full.MPC):
-    # TODO: remove string handling
+
     config: mpc_full.MPCConfig
 
     def __init__(self, *args, **kwargs):
@@ -63,7 +63,7 @@ class FlexibilityShadowMPC(mpc_full.MPC):
 
 
 class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
-    # TODO: remove string handling
+
     config: minlp_mpc.MINLPMPCConfig
 
     def __init__(self, *args, **kwargs):
