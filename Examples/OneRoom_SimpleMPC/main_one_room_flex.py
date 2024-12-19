@@ -10,8 +10,8 @@ import pandas as pd
 import json
 import os
 import shutil
-from flexibility_quantification.utils.interactive import Dashboard, CustomBound
 from plot_results import plot_results_2
+import pickle
 
 
 # Set the log-level
@@ -40,6 +40,9 @@ def run_example(until=until, offer_type=None):
 
     mas.run(until=until)
     results = mas.get_results(cleanup=False)
+
+    with open('results/results_file_neg.pkl', 'wb') as results_file:
+        pickle.dump(results, results_file)
 
     plot_results_2(results=results, offer_type=offer_type)
 
@@ -84,7 +87,8 @@ if __name__ == "__main__":
     if bClearFiles:
         clear_files(bClear_plots=True, bClear_results=True, bClear_flex_files=False)
 
-    offer_types: list[str] = ["neg", "pos", "average"]
+    # offer_types: list[str] = ["neg", "pos", "average"]
+    offer_types: list[str] = ["neg"]
     for offer_type in offer_types:
         print(f'\n{"":-^50}')
         print(f'{f" Starting simulation with {offer_type} ":-^50}')

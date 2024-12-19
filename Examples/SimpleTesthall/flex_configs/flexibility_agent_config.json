@@ -51,7 +51,7 @@
     },
     "market_config": "flex_configs/market.json",
     "baseline_config_generator_data": {
-        "power_variable": "P_el",
+        "power_variable": "P_el_c",
         "power_unit": "kW",
         "profile_deviation_weight": 1000
     },
@@ -63,10 +63,10 @@
             }
         ],
         "pos_flex": {
-            "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, self.s_P * self.P_el])"
+            "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, self.s_P * self.P_el_c])"
         },
         "neg_flex": {
-            "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, -self.s_P * self.P_el])"
+            "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, -self.s_P * self.P_el_c])"
         }
     },
     "path_to_flex_files": "created_flex_files",

@@ -8,11 +8,9 @@ from typing import Optional, Union
 from pathlib import Path
 import pydantic
 import flexibility_quantification.data_structures.globals as glbs
-
+from flexibility_quantification.data_structures.flex_offer import FlexOffer
 from flexibility_quantification.utils.data_handling import strip_multi_index, fill_nans
 sys.path.append(os.path.dirname(__file__))
-
-from flexibility_quantification.data_structures.flex_offer import FlexOffer
 
 
 class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
