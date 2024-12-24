@@ -464,12 +464,14 @@ def plot_results_2(results: dict = None, offer_type: str = None, until: float = 
 
 
 if __name__ == "__main__":
-    path2file = 'results/results_file_neg.pkl'
-    objPath2file = Path(path2file)
+    offer_types: list[str] = ["neg", "pos", "average"]
+    for offer_type in offer_types:
+        path2file: str = f'results/results_file_{offer_type}.pkl'
+        objPath2file = Path(path2file)
 
-    if objPath2file.exists():
-        with open('results/results_file_neg.pkl', 'rb') as results_file:
-            results = pickle.load(results_file)
-            results_file.close()
+        if objPath2file.exists():
+            with open(path2file, 'rb') as results_file:
+                results = pickle.load(results_file)
+                results_file.close()
 
-        plot_results_2(results=results, offer_type='neg', until=results.get('until'))
+            plot_results_2(results=results, offer_type=offer_type, until=results.get('until'))
