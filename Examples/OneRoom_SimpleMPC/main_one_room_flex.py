@@ -12,16 +12,17 @@ import os
 import shutil
 from plot_results import plot_results_2
 import pickle
+import sys
 
 
 # Set the log-level
 logging.basicConfig(level=logging.WARN)
-until = 21600
+until = 2*21600
 
 ENV_CONFIG = {"rt": False, "factor": 0.01, "t_sample": 60}
 
 
-def run_example(until=until, offer_type=None):
+def run_example(until=until, offer_type="neg"):
     results = []
     mpc_config = "mpc_and_sim/simple_model.json"
     sim_config = "mpc_and_sim/simple_sim.json"
@@ -40,11 +41,15 @@ def run_example(until=until, offer_type=None):
 
     mas.run(until=until)
     results = mas.get_results(cleanup=False)
+    results['until'] = until
+
+    if results is None:
+        sys.exit()
 
     with open('results/results_file_neg.pkl', 'wb') as results_file:
         pickle.dump(results, results_file)
 
-    plot_results_2(results=results, offer_type=offer_type)
+    plot_results_2(results=results, offer_type=offer_type, until=until)
 
 
 def clear_files(bClear_plots: bool = False, bClear_flex_files: bool = False, bClear_results: bool = False) -> None:
@@ -56,11 +61,11 @@ def clear_files(bClear_plots: bool = False, bClear_flex_files: bool = False, bCl
                           "plots",
                           "results"]
 
-    if bClear_plots:
+    if not bClear_plots:
         folders.remove("plots")
-    if bClear_results:
+    if not bClear_results:
         folders.remove("results")
-    if bClear_flex_files:
+    if not bClear_flex_files:
         folders.remove("created_flex_files")
 
     files: list[str] = ["nlp_hess_l.casadi"]

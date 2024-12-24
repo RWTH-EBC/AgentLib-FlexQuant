@@ -5,6 +5,7 @@ from agentlib_mpc.utils.analysis import mpc_at_time_step
 from flexibility_quantification.data_structures.flex_results import Results
 from pathlib import Path
 from matplotlib.ticker import FormatStrFormatter
+import pickle
 
 
 def plot_results(results_data: dict = None):
@@ -188,7 +189,7 @@ def plot_results(results_data: dict = None):
     plt.show()
 
 
-def plot_results_2(results: dict = None, offer_type: str = None):
+def plot_results_2(results: dict = None, offer_type: str = None, until: float = 0):
     """
     Example how plotting with matplotlib and mpcplot from agentlib_mpc works
     """
@@ -205,14 +206,14 @@ def plot_results_2(results: dict = None, offer_type: str = None):
     # T_in
     ax2.set_ylabel("$T_{in}$ in K")
     results["SimAgent"]["room"]["T_in"].plot(ax=ax2)
-    x_ticks = np.arange(0, 3600 * 6 + 1, 3600)
+    x_ticks = np.arange(0, until + 1, 3600)
     x_tick_labels = [int(tick / 3600) for tick in x_ticks]
     ax2.set_xticks(x_ticks)
     ax2.set_xticklabels(x_tick_labels)
     ax2.set_xlabel("Time in hours")
     for ax in axs:
         mpcplot.make_grid(ax)
-        ax.set_xlim(0, 3600 * 6)
+        ax.set_xlim(0, until)
 
     # save the figure
     plt.savefig(f"plots/plots_{offer_type}/disturbances.svg", format='svg')
@@ -237,20 +238,36 @@ def plot_results_2(results: dict = None, offer_type: str = None):
     ).plot(ax=ax1, label="base", linestyle="--", color=mpcplot.EBCColors.dark_grey)
 
     ax1.legend()
+
+    mpc_at_time_step(
+        data=results["NegFlexMPC"]["NegFlexMPC"], time_step=18900, variable="T"
+    ).plot(ax=ax1, label="neg", linestyle="--", color=mpcplot.EBCColors.red)
+    mpc_at_time_step(
+        data=results["PosFlexMPC"]["PosFlexMPC"], time_step=18900, variable="T"
+    ).plot(ax=ax1, label="pos", linestyle="--", color=mpcplot.EBCColors.blue)
+    mpc_at_time_step(
+        data=results["FlexModel"]["Baseline"], time_step=19800, variable="T"
+    ).plot(ax=ax1, label="base", linestyle="--", color=mpcplot.EBCColors.dark_grey)
+
     ax1.vlines(9000, ymin=0, ymax=500, colors="black")
     ax1.vlines(9900, ymin=0, ymax=500, colors="black")
     ax1.vlines(10800, ymin=0, ymax=500, colors="black")
     ax1.vlines(18000, ymin=0, ymax=500, colors="black")
 
+    ax1.vlines(18900, ymin=0, ymax=500, colors="black")
+    ax1.vlines(19800, ymin=0, ymax=500, colors="black")
+    ax1.vlines(20700, ymin=0, ymax=500, colors="black")
+    ax1.vlines(27900, ymin=0, ymax=500, colors="black")
+
     ax1.set_ylim(284, 301)
-    x_ticks = np.arange(0, 3600 * 6 + 1, 3600)
+    x_ticks = np.arange(0, until + 1, 3600)
     x_tick_labels = [int(tick / 3600) for tick in x_ticks]
     ax1.set_xticks(x_ticks)
     ax1.set_xticklabels(x_tick_labels)
     ax1.set_xlabel("Time in hours")
     for ax in axs:
         mpcplot.make_grid(ax)
-        ax.set_xlim(0, 3600 * 6)
+        ax.set_xlim(0, until)
 
     # save the figure
     plt.savefig(f"plots/plots_{offer_type}/room_temp.svg", format='svg')
@@ -291,10 +308,45 @@ def plot_results_2(results: dict = None, offer_type: str = None):
     )
 
     ax1.legend()
+
+    mpc_at_time_step(
+        data=results["NegFlexMPC"]["NegFlexMPC"], time_step=18900, variable="P_el"
+    ).ffill().plot(
+        ax=ax1,
+        drawstyle="steps-post",
+        label="neg",
+        linestyle="--",
+        color=mpcplot.EBCColors.red,
+    )
+    mpc_at_time_step(
+        data=results["PosFlexMPC"]["PosFlexMPC"], time_step=18900, variable="P_el"
+    ).ffill().plot(
+        ax=ax1,
+        drawstyle="steps-post",
+        label="pos",
+        linestyle="--",
+        color=mpcplot.EBCColors.blue,
+    )
+    mpc_at_time_step(
+        data=results["FlexModel"]["Baseline"], time_step=19800, variable="P_el"
+    ).ffill().plot(
+        ax=ax1,
+        drawstyle="steps-post",
+        label="base",
+        linestyle="--",
+        color=mpcplot.EBCColors.dark_grey,
+    )
+
     ax1.vlines(9000, ymin=-1000, ymax=5000, colors="black")
     ax1.vlines(9900, ymin=-1000, ymax=5000, colors="black")
     ax1.vlines(10800, ymin=-1000, ymax=5000, colors="black")
     ax1.vlines(18000, ymin=-1000, ymax=5000, colors="black")
+
+    ax1.vlines(18900, ymin=-1000, ymax=5000, colors="black")
+    ax1.vlines(19800, ymin=-1000, ymax=5000, colors="black")
+    ax1.vlines(20700, ymin=-1000, ymax=5000, colors="black")
+    ax1.vlines(27900, ymin=-1000, ymax=5000, colors="black")
+
     ax1.set_ylim(-0.1, 1)
 
     # mdot
@@ -329,21 +381,55 @@ def plot_results_2(results: dict = None, offer_type: str = None):
     )
 
     ax2.legend()
+
+    mpc_at_time_step(
+        data=results["NegFlexMPC"]["NegFlexMPC"], time_step=18900, variable="mDot"
+    ).ffill().plot(
+        ax=ax2,
+        drawstyle="steps-post",
+        label="neg",
+        linestyle="--",
+        color=mpcplot.EBCColors.red,
+    )
+    mpc_at_time_step(
+        data=results["PosFlexMPC"]["PosFlexMPC"], time_step=18900, variable="mDot"
+    ).ffill().plot(
+        ax=ax2,
+        drawstyle="steps-post",
+        label="pos",
+        linestyle="--",
+        color=mpcplot.EBCColors.blue,
+    )
+    mpc_at_time_step(
+        data=results["FlexModel"]["Baseline"], time_step=19800, variable="mDot"
+    ).ffill().plot(
+        ax=ax2,
+        drawstyle="steps-post",
+        label="base",
+        linestyle="--",
+        color=mpcplot.EBCColors.dark_grey,
+    )
+
     ax2.vlines(9000, ymin=0, ymax=500, colors="black")
     ax2.vlines(9900, ymin=0, ymax=500, colors="black")
     ax2.vlines(10800, ymin=0, ymax=500, colors="black")
     ax2.vlines(18000, ymin=0, ymax=500, colors="black")
 
+    ax2.vlines(18900, ymin=0, ymax=500, colors="black")
+    ax2.vlines(19800, ymin=0, ymax=500, colors="black")
+    ax2.vlines(20700, ymin=0, ymax=500, colors="black")
+    ax2.vlines(27900, ymin=0, ymax=500, colors="black")
+
     ax2.set_ylim(0, 0.06)
 
-    x_ticks = np.arange(0, 3600 * 6 + 1, 3600)
+    x_ticks = np.arange(0, until + 1, 3600)
     x_tick_labels = [int(tick / 3600) for tick in x_ticks]
     ax2.set_xticks(x_ticks)
     ax2.set_xticklabels(x_tick_labels)
     ax2.set_xlabel("Time in hours")
     for ax in axs:
         mpcplot.make_grid(ax)
-        ax.set_xlim(0, 3600 * 6)
+        ax.set_xlim(0, until)
 
     # save the figure
     plt.savefig(f"plots/plots_{offer_type}/predictions.svg", format='svg')
@@ -363,15 +449,27 @@ def plot_results_2(results: dict = None, offer_type: str = None):
 
     ax1.legend()
 
-    x_ticks = np.arange(0, 3600 * 6 + 1, 3600)
+    x_ticks = np.arange(0, until + 1, 3600)
     x_tick_labels = [int(tick / 3600) for tick in x_ticks]
     ax1.set_xticks(x_ticks)
     ax1.set_xticklabels(x_tick_labels)
     ax1.set_xlabel("Time in hours")
     for ax in axs:
         mpcplot.make_grid(ax)
-        ax.set_xlim(0, 3600 * 6)
+        ax.set_xlim(0, until + 1)
 
     # save the figure
     plt.savefig(f"plots/plots_{offer_type}/flexibility.svg", format='svg')
     plt.close()
+
+
+if __name__ == "__main__":
+    path2file = 'results/results_file_neg.pkl'
+    objPath2file = Path(path2file)
+
+    if objPath2file.exists():
+        with open('results/results_file_neg.pkl', 'rb') as results_file:
+            results = pickle.load(results_file)
+            results_file.close()
+
+        plot_results_2(results=results, offer_type='neg', until=results.get('until'))

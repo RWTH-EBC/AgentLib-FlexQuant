@@ -213,7 +213,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                         plt.xlabel("Zeit in s")
                         plt.ylabel("Kumulierte Flexibilitäts-Energie $E_{el}$ in kWh")
                         plt.legend(["energyflex_pos", "energyflex_neg", "energyflex_base"])
-                        plt.savefig("plots/plots_neg/flex_offer_1_selected.svg", format='svg')
+                        plt.savefig(f"plots/plots_neg/flex_offer_{self.env.now}_1_selected.svg", format='svg')
                         plt.close()
 
                         flex_envelope = offer.flex_envelope
@@ -223,7 +223,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                         plt.xlabel("Zeit in s")
                         plt.ylabel("Kumulierte Flexibilitäts-Energie $E_{el}$ in kWh")
                         plt.legend(["energyflex_pos", "energyflex_neg", "energyflex_base", "ausgewähltes Angebot"])
-                        plt.savefig("plots/plots_neg/flex_offer_2_selected.svg", format='svg')
+                        plt.savefig(f"plots/plots_neg/flex_offer_{self.env.now}_2_selected.svg", format='svg')
                         plt.close()
 
                         profile.plot(title="Profile", legend="selected")
@@ -232,7 +232,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                         plt.legend(["ausgewählt", "basis"])
                         plt.xlabel("Zeit in s")
                         plt.ylabel("Leistungsprofil $P_{el}$ in kW")
-                        plt.savefig("plots/plots_neg/profile_selected.svg", format='svg')
+                        plt.savefig(f"plots/plots_neg/profile_{self.env.now}_selected.svg", format='svg')
                         plt.close()
 
                 case "pos":
@@ -343,8 +343,9 @@ class FlexibilityMarketModule(agentlib.BaseModule):
             profile = profile.ffill()
             profile.index += self.env.time
             self.set("_P_external", profile)
+
             # only activate a single offer, therefore setting end to inf
-            self.end = np.inf
+            self.end = self.env.now + time_steps.values[-1] + 900
             self.set("in_provision", True)
 
         self.write_results(offer)

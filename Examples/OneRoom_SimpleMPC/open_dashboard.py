@@ -17,6 +17,7 @@ def create_dash_board(result_data=None) -> None:
 
 
 if __name__ == "__main__":
+
     with open('results/results_file_neg.pkl', 'rb') as results_file:
         results = pickle.load(results_file)
 
