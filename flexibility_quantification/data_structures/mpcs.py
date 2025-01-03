@@ -4,12 +4,12 @@ from agentlib_mpc.data_structures.mpc_datamodels import MPCVariables, MPCVariabl
 import flexibility_quantification.utils.config_management as cmng
 
 
-#TODO: add validators for these
+
 class BaseMPCData(pydantic.BaseModel):
     """Base class containing necessary data for the code creation of the different mpcs
 
     """
-    # TODO: add Fields
+
     # files and paths
     created_flex_mpcs_file: str = "flex_agents.py"
     name_of_created_file: str
@@ -54,7 +54,6 @@ class BaselineMPCData(BaseMPCData):
         default="kW",
         description="Unit of the power variable"
     )
-    # TODO: wie mit diesen Daten umgehen? Vor Aufruf von adapt_mpc_module_config einmal diese Datenklasse initialisieren und Werte entsprechend setzen?
     config_inputs_appendix: MPCVariables = [
         MPCVariable(name="_P_external", value=0, unit="W"),
         MPCVariable(name="in_provision", value=False),
