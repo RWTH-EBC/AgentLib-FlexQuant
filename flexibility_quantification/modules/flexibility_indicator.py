@@ -209,9 +209,6 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 self.pos_vals = strip_multi_index(self.pos_vals)
             elif name == self.config.price_variable:
                 # price comes from predictor, so no stripping needed
-                # TODO: add other sources for price signal?
-                # Add option to not calculate prices, just quantity
-                # Add config parameter for constant price, if user decides to make elc price constant, then no predictor needed
                 self._r_pel = inp.value
 
             if all(var is not None for var in

@@ -79,6 +79,12 @@ class BaselineMPCModelConfig(CasadiModelConfig):
             unit="-",
             description="Weight for mDot in objective function",
         ),
+        CasadiParameter(
+            name="profile_deviation_weight",
+            value=100,
+            unit="-",
+            description="Weight of soft constraint for deviation from accepted flexible profile",
+        ),
 
     ]
     outputs: List[CasadiOutput] = [

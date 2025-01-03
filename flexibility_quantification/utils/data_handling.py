@@ -20,7 +20,6 @@ def _set_mean_values(series: pd.Series):
     """Helper function to set the mean values for the collocation points
 
     """
-    # TODO: find a better solution, like using the simulator for the values
     # TODO: clean up -> check issue from peter
     def count_false_after_true(lst):
         """ Counts the nans, effectively the collocation order """
