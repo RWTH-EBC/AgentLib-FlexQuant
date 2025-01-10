@@ -44,7 +44,7 @@ class Dashboard(flex_results.Results):
     MPC_ITERATIONS: str = "iter_count"
 
     # Label for the positive and negative flexibilities
-    # todo: get names from the directions
+
     label_positive: str = "positive"
     label_negative: str = "negative"
 
@@ -98,7 +98,7 @@ class Dashboard(flex_results.Results):
         # MPC and sim variables
         self.intersection_mpcs_sim = self.get_intersection_mpcs_sim()
         self.plotting_variables.extend([key for key in self.intersection_mpcs_sim.keys()])
-        # Flexibility kpis  # todo: get names from the kpis
+        # Flexibility kpis
         self.plotting_variables.append("energyflex")
         self.plotting_variables.append("costs")
 
@@ -186,7 +186,6 @@ class Dashboard(flex_results.Results):
 
         def plot_flexibility_kpi(fig: go.Figure, variable) -> go.Figure:
             df_ind = self.df_indicator.xs(0, level=1)
-            # todo: kpi names function with indicator branch
             pos_var = f"{variable}_pos"
             neg_var = f"{variable}_neg"
             fig.add_trace(go.Scatter(name=self.label_positive, x=df_ind.index, y=df_ind[pos_var], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]))
