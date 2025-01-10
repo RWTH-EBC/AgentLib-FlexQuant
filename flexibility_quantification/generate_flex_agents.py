@@ -119,8 +119,8 @@ class FlexAgentGenerator:
         Power variable must be defined in the mpc config.
 
         """
-        # TODO: Add validation (e.g. price is the same for indicator and mpc_config).
-        #  Otherwise throw warning or make assumptions
+
+
         if self.flex_config.baseline_config_generator_data.power_variable not in [
             output.name for output in self.baseline_mpc_module_config.outputs
         ]:

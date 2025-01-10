@@ -56,6 +56,17 @@
                 {
                     "module_id": "FlexibilityMarket",
                     "type": "flexibility_quantification.flexibility_market",
+<<<<<<< Examples/SimpleTesthall/flex_config/flexibility_agent_config.json
+                    "results_file": "results/flexibility_market_results.csv",
+                    "market_specs": {
+                        "type": "random",
+                        "cooldown": 6,
+                        "minimum_average_flex": 0,
+                        "options": {
+                          "random_seed": 1,
+                          "pos_neg_rate": 1,
+                          "offer_acceptance_rate": 0.1
+=======
                     "results_file": "results/flexibility_market_results.csv",
                   "time_step": 900,
                   "market_specs": {
@@ -66,6 +77,7 @@
                       "random_seed": 1,
                       "pos_neg_rate": 1,
                       "offer_acceptance_rate": 0.1
+>>>>>>> Examples/SimpleTesthall/flex_config/flexibility_agent_config.json
                     }
                   }
                 }
@@ -75,7 +87,8 @@
         "name_of_created_file": "flexibility_market.json"
     },
     "baseline_config_generator_data": {
-        "power_variable": "P_el"
+        "power_variable": "P_el",
+        "profile_deviation_weight": "profile_deviation_weight"
     },
     "shadow_mpc_config_generator_data": {
         "weights": [{"name": "s_P", "value": 10}],

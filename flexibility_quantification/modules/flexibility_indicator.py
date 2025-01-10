@@ -84,7 +84,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         )
     ]
 
-    # TODO: don't use parameters list, but create a IndicatorSpecifications class (see market)
+
     parameters: List[agentlib.AgentVariable] = [
         agentlib.AgentVariable(name=glbs.PREP_TIME, unit="s",
                                description="Preparation time"),
@@ -100,7 +100,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
     ]
 
     results_file: Optional[Path] = pydantic.Field(default=None)
-    # TODO: use these two
+
     save_results: Optional[bool] = pydantic.Field(validate_default=True, default=None)
     overwrite_result_file: Optional[bool] = pydantic.Field(default=False, validate_default=True)
 
@@ -196,7 +196,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 self.neg_vals = None
                 self.pos_vals = None
                 self._r_pel = None
-        # TODO: remove hardcoded strings
+
         if not self.in_provision:
             if name == "__P_el_base":
                 self.base_vals = inp.value
@@ -209,7 +209,6 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 self.pos_vals = strip_multi_index(self.pos_vals)
             elif name == self.config.price_variable:
                 # price comes from predictor, so no stripping needed
-                # TODO: add other sources for price signal?
                 self._r_pel = inp.value
 
             if all(var is not None for var in
@@ -332,7 +331,6 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         powerflex_flex_neg = powerflex_profile_neg.reindex(index=full_horizon)
         self.set("powerflex_flex_neg", powerflex_flex_neg)
         # W -> kW
-        # TODO: units anpassen (über Agentvars?)
         self.set("powerflex_avg_neg", str(np.average(powerflex_flex_neg.dropna()) / scaler))
         self.set("powerflex_neg_min", str(min(powerflex_flex_neg.dropna()) / scaler))
         self.set("powerflex_neg_max", str(max(powerflex_flex_neg.dropna()) / scaler))

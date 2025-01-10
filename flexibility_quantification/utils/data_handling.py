@@ -39,11 +39,9 @@ def _set_mean_values(series: pd.Series):
     """Helper function to set the mean values for the collocation points
 
     """
-    # TODO: find a better solution, like using the simulator for the values
-    # TODO: clean up
+    # TODO: clean up -> check issue from peter
     def count_false_after_true(lst):
         """ Counts the nans, effectively the collocation order """
-        # TODO: add collocation order in config. Generator should set this value
         count = 0
         found_true = False
         for item in lst:
