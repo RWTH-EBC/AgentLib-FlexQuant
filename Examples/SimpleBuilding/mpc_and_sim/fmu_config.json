@@ -1,0 +1,41 @@
+{
+    "id": "SimAgent",
+    "modules": [
+        {
+            "module_id": "Ag1Com", 
+            "type": "local_broadcast"
+        },
+        {
+            "module_id": "SimRoom",
+            "type": "simulator",
+            "model": {
+                "type": "fmu",
+                "path": "fmu/simple_building.fmu"
+            },
+            "result_causalities": ["input", "output", "local", "parameter"],
+            "measurement_uncertainty": 0.0001,
+            "t_sample": 5,
+            "update_inputs_on_callback": true,
+            "save_results": true,
+            "result_filename": "results/sim_building.csv",
+            "overwrite_result_file": true,
+            "inputs": [
+                {
+                    "name": "Q_in", 
+                    "value": 0, 
+                    "alias": "P_el"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "T_zone"
+                }
+            ],
+            "states": [
+                {
+                    "name": "roomCapacity.T"
+                }
+            ]
+        }
+    ]
+}
