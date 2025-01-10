@@ -10,9 +10,9 @@ from agentlib.utils.multi_agent_system import LocalMASAgency
 from flexibility_quantification.utils.interactive import Dashboard, CustomBound
 
 logging.basicConfig(level=logging.WARN)
-until = 3600 * 24 #?
+until = 3600 * 24 
 
-ENV_CONFIG = {"rt": False, "factor": 0.002, "t_sample": 1} #?
+ENV_CONFIG = {"rt": False, "factor": 0.002, "t_sample": 1} 
 
 def run_example(until=until):
 
@@ -37,7 +37,7 @@ def run_example(until=until):
 
     results = []
     results = mas.get_results(cleanup=False)
-    #?
+    
     Dashboard( 
         flex_config=flex_config,
         simulator_agent_config=sim_config,
