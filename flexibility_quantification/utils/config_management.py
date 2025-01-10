@@ -24,8 +24,11 @@ all_module_types.pop("clonemap")
 MODULE_TYPE_DICT = {name: inspect.get_annotations(class_type.import_class())["config"] for name, class_type in all_module_types.items()}
 
 MPC_CONFIG_TYPE: str = "agentlib_mpc.mpc"
+BASELINEMPC_CONFIG_TYPE: str = "flexibility_quantification.baseline_mpc"
+SHADOWMPC_CONFIG_TYPE: str = "flexibility_quantification.shadow_mpc"
 INDICATOR_CONFIG_TYPE: str = "flexibility_quantification.flexibility_indicator"
 MARKET_CONFIG_TYPE: str = "flexibility_quantification.flexibility_market"
+SIMULATOR_CONFIG_TYPE: str = "simulator"
 
 
 def get_module_type_matching_dict(dictionary: dict):
@@ -81,7 +84,12 @@ def get_module(config: AgentConfig, module_type: str) -> T:
     """
     for module in config.modules:
         if module["type"] == module_type:
-            return deepcopy(MODULE_TYPE_DICT[module["type"]](**module, _agent_id=config.id))
+            # deepcopy -> avoid changing the original config, when editing the module
+            # deepcopy the args of the constructor instead of the module object,
+            # because the simulator module exceeds the recursion limit
+            config_id = deepcopy(config.id)
+            mod = deepcopy(module)
+            return MODULE_TYPE_DICT[module["type"]](**mod, _agent_id=config_id)
 
 
 def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig):
