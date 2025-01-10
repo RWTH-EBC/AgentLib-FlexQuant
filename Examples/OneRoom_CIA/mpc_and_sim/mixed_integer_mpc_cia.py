@@ -101,6 +101,12 @@ class MyCasadiModelConfig(CasadiModelConfig):
             unit="W",
             description="Cooling power cannot modulate below this value",
         ),
+        CasadiParameter(
+            name="profile_deviation_weight",
+            value=100,
+            unit="-",
+            description="Weight of soft constraint for deviation from accepted flexible profile",
+        ),
     ]
     outputs: List[CasadiOutput] = [
         CasadiOutput(name="T_out", unit="K", description="Temperature of zone"),

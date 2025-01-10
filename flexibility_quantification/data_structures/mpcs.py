@@ -45,9 +45,8 @@ class BaselineMPCData(BaseMPCData):
         default="P_el",
         description="Name of the variable representing the electrical power in the baseline config",
     )
-    # TODO: add this as parameter to the mpc config rather than just writing the value in the cost function
-    profile_deviation_weight: float = pydantic.Field(
-        default=0,
+    profile_deviation_weight: str = pydantic.Field(
+        default="profile_deviation_weight",
         description="Weight of soft constraint for deviation from accepted flexible profile",
     )
     power_unit: str = pydantic.Field(

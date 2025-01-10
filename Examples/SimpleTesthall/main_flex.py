@@ -193,7 +193,7 @@ if __name__ == "__main__":
     # change this to switch between different cases
     predictor_config = "Model//local//predictor//config.json"
     mpc_config = f"Model//local//mpc//config.json"
-    flex_config = f"flexibility_agent_config.json"
+    flex_config = f"flex_config//flexibility_agent_config.json"
     fname = None
     
     agent_configs, env_config, initial_time, until, time_step = get_configs(predictor_config, mpc_config, flex_config)
