@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
 from tikzplotlib import get_tikz_code
-from FlexibilityQuantification.flex_offer import OfferStatus
+from flexibility_quantification.flex_offer import OfferStatus
 
 
 def set_mean_values(arr):

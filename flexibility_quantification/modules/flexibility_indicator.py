@@ -443,7 +443,7 @@ def calc_flex_envelop(powerflex_pos: pd.Series, powerflex_neg: pd.Series, time_s
     #           d.h. einen Zeitschrit vor dem ersten eigentlichen Schritt, t-1
     horizon = np.append([900], horizon)
 
-    return pd.DataFrame(data={'energyflex_pos': energyflex_pos.tolist(), 'energyflex_neg': energyflex_neg.tolist(), 'energyflex_base': energyflex_base.tolist(), 'time_steps': horizon}, index=horizon)
+    return pd.DataFrame(data={'energyflex_pos': energyflex_pos.tolist(), 'energyflex_neg': energyflex_neg.tolist(), 'energyflex_base': energyflex_base.tolist(), 'time_steps': horizon, 'powerflex_base': powerflex_base_prepared, 'powerflex_pos': powerflex_pos_prepared, 'powerflex_neg': powerflex_neg_prepared}, index=horizon)
 
 
 def prepare_flex_envelope_data(power_flex_pos, power_flex_neg, time_step) -> tuple[list, list]:

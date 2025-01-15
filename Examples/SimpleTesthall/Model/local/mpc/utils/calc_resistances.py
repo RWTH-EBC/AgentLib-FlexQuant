@@ -138,7 +138,7 @@ def calc_resistances(tz_par, split_sol, split_ig):
         # Extract coefficients for each symbolic variable
         coeffs = {}
         for var in [T_Air, T_ext, T_int, T_roof, T_floor, Q_RadSol, q_ig_rad, T_preTemWin, T_radiator_sur, T_rad_exp]:
-            coeffs[str(var)] = eq.coeff(var)
+            coeffs[str(var)] = float(eq.coeff(var))
 
         # Store coefficients for the current equation
         coefficients[str(var_sur)] = coeffs

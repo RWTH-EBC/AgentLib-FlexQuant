@@ -64,6 +64,9 @@ def run_example(offer_type=None) -> None:
     if results is None:
         sys.exit()
 
+    with open('results/results_file_neg.pkl', 'wb') as results_file:
+        pickle.dump(results, results_file)
+
     # create the folder to store the figure
     Path("plots").mkdir(parents=True, exist_ok=True)
     Path(f"plots/plots_{offer_type}").mkdir(parents=True, exist_ok=True)
@@ -79,13 +82,13 @@ def run_example(offer_type=None) -> None:
     results["SimAgent"]["SimTestHall"]["T_out"].plot(ax=ax1, color=mpcplot.EBCColors.dark_grey)
 
     mpc_at_time_step(
-        data=results["NegFlexMPC"]["NegFlexMPC"], time_step=initial_time + 9000, variable="T_out"
+        data=results["NegFlexMPC"]["NegFlexMPC"], time_step=initial_time + 9000, variable="T_Air"
     ).plot(ax=ax1, label="neg", linestyle="--", color=mpcplot.EBCColors.red)
     mpc_at_time_step(
-        data=results["PosFlexMPC"]["PosFlexMPC"], time_step=initial_time + 9000, variable="T_out"
+        data=results["PosFlexMPC"]["PosFlexMPC"], time_step=initial_time + 9000, variable="T_Air"
     ).plot(ax=ax1, label="pos", linestyle="--", color=mpcplot.EBCColors.blue)
     mpc_at_time_step(
-        data=results["myMPCAgent"]["myMPC"], time_step=initial_time + 9900, variable="T_out"
+        data=results["myMPCAgent"]["myMPC"], time_step=initial_time + 9900, variable="T_Air"
     ).plot(ax=ax1, label="base", linestyle="--", color=mpcplot.EBCColors.dark_grey)
 
     ax1.legend()
@@ -412,11 +415,11 @@ def clear_files(bClear_plots: bool = False, bClear_flex_files: bool = False, bCl
                           "plots",
                           "results"]
 
-    if bClear_plots:
+    if not bClear_plots:
         folders.remove("plots")
-    if bClear_results:
+    if not bClear_results:
         folders.remove("results")
-    if bClear_flex_files:
+    if not bClear_flex_files:
         folders.remove("created_flex_files")
 
     files: list[str] = ["nlp_hess_l.casadi"]
@@ -424,13 +427,13 @@ def clear_files(bClear_plots: bool = False, bClear_flex_files: bool = False, bCl
     bDebug: bool = True
 
     for folder in folders:
-        path: str = os.path.join(rootPath, "Examples", "OneRoom_SimpleMPC", folder)
+        path: str = os.path.join(rootPath, "Examples", "SimpleTesthall", folder)
         if os.path.exists(path):
             if bDebug: print(f"{'deleting:':>14} {path}")
             shutil.rmtree(path=path)
 
     for file in files:
-        path: str = os.path.join(rootPath, "Examples", "OneRoom_SimpleMPC", file)
+        path: str = os.path.join(rootPath, "Examples", "SimpleTesthall", file)
         if os.path.exists(path):
             if bDebug: print(f"{'deleting:':>14} {path}")
             os.remove(path=path)
