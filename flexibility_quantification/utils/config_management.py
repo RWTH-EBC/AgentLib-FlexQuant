@@ -89,7 +89,7 @@ def get_module(config: AgentConfig, module_type: str) -> T:
             # because the simulator module exceeds the recursion limit
             config_id = deepcopy(config.id)
             mod = deepcopy(module)
-            return MODULE_TYPE_DICT[module["type"]](**mod, _agent_id=config_id)
+            return MODULE_TYPE_DICT[mod["type"]](**mod, _agent_id=config_id)
 
 
 def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig):
