@@ -388,7 +388,8 @@ class FlexibilityData(pydantic.BaseModel):
             Formatted series.
         """
         series = strip_multi_index(series)
-        series = fill_nans(series=series, method=MEAN)
+        if any(series.isna()):
+            series = fill_nans(series=series, method=MEAN)
         series = series.reindex(self.mpc_time_grid)
         if any(series.isna()):
             raise ValueError(f"The mpc time grid is not compatible with the mpc input, which leads to NaN values in the series.\n"
