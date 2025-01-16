@@ -9,6 +9,13 @@ FillNansMethods = Literal[MEAN, INTERPOLATE]
 
 
 def fill_nans(series: pd.Series, method: FillNansMethods) -> pd.Series:
+    """
+    Fill NaN values in the series with the given method.
+
+    Implemented methods:
+    - mean: fill NaN values with the mean of the following values.
+    - interpolate: interpolate missing values.
+    """
     if method == MEAN:
         series = _set_mean_values(series=series)
     elif method == INTERPOLATE:
