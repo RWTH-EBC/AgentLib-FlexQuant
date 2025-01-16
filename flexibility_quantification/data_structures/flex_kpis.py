@@ -42,10 +42,18 @@ class KPISeries(KPI):
         default=None,
         description="Value of the flexibility KPI",
     )
-    dt: Union[pd.Series, float, None] = pydantic.Field(
+    dt: Union[pd.Series, None] = pydantic.Field(
         default=None,
-        description="Time difference (in seconds) between the values of the series in seconds",
+        description="Time differences between the timestamps of the series in seconds",
     )
+
+    def _get_dt(self) -> pd.Series:
+        """
+        Get the time differences between the timestamps of the series.
+        """
+        dt = pd.Series(index=self.value.index, data=self.value.index).diff().shift(-1).ffill()
+        self.dt = dt
+        return dt
 
     def min(self) -> float:
         return self.value.min()
@@ -58,36 +66,20 @@ class KPISeries(KPI):
         Calculate the average value of the KPI over time.
         """
         if self.dt is None:
-            self.dt = self._get_dt()
-        if isinstance(self.dt, pd.Series):
-            delta_t = self.dt.sum()
-            avg = self.integrate() / delta_t
-        elif isinstance(self.dt, float):
-            avg = self.value.mean()
-        else:
-            raise ValueError("Time difference self.dt is type: {type(self.dt)}")
+            self._get_dt()
+        delta_t = self.dt.sum()
+        avg = self.integrate() / delta_t
         return avg
 
     def integrate(self, time_unit: TimeConversionTypes = "seconds") -> float:
         """
         Integrate the value of the KPI over time by summing up the product of values and the time difference.
-        Only possible for pd.Series
         """
         if self.dt is None:
-            self.dt = self._get_dt()
+            self._get_dt()
         products = self.value * self.dt / TIME_CONVERSION[time_unit]
         integral = products.sum()
         return integral
-
-    def _get_dt(self) -> pd.Series:
-        """
-        Calculate the time difference between the values of the series.
-        """
-        if isinstance(self.value, pd.Series):
-            dt = pd.Series(index=self.value.index, data=self.value.index).diff().shift(-1).ffill()
-            return dt
-        else:
-            raise ValueError("Time difference only possible for Series")
 
 
 class FlexibilityKPIs(pydantic.BaseModel):
