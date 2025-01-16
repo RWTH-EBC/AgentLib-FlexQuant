@@ -193,7 +193,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                     self.data.power_costs_profile
             )):
                 # Calculate the flexibility, send the offer, write and save the results
-                self.flexibility()
+                self.calc_and_send_offer()
 
                 # set the values to None to reset the callback
                 self._set_inputs_to_none()
@@ -262,7 +262,10 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             return
         os.remove(results_file)
 
-    def flexibility(self):
+    def calc_and_send_offer(self):
+        """
+        Calculate the flexibility KPIs for current predictions, send the flex offer and set the outputs, write and save the results.
+        """
         # Calculate the flexibility KPIs for current predictions
         self.data.calculate()
 
