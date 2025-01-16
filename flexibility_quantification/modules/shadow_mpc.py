@@ -45,7 +45,9 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         if self.agent.config.id == inp.source.agent_id:
             return
 
-        vals = fill_nans(strip_multi_index(inp.value), method=MEAN)
+        vals = strip_multi_index(inp.value)
+        if vals.isna().any():
+            vals = fill_nans(series=vals, method=MEAN)
 
         # the MPC Predictions starts at t=env.now not t=0
         vals.index += self.env.time
