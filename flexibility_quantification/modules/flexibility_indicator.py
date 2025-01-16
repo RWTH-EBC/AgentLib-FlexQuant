@@ -1,48 +1,26 @@
 import os
-import sys
-from typing import Optional, List, Literal
+from typing import Optional, List
 import agentlib
 import numpy as np
 import pandas as pd
 from pathlib import Path
 import pydantic
 import flexibility_quantification.data_structures.globals as glbs
-from flexibility_quantification.utils.data_handling import strip_multi_index, fill_nans, MEAN, INTERPOLATE
-from flexibility_quantification.data_structures.indicator import FlexibilityData, FlexibilityKPIs
-
-DiscretizationTypes = Literal["collocation", "multiple_shooting"]
-
-sys.path.append(os.path.dirname(__file__))
-
+from flexibility_quantification.data_structures.flex_kpis import FlexibilityData, FlexibilityKPIs
 from flexibility_quantification.data_structures.flex_offer import FlexOffer
 
+# Pos and neg kpis to get the right names for plotting
 kpis_pos = FlexibilityKPIs(direction="positive")
 kpis_neg = FlexibilityKPIs(direction="negative")
-
-# todo: import without circle
-power_alias_base = "__P_el_base"
-power_alias_neg = "__P_el_neg"
-power_alias_pos = "__P_el_pos"
-
-
-def format_predictor_inputs(series: pd.Series) -> pd.Series:
-    series.index = series.index - series.index[0]
-    return series
-
-
-def format_mpc_inputs(series: pd.Series) -> pd.Series:
-    series = strip_multi_index(series)
-    series = fill_nans(series=series, method=MEAN)
-    return series
 
 
 class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
     inputs: List[agentlib.AgentVariable] = [
-        agentlib.AgentVariable(name=power_alias_base, unit="W", type="pd.Series",
+        agentlib.AgentVariable(name=glbs.POWER_ALIAS_BASE, unit="W", type="pd.Series",
                                description="The power input to the system"),
-        agentlib.AgentVariable(name=power_alias_neg, unit="W", type="pd.Series",
+        agentlib.AgentVariable(name=glbs.POWER_ALIAS_NEG, unit="W", type="pd.Series",
                                description="The power input to the system"),
-        agentlib.AgentVariable(name=power_alias_pos, unit="W", type="pd.Series",
+        agentlib.AgentVariable(name=glbs.POWER_ALIAS_POS, unit="W", type="pd.Series",
                                description="The power input to the system"),
         agentlib.AgentVariable(name="r_pel", unit="ct/kWh", type="pd.Series",
                                description="electricity price")
@@ -53,71 +31,71 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
 
         # Power KPIs
         agentlib.AgentVariable(
-            name=kpis_neg.power_flex_full.get_name(), unit='W', type="pd.Series",
+            name=kpis_neg.power_flex_full.get_kpi_identifier(), unit='W', type="pd.Series",
             description="Negative power flexibility"
         ),
         agentlib.AgentVariable(
-            name=kpis_pos.power_flex_full.get_name(), unit='W', type="pd.Series",
+            name=kpis_pos.power_flex_full.get_kpi_identifier(), unit='W', type="pd.Series",
             description="Positive power flexibility"
         ),
         agentlib.AgentVariable(
-            name=kpis_neg.power_flex_offer.get_name(), unit='W', type="pd.Series",
+            name=kpis_neg.power_flex_offer.get_kpi_identifier(), unit='W', type="pd.Series",
             description="Negative power flexibility"
         ),
         agentlib.AgentVariable(
-            name=kpis_pos.power_flex_offer.get_name(), unit='W', type="pd.Series",
+            name=kpis_pos.power_flex_offer.get_kpi_identifier(), unit='W', type="pd.Series",
             description="Positive power flexibility"
         ),
         agentlib.AgentVariable(
-            name=kpis_neg.power_flex_offer_min.get_name(), unit='W', type="float",
+            name=kpis_neg.power_flex_offer_min.get_kpi_identifier(), unit='W', type="float",
             description="Minimum of negative power flexibility"
         ),
         agentlib.AgentVariable(
-            name=kpis_pos.power_flex_offer_min.get_name(), unit='W', type="float",
+            name=kpis_pos.power_flex_offer_min.get_kpi_identifier(), unit='W', type="float",
             description="Minimum of positive power flexibility"
         ),
         agentlib.AgentVariable(
-            name=kpis_neg.power_flex_offer_max.get_name(), unit='W', type="float",
+            name=kpis_neg.power_flex_offer_max.get_kpi_identifier(), unit='W', type="float",
             description="Maximum of negative power flexibility"
         ),
         agentlib.AgentVariable(
-            name=kpis_pos.power_flex_offer_max.get_name(), unit='W', type="float",
+            name=kpis_pos.power_flex_offer_max.get_kpi_identifier(), unit='W', type="float",
             description="Maximum of positive power flexibility"
         ),
         agentlib.AgentVariable(
-            name=kpis_neg.power_flex_offer_avg.get_name(), unit='W', type="float",
+            name=kpis_neg.power_flex_offer_avg.get_kpi_identifier(), unit='W', type="float",
             description="Average of negative power flexibility"
         ),
         agentlib.AgentVariable(
-            name=kpis_pos.power_flex_offer_avg.get_name(), unit='W', type="float",
+            name=kpis_pos.power_flex_offer_avg.get_kpi_identifier(), unit='W', type="float",
             description="Average of positive power flexibility"
         ),
 
         # Energy KPIs
         agentlib.AgentVariable(
-            name=kpis_neg.energy_flex.get_name(), unit='kWh', type="float",
+            name=kpis_neg.energy_flex.get_kpi_identifier(), unit='kWh', type="float",
             description="Negative energy flexibility"
         ),
         agentlib.AgentVariable(
-            name=kpis_pos.energy_flex.get_name(), unit='kWh', type="float",
+            name=kpis_pos.energy_flex.get_kpi_identifier(), unit='kWh', type="float",
             description="Positive energy flexibility"
         ),
 
         # Costs KPIs
         agentlib.AgentVariable(
-            name=kpis_neg.costs.get_name(), unit="ct", type="float",
+            name=kpis_neg.costs.get_kpi_identifier(), unit="ct", type="float",
             description="Saved costs due to baseline"
         ),
         agentlib.AgentVariable(
-            name=kpis_pos.costs.get_name(), unit="ct", type="float",
+            name=kpis_pos.costs.get_kpi_identifier(), unit="ct", type="float",
             description="Saved costs due to baseline"
         ),
         agentlib.AgentVariable(
-            name=kpis_neg.costs_rel.get_name(), unit='ct/kWh', type="float",
+            name=kpis_neg.costs_rel.get_kpi_identifier(), unit='ct/kWh', type="float",
             description="Saved costs due to baseline"
         ),
         agentlib.AgentVariable(
-            name=kpis_pos.costs_rel.get_name(), unit='ct/kWh', type="float",
+            name=kpis_pos.costs_rel.get_kpi_identifier(), unit='ct/kWh', type="float",
             description="Saved costs due to baseline"
         )
     ]
@@ -197,22 +175,22 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 self._set_inputs_to_none()
 
         if not self.in_provision:
-            if name == power_alias_base:
-                self.data.power_profile_base = format_mpc_inputs(inp.value)
-            elif name == power_alias_neg:
-                self.data.power_profile_flex_neg = format_mpc_inputs(inp.value)
-            elif name == power_alias_pos:
-                self.data.power_profile_flex_pos = format_mpc_inputs(inp.value)
+            if name == glbs.POWER_ALIAS_BASE:
+                self.data.power_profile_base = self.data.format_mpc_inputs(inp.value)
+            elif name == glbs.POWER_ALIAS_NEG:
+                self.data.power_profile_flex_neg = self.data.format_mpc_inputs(inp.value)
+            elif name == glbs.POWER_ALIAS_POS:
+                self.data.power_profile_flex_pos = self.data.format_mpc_inputs(inp.value)
             elif name == self.config.price_variable:
                 # price comes from predictor, so no stripping needed
                 # TODO: add other sources for price signal?
-                self.data.costs_profile_electricity = format_predictor_inputs(inp.value)
+                self.data.power_costs_profile = self.data.format_predictor_inputs(inp.value)
 
             if all(var is not None for var in (
                     self.data.power_profile_base,
                     self.data.power_profile_flex_neg,
                     self.data.power_profile_flex_pos,
-                    self.data.costs_profile_electricity
+                    self.data.power_costs_profile
             )):
                 # Calculate the flexibility, send the offer, write and save the results
                 self.flexibility()
@@ -249,11 +227,11 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         now = self.env.now
         for name in self.var_list:
             # Use the power variables averaged for each timestep, not the collocation values
-            if name == power_alias_base:
+            if name == glbs.POWER_ALIAS_BASE:
                 values = self.data.power_profile_base
-            elif name == power_alias_neg:
+            elif name == glbs.POWER_ALIAS_NEG:
                 values = self.data.power_profile_flex_neg
-            elif name == power_alias_pos:
+            elif name == glbs.POWER_ALIAS_POS:
                 values = self.data.power_profile_flex_pos
             else:
                 values = self.get(name).value
@@ -301,7 +279,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         # set outputs
         for kpi in self.data.get_kpis().values():
             for output in self.config.outputs:
-                if output.name == kpi.get_name():
+                if output.name == kpi.get_kpi_identifier():
                     self.set(output.name, kpi.value)
 
         # write results
@@ -352,4 +330,4 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         self.data.power_profile_base = None
         self.data.power_profile_flex_neg = None
         self.data.power_profile_flex_pos = None
-        self.data.costs_profile_electricity = None
+        self.data.power_costs_profile = None
