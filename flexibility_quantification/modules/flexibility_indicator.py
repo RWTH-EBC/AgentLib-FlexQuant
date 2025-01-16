@@ -304,7 +304,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
     ):
         """
         Send a flex offer as an agent Variable. The first offer is dismissed,
-        because the
+        since the different MPCs need one time step to fully initialize.
 
         Inputs:
 
