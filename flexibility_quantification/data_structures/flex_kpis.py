@@ -171,15 +171,15 @@ class FlexibilityKPIs(pydantic.BaseModel):
             power_profile_base: pd.Series,
             power_profile_shadow: pd.Series,
             power_costs_profile: pd.Series,
-            mpc_time_frame: np.ndarray,
-            flex_offer_time_frame: np.ndarray
+            mpc_time_grid: np.ndarray,
+            flex_offer_time_grid: np.ndarray
     ):
         """
         Calculate the KPIs based on the power and electricity input profiles.
-        Time frames needed for indexing of the power flexibility profiles.
+        Time grids needed for indexing of the power flexibility profiles.
         """
         # Power / energy KPIs
-        self._calculate_power_flex(power_profile_base=power_profile_base, power_profile_shadow=power_profile_shadow, flex_offer_time_frame=flex_offer_time_frame)
+        self._calculate_power_flex(power_profile_base=power_profile_base, power_profile_shadow=power_profile_shadow, flex_offer_time_grid=flex_offer_time_grid)
         self._calculate_power_flex_stats()
         self._calculate_energy_flex()
 
@@ -187,12 +187,14 @@ class FlexibilityKPIs(pydantic.BaseModel):
         self._calculate_costs(power_costs_profile=power_costs_profile)
         self._calculate_costs_rel()
 
-    def _calculate_power_flex(self, power_profile_base: pd.Series, power_profile_shadow: pd.Series, flex_offer_time_frame: np.ndarray,
+    def _calculate_power_flex(self, power_profile_base: pd.Series, power_profile_shadow: pd.Series,
+                              flex_offer_time_grid: np.ndarray,
                               relative_error_acceptance: float = 0.01) -> pd.Series:
         """
         Calculate the power flexibility based on the base and flexibility power profiles.
 
-        relative_error_acceptance: threshold for the relative error between the baseline and shadow mpc to set the power flexibility to zero
+        Args:
+            relative_error_acceptance: threshold for the relative error between the baseline and shadow mpc to set the power flexibility to zero
         """
         if not power_profile_shadow.index.equals(power_profile_base.index):
             raise ValueError(f"Indices of power profiles do not match.\n"
@@ -213,7 +215,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
 
         # Set values
         self.power_flex_full.value = power_flex
-        self.power_flex_offer.value = power_flex.loc[flex_offer_time_frame[0]:flex_offer_time_frame[-1]]
+        self.power_flex_offer.value = power_flex.loc[flex_offer_time_grid[0]:flex_offer_time_grid[-1]]
         return power_flex
 
     def _calculate_power_flex_stats(self) -> [float]:
@@ -276,7 +278,10 @@ class FlexibilityKPIs(pydantic.BaseModel):
 
     def get_kpi_dict(self, identifier: bool = False) -> dict[str, KPI]:
         """
-        Get the KPIs as a dictionary with names depending on the direction as keys.
+        Get the KPIs as a dictionary with names or identifier as keys.
+        
+        Args:
+            identifier: If True, the keys are the identifiers of the KPIs, otherwise the name of the kpi.
         """
         kpi_dict = {}
         for kpi in vars(self).values():
@@ -289,7 +294,8 @@ class FlexibilityKPIs(pydantic.BaseModel):
 
     def get_name_dict(self) -> dict[str, str]:
         """
-        Get the KPIs as a dictionary with names depending on the direction as keys.
+        Returns:
+            Dictionary of the kpis with names as keys and the identifiers as values.
         """
         name_dict = {}
         for name, kpi in self.get_kpi_dict(identifier=False).items():
@@ -302,13 +308,13 @@ class FlexibilityData(pydantic.BaseModel):
     Class containing the data for the calculation of the flexibility.
     """
     # Time parameters
-    mpc_time_frame: np.ndarray = pydantic.Field(
+    mpc_time_grid: np.ndarray = pydantic.Field(
         default=None,
-        description="Time frame of the mpcs",
+        description="Time grid of the mpcs",
     )
-    flex_offer_time_frame: np.ndarray = pydantic.Field(
+    flex_offer_time_grid: np.ndarray = pydantic.Field(
         default=None,
-        description="Time frame of the flexibility offer",
+        description="Time grid of the flexibility offer",
     )
     switch_time: Optional[float] = pydantic.Field(
         default=None,
@@ -350,31 +356,43 @@ class FlexibilityData(pydantic.BaseModel):
                  time_step: int, prediction_horizon: int, **data):
         super().__init__(**data)
         self.switch_time = prep_time + market_time
-        self.flex_offer_time_frame = np.arange(self.switch_time, self.switch_time + flex_event_duration, time_step)
-        self.mpc_time_frame = np.arange(0, prediction_horizon * time_step, time_step)
+        self.flex_offer_time_grid = np.arange(self.switch_time, self.switch_time + flex_event_duration, time_step)
+        self.mpc_time_grid = np.arange(0, prediction_horizon * time_step, time_step)
 
     def format_predictor_inputs(self, series: pd.Series) -> pd.Series:
         """
         Format the input of the predictor to unify the data.
+
+        Args:
+            series: Input series from a predictor.
+            
+        Returns:
+            Formatted series.
         """
         series.index = series.index - series.index[0]
-        series = series.reindex(self.mpc_time_frame)
+        series = series.reindex(self.mpc_time_grid)
         if any(series.isna()):
-            raise ValueError(f"The mpc time frame is not compatible with the predictor input, which leads to NaN values in the series.\n"
-                             f"MPC time frame:{self.mpc_time_frame}\n"
+            raise ValueError(f"The mpc time grid is not compatible with the predictor input, which leads to NaN values in the series.\n"
+                             f"MPC time grid:{self.mpc_time_grid}\n"
                              f"Series index:{series.index}")
         return series
 
     def format_mpc_inputs(self, series: pd.Series) -> pd.Series:
         """
         Format the input of the mpc to unify the data.
+        
+        Args:
+            series: Input series from a mpc.
+            
+        Returns:
+            Formatted series.
         """
         series = strip_multi_index(series)
         series = fill_nans(series=series, method=MEAN)
-        series = series.reindex(self.mpc_time_frame)
+        series = series.reindex(self.mpc_time_grid)
         if any(series.isna()):
-            raise ValueError(f"The mpc time frame is not compatible with the mpc input, which leads to NaN values in the series.\n"
-                             f"MPC time frame:{self.mpc_time_frame}\n"
+            raise ValueError(f"The mpc time grid is not compatible with the mpc input, which leads to NaN values in the series.\n"
+                             f"MPC time grid:{self.mpc_time_grid}\n"
                              f"Series index:{series.index}")
         return series
 
@@ -382,21 +400,22 @@ class FlexibilityData(pydantic.BaseModel):
         """
         Calculate the KPIs for the positive and negative flexibility.
 
-        Returns: positive KPIs, negative KPIs
+        Returns:
+            positive KPIs, negative KPIs
         """
         self.kpis_pos.calculate(
             power_profile_base=self.power_profile_base,
             power_profile_shadow=self.power_profile_flex_pos,
             power_costs_profile=self.power_costs_profile,
-            mpc_time_frame=self.mpc_time_frame,
-            flex_offer_time_frame=self.flex_offer_time_frame
+            mpc_time_grid=self.mpc_time_grid,
+            flex_offer_time_grid=self.flex_offer_time_grid
         )
         self.kpis_neg.calculate(
             power_profile_base=self.power_profile_base,
             power_profile_shadow=self.power_profile_flex_neg,
             power_costs_profile=self.power_costs_profile,
-            mpc_time_frame=self.mpc_time_frame,
-            flex_offer_time_frame=self.flex_offer_time_frame
+            mpc_time_grid=self.mpc_time_grid,
+            flex_offer_time_grid=self.flex_offer_time_grid
         )
         return self.kpis_pos, self.kpis_neg
 
