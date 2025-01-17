@@ -4,24 +4,24 @@ import pandas as pd
 from typing import List
 
 class PredictorModuleConfig(al.BaseModuleConfig):
-    """Module that outputs a prediction of the heat load at a specified
-    interval."""
+    """Module that outputs a prediction of the ambient temp and comfort setpoint
+    at a specified interval."""
 
     outputs: al.AgentVariables = [
         al.AgentVariable(
             name="T_amb", 
             type="pd.Series", 
-            description="test_description",
+            description="Ambient air temperature",
         ),
         al.AgentVariable(
             name="T_upper", 
             type="pd.Series", 
-            description="test_description",
+            description="Upper boundary (soft) for T",
         ),
         al.AgentVariable(
             name="T_lower",
             type="pd.Series", 
-            description="test_description",
+            description="Lower boundary (soft) for T",
         ),
     ]
 
@@ -32,7 +32,7 @@ class PredictorModuleConfig(al.BaseModuleConfig):
             description="Sampling time for prediction.",
         ),
         al.AgentVariable(
-            name="prediction_length",
+            name="prediction_horizon",
             value=10,
             description="Number of sampling points for prediction.",
         ),
@@ -71,8 +71,8 @@ class PredictorModuleConfig(al.BaseModuleConfig):
     shared_variable_fields: List[str] = ["outputs"]
 
 class PredictorModule(al.BaseModule):
-    """Module that outputs a prediction of the heat load at a specified
-    interval."""
+    """Module that outputs a prediction of the ambient temp and comfort setpoint
+    at a specified interval."""
 
     config: PredictorModuleConfig
 
@@ -85,13 +85,15 @@ class PredictorModule(al.BaseModule):
         self.env.process(self.send_upper_comfort_trajectory())
         self.env.process(self.send_lower_comfort_trajectory())
 
+        #TODO: why is this not in a function?
         while True:
             ts = self.get("prediction_sampling_time").value
-            n = self.get("prediction_length").value
+            n = self.get("prediction_horizon").value
             now = self.env.now
             sample_time = self.get("sampling_time").value
 
             # temperature prediction
+            #TODO: check / confirm if vals make sense, grid makes sense 
             grid = np.arange(now, now + n * ts, ts)
             values = amb_temp_func(grid, uncertainty=0)
             traj = pd.Series(values, index=list(grid))
@@ -119,6 +121,7 @@ class PredictorModule(al.BaseModule):
             comfort_interval = self.get("comfort_interval").value
 
             # temperature prediction
+            #TODO: check / confirm if vals make sense, grid makes sense 
             grid = np.arange(now, now + 2 * comfort_interval, 0.5 * comfort_interval)
             values = [self.get("upper_comfort_high").value, self.get("upper_comfort_low").value] * 2
             traj = pd.Series(values, index=list(grid))
@@ -132,6 +135,7 @@ class PredictorModule(al.BaseModule):
             comfort_interval = self.get("comfort_interval").value
 
             # temperature prediction
+            #TODO: check / confirm if vals make sense, grid makes sense 
             grid = np.arange(now, now + 2 * comfort_interval, 0.5 * comfort_interval)
             values = [self.get("lower_comfort_low").value, self.get("lower_comfort_high").value] * 2
             traj = pd.Series(values, index=list(grid))
