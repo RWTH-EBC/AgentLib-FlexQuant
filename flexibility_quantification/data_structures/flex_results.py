@@ -94,14 +94,12 @@ class Results:
 
         # load the agent and module configs
         self.simulator_agent_config = load_config.load_config(
-            config=simulator_agent_config, config_type=AgentConfig
-        )
+            config=simulator_agent_config, config_type=AgentConfig)
         self.simulator_module_config = cmng.get_module(
-            config=self.simulator_agent_config, module_type=cmng.SIMULATOR_CONFIG_TYPE
-        )
+            config=self.simulator_agent_config, module_type=cmng.SIMULATOR_CONFIG_TYPE)
 
         for file_path in Path(self.generator_config.path_to_flex_files).rglob("*.json"):
-            if file_path.name in config_filename_baseline :
+            if file_path.name in config_filename_baseline:
                 self.baseline_agent_config = load_config.load_config(
                     config=file_path, config_type=AgentConfig)
                 self.baseline_module_config = cmng.get_module(

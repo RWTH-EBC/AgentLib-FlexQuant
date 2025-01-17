@@ -1,5 +1,5 @@
 from agentlib_mpc.modules import mpc_full, minlp_mpc
-from flexibility_quantification.utils.data_handling import strip_multi_index, fill_nans
+from flexibility_quantification.utils.data_handling import strip_multi_index, fill_nans, MEAN, INTERPOLATE
 from flexibility_quantification.data_structures.globals import (
     full_trajectory_prefix,
     full_trajectory_suffix,
@@ -46,6 +46,8 @@ class FlexibilityShadowMPC(mpc_full.MPC):
             return
 
         vals = strip_multi_index(inp.value)
+        if vals.isna().any():
+            vals = fill_nans(series=vals, method=MEAN)
 
         # the MPC Predictions starts at t=env.now not t=0
         vals.index += self.env.time

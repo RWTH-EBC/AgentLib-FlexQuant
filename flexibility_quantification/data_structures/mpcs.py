@@ -41,7 +41,7 @@ class BaselineMPCData(BaseMPCData):
     class_name: str = "BaselineMPCModel"
     module_id: str = "Baseline"
     # variables
-    power_alias: str = "__P_el_base"
+    power_alias: str = glbs.POWER_ALIAS_BASE
     power_variable: str = pydantic.Field(
         default="P_el",
         description="Name of the variable representing the electrical power in the baseline config",
@@ -81,7 +81,7 @@ class PFMPCData(BaseMPCData):
     class_name: str = "PosFlexModel"
     module_id: str = "PosFlexMPC"
     # variables
-    power_alias: str = "__P_el_pos"
+    power_alias: str = glbs.POWER_ALIAS_POS
     flex_cost_function: str = pydantic.Field(
         default=None,
         description="Cost function of the PF-MPC",
@@ -113,7 +113,7 @@ class NFMPCData(BaseMPCData):
     class_name: str = "NegFlexModel"
     module_id: str = "NegFlexMPC"
     # variables
-    power_alias: str = "__P_el_neg"
+    power_alias: str = glbs.POWER_ALIAS_NEG
     flex_cost_function: str = pydantic.Field(
         default=None,
         description="Cost function of the NF-MPC",
