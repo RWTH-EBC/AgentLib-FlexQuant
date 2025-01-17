@@ -406,6 +406,8 @@ class FlexAgentGenerator:
         for var in mpc_dataclass.config_parameters_appendix:
             if var.name in self.flex_config.model_fields:
                 var.value = getattr(self.flex_config, var.name)
+            if var.name in self.flex_config.baseline_config_generator_data.model_fields:
+                var.value = getattr(self.flex_config.baseline_config_generator_data, var.name)
         module_config.parameters.extend(mpc_dataclass.config_parameters_appendix)
 
         # freeze the config again

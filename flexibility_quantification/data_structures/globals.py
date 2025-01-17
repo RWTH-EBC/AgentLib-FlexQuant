@@ -3,6 +3,7 @@
 PREP_TIME = "prep_time"
 MARKET_TIME = "market_time"
 FLEX_EVENT_DURATION = "flex_event_duration"
+POFILE_DEVIATION_WEIGHT = "profile_deviation_weight"
 
 SHADOW_MPC_COST_FUNCTION = ("return ca.if_else(self.Time.sym < self.prep_time.sym + "
                             "self.market_time.sym, obj_std, ca.if_else(self.Time.sym < "

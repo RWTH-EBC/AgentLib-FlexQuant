@@ -47,7 +47,7 @@ class BaselineMPCData(BaseMPCData):
         description="Name of the variable representing the electrical power in the baseline config",
     )
     profile_deviation_weight: float = pydantic.Field(
-        default=100,
+        default=0,
         description="Weight of soft constraint for deviation from accepted flexible profile",
     )
     power_unit: str = pydantic.Field(
@@ -59,6 +59,9 @@ class BaselineMPCData(BaseMPCData):
         MPCVariable(name="in_provision", value=False),
         MPCVariable(name="rel_start", value=0, unit="s"),
         MPCVariable(name="rel_end", value=0, unit="s")
+    ]
+    config_parameters_appendix: MPCVariables = [
+        MPCVariable(name=glbs.POFILE_DEVIATION_WEIGHT, value=profile_deviation_weight, unit="-")
     ]
     weights: List[MPCVariable] = pydantic.Field(
         default=[],
