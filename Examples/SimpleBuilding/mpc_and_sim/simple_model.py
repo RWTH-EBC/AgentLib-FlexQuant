@@ -31,13 +31,13 @@ class BaselineMPCModelConfig(CasadiModelConfig):
             name="T_upper",
             value=294.15,
             unit="K",
-            description="Upper boundary (soft) for T.",
+            description="Upper boundary (soft) for T",
         ),
         CasadiInput(
             name="T_lower",
             value=290.15,
             unit="K",
-            description="Lower boundary (soft) for T.",
+            description="Lower boundary (soft) for T",
         ),
     ]
 
