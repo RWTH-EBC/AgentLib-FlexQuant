@@ -198,7 +198,7 @@ class FlexAgentGenerator:
         module_type: str,
         config_name: str,
     ):
-        """Appends the given module config to the given agent config and dumps th agent config to a
+        """Appends the given module config to the given agent config and dumps the agent config to a
         json file. The json file is named based on the config_name."""
 
         # if module is not from the baseline, set a new agent id, based on module id

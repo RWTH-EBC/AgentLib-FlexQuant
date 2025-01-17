@@ -302,6 +302,17 @@ class SetupSystemModifier(ast.NodeTransformer):
                     )
                 )
 
+            # add the flex variables and the weights
+            if body.target.id == "parameters":
+                for weight in self.mpc_data.weights:
+                    body.value.elts.append(
+                        add_parameter(
+                            weight.name,
+                            weight.value,
+                            "-",
+                            "Weight of soft constraint for deviation from accepted flexible profile",
+                        )
+                    )
     def modify_setup_system_shadow(self, node):
         """Modify the setup_system method of the shadow mpc model class.
 
@@ -450,8 +461,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                     ast.Return(
                         value=ast.parse(
                             return_baseline_cost_function(
-                                profile_deviation_weight=self.mpc_data.profile_deviation_weight,
-                                power_variable=self.mpc_data.power_variable,
+                                power_variable=self.mpc_data.power_variable
                             )
                         )
                         .body[0]

@@ -51,9 +51,9 @@
     },
     "market_config": "flex_configs\\market.json",
     "baseline_config_generator_data": {
+        "weights": [{"name": "profile_deviation_weight", "value": 100}],
         "power_variable": "P_el",
-        "power_unit": "W",
-        "profile_deviation_weight": "profile_deviation_weight"
+        "power_unit": "W"
     },
     "shadow_mpc_config_generator_data": {
         "weights": [{"name": "s_P", "value": 10}],

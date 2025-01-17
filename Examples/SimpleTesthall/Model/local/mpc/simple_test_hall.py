@@ -222,8 +222,6 @@ class SimpleTestHallModelConfig(CasadiModelConfig):
                         unit="-", description="Weight for T_slack"),
         CasadiParameter(name="s_Pel", value=0.5,
                         unit="-", description="Weight for P_el"),
-        CasadiParameter(name="profile_deviation_weight", value=100,
-                        unit="-", description="Weight of soft constraint for deviation from accepted flexible profile"),
 
         # calibration factor, used for wandb
         CasadiParameter(name="fac_amb_win", value=1,
