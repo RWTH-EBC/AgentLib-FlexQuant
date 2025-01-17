@@ -93,7 +93,8 @@ class PredictorModule(al.BaseModule):
             sample_time = self.get("sampling_time").value
 
             # temperature prediction
-            #TODO: check / confirm if vals make sense, grid makes sense 
+            #TODO: check / confirm if vals make sense, grid makes sense
+            #TODO: change grid param n to n+1  
             grid = np.arange(now, now + n * ts, ts)
             values = amb_temp_func(grid, uncertainty=0)
             traj = pd.Series(values, index=list(grid))
