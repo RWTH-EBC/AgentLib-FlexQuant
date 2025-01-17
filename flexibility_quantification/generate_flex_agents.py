@@ -460,10 +460,6 @@ class FlexAgentGenerator:
                 module_config.__setattr__(
                     field, getattr(self.market_module_config, field)
                 )
-            if field == "time_step":
-                module_config.__setattr__(
-                    field, self.baseline_mpc_module_config.time_step
-                )
         module_config.model_config["frozen"] = True
         return module_config
 
