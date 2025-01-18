@@ -14,7 +14,8 @@ class BaselineMPCModelConfig(CasadiModelConfig):
     inputs: List[CasadiInput] = [
         # controls
         CasadiInput(
-            name="P_el",
+            #TODO: Change to another name "P_in"
+            name="P_in",
             value=100,
             unit="W",
             description="Electrical power of heating rod",
@@ -98,13 +99,25 @@ class BaselineMPCModelConfig(CasadiModelConfig):
         )
     ]
 
+    outputs: List[CasadiParameter] = [
+        CasadiParameter(
+            #TODO: alias: "P_in"?
+            name="P_el",
+            unit="W",
+            description="Electrical power of heating rod (system input)",
+        )
+    ]
+
 class BaselineMPCModel(CasadiModel):
 
     config: BaselineMPCModelConfig
                 
     def setup_system(self):
         # Define ode
-        self.T_zone.ode = (self.P_el - self.U * (self.T_zone - self.T_amb)) / self.C
+        self.T_zone.ode = (self.P_in - self.U * (self.T_zone - self.T_amb)) / self.C
+
+        #Define ae for outputs
+        self.P_el.alg = self.P_in
 
         # Constraints: List[(lower bound, function, upper bound)]
         self.constraints = [
@@ -114,7 +127,7 @@ class BaselineMPCModel(CasadiModel):
             (0, self.T_slack_upper, inf),
             (0, self.T_slack_lower, inf),
             # hard constraints
-            (-100, self.P_el, 200),
+            (-100, self.P_in, 200),
         ]
 
         # Objective function
@@ -122,7 +135,7 @@ class BaselineMPCModel(CasadiModel):
             [
                 self.s_T_upper * self.T_slack_upper**2,
                 self.s_T_lower * self.T_slack_lower**2,
-                self.r_pel * self.P_el,
+                self.r_pel * self.P_in,
             ]
         )
 
