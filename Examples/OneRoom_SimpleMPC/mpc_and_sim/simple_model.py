@@ -36,12 +36,10 @@ class BaselineMPCModelConfig(CasadiModelConfig):
             unit="K",
             description="Upper boundary (soft) for T.",
         ),
-
     ]
 
     states: List[CasadiState] = [
         CasadiState(name="t_sim", value=0, unit="sec", description="simulation time"),
-
         # differential
         CasadiState(
             name="T", value=293.15, unit="K", description="Temperature of zone"
@@ -54,7 +52,6 @@ class BaselineMPCModelConfig(CasadiModelConfig):
             unit="K",
             description="Slack variable of temperature of zone",
         ),
-        
     ]
 
     parameters: List[CasadiParameter] = [
@@ -79,16 +76,21 @@ class BaselineMPCModelConfig(CasadiModelConfig):
             unit="-",
             description="Weight for mDot in objective function",
         ),
-
     ]
+
     outputs: List[CasadiOutput] = [
-        CasadiOutput(name="T_out", unit="K", description="Temperature of zone"),
+        CasadiOutput(
+            name="T_out",
+            unit="K",
+            description="Temperature of zone"
+        ),
         CasadiOutput(
             name="P_el",
-            unit="W",
+            unit="kW",
             description="The power input to the system",
         ),
     ]
+
 
 class BaselineMPCModel(CasadiModel):
     config: BaselineMPCModelConfig
@@ -117,5 +119,3 @@ class BaselineMPCModel(CasadiModel):
                 ]
             )
         return objective
-
-

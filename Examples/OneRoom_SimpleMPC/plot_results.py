@@ -275,6 +275,8 @@ def plot_results_2(results: dict = None, offer_type: str = None, until: float = 
 
     # predictions
     fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=2)
+    fig.set_figheight(10)
+    fig.set_figwidth(20)
     (ax1, ax2) = axs
     # P_el
     ax1.set_ylabel("$P_{el}$ in kW")
@@ -347,7 +349,7 @@ def plot_results_2(results: dict = None, offer_type: str = None, until: float = 
     ax1.vlines(20700, ymin=-1000, ymax=5000, colors="black")
     ax1.vlines(27900, ymin=-1000, ymax=5000, colors="black")
 
-    ax1.set_ylim(-0.1, 1)
+    ax1.set_ylim(-0.01, 0.4)
 
     # mdot
     ax2.set_ylabel("$\dot{m}$ in kg/s")

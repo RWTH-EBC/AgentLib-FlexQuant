@@ -287,13 +287,18 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                     if bDebug:
                         draw_flex_envelope(market_type="average", offer_data=offer, event_time=self.env.now, profile_accepted=profile)
 
-                case "custom":
-                    profile_energy, time_steps = flex_profile_custom(offer)
+                case "real":
+                    profile_energy, time_steps = flex_profile_real(offer=offer)
+                    profile: pd.Series = convert_profile(profile_energy=profile_energy, time_steps=time_steps)
+
+                    if bDebug:
+                        draw_flex_envelope(market_type="real", offer_data=offer, event_time=self.env.now, profile_accepted=profile)
 
                 case _:
                     print("Wrong Market Event Type selected ! \nAverage Profile was automatically selected.")
 
-                    profile, time_steps = flex_profile_average(offer=offer)
+                    profile_energy, time_steps = flex_profile_average(offer=offer)
+                    profile: pd.Series = convert_profile(profile_energy=profile_energy, time_steps=time_steps)
 
                     if bDebug:
                         draw_flex_envelope(market_type="average", offer_data=offer, event_time=self.env.now, profile_accepted=profile)
@@ -333,7 +338,7 @@ def flex_profile_neg(offer: FlexOffer) -> tuple[pd.Series, pd.Series]:
 
 
 def flex_profile_pos(offer: FlexOffer) -> tuple[pd.Series, pd.Series]:
-    return offer.flex_envelope.energyflex_pos, offer.flex_envelope.time_steps
+    return pd.Series(offer.flex_envelope['Values']['energyflex_pos']), pd.Series(offer.flex_envelope['Values']['time_steps'])
 
 
 def flex_profile_average(offer: FlexOffer) -> tuple[pd.Series, pd.Series]:
@@ -349,10 +354,40 @@ def flex_profile_average(offer: FlexOffer) -> tuple[pd.Series, pd.Series]:
 
     return profile, time_steps
 
+randGenSeedCount = 0
+def flex_profile_real(offer: FlexOffer) -> tuple[pd.Series, pd.Series]:
+    # Todo: write a real profile function
+    # create random generator
+    global randGenSeedCount
+    if randGenSeedCount is None:
+        randGenSeedCount = 0
+    else:
+        randGenSeedCount += 1
 
-def flex_profile_custom(offer: FlexOffer) -> tuple[pd.Series, pd.Series]:
-    # Todo: write a custom profile function
-    pass
+    random_generator = np.random.default_rng(randGenSeedCount)
+
+    profile_energy_neg, time_steps = flex_profile_neg(offer)
+    profile_energy_pos, _ = flex_profile_pos(offer)
+    p_el_min: float = offer.flex_envelope['Values']['p_el_min']
+    p_el_max: float = offer.flex_envelope['Values']['p_el_max']
+
+    time_step = time_steps[1] - time_steps[0]
+    profile_selected: list[float] = [0.0]
+
+    e_el_max: float = p_el_max * (time_step/3600)
+    e_el_min: float = p_el_min * (time_step/3600)
+
+    for iIdx in range(1, profile_energy_neg.size):
+        usable_max_value: float = min(e_el_max + profile_selected[iIdx-1], profile_energy_neg[iIdx])
+        usable_min_value: float = max(e_el_min + profile_selected[iIdx-1], profile_energy_pos[iIdx])
+
+        # generate a random number between -usable_max_value and +usable_max_value
+        gen_number = random_generator.uniform(usable_min_value, usable_max_value)
+        profile_selected.append(gen_number)
+
+    profile: pd.Series = pd.Series(profile_selected)
+
+    return profile, time_steps
 
 
 def convert_profile(profile_energy: pd.Series, time_steps: pd.Series) -> pd.Series:

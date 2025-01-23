@@ -451,51 +451,8 @@ def calc_flex_envelop(powerflex_pos: pd.Series, powerflex_neg: pd.Series, time_s
                      'powerflex_pos': powerflex_pos.to_list(),
                      'powerflex_neg': powerflex_neg.to_list(),
                      'powerflex_base': powerflex_base.to_list(),
-                     'p_el_max': [300],
-                     'p_el_min': [0],
+                     'p_el_max': 0.6,
+                     'p_el_min': 0,
                      }
 
-    # pd.DataFrame(list(flex_env_data.items()), columns=['Key', 'Values'])
     return pd.DataFrame(list(flex_env_data.items()), columns=['Keys', 'Values'], index=list(flex_env_data.keys()))
-    # return pd.DataFrame(data={'energyflex_pos': energyflex_pos.tolist(), 'energyflex_neg': energyflex_neg.tolist(),
-    #                          'energyflex_base': energyflex_base.tolist(), 'time_steps': horizon,
-    #                          'powerflex_base': powerflex_base_prepared, 'powerflex_pos': powerflex_pos_prepared,
-    #                          'powerflex_neg': powerflex_neg_prepared}, index=horizon)
-
-
-def prepare_flex_envelope_data(power_flex_pos, power_flex_neg, time_step) -> tuple[list, list]:
-    # no need for this function anymore
-    # This function is no longer used
-    power_flex_pos_prepared = []
-    power_flex_neg_prepared = []
-
-    # TODO: write this code to use both power_flex_pos and _neg with the same code fragment
-    power_flex_pos_time_index = power_flex_pos.index
-    for iIdx, iIdxVal in enumerate(power_flex_pos_time_index):
-        if iIdxVal % time_step == 0:
-            if np.isnan(power_flex_pos[iIdxVal]):
-                if iIdxVal == 0:
-                    power_flex_pos_prepared.append(0)
-                elif iIdxVal == power_flex_pos_time_index[-1]:
-                    power_flex_pos_prepared.append(power_flex_pos[power_flex_pos_time_index[-2]])
-                else:
-                    power_flex_pos_prepared.append((power_flex_pos[power_flex_pos_time_index[iIdx - 1]] +
-                                                    power_flex_pos[power_flex_pos_time_index[iIdx + 1]]) / 2)
-            else:
-                power_flex_pos_prepared.append(power_flex_pos[iIdxVal])
-
-    power_flex_neg_time_index = power_flex_neg.index
-    for iIdx, iIdxVal in enumerate(power_flex_neg_time_index):
-        if iIdxVal % time_step == 0:
-            if np.isnan(power_flex_neg[iIdxVal]):
-                if iIdxVal == 0:
-                    power_flex_neg_prepared.append(0)
-                elif iIdxVal == power_flex_neg_time_index[-1]:
-                    power_flex_neg_prepared.append(power_flex_neg[power_flex_neg_time_index[-2]])
-                else:
-                    power_flex_neg_prepared.append((power_flex_neg[power_flex_neg_time_index[iIdx - 1]] +
-                                                    power_flex_neg[power_flex_neg_time_index[iIdx + 1]]) / 2)
-            else:
-                power_flex_neg_prepared.append(power_flex_neg[iIdxVal])
-
-    return power_flex_pos_prepared, power_flex_neg_prepared

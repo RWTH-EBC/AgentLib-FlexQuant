@@ -545,7 +545,6 @@ class SimpleTestHall(CasadiModel):
                               coeff_dict['T_win_sur']['Q_RadSol'] * self.Q_RadSol + coeff_dict['T_win_sur']['q_ig_rad'] * q_ig_rad +
                               coeff_dict['T_win_sur']['T_preTemWin'] * self.T_preTemWin)
 
-
         self.T_Air.ode = (1 / c_air) * ((self.T_Roof_sur - self.T_Air) * k_roof_air
                                         + (self.T_ExtWall_sur - self.T_Air) * k_ext_air
                                         + (self.T_IntWall_sur - self.T_Air) * k_int_air

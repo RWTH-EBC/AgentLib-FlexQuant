@@ -90,10 +90,10 @@ def clear_files(bClear_plots: bool = False, bClear_flex_files: bool = False, bCl
 if __name__ == "__main__":
     bClearFiles: bool = True
     if bClearFiles:
-        clear_files(bClear_plots=True, bClear_results=True, bClear_flex_files=False)
+        clear_files(bClear_plots=True, bClear_results=True, bClear_flex_files=True)
 
     # offer_types: list[str] = ["neg", "pos", "average"]
-    offer_types: list[str] = ["neg"]
+    offer_types: list[str] = ["real"]
     for offer_type in offer_types:
         print(f'\n{"":-^50}')
         print(f'{f" Starting simulation with {offer_type} ":-^50}')
