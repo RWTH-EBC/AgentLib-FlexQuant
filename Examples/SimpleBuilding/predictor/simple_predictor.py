@@ -23,6 +23,12 @@ class PredictorModuleConfig(al.BaseModuleConfig):
             type="pd.Series", 
             description="Lower boundary (soft) for T",
         ),
+        al.AgentVariable(
+            name="r_pel", 
+            unit="ct/kWh", 
+            type="pd.Series", 
+            description="Weight for P_el in objective function (electricity price)"
+        ),
     ]
 
     parameters: al.AgentVariables = [
@@ -84,6 +90,7 @@ class PredictorModule(al.BaseModule):
         # self.env.process(self.send_setpoint_trajectories())
         self.env.process(self.send_upper_comfort_trajectory())
         self.env.process(self.send_lower_comfort_trajectory())
+        self.env.process(self.send_price_var_trajectory())
 
         #TODO: why is this not in a function?
         while True:
@@ -142,6 +149,19 @@ class PredictorModule(al.BaseModule):
             traj = pd.Series(values, index=list(grid))
             self.set("T_lower", traj)
             yield self.env.timeout(comfort_interval)
+    
+    def send_price_var_trajectory(self):
+        "Sends the series for the price variable"
+        while True:
+            ts = self.get("prediction_sampling_time").value
+            n = self.get("prediction_horizon").value
+            now = self.env.now
+            sample_time = self.get("sampling_time").value
+
+            grid = np.arange(now, now + n * ts, ts)
+            traj = pd.Series([1 for i in grid], index=list(grid))
+            self.set("r_pel", traj)
+            yield self.env.timeout(sample_time)
 
 def amb_temp_func(current, uncertainty):
     """Returns the ambient temperature in K, given a time in seconds."""
