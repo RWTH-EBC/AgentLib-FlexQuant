@@ -99,9 +99,8 @@ class BaselineMPCModelConfig(CasadiModelConfig):
         )
     ]
 
-    outputs: List[CasadiParameter] = [
-        CasadiParameter(
-            #TODO: alias: "P_in"?
+    outputs: List[CasadiOutput] = [
+        CasadiOutput(
             name="P_el",
             unit="W",
             description="Electrical power of heating rod (system input)",
@@ -122,8 +121,8 @@ class BaselineMPCModel(CasadiModel):
         # Constraints: List[(lower bound, function, upper bound)]
         self.constraints = [
             # soft constraints
-            (self.T_upper, self.T_zone + self.T_slack_upper, self.T_upper),
-            (self.T_lower, self.T_zone - self.T_slack_lower, self.T_lower),
+            (-inf, self.T_zone - self.T_slack_upper, self.T_upper),
+            (self.T_lower, self.T_zone + self.T_slack_lower, inf),
             (0, self.T_slack_upper, inf),
             (0, self.T_slack_lower, inf),
             # hard constraints
