@@ -19,7 +19,7 @@ This section provides tutorials to help you get started with FlexQuant. It begin
 ### The framework
 
 <figure>
-  <img src="./docs/images/FlexQuantFramework.jpg" width="600" alt="framework">
+  <img src="./docs/images/FlexQuantFramework.svg" width="600" alt="framework">
   <figcaption>Framework and data flow of the seven agents in FlexQuant</figcaption>
 </figure>
 
@@ -42,7 +42,7 @@ The **Shadow MPCs** are designed to assess the maximum possible flexibility in e
  The Positive Shadow MPC does the opposite. The horizon of the Shadow MPCs is divided as following: 
 
 <figure>
-  <img src="./docs/images/ShadowMPCTimeSlpit.jpg" width="600" alt="framework">
+  <img src="./docs/images/ShadowMPCTimeSlpit.svg" width="600" alt="framework">
   <figcaption>Split of the prediction horizon of the Shadow MPCs</figcaption>
 </figure>
 
