@@ -12,6 +12,74 @@ class OfferStatus(Enum):
     accepted_negative = "Accepted Negative"
 
 
+class FlexEnvelope(BaseModel):
+    """
+    Data class for the flexibility envelope
+    """
+    energyflex_pos: pd.Series = pydantic.Field(
+        default=None,
+        scalar=False,
+        description="",
+    )
+    energyflex_neg: pd.Series = pydantic.Field(
+        default=None,
+        scalar=False,
+        description="",
+    )
+    energyflex_base: pd.Series = pydantic.Field(
+        default=None,
+        scalar=False,
+        description="",
+    )
+    time_steps: list = pydantic.Field(
+        default=None,
+        scalar=False,
+        description="",
+    )
+    powerflex_pos: pd.Series = pydantic.Field(
+        default=None,
+        scalar=False,
+        description="",
+    )
+    powerflex_neg: pd.Series = pydantic.Field(
+        default=None,
+        scalar=False,
+        description="",
+    )
+    powerflex_base: pd.Series = pydantic.Field(
+        default=None,
+        scalar=False,
+        description="",
+    )
+    p_el_max: float = pydantic.Field(
+        default=None,
+        scalar=True,
+        description="",
+    )
+    p_el_min: float = pydantic.Field(
+        default=None,
+        scalar=True,
+        description="",
+    )
+
+    class Config:
+        arbitrary_types_allowed = True
+
+    def as_dataframe(self) -> pd.DataFrame:
+        flex_env_data = {'energyflex_pos': self.energyflex_pos.to_list(),
+                         'energyflex_neg': self.energyflex_neg.tolist(),
+                         'energyflex_base': self.energyflex_base.tolist(),
+                         'time_steps': self.time_steps,
+                         'powerflex_pos': self.powerflex_pos.to_list(),
+                         'powerflex_neg': self.powerflex_neg.to_list(),
+                         'powerflex_base': self.powerflex_base.to_list(),
+                         'p_el_max': self.p_el_max,
+                         'p_el_min': self.p_el_min,
+                         }
+
+        return pd.DataFrame(list(flex_env_data.items()), columns=['Keys', 'Values'], index=list(flex_env_data.keys()))
+
+
 class FlexOffer(BaseModel):
     """Data class for the flexibility offer
 
@@ -51,7 +119,7 @@ class FlexOffer(BaseModel):
         scalar=True,
         description="Status of the FlexOffer",
     )
-    flex_envelope: Optional[pd.DataFrame] = pydantic.Field(
+    flex_envelope: Optional[FlexEnvelope] = pydantic.Field(
         default=None,
         scalar=False,
         description="Flexibility envelope of the FlexOffer",

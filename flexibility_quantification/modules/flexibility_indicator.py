@@ -8,7 +8,7 @@ from typing import Optional, Union
 from pathlib import Path
 import pydantic
 import flexibility_quantification.data_structures.globals as glbs
-from flexibility_quantification.data_structures.flex_offer import FlexOffer
+from flexibility_quantification.data_structures.flex_offer import FlexOffer, FlexEnvelope
 from flexibility_quantification.utils.data_handling import strip_multi_index, fill_nans
 
 sys.path.append(os.path.dirname(__file__))
@@ -140,7 +140,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
 
     def send_flex_offer(
             self, name, base_power_profile, pos_price, pos_diff_profile,
-            neg_price, neg_diff_profile, flex_envelope: pd.DataFrame = None, timestamp: float = None):
+            neg_price, neg_diff_profile, flex_envelope: FlexEnvelope = None, timestamp: float = None):
         """
         Send a flex offer as an agent Variable. The first offer is dismissed,
         because the 
@@ -153,6 +153,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         pos_diff_profile: difference profile (pos flex MPC - base MPC)
         neg_price: price to provise the negative flex profile
         neg_diff_profile: difference profile (neg flex MPC - base MPC)
+        flex_envelope: data class with all the data necessary for the envelope
         timestamp: the time offer was generated
 
         """
@@ -419,7 +420,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
 
 
 def calc_flex_envelop(powerflex_pos: pd.Series, powerflex_neg: pd.Series, time_step: int, horizon: np.ndarray,
-                      scaler: int, powerflex_base: pd.Series = None) -> pd.DataFrame:
+                      scaler: int, powerflex_base: pd.Series = None) -> FlexEnvelope:
     """ powerflex_pos, powerflex_neg and powerflex_base are in (k)W, and the result is in (k)Wh. """
 
     powerflex_pos_prepared = powerflex_pos.to_list()
@@ -444,15 +445,24 @@ def calc_flex_envelop(powerflex_pos: pd.Series, powerflex_neg: pd.Series, time_s
     horizon = np.append([900], horizon)
 
     # create a dictionary for easier handling in panda Dataframe (different list lengths)
-    flex_env_data = {'energyflex_pos': energyflex_pos.tolist(),
-                     'energyflex_neg': energyflex_neg.tolist(),
-                     'energyflex_base': energyflex_base.tolist(),
-                     'time_steps': horizon,
-                     'powerflex_pos': powerflex_pos.to_list(),
-                     'powerflex_neg': powerflex_neg.to_list(),
-                     'powerflex_base': powerflex_base.to_list(),
-                     'p_el_max': 0.6,
-                     'p_el_min': 0,
-                     }
-
-    return pd.DataFrame(list(flex_env_data.items()), columns=['Keys', 'Values'], index=list(flex_env_data.keys()))
+    # flex_env_data = {'energyflex_pos': energyflex_pos.tolist(),
+    #                  'energyflex_neg': energyflex_neg.tolist(),
+    #                  'energyflex_base': energyflex_base.tolist(),
+    #                  'time_steps': horizon,
+    #                  'powerflex_pos': powerflex_pos.to_list(),
+    #                  'powerflex_neg': powerflex_neg.to_list(),
+    #                  'powerflex_base': powerflex_base.to_list(),
+    #                  'p_el_max': 0.6,
+    #                  'p_el_min': 0,
+    #                  }
+    # return pd.DataFrame(list(flex_env_data.items()), columns=['Keys', 'Values'], index=list(flex_env_data.keys()))
+    return FlexEnvelope(energyflex_pos=pd.Series(energyflex_pos.tolist()),
+                        energyflex_neg=pd.Series(energyflex_neg.tolist()),
+                        energyflex_base=pd.Series(energyflex_base.tolist()),
+                        time_steps=horizon,
+                        powerflex_pos=pd.Series(powerflex_pos.to_list()),
+                        powerflex_neg=pd.Series(powerflex_neg.to_list()),
+                        powerflex_base=pd.Series(powerflex_base.to_list()),
+                        p_el_max=0.6,
+                        p_el_min=0,
+                        )

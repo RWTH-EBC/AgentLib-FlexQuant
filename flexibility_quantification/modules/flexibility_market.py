@@ -113,7 +113,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         # write flex_envelop offers to csv file
         if self.df_flex_envelop is None:
             self.df_flex_envelop = pd.DataFrame()
-        df_flex_envelop = offer.flex_envelope
+        df_flex_envelop = offer.flex_envelope.as_dataframe()
         self.df_flex_envelop = pd.concat([self.df_flex_envelop, df_flex_envelop])
         self.df_flex_envelop.to_csv(self.config.market_specs.options.model_extra["results_file_offer"])
 
@@ -189,7 +189,8 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         """Placeholder for a custom flexibility callback"""
 
         offer = inp.value
-        profile = None
+        profile: Union[None, pd.Series] = None
+        time_steps: Union[None, list] = None
         if self.env.now >= self.env.config.offset + self.config.market_specs.options.start_time and not self.get("in_provision").value:
 
             bDebug: bool = True
@@ -201,13 +202,12 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                 flex_envelope = offer_data.flex_envelope
 
                 # create prediction of power flexibility diagram
-                powerflex_data = flex_envelope.loc[["powerflex_base", "powerflex_pos", "powerflex_neg", "time_steps"]]
-                powerflex_data = powerflex_data.Values.to_dict()
+                time_steps_data_plot = np.delete(flex_envelope.time_steps, 0)
 
                 fig, ax = plt.subplots()
-                ax.plot(np.delete(powerflex_data["time_steps"], 0), powerflex_data["powerflex_base"], label='powerflex_base')
-                ax.plot(np.delete(powerflex_data["time_steps"], 0), powerflex_data["powerflex_pos"], label='powerflex_pos')
-                ax.plot(np.delete(powerflex_data["time_steps"], 0), powerflex_data["powerflex_neg"], label='powerflex_neg')
+                ax.plot(time_steps_data_plot, flex_envelope.powerflex_base.values, label='powerflex_base')
+                ax.plot(time_steps_data_plot, flex_envelope.powerflex_pos.values, label='powerflex_pos')
+                ax.plot(time_steps_data_plot, flex_envelope.powerflex_neg.values, label='powerflex_neg')
                 ax.set(xlabel='Zeit in s',
                        ylabel='Prädiktive Flexible Leistung $P_{el, pred}$ in kW',
                        title='Prädiktions Werte',
@@ -217,13 +217,12 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                 plt.close()
 
                 # create Flexibility Envelope diagram
-                energyflex_data = flex_envelope.loc[["energyflex_base", "energyflex_pos", "energyflex_neg", "time_steps"]]
-                energyflex_data = energyflex_data.Values.to_dict()
+                time_steps_data_plot = flex_envelope.time_steps
 
                 fig, ax = plt.subplots()
-                ax.plot(energyflex_data["time_steps"], energyflex_data["energyflex_base"], label='energyflex_base')
-                ax.plot(energyflex_data["time_steps"], energyflex_data["energyflex_pos"], label='energyflex_pos')
-                ax.plot(energyflex_data["time_steps"], energyflex_data["energyflex_neg"], label='energyflex_neg')
+                ax.plot(time_steps_data_plot, flex_envelope.energyflex_base, label='energyflex_base')
+                ax.plot(time_steps_data_plot, flex_envelope.energyflex_pos, label='energyflex_pos')
+                ax.plot(time_steps_data_plot, flex_envelope.energyflex_neg, label='energyflex_neg')
                 ax.set(xlabel='Zeit in s',
                        ylabel='Kumulierte Flexibilitäts-Energie $E_{el}$ in kWh',
                        title='Prädiktions Werte',
@@ -234,10 +233,10 @@ class FlexibilityMarketModule(agentlib.BaseModule):
 
                 # create selected values from Flexibility envelope diagram
                 fig, ax = plt.subplots()
-                ax.plot(energyflex_data["time_steps"], energyflex_data["energyflex_base"], label='energyflex_base')
-                ax.plot(energyflex_data["time_steps"], energyflex_data["energyflex_pos"], label='energyflex_pos')
-                ax.plot(energyflex_data["time_steps"], energyflex_data["energyflex_neg"], label='energyflex_neg')
-                ax.plot(energyflex_data["time_steps"], profile_energy.to_list(), label='ausgewählt')
+                ax.plot(time_steps_data_plot, flex_envelope.energyflex_base, label='energyflex_base')
+                ax.plot(time_steps_data_plot, flex_envelope.energyflex_pos, label='energyflex_pos')
+                ax.plot(time_steps_data_plot, flex_envelope.energyflex_neg, label='energyflex_neg')
+                ax.plot(time_steps_data_plot, profile_energy.to_list(), label='ausgewählt')
                 ax.set(xlabel='Zeit in s',
                        ylabel='Kumulierte Flexibilitäts-Energie $E_{el}$ in kWh',
                        title='Prädiktions Werte',
@@ -248,10 +247,11 @@ class FlexibilityMarketModule(agentlib.BaseModule):
 
                 # create accepted offer profile diagram (which will be sent back to the building)
                 base_profile = offer_data.base_power_profile
+                time_steps_data_plot = np.delete(flex_envelope.time_steps, 0)
 
                 fig, ax = plt.subplots()
-                ax.plot(np.delete(powerflex_data["time_steps"], 0), profile_accepted.to_list(), label='ausgewählt')
-                ax.plot(np.delete(powerflex_data["time_steps"], 0), base_profile.to_list(), label='basis')
+                ax.plot(time_steps_data_plot, profile_accepted.to_list(), label='ausgewählt')
+                ax.plot(time_steps_data_plot, base_profile.to_list(), label='basis')
                 ax.set(xlabel='Zeit in s',
                        ylabel='Leistungsprofil $P_{el}$ in kW',
                        title='Prädiktions Werte',
@@ -309,7 +309,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
             self.set("_P_external", profile)
 
             # only activate a single offer, therefore setting end to inf
-            self.end = self.env.now + time_steps.values[-1]
+            self.end = self.env.now + time_steps[-1]
             self.set("in_provision", True)
 
         self.write_results(offer)
@@ -332,16 +332,15 @@ class FlexibilityMarketModule(agentlib.BaseModule):
             yield self.env.timeout(self.env.config.t_sample)
 
 
-def flex_profile_neg(offer: FlexOffer) -> tuple[pd.Series, pd.Series]:
-    return pd.Series(offer.flex_envelope['Values']['energyflex_neg']), pd.Series(offer.flex_envelope['Values']['time_steps'])
-    # return offer.flex_envelope.energyflex_neg, offer.flex_envelope.time_steps
+def flex_profile_neg(offer: FlexOffer) -> tuple[pd.Series, list]:
+    return offer.flex_envelope.energyflex_neg, offer.flex_envelope.time_steps
 
 
-def flex_profile_pos(offer: FlexOffer) -> tuple[pd.Series, pd.Series]:
-    return pd.Series(offer.flex_envelope['Values']['energyflex_pos']), pd.Series(offer.flex_envelope['Values']['time_steps'])
+def flex_profile_pos(offer: FlexOffer) -> tuple[pd.Series, list]:
+    return offer.flex_envelope.energyflex_pos, offer.flex_envelope.time_steps
 
 
-def flex_profile_average(offer: FlexOffer) -> tuple[pd.Series, pd.Series]:
+def flex_profile_average(offer: FlexOffer) -> tuple[pd.Series, list]:
     profile_energy_neg, time_steps = flex_profile_neg(offer)
     profile_power_neg: pd.Series = convert_profile(profile_energy=profile_energy_neg,
                                                    time_steps=time_steps)
@@ -354,8 +353,12 @@ def flex_profile_average(offer: FlexOffer) -> tuple[pd.Series, pd.Series]:
 
     return profile, time_steps
 
+
+# This Global parameter is needed for flex_profile_real
 randGenSeedCount = 0
-def flex_profile_real(offer: FlexOffer) -> tuple[pd.Series, pd.Series]:
+
+
+def flex_profile_real(offer: FlexOffer) -> tuple[pd.Series, list]:
     # Todo: write a real profile function
     # create random generator
     global randGenSeedCount
@@ -368,8 +371,8 @@ def flex_profile_real(offer: FlexOffer) -> tuple[pd.Series, pd.Series]:
 
     profile_energy_neg, time_steps = flex_profile_neg(offer)
     profile_energy_pos, _ = flex_profile_pos(offer)
-    p_el_min: float = offer.flex_envelope['Values']['p_el_min']
-    p_el_max: float = offer.flex_envelope['Values']['p_el_max']
+    p_el_min: float = offer.flex_envelope.p_el_min
+    p_el_max: float = offer.flex_envelope.p_el_max
 
     time_step = time_steps[1] - time_steps[0]
     profile_selected: list[float] = [0.0]
@@ -390,7 +393,7 @@ def flex_profile_real(offer: FlexOffer) -> tuple[pd.Series, pd.Series]:
     return profile, time_steps
 
 
-def convert_profile(profile_energy: pd.Series, time_steps: pd.Series) -> pd.Series:
+def convert_profile(profile_energy: pd.Series, time_steps: list) -> pd.Series:
     """
     convert_profile: takes the accumulated energy profile from the selected offer,
                      computes the slope of the offer to get the kW profile, for passing it to the building.
@@ -400,12 +403,13 @@ def convert_profile(profile_energy: pd.Series, time_steps: pd.Series) -> pd.Seri
 
     # reset index of profile_energy for easier looping
     profile_energy = profile_energy.reset_index(drop=True)
-    time_steps = time_steps.reset_index(drop=True)
+    # time_steps = time_steps.reset_index(drop=True)
 
     # convert the (k)Wh to (k)W before creating a series
 
     for iIdx in range(len(profile_energy) - 1):
+        # TODO: compute time step, in case it is not always 900s
         flex_power.append(abs((profile_energy[iIdx + 1] - profile_energy[iIdx]) / (900 / 3600)))
 
-    return pd.Series(data=flex_power, index=np.delete(time_steps.values, 0))
+    return pd.Series(data=flex_power, index=np.delete(time_steps, 0))
 
