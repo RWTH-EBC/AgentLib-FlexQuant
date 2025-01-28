@@ -449,22 +449,8 @@ def calc_flex_envelop(powerflex_pos: pd.Series, powerflex_neg: pd.Series, time_s
     temp_energy = [x * (time_step / 3600) for x in powerflex_base_prepared]
     energyflex_base = np.cumsum(temp_energy)
 
-    # TODO: berechnung der Zahl für den ersten Zeitschritt
-    #           d.h. einen Zeitschrit vor dem ersten eigentlichen Schritt, t-1
-    horizon = np.append([900], horizon)
+    horizon = np.append(horizon[0] - time_step, horizon)
 
-    # create a dictionary for easier handling in panda Dataframe (different list lengths)
-    # flex_env_data = {'energyflex_pos': energyflex_pos.tolist(),
-    #                  'energyflex_neg': energyflex_neg.tolist(),
-    #                  'energyflex_base': energyflex_base.tolist(),
-    #                  'time_steps': horizon,
-    #                  'powerflex_pos': powerflex_pos.to_list(),
-    #                  'powerflex_neg': powerflex_neg.to_list(),
-    #                  'powerflex_base': powerflex_base.to_list(),
-    #                  'p_el_max': 0.6,
-    #                  'p_el_min': 0,
-    #                  }
-    # return pd.DataFrame(list(flex_env_data.items()), columns=['Keys', 'Values'], index=list(flex_env_data.keys()))
     return FlexEnvelope(energyflex_pos=pd.Series(energyflex_pos.tolist()),
                         energyflex_neg=pd.Series(energyflex_neg.tolist()),
                         energyflex_base=pd.Series(energyflex_base.tolist()),

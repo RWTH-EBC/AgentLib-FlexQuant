@@ -266,8 +266,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                 case "neg":
                     profile_energy, time_steps = flex_profile_neg(offer)
 
-                    profile_power: pd.Series = convert_profile(profile_energy=profile_energy, time_steps=time_steps)
-                    profile: pd.Series = profile_power
+                    profile: pd.Series = convert_profile(profile_energy=profile_energy, time_steps=time_steps)
 
                     if bDebug:
                         draw_flex_envelope(market_type="neg", offer_data=offer, event_time=self.env.now, profile_accepted=profile)
@@ -275,17 +274,21 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                 case "pos":
                     profile_energy, time_steps = flex_profile_pos(offer)
 
-                    profile_power: pd.Series = convert_profile(profile_energy=profile_energy, time_steps=time_steps)
-                    profile: pd.Series = profile_power
+                    profile: pd.Series = convert_profile(profile_energy=profile_energy, time_steps=time_steps)
 
                     if bDebug:
                         draw_flex_envelope(market_type="pos", offer_data=offer, event_time=self.env.now, profile_accepted=profile)
 
                 case "average":
-                    profile, time_steps = flex_profile_average(offer=offer)
 
-                    if bDebug:
-                        draw_flex_envelope(market_type="average", offer_data=offer, event_time=self.env.now, profile_accepted=profile)
+                    # TODO: The creation of plots doesn't work anymore because one variable doesn't exist anymore
+                    # find a fix !
+
+                    profile_energy, time_steps = flex_profile_average(offer=offer)
+                    profile: pd.Series = convert_profile(profile_energy=profile_energy, time_steps=time_steps)
+
+                    #if bDebug:
+                    #    draw_flex_envelope(market_type="average", offer_data=offer, event_time=self.env.now, profile_accepted=profile)
 
                 case "real":
                     profile_energy, time_steps = flex_profile_real(offer=offer)
@@ -295,13 +298,13 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                         draw_flex_envelope(market_type="real", offer_data=offer, event_time=self.env.now, profile_accepted=profile)
 
                 case _:
-                    print("Wrong Market Event Type selected ! \nAverage Profile was automatically selected.")
+                    print("Wrong Market Event Type selected ! \nReal Profile was automatically selected.")
 
-                    profile_energy, time_steps = flex_profile_average(offer=offer)
+                    profile_energy, time_steps = flex_profile_real(offer=offer)
                     profile: pd.Series = convert_profile(profile_energy=profile_energy, time_steps=time_steps)
 
                     if bDebug:
-                        draw_flex_envelope(market_type="average", offer_data=offer, event_time=self.env.now, profile_accepted=profile)
+                        draw_flex_envelope(market_type="real", offer_data=offer, event_time=self.env.now, profile_accepted=profile)
 
         if profile is not None:
             profile = profile.ffill()
