@@ -22,7 +22,7 @@ until = 2*21600
 ENV_CONFIG = {"rt": False, "factor": 0.01, "t_sample": 60}
 
 
-def run_example(until=until, offer_type="neg"):
+def run_example(until=until, offer_type="real"):
     results = []
     mpc_config = "mpc_and_sim/simple_model.json"
     sim_config = "mpc_and_sim/simple_sim.json"
@@ -46,7 +46,7 @@ def run_example(until=until, offer_type="neg"):
     if results is None:
         sys.exit()
 
-    with open('results/results_file_neg.pkl', 'wb') as results_file:
+    with open(f'results/results_file_{offer_type}.pkl', 'wb') as results_file:
         pickle.dump(results, results_file)
 
     plot_results_2(results=results, offer_type=offer_type, until=until)
@@ -92,8 +92,7 @@ if __name__ == "__main__":
     if bClearFiles:
         clear_files(bClear_plots=True, bClear_results=True, bClear_flex_files=True)
 
-    # offer_types: list[str] = ["neg", "pos", "average"]
-    offer_types: list[str] = ["real"]
+    offer_types: list[str] = ["neg", "pos", "real"]
     for offer_type in offer_types:
         print(f'\n{"":-^50}')
         print(f'{f" Starting simulation with {offer_type} ":-^50}')

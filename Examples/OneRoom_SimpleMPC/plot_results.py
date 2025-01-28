@@ -466,7 +466,7 @@ def plot_results_2(results: dict = None, offer_type: str = None, until: float = 
 
 
 if __name__ == "__main__":
-    offer_types: list[str] = ["neg", "pos", "average"]
+    offer_types: list[str] = ["neg", "pos", "average", "real"]
     for offer_type in offer_types:
         path2file: str = f'results/results_file_{offer_type}.pkl'
         objPath2file = Path(path2file)
