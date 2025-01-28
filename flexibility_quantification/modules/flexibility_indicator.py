@@ -400,10 +400,19 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
 
         base_profile = self.base_vals.reindex(index=flex_horizon)
 
+        # find p_el_min and _max in config.parameters and return the values
+        p_el_min = -np.inf
+        p_el_max = np.inf
+        for varParam in self.config.parameters:
+            if varParam.name == "p_el_min":
+                p_el_min = varParam.value
+            elif varParam.name == "p_el_max":
+                p_el_max = varParam.value
+
         flex_envelope = calc_flex_envelop(powerflex_pos=self.pos_vals.reindex(index=flex_horizon),
                                           powerflex_neg=self.neg_vals.reindex(index=flex_horizon),
                                           powerflex_base=base_profile, time_step=time_step, horizon=flex_horizon,
-                                          scaler=scaler)
+                                          scaler=scaler, p_el_min=p_el_min, p_el_max=p_el_max)
 
         self.send_flex_offer("FlexibilityOffer", base_profile,
                              flex_price_pos, powerflex_profile_pos,
@@ -420,7 +429,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
 
 
 def calc_flex_envelop(powerflex_pos: pd.Series, powerflex_neg: pd.Series, time_step: int, horizon: np.ndarray,
-                      scaler: int, powerflex_base: pd.Series = None) -> FlexEnvelope:
+                      scaler: int, p_el_min: float, p_el_max: float, powerflex_base: pd.Series = None) -> FlexEnvelope:
     """ powerflex_pos, powerflex_neg and powerflex_base are in (k)W, and the result is in (k)Wh. """
 
     powerflex_pos_prepared = powerflex_pos.to_list()
@@ -463,6 +472,6 @@ def calc_flex_envelop(powerflex_pos: pd.Series, powerflex_neg: pd.Series, time_s
                         powerflex_pos=pd.Series(powerflex_pos.to_list()),
                         powerflex_neg=pd.Series(powerflex_neg.to_list()),
                         powerflex_base=pd.Series(powerflex_base.to_list()),
-                        p_el_max=0.6,
-                        p_el_min=0,
+                        p_el_max=p_el_max,
+                        p_el_min=p_el_min,
                         )
