@@ -64,7 +64,7 @@ def run_example(offer_type=None) -> None:
     if results is None:
         sys.exit()
 
-    with open('results/results_file_neg.pkl', 'wb') as results_file:
+    with open(f'results/results_file_{offer_type}.pkl', 'wb') as results_file:
         pickle.dump(results, results_file)
 
     # create the folder to store the figure
@@ -116,7 +116,7 @@ def run_example(offer_type=None) -> None:
     (ax1, ax2) = axs
     fig.set_figwidth(13)
     # P_el
-    ax1.set_ylabel("$P_{el}$ in kW")
+    ax1.set_ylabel("$P_{el}$ in W")
     results["SimAgent"]["SimTestHall"]["P_el_c"].plot(ax=ax1, color=mpcplot.EBCColors.green)
     mpc_at_time_step(
         data=results["NegFlexMPC"]["NegFlexMPC"], time_step=initial_time + 9000, variable="P_el_c"
@@ -444,10 +444,10 @@ def clear_files(bClear_plots: bool = False, bClear_flex_files: bool = False, bCl
 if __name__ == "__main__":
     bClearFiles: bool = True
     if bClearFiles:
-        clear_files(bClear_plots=True, bClear_results=True, bClear_flex_files=False)
+        clear_files(bClear_plots=True, bClear_results=True, bClear_flex_files=True)
 
     # offer_types: list[str] = ["neg", "pos", "average"]
-    offer_types: list[str] = ["neg"]
+    offer_types: list[str] = ["pos"]
     for offer_type in offer_types:
         print(f'\n{"":-^50}')
         print(f'{f" Starting simulation with {offer_type} ":-^50}')

@@ -1,7 +1,7 @@
 {
-    "prep_time": 900,
-    "flex_event_duration": 7200,
-    "market_time": 900,
+    "prep_time": 1800,
+    "flex_event_duration": 14400,
+    "market_time": 1800,
     "indicator_config": {
         "agent_config": {
             "id": "FlexibilityIndicator",
@@ -13,28 +13,36 @@
                 {
                     "module_id": "FlexibilityIndicator",
                     "type": "flexibility_quantification.flexibility_indicator",
-                    "results_file": "results/flexibility_indicator_neg.csv",
+                    "results_file": "results/flexibility_indicator_pos.csv",
                     "price_variable": "r_pel",
                     "parameters": [
                         {
                             "name": "prep_time",
-                            "value": 900
+                            "value": 1800
                         },
                         {
                             "name": "market_time",
-                            "value": 900
+                            "value": 1800
                         },
                         {
                             "name": "flex_event_duration",
-                            "value": 7200
+                            "value": 14400
                         },
                         {
                             "name": "time_step",
-                            "value": 900
+                            "value": 1800
                         },
                         {
                             "name": "prediction_horizon",
-                            "value": 48
+                            "value": 24
+                        },
+                        {
+                            "name": "p_el_min",
+                            "value": 0
+                        },
+                        {
+                            "name": "'p_el_max'",
+                            "value": 2000
                         }
                     ],
                     "inputs": [
@@ -52,7 +60,7 @@
     "market_config": "flex_configs/market.json",
     "baseline_config_generator_data": {
         "power_variable": "P_el_c",
-        "power_unit": "kW",
+        "power_unit": "W",
         "profile_deviation_weight": 1000
     },
     "shadow_mpc_config_generator_data": {
