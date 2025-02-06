@@ -4,8 +4,7 @@ This project is a plugin for the [AgentLib](https://github.com/RWTH-EBC/AgentLib
 
 ## Installation
 To install, you can either use the ``requirements.txt`` or go for package installation with ``pip install -e .``. 
-The ``-e`` option installs the package in editable mode, which should be done when working on this package.
- This project is compatible with Python 3.12 (3.11, 3.10 to be checked).
+The ``-e`` option installs the package in editable mode, which should be done when working on this package. Don't use Python <=3.9 or >=3.13.
 
 ## Author
 - Felix Stegemerten 
@@ -38,7 +37,7 @@ The key components of the FlexQuant framework are the three MPCs: the **baseline
 
 The **Baseline MPC** is responsible for optimizing the operation of the BES with the primary objective of minimizing operational costs over the prediction horizon. Notably, only the control actions determined by the Baseline MPC are actually applied to the BES.
 
-The **Shadow MPCs** are designed to assess the maximum possible flexibility in electricity usage over a user-defined flexibility event duration. These controllers are termed "shadow" because they do not directly control the BES; instead, they support the evaluation of system flexibility. Two Shadow MPCs are employed: The Negative Shadow MPC calculates the control trajectory that maximizes BES power consumption, leading to a negative power contribution to the market (i.e., higher grid consumption).
+The **Shadow MPCs** are designed to assess the maximum possible flexibility of electricity usage over a user-defined flexibility event duration. These controllers are termed "shadow" because they do not directly control the BES; instead, they support the evaluation of system flexibility. Two Shadow MPCs are employed: The Negative Shadow MPC calculates the control trajectory that maximizes BES power consumption, leading to a negative power contribution to the market (i.e., higher grid consumption).
  The Positive Shadow MPC does the opposite. The horizon of the Shadow MPCs is divided as following: 
 
 <figure>
@@ -46,20 +45,20 @@ The **Shadow MPCs** are designed to assess the maximum possible flexibility in e
   <figcaption>Split of the prediction horizon of the Shadow MPCs</figcaption>
 </figure>
 
-The time t<sub>MC</sub> is the market clearing time, during which a flexibility offer is active and the market can decide whether to take it. t<sub>Prep</sub> is the preparation time, where the system can prepare itself for the upcoming flexibility event in advance. In t<sub>FE</sub> the flexibility event takes place. 
+The time t<sub>MC</sub> is the market clearing time, during which a flexibility offer in t<sub>FE</sub> is active and the market can decide whether to take it. t<sub>Prep</sub> is the preparation time, where the system can prepare itself for the upcoming flexibility event in advance to maximize the flexibility in t<sub>FE</sub>, where the flexibility event takes place. 
 
 <ins>Indicator Agent</ins> \
 The Indicator Agent utilizes the power consumption predictions of the
-three MPCs to calculate indicators for quantifying available flexibility offers. It could be the total energy, the peak power, the average power or the cost etc.
+three MPCs to calculate indicators for quantifying available flexibility offers. Here, the key performance indicator could be the total energy, the peak power, the average power or the cost etc.
 
 <ins>Market Agent</ins> \
-Once the Market Agent decides to accept a flexibility offer, it sends the accepted flexibility trajectory back to the baseline MPC, and it must deliver it in the corresponding time interval t<sub>FE</sub>.
+Once the Market Agent decides to accept a flexibility offer, it sends the accepted flexibility trajectory back to the baseline MPC, which must deliver it in the corresponding time interval t<sub>FE</sub>.
 
 ### Example
 This section demonstrates how to use the FlexQuant package. Examples can be found in the folder [Examples](Examples). 
 
-In general, a use case has the following files:
-- Flex_config: it is the json file that specifies the configurations for the agents in the grey boxes in the [framework](#the-framework). Additionally, it also includes the change to the Baseline MPC when used in a FlexQuant framework compared to the normal control case. Note that not all the configs are listed in detail in this file. Instead, it may refer to e.g. an indicator config in a separate json file.
-- Models: every use case has its own BES, (Baseline) MPC and predictor model. These are the black boxes in the [framework](#the-framework). For every model there exists a python file, where the variables and functionality are defined. Also, there is a config json file for each. The default value of the variables will be replaced with the one in the config, if provided. 
+In general, a use case has the two following types of files:
+- Flex_config: this is a json file that defines the configurations for the agents represented by the grey boxes in the [framework](#the-framework). It also specifies the modifications to the Baseline MPC when used in a FlexQuant framework compared to the standard control case. Note that not all the configurations are explicitly detailed within this file; instead, it may reference other configuration files, such as an indicator config in a separate JSON file.
+- Models: Each use case has its own BES, (Baseline) MPC and predictor model, represented as black boxes in the [framework](#the-framework). For every model, there is a corresponding python file that defines its variables and functionality. Additionally, each model has a configuration JSON file, which can override the default variable values if specified.
 
-To see how the package generates and updates everything, read more [here](flexibility_quantification/README.md)
+To see how the package works in detail, read more [here](flexibility_quantification/README.md)
