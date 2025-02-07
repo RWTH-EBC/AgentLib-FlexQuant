@@ -87,7 +87,6 @@ class PredictorModule(al.BaseModule):
 
     def process(self):
         """Sets a new prediction at each time step."""
-        # self.env.process(self.send_setpoint_trajectories())
         self.env.process(self.send_upper_comfort_trajectory())
         self.env.process(self.send_lower_comfort_trajectory())
         self.env.process(self.send_price_var_trajectory())
@@ -107,20 +106,6 @@ class PredictorModule(al.BaseModule):
             traj = pd.Series(values, index=list(grid))
             self.set("T_amb", traj)
             yield self.env.timeout(sample_time)
-
-    # def send_setpoint_trajectories(self):
-    #     """Sends the series for the comfort condition."""
-    #     while True:
-    #         ts = self.get("prediction_sampling_time").value
-    #         n = self.get("prediction_length").value
-    #         now = self.env.now
-    #         sampling_time = self.get("sampling_time").value
-
-    #         grid = np.arange(now, now + n * ts, ts)
-    #         values = 80 - 15 * np.sin(-np.pi / 86400 * grid)
-    #         traj = pd.Series(values, index=list(grid))
-    #         self.set("P_grid_set", traj)
-    #         yield self.env.timeout(sampling_time)
 
     def send_upper_comfort_trajectory(self):
         """Sends the series for the comfort condition."""
