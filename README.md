@@ -3,7 +3,7 @@
 This project is a plugin for the [AgentLib](https://github.com/RWTH-EBC/AgentLib). This agent-based framework employs model predictive control (MPC) to quantify flexibility offers of electricity usage of building energy systems (BES) during operation.
 
 ## Installation
-To install, you can either use the ``requirements.txt`` or go for package installation with ``pip install -e ``.
+To install, you can either use the ``requirements.txt`` or go for package installation with ``pip install -e. ``.
 The ``-e`` option installs the package in editable mode, which should be done when working on this package. Don't use Python <=3.9 or >=3.13.
 
 ## Author
@@ -13,7 +13,7 @@ The ``-e`` option installs the package in editable mode, which should be done wh
 A publication regarding the FlexQuant is currently in the work. A preprint is available under https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5015569
 
 ## Tutorial
-This section provides tutorials to help you get started with FlexQuant. It begins with an introduction to the framework's structure, followed by examples to guide you through its application.
+This section provides tutorials to help you get started with FlexQuant. It begins with the framework's structure, followed by the application. Functionality of each agent is introduced at the end. For more details, please refer to the literature mentioned above.
 
 ### The framework
 
@@ -23,7 +23,18 @@ This section provides tutorials to help you get started with FlexQuant. It begin
 </figure>
 
 
-In total, the framework consists of seven agents: Predictor Agent, BES Agent, three MPC Agents, an Indicator Agent and a market agent. The data exchange between these agents is illustrated with the arrows in the image above. For the normal use case without flexibility quantification, only the agents and communications in black are active. The ones in the grey box are generated while quantifying the flexibility, Below are detailed descriptions for each agent and their interactions.
+In total, the framework consists of seven agents: Predictor Agent, BES Agent, three MPC Agents, an Indicator Agent and a market agent. The data exchange between these agents is illustrated with the arrows in the image above. For the normal use case without flexibility quantification, only the agents and communications in black are active. The ones in the grey box are generated while quantifying the flexibility. Detailed descriptions for each agent and their interactions can be found in this [section](#the-agents).
+
+### Application
+This section demonstrates how to use the FlexQuant package. Examples can be found in the folder [Examples](Examples). 
+
+In general, a use case has the two following types of files:
+- Flex_config: this is a json file that defines the configurations for the agents represented by the grey boxes in the [framework](#the-framework). It also specifies the modifications to the Baseline MPC when used in a FlexQuant framework compared to the standard control case. Note that not all the configurations are explicitly detailed within this file; instead, it may reference other configuration files, such as an indicator config in a separate JSON file.
+- Modules: Each use case has its own specific BES, (Baseline) MPC and predictor module, represented as black boxes in the [framework](#the-framework). They work in the same way as the agentlib module. For every module, there is a corresponding python file that defines its variables and functionality. Additionally, each module has a configuration JSON file, which can override the default variable values if specified.
+
+To see how the package works in detail, read more [here](flexibility_quantification/README.md)
+
+### The Agents
 
 <ins>Predictor Agent</ins> \
 The Predictor Agent provides a prediction trajectory of the boundary
@@ -54,11 +65,3 @@ three MPCs to calculate key performance indicators for quantifying available fle
 <ins>Market Agent</ins> \
 Once the Market Agent decides to accept a flexibility offer, it sends the accepted flexibility trajectory back to the baseline MPC, which must deliver it in the corresponding time interval t<sub>FE</sub>.
 
-### Example
-This section demonstrates how to use the FlexQuant package. Examples can be found in the folder [Examples](Examples). 
-
-In general, a use case has the two following types of files:
-- Flex_config: this is a json file that defines the configurations for the agents represented by the grey boxes in the [framework](#the-framework). It also specifies the modifications to the Baseline MPC when used in a FlexQuant framework compared to the standard control case. Note that not all the configurations are explicitly detailed within this file; instead, it may reference other configuration files, such as an indicator config in a separate JSON file.
-- Modules: Each use case has its own specific BES, (Baseline) MPC and predictor module, represented as black boxes in the [framework](#the-framework). They work in the same way as the agentlib module. For every module, there is a corresponding python file that defines its variables and functionality. Additionally, each module has a configuration JSON file, which can override the default variable values if specified.
-
-To see how the package works in detail, read more [here](flexibility_quantification/README.md)
