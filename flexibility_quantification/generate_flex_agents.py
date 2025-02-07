@@ -430,19 +430,13 @@ class FlexAgentGenerator:
                 parameter.value = self.baseline_mpc_module_config.time_step
             if parameter.name == "prediction_horizon":
                 parameter.value = self.baseline_mpc_module_config.prediction_horizon
-        if (
-            "method"
-            in self.baseline_mpc_module_config.optimization_backend[
-                "discretization_options"
-            ]
-        ):
-            module_config.discretization = (
-                self.baseline_mpc_module_config.optimization_backend[
-                    "discretization_options"
-                ]["method"]
-            )
+        # set power unit
         module_config.power_unit = (
             self.flex_config.baseline_config_generator_data.power_unit
+        )
+        module_config.results_file = Path(
+            Path(self.orig_mpc_module_config.optimization_backend["results_file"]).parent,
+            self.indicator_config.name_of_created_file.replace(".json", ".csv"),
         )
         module_config.model_config["frozen"] = True
         return module_config
@@ -462,6 +456,10 @@ class FlexAgentGenerator:
                 module_config.__setattr__(
                     field, self.baseline_mpc_module_config.time_step
                 )
+        module_config.results_file = Path(
+            Path(self.orig_mpc_module_config.optimization_backend["results_file"]).parent,
+            self.market_config.name_of_created_file.replace(".json", ".csv"),
+        )
         module_config.model_config["frozen"] = True
         return module_config
 

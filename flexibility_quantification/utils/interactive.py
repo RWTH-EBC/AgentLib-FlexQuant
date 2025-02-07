@@ -12,9 +12,10 @@ from agentlib_mpc.utils import TimeConversionTypes, TIME_CONVERSION
 from agentlib_mpc.utils.analysis import mpc_at_time_step
 from agentlib_mpc.utils.plotting.interactive import get_port    # solver_return, obj_plot  -> didn't work out for stats
 
-from flexibility_quantification.data_structures.flexquant import FlexQuantConfig
 import flexibility_quantification.data_structures.globals as glbs
 import flexibility_quantification.data_structures.flex_results as flex_results
+from flexibility_quantification.data_structures.flexquant import FlexQuantConfig
+from flexibility_quantification.data_structures.flex_kpis import FlexibilityKPIs
 
 
 class CustomBound:
@@ -44,7 +45,6 @@ class Dashboard(flex_results.Results):
     MPC_ITERATIONS: str = "iter_count"
 
     # Label for the positive and negative flexibilities
-    # todo: get names from the directions
     label_positive: str = "positive"
     label_negative: str = "negative"
 
@@ -92,15 +92,24 @@ class Dashboard(flex_results.Results):
             },
         }
 
+        # KPIS
+        kpis_pos = FlexibilityKPIs(direction="positive")
+        self.kpi_names_pos = kpis_pos.get_name_dict()
+        kpis_neg = FlexibilityKPIs(direction="negative")
+        self.kpi_names_neg = kpis_neg.get_name_dict()
+
         # Get variables for plotting
         # MPC stats
         self.plotting_variables = [self.MPC_ITERATIONS]
         # MPC and sim variables
         self.intersection_mpcs_sim = self.get_intersection_mpcs_sim()
         self.plotting_variables.extend([key for key in self.intersection_mpcs_sim.keys()])
-        # Flexibility kpis  # todo: get names from the kpis
-        self.plotting_variables.append("energyflex")
-        self.plotting_variables.append("costs")
+        # Flexibility kpis
+        self.plotting_variables.append(kpis_pos.energy_flex.name)
+        self.plotting_variables.append(kpis_pos.costs.name)
+        # for kpi in kpis_pos.get_kpi_dict(direction_name=False).values():
+        #     if not isinstance(kpi.value, pd.Series):
+        #         self.plotting_variables.append(kpi.name)
 
     def show(self, custom_bounds: Union[CustomBound, list[CustomBound]] = None):
         """
@@ -131,16 +140,24 @@ class Dashboard(flex_results.Results):
 
         def plot_one_mpc_variable(fig: go.Figure, variable: str, time_step: float) -> go.Figure:
             # Get the mpc data for the plot
-            df_neg = mpc_at_time_step(data=self.df_neg_flex, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.neg_flex_module_config.module_id], index_offset=False)
-            df_pos = mpc_at_time_step(data=self.df_pos_flex, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.pos_flex_module_config.module_id], index_offset=False)
-            df_bas = mpc_at_time_step(data=self.df_baseline, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.baseline_module_config.module_id], index_offset=False)
+            series_neg = mpc_at_time_step(data=self.df_neg_flex, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.neg_flex_module_config.module_id], index_offset=False)
+            series_pos = mpc_at_time_step(data=self.df_pos_flex, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.pos_flex_module_config.module_id], index_offset=False)
+            series_bas = mpc_at_time_step(data=self.df_baseline, time_step=time_step, variable=self.intersection_mpcs_sim[variable][self.baseline_module_config.module_id], index_offset=False)
+
+            def _add_step_to_data(s: pd.Series) -> pd.Series:
+                s_concat = s.copy().shift(periods=1)
+                s_concat.index = s.index - 0.01 * (s.index[1] - s.index[0])
+                for ind, val in s_concat.items():
+                   s[ind] = val
+                s.sort_index(inplace=True)
+                return s
 
             # Manage nans
-            for df in [df_neg, df_pos, df_bas]:
+            for series in [series_neg, series_pos, series_bas]:
                 if variable in [control.name for control in self.baseline_module_config.controls]:
-                    df.ffill(inplace=True)
-                else:
-                    df.dropna(inplace=True)
+                    series.dropna(inplace=True)
+                    series = _add_step_to_data(s=series)
+                series.dropna(inplace=True)
 
             # Plot the data
             try:
@@ -148,9 +165,9 @@ class Dashboard(flex_results.Results):
                 fig.add_trace(go.Scatter(name=self.simulator_agent_config.id, x=df_sim.index, y=df_sim, mode="lines", line=self.LINE_PROPERTIES[self.simulator_agent_config.id], zorder=2))
             except KeyError:
                 pass    # E.g. when the simulator variable name was not found from the intersection
-            fig.add_trace(go.Scatter(name=self.baseline_agent_config.id, x=df_bas.index, y=df_bas, mode="lines", line=self.LINE_PROPERTIES[self.baseline_agent_config.id] | {"dash": "dash"}, zorder=3))
-            fig.add_trace(go.Scatter(name=self.neg_flex_agent_config.id, x=df_neg.index, y=df_neg, mode="lines", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id] | {"dash": "dash"}, zorder=4))
-            fig.add_trace(go.Scatter(name=self.pos_flex_agent_config.id, x=df_pos.index, y=df_pos, mode="lines", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id] | {"dash": "dash"}, zorder=4))
+            fig.add_trace(go.Scatter(name=self.baseline_agent_config.id, x=series_bas.index, y=series_bas, mode="lines", line=self.LINE_PROPERTIES[self.baseline_agent_config.id] | {"dash": "dash"}, zorder=3))
+            fig.add_trace(go.Scatter(name=self.neg_flex_agent_config.id, x=series_neg.index, y=series_neg, mode="lines", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id] | {"dash": "dash"}, zorder=4))
+            fig.add_trace(go.Scatter(name=self.pos_flex_agent_config.id, x=series_pos.index, y=series_pos, mode="lines", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id] | {"dash": "dash"}, zorder=4))
 
             # Get the data for the bounds
             def _get_mpc_series(var_type: str, var_name: str):
@@ -186,17 +203,14 @@ class Dashboard(flex_results.Results):
 
         def plot_flexibility_kpi(fig: go.Figure, variable) -> go.Figure:
             df_ind = self.df_indicator.xs(0, level=1)
-            # todo: kpi names function with indicator branch
-            pos_var = f"{variable}_pos"
-            neg_var = f"{variable}_neg"
-            fig.add_trace(go.Scatter(name=self.label_positive, x=df_ind.index, y=df_ind[pos_var], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]))
-            fig.add_trace(go.Scatter(name=self.label_negative, x=df_ind.index, y=df_ind[neg_var], mode="lines+markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id]))
+            fig.add_trace(go.Scatter(name=self.label_positive, x=df_ind.index, y=df_ind[self.kpi_names_pos[variable]], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]))
+            fig.add_trace(go.Scatter(name=self.label_negative, x=df_ind.index, y=df_ind[self.kpi_names_neg[variable]], mode="lines+markers", line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id]))
             return fig
 
         def plot_market_results(fig: go.Figure, variable: str) -> go.Figure:
             df_flex_market_index = self.df_market.index.droplevel("time")
             if variable in self.df_market.columns:
-                fig.add_trace(go.Scatter(name=self.label_positive, x=df_flex_market_index, y=self.df_market[variable], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]))
+                fig.add_trace(go.Scatter(x=df_flex_market_index, y=self.df_market[variable], mode="lines+markers", line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]))
             else:
                 pos_var = f"pos_{variable}"
                 neg_var = f"neg_{variable}"
@@ -306,6 +320,9 @@ class Dashboard(flex_results.Results):
         app = Dash(__name__, title="Results")
         app.layout = [
             html.H1("Results"),
+            html.H3("Settings"),
+            html.Div(children=[html.Code(f"{option}: {setting}, ") for option, setting in self.baseline_module_config.optimization_backend["discretization_options"].items()]),
+            # Options
             html.Div(
                 children=[
                     html.H3("Options"),
