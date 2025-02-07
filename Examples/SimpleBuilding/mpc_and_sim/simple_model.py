@@ -13,12 +13,14 @@ class BaselineMPCModelConfig(CasadiModelConfig):
 
     inputs: List[CasadiInput] = [
         # controls
+        # P_el is replaced with P_in as input 
+        # because var name P_el needs to be declared as an output 
+        # P_el set to P_in below
         CasadiInput(
-            #TODO: Change to another name "P_in"
             name="P_in",
             value=100,
             unit="W",
-            description="Electrical power of heating rod",
+            description="Electrical power of heating rod (equivalent to P_el)",
         ),
         # disturbances
         CasadiInput(
