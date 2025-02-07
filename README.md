@@ -3,7 +3,7 @@
 This project is a plugin for the [AgentLib](https://github.com/RWTH-EBC/AgentLib). This agent-based framework employs model predictive control (MPC) to quantify flexibility offers of electricity usage of building energy systems (BES) during operation.
 
 ## Installation
-To install, you can either use the ``requirements.txt`` or go for package installation with ``pip install -e. ``.
+To install, you can either use the ``requirements.txt`` or go for package installation with ``pip install -e .``.
 The ``-e`` option installs the package in editable mode, which should be done when working on this package. Don't use Python <=3.9 or >=3.13.
 
 ## Author
