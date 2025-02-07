@@ -13,12 +13,12 @@ Below is a brief breakdown of how this method works.
   1. load the flex_config
   2. initialize the three mpc agent config using the mpc_agent_config
   3. initialize the three mpc module config using the mpc agent config. All the mpc modules are now the same as the standard mpc, but will be later modified individually.
-  4. do step ii and iii for indicator and market 
+  4. do step 2 and 3 for indicator and market 
   
 
 - ``generate_flex_agents()`` modifies the modules according to the flex_config. Things changed can be found in the adapt functions. 
   1. adapt mpc modules
   2. dump jsons of the mpc agents including the adapted module configs
-  3. do step i and ii for indicator and market 
+  3. do step 1 and 2 for indicator and market 
   
 The automatically generated configs and mpc models will be stored in the generated '**created_flex_files**' folder and will be used during the simulation.
