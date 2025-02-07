@@ -195,6 +195,9 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 # Calculate the flexibility, send the offer, write and save the results
                 self.calc_and_send_offer()
 
+                # check the power profile end deviation
+                self.check_power_end_deviation(tol=0.02)
+
                 # set the values to None to reset the callback
                 self._set_inputs_to_none()
 
@@ -334,3 +337,14 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         self.data.power_profile_flex_neg = None
         self.data.power_profile_flex_pos = None
         self.data.power_costs_profile = None
+
+    def check_power_end_deviation(self, tol: float = 0.02):
+        """
+        calculates the deviation of the final value of the power profiles and warn the user if it exceeds the tolerance
+        """
+        dev_pos = self.data.power_profile_base.values[-1] - self.data.power_profile_flex_pos.values[-1]
+        dev_neg = self.data.power_profile_base.values[-1] - self.data.power_profile_flex_neg.values[-1]
+        if abs(dev_pos) > tol:
+            print(f"WARN: There is a deviation of {dev_pos} kW between the final value of power profiles of the baseline and positive shadow MPC")
+        if abs(dev_neg) > tol:
+            print(f"WARN: There is a deviation of {dev_neg} kW between the final value of power profiles of the baseline and negative shadow MPC")
