@@ -13,7 +13,7 @@ The ``-e`` option installs the package in editable mode, which should be done wh
 A publication regarding the FlexQuant is currently in the work. A preprint is available under https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5015569
 
 ## Tutorial
-This section provides tutorials to help you get started with FlexQuant. It begins with an introduction to the framework's structure, followed by a detailed breakdown of an example to guide you through its application.
+This section provides tutorials to help you get started with FlexQuant. It begins with an introduction to the framework's structure, followed by examples to guide you through its application.
 
 ### The framework
 
@@ -23,33 +23,33 @@ This section provides tutorials to help you get started with FlexQuant. It begin
 </figure>
 
 
-In total, the framework consists of seven agents: Predictor Agent, BES Agent, three MPC Agents, an Indicator Agent and a market agent. The data exchange between these agents is illustrated with the arrows in the image above. For the normal use case without flexibility quantification, only the agents in the black box are active. The ones in the grey box are generated while quantifying the flexibility, Let’s take a closer look at each agent and their interactions.
+In total, the framework consists of seven agents: Predictor Agent, BES Agent, three MPC Agents, an Indicator Agent and a market agent. The data exchange between these agents is illustrated with the arrows in the image above. For the normal use case without flexibility quantification, only the agents and communications in black are active. The ones in the grey box are generated while quantifying the flexibility, Below are detailed descriptions for each agent and their interactions.
 
 <ins>Predictor Agent</ins> \
 The Predictor Agent provides a prediction trajectory of the boundary
 conditions for the given use case to the MPC Agents. This includes factors such as weather conditions, electricity tariffs, comfort boundaries, and occupancy schedules. The data can either be historical or retrieved via API services to support real-time operation.
 
 <ins>BES Agent</ins> \
-The BES Agent simulates the energy system to be controlled. It can either use the same model as the MPC or a higher-fidelity model. In the latter case, the BES model does not need to be Python-based; for example, a Modelica model or even a real-world BES can be utilized. The BES Agent receives control signals from the MPC, applies them to the system, and subsequently sends the resulting measurements back to the MPC. 
+The BES Agent simulates the energy system to be controlled. It can either use the same model as the MPC or a higher-fidelity one. In the latter case, the BES model does not need to be Python-based; for example, a Modelica model or even a real-world BES can be utilized. The BES Agent receives control signals from the MPC, applies them to the system, and subsequently sends the resulting measurements back to the MPC. 
 
 <ins>MPC Agents</ins> \
 The key components of the FlexQuant framework are the three MPCs: the **baseline MPC**, which controls the BES and two **shadow MPCs** for the calculation of the available flexibility.  
 
-The **Baseline MPC** is responsible for optimizing the operation of the BES with the primary objective of minimizing operational costs over the prediction horizon. Notably, only the control actions determined by the Baseline MPC are actually applied to the BES.
+The **Baseline MPC** is responsible for optimizing the operation of the BES with the objective of minimizing operational costs over the prediction horizon. While used for flexibility quantification, it is slightly modified to include the extra function of delivering the accepted flex offer.
 
-The **Shadow MPCs** are designed to assess the maximum possible flexibility of electricity usage over a user-defined flexibility event duration. These controllers are termed "shadow" because they do not directly control the BES; instead, they support the evaluation of system flexibility. Two Shadow MPCs are employed: The Negative Shadow MPC calculates the control trajectory that maximizes BES power consumption, leading to a negative power contribution to the market (i.e., higher grid consumption).
- The Positive Shadow MPC does the opposite. The horizon of the Shadow MPCs is divided as following: 
+The **Shadow MPCs** are designed to assess the maximum possible flexibility of electricity usage over a user-defined flexibility event duration. They are termed "shadow" because they do not directly control the BES but only support the evaluation of system flexibility. Two Shadow MPCs are employed: The Negative Shadow MPC calculates the control trajectory that maximizes BES power consumption, leading to a negative power contribution to the market (i.e., higher grid consumption).
+ The Positive Shadow MPC does the opposite. The prediction horizon of the Shadow MPCs is divided as following: 
 
 <figure>
   <img src="./docs/images/ShadowMPCTimeSlpit.jpg" width="600" alt="framework">
   <figcaption>Split of the prediction horizon of the Shadow MPCs</figcaption>
 </figure>
 
-The time t<sub>MC</sub> is the market clearing time, during which a flexibility offer in t<sub>FE</sub> is active and the market can decide whether to take it. t<sub>Prep</sub> is the preparation time, where the system can prepare itself for the upcoming flexibility event in advance to maximize the flexibility in t<sub>FE</sub>, where the flexibility event takes place. 
+The time t<sub>MC</sub> is the market clearing time, during which a flexibility offer in t<sub>FE</sub> is reserved and the market can decide whether to take it. The preparation time t<sub>Prep</sub> allows the system to prepare itself for the upcoming flexibility event in advance to maximize the flexibility in t<sub>FE</sub>, where the flexibility event takes place. 
 
 <ins>Indicator Agent</ins> \
 The Indicator Agent utilizes the power consumption predictions of the
-three MPCs to calculate indicators for quantifying available flexibility offers. Here, the key performance indicator could be the total energy, the peak power, the average power or the cost etc.
+three MPCs to calculate key performance indicators for quantifying available flexibility offers. They could be the total energy, the peak power, the average power or the cost etc.
 
 <ins>Market Agent</ins> \
 Once the Market Agent decides to accept a flexibility offer, it sends the accepted flexibility trajectory back to the baseline MPC, which must deliver it in the corresponding time interval t<sub>FE</sub>.
@@ -59,6 +59,6 @@ This section demonstrates how to use the FlexQuant package. Examples can be foun
 
 In general, a use case has the two following types of files:
 - Flex_config: this is a json file that defines the configurations for the agents represented by the grey boxes in the [framework](#the-framework). It also specifies the modifications to the Baseline MPC when used in a FlexQuant framework compared to the standard control case. Note that not all the configurations are explicitly detailed within this file; instead, it may reference other configuration files, such as an indicator config in a separate JSON file.
-- Models: Each use case has its own BES, (Baseline) MPC and predictor model, represented as black boxes in the [framework](#the-framework). For every model, there is a corresponding python file that defines its variables and functionality. Additionally, each model has a configuration JSON file, which can override the default variable values if specified.
+- Modules: Each use case has its own specific BES, (Baseline) MPC and predictor module, represented as black boxes in the [framework](#the-framework). They work in the same way as the agentlib module. For every module, there is a corresponding python file that defines its variables and functionality. Additionally, each module has a configuration JSON file, which can override the default variable values if specified.
 
 To see how the package works in detail, read more [here](flexibility_quantification/README.md)
