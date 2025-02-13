@@ -88,6 +88,7 @@ class BaselineMPCModelConfig(CasadiModelConfig):
             unit="W",
             description="The power input to the system",
         ),
+        CasadiOutput(name="Time", unit="s", description="Test casadi time")
     ]
 
 class BaselineMPCModel(CasadiModel):
@@ -99,6 +100,7 @@ class BaselineMPCModel(CasadiModel):
             self.cp * self.mDot / self.C * (self.T_in - self.T) + self.load / self.C
         )
         self.P_el.alg = self.cp * self.mDot * (self.T - self.T_in)/1000
+        self.Time.alg = self.time
 
         # Define ae
         self.T_out.alg = self.T  # math operation to get the symbolic variable
