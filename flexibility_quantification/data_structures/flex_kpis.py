@@ -170,9 +170,10 @@ class FlexibilityKPIs(pydantic.BaseModel):
             self,
             power_profile_base: pd.Series,
             power_profile_shadow: pd.Series,
-            power_costs_profile: pd.Series,
+            power_costs_profile: pd.Series, # unit?
             mpc_time_grid: np.ndarray,
-            flex_offer_time_grid: np.ndarray
+            flex_offer_time_grid: np.ndarray,
+            stored_energy: float = 0
     ):
         """
         Calculate the KPIs based on the power and electricity input profiles.
@@ -184,7 +185,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         self._calculate_energy_flex()
 
         # Costs KPIs
-        self._calculate_costs(power_costs_profile=power_costs_profile)
+        self._calculate_costs(power_costs_profile=power_costs_profile, stored_energy=stored_energy)
         self._calculate_costs_rel()
 
     def _calculate_power_flex(self, power_profile_base: pd.Series, power_profile_shadow: pd.Series,
@@ -250,7 +251,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         self.energy_flex.value = energy_flex
         return energy_flex
 
-    def _calculate_costs(self, power_costs_profile: pd.Series) -> [float, pd.Series]:
+    def _calculate_costs(self, power_costs_profile: pd.Series, stored_energy: float) -> [float, pd.Series]:
         """
         Calculate the costs of the flexibility event based on the electricity costs profile and the power flexibility profile.
         """
@@ -260,7 +261,8 @@ class FlexibilityKPIs(pydantic.BaseModel):
 
         # Calculate scalar
         costs = abs(self.costs_series.integrate(time_unit="hours"))
-        self.costs.value = costs
+        costs_with_stored_energy = costs + stored_energy * power_costs_profile.values[-1]
+        self.costs.value = costs_with_stored_energy
         return costs, costs_series
 
     def _calculate_costs_rel(self) -> float:
