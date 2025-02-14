@@ -23,7 +23,13 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         agentlib.AgentVariable(name=glbs.POWER_ALIAS_POS, unit="W", type="pd.Series",
                                description="The power input to the system"),
         agentlib.AgentVariable(name="r_pel", unit="ct/kWh", type="pd.Series",
-                               description="electricity price")
+                               description="electricity price"),
+        agentlib.AgentVariable(name=glbs.STORED_ENERGY_ALIAS_BASE, unit="kWh", type="pd.Series",
+                               description="Energy stored in the system wrt. 0K"),
+        agentlib.AgentVariable(name=glbs.STORED_ENERGY_ALIAS_NEG, unit="kWh", type="pd.Series",
+                               description="Energy stored in the system wrt. 0K"),
+        agentlib.AgentVariable(name=glbs.STORED_ENERGY_ALIAS_POS, unit="kWh", type="pd.Series",
+                               description="Energy stored in the system wrt. 0K")
     ]
     outputs: List[agentlib.AgentVariable] = [
         # Flexibility offer
@@ -181,6 +187,12 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 self.data.power_profile_flex_neg = self.data.format_mpc_inputs(inp.value)
             elif name == glbs.POWER_ALIAS_POS:
                 self.data.power_profile_flex_pos = self.data.format_mpc_inputs(inp.value)
+            elif name == glbs.STORED_ENERGY_ALIAS_BASE:
+                self.data.stored_energy_profile_base = self.data.format_mpc_inputs(inp.value)
+            elif name == glbs.STORED_ENERGY_ALIAS_NEG:
+                self.data.stored_energy_profile_neg = self.data.format_mpc_inputs(inp.value)
+            elif name == glbs.STORED_ENERGY_ALIAS_POS:
+                self.data.stored_energy_profile_pos = self.data.format_mpc_inputs(inp.value)
             elif name == self.config.price_variable:
                 # price comes from predictor, so no stripping needed
                 # TODO: add other sources for price signal?
@@ -190,7 +202,10 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                     self.data.power_profile_base,
                     self.data.power_profile_flex_neg,
                     self.data.power_profile_flex_pos,
-                    self.data.power_costs_profile
+                    self.data.power_costs_profile,
+                    self.data.stored_energy_profile_base,
+                    self.data.stored_energy_profile_neg,
+                    self.data.stored_energy_profile_pos
             )):
                 # Calculate the flexibility, send the offer, write and save the results
                 self.calc_and_send_offer()
