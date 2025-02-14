@@ -83,6 +83,7 @@ class BaselineMPCModelConfig(CasadiModelConfig):
     ]
     outputs: List[CasadiOutput] = [
         CasadiOutput(name="T_out", unit="K", description="Temperature of zone"),
+        CasadiOutput(name="E_out_sum", unit="J", description="Stored energy in the air of zone wrt 0K"),
         CasadiOutput(
             name="P_el",
             unit="W",
@@ -102,6 +103,7 @@ class BaselineMPCModel(CasadiModel):
 
         # Define ae
         self.T_out.alg = self.T  # math operation to get the symbolic variable
+        self.E_out_sum.alg = self.T * self.C / (3600*1000)  # stored energy in kWh
         # Constraints: List[(lower bound, function, upper bound)]
         self.constraints = [
             # soft constraints

@@ -170,7 +170,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
             self,
             power_profile_base: pd.Series,
             power_profile_shadow: pd.Series,
-            power_costs_profile: pd.Series, # unit?
+            power_costs_profile: pd.Series,
             mpc_time_grid: np.ndarray,
             flex_offer_time_grid: np.ndarray,
             stored_energy: float = 0
