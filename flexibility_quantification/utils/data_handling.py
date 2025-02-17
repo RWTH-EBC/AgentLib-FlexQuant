@@ -16,6 +16,8 @@ def fill_nans(series: pd.Series, method: FillNansMethods) -> pd.Series:
     - mean: fill NaN values with the mean of the following values.
     - interpolate: interpolate missing values.
     """
+    #ignore lags from casadi_ml models
+    series = series[series.index >= 0]
     if method == MEAN:
         series = _set_mean_values(series=series)
     elif method == INTERPOLATE:
