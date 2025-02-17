@@ -1,0 +1,68 @@
+{
+    "prep_time": 900,
+    "flex_event_duration": 7200,
+    "market_time": 900,
+    "indicator_config": {
+        "agent_config": {
+            "id": "FlexibilityIndicator",
+            "modules": [
+                {
+                    "module_id": "Ag1Com",
+                    "type": "local_broadcast"
+                },
+                {
+                    "module_id": "FlexibilityIndicator",
+                    "type": "flexibility_quantification.flexibility_indicator",
+                    "price_variable": "r_pel",
+                    "parameters": [
+                        {
+                            "name": "prep_time",
+                            "value": 900
+                        },
+                        {
+                            "name": "market_time",
+                            "value": 900
+                        },
+                        {
+                            "name": "flex_event_duration",
+                            "value": 7200
+                        },
+                        {
+                            "name": "time_step",
+                            "value": 900
+                        },
+                        {
+                            "name": "prediction_horizon",
+                            "value": 48
+                        }
+                    ],
+                    "inputs": [
+                        {
+                            "name": "r_pel",
+                            "alias": "r_pel"
+                        }
+                    ]
+                }
+            ]
+        },
+        "name_of_created_file": "indicator.json"
+    },
+    "market_config": "flex_configs/flexibility_market.json",
+    "baseline_config_generator_data": {
+        "power_variable": "P_el",
+        "power_unit": "kW",
+        "profile_deviation_weight": 100
+    },
+    "shadow_mpc_config_generator_data": {
+        "weights": [{"name": "s_P", "value": 10}],
+        "pos_flex": {
+            "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, self.s_P * self.P_el])"
+        },
+        "neg_flex": {
+            "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, -self.s_P * self.P_el])"
+        }
+    },
+    "path_to_flex_files": "created_flex_files",
+    "delete_files": false,
+    "overwrite_files": true
+}
