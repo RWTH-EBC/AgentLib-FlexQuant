@@ -197,6 +197,12 @@ def plot_results_2(results: dict = None, offer_type: str = None, until: float = 
     Path("plots").mkdir(parents=True, exist_ok=True)
     Path(f"plots/plots_{offer_type}").mkdir(parents=True, exist_ok=True)
 
+    offer_Time_steps: list = []
+    Plot_files = list(Path(f"plots/plots_{offer_type}").glob('flex_offer_*_flexEnvelope.svg'))
+    for iIdx in range(len(Plot_files)):
+        strDigits = ''.join(char for char in Plot_files[iIdx].name if char.isdigit())
+        offer_Time_steps.append(int(strDigits)/10)
+    offer_Time_steps.sort()
     # disturbances
     fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=2)
     (ax1, ax2) = axs
@@ -221,45 +227,33 @@ def plot_results_2(results: dict = None, offer_type: str = None, until: float = 
 
     # room temp
     fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=1)
+    fig.set_figwidth(20)
     ax1 = axs[0]
     # T out
     ax1.set_ylabel("$T_{room}$ in K")
     results["SimAgent"]["room"]["T_upper"].plot(ax=ax1, color="0.5")
     results["SimAgent"]["room"]["T_lower"].plot(ax=ax1, color="0.5")
     results["SimAgent"]["room"]["T_out"].plot(ax=ax1, color=mpcplot.EBCColors.dark_grey)
-    mpc_at_time_step(
-        data=results["NegFlexMPC"]["NegFlexMPC"], time_step=9000, variable="T"
-    ).plot(ax=ax1, label="neg", linestyle="--", color=mpcplot.EBCColors.red)
-    mpc_at_time_step(
-        data=results["PosFlexMPC"]["PosFlexMPC"], time_step=9000, variable="T"
-    ).plot(ax=ax1, label="pos", linestyle="--", color=mpcplot.EBCColors.blue)
-    mpc_at_time_step(
-        data=results["FlexModel"]["Baseline"], time_step=9900, variable="T"
-    ).plot(ax=ax1, label="base", linestyle="--", color=mpcplot.EBCColors.dark_grey)
+    for iIdx in range(len(offer_Time_steps)):
+        mpc_at_time_step(
+            data=results["NegFlexMPC"]["NegFlexMPC"], time_step=offer_Time_steps[iIdx], variable="T"
+        ).plot(ax=ax1, label="neg", linestyle="--", color=mpcplot.EBCColors.red)
+        mpc_at_time_step(
+            data=results["PosFlexMPC"]["PosFlexMPC"], time_step=offer_Time_steps[iIdx], variable="T"
+        ).plot(ax=ax1, label="pos", linestyle="--", color=mpcplot.EBCColors.blue)
+        mpc_at_time_step(
+            data=results["FlexModel"]["Baseline"], time_step=offer_Time_steps[iIdx]+900, variable="T"
+        ).plot(ax=ax1, label="base", linestyle="--", color=mpcplot.EBCColors.dark_grey)
 
-    ax1.legend()
+        if iIdx == 0:
+            ax1.legend()
 
-    mpc_at_time_step(
-        data=results["NegFlexMPC"]["NegFlexMPC"], time_step=18900, variable="T"
-    ).plot(ax=ax1, label="neg", linestyle="--", color=mpcplot.EBCColors.red)
-    mpc_at_time_step(
-        data=results["PosFlexMPC"]["PosFlexMPC"], time_step=18900, variable="T"
-    ).plot(ax=ax1, label="pos", linestyle="--", color=mpcplot.EBCColors.blue)
-    mpc_at_time_step(
-        data=results["FlexModel"]["Baseline"], time_step=19800, variable="T"
-    ).plot(ax=ax1, label="base", linestyle="--", color=mpcplot.EBCColors.dark_grey)
+        ax1.vlines(offer_Time_steps[iIdx], ymin=0, ymax=500, colors="black")
+        ax1.vlines(offer_Time_steps[iIdx] + 900, ymin=0, ymax=500, colors="black")
+        ax1.vlines(offer_Time_steps[iIdx] + 900 + 900, ymin=0, ymax=500, colors="black")
+        ax1.vlines(offer_Time_steps[iIdx] + 900 + 900 + 7200, ymin=0, ymax=500, colors="black")
 
-    ax1.vlines(9000, ymin=0, ymax=500, colors="black")
-    ax1.vlines(9900, ymin=0, ymax=500, colors="black")
-    ax1.vlines(10800, ymin=0, ymax=500, colors="black")
-    ax1.vlines(18000, ymin=0, ymax=500, colors="black")
-
-    ax1.vlines(18900, ymin=0, ymax=500, colors="black")
-    ax1.vlines(19800, ymin=0, ymax=500, colors="black")
-    ax1.vlines(20700, ymin=0, ymax=500, colors="black")
-    ax1.vlines(27900, ymin=0, ymax=500, colors="black")
-
-    ax1.set_ylim(284, 301)
+    ax1.set_ylim(292, 294.5)
     x_ticks = np.arange(0, until + 1, 3600)
     x_tick_labels = [int(tick / 3600) for tick in x_ticks]
     ax1.set_xticks(x_ticks)
@@ -281,146 +275,84 @@ def plot_results_2(results: dict = None, offer_type: str = None, until: float = 
     # P_el
     ax1.set_ylabel("$P_{el}$ in kW")
     results["SimAgent"]["room"]["P_el"].plot(ax=ax1, color=mpcplot.EBCColors.green)
-    mpc_at_time_step(
-        data=results["NegFlexMPC"]["NegFlexMPC"], time_step=9000, variable="P_el"
-    ).ffill().plot(
-        ax=ax1,
-        drawstyle="steps-post",
-        label="neg",
-        linestyle="--",
-        color=mpcplot.EBCColors.red,
-    )
-    mpc_at_time_step(
-        data=results["PosFlexMPC"]["PosFlexMPC"], time_step=9000, variable="P_el"
-    ).ffill().plot(
-        ax=ax1,
-        drawstyle="steps-post",
-        label="pos",
-        linestyle="--",
-        color=mpcplot.EBCColors.blue,
-    )
-    mpc_at_time_step(
-        data=results["FlexModel"]["Baseline"], time_step=9900, variable="P_el"
-    ).ffill().plot(
-        ax=ax1,
-        drawstyle="steps-post",
-        label="base",
-        linestyle="--",
-        color=mpcplot.EBCColors.dark_grey,
-    )
+    for iIdx in range(len(offer_Time_steps)):
+        mpc_at_time_step(
+            data=results["NegFlexMPC"]["NegFlexMPC"], time_step=offer_Time_steps[iIdx], variable="P_el"
+        ).ffill().plot(
+            ax=ax1,
+            drawstyle="steps-post",
+            label="neg",
+            linestyle="--",
+            color=mpcplot.EBCColors.red,
+        )
+        mpc_at_time_step(
+            data=results["PosFlexMPC"]["PosFlexMPC"], time_step=offer_Time_steps[iIdx], variable="P_el"
+        ).ffill().plot(
+            ax=ax1,
+            drawstyle="steps-post",
+            label="pos",
+            linestyle="--",
+            color=mpcplot.EBCColors.blue,
+        )
+        mpc_at_time_step(
+            data=results["FlexModel"]["Baseline"], time_step=offer_Time_steps[iIdx] + 900, variable="P_el"
+        ).ffill().plot(
+            ax=ax1,
+            drawstyle="steps-post",
+            label="base",
+            linestyle="--",
+            color=mpcplot.EBCColors.dark_grey,
+        )
 
-    ax1.legend()
+        if iIdx == 0:
+            ax1.legend()
 
-    mpc_at_time_step(
-        data=results["NegFlexMPC"]["NegFlexMPC"], time_step=18900, variable="P_el"
-    ).ffill().plot(
-        ax=ax1,
-        drawstyle="steps-post",
-        label="neg",
-        linestyle="--",
-        color=mpcplot.EBCColors.red,
-    )
-    mpc_at_time_step(
-        data=results["PosFlexMPC"]["PosFlexMPC"], time_step=18900, variable="P_el"
-    ).ffill().plot(
-        ax=ax1,
-        drawstyle="steps-post",
-        label="pos",
-        linestyle="--",
-        color=mpcplot.EBCColors.blue,
-    )
-    mpc_at_time_step(
-        data=results["FlexModel"]["Baseline"], time_step=19800, variable="P_el"
-    ).ffill().plot(
-        ax=ax1,
-        drawstyle="steps-post",
-        label="base",
-        linestyle="--",
-        color=mpcplot.EBCColors.dark_grey,
-    )
-
-    ax1.vlines(9000, ymin=-1000, ymax=5000, colors="black")
-    ax1.vlines(9900, ymin=-1000, ymax=5000, colors="black")
-    ax1.vlines(10800, ymin=-1000, ymax=5000, colors="black")
-    ax1.vlines(18000, ymin=-1000, ymax=5000, colors="black")
-
-    ax1.vlines(18900, ymin=-1000, ymax=5000, colors="black")
-    ax1.vlines(19800, ymin=-1000, ymax=5000, colors="black")
-    ax1.vlines(20700, ymin=-1000, ymax=5000, colors="black")
-    ax1.vlines(27900, ymin=-1000, ymax=5000, colors="black")
+        ax1.vlines(offer_Time_steps[iIdx], ymin=-1000, ymax=5000, colors="black")
+        ax1.vlines(offer_Time_steps[iIdx] + 900, ymin=-1000, ymax=5000, colors="black")
+        ax1.vlines(offer_Time_steps[iIdx] + 900 + 900, ymin=-1000, ymax=5000, colors="black")
+        ax1.vlines(offer_Time_steps[iIdx] + 900 + 900 + 7200, ymin=-1000, ymax=5000, colors="black")
 
     ax1.set_ylim(-0.01, 0.4)
 
     # mdot
     ax2.set_ylabel("$\dot{m}$ in kg/s")
     results["SimAgent"]["room"]["mDot"].plot(ax=ax2, color=mpcplot.EBCColors.dark_grey)
-    mpc_at_time_step(
-        data=results["NegFlexMPC"]["NegFlexMPC"], time_step=9000, variable="mDot"
-    ).ffill().plot(
-        ax=ax2,
-        drawstyle="steps-post",
-        label="neg",
-        linestyle="--",
-        color=mpcplot.EBCColors.red,
-    )
-    mpc_at_time_step(
-        data=results["PosFlexMPC"]["PosFlexMPC"], time_step=9000, variable="mDot"
-    ).ffill().plot(
-        ax=ax2,
-        drawstyle="steps-post",
-        label="pos",
-        linestyle="--",
-        color=mpcplot.EBCColors.blue,
-    )
-    mpc_at_time_step(
-        data=results["FlexModel"]["Baseline"], time_step=9900, variable="mDot"
-    ).ffill().plot(
-        ax=ax2,
-        drawstyle="steps-post",
-        label="base",
-        linestyle="--",
-        color=mpcplot.EBCColors.dark_grey,
-    )
+    for iIdx in range(len(offer_Time_steps)):
+        mpc_at_time_step(
+            data=results["NegFlexMPC"]["NegFlexMPC"], time_step=offer_Time_steps[iIdx], variable="mDot"
+        ).ffill().plot(
+            ax=ax2,
+            drawstyle="steps-post",
+            label="neg",
+            linestyle="--",
+            color=mpcplot.EBCColors.red,
+        )
+        mpc_at_time_step(
+            data=results["PosFlexMPC"]["PosFlexMPC"], time_step=offer_Time_steps[iIdx], variable="mDot"
+        ).ffill().plot(
+            ax=ax2,
+            drawstyle="steps-post",
+            label="pos",
+            linestyle="--",
+            color=mpcplot.EBCColors.blue,
+        )
+        mpc_at_time_step(
+            data=results["FlexModel"]["Baseline"], time_step=offer_Time_steps[iIdx] + 900, variable="mDot"
+        ).ffill().plot(
+            ax=ax2,
+            drawstyle="steps-post",
+            label="base",
+            linestyle="--",
+            color=mpcplot.EBCColors.dark_grey,
+        )
 
-    ax2.legend()
+        if iIdx == 0:
+            ax2.legend()
 
-    mpc_at_time_step(
-        data=results["NegFlexMPC"]["NegFlexMPC"], time_step=18900, variable="mDot"
-    ).ffill().plot(
-        ax=ax2,
-        drawstyle="steps-post",
-        label="neg",
-        linestyle="--",
-        color=mpcplot.EBCColors.red,
-    )
-    mpc_at_time_step(
-        data=results["PosFlexMPC"]["PosFlexMPC"], time_step=18900, variable="mDot"
-    ).ffill().plot(
-        ax=ax2,
-        drawstyle="steps-post",
-        label="pos",
-        linestyle="--",
-        color=mpcplot.EBCColors.blue,
-    )
-    mpc_at_time_step(
-        data=results["FlexModel"]["Baseline"], time_step=19800, variable="mDot"
-    ).ffill().plot(
-        ax=ax2,
-        drawstyle="steps-post",
-        label="base",
-        linestyle="--",
-        color=mpcplot.EBCColors.dark_grey,
-    )
-
-    ax2.vlines(9000, ymin=0, ymax=500, colors="black")
-    ax2.vlines(9900, ymin=0, ymax=500, colors="black")
-    ax2.vlines(10800, ymin=0, ymax=500, colors="black")
-    ax2.vlines(18000, ymin=0, ymax=500, colors="black")
-
-    ax2.vlines(18900, ymin=0, ymax=500, colors="black")
-    ax2.vlines(19800, ymin=0, ymax=500, colors="black")
-    ax2.vlines(20700, ymin=0, ymax=500, colors="black")
-    ax2.vlines(27900, ymin=0, ymax=500, colors="black")
+        ax2.vlines(offer_Time_steps[iIdx], ymin=0, ymax=500, colors="black")
+        ax2.vlines(offer_Time_steps[iIdx] + 900, ymin=0, ymax=500, colors="black")
+        ax2.vlines(offer_Time_steps[iIdx] + 900 + 900, ymin=0, ymax=500, colors="black")
+        ax2.vlines(offer_Time_steps[iIdx] + 900 + 900 + 7200, ymin=0, ymax=500, colors="black")
 
     ax2.set_ylim(0, 0.06)
 
