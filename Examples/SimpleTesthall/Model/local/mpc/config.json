@@ -13,11 +13,12 @@
                 "type": "casadi",
                 "model": {
                     "type": {
-                        "file": "Model/local/mpc/simple_test_hall.py",
+                        "file": "model/local/mpc/simple_test_hall.py",
                         "class_name": "SimpleTestHall"
                     }
                 },
-                "results_file": "results/mpc_simple_building_local_broadcast.csv",
+                "results_file": "results/mpc_neg.csv",
+                "overwrite_result_file": true,
                 "discretization_options": {
                     "collocation_order": 2,
                     "collocation_method": "legendre"
@@ -27,12 +28,12 @@
                     "options": {
                         "ipopt": {
                             "max_iter": 1000,
-                            "tol": 0.0001,
-                            "acceptable_tol": 0.001,
-                            "acceptable_constr_viol_tol": 0.01,
-                            "acceptable_iter": 30,
-                            "acceptable_compl_inf_tol": 0.01,
-                            "print_level": 3
+                            "tol": 1e-07,
+                            "acceptable_tol": 1e-05,
+                            "acceptable_constr_viol_tol": 0.0001,
+                            "acceptable_iter": 50,
+                            "acceptable_compl_inf_tol": 0.0001,
+                            "print_level": 0
                         }
                     }
                 }
@@ -55,16 +56,12 @@
                 {
                     "name": "COP",
                     "value": 3
-                },
-                {
-                    "name": "delay_const",
-                    "value": 500
                 }
             ],
             "inputs": [
                 {
                     "name": "Q_RadSol",
-                    "value": 150
+                    "value": 0
                 },
                 {
                     "name": "T_amb",
@@ -72,15 +69,15 @@
                 },
                 {
                     "name": "T_preTemWin",
-                    "value": 295
+                    "value": 294
                 },
                 {
                     "name": "T_preTemWall",
-                    "value": 295
+                    "value": 294
                 },
                 {
                     "name": "T_preTemRoof",
-                    "value": 295
+                    "value": 294
                 },
                 {
                     "name": "m_flow_ahu",
@@ -110,15 +107,15 @@
                 },
                 {
                     "name": "r_pel",
-                    "value": 26
+                    "value": 27.25
                 }
             ],
             "controls": [
                 {
                     "name": "Q_Tabs_set",
                     "value": 0,
-                    "ub": 4000,
-                    "lb": -4500
+                    "ub": 4800,
+                    "lb": -4800
                 },
                 {
                     "name": "T_ahu_set",
@@ -130,13 +127,13 @@
             "states": [
                 {
                     "name": "T_Air",
-                    "value": 294.15,
+                    "value": 290.65,
                     "ub": 303.15,
                     "lb": 288.15
                 },
                 {
                     "name": "T_Roof",
-                    "value": 294.15,
+                    "value": 290.15,
                     "ub": 303.15,
                     "lb": 283.15
                 },
@@ -148,20 +145,20 @@
                 },
                 {
                     "name": "T_ExtWall",
-                    "value": 294.15,
+                    "value": 290.15,
                     "ub": 303.15,
                     "lb": 283.15
                 },
                 {
                     "name": "T_IntWall",
-                    "value": 294.15,
+                    "value": 290.15,
                     "ub": 303.15,
                     "lb": 283.15
                 },
                 {
                     "name": "T_Tabs",
-                    "value": 294.15,
-                    "ub": 310.15,
+                    "value": 290.15,
+                    "ub": 303.15,
                     "lb": 288.15
                 },
                 {
@@ -174,7 +171,8 @@
                     "name": "P_el_c",
                     "type": "pd.Series"
                 }
-            ]
+            ],
+            "set_outputs": true
         }
     ]
 }

@@ -10,7 +10,7 @@
             "type": "simulator",
             "model": {
                 "type": {
-                    "file": "Model/local/mpc/simple_test_hall.py",
+                    "file": "model/local/mpc/simple_test_hall.py",
                     "class_name": "SimpleTestHall"
                 },
                 "states": [
@@ -42,85 +42,87 @@
                         "name": "T_Tabs",
                         "value": 291.15
                     }
-                ],
-                "parameters": [
-                    {
-                        "name": "delay_const",
-                        "value": 500
-                    }
                 ]
             },
-            "t_sample": 60,
+            "t_sample": 10,
             "update_inputs_on_callback": true,
             "save_results": true,
-            "result_filename": "results/results_casadi_simulator_base.csv",
+            "result_filename": "results/sim_testhall_neg.csv",
             "overwrite_result_file": true,
+            "result_causalities": [
+                "output",
+                "local",
+                "input"
+            ],
             "inputs": [
                 {
                     "name": "Q_Tabs_set",
-                    "value": 0,
+                    "value": 200,
                     "ub": 5000,
-                    "lb": -5000
+                    "lb": -5000,
+                    "alias": "Q_Tabs_set"
                 },
                 {
                     "name": "T_ahu_set",
                     "value": 291.15,
                     "ub": 298.15,
-                    "lb": 291.15
-                },
-                {
-                    "name": "m_flow_ahu",
-                    "value": 0.13158
-                },
-                {
-                    "name": "T_upper",
-                    "alias": "T_upper_sim",
-                    "value": 300.15
-                },
-                {
-                    "name": "T_lower",
-                    "alias": "T_lower_sim",
-                    "value": 290.15
-                },
-                {
-                    "name": "T_amb",
-                    "alias": "T_amb_sim",
-                    "value": 280
-                },
-                {
-                    "name": "T_preTemWall",
-                    "alias": "T_preTemWall_sim",
-                    "value": 295
-                },
-                {
-                    "name": "T_preTemWin",
-                    "alias": "T_preTemWin_sim",
-                    "value": 295
-                },
-                {
-                    "name": "T_preTemRoof",
-                    "alias": "T_preTemWin_sim",
-                    "value": 295
-                },
-                {
-                    "name": "schedule_light",
-                    "alias": "schedule_light_sim",
-                    "value": 0
-                },
-                {
-                    "name": "schedule_dev",
-                    "alias": "schedule_dev_sim",
-                    "value": 0
-                },
-                {
-                    "name": "schedule_human",
-                    "alias": "schedule_human_sim",
-                    "value": 0
+                    "lb": 291.15,
+                    "alias": "T_ahu_set"
                 },
                 {
                     "name": "Q_RadSol",
-                    "alias": "Q_RadSol_sim",
-                    "value": 150
+                    "value": 0,
+                    "alias": "Q_RadSol_scalar"
+                },
+                {
+                    "name": "T_amb",
+                    "value": 279.15,
+                    "alias": "T_amb_scalar"
+                },
+                {
+                    "name": "T_preTemWin",
+                    "value": 279.15,
+                    "alias": "T_preTemWin_scalar"
+                },
+                {
+                    "name": "T_preTemWall",
+                    "value": 278.076,
+                    "alias": "T_preTemWall_scalar"
+                },
+                {
+                    "name": "T_preTemRoof",
+                    "value": 278.076,
+                    "alias": "T_preTemRoof_scalar"
+                },
+                {
+                    "name": "m_flow_ahu",
+                    "value": 0.13158,
+                    "alias": "m_flow_ahu"
+                },
+                {
+                    "name": "schedule_human",
+                    "value": 0,
+                    "alias": "schedule_human_scalar"
+                },
+                {
+                    "name": "schedule_dev",
+                    "value": 0,
+                    "alias": "schedule_dev_scalar"
+                },
+                {
+                    "name": "schedule_light",
+                    "value": 0,
+                    "alias": "schedule_light_scalar"
+                },
+                {
+                    "name": "T_upper",
+                    "value": 300.15,
+                    "alias": "T_upper_scalar"
+                },
+                {
+                    "name": "T_lower",
+                    "value": 290.15,
+                    "alias": "T_lower_scalar"
                 }
             ],
             "states": [
@@ -172,12 +174,12 @@
                     "name": "P_el_c"
                 },
                 {
-                    "name": "q_tabs_del_out"
-                },
-                {
                     "name": "T_out",
                     "alias": "T_Air"
                 }
+            ],
+            "shared_variable_fields": [
+                "states"
             ]
         }
     ]

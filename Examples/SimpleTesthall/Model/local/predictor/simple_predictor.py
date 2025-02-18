@@ -184,7 +184,7 @@ class PredictorModule(al.BaseModule):
         # new disturbance.csv considered that the TRY 2010 does not start at a monday,
         # but at a friday. This is important for the internal gain profile
         # self.disturbances1 = self.read_csv('predictor/disturbance.csv')
-        self.disturbances = self.read_csv('Model/local/predictor/disturbance.csv')
+        self.disturbances = self.read_csv('model/local/predictor/disturbance.csv')
         self.disturbances.index = self.disturbances['SimTime']
         # disturbance mapping
         with open(self.get("path_mapping_disturbances").value, 'r') as f:
