@@ -76,6 +76,18 @@ class BaselineMPCModelConfig(CasadiModelConfig):
             unit="-",
             description="Weight for mDot in objective function",
         ),
+        CasadiParameter(
+            name="prediction_horizon",
+            value=48,
+            unit="-",
+            description="",
+        ),
+        CasadiParameter(
+            name="sample_time",
+            value=900,
+            unit="s",
+            description="",
+        )
     ]
 
     outputs: List[CasadiOutput] = [
@@ -112,10 +124,19 @@ class BaselineMPCModel(CasadiModel):
             (0, self.T_slack, inf)
         ]
         # Objective function
+
+        #
+        # r_mDot = 1
+        # s_T = 1
+        # mDot = 0 - 0.05
+        # T_slack = 0
+        #
+        # TODO: Maybe bigger s_T for prioritizing comfort boundaries
+
         objective = sum(
-                [
-                    self.r_mDot * self.mDot,
-                    self.s_T * self.T_slack**2,
-                ]
-            )
+            [
+                self.r_mDot * self.mDot*100,
+                self.s_T * self.T_slack**2,
+            ]
+        ) / (self.prediction_horizon * self.sample_time)
         return objective
