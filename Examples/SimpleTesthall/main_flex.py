@@ -40,14 +40,14 @@ def run_example(offer_type=None) -> None:
     fmu: bool = False
 
     agent_configs, env_config, \
-    initial_time, until, time_step = get_configs(predictor_config=predictor_config,
-                                                 mpc_config=mpc_config,
-                                                 flex_config=flex_config,
-                                                 varying_price_signal=varying_price_signal,
-                                                 start_day=start_day,
-                                                 duration=duration,
-                                                 use_case=use_case,
-                                                 fmu=fmu)
+        initial_time, until, time_step = get_configs(predictor_config=predictor_config,
+                                                     mpc_config=mpc_config,
+                                                     flex_config=flex_config,
+                                                     varying_price_signal=varying_price_signal,
+                                                     start_day=start_day,
+                                                     duration=duration,
+                                                     use_case=use_case,
+                                                     fmu=fmu)
 
     # Set the log-level
     logging.basicConfig(level=logging.INFO)
@@ -61,6 +61,11 @@ def run_example(offer_type=None) -> None:
     # Write Warnings
     solver_stats = write_solver_warning()
     results = mas.get_results(cleanup=False)
+
+    mas.terminate_agents()
+
+    del mas
+
     if results is None:
         sys.exit()
 
@@ -70,6 +75,13 @@ def run_example(offer_type=None) -> None:
     # create the folder to store the figure
     Path("plots").mkdir(parents=True, exist_ok=True)
     Path(f"plots/plots_{offer_type}").mkdir(parents=True, exist_ok=True)
+
+    offer_Time_steps: list = []
+    Plot_files = list(Path(f"plots/plots_{offer_type}").glob('flex_offer_*_flexEnvelope.svg'))
+    for iIdx in range(len(Plot_files)):
+        strDigits = ''.join(char for char in Plot_files[iIdx].name if char.isdigit())
+        offer_Time_steps.append(int(strDigits)/10)
+    offer_Time_steps.sort()
 
     # room temp
     fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=1)
@@ -81,21 +93,39 @@ def run_example(offer_type=None) -> None:
     results["SimAgent"]["SimTestHall"]["T_lower"].plot(ax=ax1, color="0.5")
     results["SimAgent"]["SimTestHall"]["T_out"].plot(ax=ax1, color=mpcplot.EBCColors.dark_grey)
 
-    mpc_at_time_step(
-        data=results["NegFlexMPC"]["NegFlexMPC"], time_step=initial_time + 9000, variable="T_Air"
-    ).plot(ax=ax1, label="neg", linestyle="--", color=mpcplot.EBCColors.red)
-    mpc_at_time_step(
-        data=results["PosFlexMPC"]["PosFlexMPC"], time_step=initial_time + 9000, variable="T_Air"
-    ).plot(ax=ax1, label="pos", linestyle="--", color=mpcplot.EBCColors.blue)
-    mpc_at_time_step(
-        data=results["myMPCAgent"]["myMPC"], time_step=initial_time + 9900, variable="T_Air"
-    ).plot(ax=ax1, label="base", linestyle="--", color=mpcplot.EBCColors.dark_grey)
+    simData = results["SimAgent"]["SimTestHall"]["T_Air"]
+    ax1.plot(simData.index, simData.values, 'g-', label='sim')
+    for iIdx in range(len(offer_Time_steps)):
+        negFlexData = results["NegFlexMPC"]["NegFlexMPC"]['variable']['T_Air'][offer_Time_steps[iIdx]]
+        ax1.plot(negFlexData.index + offer_Time_steps[iIdx], negFlexData.ffill().values, 'r--', label='neg')
+        posFlexData = results["PosFlexMPC"]["PosFlexMPC"]['variable']['T_Air'][offer_Time_steps[iIdx]]
+        ax1.plot(posFlexData.index + offer_Time_steps[iIdx], posFlexData.ffill().values, 'b--', label='pos')
+        baseFlexData = results["myMPCAgent"]["myMPC"]['variable']['T_Air'][offer_Time_steps[iIdx] + 1800]
+        ax1.plot(posFlexData.index + (offer_Time_steps[iIdx] + 1800), baseFlexData.ffill().values, 'k--', label='base')
 
-    ax1.legend()
-    ax1.vlines(initial_time + 9000, ymin=0, ymax=500, colors="black")
-    ax1.vlines(initial_time + 9900, ymin=0, ymax=500, colors="black")
-    ax1.vlines(initial_time + 10800, ymin=0, ymax=500, colors="black")
-    ax1.vlines(initial_time + 18000, ymin=0, ymax=500, colors="black")
+        if iIdx == 0:
+            ax1.legend()
+
+        ax1.vlines(offer_Time_steps[iIdx], ymin=0, ymax=500, colors="black")
+        ax1.vlines(offer_Time_steps[iIdx] + 1800, ymin=0, ymax=500, colors="black")
+        ax1.vlines(offer_Time_steps[iIdx] + 1800 + 1800, ymin=0, ymax=500, colors="black")
+        ax1.vlines(offer_Time_steps[iIdx] + 1800 + 1800 + 14400, ymin=0, ymax=500, colors="black")
+
+    # mpc_at_time_step(
+    #     data=results["NegFlexMPC"]["NegFlexMPC"], time_step=initial_time + 9000, variable="T_Air"
+    # ).plot(ax=ax1, label="neg", linestyle="--", color=mpcplot.EBCColors.red)
+    # mpc_at_time_step(
+    #     data=results["PosFlexMPC"]["PosFlexMPC"], time_step=initial_time + 9000, variable="T_Air"
+    # ).plot(ax=ax1, label="pos", linestyle="--", color=mpcplot.EBCColors.blue)
+    # mpc_at_time_step(
+    #     data=results["myMPCAgent"]["myMPC"], time_step=initial_time + 9900, variable="T_Air"
+    # ).plot(ax=ax1, label="base", linestyle="--", color=mpcplot.EBCColors.dark_grey)
+
+    # ax1.legend()
+    # ax1.vlines(initial_time + 9000, ymin=0, ymax=500, colors="black")
+    # ax1.vlines(initial_time + 9900, ymin=0, ymax=500, colors="black")
+    # ax1.vlines(initial_time + 10800, ymin=0, ymax=500, colors="black")
+    # ax1.vlines(initial_time + 18000, ymin=0, ymax=500, colors="black")
 
     ax1.set_ylim(284, 301)
     x_ticks = np.arange(initial_time, until, 3600)  # maybe also add 1 to until
@@ -117,78 +147,95 @@ def run_example(offer_type=None) -> None:
     fig.set_figwidth(13)
     # P_el
     ax1.set_ylabel("$P_{el}$ in W")
-    results["SimAgent"]["SimTestHall"]["P_el_c"].plot(ax=ax1, color=mpcplot.EBCColors.green)
-    mpc_at_time_step(
-        data=results["NegFlexMPC"]["NegFlexMPC"], time_step=initial_time + 9000, variable="P_el_c"
-    ).ffill().plot(
-        ax=ax1,
-        drawstyle="steps-post",
-        label="neg",
-        linestyle="--",
-        color=mpcplot.EBCColors.red,
-    )
-    mpc_at_time_step(
-        data=results["PosFlexMPC"]["PosFlexMPC"], time_step=initial_time + 9000, variable="P_el_c"
-    ).ffill().plot(
-        ax=ax1,
-        drawstyle="steps-post",
-        label="pos",
-        linestyle="--",
-        color=mpcplot.EBCColors.blue,
-    )
-    mpc_at_time_step(
-        data=results["myMPCAgent"]["myMPC"], time_step=initial_time + 9900, variable="P_el_c"
-    ).ffill().plot(
-        ax=ax1,
-        drawstyle="steps-post",
-        label="base",
-        linestyle="--",
-        color=mpcplot.EBCColors.dark_grey,
-    )
 
-    ax1.legend()
-    ax1.vlines(initial_time + 9000, ymin=-1000, ymax=5000, colors="black")
-    ax1.vlines(initial_time + 9900, ymin=-1000, ymax=5000, colors="black")
-    ax1.vlines(initial_time + 10800, ymin=-1000, ymax=5000, colors="black")
-    ax1.vlines(initial_time + 18000, ymin=-1000, ymax=5000, colors="black")
+    simData = results["SimAgent"]["SimTestHall"]["P_el_c"]
+    ax1.plot(simData.index, simData.values, 'g-', label='sim')
+    for iIdx in range(len(offer_Time_steps)):
+        negFlexData = results["NegFlexMPC"]["NegFlexMPC"]['variable']['P_el_c'][offer_Time_steps[iIdx]]
+        ax1.plot(negFlexData.index + offer_Time_steps[iIdx], negFlexData.ffill().values, 'r--', label='neg')
+        posFlexData = results["PosFlexMPC"]["PosFlexMPC"]['variable']['P_el_c'][offer_Time_steps[iIdx]]
+        ax1.plot(posFlexData.index + offer_Time_steps[iIdx], posFlexData.ffill().values, 'b--', label='pos')
+        baseFlexData = results["myMPCAgent"]["myMPC"]['variable']['P_el_c'][offer_Time_steps[iIdx] + 1800]
+        ax1.plot(posFlexData.index + (offer_Time_steps[iIdx] + 1800), baseFlexData.ffill().values, 'k--', label='base')
+
+        if iIdx == 0:
+            ax1.legend()
+
+        ax1.vlines(offer_Time_steps[iIdx], ymin=0, ymax=500, colors="black")
+        ax1.vlines(offer_Time_steps[iIdx] + 1800, ymin=0, ymax=500, colors="black")
+        ax1.vlines(offer_Time_steps[iIdx] + 1800 + 1800, ymin=0, ymax=500, colors="black")
+        ax1.vlines(offer_Time_steps[iIdx] + 1800 + 1800 + 14400, ymin=0, ymax=500, colors="black")
+
+    # simData = results["SimAgent"]["SimTestHall"]["P_el_c"]
+    # ax1.plot(simData.index, simData.values, 'g-', label='sim')
+    # negFlexData = results["NegFlexMPC"]["NegFlexMPC"]['variable']['P_el_c'][initial_time + 9000.0]
+    # ax1.plot(negFlexData.index + (initial_time + 9000.0), negFlexData.ffill().values, 'r--', label='neg')
+    # posFlexData = results["PosFlexMPC"]["PosFlexMPC"]['variable']['P_el_c'][initial_time + 9000.0]
+    # ax1.plot(posFlexData.index + (initial_time + 9000.0), posFlexData.ffill().values, 'b--', label='pos')
+    # baseFlexData = results["myMPCAgent"]["myMPC"]['variable']['P_el_c'][initial_time + 10800.0]
+    # ax1.plot(posFlexData.index + (initial_time + 10800.0), baseFlexData.ffill().values, 'k--', label='base')
+    #
+    # ax1.legend()
+    # ax1.vlines(initial_time + 9000, ymin=-1000, ymax=5000, colors="black")
+    # ax1.vlines(initial_time + 10800, ymin=-1000, ymax=5000, colors="black")
+    # ax1.vlines(initial_time + 12600, ymin=-1000, ymax=5000, colors="black")
+    # ax1.vlines(initial_time + 27000, ymin=-1000, ymax=5000, colors="black")
     ax1.set_ylim(0, 2500)
 
     # Q_Ahu
     ax2.set_ylabel("Q_Ahu in W")
-    results["SimAgent"]["SimTestHall"]["Q_Ahu"].plot(ax=ax2, color=mpcplot.EBCColors.dark_grey)
-    mpc_at_time_step(
-        data=results["NegFlexMPC"]["NegFlexMPC"], time_step=initial_time + 9000, variable="Q_Ahu"
-    ).ffill().plot(
-        ax=ax2,
-        drawstyle="steps-post",
-        label="neg",
-        linestyle="--",
-        color=mpcplot.EBCColors.red,
-    )
-    mpc_at_time_step(
-        data=results["PosFlexMPC"]["PosFlexMPC"], time_step=initial_time + 9000, variable="Q_Ahu"
-    ).ffill().plot(
-        ax=ax2,
-        drawstyle="steps-post",
-        label="pos",
-        linestyle="--",
-        color=mpcplot.EBCColors.blue,
-    )
-    mpc_at_time_step(
-        data=results["myMPCAgent"]["myMPC"], time_step=initial_time + 9900, variable="Q_Ahu"
-    ).ffill().plot(
-        ax=ax2,
-        drawstyle="steps-post",
-        label="base",
-        linestyle="--",
-        color=mpcplot.EBCColors.dark_grey,
-    )
 
-    ax2.legend()
-    ax2.vlines(initial_time + 9000, ymin=0, ymax=500, colors="black")
-    ax2.vlines(initial_time + 9900, ymin=0, ymax=500, colors="black")
-    ax2.vlines(initial_time + 10800, ymin=0, ymax=500, colors="black")
-    ax2.vlines(initial_time + 18000, ymin=0, ymax=500, colors="black")
+    simData = results["SimAgent"]["SimTestHall"]["Q_Ahu"]
+    ax2.plot(simData.index, simData.values, 'g-', label='sim')
+    for iIdx in range(len(offer_Time_steps)):
+        negFlexData = results["NegFlexMPC"]["NegFlexMPC"]['variable']['Q_Ahu'][offer_Time_steps[iIdx]]
+        ax2.plot(negFlexData.index + offer_Time_steps[iIdx], negFlexData.ffill().values, 'r--', label='neg')
+        posFlexData = results["PosFlexMPC"]["PosFlexMPC"]['variable']['Q_Ahu'][offer_Time_steps[iIdx]]
+        ax2.plot(posFlexData.index + offer_Time_steps[iIdx], posFlexData.ffill().values, 'b--', label='pos')
+        baseFlexData = results["myMPCAgent"]["myMPC"]['variable']['Q_Ahu'][offer_Time_steps[iIdx] + 1800]
+        ax2.plot(posFlexData.index + (offer_Time_steps[iIdx] + 1800), baseFlexData.ffill().values, 'k--', label='base')
+
+        if iIdx == 0:
+            ax2.legend()
+
+        ax2.vlines(offer_Time_steps[iIdx], ymin=0, ymax=500, colors="black")
+        ax2.vlines(offer_Time_steps[iIdx] + 1800, ymin=0, ymax=500, colors="black")
+        ax2.vlines(offer_Time_steps[iIdx] + 1800 + 1800, ymin=0, ymax=500, colors="black")
+        ax2.vlines(offer_Time_steps[iIdx] + 1800 + 1800 + 14400, ymin=0, ymax=500, colors="black")
+    # results["SimAgent"]["SimTestHall"]["Q_Ahu"].plot(ax=ax2, color=mpcplot.EBCColors.dark_grey)
+    # mpc_at_time_step(
+    #     data=results["NegFlexMPC"]["NegFlexMPC"], time_step=initial_time + 9000, variable="Q_Ahu"
+    # ).ffill().plot(
+    #     ax=ax2,
+    #     drawstyle="steps-post",
+    #     label="neg",
+    #     linestyle="--",
+    #     color=mpcplot.EBCColors.red,
+    # )
+    # mpc_at_time_step(
+    #     data=results["PosFlexMPC"]["PosFlexMPC"], time_step=initial_time + 9000, variable="Q_Ahu"
+    # ).ffill().plot(
+    #     ax=ax2,
+    #     drawstyle="steps-post",
+    #     label="pos",
+    #     linestyle="--",
+    #     color=mpcplot.EBCColors.blue,
+    # )
+    # mpc_at_time_step(
+    #     data=results["myMPCAgent"]["myMPC"], time_step=initial_time + 10800, variable="Q_Ahu"
+    # ).ffill().plot(
+    #     ax=ax2,
+    #     drawstyle="steps-post",
+    #     label="base",
+    #     linestyle="--",
+    #     color=mpcplot.EBCColors.dark_grey,
+    # )
+    #
+    # ax2.legend()
+    # ax2.vlines(initial_time + 9000, ymin=0, ymax=500, colors="black")
+    # ax2.vlines(initial_time + 10800, ymin=0, ymax=500, colors="black")
+    # ax2.vlines(initial_time + 12600, ymin=0, ymax=500, colors="black")
+    # ax2.vlines(initial_time + 27000, ymin=0, ymax=500, colors="black")
 
     ax2.set_ylim(500, 3000)
 
@@ -269,9 +316,9 @@ def write_solver_warning():
         Warning which indicates which MPC is not successful at which time
     """
     file_paths = {
-        'results/stats_mpc_simple_building_local_broadcast_base.csv': 'MPC',
-        'results/stats_mpc_simple_building_local_broadcast_neg_flex.csv': 'Max MPC',
-        'results/stats_mpc_simple_building_local_broadcast_pos_flex.csv': 'Min MPC'
+        'results/stats_mpc_neg_base.csv': 'MPC',
+        'results/stats_mpc_neg_neg_flex.csv': 'Max MPC',
+        'results/stats_mpc_neg_pos_flex.csv': 'Min MPC'
     }
     ret = []
     for file_path, solver_name in file_paths.items():
@@ -400,7 +447,7 @@ def get_configs(predictor_config, mpc_config, flex_config, varying_price_signal,
     with open(predictor_config, "w+") as f:
         json.dump(pred_conf, f, indent=4)
 
-    until = initial_time + 86400 * duration * (0.25)
+    until = initial_time + 86400 * duration
 
     env_config = {"rt": False, "t_sample": 100, "offset": initial_time}
     return agent_configs, env_config, initial_time, until, time_step
@@ -447,8 +494,10 @@ if __name__ == "__main__":
         clear_files(bClear_plots=True, bClear_results=True, bClear_flex_files=True)
 
     # offer_types: list[str] = ["neg", "pos", "average"]
-    offer_types: list[str] = ["pos"]
+    # offer_types: list[str] = ["neg", "pos", "real"]
+    offer_types: list[str] = ["neg"]
     for offer_type in offer_types:
+        clear_files(bClear_plots=False, bClear_results=False, bClear_flex_files=True)
         print(f'\n{"":-^50}')
         print(f'{f" Starting simulation with {offer_type} ":-^50}')
         print(f'{"":-^50}\n')
@@ -460,8 +509,7 @@ if __name__ == "__main__":
             market_file.close()
 
         market_data["agent_config"]["modules"][1]["market_specs"]["options"]["event_type"] = offer_type
-        market_data["agent_config"]["modules"][1]["market_specs"]["options"][
-            "results_file_offer"] = f"results/flex_offer_{offer_type}.csv"
+        market_data["agent_config"]["modules"][1]["market_specs"]["options"]["results_file_offer"] = f"results/flex_offer_{offer_type}.csv"
         market_data["agent_config"]["modules"][1]["results_file"] = f"results/flexibility_market_{offer_type}.csv"
 
         # delete old json file
@@ -477,8 +525,7 @@ if __name__ == "__main__":
             flex_agent_data = json.load(flex_agent_config)
             flex_agent_config.close()
 
-        flex_agent_data["indicator_config"]["agent_config"]["modules"][1][
-            "results_file"] = f"results/flexibility_indicator_{offer_type}.csv"
+        flex_agent_data["indicator_config"]["agent_config"]["modules"][1]["results_file"] = f"results/flexibility_indicator_{offer_type}.csv"
 
         # delete old json file
         os.remove(file_path)
@@ -486,6 +533,36 @@ if __name__ == "__main__":
         # create new flexiblity_agent_config.json
         with open(file_path, "w") as flex_agent_config:
             json.dump(flex_agent_data, flex_agent_config, indent=4)
+
+        # read mpc/config.json
+        file_path: str = os.path.join("model", "local", "mpc", "config.json")
+        with open(file_path, "r") as model_config:
+            model_config_data = json.load(model_config)
+            model_config.close()
+
+        model_config_data["modules"][1]["optimization_backend"]["results_file"] = f"results/mpc_{offer_type}.csv"
+
+        # delete old json file
+        os.remove(file_path)
+
+        # create new simple_model.json
+        with open(file_path, "w") as model_config:
+            json.dump(model_config_data, model_config, indent=4)
+
+        # read simple_sim.json
+        file_path: str = os.path.join("model", "local", "mpc", "ca_simu.json")
+        with open(file_path, "r") as sim_config:
+            sim_config_data = json.load(sim_config)
+            sim_config.close()
+
+        sim_config_data["modules"][1]["result_filename"] = f"results/sim_testhall_{offer_type}.csv"
+
+        # delete old json file
+        os.remove(file_path)
+
+        # create new simple_sim.json
+        with open(file_path, "w") as sim_config:
+            json.dump(sim_config_data, sim_config, indent=4)
 
         run_example(offer_type=offer_type)
 
