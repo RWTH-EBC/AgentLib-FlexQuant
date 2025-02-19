@@ -1,4 +1,5 @@
 import os
+import logging
 from typing import Optional, List
 import agentlib
 import numpy as np
@@ -342,9 +343,12 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         """
         calculates the deviation of the final value of the power profiles and warn the user if it exceeds the tolerance
         """
-        dev_pos = self.data.power_profile_flex_pos.values[-1] - self.data.power_profile_base.values[-1]
-        dev_neg = self.data.power_profile_flex_neg.values[-1] - self.data.power_profile_base.values[-1]
+        logger = logging.getLogger(__name__)
+        dev_pos = np.mean(self.data.power_profile_flex_pos.values[-4:] - self.data.power_profile_base.values[-4:])
+        dev_neg = np.mean(self.data.power_profile_flex_neg.values[-4:] - self.data.power_profile_base.values[-4:])
         if abs(dev_pos) > tol:
-            print(f"WARN: There is a deviation of {dev_pos:.6f} kW between the final value of power profiles of positive shadow MPC and the baseline")
+            logger.warning(f"There is an average deviation of {dev_pos:.6f} kW between the final four values of power profiles of positive shadow MPC and the baseline")
         if abs(dev_neg) > tol:
-            print(f"WARN: There is a deviation of {dev_neg:.6f} kW between the final value of power profiles of negative shadow MPC and the baseline")
+            logger.warning(f"There is an average deviation of {dev_pos:.6f} kW between the final four values of power profiles of negative shadow MPC and the baseline")
+
+
