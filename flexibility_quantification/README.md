@@ -2,7 +2,7 @@
 ### Introduction
 This package automates the generation of agents for flexibility quantification and follows the same structure as the [Agentlib-MPC](https://github.com/RWTH-EBC/AgentLib-MPC/tree/main/agentlib_mpc). For better understanding, it is recommended to refer to the [Agentlib-MPC documentation](https://rwth-ebc.github.io/AgentLib-MPC/main/docs/index.html).
 
-The core functionality this package is executed by calling:
+The core functionality of this package is executed by calling:
 
  ``FlexAgentGenerator(flex_config, mpc_agent_config).generate_flex_agents()``
 
