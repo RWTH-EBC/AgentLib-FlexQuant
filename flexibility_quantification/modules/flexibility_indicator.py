@@ -173,7 +173,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         inputs = self.config.inputs
         for var in inputs:
             self.agent.data_broker.register_callback(
-                name=var.name, alias=var.alias, callback=self.callback
+                name=var.name, alias=var.name, callback=self.callback
             )
         self.agent.data_broker.register_callback(
             name="in_provision", alias="in_provision", callback=self.callback
