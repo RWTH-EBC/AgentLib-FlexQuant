@@ -194,7 +194,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         self._calculate_energy_flex()
 
         # Costs KPIs
-        end_power_diff = numpy.mean(power_profile_shadow.values[-4:-1] - power_profile_base.values[-4:-1])
+        end_power_diff = numpy.mean(power_profile_shadow.values[-4:] - power_profile_base.values[-4:])
         if abs(end_power_diff) > 0.01:
             correct_cost = True
         else:
