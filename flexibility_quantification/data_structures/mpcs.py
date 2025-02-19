@@ -21,6 +21,7 @@ class BaseMPCData(pydantic.BaseModel):
     module_id: str
     # variables
     power_alias: str
+    stored_energy_alias: str
     config_inputs_appendix: MPCVariables = []
     config_parameters_appendix: MPCVariables = []
     weights: List[MPCVariable] = pydantic.Field(
@@ -42,9 +43,14 @@ class BaselineMPCData(BaseMPCData):
     module_id: str = "Baseline"
     # variables
     power_alias: str = glbs.POWER_ALIAS_BASE
+    stored_energy_alias: str = glbs.STORED_ENERGY_ALIAS_BASE
     power_variable: str = pydantic.Field(
         default="P_el",
         description="Name of the variable representing the electrical power in the baseline config",
+    )
+    storage_variable: str = pydantic.Field(
+        default="E_out_sum",
+        description="Name of the variable representing the stored thermal energy w.r.t. 0K in the baseline config",
     )
     # TODO: add this as parameter to the mpc config rather than just writing the value in the cost function
     profile_deviation_weight: float = pydantic.Field(
@@ -81,6 +87,7 @@ class PFMPCData(BaseMPCData):
     module_id: str = "PosFlexMPC"
     # variables
     power_alias: str = glbs.POWER_ALIAS_POS
+    stored_energy_alias: str = glbs.STORED_ENERGY_ALIAS_POS
     flex_cost_function: str = pydantic.Field(
         default=None,
         description="Cost function of the PF-MPC",
@@ -113,6 +120,7 @@ class NFMPCData(BaseMPCData):
     module_id: str = "NegFlexMPC"
     # variables
     power_alias: str = glbs.POWER_ALIAS_NEG
+    stored_energy_alias: str = glbs.STORED_ENERGY_ALIAS_NEG
     flex_cost_function: str = pydantic.Field(
         default=None,
         description="Cost function of the NF-MPC",

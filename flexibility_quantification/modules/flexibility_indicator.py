@@ -25,11 +25,11 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         agentlib.AgentVariable(name="r_pel", unit="ct/kWh", type="pd.Series",
                                description="electricity price"),
         agentlib.AgentVariable(name=glbs.STORED_ENERGY_ALIAS_BASE, unit="kWh", type="pd.Series",
-                               description="Energy stored in the system wrt. 0K"),
+                               description="Energy stored in the system w.r.t. 0K"),
         agentlib.AgentVariable(name=glbs.STORED_ENERGY_ALIAS_NEG, unit="kWh", type="pd.Series",
-                               description="Energy stored in the system wrt. 0K"),
+                               description="Energy stored in the system w.r.t. 0K"),
         agentlib.AgentVariable(name=glbs.STORED_ENERGY_ALIAS_POS, unit="kWh", type="pd.Series",
-                               description="Energy stored in the system wrt. 0K")
+                               description="Energy stored in the system w.r.t. 0K")
     ]
     outputs: List[agentlib.AgentVariable] = [
         # Flexibility offer
@@ -95,6 +95,14 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         agentlib.AgentVariable(
             name=kpis_pos.costs.get_kpi_identifier(), unit="ct", type="float",
             description="Saved costs due to baseline"
+        ),
+        agentlib.AgentVariable(
+            name=kpis_neg.corrected_costs.get_kpi_identifier(), unit="ct", type="float",
+            description="Corrected saved costs due to baseline"
+        ),
+        agentlib.AgentVariable(
+            name=kpis_pos.corrected_costs.get_kpi_identifier(), unit="ct", type="float",
+            description="Corrected saved costs due to baseline"
         ),
         agentlib.AgentVariable(
             name=kpis_neg.costs_rel.get_kpi_identifier(), unit='ct/kWh', type="float",
@@ -165,7 +173,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         inputs = self.config.inputs
         for var in inputs:
             self.agent.data_broker.register_callback(
-                name=var.name, alias=var.name, callback=self.callback
+                name=var.name, alias=var.alias, callback=self.callback
             )
         self.agent.data_broker.register_callback(
             name="in_provision", alias="in_provision", callback=self.callback

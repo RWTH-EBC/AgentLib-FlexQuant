@@ -2,6 +2,7 @@
     "prep_time": 600,
     "flex_event_duration": 2400,
     "market_time": 300,
+    "storage_variable" : "T_out",
     "indicator_config": {
         "agent_config": {
             "id": "FlexibilityIndicator",
@@ -53,6 +54,7 @@
     "baseline_config_generator_data": {
         "power_variable": "P_el",
         "power_unit": "W",
+        "storage_variable" : "E_out_sum",
         "profile_deviation_weight": 100
     },
     "shadow_mpc_config_generator_data": {

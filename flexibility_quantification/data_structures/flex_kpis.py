@@ -1,5 +1,6 @@
 from typing import Union, Optional
 
+import numpy
 import pydantic
 import numpy as np
 import pandas as pd
@@ -151,6 +152,13 @@ class FlexibilityKPIs(pydantic.BaseModel):
         ),
         description="Costs of flexibility",
     )
+    corrected_costs: KPI = pydantic.Field(
+        default=KPI(
+            name="corrected_costs",
+            unit="ct"
+        ),
+        description="Corrected costs of flexibility considering the stored thermal energy in the system",
+    )
     costs_rel: KPI = pydantic.Field(
         default=KPI(
             name="costs_rel",
@@ -186,11 +194,12 @@ class FlexibilityKPIs(pydantic.BaseModel):
         self._calculate_energy_flex()
 
         # Costs KPIs
-        stored_energy_diff = stored_energy_shadow.values[-1] - stored_energy_base.values[-1]
-        if stored_energy_diff > 0.01:
+        end_power_diff = numpy.mean(power_profile_shadow.values[-4:-1] - power_profile_base.values[-4:-1])
+        if abs(end_power_diff) > 0.01:
             correct_cost = True
         else:
             correct_cost = False
+        stored_energy_diff = stored_energy_shadow.values[-1] - stored_energy_base.values[-1]
         self._calculate_costs(power_costs_profile=power_costs_profile, stored_energy_diff=stored_energy_diff, correct_cost=correct_cost)
         self._calculate_costs_rel()
 
@@ -257,7 +266,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         self.energy_flex.value = energy_flex
         return energy_flex
 
-    def _calculate_costs(self, power_costs_profile: pd.Series, stored_energy_diff: pd.Series, correct_cost: bool = False) -> [float, pd.Series]:
+    def _calculate_costs(self, power_costs_profile: pd.Series, stored_energy_diff: float, correct_cost: bool) -> [float, pd.Series]:
         """
         Calculate the costs of the flexibility event based on the electricity costs profile and the power flexibility profile.
         """
@@ -267,10 +276,12 @@ class FlexibilityKPIs(pydantic.BaseModel):
 
         # Calculate scalar
         costs = abs(self.costs_series.integrate(time_unit="hours"))
+        corrected_costs = costs
         if correct_cost:
-            costs= costs - stored_energy_diff[-1] * power_costs_profile.values[-1]
+            corrected_costs = costs - stored_energy_diff * power_costs_profile.values[-1]
         self.costs.value = costs
-        return costs, costs_series
+        self.corrected_costs.value = corrected_costs
+        return costs, costs_series, corrected_costs
 
     def _calculate_costs_rel(self) -> float:
         """
@@ -345,15 +356,15 @@ class FlexibilityData(pydantic.BaseModel):
     )
     stored_energy_profile_base: pd.Series = pydantic.Field(
         default=None,
-        description="Base profile of the stored thermal energy wrt. 0K",
+        description="Base profile of the stored thermal energy w.r.t. 0K",
     )
     stored_energy_profile_neg: pd.Series = pydantic.Field(
         default=None,
-        description="Profile of the stored thermal energy wrt. 0K for negative flexibility",
+        description="Profile of the stored thermal energy w.r.t. 0K for negative flexibility",
     )
     stored_energy_profile_pos: pd.Series = pydantic.Field(
         default=None,
-        description="Profile of the stored thermal energy wrt. 0K for positive flexibility",
+        description="Profile of the stored thermal energy w.r.t. 0K for positive flexibility",
     )
     power_costs_profile: pd.Series = pydantic.Field(
         default=None,
@@ -432,7 +443,7 @@ class FlexibilityData(pydantic.BaseModel):
             power_costs_profile=self.power_costs_profile,
             mpc_time_grid=self.mpc_time_grid,
             flex_offer_time_grid=self.flex_offer_time_grid,
-            stored_energy_base=self.stored_energy_profile,
+            stored_energy_base=self.stored_energy_profile_base,
             stored_energy_shadow=self.stored_energy_profile_pos
         )
         self.kpis_neg.calculate(
@@ -441,7 +452,7 @@ class FlexibilityData(pydantic.BaseModel):
             power_costs_profile=self.power_costs_profile,
             mpc_time_grid=self.mpc_time_grid,
             flex_offer_time_grid=self.flex_offer_time_grid,
-            stored_energy_base=self.stored_energy_profile,
+            stored_energy_base=self.stored_energy_profile_base,
             stored_energy_shadow=self.stored_energy_profile_neg
         )
         return self.kpis_pos, self.kpis_neg

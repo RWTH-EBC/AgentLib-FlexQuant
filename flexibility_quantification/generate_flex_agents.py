@@ -121,11 +121,19 @@ class FlexAgentGenerator:
         """
         # TODO: Add validation (e.g. price is the same for indicator and mpc_config).
         #  Otherwise throw warning or make assumptions
+        # check if the power variable exists in the mpc config
         if self.flex_config.baseline_config_generator_data.power_variable not in [
             output.name for output in self.baseline_mpc_module_config.outputs
         ]:
             raise ConfigurationError(
                 f"Given power variable {self.flex_config.baseline_config_generator_data.power_variable} is not defined in baseline mpc config."
+            )
+        # check if the energy storage variable exists in the mpc config
+        if self.flex_config.baseline_config_generator_data.storage_variable not in [
+            output.name for output in self.baseline_mpc_module_config.outputs
+        ]:
+            raise ConfigurationError(
+                f"Given storage variable {self.flex_config.baseline_config_generator_data.storage_variable} is not defined in baseline mpc config."
             )
 
         # adapt modules to include necessary communication variables
@@ -198,7 +206,7 @@ class FlexAgentGenerator:
         module_type: str,
         config_name: str,
     ):
-        """Appends the given module config to the given agent config and dumps th agent config to a
+        """Appends the given module config to the given agent config and dumps the agent config to a
         json file. The json file is named based on the config_name."""
 
         # if module is not from the baseline, set a new agent id, based on module id
@@ -390,6 +398,21 @@ class FlexAgentGenerator:
                     alias=mpc_dataclass.power_alias,
                 )
             )
+        # add variable for stored thermal energy to the outputs, if not already existed
+        if (
+            self.flex_config.baseline_config_generator_data.storage_variable
+            in output_dict
+        ):
+            output_dict[
+                self.flex_config.baseline_config_generator_data.storage_variable
+            ].alias = mpc_dataclass.stored_energy_alias
+        else:
+            module_config.outputs.append(
+                MPCVariable(
+                    name=self.flex_config.baseline_config_generator_data.storage_variable,
+                    alias=mpc_dataclass.stored_energy_alias,
+                )
+            )
         # add inputs for the Time variable as well as extra inputs needed for activation of flex
         module_config.inputs.append(
             MPCVariable(
@@ -464,7 +487,7 @@ class FlexAgentGenerator:
         return module_config
 
     def _generate_flex_model_definition(self):
-        """Generates a python module for negative and positive flexbility agents from
+        """Generates a python module for negative and positive flexibility agents from
         the Baseline MPC model
 
         """
