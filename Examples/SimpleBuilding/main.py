@@ -44,7 +44,7 @@ def run_example(until=until):
         results=results
     ).show(
         custom_bounds=CustomBound(
-            for_variable="T",
+            for_variable="T_zone",
             lb_name="T_lower",
             ub_name="T_upper"
         )
