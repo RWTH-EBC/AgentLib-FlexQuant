@@ -199,9 +199,9 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             elif name == glbs.STORED_ENERGY_ALIAS_BASE:
                 self.data.stored_energy_profile_base = self.data.format_mpc_inputs(inp.value)
             elif name == glbs.STORED_ENERGY_ALIAS_NEG:
-                self.data.stored_energy_profile_neg = self.data.format_mpc_inputs(inp.value)
+                self.data.stored_energy_profile_flex_neg = self.data.format_mpc_inputs(inp.value)
             elif name == glbs.STORED_ENERGY_ALIAS_POS:
-                self.data.stored_energy_profile_pos = self.data.format_mpc_inputs(inp.value)
+                self.data.stored_energy_profile_flex_pos = self.data.format_mpc_inputs(inp.value)
             elif name == self.config.price_variable:
                 # price comes from predictor, so no stripping needed
                 # TODO: add other sources for price signal?
@@ -213,8 +213,8 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                     self.data.power_profile_flex_pos,
                     self.data.power_costs_profile,
                     self.data.stored_energy_profile_base,
-                    self.data.stored_energy_profile_neg,
-                    self.data.stored_energy_profile_pos
+                    self.data.stored_energy_profile_flex_neg,
+                    self.data.stored_energy_profile_flex_pos
             )):
                 # Calculate the flexibility, send the offer, write and save the results
                 self.calc_and_send_offer()
@@ -263,9 +263,9 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             elif name == glbs.STORED_ENERGY_ALIAS_BASE:
                 values = self.data.stored_energy_profile_base
             elif name == glbs.STORED_ENERGY_ALIAS_NEG:
-                values = self.data.stored_energy_profile_neg
+                values = self.data.stored_energy_profile_flex_neg
             elif name == glbs.STORED_ENERGY_ALIAS_POS:
-                values = self.data.stored_energy_profile_pos
+                values = self.data.stored_energy_profile_flex_pos
             else:
                 values = self.get(name).value
 
@@ -368,8 +368,8 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         self.data.power_profile_flex_pos = None
         self.data.power_costs_profile = None
         self.data.stored_energy_profile_base = None
-        self.data.stored_energy_profile_neg = None
-        self.data.stored_energy_profile_pos = None
+        self.data.stored_energy_profile_flex_neg = None
+        self.data.stored_energy_profile_flex_pos = None
 
     def check_power_end_deviation(self, tol: float):
         """

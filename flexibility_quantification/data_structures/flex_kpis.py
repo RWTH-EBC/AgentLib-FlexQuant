@@ -358,11 +358,11 @@ class FlexibilityData(pydantic.BaseModel):
         default=None,
         description="Base profile of the stored thermal energy w.r.t. 0K",
     )
-    stored_energy_profile_neg: pd.Series = pydantic.Field(
+    stored_energy_profile_flex_neg: pd.Series = pydantic.Field(
         default=None,
         description="Profile of the stored thermal energy w.r.t. 0K for negative flexibility",
     )
-    stored_energy_profile_pos: pd.Series = pydantic.Field(
+    stored_energy_profile_flex_pos: pd.Series = pydantic.Field(
         default=None,
         description="Profile of the stored thermal energy w.r.t. 0K for positive flexibility",
     )
@@ -444,7 +444,7 @@ class FlexibilityData(pydantic.BaseModel):
             mpc_time_grid=self.mpc_time_grid,
             flex_offer_time_grid=self.flex_offer_time_grid,
             stored_energy_base=self.stored_energy_profile_base,
-            stored_energy_shadow=self.stored_energy_profile_pos
+            stored_energy_shadow=self.stored_energy_profile_flex_pos
         )
         self.kpis_neg.calculate(
             power_profile_base=self.power_profile_base,
@@ -453,7 +453,7 @@ class FlexibilityData(pydantic.BaseModel):
             mpc_time_grid=self.mpc_time_grid,
             flex_offer_time_grid=self.flex_offer_time_grid,
             stored_energy_base=self.stored_energy_profile_base,
-            stored_energy_shadow=self.stored_energy_profile_neg
+            stored_energy_shadow=self.stored_energy_profile_flex_neg
         )
         return self.kpis_pos, self.kpis_neg
 
