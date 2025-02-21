@@ -55,16 +55,10 @@ class BaselineMPCModelConfig(CasadiModelConfig):
         # algebraic
         # slack variables
         CasadiState(
-            name="T_slack_upper",
+            name="T_slack",
             value=0,
             unit="K",
-            description="Slack variable of upper temperature of zone",
-        ),
-        CasadiState(
-            name="T_slack_lower",
-            value=0,
-            unit="K",
-            description="Slack variable of lower temperature of zone",
+            description="Slack variable for zone temperature",
         ),
     ]
 
@@ -73,25 +67,19 @@ class BaselineMPCModelConfig(CasadiModelConfig):
             name="C",
             value=10000,
             unit="J/K",
-            description="thermal capacity of zone",
+            description="Thermal capacity of zone",
         ),
         CasadiParameter(
             name="U",
             value=5,
             unit="W/K",
-            description="thermal conductivity of zone",
+            description="Thermal conductivity of zone",
         ),
         CasadiParameter(
-            name="s_T_upper",
+            name="s_T",
             value=1,
             unit="-",
-            description="Weight for T in upper constraint function",
-        ),
-        CasadiParameter(
-            name="s_T_lower",
-            value=1,
-            unit="-",
-            description="Weight for T in lower constraint function",
+            description="Weight for zone temperature slack var in constraint function",
         ),
         CasadiParameter(
             name="r_pel",
@@ -123,10 +111,9 @@ class BaselineMPCModel(CasadiModel):
         # Constraints: List[(lower bound, function, upper bound)]
         self.constraints = [
             # soft constraints
-            (-inf, self.T_zone - self.T_slack_upper, self.T_upper),
-            (self.T_lower, self.T_zone + self.T_slack_lower, inf),
-            (0, self.T_slack_upper, inf),
-            (0, self.T_slack_lower, inf),
+            (-inf, self.T_zone - self.T_slack, self.T_upper),
+            (self.T_lower, self.T_zone + self.T_slack, inf),
+            (0, self.T_slack, inf),
             # hard constraints
             (0, self.P_in, 200),
         ]
@@ -134,8 +121,7 @@ class BaselineMPCModel(CasadiModel):
         # Objective function
         objective = sum(
             [
-                self.s_T_upper * self.T_slack_upper**2,
-                self.s_T_lower * self.T_slack_lower**2,
+                self.s_T * self.T_slack**2,
                 self.r_pel * self.P_in,
             ]
         )
