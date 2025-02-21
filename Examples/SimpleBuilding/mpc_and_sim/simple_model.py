@@ -128,7 +128,7 @@ class BaselineMPCModel(CasadiModel):
             (0, self.T_slack_upper, inf),
             (0, self.T_slack_lower, inf),
             # hard constraints
-            (-100, self.P_in, 200),
+            (0, self.P_in, 200),
         ]
 
         # Objective function
