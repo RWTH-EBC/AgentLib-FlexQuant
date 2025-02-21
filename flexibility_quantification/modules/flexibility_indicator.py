@@ -287,6 +287,15 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             indices = pd.MultiIndex.from_tuples(df.index, names=[glbs.TIME_STEP, "time"])
             df.set_index(indices, inplace=True)
 
+        # add columns "within_boundary_pos(neg)" to show if the power profiles of the baseline and shadow MPC meet each other by the end of the trajectory
+        df['positive_within_boundary'] = np.where(df[kpis_pos.corrected_costs.get_kpi_identifier()] == df[kpis_pos.costs.get_kpi_identifier()], True, False)
+        df['positive_within_boundary'] = df['positive_within_boundary'].astype('boolean')
+        df.loc[df.index[1:], "positive_within_boundary"] = None
+
+        df['negative_within_boundary'] = np.where(df[kpis_neg.corrected_costs.get_kpi_identifier()] == df[kpis_neg.costs.get_kpi_identifier()], True, False)
+        df['negative_within_boundary'] = df['negative_within_boundary'].astype('boolean')
+        df.loc[df.index[1:], 'negative_within_boundary'] = None
+
         return df
 
     def cleanup_results(self):
