@@ -135,7 +135,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
                                description="timestep of the mpc solution"),
         agentlib.AgentVariable(name=glbs.PREDICTION_HORIZON, unit="-",
                                description="prediction horizon of the mpc solution"),
-        agentlib.AgentVariable(name="Power_deviation_tolerance", unit="kW", value=0.01,
+        agentlib.AgentVariable(name=glbs.POWER_DEVIATION_TOLERANCE, unit="kW", value=0.01,
                                description="Tolerance within which the flexibility cost doesn't need to be corrected"),
     ]
 
@@ -230,7 +230,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 self.calc_and_send_offer()
 
                 # check the power profile end deviation
-                self.check_power_end_deviation(tol=self.get('Power_deviation_tolerance').value)
+                self.check_power_end_deviation(tol=self.get(glbs.POWER_DEVIATION_TOLERANCE).value)
 
                 # set the values to None to reset the callback
                 self._set_inputs_to_none()
@@ -321,7 +321,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         Calculate the flexibility KPIs for current predictions, send the flex offer and set the outputs, write and save the results.
         """
         # Calculate the flexibility KPIs for current predictions
-        self.data.calculate(tol=self.get('Power_deviation_tolerance').value)
+        self.data.calculate(tol=self.get(glbs.POWER_DEVIATION_TOLERANCE).value)
 
         # Send flex offer
         self.send_flex_offer(
