@@ -368,7 +368,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         self.data.power_profile_flex_pos = None
         self.data.power_costs_profile = None
 
-    def check_power_end_deviation(self, tol: float = 0.02):
+    def check_power_end_deviation(self, tol: float):
         """
         calculates the deviation of the final value of the power profiles and warn the user if it exceeds the tolerance
         """
