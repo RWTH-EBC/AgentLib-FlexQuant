@@ -256,6 +256,12 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 values = self.data.power_profile_flex_neg
             elif name == glbs.POWER_ALIAS_POS:
                 values = self.data.power_profile_flex_pos
+            elif name == glbs.STORED_ENERGY_ALIAS_BASE:
+                values = self.data.stored_energy_profile_base
+            elif name == glbs.STORED_ENERGY_ALIAS_NEG:
+                values = self.data.stored_energy_profile_neg
+            elif name == glbs.STORED_ENERGY_ALIAS_POS:
+                values = self.data.stored_energy_profile_pos
             else:
                 values = self.get(name).value
 
