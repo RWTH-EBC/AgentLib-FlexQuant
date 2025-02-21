@@ -367,6 +367,9 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         self.data.power_profile_flex_neg = None
         self.data.power_profile_flex_pos = None
         self.data.power_costs_profile = None
+        self.data.stored_energy_profile_base = None
+        self.data.stored_energy_profile_neg = None
+        self.data.stored_energy_profile_pos = None
 
     def check_power_end_deviation(self, tol: float):
         """
