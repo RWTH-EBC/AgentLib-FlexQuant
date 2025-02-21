@@ -112,6 +112,14 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         agentlib.AgentVariable(
             name=kpis_pos.costs_rel.get_kpi_identifier(), unit='ct/kWh', type="float",
             description="Saved costs due to baseline"
+        ),
+        agentlib.AgentVariable(
+            name=kpis_neg.corrected_costs_rel.get_kpi_identifier(), unit='ct/kWh', type="float",
+            description="Corrected saved costs due to baseline"
+        ),
+        agentlib.AgentVariable(
+            name=kpis_pos.corrected_costs_rel.get_kpi_identifier(), unit='ct/kWh', type="float",
+            description="Corrected saved costs due to baseline"
         )
     ]
 

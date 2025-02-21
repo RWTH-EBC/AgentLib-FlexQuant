@@ -166,6 +166,13 @@ class FlexibilityKPIs(pydantic.BaseModel):
         ),
         description="Costs of flexibility per energy",
     )
+    corrected_costs_rel: KPI = pydantic.Field(
+        default=KPI(
+            name="corrected_costs_rel",
+            unit="ct/kWh"
+        ),
+        description="Corrected costs of flexibility per energy",
+    )
 
     def __init__(self, direction: FlexibilityDirections, **data):
         super().__init__(**data)
@@ -289,12 +296,15 @@ class FlexibilityKPIs(pydantic.BaseModel):
         """
         if self.energy_flex == 0:
             costs_rel = 0
+            corrected_costs_rel = 0
         else:
             costs_rel = self.costs.value / self.energy_flex.value
+            corrected_costs_rel = self.corrected_costs.value / self.energy_flex.value
 
         # Set value
         self.costs_rel.value = costs_rel
-        return costs_rel
+        self.corrected_costs_rel.value = corrected_costs_rel
+        return costs_rel, corrected_costs_rel
 
     def get_kpi_dict(self, identifier: bool = False) -> dict[str, KPI]:
         """
