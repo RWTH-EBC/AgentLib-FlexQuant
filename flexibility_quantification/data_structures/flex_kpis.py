@@ -189,7 +189,8 @@ class FlexibilityKPIs(pydantic.BaseModel):
             mpc_time_grid: np.ndarray,
             flex_offer_time_grid: np.ndarray,
             stored_energy_base: pd.Series,
-            stored_energy_shadow: pd.Series
+            stored_energy_shadow: pd.Series,
+            power_deviation_tolerance: float
     ):
         """
         Calculate the KPIs based on the power and electricity input profiles.
@@ -202,7 +203,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
 
         # Costs KPIs
         end_power_diff = numpy.mean(power_profile_shadow.values[-4:] - power_profile_base.values[-4:])
-        if abs(end_power_diff) > 0.01:
+        if abs(end_power_diff) > power_deviation_tolerance:
             correct_cost = True
         else:
             correct_cost = False
@@ -440,7 +441,7 @@ class FlexibilityData(pydantic.BaseModel):
                              f"Series index:{series.index}")
         return series
 
-    def calculate(self) -> [FlexibilityKPIs, FlexibilityKPIs]:
+    def calculate(self, tol: float) -> [FlexibilityKPIs, FlexibilityKPIs]:
         """
         Calculate the KPIs for the positive and negative flexibility.
 
@@ -454,7 +455,8 @@ class FlexibilityData(pydantic.BaseModel):
             mpc_time_grid=self.mpc_time_grid,
             flex_offer_time_grid=self.flex_offer_time_grid,
             stored_energy_base=self.stored_energy_profile_base,
-            stored_energy_shadow=self.stored_energy_profile_flex_pos
+            stored_energy_shadow=self.stored_energy_profile_flex_pos,
+            power_deviation_tolerance=tol
         )
         self.kpis_neg.calculate(
             power_profile_base=self.power_profile_base,
@@ -463,7 +465,8 @@ class FlexibilityData(pydantic.BaseModel):
             mpc_time_grid=self.mpc_time_grid,
             flex_offer_time_grid=self.flex_offer_time_grid,
             stored_energy_base=self.stored_energy_profile_base,
-            stored_energy_shadow=self.stored_energy_profile_flex_neg
+            stored_energy_shadow=self.stored_energy_profile_flex_neg,
+            power_deviation_tolerance=tol
         )
         return self.kpis_pos, self.kpis_neg
 
