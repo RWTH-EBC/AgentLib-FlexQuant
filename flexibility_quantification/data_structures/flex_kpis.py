@@ -285,7 +285,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         costs = abs(self.costs_series.integrate(time_unit="hours"))
         corrected_costs = costs
         if correct_cost:
-            corrected_costs = costs - stored_energy_diff * power_costs_profile.values[-1]
+            corrected_costs = costs - stored_energy_diff * np.mean(power_costs_profile)
         self.costs.value = costs
         self.corrected_costs.value = corrected_costs
         return costs, costs_series, corrected_costs
