@@ -161,10 +161,10 @@ def run_example(offer_type=None) -> None:
         if iIdx == 0:
             ax1.legend()
 
-        ax1.vlines(offer_Time_steps[iIdx], ymin=0, ymax=500, colors="black")
-        ax1.vlines(offer_Time_steps[iIdx] + 1800, ymin=0, ymax=500, colors="black")
-        ax1.vlines(offer_Time_steps[iIdx] + 1800 + 1800, ymin=0, ymax=500, colors="black")
-        ax1.vlines(offer_Time_steps[iIdx] + 1800 + 1800 + 14400, ymin=0, ymax=500, colors="black")
+        ax1.vlines(offer_Time_steps[iIdx], ymin=0, ymax=3000, colors="black")
+        ax1.vlines(offer_Time_steps[iIdx] + 1800, ymin=0, ymax=3000, colors="black")
+        ax1.vlines(offer_Time_steps[iIdx] + 1800 + 1800, ymin=0, ymax=3000, colors="black")
+        ax1.vlines(offer_Time_steps[iIdx] + 1800 + 1800 + 14400, ymin=0, ymax=3000, colors="black")
 
     # simData = results["SimAgent"]["SimTestHall"]["P_el_c"]
     # ax1.plot(simData.index, simData.values, 'g-', label='sim')
@@ -198,10 +198,10 @@ def run_example(offer_type=None) -> None:
         if iIdx == 0:
             ax2.legend()
 
-        ax2.vlines(offer_Time_steps[iIdx], ymin=0, ymax=500, colors="black")
-        ax2.vlines(offer_Time_steps[iIdx] + 1800, ymin=0, ymax=500, colors="black")
-        ax2.vlines(offer_Time_steps[iIdx] + 1800 + 1800, ymin=0, ymax=500, colors="black")
-        ax2.vlines(offer_Time_steps[iIdx] + 1800 + 1800 + 14400, ymin=0, ymax=500, colors="black")
+        ax2.vlines(offer_Time_steps[iIdx], ymin=0, ymax=3000, colors="black")
+        ax2.vlines(offer_Time_steps[iIdx] + 1800, ymin=0, ymax=3000, colors="black")
+        ax2.vlines(offer_Time_steps[iIdx] + 1800 + 1800, ymin=0, ymax=3000, colors="black")
+        ax2.vlines(offer_Time_steps[iIdx] + 1800 + 1800 + 14400, ymin=0, ymax=3000, colors="black")
     # results["SimAgent"]["SimTestHall"]["Q_Ahu"].plot(ax=ax2, color=mpcplot.EBCColors.dark_grey)
     # mpc_at_time_step(
     #     data=results["NegFlexMPC"]["NegFlexMPC"], time_step=initial_time + 9000, variable="Q_Ahu"
