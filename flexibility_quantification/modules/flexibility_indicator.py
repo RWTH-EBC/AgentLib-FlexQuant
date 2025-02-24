@@ -412,7 +412,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         flex_envelope = calc_flex_envelop(powerflex_pos=self.pos_vals.reindex(index=flex_horizon),
                                           powerflex_neg=self.neg_vals.reindex(index=flex_horizon),
                                           powerflex_base=base_profile, time_step=time_step, horizon=flex_horizon,
-                                          scaler=scaler, p_el_min=p_el_min, p_el_max=p_el_max)
+                                          scaler=scaler, p_el_min=p_el_min, p_el_max=p_el_max, time=self.env.now)
 
         self.send_flex_offer("FlexibilityOffer", base_profile,
                              flex_price_pos, powerflex_profile_pos,
@@ -429,7 +429,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
 
 
 def calc_flex_envelop(powerflex_pos: pd.Series, powerflex_neg: pd.Series, time_step: int, horizon: np.ndarray,
-                      scaler: int, p_el_min: float, p_el_max: float, powerflex_base: pd.Series = None) -> FlexEnvelope:
+                      scaler: int, p_el_min: float, p_el_max: float, time: float, powerflex_base: pd.Series = None) -> FlexEnvelope:
     """ powerflex_pos, powerflex_neg and powerflex_base are in (k)W, and the result is in (k)Wh. """
 
     powerflex_pos_prepared = powerflex_pos.to_list()
@@ -460,4 +460,5 @@ def calc_flex_envelop(powerflex_pos: pd.Series, powerflex_neg: pd.Series, time_s
                         powerflex_base=pd.Series(powerflex_base.to_list()),
                         p_el_max=p_el_max,
                         p_el_min=p_el_min,
+                        time=time,
                         )

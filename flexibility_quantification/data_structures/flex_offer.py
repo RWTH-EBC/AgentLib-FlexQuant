@@ -10,6 +10,7 @@ class OfferStatus(Enum):
     not_accepted = "Not Accepted"
     accepted_positive = "Accepted Positive"
     accepted_negative = "Accepted Negative"
+    accepted = "Accepted"
 
 
 class FlexEnvelope(BaseModel):
@@ -61,6 +62,11 @@ class FlexEnvelope(BaseModel):
         scalar=True,
         description="",
     )
+    time: float = pydantic.Field(
+        default=0,
+        scalar=True,
+        description="",
+    )
 
     class Config:
         arbitrary_types_allowed = True
@@ -75,6 +81,7 @@ class FlexEnvelope(BaseModel):
                          'powerflex_base': self.powerflex_base.to_list(),
                          'p_el_max': self.p_el_max,
                          'p_el_min': self.p_el_min,
+                         'time': self.time,
                          }
 
         return pd.DataFrame(list(flex_env_data.items()), columns=['Keys', 'Values'], index=list(flex_env_data.keys()))
