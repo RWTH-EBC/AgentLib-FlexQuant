@@ -13,7 +13,7 @@
                 {
                     "module_id": "FlexibilityIndicator",
                     "type": "flexibility_quantification.flexibility_indicator",
-                    "results_file": "results/flexibility_indicator_pos.csv",
+                    "results_file": "results/flexibility_indicator_neg.csv",
                     "price_variable": "r_pel",
                     "parameters": [
                         {
@@ -42,7 +42,7 @@
                         },
                         {
                             "name": "'p_el_max'",
-                            "value": 2000
+                            "value": 400
                         }
                     ],
                     "inputs": [
@@ -61,7 +61,7 @@
     "baseline_config_generator_data": {
         "power_variable": "P_el_c",
         "power_unit": "W",
-        "profile_deviation_weight": 1000
+        "profile_deviation_weight": 100
     },
     "shadow_mpc_config_generator_data": {
         "weights": [

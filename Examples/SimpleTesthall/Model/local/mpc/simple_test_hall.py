@@ -233,6 +233,19 @@ class SimpleTestHallModelConfig(CasadiModelConfig):
                         unit="-", description="factor for internal gains"),
         CasadiParameter(name="fac_sol_floor", value=1,
                         unit="-", description="factor for internal gains"),
+
+        CasadiParameter(
+            name="prediction_horizon",
+            value=24,
+            unit="-",
+            description="",
+        ),
+        CasadiParameter(
+            name="sample_time",
+            value=1800,
+            unit="s",
+            description="",
+        )
     ]
 
     outputs: List[CasadiOutput] = [
@@ -494,8 +507,8 @@ class SimpleTestHall(CasadiModel):
         objective = sum(
             [
                 (self.s_T / (self.s_T + self.s_Pel)) * self.T_slack ** 2,
-                (self.r_pel / 4) * (self.s_Pel / (self.s_T + self.s_Pel)) * (self.Q_tabs_slack1 + self.Q_tabs_slack2 + self.Q_ahu_slack1 + self.Q_ahu_slack2) / self.COP / 1000,
+                (self.r_pel / 4) * (self.s_Pel / (self.s_T + self.s_Pel)) * self.P_el_c / 1000,
             ]
-        )
+        ) / (self.prediction_horizon * self.sample_time)
 
         return objective
