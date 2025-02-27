@@ -102,7 +102,7 @@ class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
             return
 
         # vals = strip_multi_index(inp.value)
-        vals = fill_nans(inp.value)
+        vals = fill_nans(inp.value, method=MEAN)
 
         # the MPC Predictions starts at t=env.now not t=0
         vals.index += self.env.time
