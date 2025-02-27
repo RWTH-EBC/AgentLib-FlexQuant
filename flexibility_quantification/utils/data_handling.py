@@ -77,4 +77,4 @@ def convert_timescale_of_index(df: pd.DataFrame, from_unit: TimeConversionTypes,
         )
     else:
         df.index = df.index * time_conversion_factor
-    return result
+    return df
