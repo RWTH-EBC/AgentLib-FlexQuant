@@ -157,7 +157,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
             name="corrected_costs",
             unit="ct"
         ),
-        description="Corrected costs of flexibility considering the stored thermal energy in the system",
+        description="Corrected costs of flexibility considering the stored energy in the system",
     )
     costs_rel: KPI = pydantic.Field(
         default=KPI(
@@ -365,15 +365,15 @@ class FlexibilityData(pydantic.BaseModel):
     )
     stored_energy_profile_base: pd.Series = pydantic.Field(
         default=None,
-        description="Base profile of the stored thermal energy w.r.t. 0K",
+        description="Base profile of the stored energy w.r.t. 0K",
     )
     stored_energy_profile_flex_neg: pd.Series = pydantic.Field(
         default=None,
-        description="Profile of the stored thermal energy w.r.t. 0K for negative flexibility",
+        description="Profile of the stored energy w.r.t. 0K for negative flexibility",
     )
     stored_energy_profile_flex_pos: pd.Series = pydantic.Field(
         default=None,
-        description="Profile of the stored thermal energy w.r.t. 0K for positive flexibility",
+        description="Profile of the stored energy w.r.t. 0K for positive flexibility",
     )
     power_costs_profile: pd.Series = pydantic.Field(
         default=None,

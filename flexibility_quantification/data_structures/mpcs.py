@@ -49,8 +49,8 @@ class BaselineMPCData(BaseMPCData):
         description="Name of the variable representing the electrical power in the baseline config",
     )
     storage_variable: str = pydantic.Field(
-        default="E_out_sum",
-        description="Name of the variable representing the stored thermal energy w.r.t. 0K in the baseline config",
+        default="E_stored",
+        description="Name of the variable representing the stored energy w.r.t. 0K in the baseline config",
     )
     # TODO: add this as parameter to the mpc config rather than just writing the value in the cost function
     profile_deviation_weight: float = pydantic.Field(

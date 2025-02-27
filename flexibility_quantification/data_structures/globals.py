@@ -16,9 +16,9 @@ FlexibilityDirections = Literal["positive", "negative"]
 POWER_ALIAS_BASE = "_P_el_base"
 POWER_ALIAS_NEG = "_P_el_neg"
 POWER_ALIAS_POS = "_P_el_pos"
-STORED_ENERGY_ALIAS_BASE = "_E_out_sum_base"
-STORED_ENERGY_ALIAS_NEG = "_E_out_sum_neg"
-STORED_ENERGY_ALIAS_POS = "_E_out_sum_pos"
+STORED_ENERGY_ALIAS_BASE = "_E_stored_base"
+STORED_ENERGY_ALIAS_NEG = "_E_stored_neg"
+STORED_ENERGY_ALIAS_POS = "_E_stored_pos"
 
 SHADOW_MPC_COST_FUNCTION = ("return ca.if_else(self.Time.sym < self.prep_time.sym + "
                             "self.market_time.sym, obj_std, ca.if_else(self.Time.sym < "

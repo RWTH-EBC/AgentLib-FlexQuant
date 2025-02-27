@@ -398,7 +398,7 @@ class FlexAgentGenerator:
                     alias=mpc_dataclass.power_alias,
                 )
             )
-        # add variable for stored thermal energy to the outputs, if not already existed
+        # add variable for stored energy to the outputs, if not already existed
         if (
             self.flex_config.baseline_config_generator_data.storage_variable
             in output_dict
