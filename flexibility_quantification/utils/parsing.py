@@ -240,8 +240,14 @@ class SetupSystemModifier(ast.NodeTransformer):
         for body in node.body:
             # add the fullcontrol trajectories to the baseline config class
             if body.target.id == "outputs":
+                if isinstance(body.value, ast.List):
+                    # Simple list case
+                    value_list = body.value
+                elif isinstance(body.value, ast.BinOp):
+                    # List concatenation case (a + b)
+                    value_list = body.value.left
                 for control in self.controls:
-                    body.value.elts.append(
+                    value_list.elts.append(
                         add_output(
                             f"{full_trajectory_prefix}{control.name}"
                             f"{full_trajectory_suffix}",
@@ -266,10 +272,16 @@ class SetupSystemModifier(ast.NodeTransformer):
                         )
             # add the flexibility inputs
             if body.target.id == "inputs":
-                body.value.elts.append(
+                if isinstance(body.value, ast.List):
+                    # Simple list case
+                    value_list = body.value
+                elif isinstance(body.value, ast.BinOp):
+                    # List concatenation case (a + b)
+                    value_list = body.value.left
+                value_list.elts.append(
                     add_input("Time", 0, "s", "time trajectory", "list")
                 )
-                body.value.elts.append(
+                value_list.elts.append(
                     add_input(
                         "_P_external",
                         0,
@@ -278,7 +290,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                         "pd.Series",
                     )
                 )
-                body.value.elts.append(
+                value_list.elts.append(
                     add_input(
                         "in_provision",
                         False,
@@ -287,7 +299,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                         "bool",
                     )
                 )
-                body.value.elts.append(
+                value_list.elts.append(
                     add_input(
                         "rel_start",
                         0,
@@ -296,7 +308,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                         "int",
                     )
                 )
-                body.value.elts.append(
+                value_list.elts.append(
                     add_input(
                         "rel_end",
                         0,
