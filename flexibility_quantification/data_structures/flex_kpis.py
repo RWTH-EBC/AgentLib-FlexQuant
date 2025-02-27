@@ -289,7 +289,6 @@ class FlexibilityKPIs(pydantic.BaseModel):
             corrected_costs = costs - stored_energy_diff * np.mean(power_costs_profile)
         self.costs.value = costs
         self.corrected_costs.value = corrected_costs
-        return costs, costs_series, corrected_costs
 
     def _calculate_costs_rel(self) -> float:
         """
@@ -305,7 +304,6 @@ class FlexibilityKPIs(pydantic.BaseModel):
         # Set value
         self.costs_rel.value = costs_rel
         self.corrected_costs_rel.value = corrected_costs_rel
-        return costs_rel, corrected_costs_rel
 
     def get_kpi_dict(self, identifier: bool = False) -> dict[str, KPI]:
         """
