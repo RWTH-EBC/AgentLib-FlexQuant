@@ -9,7 +9,6 @@ FLEX_EVENT_DURATION = "flex_event_duration"
 TIME_STEP = "time_step"
 PREDICTION_HORIZON = "prediction_horizon"
 FlexibilityOffer = "FlexibilityOffer"
-POWER_DEVIATION_TOLERANCE = "power_deviation_tolerance"
 
 FlexibilityDirections = Literal["positive", "negative"]
 

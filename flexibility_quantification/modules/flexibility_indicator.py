@@ -137,8 +137,6 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
                                description="timestep of the mpc solution"),
         agentlib.AgentVariable(name=glbs.PREDICTION_HORIZON, unit="-",
                                description="prediction horizon of the mpc solution"),
-        # agentlib.AgentVariable(name=glbs.POWER_DEVIATION_TOLERANCE, unit="kW", value=0.01,
-        #                        description="Tolerance within which the flexibility cost doesn't need to be corrected"),
     ]
 
     results_file: Optional[Path] = pydantic.Field(default=None)
@@ -163,12 +161,10 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
                     "Define the storage variable 'E_stored' in the base MPC model and config as output if the correction of costs is enabled",
     )
 
-    power_deviation_tolerance: float = pydantic.Field(
-        default=0.1,
-        description="Tolerance within which the flexibility cost doesn't need to be corrected",
+    absolute_power_deviation_tolerance: float = pydantic.Field(
+        default=0.01,
+        description="Absolute tolerance in kW within which the flexibility cost doesn't need to be corrected",
     )
-
-    # correct_costs: List[object]= [enable_energy_costs_correction, power_unit]
 
 class FlexibilityIndicatorModule(agentlib.BaseModule):
     config: FlexibilityIndicatorModuleConfig
@@ -246,7 +242,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 self.calc_and_send_offer()
 
                 # check the power profile end deviation
-                self.check_power_end_deviation(tol=self.config.power_deviation_tolerance)
+                self.check_power_end_deviation(tol=self.config.absolute_power_deviation_tolerance)
 
                 # set the values to None to reset the callback
                 self._set_inputs_to_none()
