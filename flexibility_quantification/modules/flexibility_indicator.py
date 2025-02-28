@@ -338,7 +338,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         Calculate the flexibility KPIs for current predictions, send the flex offer and set the outputs, write and save the results.
         """
         # Calculate the flexibility KPIs for current predictions
-        self.data.calculate(enable_costs_correction=self.config.enable_energy_costs_correction)
+        self.data.calculate(enable_energy_costs_correction=self.config.enable_energy_costs_correction)
 
         # Send flex offer
         self.send_flex_offer(
