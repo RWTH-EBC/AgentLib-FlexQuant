@@ -119,8 +119,8 @@ class FlexAgentGenerator:
         Power variable must be defined in the mpc config.
 
         """
-        # TODO: Add validation (e.g. price is the same for indicator and mpc_config).
-        #  Otherwise throw warning or make assumptions
+
+
         if self.flex_config.baseline_config_generator_data.power_variable not in [
             output.name for output in self.baseline_mpc_module_config.outputs
         ]:
@@ -198,7 +198,7 @@ class FlexAgentGenerator:
         module_type: str,
         config_name: str,
     ):
-        """Appends the given module config to the given agent config and dumps th agent config to a
+        """Appends the given module config to the given agent config and dumps the agent config to a
         json file. The json file is named based on the config_name."""
 
         # if module is not from the baseline, set a new agent id, based on module id
@@ -406,6 +406,8 @@ class FlexAgentGenerator:
         for var in mpc_dataclass.config_parameters_appendix:
             if var.name in self.flex_config.model_fields:
                 var.value = getattr(self.flex_config, var.name)
+            if var.name in self.flex_config.baseline_config_generator_data.model_fields:
+                var.value = getattr(self.flex_config.baseline_config_generator_data, var.name)
         module_config.parameters.extend(mpc_dataclass.config_parameters_appendix)
 
         # freeze the config again
@@ -430,19 +432,13 @@ class FlexAgentGenerator:
                 parameter.value = self.baseline_mpc_module_config.time_step
             if parameter.name == "prediction_horizon":
                 parameter.value = self.baseline_mpc_module_config.prediction_horizon
-        if (
-            "method"
-            in self.baseline_mpc_module_config.optimization_backend[
-                "discretization_options"
-            ]
-        ):
-            module_config.discretization = (
-                self.baseline_mpc_module_config.optimization_backend[
-                    "discretization_options"
-                ]["method"]
-            )
+        # set power unit
         module_config.power_unit = (
             self.flex_config.baseline_config_generator_data.power_unit
+        )
+        module_config.results_file = Path(
+            Path(self.orig_mpc_module_config.optimization_backend["results_file"]).parent,
+            self.indicator_config.name_of_created_file.replace(".json", ".csv"),
         )
         module_config.model_config["frozen"] = True
         return module_config
@@ -458,10 +454,10 @@ class FlexAgentGenerator:
                 module_config.__setattr__(
                     field, getattr(self.market_module_config, field)
                 )
-            if field == "time_step":
-                module_config.__setattr__(
-                    field, self.baseline_mpc_module_config.time_step
-                )
+        module_config.results_file = Path(
+            Path(self.orig_mpc_module_config.optimization_backend["results_file"]).parent,
+            self.market_config.name_of_created_file.replace(".json", ".csv"),
+        )
         module_config.model_config["frozen"] = True
         return module_config
 

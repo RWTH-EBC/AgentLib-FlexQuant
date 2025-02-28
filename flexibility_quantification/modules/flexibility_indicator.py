@@ -1,90 +1,107 @@
 import os
-import sys
+import logging
 from typing import Optional, List
 import agentlib
 import numpy as np
 import pandas as pd
-from typing import Optional, Union
 from pathlib import Path
 import pydantic
 import flexibility_quantification.data_structures.globals as glbs
-
-from flexibility_quantification.utils.data_handling import strip_multi_index, fill_nans
-sys.path.append(os.path.dirname(__file__))
-
+from flexibility_quantification.data_structures.flex_kpis import FlexibilityData, FlexibilityKPIs
 from flexibility_quantification.data_structures.flex_offer import FlexOffer
+
+# Pos and neg kpis to get the right names for plotting
+kpis_pos = FlexibilityKPIs(direction="positive")
+kpis_neg = FlexibilityKPIs(direction="negative")
 
 
 class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
     inputs: List[agentlib.AgentVariable] = [
-        agentlib.AgentVariable(name="__P_el_pos", unit="W",
+        agentlib.AgentVariable(name=glbs.POWER_ALIAS_BASE, unit="W", type="pd.Series",
                                description="The power input to the system"),
-        agentlib.AgentVariable(name="__P_el_base", unit="W",
+        agentlib.AgentVariable(name=glbs.POWER_ALIAS_NEG, unit="W", type="pd.Series",
                                description="The power input to the system"),
-        agentlib.AgentVariable(name="__P_el_neg", unit="W",
+        agentlib.AgentVariable(name=glbs.POWER_ALIAS_POS, unit="W", type="pd.Series",
                                description="The power input to the system"),
         agentlib.AgentVariable(name="r_pel", unit="ct/kWh", type="pd.Series",
                                description="electricity price")
     ]
     outputs: List[agentlib.AgentVariable] = [
-        agentlib.AgentVariable(name="FlexibilityOffer", type="FlexOffer"),
+        # Flexibility offer
+        agentlib.AgentVariable(name=glbs.FlexibilityOffer, type="FlexOffer"),
+
+        # Power KPIs
         agentlib.AgentVariable(
-            name="powerflex_flex_neg", unit='W', type="pd.Series",
-            description="Negative Powerflexibility"
+            name=kpis_neg.power_flex_full.get_kpi_identifier(), unit='W', type="pd.Series",
+            description="Negative power flexibility"
         ),
         agentlib.AgentVariable(
-            name="powerflex_flex_pos", unit='W', type="pd.Series",
-            description="Positive Powerflexibility"
+            name=kpis_pos.power_flex_full.get_kpi_identifier(), unit='W', type="pd.Series",
+            description="Positive power flexibility"
         ),
         agentlib.AgentVariable(
-            name="powerflex_avg_neg", unit='kW', type="pd.Series",
-            description="Negative Average Powerflexibility"
+            name=kpis_neg.power_flex_offer.get_kpi_identifier(), unit='W', type="pd.Series",
+            description="Negative power flexibility"
         ),
         agentlib.AgentVariable(
-            name="powerflex_avg_pos", unit='kW', type="pd.Series",
-            description="Positive Average Powerflexibility"
+            name=kpis_pos.power_flex_offer.get_kpi_identifier(), unit='W', type="pd.Series",
+            description="Positive power flexibility"
         ),
         agentlib.AgentVariable(
-            name="powerflex_neg_max", unit='kW', type="pd.Series",
-            description="Negative Maximal Powerflexibility"
+            name=kpis_neg.power_flex_offer_min.get_kpi_identifier(), unit='W', type="float",
+            description="Minimum of negative power flexibility"
         ),
         agentlib.AgentVariable(
-            name="powerflex_neg_min", unit='kW', type="pd.Series",
-            description="Negative Minimal Powerflexibility"
+            name=kpis_pos.power_flex_offer_min.get_kpi_identifier(), unit='W', type="float",
+            description="Minimum of positive power flexibility"
         ),
         agentlib.AgentVariable(
-            name="powerflex_pos_max", unit='kW', type="pd.Series",
-            description="Positive Maximal Powerflexibility"
+            name=kpis_neg.power_flex_offer_max.get_kpi_identifier(), unit='W', type="float",
+            description="Maximum of negative power flexibility"
         ),
         agentlib.AgentVariable(
-            name="powerflex_pos_min", unit='kW', type="pd.Series",
-            description="Positive Minimal Powerflexibility"
+            name=kpis_pos.power_flex_offer_max.get_kpi_identifier(), unit='W', type="float",
+            description="Maximum of positive power flexibility"
         ),
         agentlib.AgentVariable(
-            name="energyflex_neg", unit='kWh', type="pd.Series",
-            description="Negative Energyflexibility"
+            name=kpis_neg.power_flex_offer_avg.get_kpi_identifier(), unit='W', type="float",
+            description="Average of negative power flexibility"
         ),
         agentlib.AgentVariable(
-            name="energyflex_pos", unit='kWh', type="pd.Series",
-            description="Positive Energyflexibility"
+            name=kpis_pos.power_flex_offer_avg.get_kpi_identifier(), unit='W', type="float",
+            description="Average of positive power flexibility"
+        ),
+
+        # Energy KPIs
+        agentlib.AgentVariable(
+            name=kpis_neg.energy_flex.get_kpi_identifier(), unit='kWh', type="float",
+            description="Negative energy flexibility"
         ),
         agentlib.AgentVariable(
-            name="costs_neg", unit='ct', type="pd.Series", description="Saved costs due to baseline"
+            name=kpis_pos.energy_flex.get_kpi_identifier(), unit='kWh', type="float",
+            description="Positive energy flexibility"
         ),
+
+        # Costs KPIs
         agentlib.AgentVariable(
-            name="costs_pos", unit='ct', type="pd.Series", description="Saved costs due to baseline"
-        ),
-        agentlib.AgentVariable(
-            name="costs_neg_rel", unit='ct/kWh', type="pd.Series",
+            name=kpis_neg.costs.get_kpi_identifier(), unit="ct", type="float",
             description="Saved costs due to baseline"
         ),
         agentlib.AgentVariable(
-            name="costs_pos_rel", unit='ct/kWh', type="pd.Series",
+            name=kpis_pos.costs.get_kpi_identifier(), unit="ct", type="float",
+            description="Saved costs due to baseline"
+        ),
+        agentlib.AgentVariable(
+            name=kpis_neg.costs_rel.get_kpi_identifier(), unit='ct/kWh', type="float",
+            description="Saved costs due to baseline"
+        ),
+        agentlib.AgentVariable(
+            name=kpis_pos.costs_rel.get_kpi_identifier(), unit='ct/kWh', type="float",
             description="Saved costs due to baseline"
         )
     ]
 
-    # TODO: don't use parameters list, but create a IndicatorSpecifications class (see market)
+
     parameters: List[agentlib.AgentVariable] = [
         agentlib.AgentVariable(name=glbs.PREP_TIME, unit="s",
                                description="Preparation time"),
@@ -92,15 +109,14 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
                                description="Market time"),
         agentlib.AgentVariable(name=glbs.FLEX_EVENT_DURATION, unit="s",
                                description="time to switch objective"),
-        agentlib.AgentVariable(name="time_step", unit="s",
+        agentlib.AgentVariable(name=glbs.TIME_STEP, unit="s",
                                description="timestep of the mpc solution"),
-        agentlib.AgentVariable(name="prediction_horizon", unit="-",
+        agentlib.AgentVariable(name=glbs.PREDICTION_HORIZON, unit="-",
                                description="prediction horizon of the mpc solution"),
-
     ]
 
     results_file: Optional[Path] = pydantic.Field(default=None)
-    # TODO: use these two
+
     save_results: Optional[bool] = pydantic.Field(validate_default=True, default=None)
     overwrite_result_file: Optional[bool] = pydantic.Field(default=False, validate_default=True)
 
@@ -112,10 +128,6 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         default="kW",
         description="Unit of the power variable"
     )
-    discretization: str = pydantic.Field(
-        default="collocation",
-        description="Name of the discretization method",
-    )
 
     shared_variable_fields: List[str] = ["outputs"]
 
@@ -123,57 +135,26 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
 class FlexibilityIndicatorModule(agentlib.BaseModule):
     config: FlexibilityIndicatorModuleConfig
 
+    data: FlexibilityData
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.var_list = []
         for variable in self.variables:
-            if variable == "FlexibilityOffer":
+            if variable == glbs.FlexibilityOffer:
                 continue
             self.var_list.append(variable.name)
         self.time = []
-        self.base_vals = None
-        self.pos_vals = None
-        self.neg_vals = None
-        self._r_pel = None
         self.in_provision = False
-        self.df = None
         self.offer_count = 0
-
-    def send_flex_offer(
-            self, name, base_power_profile, pos_price, pos_diff_profile,
-            neg_price, neg_diff_profile, timestamp: float = None):
-        """
-        Send a flex offer as an agent Variable. The first offer is dismissed,
-        because the 
-
-        Inputs:
-
-        name: name of the agent variable
-        base_power_profile: power profile from the base MPC
-        pos_price: price to provise the positive flex profile
-        pos_diff_profile: difference profile (pos flex MPC - base MPC)
-        neg_price: price to provise the negative flex profile
-        neg_diff_profile: difference profile (neg flex MPC - base MPC)
-        timestamp: the time offer was generated
-
-        """
-        if self.offer_count > 0:
-            var = self._variables_dict[name]
-            var.value = FlexOffer(
-                base_power_profile=base_power_profile,
-                pos_price=pos_price,
-                pos_diff_profile=pos_diff_profile,
-                neg_price=neg_price,
-                neg_diff_profile=neg_diff_profile
-            )
-            if timestamp is None:
-                timestamp = self.env.time
-            var.timestamp = timestamp
-            self.agent.data_broker.send_variable(
-                variable=var.copy(update={"source": self.source}),
-                copy=False,
-            )
-        self.offer_count += 1
+        self.data = FlexibilityData(
+            prep_time=self.get(glbs.PREP_TIME).value,
+            market_time=self.get(glbs.MARKET_TIME).value,
+            flex_event_duration=self.get(glbs.FLEX_EVENT_DURATION).value,
+            time_step=self.get(glbs.TIME_STEP).value,
+            prediction_horizon=self.get(glbs.PREDICTION_HORIZON).value
+        )
+        self.df = pd.DataFrame(columns=pd.Series(self.var_list))
 
     def register_callbacks(self):
         inputs = self.config.inputs
@@ -192,33 +173,37 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         if name == "in_provision":
             self.in_provision = inp.value
             if self.in_provision:
-                self.base_vals = None
-                self.neg_vals = None
-                self.pos_vals = None
-                self._r_pel = None
-        # TODO: remove hardcoded strings
+                self._set_inputs_to_none()
+
         if not self.in_provision:
-            if name == "__P_el_base":
-                self.base_vals = inp.value
-                self.base_vals = strip_multi_index(self.base_vals)
-            elif name == "__P_el_neg":
-                self.neg_vals = inp.value
-                self.neg_vals = strip_multi_index(self.neg_vals)
-            elif name == "__P_el_pos":
-                self.pos_vals = inp.value
-                self.pos_vals = strip_multi_index(self.pos_vals)
+            if name == glbs.POWER_ALIAS_BASE:
+                self.data.power_profile_base = self.data.format_mpc_inputs(inp.value)
+            elif name == glbs.POWER_ALIAS_NEG:
+                self.data.power_profile_flex_neg = self.data.format_mpc_inputs(inp.value)
+            elif name == glbs.POWER_ALIAS_POS:
+                self.data.power_profile_flex_pos = self.data.format_mpc_inputs(inp.value)
             elif name == self.config.price_variable:
                 # price comes from predictor, so no stripping needed
-                # TODO: add other sources for price signal?
-                self._r_pel = inp.value
+                self.data.power_costs_profile = self.data.format_predictor_inputs(inp.value)
 
-            if all(var is not None for var in
-                   (self.base_vals, self.neg_vals, self.pos_vals, self._r_pel)):
-                self.calc_flex()
+            if all(var is not None for var in (
+                    self.data.power_profile_base,
+                    self.data.power_profile_flex_neg,
+                    self.data.power_profile_flex_pos,
+                    self.data.power_costs_profile
+            )):
+                # Calculate the flexibility, send the offer, write and save the results
+                self.calc_and_send_offer()
+
+                # check the power profile end deviation
+                self.check_power_end_deviation(tol=0.01)
+
+                # set the values to None to reset the callback
+                self._set_inputs_to_none()
 
     def get_results(self) -> Optional[pd.DataFrame]:
         """
-        Opens results file of flexibilityindicators.py
+        Opens results file of flexibility_indicator.py
         results_file defined in __init__
         """
         results_file = self.config.results_file
@@ -245,12 +230,12 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         now = self.env.now
         for name in self.var_list:
             # Use the power variables averaged for each timestep, not the collocation values
-            if name == "__P_el_base":
-                values = self.base_vals
-            elif name == "__P_el_neg":
-                values = self.neg_vals
-            elif name == "__P_el_pos":
-                values = self.pos_vals
+            if name == glbs.POWER_ALIAS_BASE:
+                values = self.data.power_profile_base
+            elif name == glbs.POWER_ALIAS_NEG:
+                values = self.data.power_profile_flex_neg
+            elif name == glbs.POWER_ALIAS_POS:
+                values = self.data.power_profile_flex_pos
             else:
                 values = self.get(name).value
 
@@ -264,12 +249,12 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             self.time.append(now)
             new_df = pd.DataFrame(results).T
             new_df.columns = self.var_list
-            new_df.index.type = "time"
-            new_df['time_step'] = now
-            new_df.set_index(['time_step', new_df.index], inplace=True)
+            new_df.index.direction = "time"
+            new_df[glbs.TIME_STEP] = now
+            new_df.set_index([glbs.TIME_STEP, new_df.index], inplace=True)
             df = pd.concat([df, new_df])
             # set the indices once again as concat cant handle indices properly
-            indices = pd.MultiIndex.from_tuples(df.index, names=["time_step", "time"])
+            indices = pd.MultiIndex.from_tuples(df.index, names=[glbs.TIME_STEP, "time"])
             df.set_index(indices, inplace=True)
 
         return df
@@ -280,132 +265,89 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             return
         os.remove(results_file)
 
-    def calc_flex(self):
-        if self.df is None:
-            self.df = pd.DataFrame(columns=self.var_list)
-        prep_time = self.get(glbs.PREP_TIME).value
-        market_time = self.get(glbs.MARKET_TIME).value
-        switch_time = prep_time + market_time
-        flex_event_duration = self.get(glbs.FLEX_EVENT_DURATION).value
-        horizon = self.get("prediction_horizon").value
-        time_step = self.get("time_step").value
+    def calc_and_send_offer(self):
+        """
+        Calculate the flexibility KPIs for current predictions, send the flex offer and set the outputs, write and save the results.
+        """
+        # Calculate the flexibility KPIs for current predictions
+        self.data.calculate()
 
-        if self.config.power_unit == "kW":
-            scaler = 1
-        else:
-            scaler = 1000
+        # Send flex offer
+        self.send_flex_offer(
+            name=glbs.FlexibilityOffer,
+            base_power_profile=self.data.power_profile_base,
+            pos_diff_profile=self.data.kpis_pos.power_flex_offer.value,
+            pos_price=self.data.kpis_pos.costs.value,
+            neg_diff_profile=self.data.kpis_neg.power_flex_offer.value,
+            neg_price=self.data.kpis_neg.costs.value,
+        )
 
-        # generate horizons
-        # 1. for the flexibility range
-        flex_horizon = np.arange(
-            switch_time, switch_time + flex_event_duration, time_step)
-        # 2. for the full range of prediction
-        full_horizon = np.arange(
-            0, horizon * time_step, time_step)
+        # set outputs
+        for kpi in self.data.get_kpis().values():
+            for output in self.config.outputs:
+                if output.name == kpi.get_kpi_identifier():
+                    self.set(output.name, kpi.value)
 
-        if self.config.discretization == "collocation":
-            # As the collocation uses the values after each time step, the last value is always none
-            time = self.base_vals.index[:-1]
+        # write results
+        self.df = self.write_results(
+            df=self.df,
+            ts=self.get(glbs.TIME_STEP).value,
+            n=self.get(glbs.PREDICTION_HORIZON).value
+        )
 
-            # use only the values of the full time steps
-            self.base_vals = pd.Series(self.base_vals, index=time).reindex(index=full_horizon)
-            self.neg_vals = pd.Series(self.neg_vals, index=time).reindex(index=full_horizon)
-            self.pos_vals = pd.Series(self.pos_vals, index=time).reindex(index=full_horizon)
-
-        powerflex_flex_neg = []
-        for i in range(len(self.neg_vals)):
-            diff = self.neg_vals.values[i] - self.base_vals.values[i]
-
-            if diff < 0:
-                percentage_diff = (abs(diff) / self.base_vals.values[i]) * 100
-
-                if percentage_diff < 1:
-                    powerflex_flex_neg.append(0)
-                else:
-                    powerflex_flex_neg.append(diff)
-            else:
-                powerflex_flex_neg.append(diff)
-        # save this variable for the cost flexibilty
-        powerflex_flex_neg_full = pd.Series(powerflex_flex_neg, index=full_horizon)
-        # the powerflex is defined only in the flexibility region
-        powerflex_profile_neg = powerflex_flex_neg_full.reindex(index=flex_horizon)
-        powerflex_flex_neg = powerflex_profile_neg.reindex(index=full_horizon)
-        self.set("powerflex_flex_neg", powerflex_flex_neg)
-        # W -> kW
-        # TODO: units anpassen (über Agentvars?)
-        self.set("powerflex_avg_neg", str(np.average(powerflex_flex_neg.dropna()) / scaler))
-        self.set("powerflex_neg_min", str(min(powerflex_flex_neg.dropna()) / scaler))
-        self.set("powerflex_neg_max", str(max(powerflex_flex_neg.dropna()) / scaler))
-        # J -> kWh 
-        energyflex_neg = (np.sum(powerflex_flex_neg * time_step) / (3600 * scaler)).round(4)
-        self.set("energyflex_neg", str(energyflex_neg))
-
-        powerflex_flex_pos = []
-        for i in range(len(self.pos_vals)):
-            diff = self.base_vals.values[i] - self.pos_vals.values[i]
-
-            if diff < 0:
-                if self.base_vals.values[i] == 0:
-                    powerflex_flex_pos.append(diff)
-                else:
-                    percentage_diff = (abs(diff) / self.base_vals.values[i]) * 100
-
-                    if percentage_diff < 1:
-                        powerflex_flex_pos.append(0)
-                    else:
-                        powerflex_flex_pos.append(diff)
-            else:
-                powerflex_flex_pos.append(diff)
-        # save this variable for the cost flexibilty
-        powerflex_flex_pos_full = pd.Series(powerflex_flex_pos, index=full_horizon)
-
-        # the powerflex is defined only in the flexibility region
-        powerflex_profile_pos = powerflex_flex_pos_full.reindex(index=flex_horizon)
-        powerflex_flex_pos = powerflex_profile_pos.reindex(index=full_horizon)
-
-        self.set("powerflex_flex_pos", powerflex_flex_pos)
-        # W -> kW
-        self.set("powerflex_avg_pos", str(np.average(powerflex_flex_pos.dropna()) / scaler))
-        self.set("powerflex_pos_min", str(min(powerflex_flex_pos.dropna()) / scaler))
-        self.set("powerflex_pos_max", str(max(powerflex_flex_pos.dropna()) / scaler))
-        # J -> kWh 
-        energyflex_pos = (np.sum(powerflex_flex_pos * time_step) / (3600 * scaler)).round(4)
-
-        self.set("energyflex_pos", str(energyflex_pos))
-
-        elec_prices = self._r_pel.iloc[:horizon]
-        elec_prices.index = full_horizon
-        flex_price_neg = sum(powerflex_flex_neg_full * elec_prices * time_step / (3600 * scaler))
-        flex_price_pos = -1 * sum(powerflex_flex_pos_full * elec_prices * time_step / (3600 * scaler))
-
-        self.set("costs_neg", str(flex_price_neg))
-        self.set("costs_pos", str(flex_price_pos))
-
-        # Relative Flexibility Costs as deviation of absolute costs for whole prediction horizon
-        # and energy flexibility during flexibility event
-
-        if energyflex_neg == 0:
-            costs_neg_rel = 0
-        else:
-            costs_neg_rel = flex_price_neg / energyflex_neg
-
-        if energyflex_pos == 0:
-            costs_pos_rel = 0
-        else:
-            costs_pos_rel = flex_price_pos / energyflex_pos
-
-        self.set("costs_neg_rel", str(costs_neg_rel))
-        self.set("costs_pos_rel", str(costs_pos_rel))
-
-        base_profile = self.base_vals.reindex(index=flex_horizon)
-        self.send_flex_offer("FlexibilityOffer", base_profile,
-                             flex_price_pos, powerflex_profile_pos,
-                             flex_price_neg, powerflex_profile_neg)
-
-        self.df = self.write_results(df=self.df, ts=time_step, n=horizon)
+        # save results
         self.df.to_csv(self.config.results_file)
-        # set the values to None to reset the callback
-        self.base_vals = None
-        self.neg_vals = None
-        self.pos_vals = None
-        self._r_pel = None
+
+    def send_flex_offer(
+            self, name,
+            base_power_profile: pd.Series,
+            pos_diff_profile: pd.Series, pos_price: float,
+            neg_diff_profile: pd.Series, neg_price: float,
+            timestamp: float = None
+    ):
+        """
+        Send a flex offer as an agent Variable. The first offer is dismissed,
+        since the different MPCs need one time step to fully initialize.
+
+        Inputs:
+
+        name: name of the agent variable
+        indicator_data: the indicator data object
+        timestamp: the time offer was generated
+
+        """
+        if self.offer_count > 0:
+            var = self._variables_dict[name]
+            var.value = FlexOffer(
+                base_power_profile=base_power_profile,
+                pos_diff_profile=pos_diff_profile, pos_price=pos_price,
+                neg_diff_profile=neg_diff_profile, neg_price=neg_price,
+            )
+            if timestamp is None:
+                timestamp = self.env.time
+            var.timestamp = timestamp
+            self.agent.data_broker.send_variable(
+                variable=var.copy(update={"source": self.source}),
+                copy=False,
+            )
+        self.offer_count += 1
+
+    def _set_inputs_to_none(self):
+        self.data.power_profile_base = None
+        self.data.power_profile_flex_neg = None
+        self.data.power_profile_flex_pos = None
+        self.data.power_costs_profile = None
+
+    def check_power_end_deviation(self, tol: float = 0.02):
+        """
+        calculates the deviation of the final value of the power profiles and warn the user if it exceeds the tolerance
+        """
+        logger = logging.getLogger(__name__)
+        dev_pos = np.mean(self.data.power_profile_flex_pos.values[-4:] - self.data.power_profile_base.values[-4:])
+        dev_neg = np.mean(self.data.power_profile_flex_neg.values[-4:] - self.data.power_profile_base.values[-4:])
+        if abs(dev_pos) > tol:
+            logger.warning(f"There is an average deviation of {dev_pos:.6f} kW between the final four values of power profiles of positive shadow MPC and the baseline")
+        if abs(dev_neg) > tol:
+            logger.warning(f"There is an average deviation of {dev_pos:.6f} kW between the final four values of power profiles of negative shadow MPC and the baseline")
+
+

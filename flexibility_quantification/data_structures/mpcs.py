@@ -5,12 +5,12 @@ import flexibility_quantification.data_structures.globals as glbs
 import flexibility_quantification.utils.config_management as cmng
 
 
-#TODO: add validators for these
+
 class BaseMPCData(pydantic.BaseModel):
     """Base class containing necessary data for the code creation of the different mpcs
 
     """
-    # TODO: add Fields
+
     # files and paths
     created_flex_mpcs_file: str = "flex_agents.py"
     name_of_created_file: str
@@ -41,12 +41,11 @@ class BaselineMPCData(BaseMPCData):
     class_name: str = "BaselineMPCModel"
     module_id: str = "Baseline"
     # variables
-    power_alias: str = "__P_el_base"
+    power_alias: str = glbs.POWER_ALIAS_BASE
     power_variable: str = pydantic.Field(
         default="P_el",
         description="Name of the variable representing the electrical power in the baseline config",
     )
-    # TODO: add this as parameter to the mpc config rather than just writing the value in the cost function
     profile_deviation_weight: float = pydantic.Field(
         default=0,
         description="Weight of soft constraint for deviation from accepted flexible profile",
@@ -55,12 +54,14 @@ class BaselineMPCData(BaseMPCData):
         default="kW",
         description="Unit of the power variable"
     )
-    # TODO: wie mit diesen Daten umgehen? Vor Aufruf von adapt_mpc_module_config einmal diese Datenklasse initialisieren und Werte entsprechend setzen?
     config_inputs_appendix: MPCVariables = [
         MPCVariable(name="_P_external", value=0, unit="W"),
         MPCVariable(name="in_provision", value=False),
         MPCVariable(name="rel_start", value=0, unit="s"),
         MPCVariable(name="rel_end", value=0, unit="s")
+    ]
+    config_parameters_appendix: MPCVariables = [
+        MPCVariable(name=glbs.POFILE_DEVIATION_WEIGHT, value=profile_deviation_weight, unit="-")
     ]
     weights: List[MPCVariable] = pydantic.Field(
         default=[],
@@ -80,7 +81,7 @@ class PFMPCData(BaseMPCData):
     class_name: str = "PosFlexModel"
     module_id: str = "PosFlexMPC"
     # variables
-    power_alias: str = "__P_el_pos"
+    power_alias: str = glbs.POWER_ALIAS_POS
     flex_cost_function: str = pydantic.Field(
         default=None,
         description="Cost function of the PF-MPC",
@@ -112,7 +113,7 @@ class NFMPCData(BaseMPCData):
     class_name: str = "NegFlexModel"
     module_id: str = "NegFlexMPC"
     # variables
-    power_alias: str = "__P_el_neg"
+    power_alias: str = glbs.POWER_ALIAS_NEG
     flex_cost_function: str = pydantic.Field(
         default=None,
         description="Cost function of the NF-MPC",

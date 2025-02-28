@@ -11,6 +11,10 @@ from flexibility_quantification.data_structures.globals import (
     return_baseline_cost_function,
     full_trajectory_prefix,
     full_trajectory_suffix,
+    POFILE_DEVIATION_WEIGHT,
+    MARKET_TIME,
+    PREP_TIME,
+    FLEX_EVENT_DURATION
 )
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from string import Template
@@ -211,7 +215,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                 )
             # add the flex variables and the weights
             if body.target.id == "parameters":
-                for param_name in ["prep_time", "flex_event_duration", "market_time"]:
+                for param_name in [PREP_TIME, FLEX_EVENT_DURATION, MARKET_TIME]:
                     body.value.elts.append(
                         add_parameter(param_name, 0, "s", "time to switch objective")
                     )
@@ -236,8 +240,14 @@ class SetupSystemModifier(ast.NodeTransformer):
         for body in node.body:
             # add the fullcontrol trajectories to the baseline config class
             if body.target.id == "outputs":
+                if isinstance(body.value, ast.List):
+                    # Simple list case
+                    value_list = body.value
+                elif isinstance(body.value, ast.BinOp):
+                    # List concatenation case (a + b)
+                    value_list = body.value.left
                 for control in self.controls:
-                    body.value.elts.append(
+                    value_list.elts.append(
                         add_output(
                             f"{full_trajectory_prefix}{control.name}"
                             f"{full_trajectory_suffix}",
@@ -262,10 +272,16 @@ class SetupSystemModifier(ast.NodeTransformer):
                         )
             # add the flexibility inputs
             if body.target.id == "inputs":
-                body.value.elts.append(
+                if isinstance(body.value, ast.List):
+                    # Simple list case
+                    value_list = body.value
+                elif isinstance(body.value, ast.BinOp):
+                    # List concatenation case (a + b)
+                    value_list = body.value.left
+                value_list.elts.append(
                     add_input("Time", 0, "s", "time trajectory", "list")
                 )
-                body.value.elts.append(
+                value_list.elts.append(
                     add_input(
                         "_P_external",
                         0,
@@ -274,7 +290,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                         "pd.Series",
                     )
                 )
-                body.value.elts.append(
+                value_list.elts.append(
                     add_input(
                         "in_provision",
                         False,
@@ -283,7 +299,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                         "bool",
                     )
                 )
-                body.value.elts.append(
+                value_list.elts.append(
                     add_input(
                         "rel_start",
                         0,
@@ -292,7 +308,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                         "int",
                     )
                 )
-                body.value.elts.append(
+                value_list.elts.append(
                     add_input(
                         "rel_end",
                         0,
@@ -301,6 +317,12 @@ class SetupSystemModifier(ast.NodeTransformer):
                         "int",
                     )
                 )
+
+            # add the flex variables and the weights
+            if body.target.id == "parameters":
+                    body.value.elts.append(
+                        add_parameter(POFILE_DEVIATION_WEIGHT, 0, "-", "Weight of soft constraint for deviation from accepted flexible profile")
+                    )
 
     def modify_setup_system_shadow(self, node):
         """Modify the setup_system method of the shadow mpc model class.
@@ -450,8 +472,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                     ast.Return(
                         value=ast.parse(
                             return_baseline_cost_function(
-                                profile_deviation_weight=self.mpc_data.profile_deviation_weight,
-                                power_variable=self.mpc_data.power_variable,
+                                power_variable=self.mpc_data.power_variable
                             )
                         )
                         .body[0]

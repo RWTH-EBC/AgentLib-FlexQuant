@@ -57,11 +57,6 @@ class FlexibilityIndicatorConfig(pydantic.BaseModel):
 
     """
     agent_config: Union[AgentConfig, Path]
-    collocation_order: int = pydantic.Field(
-        default=0,
-        ge=0,
-        description="Order of collocation used",
-    )  # TODO: get collocation order from either Baseline config or the communicated trajectories
     name_of_created_file: str = pydantic.Field(
         default="indicator.json",
         description="Name of the config that is created by the generator",
