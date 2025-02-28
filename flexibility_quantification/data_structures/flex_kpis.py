@@ -190,7 +190,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
             flex_offer_time_grid: np.ndarray,
             stored_energy_base: pd.Series,
             stored_energy_shadow: pd.Series,
-            power_deviation_tolerance: float
+            enable_costs_correction: bool
     ):
         """
         Calculate the KPIs based on the power and electricity input profiles.
@@ -202,13 +202,11 @@ class FlexibilityKPIs(pydantic.BaseModel):
         self._calculate_energy_flex()
 
         # Costs KPIs
-        end_power_diff = numpy.mean(power_profile_shadow.values[-4:] - power_profile_base.values[-4:])
-        if abs(end_power_diff) > power_deviation_tolerance:
-            correct_cost = True
+        if enable_costs_correction:
+            stored_energy_diff = stored_energy_shadow.values[-1] - stored_energy_base.values[-1]
         else:
-            correct_cost = False
-        stored_energy_diff = stored_energy_shadow.values[-1] - stored_energy_base.values[-1]
-        self._calculate_costs(power_costs_profile=power_costs_profile, stored_energy_diff=stored_energy_diff, correct_cost=correct_cost)
+            stored_energy_diff = 0
+        self._calculate_costs(power_costs_profile=power_costs_profile, stored_energy_diff=stored_energy_diff, correct_cost=enable_costs_correction)
         self._calculate_costs_rel()
 
     def _calculate_power_flex(self, power_profile_base: pd.Series, power_profile_shadow: pd.Series,
@@ -439,7 +437,7 @@ class FlexibilityData(pydantic.BaseModel):
                              f"Series index:{series.index}")
         return series
 
-    def calculate(self, tol: float) -> [FlexibilityKPIs, FlexibilityKPIs]:
+    def calculate(self, enable_costs_correction: bool) -> [FlexibilityKPIs, FlexibilityKPIs]:
         """
         Calculate the KPIs for the positive and negative flexibility.
 
@@ -454,7 +452,7 @@ class FlexibilityData(pydantic.BaseModel):
             flex_offer_time_grid=self.flex_offer_time_grid,
             stored_energy_base=self.stored_energy_profile_base,
             stored_energy_shadow=self.stored_energy_profile_flex_pos,
-            power_deviation_tolerance=tol
+            enable_costs_correction=enable_costs_correction
         )
         self.kpis_neg.calculate(
             power_profile_base=self.power_profile_base,
@@ -464,7 +462,7 @@ class FlexibilityData(pydantic.BaseModel):
             flex_offer_time_grid=self.flex_offer_time_grid,
             stored_energy_base=self.stored_energy_profile_base,
             stored_energy_shadow=self.stored_energy_profile_flex_neg,
-            power_deviation_tolerance=tol
+            enable_costs_correction=enable_costs_correction
         )
         return self.kpis_pos, self.kpis_neg
 

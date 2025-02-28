@@ -41,7 +41,9 @@
                             "name": "r_pel",
                             "alias": "r_pel"
                         }
-                    ]
+                    ],
+                    "enable_energy_costs_correction": false,
+                    "power_deviation_tolerance": 0
                 }
             ]
         },
@@ -51,7 +53,6 @@
     "baseline_config_generator_data": {
         "power_variable": "P_el",
         "power_unit": "kW",
-        "storage_variable" : "E_stored",
         "profile_deviation_weight": 100
     },
     "shadow_mpc_config_generator_data": {
