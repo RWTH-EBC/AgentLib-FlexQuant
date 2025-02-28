@@ -456,7 +456,7 @@ class SimpleTestHall(CasadiModel):
             k_floor_roof = 0
             k_win_roof = 0
             k_roof = 0
-        # Floor # TODO
+        # Floor
         if has_floor:
             k_air_floor = self.hConFloor * self.AFloortot
             k_ext_floor = self.hRad * min(self.AFloortot.value, self.AExttot.value)

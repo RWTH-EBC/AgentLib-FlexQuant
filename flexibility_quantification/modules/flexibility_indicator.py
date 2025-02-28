@@ -101,7 +101,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         )
     ]
 
-    # TODO: don't use parameters list, but create a IndicatorSpecifications class (see market)
+
     parameters: List[agentlib.AgentVariable] = [
         agentlib.AgentVariable(name=glbs.PREP_TIME, unit="s",
                                description="Preparation time"),
@@ -116,7 +116,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
     ]
 
     results_file: Optional[Path] = pydantic.Field(default=None)
-    # TODO: use these two
+
     save_results: Optional[bool] = pydantic.Field(validate_default=True, default=None)
     overwrite_result_file: Optional[bool] = pydantic.Field(default=False, validate_default=True)
 
@@ -184,7 +184,6 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 self.data.power_profile_flex_pos = self.data.format_mpc_inputs(inp.value)
             elif name == self.config.price_variable:
                 # price comes from predictor, so no stripping needed
-                # TODO: add other sources for price signal?
                 self.data.power_costs_profile = self.data.format_predictor_inputs(inp.value)
 
             if all(var is not None for var in (

@@ -11,6 +11,10 @@ from flexibility_quantification.data_structures.globals import (
     return_baseline_cost_function,
     full_trajectory_prefix,
     full_trajectory_suffix,
+    POFILE_DEVIATION_WEIGHT,
+    MARKET_TIME,
+    PREP_TIME,
+    FLEX_EVENT_DURATION
 )
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from string import Template
@@ -211,7 +215,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                 )
             # add the flex variables and the weights
             if body.target.id == "parameters":
-                for param_name in ["prep_time", "flex_event_duration", "market_time"]:
+                for param_name in [PREP_TIME, FLEX_EVENT_DURATION, MARKET_TIME]:
                     body.value.elts.append(
                         add_parameter(param_name, 0, "s", "time to switch objective")
                     )
@@ -313,6 +317,12 @@ class SetupSystemModifier(ast.NodeTransformer):
                         "int",
                     )
                 )
+
+            # add the flex variables and the weights
+            if body.target.id == "parameters":
+                    body.value.elts.append(
+                        add_parameter(POFILE_DEVIATION_WEIGHT, 0, "-", "Weight of soft constraint for deviation from accepted flexible profile")
+                    )
 
     def modify_setup_system_shadow(self, node):
         """Modify the setup_system method of the shadow mpc model class.
@@ -462,8 +472,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                     ast.Return(
                         value=ast.parse(
                             return_baseline_cost_function(
-                                profile_deviation_weight=self.mpc_data.profile_deviation_weight,
-                                power_variable=self.mpc_data.power_variable,
+                                power_variable=self.mpc_data.power_variable
                             )
                         )
                         .body[0]
