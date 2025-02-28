@@ -156,7 +156,7 @@ class FlexAgentGenerator:
             ]:
                 raise ConfigurationError(
                     f"Given storage variable {self.flex_config.baseline_config_generator_data.storage_variable} is not defined in baseline mpc config."
-                    f"Define it in the base MPC model and config as output if the correction of costs is enabled"
+                    f"It must be defined in the base MPC model and config as output if the correction of costs is enabled"
                 )
 
         # adapt modules to include necessary communication variables
