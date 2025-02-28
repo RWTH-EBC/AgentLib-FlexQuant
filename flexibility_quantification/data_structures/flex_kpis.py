@@ -373,9 +373,9 @@ class FlexibilityData(pydantic.BaseModel):
         default=None,
         description="Profile of the stored energy w.r.t. 0K for positive flexibility",
     )
-    power_costs_profile: pd.Series = pydantic.Field(
+    electricity_price_profile: pd.Series = pydantic.Field(
         default=None,
-        description="Profile of the electricity costs",
+        description="Profile of the electricity price",
     )
 
 
@@ -447,7 +447,7 @@ class FlexibilityData(pydantic.BaseModel):
         self.kpis_pos.calculate(
             power_profile_base=self.power_profile_base,
             power_profile_shadow=self.power_profile_flex_pos,
-            power_costs_profile=self.power_costs_profile,
+            power_costs_profile=self.electricity_price_profile,
             mpc_time_grid=self.mpc_time_grid,
             flex_offer_time_grid=self.flex_offer_time_grid,
             stored_energy_base=self.stored_energy_profile_base,
@@ -457,7 +457,7 @@ class FlexibilityData(pydantic.BaseModel):
         self.kpis_neg.calculate(
             power_profile_base=self.power_profile_base,
             power_profile_shadow=self.power_profile_flex_neg,
-            power_costs_profile=self.power_costs_profile,
+            power_costs_profile=self.electricity_price_profile,
             mpc_time_grid=self.mpc_time_grid,
             flex_offer_time_grid=self.flex_offer_time_grid,
             stored_energy_base=self.stored_energy_profile_base,
