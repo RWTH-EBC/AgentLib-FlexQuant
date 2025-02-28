@@ -7,10 +7,15 @@ import pandas as pd
 from pathlib import Path
 import pydantic
 from numpy.core.numeric import infty
+# import pydantic
 
 import flexibility_quantification.data_structures.globals as glbs
 from flexibility_quantification.data_structures.flex_kpis import FlexibilityData, FlexibilityKPIs
 from flexibility_quantification.data_structures.flex_offer import FlexOffer
+
+# class CorrectedCosts(pydantic.BaseModel):
+#     enable = pydantic.Field(type=bool, name=...)
+
 
 # Pos and neg kpis to get the right names for plotting
 kpis_pos = FlexibilityKPIs(direction="positive")
@@ -33,7 +38,8 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
                                description="Energy stored in the system w.r.t. 0K"),
         agentlib.AgentVariable(name=glbs.STORED_ENERGY_ALIAS_POS, unit="kWh", type="pd.Series",
                                description="Energy stored in the system w.r.t. 0K")
-    ]
+    ] # + [agentlib.AgentVariable(name=names, unit="kWh", type="pd.Series",
+    #                            description="Energy stored in the system w.r.t. 0K") for names in glbs.corr_cost_names if self.config.enable_energy_costs_correction]
     outputs: List[agentlib.AgentVariable] = [
         # Flexibility offer
         agentlib.AgentVariable(name=glbs.FlexibilityOffer, type="FlexOffer"),
@@ -137,6 +143,8 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
                                description="timestep of the mpc solution"),
         agentlib.AgentVariable(name=glbs.PREDICTION_HORIZON, unit="-",
                                description="prediction horizon of the mpc solution"),
+        # agentlib.AgentVariable(name=glbs.POWER_DEVIATION_TOLERANCE, unit="kW", value=0.01,
+        #                        description="Tolerance within which the flexibility cost doesn't need to be corrected"),
     ]
 
     results_file: Optional[Path] = pydantic.Field(default=None)
@@ -165,6 +173,8 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         default=0.01,
         description="Absolute tolerance in kW within which the flexibility cost doesn't need to be corrected",
     )
+
+    # correct_costs: CorrectedCosts
 
 class FlexibilityIndicatorModule(agentlib.BaseModule):
     config: FlexibilityIndicatorModuleConfig

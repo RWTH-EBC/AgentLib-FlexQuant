@@ -123,3 +123,7 @@ class BaselineMPCModel(CasadiModel):
         return objective
 
 
+# if __name__ == "__main__":
+#     mdot = 0.1
+#     my_model = BaselineMPCModel()
+#     my_model.do_step(t_start=0, t_sample=10)
