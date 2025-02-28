@@ -160,7 +160,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
     enable_energy_costs_correction: bool = pydantic.Field(
         default=False,
         description="Variable determining whether to include storage variables as input for correction of the costs"
-                    "Define the storage variable 'E_stored' in the base MPC model and config as output if the correction of cost if enabled",
+                    "Define the storage variable 'E_stored' in the base MPC model and config as output if the correction of costs is enabled",
     )
 
     power_deviation_tolerance: float = pydantic.Field(
