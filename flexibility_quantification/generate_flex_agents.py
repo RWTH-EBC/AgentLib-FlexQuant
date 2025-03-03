@@ -150,7 +150,7 @@ class FlexAgentGenerator:
                 f"Given power variable {self.flex_config.baseline_config_generator_data.power_variable} is not defined in baseline mpc config."
             )
         # check if the energy storage variable exists in the mpc config
-        if indicator_module_config.enable_energy_costs_correction:
+        if indicator_module_config.correct_costs.enable_energy_costs_correction:
             if self.flex_config.baseline_config_generator_data.storage_variable not in [
                 output.name for output in self.baseline_mpc_module_config.outputs
             ]:
@@ -401,7 +401,7 @@ class FlexAgentGenerator:
                 )
             )
         # add variable for stored energy to the outputs, if not already existed
-        if self.indicator_module_config.enable_energy_costs_correction:
+        if self.indicator_module_config.correct_costs.enable_energy_costs_correction:
             output_dict[
                 self.flex_config.baseline_config_generator_data.storage_variable
             ].alias = mpc_dataclass.stored_energy_alias

@@ -7,13 +7,27 @@ import pandas as pd
 from pathlib import Path
 import pydantic
 from numpy.core.numeric import infty
-
+import pydantic
 
 import flexibility_quantification.data_structures.globals as glbs
 from flexibility_quantification.data_structures.flex_kpis import FlexibilityData, FlexibilityKPIs
 from flexibility_quantification.data_structures.flex_offer import FlexOffer
 
+class Options_for_correct_costs(pydantic.BaseModel):
+    enable_energy_costs_correction: bool = pydantic.Field(
+        name="enable_energy_costs_correction",
+        type=bool,
+        default=False,
+        description="Variable determining whether to include storage variables as input for correction of the costs"
+                    "Define the storage variable 'E_stored' in the base MPC model and config as output if the correction of costs is enabled",
+    )
 
+    absolute_power_deviation_tolerance: float = pydantic.Field(
+        name="absolute_power_deviation_tolerance",
+        type=float,
+        default=0.01,
+        description="Absolute tolerance in kW within which the flexibility cost doesn't need to be corrected",
+    )
 
 # Pos and neg kpis to get the right names for plotting
 kpis_pos = FlexibilityKPIs(direction="positive")
@@ -159,16 +173,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
 
     shared_variable_fields: List[str] = ["outputs"]
 
-    enable_energy_costs_correction: bool = pydantic.Field(
-        default=False,
-        description="Variable determining whether to include storage variables as input for correction of the costs"
-                    "Define the storage variable 'E_stored' in the base MPC model and config as output if the correction of costs is enabled",
-    )
-
-    absolute_power_deviation_tolerance: float = pydantic.Field(
-        default=0.01,
-        description="Absolute tolerance in kW within which the flexibility cost doesn't need to be corrected",
-    )
+    correct_costs: Options_for_correct_costs
 
 class FlexibilityIndicatorModule(agentlib.BaseModule):
     config: FlexibilityIndicatorModuleConfig
@@ -235,7 +240,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                                              self.data.power_profile_flex_neg,
                                              self.data.power_profile_flex_pos,
                                              self.data.electricity_price_profile]
-            if self.config.enable_energy_costs_correction:
+            if self.config.correct_costs.enable_energy_costs_correction:
                 necessary_input_for_calc_flex.extend(
                                                 [self.data.stored_energy_profile_base,
                                                  self.data.stored_energy_profile_flex_neg,
@@ -246,7 +251,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 self.calc_and_send_offer()
 
                 # check the power profile end deviation
-                self.check_power_end_deviation(tol=self.config.absolute_power_deviation_tolerance)
+                self.check_power_end_deviation(tol=self.config.correct_costs.absolute_power_deviation_tolerance)
 
                 # set the values to None to reset the callback
                 self._set_inputs_to_none()
@@ -314,7 +319,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             df.set_index(indices, inplace=True)
 
         # add columns "within_boundary_pos(neg)" to show if the power profiles of the baseline and shadow MPC meet each other by the end of the trajectory
-        if self.config.enable_energy_costs_correction:
+        if self.config.correct_costs.enable_energy_costs_correction:
             df['positive_within_boundary'] = np.where(df[kpis_pos.costs.get_kpi_identifier()].isna(),
                                                       np.nan,
                                                       df[kpis_pos.corrected_costs.get_kpi_identifier()] == df[kpis_pos.costs.get_kpi_identifier()])
@@ -338,7 +343,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         Calculate the flexibility KPIs for current predictions, send the flex offer and set the outputs, write and save the results.
         """
         # Calculate the flexibility KPIs for current predictions
-        self.data.calculate(enable_energy_costs_correction=self.config.enable_energy_costs_correction)
+        self.data.calculate(enable_energy_costs_correction=self.config.correct_costs.enable_energy_costs_correction)
 
         # Send flex offer
         self.send_flex_offer(
