@@ -9,6 +9,8 @@ FLEX_EVENT_DURATION = "flex_event_duration"
 TIME_STEP = "time_step"
 PREDICTION_HORIZON = "prediction_horizon"
 FlexibilityOffer = "FlexibilityOffer"
+HEATING = "heating"
+COOLING = "cooling"
 
 FlexibilityDirections = Literal["positive", "negative"]
 

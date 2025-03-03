@@ -5,29 +5,41 @@ import agentlib
 import numpy as np
 import pandas as pd
 from pathlib import Path
-import pydantic
+from pydantic import BaseModel, Field, field_validator
 from numpy.core.numeric import infty
-import pydantic
+
 
 import flexibility_quantification.data_structures.globals as glbs
 from flexibility_quantification.data_structures.flex_kpis import FlexibilityData, FlexibilityKPIs
 from flexibility_quantification.data_structures.flex_offer import FlexOffer
 
-class Options_for_correct_costs(pydantic.BaseModel):
-    enable_energy_costs_correction: bool = pydantic.Field(
+class Inputs_for_correct_flex_costs(BaseModel):
+    enable_energy_costs_correction: bool = Field(
         name="enable_energy_costs_correction",
-        type=bool,
         default=False,
         description="Variable determining whether to include storage variables as input for correction of the costs"
-                    "Define the storage variable 'E_stored' in the base MPC model and config as output if the correction of costs is enabled",
+                    "Define the storage variable 'E_stored' in the base MPC model and config as output if the correction of costs is enabled"
     )
 
-    absolute_power_deviation_tolerance: float = pydantic.Field(
+    absolute_power_deviation_tolerance: float = Field(
         name="absolute_power_deviation_tolerance",
-        type=float,
-        default=0.01,
-        description="Absolute tolerance in kW within which the flexibility cost doesn't need to be corrected",
+        default=infty,
+        description="Absolute tolerance in kW within which the flexibility cost doesn't need to be corrected"
     )
+
+    temp_control_mode: str = Field(
+        name="temp_control_mode",
+        default=glbs.HEATING,
+        description="Variable indicating whether it is a heating or cooling case"
+    )
+
+    @field_validator('temp_control_mode', mode='after')
+    @classmethod
+    def check_temp_control_mode(cls, value: str) -> str:
+        if value.lower() not in [glbs.HEATING, glbs.COOLING]:
+            raise ValueError(f'{value} is not a valid temperature control mode description. Please use one of {glbs.HEATING, glbs.COOLING} in the flex config.')
+        return value
+
 
 # Pos and neg kpis to get the right names for plotting
 kpis_pos = FlexibilityKPIs(direction="positive")
@@ -157,23 +169,23 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
                                description="prediction horizon of the mpc solution")
     ]
 
-    results_file: Optional[Path] = pydantic.Field(default=None)
+    results_file: Optional[Path] = Field(default=None)
     # TODO: use these two
-    save_results: Optional[bool] = pydantic.Field(validate_default=True, default=None)
-    overwrite_result_file: Optional[bool] = pydantic.Field(default=False, validate_default=True)
+    save_results: Optional[bool] = Field(validate_default=True, default=None)
+    overwrite_result_file: Optional[bool] = Field(default=False, validate_default=True)
 
-    price_variable: str = pydantic.Field(
+    price_variable: str = Field(
         default="r_pel",
         description="Name of the price variable send by a predictor",
     )
-    power_unit: str = pydantic.Field(
+    power_unit: str = Field(
         default="kW",
         description="Unit of the power variable"
     )
 
     shared_variable_fields: List[str] = ["outputs"]
 
-    correct_costs: Options_for_correct_costs
+    correct_costs: Inputs_for_correct_flex_costs
 
 class FlexibilityIndicatorModule(agentlib.BaseModule):
     config: FlexibilityIndicatorModuleConfig
@@ -343,7 +355,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         Calculate the flexibility KPIs for current predictions, send the flex offer and set the outputs, write and save the results.
         """
         # Calculate the flexibility KPIs for current predictions
-        self.data.calculate(enable_energy_costs_correction=self.config.correct_costs.enable_energy_costs_correction)
+        self.data.calculate(enable_energy_costs_correction=self.config.correct_costs.enable_energy_costs_correction, temp_control_mode=self.config.correct_costs.temp_control_mode)
 
         # Send flex offer
         self.send_flex_offer(
