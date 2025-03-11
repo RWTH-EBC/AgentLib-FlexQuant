@@ -46,7 +46,7 @@ class FlexOffer(BaseModel):
         description="Power profile for the negative difference",
     )
     status: OfferStatus = pydantic.Field(
-        default=OfferStatus.not_accepted,
+        default=OfferStatus.not_accepted.value,
         scalar=True,
         description="Status of the FlexOffer",
     )

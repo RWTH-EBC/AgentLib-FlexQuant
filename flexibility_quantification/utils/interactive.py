@@ -16,6 +16,7 @@ import flexibility_quantification.data_structures.globals as glbs
 import flexibility_quantification.data_structures.flex_results as flex_results
 from flexibility_quantification.data_structures.flexquant import FlexQuantConfig
 from flexibility_quantification.data_structures.flex_kpis import FlexibilityKPIs
+from flexibility_quantification.data_structures.flex_offer import OfferStatus
 
 
 class CustomBound:
@@ -254,11 +255,14 @@ class Dashboard(flex_results.Results):
         def mark_characteristic_times_of_accepted_offers(fig: go.Figure) -> go.Figure:
             """ Add markers of the characteristic times for accepted offers to the plot
             """
-            df_accepted_offers = self.df_market["status"].str.contains(pat="OfferStatus.accepted")
-            for i in df_accepted_offers.index.to_list():
-                if df_accepted_offers[i]:
-                    fig = mark_characteristic_times(fig=fig, offer_time=i[0], line_prop=self.LINE_PROPERTIES[self.characteristic_times_accepted_key])
-            return fig
+            if self.df_market:
+                if self.df_market["status"].isin([OfferStatus.accepted_negative.value,
+                                                  OfferStatus.accepted_positive.value]).any():
+                    df_accepted_offers = self.df_market["status"].str.contains(pat="OfferStatus.accepted")
+                    for i in df_accepted_offers.index.to_list():
+                        if df_accepted_offers[i]:
+                            fig = mark_characteristic_times(fig=fig, offer_time=i[0], line_prop=self.LINE_PROPERTIES[self.characteristic_times_accepted_key])
+                    return fig
 
         # Master plotting function
         def create_plot(
