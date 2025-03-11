@@ -125,11 +125,11 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                 if self.random_generator.random() < self.config.market_specs.options.pos_neg_rate:
                     if np.average(offer.pos_diff_profile) > self.config.market_specs.minimum_average_flex:
                         profile = offer.base_power_profile - offer.pos_diff_profile
-                        offer.status = OfferStatus.accepted_positive
+                        offer.status = OfferStatus.accepted_positive.value
 
                 elif np.average(offer.neg_diff_profile) > self.config.market_specs.minimum_average_flex:
                     profile = offer.base_power_profile + offer.neg_diff_profile
-                    offer.status = OfferStatus.accepted_negative
+                    offer.status = OfferStatus.accepted_negative.value
 
                 if profile is not None:
                     profile = profile.dropna()
@@ -154,11 +154,11 @@ class FlexibilityMarketModule(agentlib.BaseModule):
             if self.config.market_specs.options.direction == "positive":
                 if np.average(offer.pos_diff_profile) > self.config.market_specs.minimum_average_flex:
                     profile = offer.base_power_profile - offer.pos_diff_profile
-                    offer.status = OfferStatus.accepted_positive
+                    offer.status = OfferStatus.accepted_positive.value
 
             elif np.average(offer.neg_diff_profile) > self.config.market_specs.minimum_average_flex:
                 profile = offer.base_power_profile + offer.neg_diff_profile
-                offer.status = OfferStatus.accepted_negative
+                offer.status = OfferStatus.accepted_negative.value
 
             if profile is not None:
                 profile = profile.dropna()

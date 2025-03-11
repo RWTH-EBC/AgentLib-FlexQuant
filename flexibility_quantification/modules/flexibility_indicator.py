@@ -350,4 +350,3 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         if abs(dev_neg) > tol:
             logger.warning(f"There is an average deviation of {dev_pos:.6f} kW between the final four values of power profiles of negative shadow MPC and the baseline")
 
-
