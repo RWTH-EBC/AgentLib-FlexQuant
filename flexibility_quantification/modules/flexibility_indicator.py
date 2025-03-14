@@ -122,7 +122,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
 
     price_variable: str = pydantic.Field(
         default="r_pel",
-        description="Name of the price variable send by a predictor",
+        description="Name of the price variable sent by a predictor",
     )
     power_unit: str = pydantic.Field(
         default="kW",
