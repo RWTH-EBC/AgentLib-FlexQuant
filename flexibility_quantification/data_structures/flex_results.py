@@ -88,7 +88,7 @@ class Results:
     def __init__(
         self,
         flex_config: Union[str, FilePath, FlexQuantConfig],
-        simulator_agent_config: Union[str, FilePath, AgentConfig],
+        simulator_agent_config: Union[str, FilePath],
         results: Union[str, FilePath, dict[str, dict[str, pd.DataFrame]]] = None,
         to_timescale: TimeConversionTypes = "seconds",
     ):
@@ -122,12 +122,15 @@ class Results:
                 ).name_of_created_file
 
         # load the agent and module configs
-        self.simulator_agent_config = load_config.load_config(
-            config=simulator_agent_config, config_type=AgentConfig
-        )
-        self.simulator_module_config = cmng.get_module(
-            config=self.simulator_agent_config, module_type=cmng.SIMULATOR_CONFIG_TYPE
-        )
+        # (don't validate config, as result file is deleted in simulator validator)
+        with open(simulator_agent_config, "r") as f:
+            sim_config = json.load(f)
+        self.simulator_agent_config = AgentConfig.construct(**sim_config)
+        for module in self.simulator_agent_config.modules:
+            if module["type"] == "simulator":
+                self.simulator_module_config = SimulatorConfig.construct(**module)
+        if not self.simulator_module_config:
+            raise ValueError("No simulator module in provided simulator config")
 
         for file_path in Path(self.generator_config.path_to_flex_files).rglob("*.json"):
             if file_path.name in config_filename_baseline:
@@ -293,19 +296,14 @@ class Results:
                 self.indicator_module_config.module_id: load_indicator(
                     Path(res_path, Path(self.indicator_module_config.results_file).name)
                 )
-            },
-            self.market_agent_config.id: (
-                {
-                    self.market_module_config.module_id: load_market(
-                        Path(
-                            res_path, Path(self.market_module_config.results_file).name
-                        )
-                    )
-                }
-                if self.generator_config.market_config
-                else pd.DataFrame()
-            ),
+            }
         }
+        if self.generator_config.market_config:
+            res[self.market_agent_config.id] = {
+                self.market_module_config.module_id: load_market(
+                    Path(res_path, Path(self.market_module_config.results_file).name)
+                )
+            }
         return res
 
     def convert_timescale_of_dataframe_index(self, to_timescale: TimeConversionTypes):
