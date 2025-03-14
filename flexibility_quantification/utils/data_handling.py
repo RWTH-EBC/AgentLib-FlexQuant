@@ -26,25 +26,24 @@ def fill_nans(series: pd.Series, method: FillNansMethods) -> pd.Series:
         raise ValueError(f"NaN values are still present in the series after filling them with the method {method}\n{series}")
     return series
 
-#bugged
 def _set_mean_values(series: pd.Series) -> pd.Series:
     """ Fills intervals including the nan with the mean of the following values. """
     def _get_intervals_for_mean(s: pd.Series) -> list[pd.Interval]:
         intervals = []
         start = None
-        #for-loop modified: working correctly
         for index, value in s.items():
             if pd.isna(value):
-                if start is None:
+                if pd.isna(start):
                     start = index
-            else:
-                if start is not None:
-                    intervals.append(pd.Interval(left=start, right=index, closed="left"))
-                    start = None
+                else:
+                    end = index
+                    intervals.append(pd.Interval(left=start, right=end, closed="left"))
+                    start = end
         return intervals
-    #for loop modified: working correctly
+
     for interval in _get_intervals_for_mean(series):
-        series.loc[interval.left:interval.right-1] = series.loc[interval.right:].mean(skipna=True)
+        interval_index = (interval.left <= series.index) & (series.index < interval.right)
+        series[interval.left] = series[interval_index].mean(skipna=True)
 
     # remove last entry if nan, e.g. with collocation
     if pd.isna(series.iloc[-1]):
