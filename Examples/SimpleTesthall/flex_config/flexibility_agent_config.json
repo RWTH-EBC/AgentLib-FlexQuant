@@ -56,15 +56,14 @@
                     "module_id": "FlexibilityMarket",
                     "type": "flexibility_quantification.flexibility_market",
                     "results_file": "results/flexibility_market_results.csv",
-                  "time_step": 900,
-                  "market_specs": {
-                    "type": "random",
-                    "cooldown": 6,
-                    "minimum_average_flex": 0,
-                    "options": {
-                      "random_seed": 1,
-                      "pos_neg_rate": 1,
-                      "offer_acceptance_rate": 0.1
+                    "market_specs": {
+                        "type": "random",
+                        "cooldown": 6,
+                        "minimum_average_flex": 0,
+                        "options": {
+                          "random_seed": 1,
+                          "pos_neg_rate": 1,
+                          "offer_acceptance_rate": 0.1
                     }
                   }
                 }
@@ -74,7 +73,8 @@
         "name_of_created_file": "flexibility_market.json"
     },
     "baseline_config_generator_data": {
-        "power_variable": "P_el"
+        "power_variable": "P_el",
+        "profile_deviation_weight": 100
     },
     "shadow_mpc_config_generator_data": {
         "weights": [{"name": "s_P", "value": 10}],

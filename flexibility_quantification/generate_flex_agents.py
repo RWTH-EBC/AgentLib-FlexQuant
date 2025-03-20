@@ -119,8 +119,7 @@ class FlexAgentGenerator:
         Power variable must be defined in the mpc config.
 
         """
-        # TODO: Add validation (e.g. price is the same for indicator and mpc_config).
-        #  Otherwise throw warning or make assumptions
+
         # adapt modules to include necessary communication variables and dump jsons of the agents including the adapted module configs
         indicator_module_config = self.adapt_indicator_config(
             module_config=self.indicator_module_config
@@ -143,6 +142,8 @@ class FlexAgentGenerator:
             )
 
         # check if the power variable exists in the mpc config
+
+
         if self.flex_config.baseline_config_generator_data.power_variable not in [
             output.name for output in self.baseline_mpc_module_config.outputs
         ]:
@@ -422,6 +423,8 @@ class FlexAgentGenerator:
         for var in mpc_dataclass.config_parameters_appendix:
             if var.name in self.flex_config.model_fields:
                 var.value = getattr(self.flex_config, var.name)
+            if var.name in self.flex_config.baseline_config_generator_data.model_fields:
+                var.value = getattr(self.flex_config.baseline_config_generator_data, var.name)
         module_config.parameters.extend(mpc_dataclass.config_parameters_appendix)
 
         # freeze the config again
@@ -467,10 +470,6 @@ class FlexAgentGenerator:
             if field in self.market_module_config.__fields__.keys():
                 module_config.__setattr__(
                     field, getattr(self.market_module_config, field)
-                )
-            if field == "time_step":
-                module_config.__setattr__(
-                    field, self.baseline_mpc_module_config.time_step
                 )
         module_config.results_file = Path(
             Path(self.orig_mpc_module_config.optimization_backend["results_file"]).parent,

@@ -5,12 +5,12 @@ import flexibility_quantification.data_structures.globals as glbs
 import flexibility_quantification.utils.config_management as cmng
 
 
-#TODO: add validators for these
+
 class BaseMPCData(pydantic.BaseModel):
     """Base class containing necessary data for the code creation of the different mpcs
 
     """
-    # TODO: add Fields
+
     # files and paths
     created_flex_mpcs_file: str = "flex_agents.py"
     name_of_created_file: str
@@ -52,7 +52,6 @@ class BaselineMPCData(BaseMPCData):
         default="E_stored",
         description="Name of the variable representing the stored energy w.r.t. 0K in the baseline config",
     )
-    # TODO: add this as parameter to the mpc config rather than just writing the value in the cost function
     profile_deviation_weight: float = pydantic.Field(
         default=0,
         description="Weight of soft constraint for deviation from accepted flexible profile",
@@ -61,12 +60,14 @@ class BaselineMPCData(BaseMPCData):
         default="kW",
         description="Unit of the power variable"
     )
-    # TODO: wie mit diesen Daten umgehen? Vor Aufruf von adapt_mpc_module_config einmal diese Datenklasse initialisieren und Werte entsprechend setzen?
     config_inputs_appendix: MPCVariables = [
         MPCVariable(name="_P_external", value=0, unit="W"),
         MPCVariable(name="in_provision", value=False),
         MPCVariable(name="rel_start", value=0, unit="s"),
         MPCVariable(name="rel_end", value=0, unit="s")
+    ]
+    config_parameters_appendix: MPCVariables = [
+        MPCVariable(name=glbs.POFILE_DEVIATION_WEIGHT, value=profile_deviation_weight, unit="-")
     ]
     weights: List[MPCVariable] = pydantic.Field(
         default=[],

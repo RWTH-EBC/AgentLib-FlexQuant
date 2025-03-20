@@ -267,7 +267,7 @@ class PredictorModule(al.BaseModule):
                                          self.disturbances["Q_RadSol_or_2"] +
                                          self.disturbances["Q_RadSol_or_3"] +
                                          self.disturbances["Q_RadSol_or_4"])
-        self.mapping_disturbances["Q_RadSol"] = "Q_RadSol"  # TODO: tidy up
+        self.mapping_disturbances["Q_RadSol"] = "Q_RadSol"
         del self.mapping_disturbances["Q_RadSol_or_1"]
         del self.mapping_disturbances["Q_RadSol_or_2"]
         del self.mapping_disturbances["Q_RadSol_or_3"]
