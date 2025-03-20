@@ -16,20 +16,18 @@ from flexibility_quantification.data_structures.flex_offer import FlexOffer
 class Inputs_for_correct_flex_costs(BaseModel):
     enable_energy_costs_correction: bool = Field(
         name="enable_energy_costs_correction",
-        default=False,
         description="Variable determining whether to include storage variables as input for correction of the costs"
                     "Define the storage variable 'E_stored' in the base MPC model and config as output if the correction of costs is enabled"
     )
 
     absolute_power_deviation_tolerance: float = Field(
         name="absolute_power_deviation_tolerance",
-        default=infty,
-        description="Absolute tolerance in kW within which the flexibility cost doesn't need to be corrected"
+        default= 0.1,
+        description="Absolute tolerance in kW within which no warning is thrown"
     )
 
     temp_control_mode: str = Field(
         name="temp_control_mode",
-        default=glbs.HEATING,
         description="Variable indicating whether it is a heating or cooling case"
     )
 
@@ -108,6 +106,14 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         agentlib.AgentVariable(
             name=kpis_pos.power_flex_offer_avg.get_kpi_identifier(), unit='W', type="float",
             description="Average of positive power flexibility"
+        ),
+        agentlib.AgentVariable(
+            name=kpis_neg.power_flex_within_boundary.get_kpi_identifier(), unit='-', type="bool",
+            description="Variable indicating whether the baseline power and flex power align at the horizon end"
+        ),
+        agentlib.AgentVariable(
+            name=kpis_pos.power_flex_within_boundary.get_kpi_identifier(), unit='-', type="bool",
+            description="Variable indicating whether the baseline power and flex power align at the horizon end"
         ),
 
         # Energy KPIs
@@ -259,11 +265,13 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                                                  self.data.stored_energy_profile_flex_pos])
 
             if all(var is not None for var in necessary_input_for_calc_flex):
-                # Calculate the flexibility, send the offer, write and save the results
-                self.calc_and_send_offer()
 
                 # check the power profile end deviation
-                self.check_power_end_deviation(tol=self.config.correct_costs.absolute_power_deviation_tolerance)
+                if not self.config.correct_costs.enable_energy_costs_correction:
+                    self.check_power_end_deviation(tol=self.config.correct_costs.absolute_power_deviation_tolerance)
+
+                # Calculate the flexibility, send the offer, write and save the results
+                self.calc_and_send_offer()
 
                 # set the values to None to reset the callback
                 self._set_inputs_to_none()
@@ -330,18 +338,6 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             indices = pd.MultiIndex.from_tuples(df.index, names=[glbs.TIME_STEP, "time"])
             df.set_index(indices, inplace=True)
 
-        # add columns "within_boundary_pos(neg)" to show if the power profiles of the baseline and shadow MPC meet each other by the end of the trajectory
-        if self.config.correct_costs.enable_energy_costs_correction:
-            df['positive_within_boundary'] = np.where(df[kpis_pos.costs.get_kpi_identifier()].isna(),
-                                                      np.nan,
-                                                      df[kpis_pos.corrected_costs.get_kpi_identifier()] == df[kpis_pos.costs.get_kpi_identifier()])
-            df['positive_within_boundary'] = df['positive_within_boundary'].astype('boolean')
-
-            df['negative_within_boundary'] = np.where(df[kpis_neg.costs.get_kpi_identifier()].isna(),
-                                                      np.nan,
-                                                      df[kpis_neg.corrected_costs.get_kpi_identifier()] == df[kpis_neg.costs.get_kpi_identifier()])
-            df['negative_within_boundary'] = df['negative_within_boundary'].astype('boolean')
-
         return df
 
     def cleanup_results(self):
@@ -369,9 +365,10 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
 
         # set outputs
         for kpi in self.data.get_kpis().values():
-            for output in self.config.outputs:
-                if output.name == kpi.get_kpi_identifier():
-                    self.set(output.name, kpi.value)
+            if kpi.get_kpi_identifier() not in [kpis_pos.power_flex_within_boundary.get_kpi_identifier(), kpis_neg.power_flex_within_boundary.get_kpi_identifier()]:
+                for output in self.config.outputs:
+                    if output.name == kpi.get_kpi_identifier():
+                        self.set(output.name, kpi.value)
 
         # write results
         self.df = self.write_results(
@@ -435,7 +432,12 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         dev_neg = np.mean(self.data.power_profile_flex_neg.values[-4:] - self.data.power_profile_base.values[-4:])
         if abs(dev_pos) > tol:
             logger.warning(f"There is an average deviation of {dev_pos:.6f} kW between the final values of power profiles of positive shadow MPC and the baseline. Correction of energy costs might be necessary.")
+            self.set(kpis_pos.power_flex_within_boundary.get_kpi_identifier(), False)
+        else:
+            self.set(kpis_pos.power_flex_within_boundary.get_kpi_identifier(), True)
         if abs(dev_neg) > tol:
             logger.warning(f"There is an average deviation of {dev_pos:.6f} kW between the final values of power profiles of negative shadow MPC and the baseline. Correction of energy costs might be necessary.")
-
+            self.set(kpis_neg.power_flex_within_boundary.get_kpi_identifier(), False)
+        else:
+            self.set(kpis_neg.power_flex_within_boundary.get_kpi_identifier(), True)
 

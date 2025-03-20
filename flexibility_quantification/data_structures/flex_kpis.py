@@ -136,6 +136,13 @@ class FlexibilityKPIs(pydantic.BaseModel):
         ),
         description="Energy flexibility equals the integral of the power flexibility",
     )
+    power_flex_within_boundary: KPI = pydantic.Field(
+        default=KPI(
+            name="power_flex_within_boundary",
+            unit="-"
+        ),
+        description="Variable indicating whether the baseline power and flex power align at the horizon end",
+    )
 
     # Costs KPIs
     time_specific_costs_series: KPISeries = pydantic.Field(
