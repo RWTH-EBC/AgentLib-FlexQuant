@@ -400,7 +400,7 @@ class FlexAgentGenerator:
                     alias=mpc_dataclass.power_alias,
                 )
             )
-        # add variable for stored energy to the outputs, if not already existed
+        # add or change alias for stored energy variable
         if self.indicator_module_config.correct_costs.enable_energy_costs_correction:
             output_dict[
                 self.flex_config.baseline_config_generator_data.storage_variable

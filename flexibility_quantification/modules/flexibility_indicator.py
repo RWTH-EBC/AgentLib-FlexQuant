@@ -15,7 +15,7 @@ from flexibility_quantification.data_structures.flex_offer import FlexOffer
 class Inputs_for_correct_flex_costs(BaseModel):
     enable_energy_costs_correction: bool = Field(
         name="enable_energy_costs_correction",
-        description="Variable determining whether to include storage variables as input for correction of the costs"
+        description="Variable determining whether to correct the costs of the flexible energy"
                     "Define the storage variable 'E_stored' in the base MPC model and config as output if the correction of costs is enabled"
     )
 
@@ -152,11 +152,11 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         ),
         agentlib.AgentVariable(
             name=kpis_neg.corrected_costs_rel.get_kpi_identifier(), unit='ct/kWh', type="float",
-            description="Corrected saved costs due to baseline"
+            description="Corrected saved costs per energy due to baseline"
         ),
         agentlib.AgentVariable(
             name=kpis_pos.corrected_costs_rel.get_kpi_identifier(), unit='ct/kWh', type="float",
-            description="Corrected saved costs due to baseline"
+            description="Corrected saved costs per energy due to baseline"
         )
     ]
 
