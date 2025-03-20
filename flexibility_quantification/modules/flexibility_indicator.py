@@ -6,7 +6,6 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 from pydantic import BaseModel, Field, field_validator
-from numpy.core.numeric import infty
 
 
 import flexibility_quantification.data_structures.globals as glbs
