@@ -107,7 +107,6 @@ class Dashboard(flex_results.Results):
         # Flexibility kpis
         self.plotting_variables.append(kpis_pos.energy_flex.name)
         self.plotting_variables.append(kpis_pos.costs.name)
-        self.plotting_variables.append(kpis_pos.corrected_costs.name)
         # for kpi in kpis_pos.get_kpi_dict(direction_name=False).values():
         #     if not isinstance(kpi.value, pd.Series):
         #         self.plotting_variables.append(kpi.name)

@@ -294,7 +294,6 @@ class SimpleTestHallModelConfig(CasadiModelConfig):
 
     outputs: List[CasadiOutput] = [
         CasadiOutput(name="P_el_c", unit='W'),
-        CasadiOutput(name="E_stored", unit='kWh'),
         CasadiOutput(name="q_tabs_del_out", unit='W', value=0),
         CasadiOutput(name="T_out", unit='K'),
         CasadiOutput(name="T_Win_sur", value=293.15, unit="K", description="Surface Temperature on the inside of the window"),
@@ -590,9 +589,6 @@ class SimpleTestHall(CasadiModel):
         self.Q_ahu_abs.alg = ca.fabs(self.Q_Ahu.sym)
         self.Q_tabs_abs.alg = ca.fabs(self.Q_Tabs_set_del.sym)
         self.P_el_c.alg = (ca.fabs(self.Q_Ahu.sym) + ca.fabs(self.Q_Tabs_set_del.sym)) / self.COP
-        self.E_stored.alg = ((self.T_Air*c_air + self.T_Roof*CRoof + self.T_Floor*CFloor
-                              + self.T_ExtWall*CExt + self.T_IntWall*CInt + self.T_Tabs*c_tabs)
-                              / (3600 * 1000))  # stored energy in kWh
 
         # endregion
 
