@@ -25,19 +25,6 @@ class Inputs_for_correct_flex_costs(BaseModel):
         description="Absolute tolerance in kW within which no warning is thrown"
     )
 
-    temp_control_mode: str = Field(
-        name="temp_control_mode",
-        description="Variable indicating whether it is a heating or cooling case"
-    )
-
-    @field_validator('temp_control_mode', mode='after')
-    @classmethod
-    def check_temp_control_mode(cls, value: str) -> str:
-        if value.lower() not in [glbs.HEATING, glbs.COOLING]:
-            raise ValueError(f'{value} is not a valid temperature control mode description. Please use one of {glbs.HEATING, glbs.COOLING} in the flex config.')
-        return value
-
-
 # Pos and neg kpis to get the right names for plotting
 kpis_pos = FlexibilityKPIs(direction="positive")
 kpis_neg = FlexibilityKPIs(direction="negative")
@@ -349,7 +336,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         Calculate the flexibility KPIs for current predictions, send the flex offer and set the outputs, write and save the results.
         """
         # Calculate the flexibility KPIs for current predictions
-        self.data.calculate(enable_energy_costs_correction=self.config.correct_costs.enable_energy_costs_correction, temp_control_mode=self.config.correct_costs.temp_control_mode)
+        self.data.calculate(enable_energy_costs_correction=self.config.correct_costs.enable_energy_costs_correction)
 
         # Send flex offer
         self.send_flex_offer(

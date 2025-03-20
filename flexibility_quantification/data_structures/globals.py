@@ -10,8 +10,6 @@ POFILE_DEVIATION_WEIGHT = "profile_deviation_weight"
 TIME_STEP = "time_step"
 PREDICTION_HORIZON = "prediction_horizon"
 FlexibilityOffer = "FlexibilityOffer"
-HEATING = "heating"
-COOLING = "cooling"
 
 FlexibilityDirections = Literal["positive", "negative"]
 
