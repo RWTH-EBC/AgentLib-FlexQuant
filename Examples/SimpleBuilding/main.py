@@ -1,9 +1,3 @@
-import os
-import sys
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-
-from pathlib import Path
 import logging
 from flexibility_quantification.generate_flex_agents import FlexAgentGenerator
 from agentlib.utils.multi_agent_system import LocalMASAgency
@@ -15,8 +9,6 @@ until = 3600 * 24
 ENV_CONFIG = {"rt": False, "factor": 0.002, "t_sample": 1} 
 
 def run_example(until=until):
-
-    os.chdir(Path(__file__).parent)
 
     mpc_config = "mpc_and_sim/simple_model.json"
     sim_config = "mpc_and_sim/fmu_config.json" 
