@@ -213,7 +213,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
             stored_energy_diff = stored_energy_shadow.values[-1] - stored_energy_base.values[-1]
         else:
             stored_energy_diff = 0
-        self._calculate_costs(electricity_price_signal=electricity_price_profile, stored_energy_diff=stored_energy_diff, correct_cost=enable_energy_costs_correction)
+        self._calculate_costs(electricity_price_signal=electricity_price_profile, stored_energy_diff=stored_energy_diff)
         self._calculate_costs_rel()
 
     def _calculate_power_flex(self, power_profile_base: pd.Series, power_profile_shadow: pd.Series,
@@ -279,7 +279,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         self.energy_flex.value = energy_flex
         return energy_flex
 
-    def _calculate_costs(self, electricity_price_signal: pd.Series, stored_energy_diff: float, correct_cost: bool) -> [float, pd.Series]:
+    def _calculate_costs(self, electricity_price_signal: pd.Series, stored_energy_diff: float) -> [float, pd.Series]:
         """
         Calculate the costs of the flexibility event based on the electricity costs profile and the power flexibility profile.
         """
@@ -291,9 +291,9 @@ class FlexibilityKPIs(pydantic.BaseModel):
         costs = abs(self.time_specific_costs_series.integrate(time_unit="hours"))
         corrected_costs = costs
 
-        # correct the costs if desired
-        if correct_cost:
-            corrected_costs = costs - stored_energy_diff * np.mean(electricity_price_signal)
+        # correct the costs
+        corrected_costs = costs - stored_energy_diff * np.mean(electricity_price_signal)
+
         self.costs.value = costs
         self.corrected_costs.value = corrected_costs
 
