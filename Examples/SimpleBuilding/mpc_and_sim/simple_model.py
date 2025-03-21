@@ -13,8 +13,8 @@ class BaselineMPCModelConfig(CasadiModelConfig):
 
     inputs: List[CasadiInput] = [
         # controls
-        # P_el is replaced with P_in as input 
-        # because var name P_el needs to be declared as an output 
+        # Power var needs to be declared as an output. Here power var is also a model-input 
+        # So two separate var names are used for power var: P_in as input, P_el as output
         # P_el set to P_in below
         CasadiInput(
             name="P_in",
