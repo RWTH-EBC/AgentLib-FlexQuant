@@ -49,7 +49,7 @@ class PredictorModuleConfig(al.BaseModuleConfig):
         ),
         al.AgentVariable(
             name="comfort_interval",
-            value=86400,
+            value=43200,
             description="Time between comfort updates.",
         ),
         al.AgentVariable(
