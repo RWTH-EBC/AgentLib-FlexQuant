@@ -61,10 +61,10 @@ The **Shadow MPCs** are designed to assess the maximum possible flexibility of e
 
 The time t<sub>MC</sub> is the market clearing time, during which a flexibility offer in t<sub>FE</sub> is reserved and the market can decide whether to take it. The preparation time t<sub>Prep</sub> allows the system to prepare itself for the upcoming flexibility event in advance to maximize the flexibility in t<sub>FE</sub>, where the flexibility event takes place. 
 
-Both the baseline and the shadow MPCs may have the storage variable ``E_stored``, if the correction of the flexible energy cost is activated. According to definition in the package, ``E_stored`` increases as more energy is stored in the system. Therefore, it should be declared as following:
+Both the baseline and the shadow MPCs must have the storage variable ``E_stored`` as output, if the correction of the flexible energy cost is activated. According to definition in the package, ``E_stored`` increases as more energy is stored in the system. Therefore, it should be declared as following:
 
-- for heating case, define E_stored = C * T + other stored energy 
-- for cooling case, define E_stored = -C * T + other stored energy
+- for heating case, define E_stored = C * T + stored energy in other form
+- for cooling case, define E_stored = -C * T + stored energy in other form
 
 <ins>Indicator Agent</ins> \
 The Indicator Agent utilizes the power consumption predictions of the
