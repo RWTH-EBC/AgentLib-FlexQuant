@@ -1,3 +1,4 @@
+from agentlib_mpc.data_structures.mpc_datamodels import Results
 from agentlib_mpc.modules import mpc_full, minlp_mpc
 from flexibility_quantification.utils.data_handling import strip_multi_index, fill_nans, MEAN, INTERPOLATE
 from flexibility_quantification.data_structures.globals import (
@@ -16,6 +17,15 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         # create instance variable
         self._full_controls: Dict[str, Union[AgentVariable, None]] = {}
         super().__init__(*args, **kwargs)
+        # self.sim_model = self.model.deepcopy()
+
+    # def set_output(self, solution: Results):
+    #     control = solution[self.config.controls]
+    #     new_control = calc_control_casadi_model(control)
+    #     self.model.do_step()
+    #
+    #     solution = update_solution(solution, new_control)
+    #     super().set_output(solution=solution)
 
     def register_callbacks(self):
         for control_var in self.config.controls:
