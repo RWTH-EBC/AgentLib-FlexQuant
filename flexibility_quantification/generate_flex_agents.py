@@ -133,6 +133,11 @@ class FlexAgentGenerator:
             module_config=self.baseline_mpc_module_config,
             mpc_dataclass=self.flex_config.baseline_config_generator_data,
         )
+        # raise error if unsupported collocation method is used
+        if baseline_mpc_config.optimization_backend["discretization_options"]["collocation_method"] == "radau":
+            raise ConfigurationError(
+                 f"Collocation method radau is not supported. Try a different method like legendre."
+            )
         pf_mpc_config = self.adapt_mpc_module_config(
             module_config=self.pos_flex_mpc_module_config,
             mpc_dataclass=self.flex_config.shadow_mpc_config_generator_data.pos_flex,
