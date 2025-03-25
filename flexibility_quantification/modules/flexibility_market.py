@@ -191,7 +191,10 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         offer = inp.value
         profile: Union[None, pd.Series] = None
         time_steps: Union[None, list] = None
-        if self.env.now >= self.env.config.offset + self.config.market_specs.options.start_time and not self.get("in_provision").value:
+
+        #if self.env.now >= self.env.config.offset + self.config.market_specs.options.start_time and not self.get("in_provision").value:
+        if self.env.now == 372600 and not self.get("in_provision").value:
+        #if False:
 
             bDebug: bool = True
 
@@ -307,12 +310,18 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                         draw_flex_envelope(market_type="real", offer_data=offer, event_time=self.env.now, profile_accepted=profile)
 
         if profile is not None:
+            offer.status = OfferStatus.accepted
+
+            #time_step = profile.index[-1] - profile.index[-2]
+            #temp_Series = pd.Series(data=[0], index=[(profile.index[-1] + time_step)])
+            #profile = pd.concat([profile, temp_Series])
             profile = profile.ffill()
             profile.index += self.env.time
             self.set("_P_external", profile)
 
             # only activate a single offer, therefore setting end to inf
             self.end = self.env.now + time_steps[-1]
+            # self.end = np.inf
             self.set("in_provision", True)
 
         self.write_results(offer)
@@ -409,10 +418,10 @@ def convert_profile(profile_energy: pd.Series, time_steps: list) -> pd.Series:
     # time_steps = time_steps.reset_index(drop=True)
 
     # convert the (k)Wh to (k)W before creating a series
-
+    time_step = 0
     for iIdx in range(len(profile_energy) - 1):
-        # TODO: compute time step, in case it is not always 900s
-        flex_power.append(abs((profile_energy[iIdx + 1] - profile_energy[iIdx]) / (900 / 3600)))
+        time_step = (time_steps[iIdx + 1] - time_steps[iIdx])
+        flex_power.append(abs((profile_energy[iIdx + 1] - profile_energy[iIdx]) / (time_step / 3600)))
 
     return pd.Series(data=flex_power, index=np.delete(time_steps, 0))
 

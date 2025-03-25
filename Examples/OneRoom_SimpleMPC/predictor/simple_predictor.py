@@ -22,7 +22,7 @@ class PredictorModuleConfig(al.BaseModuleConfig):
         ),
         al.AgentVariable(
             name="prediction_horizon",
-            value=8,
+            value=48,
             description="Number of sampling points for prediction.",
         )
     ]

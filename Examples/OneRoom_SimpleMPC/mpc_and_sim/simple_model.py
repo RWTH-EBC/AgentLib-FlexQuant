@@ -87,7 +87,7 @@ class BaselineMPCModelConfig(CasadiModelConfig):
             value=900,
             unit="s",
             description="",
-        )
+        ),
     ]
 
     outputs: List[CasadiOutput] = [
@@ -116,6 +116,7 @@ class BaselineMPCModel(CasadiModel):
 
         # Define ae
         self.T_out.alg = self.T  # math operation to get the symbolic variable
+
         # Constraints: List[(lower bound, function, upper bound)]
         self.constraints = [
             # soft constraints
