@@ -103,7 +103,7 @@ class BaselineMPCModel(CasadiModel):
         # Define ae
         self.P_el.alg = self.cp * self.mDot * (self.T - self.T_in) / 1000
         self.T_out.alg = self.T  # math operation to get the symbolic variable
-        self.E_stored.alg = - self.T * self.C / (3600*1000)  # stored energy in kWh
+        self.E_stored.alg = - self.T * self.C / (3600*1000)  # stored electrical energy in kWh
 
         # Constraints: List[(lower bound, function, upper bound)]
         self.constraints = [

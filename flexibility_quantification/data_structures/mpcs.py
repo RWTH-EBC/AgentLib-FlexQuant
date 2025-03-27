@@ -50,7 +50,7 @@ class BaselineMPCData(BaseMPCData):
     )
     storage_variable: str = pydantic.Field(
         default="E_stored",
-        description="Name of the variable representing the stored energy w.r.t. 0K in the baseline config",
+        description="Name of the variable representing the stored electrical energy in the baseline config",
     )
     profile_deviation_weight: float = pydantic.Field(
         default=0,

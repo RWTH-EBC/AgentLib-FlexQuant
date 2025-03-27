@@ -372,15 +372,15 @@ class FlexibilityData(pydantic.BaseModel):
     )
     stored_energy_profile_base: pd.Series = pydantic.Field(
         default=None,
-        description="Base profile of the stored energy w.r.t. 0K",
+        description="Base profile of the stored electrical energy",
     )
     stored_energy_profile_flex_neg: pd.Series = pydantic.Field(
         default=None,
-        description="Profile of the stored energy w.r.t. 0K for negative flexibility",
+        description="Profile of the stored electrical energy for negative flexibility",
     )
     stored_energy_profile_flex_pos: pd.Series = pydantic.Field(
         default=None,
-        description="Profile of the stored energy w.r.t. 0K for positive flexibility",
+        description="Profile of the stored elctrical energy for positive flexibility",
     )
     electricity_price_profile: pd.Series = pydantic.Field(
         default=None,

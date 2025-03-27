@@ -12,7 +12,7 @@ import flexibility_quantification.data_structures.globals as glbs
 from flexibility_quantification.data_structures.flex_kpis import FlexibilityData, FlexibilityKPIs
 from flexibility_quantification.data_structures.flex_offer import FlexOffer
 
-class Inputs_for_correct_flex_costs(BaseModel):
+class InputsForCorrectFlexCosts(BaseModel):
     enable_energy_costs_correction: bool = Field(
         name="enable_energy_costs_correction",
         description="Variable determining whether to correct the costs of the flexible energy"
@@ -177,7 +177,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
 
     shared_variable_fields: List[str] = ["outputs"]
 
-    correct_costs: Inputs_for_correct_flex_costs
+    correct_costs: InputsForCorrectFlexCosts
 
 class FlexibilityIndicatorModule(agentlib.BaseModule):
     config: FlexibilityIndicatorModuleConfig
