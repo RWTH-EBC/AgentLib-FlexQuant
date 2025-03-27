@@ -1,4 +1,4 @@
-from agentlib_mpc.data_structures.mpc_datamodels import Results
+import pandas as pd
 from agentlib_mpc.modules import mpc_full, minlp_mpc
 from flexibility_quantification.utils.data_handling import strip_multi_index, fill_nans, MEAN, INTERPOLATE
 from flexibility_quantification.data_structures.globals import (
@@ -17,15 +17,55 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         # create instance variable
         self._full_controls: Dict[str, Union[AgentVariable, None]] = {}
         super().__init__(*args, **kwargs)
-        # self.sim_model = self.model.deepcopy()
 
-    # def set_output(self, solution: Results):
-    #     control = solution[self.config.controls]
-    #     new_control = calc_control_casadi_model(control)
-    #     self.model.do_step()
-    #
-    #     solution = update_solution(solution, new_control)
-    #     super().set_output(solution=solution)
+    def set_output(self, result_df: pd.DataFrame):
+
+        # fill output values at the discretization points if collocation method is used
+        if 'collocation' in next(iter(self.config.optimization_backend['discretization_options'])):
+
+            # store the current state and control value of the casadi model in a dictionary
+            current_states = dict()
+            for state in self.var_ref.states:
+                current_states[state] = self.model.get_state(state).value
+
+            # store the current state and control value of the casadi model in a dictionary
+            current_controls = dict()
+            for control in self.var_ref.controls:
+                current_controls[control] = self.model.get_input(control).value
+
+            # get state and control values from the mpc optimization result
+            state_values = result_df.variable[self.var_ref.states]
+            control_values = result_df.variable[self.var_ref.controls]
+
+            for i in range(1, len(state_values)):
+                # get the integration time
+                t_start = float(state_values.index[i-1].strip("()").split(", ")[1]) # or a dummy value? is t_start itself used at all, or do we just need inputs at t_start?
+                t_sample = float(state_values.index[i].strip("()").split(", ")[1])
+                # only integrate to get outputs at the discretization points
+                if not t_sample % self.config.time_step:
+                    # set the state to the one at the last collocation/discretization point
+                    for j in range(len(self.var_ref.states)):
+                        self.model.set(self.var_ref.states[j], state_values.iloc[i-1, j])
+                    # set the control to the one at the last discretization point
+                    for j in range(len(self.var_ref.controls)):
+                        control_inx_shift = int(self.config.optimization_backend['discretization_options']['collocation_order'])+1
+                        self.model.set(self.var_ref.controls[j], control_values.iloc[i-control_inx_shift, j])
+                    # do the integration
+                    self.model.do_step(t_start=t_start, t_sample=t_sample)
+                    # set output at the discretization points
+                    for output in self.var_ref.outputs:
+                        result_df.loc[result_df.index[i], ('variable', output)] = self.model.get_output(output).value
+
+            # reset the state and control value in the casadi model
+            for state in self.var_ref.states:
+                self.model.set(state, current_states[state])
+
+            for control in self.var_ref.controls:
+                self.model.set(control, current_controls[control])
+
+        # send the modified output to AgentVariables
+        super().set_output(result_df)
+
 
     def register_callbacks(self):
         for control_var in self.config.controls:
