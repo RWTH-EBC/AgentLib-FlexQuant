@@ -284,12 +284,10 @@ class FlexibilityKPIs(pydantic.BaseModel):
         Calculate the costs of the flexibility event based on the electricity costs profile and the power flexibility profile.
         """
         # Calculate series
-        time_specific_costs_series = electricity_price_signal * self.power_flex_full.value
-        self.time_specific_costs_series.value = time_specific_costs_series
+        self.time_specific_costs_series.value = electricity_price_signal * self.power_flex_full.value
 
         # Calculate scalar
         costs = abs(self.time_specific_costs_series.integrate(time_unit="hours"))
-        corrected_costs = costs
 
         # correct the costs
         corrected_costs = costs - stored_energy_diff * np.mean(electricity_price_signal)
