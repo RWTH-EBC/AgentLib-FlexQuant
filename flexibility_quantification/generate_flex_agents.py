@@ -44,6 +44,9 @@ class FlexAgentGenerator:
         flex_config: Union[str, FilePath, FlexQuantConfig],
         mpc_agent_config: Union[str, FilePath, AgentConfig],
     ):
+        
+        self.logger = logging.getLogger(__name__)
+        
         # load configs
         self.flex_config = load_config.load_config(
             flex_config, config_type=FlexQuantConfig
@@ -133,11 +136,6 @@ class FlexAgentGenerator:
             module_config=self.baseline_mpc_module_config,
             mpc_dataclass=self.flex_config.baseline_config_generator_data,
         )
-        # raise error if unsupported collocation method is used
-        if baseline_mpc_config.optimization_backend["discretization_options"]["collocation_method"] == "radau":
-            raise ConfigurationError(
-                 f"Collocation method radau is not supported. Try a different method like legendre."
-            )
         pf_mpc_config = self.adapt_mpc_module_config(
             module_config=self.pos_flex_mpc_module_config,
             mpc_dataclass=self.flex_config.shadow_mpc_config_generator_data.pos_flex,
@@ -146,6 +144,13 @@ class FlexAgentGenerator:
             module_config=self.neg_flex_mpc_module_config,
             mpc_dataclass=self.flex_config.shadow_mpc_config_generator_data.neg_flex,
         )
+        
+        #raise warning if unsupported collocation method is used and change to supported method
+        if baseline_mpc_config.optimization_backend["discretization_options"]["collocation_method"] == "radau":
+            self.logger.warning(f"Collocation method radau is not supported. Switching to method legendre.")
+            baseline_mpc_config.optimization_backend["discretization_options"]["collocation_method"] = "legendre"
+            pf_mpc_config.optimization_backend["discretization_options"]["collocation_method"] = "legendre"
+            nf_mpc_config.optimization_backend["discretization_options"]["collocation_method"] = "legendre"
 
         # dump jsons of the agents including the adapted module configs
         self.append_module_and_dump_agent(
