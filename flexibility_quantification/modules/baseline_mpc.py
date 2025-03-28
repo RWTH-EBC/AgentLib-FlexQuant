@@ -1,11 +1,14 @@
 from typing import Optional
 
+from agentlib_mpc.data_structures.mpc_datamodels import Results
 from agentlib_mpc.modules import mpc_full, minlp_mpc
 import pandas as pd
+import math
+import numpy as np
 
 class FlexibilityBaselineMPC(mpc_full.MPC):
     config: mpc_full.MPCConfig
-    flex_results: pd.DataFrame
+    # flex_results: pd.DataFrame
 
     def pre_computation_hook(self):
         if self.get("in_provision").value:
@@ -18,9 +21,24 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
             self.set("rel_end", self.get("_P_external").value.index[-1] -
                      self.env.time + timestep)
 
-    def sim_fex_model(self):
-        results = self.flex_model.do_step() # high res power profile
-        results.to_csv()
+    def set_output(self, solution):
+        super().set_output(solution)
+        self.sim_flex_model()
+    def sim_flex_model(self):
+        dt = 90
+        horizon_length = int(self.config.prediction_horizon*(self.config.time_step))
+        time_points = math.floor(horizon_length/dt)
+        df = pd.DataFrame(np.nan, index=range(0,horizon_length+dt,dt), columns=self.var_ref.outputs)
+
+        self.flex_model = type(self.model)(dt=90) # dt should be a user input in the flex config
+        for i in range(1, time_points+1, 1):
+            # set mDot
+            t_sample = self.flex_model.dt*i
+            self.flex_model.do_step(t_start=0, t_sample=t_sample) # high resolution power profile
+            for output in self.var_ref.outputs:
+                df.loc[t_sample, output] = self.flex_model.get_output(output).value
+
+        # results.to_csv()
         # results für t_step=60
         # time      P_flex_sim
         #  0        100
@@ -45,7 +63,7 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
         """
         results_file = self.optimization_backend.config.results_file
         if results_file is None or not self.optimization_backend.config.save_results:
-            self.logger.info("All results were saved .")
+            self.logger.info("None results were saved .")
             return None
         try:
             result, stat = self.read_results_file(results_file)
