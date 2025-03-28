@@ -5,10 +5,25 @@ import agentlib
 import numpy as np
 import pandas as pd
 from pathlib import Path
-import pydantic
+from pydantic import BaseModel, Field, field_validator
+
+
 import flexibility_quantification.data_structures.globals as glbs
 from flexibility_quantification.data_structures.flex_kpis import FlexibilityData, FlexibilityKPIs
 from flexibility_quantification.data_structures.flex_offer import FlexOffer
+
+class InputsForCorrectFlexCosts(BaseModel):
+    enable_energy_costs_correction: bool = Field(
+        name="enable_energy_costs_correction",
+        description="Variable determining whether to correct the costs of the flexible energy"
+                    "Define the storage variable 'E_stored' in the base MPC model and config as output if the correction of costs is enabled"
+    )
+
+    absolute_power_deviation_tolerance: float = Field(
+        name="absolute_power_deviation_tolerance",
+        default= 0.1,
+        description="Absolute tolerance in kW within which no warning is thrown"
+    )
 
 # Pos and neg kpis to get the right names for plotting
 kpis_pos = FlexibilityKPIs(direction="positive")
@@ -24,8 +39,15 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         agentlib.AgentVariable(name=glbs.POWER_ALIAS_POS, unit="W", type="pd.Series",
                                description="The power input to the system"),
         agentlib.AgentVariable(name="r_pel", unit="ct/kWh", type="pd.Series",
-                               description="electricity price")
+                               description="electricity price"),
+        agentlib.AgentVariable(name=glbs.STORED_ENERGY_ALIAS_BASE, unit="kWh", type="pd.Series",
+                               description="Energy stored in the system w.r.t. 0K"),
+        agentlib.AgentVariable(name=glbs.STORED_ENERGY_ALIAS_NEG, unit="kWh", type="pd.Series",
+                               description="Energy stored in the system w.r.t. 0K"),
+        agentlib.AgentVariable(name=glbs.STORED_ENERGY_ALIAS_POS, unit="kWh", type="pd.Series",
+                               description="Energy stored in the system w.r.t. 0K")
     ]
+
     outputs: List[agentlib.AgentVariable] = [
         # Flexibility offer
         agentlib.AgentVariable(name=glbs.FlexibilityOffer, type="FlexOffer"),
@@ -71,6 +93,14 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
             name=kpis_pos.power_flex_offer_avg.get_kpi_identifier(), unit='W', type="float",
             description="Average of positive power flexibility"
         ),
+        agentlib.AgentVariable(
+            name=kpis_neg.power_flex_within_boundary.get_kpi_identifier(), unit='-', type="bool",
+            description="Variable indicating whether the baseline power and flex power align at the horizon end"
+        ),
+        agentlib.AgentVariable(
+            name=kpis_pos.power_flex_within_boundary.get_kpi_identifier(), unit='-', type="bool",
+            description="Variable indicating whether the baseline power and flex power align at the horizon end"
+        ),
 
         # Energy KPIs
         agentlib.AgentVariable(
@@ -92,12 +122,28 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
             description="Saved costs due to baseline"
         ),
         agentlib.AgentVariable(
+            name=kpis_neg.corrected_costs.get_kpi_identifier(), unit="ct", type="float",
+            description="Corrected saved costs due to baseline"
+        ),
+        agentlib.AgentVariable(
+            name=kpis_pos.corrected_costs.get_kpi_identifier(), unit="ct", type="float",
+            description="Corrected saved costs due to baseline"
+        ),
+        agentlib.AgentVariable(
             name=kpis_neg.costs_rel.get_kpi_identifier(), unit='ct/kWh', type="float",
             description="Saved costs due to baseline"
         ),
         agentlib.AgentVariable(
             name=kpis_pos.costs_rel.get_kpi_identifier(), unit='ct/kWh', type="float",
             description="Saved costs due to baseline"
+        ),
+        agentlib.AgentVariable(
+            name=kpis_neg.corrected_costs_rel.get_kpi_identifier(), unit='ct/kWh', type="float",
+            description="Corrected saved costs per energy due to baseline"
+        ),
+        agentlib.AgentVariable(
+            name=kpis_pos.corrected_costs_rel.get_kpi_identifier(), unit='ct/kWh', type="float",
+            description="Corrected saved costs per energy due to baseline"
         )
     ]
 
@@ -112,25 +158,26 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         agentlib.AgentVariable(name=glbs.TIME_STEP, unit="s",
                                description="timestep of the mpc solution"),
         agentlib.AgentVariable(name=glbs.PREDICTION_HORIZON, unit="-",
-                               description="prediction horizon of the mpc solution"),
+                               description="prediction horizon of the mpc solution")
     ]
 
-    results_file: Optional[Path] = pydantic.Field(default=None)
+    results_file: Optional[Path] = Field(default=None)
 
-    save_results: Optional[bool] = pydantic.Field(validate_default=True, default=None)
-    overwrite_result_file: Optional[bool] = pydantic.Field(default=False, validate_default=True)
+    save_results: Optional[bool] = Field(validate_default=True, default=None)
+    overwrite_result_file: Optional[bool] = Field(default=False, validate_default=True)
 
-    price_variable: str = pydantic.Field(
+    price_variable: str = Field(
         default="r_pel",
         description="Name of the price variable sent by a predictor",
     )
-    power_unit: str = pydantic.Field(
+    power_unit: str = Field(
         default="kW",
         description="Unit of the power variable"
     )
 
     shared_variable_fields: List[str] = ["outputs"]
 
+    correct_costs: InputsForCorrectFlexCosts
 
 class FlexibilityIndicatorModule(agentlib.BaseModule):
     config: FlexibilityIndicatorModuleConfig
@@ -182,21 +229,34 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 self.data.power_profile_flex_neg = self.data.format_mpc_inputs(inp.value)
             elif name == glbs.POWER_ALIAS_POS:
                 self.data.power_profile_flex_pos = self.data.format_mpc_inputs(inp.value)
+            elif name == glbs.STORED_ENERGY_ALIAS_BASE:
+                self.data.stored_energy_profile_base = self.data.format_mpc_inputs(inp.value)
+            elif name == glbs.STORED_ENERGY_ALIAS_NEG:
+                self.data.stored_energy_profile_flex_neg = self.data.format_mpc_inputs(inp.value)
+            elif name == glbs.STORED_ENERGY_ALIAS_POS:
+                self.data.stored_energy_profile_flex_pos = self.data.format_mpc_inputs(inp.value)
             elif name == self.config.price_variable:
                 # price comes from predictor, so no stripping needed
-                self.data.power_costs_profile = self.data.format_predictor_inputs(inp.value)
+                self.data.electricity_price_series = self.data.format_predictor_inputs(inp.value)
 
-            if all(var is not None for var in (
-                    self.data.power_profile_base,
-                    self.data.power_profile_flex_neg,
-                    self.data.power_profile_flex_pos,
-                    self.data.power_costs_profile
-            )):
-                # Calculate the flexibility, send the offer, write and save the results
-                self.calc_and_send_offer()
+            necessary_input_for_calc_flex = [self.data.power_profile_base,
+                                             self.data.power_profile_flex_neg,
+                                             self.data.power_profile_flex_pos,
+                                             self.data.electricity_price_series]
+            if self.config.correct_costs.enable_energy_costs_correction:
+                necessary_input_for_calc_flex.extend(
+                                                [self.data.stored_energy_profile_base,
+                                                 self.data.stored_energy_profile_flex_neg,
+                                                 self.data.stored_energy_profile_flex_pos])
+
+            if all(var is not None for var in necessary_input_for_calc_flex):
 
                 # check the power profile end deviation
-                self.check_power_end_deviation(tol=0.01)
+                if not self.config.correct_costs.enable_energy_costs_correction:
+                    self.check_power_end_deviation(tol=self.config.correct_costs.absolute_power_deviation_tolerance)
+
+                # Calculate the flexibility, send the offer, write and save the results
+                self.calc_and_send_offer()
 
                 # set the values to None to reset the callback
                 self._set_inputs_to_none()
@@ -236,6 +296,12 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 values = self.data.power_profile_flex_neg
             elif name == glbs.POWER_ALIAS_POS:
                 values = self.data.power_profile_flex_pos
+            elif name == glbs.STORED_ENERGY_ALIAS_BASE:
+                values = self.data.stored_energy_profile_base
+            elif name == glbs.STORED_ENERGY_ALIAS_NEG:
+                values = self.data.stored_energy_profile_flex_neg
+            elif name == glbs.STORED_ENERGY_ALIAS_POS:
+                values = self.data.stored_energy_profile_flex_pos
             else:
                 values = self.get(name).value
 
@@ -270,7 +336,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         Calculate the flexibility KPIs for current predictions, send the flex offer and set the outputs, write and save the results.
         """
         # Calculate the flexibility KPIs for current predictions
-        self.data.calculate()
+        self.data.calculate(enable_energy_costs_correction=self.config.correct_costs.enable_energy_costs_correction)
 
         # Send flex offer
         self.send_flex_offer(
@@ -284,9 +350,10 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
 
         # set outputs
         for kpi in self.data.get_kpis().values():
-            for output in self.config.outputs:
-                if output.name == kpi.get_kpi_identifier():
-                    self.set(output.name, kpi.value)
+            if kpi.get_kpi_identifier() not in [kpis_pos.power_flex_within_boundary.get_kpi_identifier(), kpis_neg.power_flex_within_boundary.get_kpi_identifier()]:
+                for output in self.config.outputs:
+                    if output.name == kpi.get_kpi_identifier():
+                        self.set(output.name, kpi.value)
 
         # write results
         self.df = self.write_results(
@@ -336,9 +403,12 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         self.data.power_profile_base = None
         self.data.power_profile_flex_neg = None
         self.data.power_profile_flex_pos = None
-        self.data.power_costs_profile = None
+        self.data.electricity_price_series = None
+        self.data.stored_energy_profile_base = None
+        self.data.stored_energy_profile_flex_neg = None
+        self.data.stored_energy_profile_flex_pos = None
 
-    def check_power_end_deviation(self, tol: float = 0.02):
+    def check_power_end_deviation(self, tol: float):
         """
         calculates the deviation of the final value of the power profiles and warn the user if it exceeds the tolerance
         """
@@ -346,8 +416,13 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         dev_pos = np.mean(self.data.power_profile_flex_pos.values[-4:] - self.data.power_profile_base.values[-4:])
         dev_neg = np.mean(self.data.power_profile_flex_neg.values[-4:] - self.data.power_profile_base.values[-4:])
         if abs(dev_pos) > tol:
-            logger.warning(f"There is an average deviation of {dev_pos:.6f} kW between the final four values of power profiles of positive shadow MPC and the baseline")
+            logger.warning(f"There is an average deviation of {dev_pos:.6f} kW between the final values of power profiles of positive shadow MPC and the baseline. Correction of energy costs might be necessary.")
+            self.set(kpis_pos.power_flex_within_boundary.get_kpi_identifier(), False)
+        else:
+            self.set(kpis_pos.power_flex_within_boundary.get_kpi_identifier(), True)
         if abs(dev_neg) > tol:
-            logger.warning(f"There is an average deviation of {dev_pos:.6f} kW between the final four values of power profiles of negative shadow MPC and the baseline")
-
+            logger.warning(f"There is an average deviation of {dev_pos:.6f} kW between the final values of power profiles of negative shadow MPC and the baseline. Correction of energy costs might be necessary.")
+            self.set(kpis_neg.power_flex_within_boundary.get_kpi_identifier(), False)
+        else:
+            self.set(kpis_neg.power_flex_within_boundary.get_kpi_identifier(), True)
 
