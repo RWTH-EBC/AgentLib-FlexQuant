@@ -1,5 +1,6 @@
 from typing import Union, Optional
 
+import numpy
 import pydantic
 import numpy as np
 import pandas as pd
@@ -135,12 +136,19 @@ class FlexibilityKPIs(pydantic.BaseModel):
         ),
         description="Energy flexibility equals the integral of the power flexibility",
     )
+    power_flex_within_boundary: KPI = pydantic.Field(
+        default=KPI(
+            name="power_flex_within_boundary",
+            unit="-"
+        ),
+        description="Variable indicating whether the baseline power and flex power align at the horizon end",
+    )
 
     # Costs KPIs
-    costs_series: KPISeries = pydantic.Field(
+    electricity_costs_series: KPISeries = pydantic.Field(
         default=KPISeries(
-            name="costs_series",
-            unit="ct"
+            name="electricity_costs_series",
+            unit="ct/h"
         ),
         description="Costs of flexibility",
     )
@@ -151,12 +159,26 @@ class FlexibilityKPIs(pydantic.BaseModel):
         ),
         description="Costs of flexibility",
     )
+    corrected_costs: KPI = pydantic.Field(
+        default=KPI(
+            name="corrected_costs",
+            unit="ct"
+        ),
+        description="Corrected costs of flexibility considering the stored energy in the system",
+    )
     costs_rel: KPI = pydantic.Field(
         default=KPI(
             name="costs_rel",
             unit="ct/kWh"
         ),
         description="Costs of flexibility per energy",
+    )
+    corrected_costs_rel: KPI = pydantic.Field(
+        default=KPI(
+            name="corrected_costs_rel",
+            unit="ct/kWh"
+        ),
+        description="Corrected costs of flexibility per energy",
     )
 
     def __init__(self, direction: FlexibilityDirections, **data):
@@ -170,9 +192,12 @@ class FlexibilityKPIs(pydantic.BaseModel):
             self,
             power_profile_base: pd.Series,
             power_profile_shadow: pd.Series,
-            power_costs_profile: pd.Series,
+            electricity_price_series: pd.Series,
             mpc_time_grid: np.ndarray,
-            flex_offer_time_grid: np.ndarray
+            flex_offer_time_grid: np.ndarray,
+            stored_energy_base: pd.Series,
+            stored_energy_shadow: pd.Series,
+            enable_energy_costs_correction: bool
     ):
         """
         Calculate the KPIs based on the power and electricity input profiles.
@@ -184,7 +209,11 @@ class FlexibilityKPIs(pydantic.BaseModel):
         self._calculate_energy_flex()
 
         # Costs KPIs
-        self._calculate_costs(power_costs_profile=power_costs_profile)
+        if enable_energy_costs_correction:
+            stored_energy_diff = stored_energy_shadow.values[-1] - stored_energy_base.values[-1]
+        else:
+            stored_energy_diff = 0
+        self._calculate_costs(electricity_price_signal=electricity_price_series, stored_energy_diff=stored_energy_diff)
         self._calculate_costs_rel()
 
     def _calculate_power_flex(self, power_profile_base: pd.Series, power_profile_shadow: pd.Series,
@@ -250,18 +279,21 @@ class FlexibilityKPIs(pydantic.BaseModel):
         self.energy_flex.value = energy_flex
         return energy_flex
 
-    def _calculate_costs(self, power_costs_profile: pd.Series) -> [float, pd.Series]:
+    def _calculate_costs(self, electricity_price_signal: pd.Series, stored_energy_diff: float) -> [float, pd.Series]:
         """
         Calculate the costs of the flexibility event based on the electricity costs profile and the power flexibility profile.
         """
         # Calculate series
-        costs_series = power_costs_profile * self.power_flex_full.value
-        self.costs_series.value = costs_series
+        self.electricity_costs_series.value = electricity_price_signal * self.power_flex_full.value
 
         # Calculate scalar
-        costs = abs(self.costs_series.integrate(time_unit="hours"))
+        costs = abs(self.electricity_costs_series.integrate(time_unit="hours"))
+
+        # correct the costs
+        corrected_costs = costs - stored_energy_diff * np.mean(electricity_price_signal)
+
         self.costs.value = costs
-        return costs, costs_series
+        self.corrected_costs.value = corrected_costs
 
     def _calculate_costs_rel(self) -> float:
         """
@@ -269,12 +301,14 @@ class FlexibilityKPIs(pydantic.BaseModel):
         """
         if self.energy_flex == 0:
             costs_rel = 0
+            corrected_costs_rel = 0
         else:
             costs_rel = self.costs.value / self.energy_flex.value
+            corrected_costs_rel = self.corrected_costs.value / self.energy_flex.value
 
         # Set value
         self.costs_rel.value = costs_rel
-        return costs_rel
+        self.corrected_costs_rel.value = corrected_costs_rel
 
     def get_kpi_dict(self, identifier: bool = False) -> dict[str, KPI]:
         """
@@ -334,10 +368,23 @@ class FlexibilityData(pydantic.BaseModel):
         default=None,
         description="Power profile of the positive flexibility",
     )
-    power_costs_profile: pd.Series = pydantic.Field(
+    stored_energy_profile_base: pd.Series = pydantic.Field(
         default=None,
-        description="Profile of the electricity costs",
+        description="Base profile of the stored electrical energy",
     )
+    stored_energy_profile_flex_neg: pd.Series = pydantic.Field(
+        default=None,
+        description="Profile of the stored electrical energy for negative flexibility",
+    )
+    stored_energy_profile_flex_pos: pd.Series = pydantic.Field(
+        default=None,
+        description="Profile of the stored elctrical energy for positive flexibility",
+    )
+    electricity_price_series: pd.Series = pydantic.Field(
+        default=None,
+        description="Profile of the electricity price",
+    )
+
 
     # KPIs
     kpis_pos: FlexibilityKPIs = pydantic.Field(
@@ -399,7 +446,7 @@ class FlexibilityData(pydantic.BaseModel):
                              f"Series index:{series.index}")
         return series
 
-    def calculate(self) -> [FlexibilityKPIs, FlexibilityKPIs]:
+    def calculate(self, enable_energy_costs_correction: bool) -> [FlexibilityKPIs, FlexibilityKPIs]:
         """
         Calculate the KPIs for the positive and negative flexibility.
 
@@ -409,16 +456,22 @@ class FlexibilityData(pydantic.BaseModel):
         self.kpis_pos.calculate(
             power_profile_base=self.power_profile_base,
             power_profile_shadow=self.power_profile_flex_pos,
-            power_costs_profile=self.power_costs_profile,
+            electricity_price_series=self.electricity_price_series,
             mpc_time_grid=self.mpc_time_grid,
-            flex_offer_time_grid=self.flex_offer_time_grid
+            flex_offer_time_grid=self.flex_offer_time_grid,
+            stored_energy_base=self.stored_energy_profile_base,
+            stored_energy_shadow=self.stored_energy_profile_flex_pos,
+            enable_energy_costs_correction=enable_energy_costs_correction
         )
         self.kpis_neg.calculate(
             power_profile_base=self.power_profile_base,
             power_profile_shadow=self.power_profile_flex_neg,
-            power_costs_profile=self.power_costs_profile,
+            electricity_price_series=self.electricity_price_series,
             mpc_time_grid=self.mpc_time_grid,
-            flex_offer_time_grid=self.flex_offer_time_grid
+            flex_offer_time_grid=self.flex_offer_time_grid,
+            stored_energy_base=self.stored_energy_profile_base,
+            stored_energy_shadow=self.stored_energy_profile_flex_neg,
+            enable_energy_costs_correction=enable_energy_costs_correction
         )
         return self.kpis_pos, self.kpis_neg
 

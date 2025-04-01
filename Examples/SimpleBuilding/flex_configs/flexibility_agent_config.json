@@ -7,12 +7,13 @@
             "id": "FlexibilityIndicator",
             "modules": [
                 {
-                    "module_id": "Ag1Com",
+                    "module_id": "Ag4Com",
                     "type": "local_broadcast"
                 },
                 {
                     "module_id": "FlexibilityIndicator",
                     "type": "flexibility_quantification.flexibility_indicator",
+                    "results_file": "results/flexibility_indicator.csv",
                     "price_variable": "r_pel",
                     "parameters": [
                         {
@@ -41,27 +42,31 @@
                             "name": "r_pel",
                             "alias": "r_pel"
                         }
-                    ],
-                    "correct_costs": {"enable_energy_costs_correction": false,
-                                      "absolute_power_deviation_tolerance": 0.05}
+                    ]
                 }
             ]
         },
+        "collocation_order": 2,
         "name_of_created_file": "indicator.json"
     },
-    "market_config": "flex_configs/flexibility_market.json",
+    "market_config": "flex_configs/market.json",
     "baseline_config_generator_data": {
         "power_variable": "P_el",
         "power_unit": "kW",
         "profile_deviation_weight": 100
     },
     "shadow_mpc_config_generator_data": {
-        "weights": [{"name": "s_P", "value": 10}],
+        "weights": [
+            {
+                "name": "s_P", 
+                "value": 10
+            }
+        ],
         "pos_flex": {
-            "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, self.s_P * self.P_el])"
+            "flex_cost_function": "sum([self.s_T * self.T_slack**2, self.s_P * self.P_el])"
         },
         "neg_flex": {
-            "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, -self.s_P * self.P_el])"
+            "flex_cost_function": "sum([self.s_T * self.T_slack**2, -self.s_P * self.P_el])"
         }
     },
     "path_to_flex_files": "created_flex_files",
