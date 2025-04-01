@@ -1,9 +1,10 @@
-from typing import Union
+from typing import Union, Optional
 
 import agentlib
 from pydantic import FilePath
 from pathlib import Path
 import json
+import os
 import pandas as pd
 
 from agentlib.core.agent import AgentConfig
@@ -87,8 +88,8 @@ class Results:
 
     def __init__(
         self,
-        flex_config: Union[str, FilePath, FlexQuantConfig],
-        simulator_agent_config: Union[str, FilePath],
+        flex_config: Union[str, FilePath],
+        simulator_agent_config: Optional[Union[str, FilePath]],
         results: Union[str, FilePath, dict[str, dict[str, pd.DataFrame]]] = None,
         to_timescale: TimeConversionTypes = "seconds",
     ):
@@ -97,6 +98,9 @@ class Results:
         self.generator_config = load_config.load_config(
             config=flex_config, config_type=FlexQuantConfig
         )
+        # get base path from flex_config to use relative paths
+        self.base_path = cmng.subtract_relative_path(os.path.normpath(flex_config),
+                                                     os.path.normpath(self.generator_config.path_to_flex_files))
 
         # get names of the config files
         config_filename_baseline = BaselineMPCData.model_validate(
@@ -122,17 +126,20 @@ class Results:
                 ).name_of_created_file
 
         # load the agent and module configs
-        # (don't validate config, as result file is deleted in simulator validator)
-        with open(simulator_agent_config, "r") as f:
-            sim_config = json.load(f)
-        self.simulator_agent_config = AgentConfig.construct(**sim_config)
-        for module in self.simulator_agent_config.modules:
-            if module["type"] == "simulator":
-                self.simulator_module_config = SimulatorConfig.construct(**module)
-        if not self.simulator_module_config:
-            raise ValueError("No simulator module in provided simulator config")
+        if simulator_agent_config:
+            # (don't validate config, as result file is deleted in simulator validator)
+            with open(simulator_agent_config, "r") as f:
+                sim_config = json.load(f)
+            self.simulator_agent_config = AgentConfig.construct(**sim_config)
+            for module in self.simulator_agent_config.modules:
+                if module["type"] == "simulator":
+                    self.simulator_module_config = SimulatorConfig.construct(**module)
+            if not self.simulator_module_config:
+                raise ValueError("No simulator module in provided simulator config")
+        else:
+             self.simulator_agent_config = None
 
-        for file_path in Path(self.generator_config.path_to_flex_files).rglob("*.json"):
+        for file_path in Path(os.path.join(self.base_path, self.generator_config.path_to_flex_files)).rglob("*.json"):
             if file_path.name in config_filename_baseline:
                 self.baseline_agent_config = load_config.load_config(
                     config=file_path, config_type=AgentConfig
@@ -182,20 +189,21 @@ class Results:
 
         # load results
         if results is None:
-            results_path = Path(self.indicator_module_config.results_file).parent
+            results_path = Path(os.path.join(self.base_path, self.indicator_module_config.results_file)).parent
             results = self._load_results(res_path=results_path)
         if isinstance(results, (str, Path)):
             results_path = results
             results = self._load_results(res_path=results_path)
         elif isinstance(results, dict):
-            results_path = Path(self.indicator_module_config.results_file).parent
+            results_path = Path(os.path.join(self.base_path, self.indicator_module_config.results_file)).parent
         else:
             raise ValueError("results must be a path or dict")
 
         # Get result dataframes
-        self.df_simulation = results[self.simulator_agent_config.id][
-            self.simulator_module_config.module_id
-        ]
+        if simulator_agent_config:
+            self.df_simulation = results[self.simulator_agent_config.id][
+                self.simulator_module_config.module_id
+            ]
         self.df_baseline = results[self.baseline_agent_config.id][
             self.baseline_module_config.module_id
         ]
@@ -248,14 +256,6 @@ class Results:
         self, res_path: Union[str, Path]
     ) -> dict[str, dict[str, pd.DataFrame]]:
         res = {
-            self.simulator_agent_config.id: {
-                self.simulator_module_config.module_id: load_sim(
-                    Path(
-                        res_path,
-                        Path(self.simulator_module_config.result_filename).name,
-                    )
-                )
-            },
             self.baseline_agent_config.id: {
                 self.baseline_module_config.module_id: load_mpc(
                     Path(
@@ -298,6 +298,16 @@ class Results:
                 )
             }
         }
+        if self.simulator_agent_config:
+
+            res[self.simulator_agent_config.id] = {
+                self.simulator_module_config.module_id: load_sim(
+                    Path(
+                        res_path,
+                        Path(self.simulator_module_config.result_filename).name,
+                    )
+                )
+            }
         if self.generator_config.market_config:
             res[self.market_agent_config.id] = {
                 self.market_module_config.module_id: load_market(
@@ -313,8 +323,7 @@ class Results:
         timescale -- The timescale to convert the data to
         """
         # Convert the time in the dataframes
-        for df in [
-            self.df_simulation,
+        for df in ([
             self.df_baseline,
             self.df_baseline_stats,
             self.df_pos_flex,
@@ -322,7 +331,8 @@ class Results:
             self.df_neg_flex,
             self.df_neg_flex_stats,
             self.df_indicator,
-        ] + ([self.df_market] if self.generator_config.market_config else []):
+        ] + ([self.df_market] if self.generator_config.market_config else []) +
+                   ([self.df_simulation] if self.simulator_agent_config else [])):
             convert_timescale_of_index(
                 df=df, from_unit=self.current_timescale_of_data, to_unit=to_timescale
             )

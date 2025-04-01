@@ -6,6 +6,7 @@ from typing import TypeVar
 import math
 from agentlib.modules import get_all_module_types
 import inspect
+import os
 
 
 T = TypeVar('T', bound=BaseModuleConfig)
@@ -121,3 +122,25 @@ def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig):
         parent_dict["states"] = [state.dict(exclude=check_bounds(state)) for state in module.states]
 
     return parent_dict
+
+
+def subtract_relative_path(absolute_path, relative_path):
+    # Normalize paths (convert slashes to the correct system format)
+    absolute_path = os.path.normpath(absolute_path)
+    relative_path = os.path.normpath(relative_path)
+
+    # Split relative path to get the first component
+    rel_parts = relative_path.split(os.sep)
+    first_rel_component = rel_parts[0]
+
+    # Find where the relative path starts in the absolute path
+    if first_rel_component in absolute_path:
+        # Find the last occurrence of the first component of the relative path
+        index = absolute_path.rfind(first_rel_component)
+
+        if index != -1:
+            # Return the part of absolute_path before the relative path component
+            return absolute_path[:index].rstrip(os.sep)
+
+    # If the relative path component wasn't found, return the original path
+    return absolute_path
