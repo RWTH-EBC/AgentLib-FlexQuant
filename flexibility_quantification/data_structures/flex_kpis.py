@@ -419,7 +419,8 @@ class FlexibilityData(pydantic.BaseModel):
         series.index = series.index - series.index[0]
         series = series.reindex(self.mpc_time_grid)
         if any(series.isna()):
-            raise ValueError(f"The mpc time grid is not compatible with the predictor input, which leads to NaN values in the series.\n"
+            raise ValueError(f"The mpc time grid is not compatible with the predictor "
+                             f"input, which leads to NaN values in the series.\n"
                              f"MPC time grid:{self.mpc_time_grid}\n"
                              f"Series index:{series.index}")
         return series
@@ -439,7 +440,8 @@ class FlexibilityData(pydantic.BaseModel):
             series = fill_nans(series=series, method=MEAN)
         series = series.reindex(self.mpc_time_grid)
         if any(series.isna()):
-            raise ValueError(f"The mpc time grid is not compatible with the mpc input, which leads to NaN values in the series.\n"
+            raise ValueError(f"The mpc time grid is not compatible with the mpc input, "
+                             f"which leads to NaN values in the series.\n"
                              f"MPC time grid:{self.mpc_time_grid}\n"
                              f"Series index:{series.index}")
         return series
