@@ -20,8 +20,8 @@ class BaseMPCData(pydantic.BaseModel):
     # variables
     power_alias: str
     stored_energy_alias: str
-    config_inputs_appendix: MPCVariables = []
-    config_parameters_appendix: MPCVariables = []
+    config_inputs_appendix: List[MPCVariable] = []
+    config_parameters_appendix: List[MPCVariable] = []
     weights: List[MPCVariable] = pydantic.Field(
         default=[],
         description="Name and value of weights",
