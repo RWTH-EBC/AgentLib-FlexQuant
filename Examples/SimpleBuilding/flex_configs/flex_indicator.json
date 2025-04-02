@@ -1,0 +1,50 @@
+{
+    "agent_config": {
+        "id": "FlexibilityIndicator",
+        "modules": [
+            {
+                "module_id": "Ag4Com",
+                "type": "local_broadcast"
+            },
+            {
+                "module_id": "FlexibilityIndicator",
+                "type": "flexibility_quantification.flexibility_indicator",
+                "results_file": "results/flexibility_indicator.csv",
+                "price_variable": "r_pel",
+                "parameters": [
+                    {
+                        "name": "prep_time",
+                        "value": 900
+                    },
+                    {
+                        "name": "market_time",
+                        "value": 900
+                    },
+                    {
+                        "name": "flex_event_duration",
+                        "value": 7200
+                    },
+                    {
+                        "name": "time_step",
+                        "value": 900
+                    },
+                    {
+                        "name": "prediction_horizon",
+                        "value": 48
+                    }
+                ],
+                "inputs": [
+                    {
+                        "name": "r_pel",
+                        "alias": "r_pel"
+                    }
+                ],
+                "correct_costs": {
+                    "enable_energy_costs_correction": false
+                }
+            }
+        ]
+    },
+    "collocation_order": 2,
+    "name_of_created_file": "indicator.json"
+}
