@@ -44,6 +44,8 @@ class FlexAgentGenerator:
         flex_config: Union[str, FilePath, FlexQuantConfig],
         mpc_agent_config: Union[str, FilePath, AgentConfig],
     ):
+        self.logger = logging.getLogger(__name__)
+
         if isinstance(flex_config, str or FilePath):
             self.flex_config_file_name = os.path.basename(flex_config)
         else:
