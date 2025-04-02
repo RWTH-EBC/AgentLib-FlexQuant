@@ -85,7 +85,7 @@ class FlexQuantConfig(pydantic.BaseModel):
         unit="s",
         description="Time for market interaction",
     )
-    indicator_config: FlexibilityIndicatorConfig = pydantic.Field(
+    indicator_config: Union[FlexibilityIndicatorConfig, Path] = pydantic.Field(
         default=None,
         description="Path to the file or dict of flexibility indicator config",
     )
@@ -93,11 +93,11 @@ class FlexQuantConfig(pydantic.BaseModel):
         default=None,
         description="Path to the file or dict of market config",
     )
-    baseline_config_generator_data: BaselineMPCData = pydantic.Field(
+    baseline_config_generator_data: Union[BaselineMPCData, Path] = pydantic.Field(
         default=None,
         description="Baseline generator data config file or dict",
     )
-    shadow_mpc_config_generator_data: ShadowMPCConfigGeneratorConfig = pydantic.Field(
+    shadow_mpc_config_generator_data: Union[ShadowMPCConfigGeneratorConfig, Path] = pydantic.Field(
         default=None,
         description="Shadow mpc generator data config file or dict",
     )
