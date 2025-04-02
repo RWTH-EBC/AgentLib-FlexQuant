@@ -36,9 +36,17 @@ class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
 
     market_specs: MarketSpecifications
 
-    results_file: Optional[Path] = pydantic.Field(default=None)
-    save_results: Optional[bool] = pydantic.Field(validate_default=True, default=None)
-    overwrite_result_file: Optional[bool] = pydantic.Field(default=False, validate_default=True)
+    results_file: Optional[Path] = pydantic.Field(
+        default=Path("results/flexibility_market.csv")
+    )
+    save_results: Optional[bool] = pydantic.Field(
+        validate_default=True, 
+        default=None
+    )
+    overwrite_result_file: Optional[bool] = pydantic.Field(
+        default=False, 
+        validate_default=True
+    )
 
     shared_variable_fields: List[str] = ["outputs"]
 
