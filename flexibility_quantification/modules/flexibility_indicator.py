@@ -161,11 +161,17 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
                                description="prediction horizon of the mpc solution")
     ]
 
-    results_file: Optional[Path] = Field(default=None)
-
-    save_results: Optional[bool] = Field(validate_default=True, default=None)
-    overwrite_result_file: Optional[bool] = Field(default=False, validate_default=True)
-
+    results_file: Optional[Path] = Field(
+        default=Path("results/flexibility_indicator.csv")
+    )
+    save_results: Optional[bool] = Field(
+        validate_default=True, 
+        default=None
+    )
+    overwrite_result_file: Optional[bool] = Field(
+        default=False, 
+        validate_default=True
+    )
     price_variable: str = Field(
         default="r_pel",
         description="Name of the price variable sent by a predictor",
