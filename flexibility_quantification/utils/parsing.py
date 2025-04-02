@@ -172,6 +172,28 @@ class SetupSystemModifier(ast.NodeTransformer):
 
         return node
 
+    def get_leftmost_list(self, node):
+        """
+        Recursively traverse binary operations to get the leftmost list.
+
+        Args:
+            node: An AST node (could be a BinOp or directly a List)
+
+        Returns:
+            The leftmost List node found
+        """
+        if isinstance(node, ast.List):
+            return node
+        elif isinstance(node, ast.BinOp):
+            # If it's a binary operation, recurse to the left
+            return self.get_leftmost_list(node.left)
+        elif isinstance(node, ast.Tuple):
+            # If it's a tuple with elements, check the first element
+            if node.elts and len(node.elts) > 0:
+                return self.get_leftmost_list(node.elts[0])
+        # If we get here, we couldn't find a list
+        return None
+
     def modify_config_class_shadow(self, node):
         """Modify the config class of the shadow mpc.
 
@@ -243,9 +265,9 @@ class SetupSystemModifier(ast.NodeTransformer):
                 if isinstance(body.value, ast.List):
                     # Simple list case
                     value_list = body.value
-                elif isinstance(body.value, ast.BinOp):
-                    # List concatenation case (a + b)
-                    value_list = body.value.left
+                elif isinstance(body.value, ast.BinOp) or isinstance(body.value, ast.Tuple):
+                    # Complex case with concatenated lists or tuple
+                    value_list = self.get_leftmost_list(body.value)
                 for control in self.controls:
                     value_list.elts.append(
                         add_output(
@@ -275,9 +297,9 @@ class SetupSystemModifier(ast.NodeTransformer):
                 if isinstance(body.value, ast.List):
                     # Simple list case
                     value_list = body.value
-                elif isinstance(body.value, ast.BinOp):
-                    # List concatenation case (a + b)
-                    value_list = body.value.left
+                elif isinstance(body.value, ast.BinOp) or isinstance(body.value, ast.Tuple):
+                    # Complex case with concatenated lists or tuple
+                    value_list = self.get_leftmost_list(body.value)
                 value_list.elts.append(
                     add_input("Time", 0, "s", "time trajectory", "list")
                 )

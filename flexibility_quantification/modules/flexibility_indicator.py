@@ -12,18 +12,21 @@ import flexibility_quantification.data_structures.globals as glbs
 from flexibility_quantification.data_structures.flex_kpis import FlexibilityData, FlexibilityKPIs
 from flexibility_quantification.data_structures.flex_offer import FlexOffer
 
+
 class InputsForCorrectFlexCosts(BaseModel):
     enable_energy_costs_correction: bool = Field(
         name="enable_energy_costs_correction",
         description="Variable determining whether to correct the costs of the flexible energy"
-                    "Define the storage variable 'E_stored' in the base MPC model and config as output if the correction of costs is enabled"
+                    "Define the storage variable 'E_stored' in the base MPC model and config as output if the correction of costs is enabled",
+        default=False
     )
 
     absolute_power_deviation_tolerance: float = Field(
         name="absolute_power_deviation_tolerance",
-        default= 0.1,
+        default=0.1,
         description="Absolute tolerance in kW within which no warning is thrown"
     )
+
 
 # Pos and neg kpis to get the right names for plotting
 kpis_pos = FlexibilityKPIs(direction="positive")
@@ -183,7 +186,8 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
 
     shared_variable_fields: List[str] = ["outputs"]
 
-    correct_costs: InputsForCorrectFlexCosts
+    correct_costs: InputsForCorrectFlexCosts = InputsForCorrectFlexCosts()
+
 
 class FlexibilityIndicatorModule(agentlib.BaseModule):
     config: FlexibilityIndicatorModuleConfig

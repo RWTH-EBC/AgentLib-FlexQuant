@@ -44,9 +44,11 @@ class FlexAgentGenerator:
         flex_config: Union[str, FilePath, FlexQuantConfig],
         mpc_agent_config: Union[str, FilePath, AgentConfig],
     ):
-        
-        #self.logger = logging.getLogger(__name__)
-        
+        if isinstance(flex_config, str or FilePath):
+            self.flex_config_file_name = os.path.basename(flex_config)
+        else:
+            # provide default name for json
+            self.flex_config_file_name = "flex_config.json"
         # load configs
         self.flex_config = load_config.load_config(
             flex_config, config_type=FlexQuantConfig
@@ -204,6 +206,11 @@ class FlexAgentGenerator:
         # generate python files for the shadow mpcs
         self._generate_flex_model_definition()
 
+        # save flex config to created flex files
+        with open(os.path.join(self.flex_config.path_to_flex_files, self.flex_config_file_name), "w") as f:
+            config_json = self.flex_config.model_dump_json(exclude_defaults=True)
+            f.write(config_json)
+
         # register the exit function if the corresponding flag is set
         if self.flex_config.delete_files:
             atexit.register(lambda: self._delete_created_files())
@@ -283,6 +290,11 @@ class FlexAgentGenerator:
     def _delete_created_files(self):
         """Function to run at exit if the files are to be deleted"""
         to_be_deleted = self.get_config_file_paths()
+        to_be_deleted.append(
+            os.path.join(
+                self.flex_config.path_to_flex_files,
+                self.flex_config_file_name,
+            ))
         # delete files
         for file in to_be_deleted:
             Path(file).unlink()
