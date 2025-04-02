@@ -93,7 +93,7 @@ class FlexAgentGenerator:
         )
         # load indicator module config
         self.indicator_agent_config = load_config.load_config(
-            self.flex_config.indicator_config.agent_config, config_type=AgentConfig
+            self.indicator_config.agent_config, config_type=AgentConfig
         )
         self.indicator_module_config = cmng.get_module(
             config=self.indicator_agent_config, module_type=cmng.INDICATOR_CONFIG_TYPE
@@ -126,32 +126,8 @@ class FlexAgentGenerator:
         Power variable must be defined in the mpc config.
 
         """
-       
-        # check if the power variable exists in the mpc config
-        if self.flex_config.baseline_config_generator_data.power_variable not in [
-            output.name for output in self.baseline_mpc_module_config.outputs
-        ]:
-            raise ConfigurationError(
-                f"Given power variable {self.flex_config.baseline_config_generator_data.power_variable} is not defined in baseline mpc config."
-            )
+        self.run_config_validations()
         
-        # check if the energy storage variable exists in the mpc config
-        if self.indicator_module_config.correct_costs.enable_energy_costs_correction:
-            if self.flex_config.baseline_config_generator_data.storage_variable not in [
-                output.name for output in self.baseline_mpc_module_config.outputs
-            ]:
-                raise ConfigurationError(
-                    f"The storage variable {self.flex_config.baseline_config_generator_data.storage_variable} is not defined in baseline mpc config. "
-                    f"It must be defined in the base MPC model and config as output if the correction of costs is enabled."
-                )
-            
-        # raise warning if unsupported collocation method is used and change to supported method
-        if self.baseline_mpc_module_config.optimization_backend["discretization_options"]["collocation_method"] == "radau":
-            self.logger.warning(f"Collocation method radau is not supported. Switching to method legendre.")
-            self.baseline_mpc_module_config.optimization_backend["discretization_options"]["collocation_method"] = "legendre"
-            self.pos_flex_mpc_module_config.optimization_backend["discretization_options"]["collocation_method"] = "legendre"
-            self.neg_flex_mpc_module_config.optimization_backend["discretization_options"]["collocation_method"] = "legendre"
-
         # adapt modules to include necessary communication variables
         baseline_mpc_config = self.adapt_mpc_module_config(
             module_config=self.baseline_mpc_module_config,
@@ -217,6 +193,33 @@ class FlexAgentGenerator:
         if self.flex_config.delete_files:
             atexit.register(lambda: self._delete_created_files())
         return self.get_config_file_paths()
+
+    def run_config_validations(self):
+        
+        # check if the power variable exists in the mpc config
+        if self.flex_config.baseline_config_generator_data.power_variable not in [
+            output.name for output in self.baseline_mpc_module_config.outputs
+        ]:
+            raise ConfigurationError(
+                f"Given power variable {self.flex_config.baseline_config_generator_data.power_variable} is not defined in baseline mpc config."
+            )
+        
+        # check if the energy storage variable exists in the mpc config
+        if self.indicator_module_config.correct_costs.enable_energy_costs_correction:
+            if self.flex_config.baseline_config_generator_data.storage_variable not in [
+                output.name for output in self.baseline_mpc_module_config.outputs
+            ]:
+                raise ConfigurationError(
+                    f"The storage variable {self.flex_config.baseline_config_generator_data.storage_variable} is not defined in baseline mpc config. "
+                    f"It must be defined in the base MPC model and config as output if the correction of costs is enabled."
+                )
+            
+        # raise warning if unsupported collocation method is used and change to supported method
+        if self.baseline_mpc_module_config.optimization_backend["discretization_options"]["collocation_method"] == "radau":
+            self.logger.warning(f"Collocation method radau is not supported. Switching to method legendre.")
+            self.baseline_mpc_module_config.optimization_backend["discretization_options"]["collocation_method"] = "legendre"
+            self.pos_flex_mpc_module_config.optimization_backend["discretization_options"]["collocation_method"] = "legendre"
+            self.neg_flex_mpc_module_config.optimization_backend["discretization_options"]["collocation_method"] = "legendre"
 
     def append_module_and_dump_agent(
         self,
