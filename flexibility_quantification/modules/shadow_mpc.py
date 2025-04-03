@@ -1,12 +1,16 @@
+import os
+import math
+import numpy as np
 import pandas as pd
+from typing import Dict, Union
+from collections.abc import Iterable
+from agentlib.core.datamodels import AgentVariable
 from agentlib_mpc.modules import mpc_full, minlp_mpc
 from flexibility_quantification.utils.data_handling import strip_multi_index, fill_nans, MEAN, INTERPOLATE
 from flexibility_quantification.data_structures.globals import (
     full_trajectory_prefix,
     full_trajectory_suffix,
 )
-from typing import Dict, Union
-from agentlib.core.datamodels import AgentVariable
 
 
 class FlexibilityShadowMPC(mpc_full.MPC):
@@ -18,53 +22,73 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         self._full_controls: Dict[str, Union[AgentVariable, None]] = {}
         super().__init__(*args, **kwargs)
 
-    # def set_output(self, result_df: pd.DataFrame):
-    #
-    #     # fill output values at the discretization points if collocation method is used
-    #     if 'collocation' in next(iter(self.config.optimization_backend['discretization_options'])):
-    #
-    #         # store the current state and control value of the casadi model in a dictionary
-    #         current_states = dict()
-    #         for state in self.var_ref.states:
-    #             current_states[state] = self.model.get_state(state).value
-    #
-    #         # store the current state and control value of the casadi model in a dictionary
-    #         current_controls = dict()
-    #         for control in self.var_ref.controls:
-    #             current_controls[control] = self.model.get_input(control).value
-    #
-    #         # get state and control values from the mpc optimization result
-    #         state_values = result_df.variable[self.var_ref.states]
-    #         control_values = result_df.variable[self.var_ref.controls]
-    #
-    #         for i in range(1, len(state_values)):
-    #             # get the integration time
-    #             t_start = float(state_values.index[i-1].strip("()").split(", ")[1]) # or a dummy value? is t_start itself used at all, or do we just need inputs at t_start?
-    #             t_sample = float(state_values.index[i].strip("()").split(", ")[1])
-    #             # only integrate to get outputs at the discretization points
-    #             if not t_sample % self.config.time_step:
-    #                 # set the state to the one at the last collocation/discretization point
-    #                 for j in range(len(self.var_ref.states)):
-    #                     self.model.set(self.var_ref.states[j], state_values.iloc[i-1, j])
-    #                 # set the control to the one at the last discretization point
-    #                 for j in range(len(self.var_ref.controls)):
-    #                     control_inx_shift = int(self.config.optimization_backend['discretization_options']['collocation_order'])+1
-    #                     self.model.set(self.var_ref.controls[j], control_values.iloc[i-control_inx_shift, j])
-    #                 # do the integration
-    #                 self.model.do_step(t_start=t_start, t_sample=t_sample)
-    #                 # set output at the discretization points
-    #                 for output in self.var_ref.outputs:
-    #                     result_df.loc[result_df.index[i], ('variable', output)] = self.model.get_output(output).value
-    #
-    #         # reset the state and control value in the casadi model
-    #         for state in self.var_ref.states:
-    #             self.model.set(state, current_states[state])
-    #
-    #         for control in self.var_ref.controls:
-    #             self.model.set(control, current_controls[control])
-    #
-    #     # send the modified output to AgentVariables
-    #     super().set_output(result_df)
+    def set_output(self, solution):
+        super().set_output(solution)
+        # self.sim_flex_model()
+
+    def sim_flex_model(self):
+        # simulate the flex_model if system is not in provision
+        if not self.get("in_provision").value:
+            # set the high resolution time step
+            dt = 90 # should be read from config
+
+            # initialize flex result
+            horizon_length = int(self.config.prediction_horizon*(self.config.time_step))
+            time_points = math.floor((horizon_length)/dt) + 1  # if int then plus one
+            index_first_level = [self.env.now] * time_points
+            multi_index = pd.MultiIndex.from_tuples(zip(index_first_level, range(0,horizon_length+dt,dt)), names=['time_step', 'time'])
+            self.flex_results = pd.DataFrame(np.nan, index=multi_index, columns=self.var_ref.outputs)
+
+            # initialize the flex_model for integration
+            self.flex_model = type(self.model)(dt=dt)
+
+            # update the value of module inputs and parameters with value from config, since creating a model just reads the value in the model class but not the config
+            for inp in self.config.inputs + self.config.parameters:
+                if not isinstance(inp.value, Iterable):
+                    self.flex_model.set(inp.name, inp.value)
+
+            # read the current optimization result
+            result_df = self.result.df
+
+            # get control values from the mpc optimization result
+            control_values = result_df.variable[self.var_ref.controls]
+
+            # index_tuples = [ast.literal_eval(idx) for idx in result_df.index.tolist()]
+            # multi_index = pd.MultiIndex.from_tuples(index_tuples, names=('time_step', 'time'))
+            # result_df = result_df.set_index(multi_index)
+
+            # read the collocation order
+            collocation_order = int(self.config.optimization_backend['discretization_options']['collocation_order']) + 1
+
+            for i in range(1, time_points, 1):
+                # set control
+                control_num = int((i*dt // self.config.time_step - (i*dt % self.config.time_step == 0)) * collocation_order)
+                for control, value in zip(self.var_ref.controls, control_values.iloc[control_num]):
+                    self.flex_model.set(control, value)
+                # set t_sample
+                t_sample = self.flex_model.dt*i
+                # do integration
+                self.flex_model.do_step(t_start=0, t_sample=t_sample)
+                # save output
+                for output in self.var_ref.outputs:
+                    self.flex_results.loc[(self.env.now, t_sample), output] = self.flex_model.get_output(output).value
+
+            # set index to the same as mpc result
+            self.flex_results.index = multi_index.tolist()
+
+            # clear the casadi simulator result at the first time step
+            res_file = self.config.optimization_backend['results_file'].replace('mpc', 'mpc_sim')
+            if self.env.now == 0:
+                try:
+                    os.remove(res_file)
+                except:
+                    pass
+
+            # save results
+            if not os.path.exists(res_file):
+                self.flex_results.to_csv(res_file)
+            else:
+                self.flex_results.to_csv(res_file, mode='a', header=False)
 
 
     def register_callbacks(self):
