@@ -48,6 +48,11 @@ class PredictorModule(al.BaseModule):
 
             grid = np.arange(now, now + k * ts + 1, sample_time)
             p_traj = pd.Series([1 for i in grid], index=list(grid))
+
+            # if now<7200:
+            #     self.set("mDot", 0.02)
+            # else:
+            #     self.set("mDot", 0)
             self.set("r_pel", p_traj)
 
             yield self.env.timeout(sample_time)

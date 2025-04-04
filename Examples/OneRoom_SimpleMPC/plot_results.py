@@ -26,10 +26,10 @@ def plot_results(results_data: dict = None):
     (ax1, ax2) = axs
     # load
     ax1.set_ylabel(r"$\dot{Q}_{Room}$ in W")
-    res.df_simulation["load"].plot(ax=ax1)
+    res.df_simulation["load"].plot_all(ax=ax1)
     # T_in
     ax2.set_ylabel("$T_{in}$ in K")
-    res.df_simulation["T_in"].plot(ax=ax2)
+    res.df_simulation["T_in"].plot_all(ax=ax2)
     x_ticks = np.arange(0, 3600 * 6 + 1, 3600)
     x_tick_labels = [int(tick / 3600) for tick in x_ticks]
     ax2.set_xticks(x_ticks)
@@ -44,9 +44,9 @@ def plot_results(results_data: dict = None):
     ax1 = axs[0]
     # T out
     ax1.set_ylabel("$T_{room}$ in K")
-    res.df_simulation["T_upper"].plot(ax=ax1, color="0.5")
-    res.df_simulation["T_lower"].plot(ax=ax1, color="0.5")
-    res.df_simulation["T_out"].plot(ax=ax1, color=mpcplot.EBCColors.dark_grey)
+    res.df_simulation["T_upper"].plot_all(ax=ax1, color="0.5")
+    res.df_simulation["T_lower"].plot_all(ax=ax1, color="0.5")
+    res.df_simulation["T_out"].plot_all(ax=ax1, color=mpcplot.EBCColors.dark_grey)
     mpc_at_time_step(
         data=res.df_neg_flex, time_step=9000, variable="T"
     ).plot(ax=ax1, label="neg", linestyle="--", color=mpcplot.EBCColors.red)
@@ -78,7 +78,7 @@ def plot_results(results_data: dict = None):
     (ax1, ax2) = axs
     # P_el
     ax1.set_ylabel("$P_{el}$ in kW")
-    res.df_simulation["P_el"].plot(ax=ax1, color=mpcplot.EBCColors.dark_grey)
+    res.df_simulation["P_el"].plot_all(ax=ax1, color=mpcplot.EBCColors.dark_grey)
     mpc_at_time_step(
         data=res.df_neg_flex, time_step=9000, variable="P_el"
     ).ffill().plot(
@@ -115,7 +115,7 @@ def plot_results(results_data: dict = None):
 
     # mdot
     ax2.set_ylabel(r"$\dot{m}$ in kg/s")
-    res.df_simulation["mDot"].plot(ax=ax2, color=mpcplot.EBCColors.dark_grey)
+    res.df_simulation["mDot"].plot_all(ax=ax2, color=mpcplot.EBCColors.dark_grey)
     mpc_at_time_step(
         data=res.df_neg_flex, time_step=9000, variable="mDot"
     ).ffill().plot(
@@ -162,25 +162,28 @@ def plot_results(results_data: dict = None):
 
     # flexibility
     # get only the first prediction time of each time step
-    energy_flex_neg = res.df_indicator.xs("energyflex_neg", axis=1).droplevel(1).dropna()
-    energy_flex_pos = res.df_indicator.xs("energyflex_pos", axis=1).droplevel(1).dropna()
-    fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=1)
-    ax1 = axs[0]
-    ax1.set_ylabel(r"$\epsilon$ in kWh")
-    energy_flex_neg.plot(ax=ax1, label="neg")
-    energy_flex_pos.plot(ax=ax1, label="pos")
-    energy_flex_neg.plot(ax=ax1, label="neg", color=mpcplot.EBCColors.red)
-    energy_flex_pos.plot(ax=ax1, label="pos", color=mpcplot.EBCColors.blue)
-
-    ax1.legend()
-
-    x_ticks = np.arange(0, 3600 * 6 + 1, 3600)
-    x_tick_labels = [int(tick / 3600) for tick in x_ticks]
-    ax1.set_xticks(x_ticks)
-    ax1.set_xticklabels(x_tick_labels)
-    ax1.set_xlabel("Time in hours")
-    for ax in axs:
-        mpcplot.make_grid(ax)
-        ax.set_xlim(0, 3600 * 6)
+    # energy_flex_neg = res.df_indicator.xs("energyflex_neg", axis=1).droplevel(1).dropna()
+    # energy_flex_pos = res.df_indicator.xs("energyflex_pos", axis=1).droplevel(1).dropna()
+    # fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=1)
+    # ax1 = axs[0]
+    # ax1.set_ylabel(r"$\epsilon$ in kWh")
+    # energy_flex_neg.plot(ax=ax1, label="neg")
+    # energy_flex_pos.plot(ax=ax1, label="pos")
+    # energy_flex_neg.plot(ax=ax1, label="neg", color=mpcplot.EBCColors.red)
+    # energy_flex_pos.plot(ax=ax1, label="pos", color=mpcplot.EBCColors.blue)
+    #
+    # ax1.legend()
+    #
+    # x_ticks = np.arange(0, 3600 * 6 + 1, 3600)
+    # x_tick_labels = [int(tick / 3600) for tick in x_ticks]
+    # ax1.set_xticks(x_ticks)
+    # ax1.set_xticklabels(x_tick_labels)
+    # ax1.set_xlabel("Time in hours")
+    # for ax in axs:
+    #     mpcplot.make_grid(ax)
+    #     ax.set_xlim(0, 3600 * 6)
 
     plt.show()
+
+if __name__ == "__main__":
+    plot_results("00_result_wo_casadimodel")

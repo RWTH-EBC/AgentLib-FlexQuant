@@ -24,13 +24,13 @@ class FlexibilityShadowMPC(mpc_full.MPC):
 
     def set_output(self, solution):
         super().set_output(solution)
-        # self.sim_flex_model()
+        self.sim_flex_model(solution)
 
-    def sim_flex_model(self):
+    def sim_flex_model(self,solution):
         # simulate the flex_model if system is not in provision
         if not self.get("in_provision").value:
             # set the high resolution time step
-            dt = 90 # should be read from config
+            dt = 300 # should be read from config
 
             # initialize flex result
             horizon_length = int(self.config.prediction_horizon*(self.config.time_step))
@@ -48,7 +48,7 @@ class FlexibilityShadowMPC(mpc_full.MPC):
                     self.flex_model.set(inp.name, inp.value)
 
             # read the current optimization result
-            result_df = self.result.df
+            result_df = solution.df
 
             # get control values from the mpc optimization result
             control_values = result_df.variable[self.var_ref.controls]
