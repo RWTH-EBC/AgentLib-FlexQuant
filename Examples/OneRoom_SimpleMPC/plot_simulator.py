@@ -7,17 +7,15 @@ import matplotlib.ticker as plticker
 import agentlib_mpc.utils.plotting.basic as mpcplot
 from agentlib_mpc.utils.analysis import mpc_at_time_step
 from agentlib_mpc.utils.analysis import load_sim, load_mpc, load_mpc_stats
-from matplotlib.pyplot import xticks
-from tensorflow.python.platform.tf_logging import log_every_n
 
 from flexibility_quantification.data_structures.flex_results import Results
 from flexibility_quantification.utils.data_handling import strip_multi_index
 
 results_wo_CasadiSimulator = "00_result_wo_casadimodel"
-results_w_CasadiSimulator = "03_result_w_casadimodel_dt_300"
+results_w_CasadiSimulator = "01_result_w_casadimodel_dt_10"
 flex_config="flex_configs/flexibility_agent_config.json"
 simulator_agent_config="mpc_and_sim/simple_sim.json"
-dt=int(results_w_CasadiSimulator[-3:])
+dt=int(results_w_CasadiSimulator[-2:])
 
 # res_wo_sim = Results(flex_config=flex_config,simulator_agent_config=simulator_agent_config,results=results_wo_CasadiSimulator)
 # res_w_sim = Results(flex_config=flex_config,simulator_agent_config=simulator_agent_config,results=results_w_CasadiSimulator)
