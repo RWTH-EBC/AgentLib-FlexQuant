@@ -12,10 +12,10 @@ from flexibility_quantification.data_structures.flex_results import Results
 from flexibility_quantification.utils.data_handling import strip_multi_index
 
 results_wo_CasadiSimulator = "00_result_wo_casadimodel"
-results_w_CasadiSimulator = "01_result_w_casadimodel_dt_10"
+results_w_CasadiSimulator = "003_result_w_casadimodel_dt_300"
 flex_config="flex_configs/flexibility_agent_config.json"
 simulator_agent_config="mpc_and_sim/simple_sim.json"
-dt=int(results_w_CasadiSimulator[-2:])
+dt=int(results_w_CasadiSimulator[-3:])
 
 # res_wo_sim = Results(flex_config=flex_config,simulator_agent_config=simulator_agent_config,results=results_wo_CasadiSimulator)
 # res_w_sim = Results(flex_config=flex_config,simulator_agent_config=simulator_agent_config,results=results_w_CasadiSimulator)
@@ -60,9 +60,6 @@ def interpolate_high_res(res_w_sim: pd.DataFrame, res_wo_sim: pd.DataFrame) -> p
             for inner_idx in range(len(low_res_time)):
                 for col in res_w_sim['interp_'+ k].columns:
                     res_w_sim['interp_' + k].loc[(outer_idx, low_res_time[inner_idx]), col] = np.interp(low_res_time[inner_idx], high_res_time, mpc_at_time_step(res_w_sim[k], time_step=outer_idx)[col])
-
-# interpolate high resolution to get corresponding value at low resolution
-interpolate_high_res(res_w_sim, res_wo_sim)
 
 def plot_all(variable:str, lb:float, ub:float, ylabel: str, dt:int):
     x_ub = len(res_wo_sim[POS_COLL][variable])
@@ -121,11 +118,14 @@ def plot_one_step(variable: str, time_step:float, lb: float, ub: float, ylabel: 
         for t in [t_mc, t_prep, t_event]:
             axis.axvline(x=t, color='green', linestyle='--', linewidth=0.8)
 
+# interpolate high resolution to get corresponding value at low resolution
+interpolate_high_res(res_w_sim, res_wo_sim)
+
 plot_all('P_el', lb=-0.2, ub=1, ylabel="$P_{el}$ / kW", dt=dt)
-plot_all('T_out', lb=280, ub=900, ylabel="$T_{out}$ / K", dt=dt)
+plot_all('T_out', lb=290, ub=300, ylabel="$T_{out}$ / K", dt=dt)
 
 one_step_time = 900
 plot_one_step(variable='P_el', lb=-0.2, ub=1, ylabel="$P_{el}$ / kW", time_step=one_step_time, dt=dt)
-plot_one_step(variable='T_out', lb=280, ub=300, ylabel="$T_{out}$ / K", time_step=one_step_time, dt=dt)
+plot_one_step(variable='T_out', lb=290, ub=300, ylabel="$T_{out}$ / K", time_step=one_step_time, dt=dt)
 
 plt.show()
