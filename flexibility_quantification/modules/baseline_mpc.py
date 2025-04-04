@@ -73,12 +73,12 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
                 for control, value in zip(self.var_ref.controls, control_values.iloc[control_num]):
                     self.flex_model.set(control, value)
                 # set t_sample
-                t_sample = self.flex_model.dt*i
+                t_sample = self.flex_model.dt
                 # do integration
                 self.flex_model.do_step(t_start=0, t_sample=t_sample)
                 # save output
                 for output in self.var_ref.outputs:
-                    self.flex_results.loc[(self.env.now, t_sample), output] = self.flex_model.get_output(output).value
+                    self.flex_results.loc[(self.env.now, t_sample*i), output] = self.flex_model.get_output(output).value
 
             # set index to the same as mpc result
             self.flex_results.index = multi_index.tolist()
