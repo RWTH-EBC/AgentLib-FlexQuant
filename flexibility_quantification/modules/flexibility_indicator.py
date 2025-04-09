@@ -17,7 +17,7 @@ class InputsForCorrectFlexCosts(BaseModel):
     enable_energy_costs_correction: bool = Field(
         name="enable_energy_costs_correction",
         description="Variable determining whether to correct the costs of the flexible energy"
-                    "Define the storage variable in the base MPC model and config as output if the correction of costs is enabled",
+                    "Define the variable for stored electrical energy in the base MPC model and config as output if the correction of costs is enabled",
         default=False
     )
 
