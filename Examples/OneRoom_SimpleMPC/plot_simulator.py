@@ -1,53 +1,43 @@
 import ast
+import copy
 import os
+import re
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import matplotlib.ticker as plticker
-import agentlib_mpc.utils.plotting.basic as mpcplot
 from agentlib_mpc.utils.analysis import mpc_at_time_step
-from agentlib_mpc.utils.analysis import load_sim, load_mpc, load_mpc_stats
 
-from flexibility_quantification.data_structures.flex_results import Results
-from flexibility_quantification.utils.data_handling import strip_multi_index
+# define the path and extract time resolution
+results_path = "001_result_w_casadimodel_dt_10"
+dt = re.search(r'(\d+)$', results_path).group(1)
+time_steps = 48
+horizon_length = 43200
 
-results_wo_CasadiSimulator = "00_result_wo_casadimodel"
-results_w_CasadiSimulator = "003_result_w_casadimodel_dt_300"
-flex_config="flex_configs/flexibility_agent_config.json"
-simulator_agent_config="mpc_and_sim/simple_sim.json"
-dt=int(results_w_CasadiSimulator[-3:])
-
-# res_wo_sim = Results(flex_config=flex_config,simulator_agent_config=simulator_agent_config,results=results_wo_CasadiSimulator)
-# res_w_sim = Results(flex_config=flex_config,simulator_agent_config=simulator_agent_config,results=results_w_CasadiSimulator)
-P_EL = 'P_el'
+# load the results
 BASE_SIM = 'mpc_sim_base.csv'
 POS_SIM = 'mpc_sim_pos_flex.csv'
 NEG_SIM = 'mpc_sim_neg_flex.csv'
 W_SIM_KEY = [BASE_SIM, POS_SIM, NEG_SIM]
 INTERP_W_SIM_KEY = ['interp_' + key for key in W_SIM_KEY]
+
 BASE_COLL = 'mpc_base.csv'
 POS_COLL = 'mpc_pos_flex.csv'
 NEG_COLL = 'mpc_neg_flex.csv'
 WO_SIM_KEY = [BASE_COLL, POS_COLL, NEG_COLL]
 
-csv_files_w_sim = [os.path.join(results_w_CasadiSimulator, f) for f in os.listdir(results_w_CasadiSimulator) if f.endswith(".csv")]
+csv_files_w_sim = [os.path.join(results_path, f) for f in os.listdir(results_path) if f.endswith(".csv") and any(KEY in f for KEY in W_SIM_KEY)]
 res_w_sim = {os.path.basename(f): pd.read_csv(f) for f in csv_files_w_sim}
 
-csv_files_wo_sim = [os.path.join(results_wo_CasadiSimulator, f) for f in os.listdir(results_wo_CasadiSimulator) if f.endswith(".csv")]
+csv_files_wo_sim = [os.path.join(results_path, f) for f in os.listdir(results_path) if f.endswith(".csv") and any(KEY in f for KEY in WO_SIM_KEY)]
 res_wo_sim = {os.path.basename(f): pd.read_csv(f, header=[1]) for f in csv_files_wo_sim}
 
 def re_index(df):
+    """ set multiindex to the dataframe index """
     index_tuples = [ast.literal_eval(idx) for idx in df.iloc[:,0]]
     multi_index = pd.MultiIndex.from_tuples(index_tuples, names=('time_step', 'time'))
     df_reindex = df.set_index(multi_index)
     df_reindex.rename(columns={df_reindex.columns[0]: 'multiindex'}, inplace=True)
     return df_reindex
-
-for key in W_SIM_KEY:
-    res_w_sim[key] = re_index(res_w_sim[key])
-
-for key in WO_SIM_KEY:
-    res_wo_sim[key] = re_index(res_wo_sim[key])
 
 def interpolate_high_res(res_w_sim: pd.DataFrame, res_wo_sim: pd.DataFrame) -> pd.DataFrame:
     """Interpolate high resolution flex results."""
@@ -61,54 +51,72 @@ def interpolate_high_res(res_w_sim: pd.DataFrame, res_wo_sim: pd.DataFrame) -> p
                 for col in res_w_sim['interp_'+ k].columns:
                     res_w_sim['interp_' + k].loc[(outer_idx, low_res_time[inner_idx]), col] = np.interp(low_res_time[inner_idx], high_res_time, mpc_at_time_step(res_w_sim[k], time_step=outer_idx)[col])
 
-def plot_all(variable:str, lb:float, ub:float, ylabel: str, dt:int):
-    x_ub = len(res_wo_sim[POS_COLL][variable])
-    fig, ax = plt.subplots(3, 1)
+def plot_all(variable:str, lb:float, ub:float, ylabel: str, dt:int, interpolation: bool):
+    fig, ax = plt.subplots(3, 1, sharex=True)
     ax[0].set_title(f'High resolution dt={dt}')
-    
+
+    if interpolation:
+        sim_keys_for_plot = INTERP_W_SIM_KEY
+    else:
+        sim_keys_for_plot = W_SIM_KEY
+
+    my_res_w_sim = copy.deepcopy(res_w_sim)
+    my_res_wo_sim = copy.deepcopy(res_wo_sim)
+
+    for key in sim_keys_for_plot:
+        my_res_w_sim[key].index = [i[0]*time_steps+i[1] for i in my_res_w_sim[key].index]
+    for key in WO_SIM_KEY:
+        my_res_wo_sim[key].index = [i[0]*time_steps+i[1] for i in my_res_wo_sim[key].index]
+
+    x_ub = int(my_res_w_sim[sim_keys_for_plot[0]].index[-1])
+
     # plot Baseline MPC
-    res_w_sim['interp_'+BASE_SIM][variable].plot(ax=ax[0], label="$SIM_{base}$", legend=True)
-    res_wo_sim[BASE_COLL][variable].plot(ax=ax[0], label="$COLL_{base}$", legend=True)
+    my_res_w_sim[sim_keys_for_plot[0]][variable].plot(ax=ax[0], label="$SIM_{base}$", legend=True)
+    my_res_wo_sim[BASE_COLL][variable].plot(ax=ax[0], label="$COLL_{base}$", legend=True)
     
     # plot positive flexibility MPC
-    res_w_sim['interp_'+POS_SIM][variable].plot(ax=ax[1], label="$SIM_{pos}$", legend=True)
-    res_wo_sim[POS_COLL][variable].plot(ax=ax[1], label="$COLL_{pos}$", legend=True)
+    my_res_w_sim[sim_keys_for_plot[1]][variable].plot(ax=ax[1], label="$SIM_{pos}$", legend=True)
+    my_res_wo_sim[POS_COLL][variable].plot(ax=ax[1], label="$COLL_{pos}$", legend=True)
     
     # plot negative flexibility MPC
-    res_w_sim['interp_'+NEG_SIM][variable].plot(ax=ax[2], label="$SIM_{neg}$", legend=True)
-    res_wo_sim[NEG_COLL][variable].plot(ax=ax[2], label="$COLL_{neg}$", legend=True)
+    my_res_w_sim[sim_keys_for_plot[2]][variable].plot(ax=ax[2], label="$SIM_{neg}$", legend=True)
+    my_res_wo_sim[NEG_COLL][variable].plot(ax=ax[2], label="$COLL_{neg}$", legend=True)
     
     for k, axis in zip(WO_SIM_KEY, ax):
         axis.set(xlim=(0, x_ub), xlabel="", xticks=[])
         axis.set(ylabel=ylabel, ylim=(lb, ub))
-        # Get unique first-level index values
-        unique_groups = res_wo_sim[k][variable].index.get_level_values(0).unique()
-        # Find positions where each Group starts
-        group_positions = [res_wo_sim[k][variable].index.get_level_values(0).tolist().index(group) for group in unique_groups]
+        group_positions = list(range(0, horizon_length+x_ub, horizon_length))
         # Add vertical lines at group start positions
         for pos in group_positions:
-            axis.axvline(x=pos, color='green', linestyle='--', linewidth=0.8)  # Adjust for spacing
+            axis.axvline(x=pos, color='green', linestyle='--', linewidth=0.8)
 
-def plot_one_step(variable: str, time_step:float, lb: float, ub: float, ylabel: str, dt:int):
+        ax[2].set(xlabel="time", xticks=group_positions, xticklabels=[gp/time_steps for g in group_positions])
+
+def plot_one_step(variable: str, time_step:float, lb: float, ub: float, ylabel: str, dt:int, interpolation: bool):
     x_ub = mpc_at_time_step(res_wo_sim[BASE_COLL], time_step=0).index.tolist()[-1]
     t_mc = 900
     t_prep = t_mc+900
     t_event = t_prep+7200
-    fig, ax = plt.subplots(3, 1)
+    fig, ax = plt.subplots(3, 1, sharex=True)
     ax[0].set_title(f'High resolution dt={dt}, time_step={time_step}')
 
+    if interpolation:
+        keys_for_plot = INTERP_W_SIM_KEY
+    else:
+        keys_for_plot = W_SIM_KEY
+
     # plot Baseline MPC
-    res_w_sim['interp_' + BASE_SIM].loc[time_step,variable].plot(ax=ax[0], label="$SIM_{base}$", legend=True)
+    res_w_sim[keys_for_plot[0]].loc[time_step,variable].plot(ax=ax[0], label="$SIM_{base}$", legend=True)
     res_wo_sim[BASE_COLL].loc[time_step,variable].plot(ax=ax[0], label="$COLL_{base}$", legend=True)
     ax[0].set(xlabel="", xticks=[])
 
-    # # plot positive flexibility MPC
-    res_w_sim['interp_' + POS_SIM].loc[time_step,variable].plot(ax=ax[1], label="$SIM_{pos}$", legend=True)
+    # plot positive flexibility MPC
+    res_w_sim[keys_for_plot[1]].loc[time_step,variable].plot(ax=ax[1], label="$SIM_{pos}$", legend=True)
     res_wo_sim[POS_COLL].loc[time_step,variable].plot(ax=ax[1], label="$COLL_{pos}$", legend=True)
     ax[1].set(xlabel="", xticks=[])
 
-    # # plot negative flexibility MPC
-    res_w_sim['interp_' + NEG_SIM].loc[time_step,variable].plot(ax=ax[2], label="$SIM_{neg}$", legend=True)
+    # plot negative flexibility MPC
+    res_w_sim[keys_for_plot[2]].loc[time_step,variable].plot(ax=ax[2], label="$SIM_{neg}$", legend=True)
     res_wo_sim[NEG_COLL].loc[time_step,variable].plot(ax=ax[2], label="$COLL_{neg}$", legend=True)
 
     for k, axis in zip(WO_SIM_KEY, ax):
@@ -118,14 +126,21 @@ def plot_one_step(variable: str, time_step:float, lb: float, ub: float, ylabel: 
         for t in [t_mc, t_prep, t_event]:
             axis.axvline(x=t, color='green', linestyle='--', linewidth=0.8)
 
+# re index the results dataframe
+for key in W_SIM_KEY:
+    res_w_sim[key] = re_index(res_w_sim[key])
+
+for key in WO_SIM_KEY:
+    res_wo_sim[key] = re_index(res_wo_sim[key])
+
 # interpolate high resolution to get corresponding value at low resolution
 interpolate_high_res(res_w_sim, res_wo_sim)
 
-plot_all('P_el', lb=-0.2, ub=1, ylabel="$P_{el}$ / kW", dt=dt)
-plot_all('T_out', lb=290, ub=300, ylabel="$T_{out}$ / K", dt=dt)
+plot_all('P_el', lb=-0.2, ub=1, ylabel="$P_{el}$ / kW", dt=dt, interpolation=False)
+plot_all('T_out', lb=290, ub=300, ylabel="$T_{out}$ / K", dt=dt, interpolation=False)
 
-one_step_time = 900
-plot_one_step(variable='P_el', lb=-0.2, ub=1, ylabel="$P_{el}$ / kW", time_step=one_step_time, dt=dt)
-plot_one_step(variable='T_out', lb=290, ub=300, ylabel="$T_{out}$ / K", time_step=one_step_time, dt=dt)
+time_step_for_plot = 900
+plot_one_step(variable='P_el', lb=-0.2, ub=1, ylabel="$P_{el}$ / kW", time_step=time_step_for_plot, dt=dt, interpolation=False)
+plot_one_step(variable='T_out', lb=290, ub=300, ylabel="$T_{out}$ / K", time_step=time_step_for_plot, dt=dt, interpolation=False)
 
 plt.show()
