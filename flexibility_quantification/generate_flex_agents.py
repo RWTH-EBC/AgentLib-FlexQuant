@@ -157,11 +157,11 @@ class FlexAgentGenerator:
             )
         # check if the energy storage variable exists in the mpc config
         if indicator_module_config.correct_costs.enable_energy_costs_correction:
-            if self.flex_config.baseline_config_generator_data.storage_variable not in [
+            if indicator_module_config.correct_costs.stored_energy_variable not in [
                 output.name for output in self.baseline_mpc_module_config.outputs
             ]:
                 raise ConfigurationError(
-                    f"The storage variable {self.flex_config.baseline_config_generator_data.storage_variable} is not defined in baseline mpc config."
+                    f"The storage variable {indicator_module_config.correct_costs.stored_energy_variable} is not defined in baseline mpc config."
                     f"It must be defined in the base MPC model and config as output if the correction of costs is enabled"
                 )
 
@@ -419,7 +419,7 @@ class FlexAgentGenerator:
         # add or change alias for stored energy variable
         if self.indicator_module_config.correct_costs.enable_energy_costs_correction:
             output_dict[
-                self.flex_config.baseline_config_generator_data.storage_variable
+                self.indicator_module_config.correct_costs.stored_energy_variable
             ].alias = mpc_dataclass.stored_energy_alias
 
         # add inputs for the Time variable as well as extra inputs needed for activation of flex

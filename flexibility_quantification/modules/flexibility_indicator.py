@@ -17,7 +17,7 @@ class InputsForCorrectFlexCosts(BaseModel):
     enable_energy_costs_correction: bool = Field(
         name="enable_energy_costs_correction",
         description="Variable determining whether to correct the costs of the flexible energy"
-                    "Define the storage variable 'E_stored' in the base MPC model and config as output if the correction of costs is enabled",
+                    "Define the storage variable in the base MPC model and config as output if the correction of costs is enabled",
         default=False
     )
 
@@ -25,6 +25,12 @@ class InputsForCorrectFlexCosts(BaseModel):
         name="absolute_power_deviation_tolerance",
         default=0.1,
         description="Absolute tolerance in kW within which no warning is thrown"
+    )
+
+    stored_energy_variable: str = Field(
+        name="stored_energy_variable",
+        default="E_stored",
+        description="Name of the variable representing the stored electrical energy in the baseline config"
     )
 
 
