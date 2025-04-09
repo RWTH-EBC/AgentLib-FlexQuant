@@ -161,7 +161,7 @@ class FlexAgentGenerator:
                 output.name for output in self.baseline_mpc_module_config.outputs
             ]:
                 raise ConfigurationError(
-                    f"The storage variable {indicator_module_config.correct_costs.stored_energy_variable} is not defined in baseline mpc config."
+                    f"The stored energy variable {indicator_module_config.correct_costs.stored_energy_variable} is not defined in baseline mpc config."
                     f"It must be defined in the base MPC model and config as output if the correction of costs is enabled"
                 )
 
