@@ -102,6 +102,10 @@ class FlexQuantConfig(pydantic.BaseModel):
         default=None,
         description="Shadow mpc generator data config file or dict",
     )
+    use_CasadiSimulator: Union[bool, float] = pydantic.Field(
+        default=False,
+        description="If the electrical power output of the mpcs should be calculated with a defined resolution",
+    )
     path_to_flex_files: Path = pydantic.Field(
         default="created_files",
         description="Path where generated files should be stored",
