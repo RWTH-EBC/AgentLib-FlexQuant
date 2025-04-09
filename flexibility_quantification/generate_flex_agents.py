@@ -44,6 +44,11 @@ class FlexAgentGenerator:
         flex_config: Union[str, FilePath, FlexQuantConfig],
         mpc_agent_config: Union[str, FilePath, AgentConfig],
     ):
+        if isinstance(flex_config, str or FilePath):
+            self.flex_config_file_name = os.path.basename(flex_config)
+        else:
+            # provide default name for json
+            self.flex_config_file_name = "flex_config.json"
         # load configs
         self.flex_config = load_config.load_config(
             flex_config, config_type=FlexQuantConfig
@@ -120,6 +125,29 @@ class FlexAgentGenerator:
 
         """
 
+        # adapt modules to include necessary communication variables and dump jsons of the agents including the adapted module configs
+        indicator_module_config = self.adapt_indicator_config(
+            module_config=self.indicator_module_config
+        )
+        self.append_module_and_dump_agent(
+            module=indicator_module_config,
+            agent=self.indicator_agent_config,
+            module_type=cmng.INDICATOR_CONFIG_TYPE,
+            config_name=self.flex_config.indicator_config.name_of_created_file,
+        )
+        if self.flex_config.market_config:
+            market_module_config = self.adapt_market_config(
+                module_config=self.market_module_config
+            )
+            self.append_module_and_dump_agent(
+                module=market_module_config,
+                agent=self.market_agent_config,
+                module_type=cmng.MARKET_CONFIG_TYPE,
+                config_name=self.market_config.name_of_created_file,
+            )
+
+        # check if the power variable exists in the mpc config
+
 
         if self.flex_config.baseline_config_generator_data.power_variable not in [
             output.name for output in self.baseline_mpc_module_config.outputs
@@ -127,6 +155,15 @@ class FlexAgentGenerator:
             raise ConfigurationError(
                 f"Given power variable {self.flex_config.baseline_config_generator_data.power_variable} is not defined in baseline mpc config."
             )
+        # check if the energy storage variable exists in the mpc config
+        if indicator_module_config.correct_costs.enable_energy_costs_correction:
+            if self.flex_config.baseline_config_generator_data.storage_variable not in [
+                output.name for output in self.baseline_mpc_module_config.outputs
+            ]:
+                raise ConfigurationError(
+                    f"The storage variable {self.flex_config.baseline_config_generator_data.storage_variable} is not defined in baseline mpc config."
+                    f"It must be defined in the base MPC model and config as output if the correction of costs is enabled"
+                )
 
         # adapt modules to include necessary communication variables
         baseline_mpc_config = self.adapt_mpc_module_config(
@@ -162,29 +199,13 @@ class FlexAgentGenerator:
             config_name=self.flex_config.shadow_mpc_config_generator_data.neg_flex.name_of_created_file,
         )
 
-        # same for indicator and market
-        indicator_module_config = self.adapt_indicator_config(
-            module_config=self.indicator_module_config
-        )
-        self.append_module_and_dump_agent(
-            module=indicator_module_config,
-            agent=self.indicator_agent_config,
-            module_type=cmng.INDICATOR_CONFIG_TYPE,
-            config_name=self.flex_config.indicator_config.name_of_created_file,
-        )
-        if self.flex_config.market_config:
-            market_module_config = self.adapt_market_config(
-                module_config=self.market_module_config
-            )
-            self.append_module_and_dump_agent(
-                module=market_module_config,
-                agent=self.market_agent_config,
-                module_type=cmng.MARKET_CONFIG_TYPE,
-                config_name=self.market_config.name_of_created_file,
-            )
-
         # generate python files for the shadow mpcs
         self._generate_flex_model_definition()
+
+        # save flex config to created flex files
+        with open(os.path.join(self.flex_config.path_to_flex_files, self.flex_config_file_name), "w") as f:
+            config_json = self.flex_config.model_dump_json(exclude_defaults=True)
+            f.write(config_json)
 
         # register the exit function if the corresponding flag is set
         if self.flex_config.delete_files:
@@ -265,6 +286,11 @@ class FlexAgentGenerator:
     def _delete_created_files(self):
         """Function to run at exit if the files are to be deleted"""
         to_be_deleted = self.get_config_file_paths()
+        to_be_deleted.append(
+            os.path.join(
+                self.flex_config.path_to_flex_files,
+                self.flex_config_file_name,
+            ))
         # delete files
         for file in to_be_deleted:
             Path(file).unlink()
@@ -390,6 +416,12 @@ class FlexAgentGenerator:
                     alias=mpc_dataclass.power_alias,
                 )
             )
+        # add or change alias for stored energy variable
+        if self.indicator_module_config.correct_costs.enable_energy_costs_correction:
+            output_dict[
+                self.flex_config.baseline_config_generator_data.storage_variable
+            ].alias = mpc_dataclass.stored_energy_alias
+
         # add inputs for the Time variable as well as extra inputs needed for activation of flex
         module_config.inputs.append(
             MPCVariable(
@@ -462,7 +494,7 @@ class FlexAgentGenerator:
         return module_config
 
     def _generate_flex_model_definition(self):
-        """Generates a python module for negative and positive flexbility agents from
+        """Generates a python module for negative and positive flexibility agents from
         the Baseline MPC model
 
         """

@@ -26,7 +26,6 @@ def fill_nans(series: pd.Series, method: FillNansMethods) -> pd.Series:
         raise ValueError(f"NaN values are still present in the series after filling them with the method {method}\n{series}")
     return series
 
-
 def _set_mean_values(series: pd.Series) -> pd.Series:
     """ Fills intervals including the nan with the mean of the following values. """
     def _get_intervals_for_mean(s: pd.Series) -> list[pd.Interval]:
