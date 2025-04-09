@@ -12,7 +12,6 @@ from agentlib_mpc.modules import mpc_full, minlp_mpc
 
 class FlexibilityBaselineMPC(mpc_full.MPC):
     config: mpc_full.MPCConfig
-    # flex_results: pd.DataFrame = pd.DataFrame()
 
     def pre_computation_hook(self):
         if self.get("in_provision").value:
@@ -32,12 +31,8 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
     def sim_flex_model(self, solution):
         # simulate the flex_model if system is not in provision
         if not self.get("in_provision").value:
-
-            # mpc_model_config = self.model.config.dict()
-            # mpc_model_config['dt'] = 900
-
             # set the high resolution time step
-            dt = 300 # should be read from config
+            dt = 100 # should be read from config
 
             # initialize flex result
             horizon_length = int(self.config.prediction_horizon*(self.config.time_step))
@@ -59,10 +54,6 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
 
             # get control values from the mpc optimization result
             control_values = result_df.variable[self.var_ref.controls]
-
-            # index_tuples = [ast.literal_eval(idx) for idx in result_df.index.tolist()]
-            # multi_index = pd.MultiIndex.from_tuples(index_tuples, names=('time_step', 'time'))
-            # result_df = result_df.set_index(multi_index)
 
             # read the collocation order
             collocation_order = int(self.config.optimization_backend['discretization_options']['collocation_order']) + 1
@@ -96,44 +87,6 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
                 self.flex_results.to_csv(res_file)
             else:
                 self.flex_results.to_csv(res_file, mode='a', header=False)
-
-            # results.to_csv()
-            # results für t_step=60
-            # time      P_flex_sim
-            #  0        100
-            # 180.711        200
-            # 760.12214       ..
-            # 900           ..
-            # formatted = self.format_results(results)
-            # results für
-            # time      P_flex_sim
-            # (0.0, 0)        100
-            # (0.0,180.711)        200
-            # (0.0,760.12214)      ..
-            # (0.0,900)           ..
-            # self.flex_results = results
-
-    # def get_results(self) -> Optional[pd.DataFrame]:
-    #     """Read the results that were saved from the optimization backend and
-    #     returns them as Dataframe.
-    #
-    #     Returns:
-    #         (results, stats) tuple of Dataframes.
-    #     """
-    #     results_file = self.optimization_backend.config.results_file
-    #     if results_file is None or not self.optimization_backend.config.save_results:
-    #         self.logger.info("None results were saved .")
-    #         return None
-    #     try:
-    #         result, stat = self.read_results_file(results_file)
-    #         result=result.append(self.formatted)
-    #         result.write_result_file()
-    #         self.warn_for_missed_solves(stat)
-    #         return result
-    #     except FileNotFoundError:
-    #         self.logger.error("Results file %s was not found.", results_file)
-    #         return None
-
 
 
 class FlexibilityBaselineMINLPMPC(minlp_mpc.MINLPMPC):

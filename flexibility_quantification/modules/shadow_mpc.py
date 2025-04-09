@@ -30,7 +30,7 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         # simulate the flex_model if system is not in provision
         if not self.get("in_provision").value:
             # set the high resolution time step
-            dt = 300 # should be read from config
+            dt = 100 # should be read from config
 
             # initialize flex result
             horizon_length = int(self.config.prediction_horizon*(self.config.time_step))
@@ -52,10 +52,6 @@ class FlexibilityShadowMPC(mpc_full.MPC):
 
             # get control values from the mpc optimization result
             control_values = result_df.variable[self.var_ref.controls]
-
-            # index_tuples = [ast.literal_eval(idx) for idx in result_df.index.tolist()]
-            # multi_index = pd.MultiIndex.from_tuples(index_tuples, names=('time_step', 'time'))
-            # result_df = result_df.set_index(multi_index)
 
             # read the collocation order
             collocation_order = int(self.config.optimization_backend['discretization_options']['collocation_order']) + 1
