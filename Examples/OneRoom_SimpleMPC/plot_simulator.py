@@ -51,7 +51,7 @@ def interpolate_high_res(res_w_sim: pd.DataFrame, res_wo_sim: pd.DataFrame) -> p
                 for col in res_w_sim['interp_'+ k].columns:
                     res_w_sim['interp_' + k].loc[(outer_idx, low_res_time[inner_idx]), col] = np.interp(low_res_time[inner_idx], high_res_time, mpc_at_time_step(res_w_sim[k], time_step=outer_idx)[col])
 
-def plot_all(variable:str, lb:float, ub:float, ylabel: str, dt:int, interpolation: bool):
+def plot_all(variable: str, lb: float, ub: float, ylabel: str, dt: int, interpolation: bool):
     fig, ax = plt.subplots(3, 1, sharex=True)
     ax[0].set_title(f'High resolution dt={dt}')
 
@@ -84,15 +84,16 @@ def plot_all(variable:str, lb:float, ub:float, ylabel: str, dt:int, interpolatio
     
     for k, axis in zip(WO_SIM_KEY, ax):
         axis.set(xlim=(0, x_ub), xlabel="", xticks=[])
+        axis.tick_params(axis='x', which='both', bottom=False, top=False)
         axis.set(ylabel=ylabel, ylim=(lb, ub))
         group_positions = list(range(0, horizon_length+x_ub, horizon_length))
         # Add vertical lines at group start positions
         for pos in group_positions:
             axis.axvline(x=pos, color='green', linestyle='--', linewidth=0.8)
 
-        ax[2].set(xlabel="time", xticks=group_positions, xticklabels=[gp/time_steps for g in group_positions])
+        ax[2].set(xlabel="time / s", xticks=group_positions, xticklabels=[gp/time_steps for gp in group_positions])
 
-def plot_one_step(variable: str, time_step:float, lb: float, ub: float, ylabel: str, dt:int, interpolation: bool):
+def plot_one_step(variable: str, time_step: float, lb: float, ub: float, ylabel: str, dt: int, interpolation: bool):
     x_ub = mpc_at_time_step(res_wo_sim[BASE_COLL], time_step=0).index.tolist()[-1]
     t_mc = 900
     t_prep = t_mc+900
@@ -118,10 +119,12 @@ def plot_one_step(variable: str, time_step:float, lb: float, ub: float, ylabel: 
     # plot negative flexibility MPC
     res_w_sim[keys_for_plot[2]].loc[time_step,variable].plot(ax=ax[2], label="$SIM_{neg}$", legend=True)
     res_wo_sim[NEG_COLL].loc[time_step,variable].plot(ax=ax[2], label="$COLL_{neg}$", legend=True)
+    ax[2].set(xlabel="time / s", xticks=[])
 
     for k, axis in zip(WO_SIM_KEY, ax):
         axis.set(ylabel=ylabel, ylim=(lb, ub))
         axis.set(xlim=(0, x_ub))
+        axis.tick_params(axis='x', which='both', bottom=False, top=False)
         # Add vertical lines at group start positions
         for t in [t_mc, t_prep, t_event]:
             axis.axvline(x=t, color='green', linestyle='--', linewidth=0.8)
