@@ -41,12 +41,12 @@ class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
     )
     save_results: Optional[bool] = pydantic.Field(
         validate_default=True, 
-        default=None
+        default=True
     )
-    overwrite_result_file: Optional[bool] = pydantic.Field(
-        default=False, 
-        validate_default=True
-    )
+    # overwrite_result_file: Optional[bool] = pydantic.Field(
+    #     default=False, 
+    #     validate_default=True
+    # )
 
     shared_variable_fields: List[str] = ["outputs"]
 
@@ -108,7 +108,9 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         self.df = pd.concat((self.df, df.set_index(multi_index)))
         indices = pd.MultiIndex.from_tuples(self.df.index, names=["time_step", "time"])
         self.df.set_index(indices, inplace=True)
-        self.df.to_csv(self.config.results_file)
+
+        if self.config.save_results:
+            self.df.to_csv(self.config.results_file)
 
     def random_flexibility_callback(self, inp, name):
         """

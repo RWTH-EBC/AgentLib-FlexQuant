@@ -169,12 +169,12 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
     )
     save_results: Optional[bool] = Field(
         validate_default=True, 
-        default=None
+        default=True
     )
-    overwrite_result_file: Optional[bool] = Field(
-        default=False, 
-        validate_default=True
-    )
+    # overwrite_result_file: Optional[bool] = Field(
+    #     default=False, 
+    #     validate_default=True
+    # )
     price_variable: str = Field(
         default="r_pel",
         description="Name of the price variable sent by a predictor",
@@ -373,7 +373,8 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         )
 
         # save results
-        self.df.to_csv(self.config.results_file)
+        if self.config.save_results:
+            self.df.to_csv(self.config.results_file)
 
     def send_flex_offer(
             self, name,
