@@ -360,10 +360,11 @@ class FlexAgentGenerator:
                     MPCVariable(
                         name=glbs.full_trajectory_prefix
                         + control.name
-                        + glbs.full_trajectory_suffix,
+                        + glbs.base_suffix,
                         value=control.value,
                     )
                 )
+                control.alias = control.name + glbs.shadow_suffix
             # also include binary controls
             if hasattr(module_config, "binary_controls"):
                 for control in module_config.binary_controls:
@@ -379,15 +380,6 @@ class FlexAgentGenerator:
             # only communicate outputs for the shadow mpcs
             module_config.shared_variable_fields = ["outputs"]
         else:
-            for control in module_config.controls:
-                module_config.outputs.append(
-                    MPCVariable(
-                        name=glbs.full_trajectory_prefix
-                        + control.name
-                        + glbs.full_trajectory_suffix,
-                        value=control.value,
-                    )
-                )
             # also include binary controls
             if hasattr(module_config, "binary_controls"):
                 for control in module_config.binary_controls:

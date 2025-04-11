@@ -11,6 +11,7 @@ from flexibility_quantification.data_structures.globals import (
     return_baseline_cost_function,
     full_trajectory_prefix,
     full_trajectory_suffix,
+    base_suffix,
     POFILE_DEVIATION_WEIGHT,
     MARKET_TIME,
     PREP_TIME,
@@ -212,11 +213,11 @@ class SetupSystemModifier(ast.NodeTransformer):
                     body.value.elts.append(
                         add_input(
                             f"{full_trajectory_prefix}{control.name}"
-                            f"{full_trajectory_suffix}",
-                            "pd.Series([0])",
-                            "W",
-                            "pd.Series",
-                            "full control output",
+                            f"{base_suffix}",
+                            "0",
+                            "W",  # TODO: controls are not always in W? mDot is in kg/s
+                            "float",
+                            "first control output of baseline mpc",
                         )
                     )
                 # also include binary controls
@@ -268,17 +269,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                 elif isinstance(body.value, ast.BinOp) or isinstance(body.value, ast.Tuple):
                     # Complex case with concatenated lists or tuple
                     value_list = self.get_leftmost_list(body.value)
-                for control in self.controls:
-                    value_list.elts.append(
-                        add_output(
-                            f"{full_trajectory_prefix}{control.name}"
-                            f"{full_trajectory_suffix}",
-                            "W",
-                            "pd.Series",
-                            "pd.Series([0])",
-                            "full control output",
-                        )
-                    )
+
                 # also include binary controls
                 if self.binary_controls:
                     for control in self.binary_controls:
@@ -370,7 +361,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                             0,
                             ast.parse(
                                 f"{control.name}_upper = ca.if_else(self.Time.sym < self.market_time.sym, "
-                                f"self.{full_trajectory_prefix}{control.name}{full_trajectory_suffix}.sym, "
+                                f"self.{full_trajectory_prefix}{control.name}{base_suffix}.sym, "
                                 f"self.{control.name}.ub)"
                             ).body[0],
                         )
@@ -378,7 +369,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                             0,
                             ast.parse(
                                 f"{control.name}_lower = ca.if_else(self.Time.sym < self.market_time.sym, "
-                                f"self.{full_trajectory_prefix}{control.name}{full_trajectory_suffix}.sym, "
+                                f"self.{full_trajectory_prefix}{control.name}{base_suffix}.sym, "
                                 f"self.{control.name}.lb)"
                             ).body[0],
                         )
@@ -461,24 +452,8 @@ class SetupSystemModifier(ast.NodeTransformer):
             controls_list = self.controls + self.binary_controls
         else:
             controls_list = self.controls
-        full_traj_list = [
-            ast.Assign(
-                targets=[
-                    ast.Attribute(
-                        value=ast.Name(id="self", ctx=ast.Load()),
-                        attr=f"{full_trajectory_prefix}{control.name}"
-                        f"{full_trajectory_suffix}.alg",
-                        ctx=ast.Store(),
-                    )
-                ],
-                value=ast.Attribute(
-                    value=ast.Name(id="self", ctx=ast.Load()),
-                    attr=control.name,
-                    ctx=ast.Load(),
-                ),
-            )
-            for control in controls_list
-        ]
+        full_traj_list = []
+
         # loop through setup_system function to find return statement
         for i, stmt in enumerate(node.body):
             if isinstance(stmt, ast.Return):

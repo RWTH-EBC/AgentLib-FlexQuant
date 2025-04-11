@@ -3,6 +3,7 @@ from flexibility_quantification.utils.data_handling import strip_multi_index, fi
 from flexibility_quantification.data_structures.globals import (
     full_trajectory_prefix,
     full_trajectory_suffix,
+    base_suffix
 )
 from typing import Dict, Union
 from agentlib.core.datamodels import AgentVariable
@@ -14,21 +15,22 @@ class FlexibilityShadowMPC(mpc_full.MPC):
 
     def __init__(self, *args, **kwargs):
         # create instance variable
-        self._full_controls: Dict[str, Union[AgentVariable, None]] = {}
+        self._first_controls: Dict[str, Union[AgentVariable, None]] = {}
         super().__init__(*args, **kwargs)
 
     def register_callbacks(self):
         for control_var in self.config.controls:
             self.agent.data_broker.register_callback(
-                name=f"{full_trajectory_prefix}{control_var.name}{full_trajectory_suffix}",
-                alias=f"{full_trajectory_prefix}{control_var.name}{full_trajectory_suffix}",
+                name=f"{control_var.name}",
+                alias=f"{control_var.name}",
                 callback=self.calc_flex_callback,
             )
         for input_var in self.config.inputs:
-            if input_var.name.replace(full_trajectory_prefix, "", 1).replace(
-                full_trajectory_suffix, ""
-            ) in [control_var.name for control_var in self.config.controls]:
-                self._full_controls[input_var.name] = input_var
+            adapted_name = input_var.name.replace(full_trajectory_prefix, "", 1).replace(
+                base_suffix, ""
+            )
+            if adapted_name in [control_var.name for control_var in self.config.controls]:
+                self._first_controls[adapted_name] = input_var
 
         super().register_callbacks()
 
@@ -45,19 +47,13 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         if self.agent.config.id == inp.source.agent_id:
             return
 
-        vals = strip_multi_index(inp.value)
-        if vals.isna().any():
-            vals = fill_nans(series=vals, method=MEAN)
-
-        # the MPC Predictions starts at t=env.now not t=0
-        vals.index += self.env.time
-        self._full_controls[name].value = vals
-        self.set(name, vals)
+        self._first_controls[name].value = inp.value
+        self.set(full_trajectory_prefix+name+base_suffix, inp.value)
         # make sure all controls are set
-        if all(x.value is not None for x in self._full_controls.values()):
+        if all(x.value is not None for x in self._first_controls.values()):
             self.do_step()
-            for name in self._full_controls.keys():
-                self._full_controls[name].value = None
+            for name in self._first_controls.keys():
+                self._first_controls[name].value = None
 
     def process(self):
         # the shadow mpc should only be run after the results of the baseline are sent
