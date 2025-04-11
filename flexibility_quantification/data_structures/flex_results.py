@@ -99,8 +99,8 @@ class Results:
             config=flex_config, config_type=FlexQuantConfig
         )
         # get base path from flex_config to use relative paths
-        self.base_path = cmng.subtract_relative_path(os.path.normpath(flex_config),
-                                                     os.path.normpath(self.generator_config.path_to_flex_files))
+        self.base_path = cmng.subtract_relative_path(os.path.abspath(os.path.normpath(self.generator_config.path_to_flex_files)),
+                                    os.path.normpath(self.generator_config.path_to_flex_files))
 
         # get names of the config files
         config_filename_baseline = BaselineMPCData.model_validate(
