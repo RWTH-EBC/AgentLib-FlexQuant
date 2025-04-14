@@ -35,11 +35,8 @@ class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
     ]
 
     market_specs: MarketSpecifications
-    # TODO: time_step needed?
-    time_step: int = pydantic.Field(name="time_step", default=None, description="time step of the MPC")
 
     results_file: Optional[Path] = pydantic.Field(default=None)
-    # TODO: use these two
     save_results: Optional[bool] = pydantic.Field(validate_default=True, default=None)
     overwrite_result_file: Optional[bool] = pydantic.Field(default=False, validate_default=True)
 
@@ -52,7 +49,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
     """
     config: FlexibilityMarketModuleConfig
 
-    # TODO: cleanup
+
     df: pd.DataFrame = None
     end: Union[int, float] = 0
 
@@ -128,11 +125,11 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                 if self.random_generator.random() < self.config.market_specs.options.pos_neg_rate:
                     if np.average(offer.pos_diff_profile) > self.config.market_specs.minimum_average_flex:
                         profile = offer.base_power_profile - offer.pos_diff_profile
-                        offer.status = OfferStatus.accepted_positive
+                        offer.status = OfferStatus.accepted_positive.value
 
                 elif np.average(offer.neg_diff_profile) > self.config.market_specs.minimum_average_flex:
                     profile = offer.base_power_profile + offer.neg_diff_profile
-                    offer.status = OfferStatus.accepted_negative
+                    offer.status = OfferStatus.accepted_negative.value
 
                 if profile is not None:
                     profile = profile.dropna()
@@ -157,11 +154,11 @@ class FlexibilityMarketModule(agentlib.BaseModule):
             if self.config.market_specs.options.direction == "positive":
                 if np.average(offer.pos_diff_profile) > self.config.market_specs.minimum_average_flex:
                     profile = offer.base_power_profile - offer.pos_diff_profile
-                    offer.status = OfferStatus.accepted_positive
+                    offer.status = OfferStatus.accepted_positive.value
 
             elif np.average(offer.neg_diff_profile) > self.config.market_specs.minimum_average_flex:
                 profile = offer.base_power_profile + offer.neg_diff_profile
-                offer.status = OfferStatus.accepted_negative
+                offer.status = OfferStatus.accepted_negative.value
 
             if profile is not None:
                 profile = profile.dropna()

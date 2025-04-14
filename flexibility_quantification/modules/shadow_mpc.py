@@ -9,7 +9,7 @@ from agentlib.core.datamodels import AgentVariable
 
 
 class FlexibilityShadowMPC(mpc_full.MPC):
-    # TODO: remove string handling
+
     config: mpc_full.MPCConfig
 
     def __init__(self, *args, **kwargs):
@@ -65,7 +65,7 @@ class FlexibilityShadowMPC(mpc_full.MPC):
 
 
 class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
-    # TODO: remove string handling
+
     config: minlp_mpc.MINLPMPCConfig
 
     def __init__(self, *args, **kwargs):
@@ -101,8 +101,9 @@ class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
         if self.agent.config.id == inp.source.agent_id:
             return
 
-        # vals = strip_multi_index(inp.value)
-        vals = fill_nans(inp.value)
+        vals = strip_multi_index(inp.value)
+        if vals.isna().any():
+            vals = fill_nans(vals, method=MEAN)
 
         # the MPC Predictions starts at t=env.now not t=0
         vals.index += self.env.time

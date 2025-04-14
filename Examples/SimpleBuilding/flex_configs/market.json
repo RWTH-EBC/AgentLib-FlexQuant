@@ -9,11 +9,11 @@
         {
           "module_id": "FlexibilityMarket",
           "type": "flexibility_quantification.flexibility_market",
-          "results_file": "results\\flexibility_market.csv",
+          "results_file": "results/flexibility_market.csv",
           "market_specs": {
             "type": "single",
             "cooldown": 10,
-            "minimum_average_flex": 0,
+            "minimum_average_flex": 500,
             "options": {
               "start_time": 9000,
               "direction": "positive"
@@ -21,7 +21,6 @@
           }
         }
       ]
-
     },
     "name_of_created_file": "flexibility_market.json"
   }
