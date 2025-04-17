@@ -43,10 +43,6 @@ class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
         validate_default=True, 
         default=True
     )
-    # overwrite_result_file: Optional[bool] = pydantic.Field(
-    #     default=False, 
-    #     validate_default=True
-    # )
 
     shared_variable_fields: List[str] = ["outputs"]
 
