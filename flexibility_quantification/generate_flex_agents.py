@@ -143,6 +143,21 @@ class FlexAgentGenerator:
             self.pos_flex_mpc_module_config.optimization_backend["discretization_options"]["collocation_method"] = "legendre"
             self.neg_flex_mpc_module_config.optimization_backend["discretization_options"]["collocation_method"] = "legendre"
 
+        # raise warning if parameter value in flex indicator module config differs from value in flex config/ baseline mpc module config
+        param_list_flex = [glbs.PREP_TIME, glbs.MARKET_TIME, glbs.FLEX_EVENT_DURATION]
+        param_list_mpc = [glbs.PREDICTION_HORIZON, glbs.TIME_STEP]
+        for parameter in self.indicator_module_config.parameters:
+            if parameter.name in param_list_flex:
+                flex_value = getattr(self.flex_config, parameter.name, None)
+                if parameter.value != flex_value:
+                    self.logger.warning(f'Value mismatch for {parameter.name} in flex config (field) and indicator module config (parameter). '
+                                        f'Flex config value will be used.')
+            elif parameter.name in param_list_mpc:
+                mpc_value = getattr(self.baseline_mpc_module_config, parameter.name, None)
+                if parameter.value != mpc_value:
+                    self.logger.warning(f'Value mismatch for {parameter.name} in baseline MPC module config (field) and indicator module config (parameter). '
+                                        f'Baseline MPC module config value will be used.')
+
     def generate_flex_agents(
         self,
     ) -> [
@@ -478,10 +493,10 @@ class FlexAgentGenerator:
         module_config.power_unit = (
             self.flex_config.baseline_config_generator_data.power_unit
         )
-        # module_config.results_file = Path(
-        #     Path(self.orig_mpc_module_config.optimization_backend["results_file"]).parent,
-        #     self.indicator_config.name_of_created_file.replace(".json", ".csv"),
-        # )
+        module_config.results_file = Path(
+            Path(self.orig_mpc_module_config.optimization_backend["results_file"]).parent,
+            Path(module_config.results_file).name,
+        )
         module_config.model_config["frozen"] = True
         return module_config
 
@@ -496,10 +511,10 @@ class FlexAgentGenerator:
                 module_config.__setattr__(
                     field, getattr(self.market_module_config, field)
                 )
-        # module_config.results_file = Path(
-        #     Path(self.orig_mpc_module_config.optimization_backend["results_file"]).parent,
-        #     self.market_config.name_of_created_file.replace(".json", ".csv"),
-        # )
+        module_config.results_file = Path(
+            Path(self.orig_mpc_module_config.optimization_backend["results_file"]).parent,
+            Path(module_config.results_file).name,
+        )
         module_config.model_config["frozen"] = True
         return module_config
 
