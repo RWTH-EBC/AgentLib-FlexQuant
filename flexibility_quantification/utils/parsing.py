@@ -214,7 +214,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                         add_input(
                             f"{control.name}{base_suffix}",
                             "0",
-                            "W",  # TODO: controls are not always in W? mDot is in kg/s
+                            control.unit,
                             "float",
                             "first control output of baseline mpc",
                         )
