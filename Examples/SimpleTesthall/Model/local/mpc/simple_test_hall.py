@@ -293,7 +293,7 @@ class SimpleTestHallModelConfig(CasadiModelConfig):
     ]
 
     outputs: List[CasadiOutput] = [
-        CasadiOutput(name="P_el_c", unit='W'),
+        CasadiOutput(name="P_el", unit='W'),
         CasadiOutput(name="q_tabs_del_out", unit='W', value=0),
         CasadiOutput(name="T_out", unit='K'),
         CasadiOutput(name="T_Win_sur", value=293.15, unit="K", description="Surface Temperature on the inside of the window"),
@@ -588,7 +588,7 @@ class SimpleTestHall(CasadiModel):
 
         self.Q_ahu_abs.alg = ca.fabs(self.Q_Ahu.sym)
         self.Q_tabs_abs.alg = ca.fabs(self.Q_Tabs_set_del.sym)
-        self.P_el_c.alg = (ca.fabs(self.Q_Ahu.sym) + ca.fabs(self.Q_Tabs_set_del.sym)) / self.COP
+        self.P_el.alg = (ca.fabs(self.Q_Ahu.sym) + ca.fabs(self.Q_Tabs_set_del.sym)) / self.COP
 
         # endregion
 
