@@ -352,15 +352,12 @@ class FlexAgentGenerator:
                 self.flex_config.market_time
             )
 
-        # add the control signal of the baseline to outputs (used during market time)
-        # and as inputs for the shadow mpcs
+        # add the control signal of the baseline as inputs for the shadow mpcs
         if type(mpc_dataclass) is not BaselineMPCData:
             for control in module_config.controls:
                 module_config.inputs.append(
                     MPCVariable(
-                        name=glbs.full_trajectory_prefix
-                        + control.name
-                        + glbs.base_suffix,
+                        name=control.name + glbs.base_suffix,
                         value=control.value,
                     )
                 )

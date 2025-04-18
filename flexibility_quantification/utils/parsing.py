@@ -204,7 +204,7 @@ class SetupSystemModifier(ast.NodeTransformer):
         """
         # loop over config object and modify fields
         for body in node.body:
-            # add the time and full control trajectory inputs
+            # add the time and baseline control inputs
             if body.target.id == "inputs":
                 body.value.elts.append(
                     add_input("Time", 0, "s", "time trajectory", "list")
@@ -212,8 +212,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                 for control in self.controls:
                     body.value.elts.append(
                         add_input(
-                            f"{full_trajectory_prefix}{control.name}"
-                            f"{base_suffix}",
+                            f"{control.name}{base_suffix}",
                             "0",
                             "W",  # TODO: controls are not always in W? mDot is in kg/s
                             "float",
@@ -361,7 +360,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                             0,
                             ast.parse(
                                 f"{control.name}_upper = ca.if_else(self.Time.sym < self.market_time.sym, "
-                                f"self.{full_trajectory_prefix}{control.name}{base_suffix}.sym, "
+                                f"self.{control.name}{base_suffix}.sym, "
                                 f"self.{control.name}.ub)"
                             ).body[0],
                         )
@@ -369,7 +368,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                             0,
                             ast.parse(
                                 f"{control.name}_lower = ca.if_else(self.Time.sym < self.market_time.sym, "
-                                f"self.{full_trajectory_prefix}{control.name}{base_suffix}.sym, "
+                                f"self.{control.name}{base_suffix}.sym, "
                                 f"self.{control.name}.lb)"
                             ).body[0],
                         )

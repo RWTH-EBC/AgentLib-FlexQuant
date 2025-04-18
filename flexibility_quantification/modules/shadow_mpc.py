@@ -26,9 +26,7 @@ class FlexibilityShadowMPC(mpc_full.MPC):
                 callback=self.calc_flex_callback,
             )
         for input_var in self.config.inputs:
-            adapted_name = input_var.name.replace(full_trajectory_prefix, "", 1).replace(
-                base_suffix, ""
-            )
+            adapted_name = input_var.name.replace(base_suffix, "")
             if adapted_name in [control_var.name for control_var in self.config.controls]:
                 self._first_controls[adapted_name] = input_var
 
@@ -48,7 +46,7 @@ class FlexibilityShadowMPC(mpc_full.MPC):
             return
 
         self._first_controls[name].value = inp.value
-        self.set(full_trajectory_prefix+name+base_suffix, inp.value)
+        self.set(name+base_suffix, inp.value)
         # make sure all controls are set
         if all(x.value is not None for x in self._first_controls.values()):
             self.do_step()
