@@ -1,5 +1,5 @@
 import pydantic
-from pydantic import ConfigDict
+from pydantic import ConfigDict, field_validator
 from pathlib import Path
 from typing import Union, List, Optional
 from enum import Enum
@@ -101,9 +101,9 @@ class FlexQuantConfig(pydantic.BaseModel):
         default=None,
         description="Shadow mpc generator data config file or dict",
     )
-    use_CasadiSimulator: Union[bool, float] = pydantic.Field(
-        default=False,
-        description="If the electrical power output of the mpcs should be calculated with a defined resolution",
+    casadi_sim_time_step: int = pydantic.Field(
+        default=200,
+        description="Simulate over the prediction horizon with a defined resolution using Casadi simulator. Set to 0 to skip simulation",
     )
     path_to_flex_files: Path = pydantic.Field(
         default="created_files",
@@ -120,3 +120,10 @@ class FlexQuantConfig(pydantic.BaseModel):
 
     class Config:
         json_encoders = {Path: str}
+
+    @field_validator('casadi_sim_time_step', mode='after')
+    @classmethod
+    def is_none_negative_integer(cls, value: int) -> int:
+        if value < 0:
+            raise ValueError(f'{value} is not a non-negative integer')
+        return value

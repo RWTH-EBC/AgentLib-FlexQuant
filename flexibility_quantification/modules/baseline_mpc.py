@@ -8,6 +8,7 @@ from typing import Optional
 from collections.abc import Iterable
 from agentlib_mpc.utils.analysis import mpc_at_time_step
 from agentlib_mpc.modules import mpc_full, minlp_mpc
+from flexibility_quantification.data_structures.globals import CASADI_SIM_TIME_STEP
 
 
 class FlexibilityBaselineMPC(mpc_full.MPC):
@@ -29,10 +30,13 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
         self.sim_flex_model(solution)
 
     def sim_flex_model(self, solution):
-        # simulate the flex_model if system is not in provision
-        if not self.get("in_provision").value:
-            # set the high resolution time step
-            dt = 100 # should be read from config
+        # read the high resolution time step
+        for inp in self.config.parameters:
+            if inp.name == CASADI_SIM_TIME_STEP:
+                dt = inp.value
+
+        # simulate the flex_model if dt is a positive integer and system is not in provision
+        if dt > 0 and not self.get("in_provision").value:
 
             # initialize flex result
             horizon_length = int(self.config.prediction_horizon*(self.config.time_step))

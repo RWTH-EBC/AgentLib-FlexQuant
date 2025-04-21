@@ -64,9 +64,8 @@ class BaselineMPCData(BaseMPCData):
         MPCVariable(name="rel_end", value=0, unit="s"),
     ]
     config_parameters_appendix: List[MPCVariable] = [
-        MPCVariable(
-            name=glbs.POFILE_DEVIATION_WEIGHT, value=profile_deviation_weight, unit="-"
-        )
+        MPCVariable(name=glbs.POFILE_DEVIATION_WEIGHT, value=profile_deviation_weight, unit="-"),
+        MPCVariable(name=glbs.CASADI_SIM_TIME_STEP, value=0, unit="s")
     ]
     weights: List[MPCVariable] = pydantic.Field(
         default=[],
@@ -97,6 +96,7 @@ class PFMPCData(BaseMPCData):
         MPCVariable(name=glbs.PREP_TIME, value=0, unit="s"),
         MPCVariable(name=glbs.MARKET_TIME, value=0, unit="s"),
         MPCVariable(name=glbs.FLEX_EVENT_DURATION, value=0, unit="s"),
+        MPCVariable(name=glbs.CASADI_SIM_TIME_STEP, value=0, unit="s")
     ]
     config_inputs_appendix: List[MPCVariable] = [
         MPCVariable(name="in_provision", value=False),
@@ -130,6 +130,7 @@ class NFMPCData(BaseMPCData):
         MPCVariable(name=glbs.PREP_TIME, value=0, unit="s"),
         MPCVariable(name=glbs.MARKET_TIME, value=0, unit="s"),
         MPCVariable(name=glbs.FLEX_EVENT_DURATION, value=0, unit="s"),
+        MPCVariable(name=glbs.CASADI_SIM_TIME_STEP, value=0, unit="s")
     ]
     config_inputs_appendix: List[MPCVariable] = [
         MPCVariable(name="in_provision", value=False),

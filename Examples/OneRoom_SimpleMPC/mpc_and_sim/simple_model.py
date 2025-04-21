@@ -91,8 +91,6 @@ class BaselineMPCModelConfig(CasadiModelConfig):
         ),
     ]
 
-    # dt: float = 10
-
 class BaselineMPCModel(CasadiModel):
     config: BaselineMPCModelConfig
                 
@@ -125,8 +123,3 @@ class BaselineMPCModel(CasadiModel):
         return objective
 
 
-
-# if __name__ == "__main__":
-#     my_model = BaselineMPCModel(dt=5)
-#     my_model.do_step(t_start=10000, t_sample=15)
-#     print(my_model.T.value)
