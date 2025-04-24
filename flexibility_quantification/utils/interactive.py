@@ -432,7 +432,7 @@ class Dashboard(flex_results.Results):
                 mark_time(fig=fig, at_time_step=offer_time, line_prop=line_prop)
                 mark_time(
                     fig=fig,
-                    at_time_step=offer_time + rel_prep_time,
+                    at_time_step=offer_time + rel_market_time,
                     line_prop=line_prop,
                 )
                 mark_time(
