@@ -5,7 +5,7 @@ import agentlib
 import numpy as np
 import pandas as pd
 from pathlib import Path
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, ConfigDict
 
 
 import flexibility_quantification.data_structures.globals as glbs
@@ -34,6 +34,11 @@ kpis_neg = FlexibilityKPIs(direction="negative")
 
 
 class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
+
+    model_config = ConfigDict(
+        extra='forbid'
+    )
+
     inputs: List[agentlib.AgentVariable] = [
         agentlib.AgentVariable(name=glbs.POWER_ALIAS_BASE, unit="W", type="pd.Series",
                                description="The power input to the system"),

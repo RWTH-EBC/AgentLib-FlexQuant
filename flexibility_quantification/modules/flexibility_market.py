@@ -12,6 +12,9 @@ from flexibility_quantification.data_structures.market import MarketSpecificatio
 class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
     # parameters: List[agentlib.AgentVariable] = [
     # ]
+    model_config = pydantic.ConfigDict(
+        extra='forbid'
+    )
     inputs: List[agentlib.AgentVariable] = [
         agentlib.AgentVariable(name="FlexibilityOffer")
     ]
