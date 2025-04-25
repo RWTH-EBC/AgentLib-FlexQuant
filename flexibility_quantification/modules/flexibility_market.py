@@ -36,8 +36,13 @@ class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
 
     market_specs: MarketSpecifications
 
+    results_filename: Optional[Path] = pydantic.Field(
+        default=Path("flexibility_market.csv"),
+        description="User specified results file name"
+    )
     results_file: Optional[Path] = pydantic.Field(
-        default=Path("results/flexibility_market.csv")
+        default=Path("results/flexibility_market.csv"),
+        description="Automatically set results file path"
     )
     save_results: Optional[bool] = pydantic.Field(
         validate_default=True, 

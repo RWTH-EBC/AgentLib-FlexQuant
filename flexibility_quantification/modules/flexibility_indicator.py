@@ -164,8 +164,13 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
                                description="prediction horizon of the mpc solution")
     ]
 
+    results_filename: Optional[Path] = Field(
+        default=Path("flexibility_indicator.csv"),
+        description="User specified results file name"
+    )
     results_file: Optional[Path] = Field(
-        default=Path("results/flexibility_indicator.csv")
+        default=Path("results/flexibility_indicator.csv"),
+        description="Automatically set results file path"
     )
     save_results: Optional[bool] = Field(
         validate_default=True, 
