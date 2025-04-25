@@ -14,9 +14,11 @@ from flexibility_quantification.data_structures.globals import (
     CASADI_SIM_TIME_STEP
 )
 
+class FlexibilityShadowMPCConfig(mpc_full.MPCConfig):
+    time_stpe: int
 
 class FlexibilityShadowMPC(mpc_full.MPC):
-    config: mpc_full.MPCConfig
+    config: FlexibilityShadowMPCConfig
 
     def __init__(self, *args, **kwargs):
         # create instance variable

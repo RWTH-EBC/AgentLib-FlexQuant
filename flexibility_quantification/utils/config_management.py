@@ -39,6 +39,7 @@ def get_module_type_matching_dict(dictionary: dict):
     """
     # Create dictionaries to store keys grouped by values
     value_to_keys = {}
+    # TODO: mathcing is done based on class type. Check for extension
     for k, v in dictionary.items():
         if k.startswith(('agentlib_mpc.', 'flexibility_quantification.')):
             if v not in value_to_keys:

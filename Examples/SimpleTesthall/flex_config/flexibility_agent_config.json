@@ -86,6 +86,7 @@
             "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, -self.s_P * self.P_el])"
         }
     },
+    "casadi_sim_time_step" : 100,
     "path_to_flex_files": "created_flex_files",
     "delete_files": false,
     "overwrite_files": true
