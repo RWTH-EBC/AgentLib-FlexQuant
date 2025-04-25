@@ -147,16 +147,42 @@ class FlexAgentGenerator:
         param_list_flex = [glbs.PREP_TIME, glbs.MARKET_TIME, glbs.FLEX_EVENT_DURATION]
         param_list_mpc = [glbs.PREDICTION_HORIZON, glbs.TIME_STEP]
         for parameter in self.indicator_module_config.parameters:
-            if parameter.name in param_list_flex:
-                flex_value = getattr(self.flex_config, parameter.name, None)
-                if parameter.value != flex_value:
-                    self.logger.warning(f'Value mismatch for {parameter.name} in flex config (field) and indicator module config (parameter). '
-                                        f'Flex config value will be used.')
-            elif parameter.name in param_list_mpc:
-                mpc_value = getattr(self.baseline_mpc_module_config, parameter.name, None)
-                if parameter.value != mpc_value:
-                    self.logger.warning(f'Value mismatch for {parameter.name} in baseline MPC module config (field) and indicator module config (parameter). '
-                                        f'Baseline MPC module config value will be used.')
+            if parameter.value is not None:
+                if parameter.name in param_list_flex:
+                    flex_value = getattr(self.flex_config, parameter.name, None)
+                    if parameter.value != flex_value:
+                        self.logger.warning(f'Value mismatch for {parameter.name} in flex config (field) and indicator module config (parameter). '
+                                            f'Flex config value will be used.')
+                elif parameter.name in param_list_mpc:
+                    mpc_value = getattr(self.baseline_mpc_module_config, parameter.name, None)
+                    if parameter.value != mpc_value:
+                        self.logger.warning(f'Value mismatch for {parameter.name} in baseline MPC module config (field) and indicator module config (parameter). '
+                                            f'Baseline MPC module config value will be used.')
+        
+        #r_pel naming problem
+        if self.indicator_module_config.price_variable != "r_pel":
+            raise ConfigurationError(f"The price variable must be named 'r_pel'")
+
+        #time data validations
+        flex_times = {
+            "prep_time": self.flex_config.prep_time,
+            "market_time": self.flex_config.market_time,
+            "flex_event_duration": self.flex_config.flex_event_duration
+        }
+        mpc_times = {
+            "time_step": self.baseline_mpc_module_config.time_step,
+            "prediction_horizon": self.baseline_mpc_module_config.prediction_horizon
+        }    
+        # total time length check (prep+market+flex_event)
+        if sum(flex_times.values()) > mpc_times["time_step"] * mpc_times["prediction_horizon"]:
+            raise ConfigurationError(f'Market time + prep time + flex event duration can not exceed the prediction horizon.')
+        # market time val check
+        if flex_times["market_time"] != mpc_times["time_step"]:
+            raise ConfigurationError(f'Market time must be equal to the time step.')
+        # check for divisibility of flex_times by time_step 
+        for name, value in flex_times.items():
+            if value % mpc_times["time_step"] != 0:
+                raise ConfigurationError(f'{name} is not a multiple of the time step. Please redefine.')
 
     def generate_flex_agents(
         self,
@@ -495,7 +521,7 @@ class FlexAgentGenerator:
         )
         module_config.results_file = Path(
             Path(self.orig_mpc_module_config.optimization_backend["results_file"]).parent,
-            Path(module_config.results_file).name,
+            Path(module_config.results_filename).name,
         )
         module_config.model_config["frozen"] = True
         return module_config
@@ -513,7 +539,7 @@ class FlexAgentGenerator:
                 )
         module_config.results_file = Path(
             Path(self.orig_mpc_module_config.optimization_backend["results_file"]).parent,
-            Path(module_config.results_file).name,
+            Path(module_config.results_filename).name,
         )
         module_config.model_config["frozen"] = True
         return module_config
