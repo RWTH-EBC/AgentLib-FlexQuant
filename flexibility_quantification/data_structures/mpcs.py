@@ -85,7 +85,7 @@ class BaselineMPCData(BaseMPCData):
             )
         ]
         if self.comfort_variable:
-            self.config_inputs_appendix.append(MPCVariable(
+            self.config_parameters_appendix.append(MPCVariable(
                     name=glbs.PROFILE_COMFORT_WEIGHT,
                     value=self.profile_comfort_weight,
                     unit="-",
