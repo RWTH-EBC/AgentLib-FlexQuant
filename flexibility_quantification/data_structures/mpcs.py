@@ -1,6 +1,6 @@
 import pydantic
-from pydantic import ConfigDict
-from typing import List
+from pydantic import ConfigDict, model_validator
+from typing import List, Optional
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 import flexibility_quantification.data_structures.globals as glbs
 import flexibility_quantification.utils.config_management as cmng
@@ -53,22 +53,45 @@ class BaselineMPCData(BaseMPCData):
     power_unit: str = pydantic.Field(
         default="kW", description="Unit of the power variable"
     )
+    comfort_variable: str = pydantic.Field(
+        default=None,
+        description="Name of the slack variable representing the thermal comfort in the baseline config",
+    )
+    profile_comfort_weight: float = pydantic.Field(
+        default=1,
+        description="Weight of soft constraint for discomfort",
+    )
     config_inputs_appendix: List[MPCVariable] = [
         MPCVariable(name="_P_external", value=0, unit="W"),
         MPCVariable(name="in_provision", value=False),
         MPCVariable(name="rel_start", value=0, unit="s"),
         MPCVariable(name="rel_end", value=0, unit="s"),
     ]
-    config_parameters_appendix: List[MPCVariable] = [
-        MPCVariable(
-            name=glbs.POFILE_DEVIATION_WEIGHT, value=profile_deviation_weight, unit="-"
-        )
-    ]
+    config_parameters_appendix: List[MPCVariable] = []
     weights: List[MPCVariable] = pydantic.Field(
         default=[],
         description="Name and value of weights",
     )
     model_config = ConfigDict(json_encoders={MPCVariable: lambda v: v.dict()})
+
+    @model_validator(mode='after')
+    def update_config_parameters_appendix(self) -> 'BaselineMPCData':
+        self.config_parameters_appendix = [
+            MPCVariable(
+                name=glbs.PROFILE_DEVIATION_WEIGHT,
+                value=self.profile_deviation_weight,
+                unit="-",
+                description="Weight of soft constraint for deviation from accepted flexible profile"
+            )
+        ]
+        if self.comfort_variable:
+            self.config_inputs_appendix.append(MPCVariable(
+                    name=glbs.PROFILE_COMFORT_WEIGHT,
+                    value=self.profile_comfort_weight,
+                    unit="-",
+                    description="Weight of soft constraint for discomfort"
+                ))
+        return self
 
 
 class PFMPCData(BaseMPCData):
