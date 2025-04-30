@@ -1,12 +1,13 @@
-from agentlib.core.agent import AgentConfig
-from agentlib.core.module import BaseModuleConfig
-import flexibility_quantification.data_structures.globals as glbs
+import os
+import inspect
+import math
+import flexibility_quantification
 from copy import deepcopy
 from typing import TypeVar
-import math
 from agentlib.modules import get_all_module_types
-import inspect
-import os
+from agentlib.core.agent import AgentConfig
+from agentlib.core.module import BaseModuleConfig
+from agentlib_mpc.modules.mpc import BaseMPCConfig
 
 
 T = TypeVar('T', bound=BaseModuleConfig)
@@ -23,6 +24,7 @@ all_module_types.pop("agentlib_mpc.set_point_generator")
 all_module_types.pop("clonemap")
 
 MODULE_TYPE_DICT = {name: inspect.get_annotations(class_type.import_class())["config"] for name, class_type in all_module_types.items()}
+MODULE_NAME_DICT = all_module_types
 
 MPC_CONFIG_TYPE: str = "agentlib_mpc.mpc"
 BASELINEMPC_CONFIG_TYPE: str = "flexibility_quantification.baseline_mpc"
@@ -39,15 +41,17 @@ def get_module_type_matching_dict(dictionary: dict):
     """
     # Create dictionaries to store keys grouped by values
     value_to_keys = {}
-    # TODO: mathcing is done based on class type. Check for extension
     for k, v in dictionary.items():
-        if k.startswith(('agentlib_mpc.', 'flexibility_quantification.')):
+        if k.startswith('agentlib_mpc.'):
             if v not in value_to_keys:
                 value_to_keys[v] = {'agentlib': [], 'flex': []}
-            if k.startswith('agentlib_mpc.'):
-                value_to_keys[v]['agentlib'].append(k)
-            else:
-                value_to_keys[v]['flex'].append(k)
+            value_to_keys[v]['agentlib'].append(k)
+        if k.startswith('flexibility_quantification.'):
+            # find the parent class of the module in the flexquant in agentlib_mpc
+            for vv in value_to_keys:
+                if vv.import_class() is v.import_class().__bases__[0]:
+                    value_to_keys[vv]['flex'].append(k)
+                    break
 
     # Create result dictionaries
     baseline_matches = {}
@@ -68,7 +72,7 @@ def get_module_type_matching_dict(dictionary: dict):
 
 
 BASELINE_MODULE_TYPE_DICT, SHADOW_MODULE_TYPE_DICT = (
-    get_module_type_matching_dict(MODULE_TYPE_DICT))
+    get_module_type_matching_dict(MODULE_NAME_DICT))
 
 
 def get_orig_module_type(config: AgentConfig):
