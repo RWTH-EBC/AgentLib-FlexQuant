@@ -1,34 +1,30 @@
-import inspect
-import logging
-from copy import deepcopy
-from agentlib.utils import custom_injection, load_config
-from agentlib.core.errors import ConfigurationError
-from flexibility_quantification.data_structures.flexquant import (
-    FlexQuantConfig,
-    FlexibilityIndicatorConfig,
-    FlexibilityMarketConfig,
-)
-import flexibility_quantification.data_structures.globals as glbs
-from flexibility_quantification.data_structures.mpcs import BaseMPCData, BaselineMPCData
-import flexibility_quantification.utils.config_management as cmng
-from flexibility_quantification.modules.flexibility_indicator import (
-    FlexibilityIndicatorModuleConfig,
-)
-from flexibility_quantification.modules.flexibility_market import (
-    FlexibilityMarketModuleConfig,
-)
-from agentlib_mpc.modules.mpc_full import BaseMPCConfig
-from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
-from agentlib_mpc.models.casadi_model import CasadiModelConfig
-from agentlib.core.agent import AgentConfig
-from agentlib.core.module import BaseModuleConfig
 import ast
 import atexit
+import black
 import os
+import inspect
+import logging
+import flexibility_quantification.data_structures.globals as glbs
+import flexibility_quantification.utils.config_management as cmng
 from typing import Union, List
 from pydantic import FilePath
 from pathlib import Path
-import black
+from copy import deepcopy
+from agentlib.utils import custom_injection, load_config
+from agentlib.core.errors import ConfigurationError
+from agentlib.core.agent import AgentConfig
+from agentlib.core.module import BaseModuleConfig
+from agentlib_mpc.modules.mpc_full import BaseMPCConfig
+from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
+from agentlib_mpc.models.casadi_model import CasadiModelConfig
+from flexibility_quantification.data_structures.mpcs import BaseMPCData, BaselineMPCData
+from flexibility_quantification.modules.flexibility_indicator import FlexibilityIndicatorModuleConfig
+from flexibility_quantification.modules.flexibility_market import FlexibilityMarketModuleConfig
+from flexibility_quantification.data_structures.flexquant import (
+    FlexQuantConfig,
+    FlexibilityIndicatorConfig,
+    FlexibilityMarketConfig
+)
 
 
 class FlexAgentGenerator:
@@ -169,14 +165,17 @@ class FlexAgentGenerator:
         baseline_mpc_config = self.adapt_mpc_module_config(
             module_config=self.baseline_mpc_module_config,
             mpc_dataclass=self.flex_config.baseline_config_generator_data,
+            agent_id=self.baseline_mpc_agent_config.id
         )
         pf_mpc_config = self.adapt_mpc_module_config(
             module_config=self.pos_flex_mpc_module_config,
             mpc_dataclass=self.flex_config.shadow_mpc_config_generator_data.pos_flex,
+            agent_id=self.pos_flex_mpc_agent_config.id
         )
         nf_mpc_config = self.adapt_mpc_module_config(
             module_config=self.neg_flex_mpc_module_config,
             mpc_dataclass=self.flex_config.shadow_mpc_config_generator_data.neg_flex,
+            agent_id=self.neg_flex_mpc_agent_config.id
         )
 
         # dump jsons of the agents including the adapted module configs
@@ -298,7 +297,7 @@ class FlexAgentGenerator:
         Path(self.flex_config.path_to_flex_files).rmdir()
 
     def adapt_mpc_module_config(
-        self, module_config: BaseMPCConfig, mpc_dataclass: BaseMPCData
+        self, module_config: BaseMPCConfig, mpc_dataclass: BaseMPCData, agent_id: str
     ) -> BaseMPCConfig:
         """Adapts the mpc module config for automated flexibility quantification.
         Things adapted among others are:
@@ -310,29 +309,38 @@ class FlexAgentGenerator:
         - add parameters for the activation and quantification of flexibility
 
         """
+
         # allow the module config to be changed
         module_config.model_config["frozen"] = False
-
-        module_config.module_id = mpc_dataclass.module_id
-
-        # append the new weights as parameter to the MPC or update its value
-        parameter_dict = {
-            parameter.name: parameter for parameter in module_config.parameters
-        }
-        for weight in mpc_dataclass.weights:
-            if weight.name in parameter_dict:
-                parameter_dict[weight.name].value = weight.value
-            else:
-                module_config.parameters.append(weight)
 
         # set new MPC type
         module_config.type = mpc_dataclass.module_types[
             cmng.get_orig_module_type(self.orig_mpc_agent_config)
         ]
+
+        # set the MPC config type from the MPCConfig in agentlib_mpc to the corresponding one in flexquant and add additional fields
+        module_config_flex = cmng.MODULE_TYPE_DICT[module_config.type](**module_config.dict(), _agent_id=agent_id,
+                                                                  casadi_sim_time_step=self.flex_config.casadi_sim_time_step)
+
+        # allow the module config to be changed
+        module_config_flex.model_config["frozen"] = False
+
+        module_config_flex.module_id = mpc_dataclass.module_id
+
+        # append the new weights as parameter to the MPC or update its value
+        parameter_dict = {
+            parameter.name: parameter for parameter in module_config_flex.parameters
+        }
+        for weight in mpc_dataclass.weights:
+            if weight.name in parameter_dict:
+                parameter_dict[weight.name].value = weight.value
+            else:
+                module_config_flex.parameters.append(weight)
+
         # set new id (needed for plotting)
-        module_config.module_id = mpc_dataclass.module_id
+        module_config_flex.module_id = mpc_dataclass.module_id
         # update optimization backend to use the created mpc files and classes
-        module_config.optimization_backend["model"]["type"] = {
+        module_config_flex.optimization_backend["model"]["type"] = {
             "file": os.path.join(
                 self.flex_config.path_to_flex_files,
                 mpc_dataclass.created_flex_mpcs_file,
@@ -340,23 +348,23 @@ class FlexAgentGenerator:
             "class_name": mpc_dataclass.class_name,
         }
         # update results file with suffix
-        module_config.optimization_backend["results_file"] = (
-            module_config.optimization_backend["results_file"].replace(
+        module_config_flex.optimization_backend["results_file"] = (
+            module_config_flex.optimization_backend["results_file"].replace(
                 ".csv", mpc_dataclass.results_suffix
             )
         )
         # change cia backend to custom backend of flexquant
-        if module_config.optimization_backend["type"] == "casadi_cia":
-            module_config.optimization_backend["type"] = "casadi_cia_cons"
-            module_config.optimization_backend["market_time"] = (
+        if module_config_flex.optimization_backend["type"] == "casadi_cia":
+            module_config_flex.optimization_backend["type"] = "casadi_cia_cons"
+            module_config_flex.optimization_backend["market_time"] = (
                 self.flex_config.market_time
             )
 
         # add the control signal of the baseline to outputs (used during market time)
         # and as inputs for the shadow mpcs
         if type(mpc_dataclass) is not BaselineMPCData:
-            for control in module_config.controls:
-                module_config.inputs.append(
+            for control in module_config_flex.controls:
+                module_config_flex.inputs.append(
                     MPCVariable(
                         name=glbs.full_trajectory_prefix
                         + control.name
@@ -365,9 +373,9 @@ class FlexAgentGenerator:
                     )
                 )
             # also include binary controls
-            if hasattr(module_config, "binary_controls"):
-                for control in module_config.binary_controls:
-                    module_config.inputs.append(
+            if hasattr(module_config_flex, "binary_controls"):
+                for control in module_config_flex.binary_controls:
+                    module_config_flex.inputs.append(
                         MPCVariable(
                             name=glbs.full_trajectory_prefix
                             + control.name
@@ -377,10 +385,10 @@ class FlexAgentGenerator:
                     )
 
             # only communicate outputs for the shadow mpcs
-            module_config.shared_variable_fields = ["outputs"]
+            module_config_flex.shared_variable_fields = ["outputs"]
         else:
-            for control in module_config.controls:
-                module_config.outputs.append(
+            for control in module_config_flex.controls:
+                module_config_flex.outputs.append(
                     MPCVariable(
                         name=glbs.full_trajectory_prefix
                         + control.name
@@ -389,9 +397,9 @@ class FlexAgentGenerator:
                     )
                 )
             # also include binary controls
-            if hasattr(module_config, "binary_controls"):
-                for control in module_config.binary_controls:
-                    module_config.outputs.append(
+            if hasattr(module_config_flex, "binary_controls"):
+                for control in module_config_flex.binary_controls:
+                    module_config_flex.outputs.append(
                         MPCVariable(
                             name=glbs.full_trajectory_prefix
                             + control.name
@@ -399,9 +407,9 @@ class FlexAgentGenerator:
                             value=control.value,
                         )
                     )
-        module_config.set_outputs = True
+        module_config_flex.set_outputs = True
         # add outputs for the power variables, for easier handling create a lookup dict
-        output_dict = {output.name: output for output in module_config.outputs}
+        output_dict = {output.name: output for output in module_config_flex.outputs}
         if (
             self.flex_config.baseline_config_generator_data.power_variable
             in output_dict
@@ -410,7 +418,7 @@ class FlexAgentGenerator:
                 self.flex_config.baseline_config_generator_data.power_variable
             ].alias = mpc_dataclass.power_alias
         else:
-            module_config.outputs.append(
+            module_config_flex.outputs.append(
                 MPCVariable(
                     name=self.flex_config.baseline_config_generator_data.power_variable,
                     alias=mpc_dataclass.power_alias,
@@ -423,16 +431,17 @@ class FlexAgentGenerator:
             ].alias = mpc_dataclass.stored_energy_alias
 
         # add inputs for the Time variable as well as extra inputs needed for activation of flex
-        module_config.inputs.append(
+        module_config_flex.inputs.append(
             MPCVariable(
                 name="Time",
                 value=[
-                    i * module_config.time_step
-                    for i in range(module_config.prediction_horizon)
+                    i * module_config_flex.time_step
+                    for i in range(module_config_flex.prediction_horizon)
                 ],
             )
         )
-        module_config.inputs.extend(mpc_dataclass.config_inputs_appendix)
+        module_config_flex.inputs.extend(mpc_dataclass.config_inputs_appendix)
+
         # CONFIG_PARAMETERS_APPENDIX only includes dummy values
         # overwrite dummy values with values from flex config and append it to module config
         for var in mpc_dataclass.config_parameters_appendix:
@@ -440,12 +449,12 @@ class FlexAgentGenerator:
                 var.value = getattr(self.flex_config, var.name)
             if var.name in self.flex_config.baseline_config_generator_data.model_fields:
                 var.value = getattr(self.flex_config.baseline_config_generator_data, var.name)
-        module_config.parameters.extend(mpc_dataclass.config_parameters_appendix)
+        module_config_flex.parameters.extend(mpc_dataclass.config_parameters_appendix)
 
         # freeze the config again
-        module_config.model_config["frozen"] = True
+        module_config_flex.model_config["frozen"] = True
 
-        return module_config
+        return module_config_flex
 
     def adapt_indicator_config(
         self, module_config: FlexibilityIndicatorModuleConfig

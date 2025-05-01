@@ -1,18 +1,21 @@
 import os
 import math
-from copy import deepcopy
-
 import numpy as np
 import pandas as pd
+from copy import deepcopy
 from typing import Optional
+from pydantic import Field
 from collections.abc import Iterable
 from agentlib_mpc.utils.analysis import mpc_at_time_step
 from agentlib_mpc.modules import mpc_full, minlp_mpc
-from flexibility_quantification.data_structures.globals import CASADI_SIM_TIME_STEP
+
+class FlexibilityBaselineMPCConfig(mpc_full.MPCConfig):
+
+    casadi_sim_time_step: int = Field(default=0, description="Time step for simulation with Casadi simulator. Value is read from FlexQuantConfig")
 
 
 class FlexibilityBaselineMPC(mpc_full.MPC):
-    config: mpc_full.MPCConfig
+    config: FlexibilityBaselineMPCConfig
 
     def pre_computation_hook(self):
         if self.get("in_provision").value:
@@ -30,10 +33,9 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
         self.sim_flex_model(solution)
 
     def sim_flex_model(self, solution):
+
         # read the high resolution time step
-        for inp in self.config.parameters:
-            if inp.name == CASADI_SIM_TIME_STEP:
-                dt = inp.value
+        dt = self.config.casadi_sim_time_step
 
         # simulate the flex_model if dt is a positive integer and system is not in provision
         if dt > 0 and not self.get("in_provision").value:

@@ -14,8 +14,7 @@ from flexibility_quantification.data_structures.globals import (
     POFILE_DEVIATION_WEIGHT,
     MARKET_TIME,
     PREP_TIME,
-    FLEX_EVENT_DURATION,
-    CASADI_SIM_TIME_STEP
+    FLEX_EVENT_DURATION
 )
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from string import Template
@@ -242,9 +241,6 @@ class SetupSystemModifier(ast.NodeTransformer):
                     body.value.elts.append(
                         add_parameter(param_name, 0, "s", "time to switch objective")
                     )
-                body.value.elts.append(
-                    add_parameter(CASADI_SIM_TIME_STEP, 0, "s", "time step for Casadi simulation")
-                )
                 for weight in self.mpc_data.weights:
                     body.value.elts.append(
                         add_parameter(
@@ -348,9 +344,6 @@ class SetupSystemModifier(ast.NodeTransformer):
             if body.target.id == "parameters":
                 body.value.elts.append(
                     add_parameter(POFILE_DEVIATION_WEIGHT, 0, "-", "Weight of soft constraint for deviation from accepted flexible profile")
-                )
-                body.value.elts.append(
-                    add_parameter(CASADI_SIM_TIME_STEP, 0, "s", "time step for Casadi simulation")
                 )
 
     def modify_setup_system_shadow(self, node):

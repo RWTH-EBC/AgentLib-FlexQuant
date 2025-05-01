@@ -10,12 +10,14 @@ from agentlib_mpc.modules import mpc_full, minlp_mpc
 from flexibility_quantification.utils.data_handling import strip_multi_index, fill_nans, MEAN, INTERPOLATE
 from flexibility_quantification.data_structures.globals import (
     full_trajectory_prefix,
-    full_trajectory_suffix,
-    CASADI_SIM_TIME_STEP
+    full_trajectory_suffix
 )
 
+
 class FlexibilityShadowMPCConfig(mpc_full.MPCConfig):
-    time_stpe: int
+
+    casadi_sim_time_step: int = Field(default=0, description="Time step for simulation with Casadi simulator. Value is read from FlexQuantConfig")
+
 
 class FlexibilityShadowMPC(mpc_full.MPC):
     config: FlexibilityShadowMPCConfig
@@ -30,10 +32,9 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         self.sim_flex_model(solution)
 
     def sim_flex_model(self,solution):
+
         # read the high resolution time step
-        for inp in self.config.parameters:
-            if inp.name == CASADI_SIM_TIME_STEP:
-                dt = inp.value
+        dt = self.config.casadi_sim_time_step
 
         # simulate the flex_model if dt is a positive integer and system is not in provision
         if dt > 0 and not self.get("in_provision").value:

@@ -10,7 +10,6 @@ POFILE_DEVIATION_WEIGHT = "profile_deviation_weight"
 TIME_STEP = "time_step"
 PREDICTION_HORIZON = "prediction_horizon"
 FlexibilityOffer = "FlexibilityOffer"
-CASADI_SIM_TIME_STEP = "casadi_sim_time_step"
 
 FlexibilityDirections = Literal["positive", "negative"]
 
