@@ -76,6 +76,9 @@ class KPISeries(KPI):
         """
         Integrate the value of the KPI over time by summing up the product of values and the time difference.
         """
+
+        return np.trapz(self.value.values, self.value.index)
+
         if self.dt is None:
             self._get_dt()
         products = self.value * self.dt / TIME_CONVERSION[time_unit]

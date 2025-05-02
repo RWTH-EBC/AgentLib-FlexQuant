@@ -48,13 +48,19 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
             return
         self.logger.info("Sending optimal output values to data_broker.")
         df = solution.df
-        for output in self.var_ref.outputs:
-            if not output == self.config.power_variable_name:
+        self.sim_flex_model(solution)
+        if hasattr(self, "flex_results"):
+            for output in self.var_ref.outputs:
+                if not output == self.config.power_variable_name:
+                    series = df.variable[output]
+                    self.set(output, series)
+            upsampled_output = self.flex_results[self.config.power_variable_name]
+            self.set(self.config.power_variable_name, upsampled_output)
+        else:
+            for output in self.var_ref.outputs:
                 series = df.variable[output]
                 self.set(output, series)
-        self.sim_flex_model(solution)
-        upsampled_output = self.flex_results[self.config.power_variable_name]
-        self.set(self.config.power_variable_name, upsampled_output)
+
 
     def sim_flex_model(self, solution):
         # read the high resolution time step
