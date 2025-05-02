@@ -123,9 +123,22 @@ class FlexAgentGenerator:
             output.name for output in self.baseline_mpc_module_config.outputs
         ]:
             raise ConfigurationError(
-                f"Given power variable {self.flex_config.baseline_config_generator_data.power_variable} is not defined in baseline mpc config."
+                f"Given power variable {self.flex_config.baseline_config_generator_data.power_variable} is not defined as output in baseline mpc config."
             )
-        
+       
+        # check if the comfort variable exists in the mpc slack variables
+        if self.flex_config.baseline_config_generator_data.comfort_variable:
+            file_path = self.baseline_mpc_module_config.optimization_backend["model"]["type"]["file"]
+            class_name = self.baseline_mpc_module_config.optimization_backend["model"]["type"]["class_name"]
+            # Get the class
+            dynamic_class = cmng.get_class_from_file(file_path, class_name)
+            if self.flex_config.baseline_config_generator_data.comfort_variable not in [
+                state.name for state in dynamic_class().states
+            ]:
+                raise ConfigurationError(
+                    f"Given comfort variable {self.flex_config.baseline_config_generator_data.comfort_variable} is not defined as state in baseline mpc config."
+                )
+            
         # check if the energy storage variable exists in the mpc config
         if self.indicator_module_config.correct_costs.enable_energy_costs_correction:
             if self.indicator_module_config.correct_costs.stored_energy_variable not in [
@@ -174,8 +187,9 @@ class FlexAgentGenerator:
         if sum(flex_times.values()) > mpc_times["time_step"] * mpc_times["prediction_horizon"]:
             raise ConfigurationError(f'Market time + prep time + flex event duration can not exceed the prediction horizon.')
         # market time val check
-        if flex_times["market_time"] != mpc_times["time_step"]:
-            raise ConfigurationError(f'Market time must be equal to the time step.')
+        if self.flex_config.market_config:
+            if flex_times["market_time"] != mpc_times["time_step"]:
+                raise ConfigurationError(f'Market time must be equal to the time step.')
         # check for divisibility of flex_times by time_step 
         for name, value in flex_times.items():
             if value % mpc_times["time_step"] != 0:
@@ -240,12 +254,13 @@ class FlexAgentGenerator:
             module_type=cmng.INDICATOR_CONFIG_TYPE,
             config_name=self.flex_config.indicator_config.name_of_created_file,
         )
-        self.append_module_and_dump_agent(
-                module=market_module_config,
-                agent=self.market_agent_config,
-                module_type=cmng.MARKET_CONFIG_TYPE,
-                config_name=self.market_config.name_of_created_file,
-            )
+        if self.flex_config.market_config:
+            self.append_module_and_dump_agent(
+                    module=market_module_config,
+                    agent=self.market_agent_config,
+                    module_type=cmng.MARKET_CONFIG_TYPE,
+                    config_name=self.market_config.name_of_created_file,
+                )
         
         # generate python files for the shadow mpcs
         self._generate_flex_model_definition()
