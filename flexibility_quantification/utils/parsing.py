@@ -11,7 +11,7 @@ from flexibility_quantification.data_structures.globals import (
     return_baseline_cost_function,
     full_trajectory_prefix,
     full_trajectory_suffix,
-    POFILE_DEVIATION_WEIGHT,
+    PROFILE_DEVIATION_WEIGHT,
     MARKET_TIME,
     PREP_TIME,
     FLEX_EVENT_DURATION
@@ -342,8 +342,9 @@ class SetupSystemModifier(ast.NodeTransformer):
 
             # add the flex variables and the weights
             if body.target.id == "parameters":
+                for parameter in self.mpc_data.config_parameters_appendix:
                     body.value.elts.append(
-                        add_parameter(POFILE_DEVIATION_WEIGHT, 0, "-", "Weight of soft constraint for deviation from accepted flexible profile")
+                        add_parameter(parameter.name, 0, "-", parameter.description)
                     )
 
     def modify_setup_system_shadow(self, node):
@@ -494,7 +495,8 @@ class SetupSystemModifier(ast.NodeTransformer):
                     ast.Return(
                         value=ast.parse(
                             return_baseline_cost_function(
-                                power_variable=self.mpc_data.power_variable
+                                power_variable=self.mpc_data.power_variable,
+                                comfort_variable=self.mpc_data.comfort_variable
                             )
                         )
                         .body[0]
