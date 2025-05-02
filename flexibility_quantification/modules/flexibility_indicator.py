@@ -52,8 +52,6 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
                                description="The power input to the system"),
         agentlib.AgentVariable(name=glbs.POWER_ALIAS_POS, unit="W", type="pd.Series",
                                description="The power input to the system"),
-        agentlib.AgentVariable(name="r_pel", unit="ct/kWh", type="pd.Series",
-                               description="electricity price"),
         agentlib.AgentVariable(name=glbs.STORED_ENERGY_ALIAS_BASE, unit="kWh", type="pd.Series",
                                description="Energy stored in the system w.r.t. 0K"),
         agentlib.AgentVariable(name=glbs.STORED_ENERGY_ALIAS_NEG, unit="kWh", type="pd.Series",

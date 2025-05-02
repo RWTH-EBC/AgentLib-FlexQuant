@@ -22,6 +22,7 @@ from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from agentlib_mpc.models.casadi_model import CasadiModelConfig
 from agentlib.core.agent import AgentConfig
 from agentlib.core.module import BaseModuleConfig
+from agentlib.core.datamodels import AgentVariable
 import ast
 import atexit
 import os
@@ -158,10 +159,6 @@ class FlexAgentGenerator:
                     if parameter.value != mpc_value:
                         self.logger.warning(f'Value mismatch for {parameter.name} in baseline MPC module config (field) and indicator module config (parameter). '
                                             f'Baseline MPC module config value will be used.')
-        
-        #r_pel naming problem
-        if self.indicator_module_config.price_variable != "r_pel":
-            raise ConfigurationError(f"The price variable must be named 'r_pel'")
 
         #time data validations
         flex_times = {
@@ -502,6 +499,15 @@ class FlexAgentGenerator:
         self, module_config: FlexibilityIndicatorModuleConfig
     ) -> FlexibilityIndicatorModuleConfig:
         """Adapts the indicator module config for automated flexibility quantification."""
+        # append user-defined price var to indicator module config
+        module_config.inputs.append(
+            AgentVariable(
+                name=module_config.price_variable,
+                unit="ct/kWh",
+                type="pd.Series",
+                description="electricity price"
+            )
+        )
         # allow the module config to be changed
         module_config.model_config["frozen"] = False
         for parameter in module_config.parameters:
