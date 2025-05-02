@@ -42,8 +42,9 @@
                             "alias": "r_pel"
                         }
                     ],
-                    "correct_costs": {"enable_energy_costs_correction": false,
-                                      "absolute_power_deviation_tolerance": 0.05}
+                    "correct_costs": {"enable_energy_costs_correction": true,
+                                      "absolute_power_deviation_tolerance": 0.05,
+                                      "stored_energy_variable": "E_out"}
                 }
             ]
         },
@@ -53,7 +54,9 @@
     "baseline_config_generator_data": {
         "power_variable": "P_el",
         "power_unit": "kW",
-        "profile_deviation_weight": 100
+        "profile_deviation_weight": 100,
+        "comfort_variable": "T_slack",
+        "profile_comfort_weight": 1
     },
     "shadow_mpc_config_generator_data": {
         "weights": [{"name": "s_P", "value": 10}],
