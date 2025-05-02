@@ -101,8 +101,9 @@ class FlexQuantConfig(pydantic.BaseModel):
         default=None,
         description="Shadow mpc generator data config file or dict",
     )
+    # TODO: ensure, that casadi_sim_time_step and mpc time_step align (otherwise adjust fill_nan function)
     casadi_sim_time_step: int = pydantic.Field(
-        default=200,
+        default=0,
         description="Simulate over the prediction horizon with a defined resolution using Casadi simulator. Set to 0 to skip simulation",
     )
     path_to_flex_files: Path = pydantic.Field(

@@ -62,8 +62,8 @@ def strip_multi_index(series: pd.Series) -> pd.Series:
     if isinstance(series.index[0], str):
         series.index = series.index.map(lambda x: eval(x))
         series.index = pd.MultiIndex.from_tuples(series.index)
-        # vals is multicolumn so get rid of first value (start time of predictions)
-        series.index = series.index.get_level_values(1).astype(float)
+    # vals is multicolumn so get rid of first value (start time of predictions)
+    series.index = series.index.get_level_values(1).astype(float)
     return series
 
 

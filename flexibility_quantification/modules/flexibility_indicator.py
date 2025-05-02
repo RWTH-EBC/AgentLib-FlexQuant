@@ -234,17 +234,17 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
 
         if not self.in_provision:
             if name == glbs.POWER_ALIAS_BASE:
-                self.data.power_profile_base = self.data.format_mpc_inputs(inp.value)
+                self.data.power_profile_base = self.data.unify_mpc_inputs(inp.value)
             elif name == glbs.POWER_ALIAS_NEG:
-                self.data.power_profile_flex_neg = self.data.format_mpc_inputs(inp.value)
+                self.data.power_profile_flex_neg = self.data.unify_mpc_inputs(inp.value)
             elif name == glbs.POWER_ALIAS_POS:
-                self.data.power_profile_flex_pos = self.data.format_mpc_inputs(inp.value)
+                self.data.power_profile_flex_pos = self.data.unify_mpc_inputs(inp.value)
             elif name == glbs.STORED_ENERGY_ALIAS_BASE:
-                self.data.stored_energy_profile_base = self.data.format_mpc_inputs(inp.value)
+                self.data.stored_energy_profile_base = self.data.unify_mpc_inputs(inp.value)
             elif name == glbs.STORED_ENERGY_ALIAS_NEG:
-                self.data.stored_energy_profile_flex_neg = self.data.format_mpc_inputs(inp.value)
+                self.data.stored_energy_profile_flex_neg = self.data.unify_mpc_inputs(inp.value)
             elif name == glbs.STORED_ENERGY_ALIAS_POS:
-                self.data.stored_energy_profile_flex_pos = self.data.format_mpc_inputs(inp.value)
+                self.data.stored_energy_profile_flex_pos = self.data.unify_mpc_inputs(inp.value)
             elif name == self.config.price_variable:
                 # price comes from predictor, so no stripping needed
                 self.data.electricity_price_series = self.data.format_predictor_inputs(inp.value)
