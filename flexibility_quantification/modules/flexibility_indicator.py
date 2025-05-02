@@ -186,7 +186,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         default=True
     )
     price_variable: str = Field(
-        default="r_pel",
+        default="c_pel",
         description="Name of the price variable sent by a predictor",
     )
     power_unit: str = Field(
