@@ -46,10 +46,6 @@ class BaselineMPCData(BaseMPCData):
         default="P_el",
         description="Name of the variable representing the electrical power in the baseline config",
     )
-    storage_variable: str = pydantic.Field(
-        default="E_stored",
-        description="Name of the variable representing the stored electrical energy in the baseline config",
-    )
     profile_deviation_weight: float = pydantic.Field(
         default=0,
         description="Weight of soft constraint for deviation from accepted flexible profile",

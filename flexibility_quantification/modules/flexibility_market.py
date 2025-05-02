@@ -164,7 +164,10 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         """
         offer = inp.value
         profile = None
-        if self.env.now >= self.env.config.offset + self.config.market_specs.options.start_time and not self.get("in_provision").value:
+        t_sample = offer.base_power_profile.index[1]-offer.base_power_profile.index[0]
+        acceptance_time_lower = self.env.config.offset + self.config.market_specs.options.start_time
+        acceptance_time_upper = self.env.config.offset + self.config.market_specs.options.start_time + t_sample
+        if acceptance_time_lower <= self.env.now < acceptance_time_upper and not self.get("in_provision").value:
             if self.config.market_specs.options.direction == "positive":
                 if np.average(offer.pos_diff_profile) > self.config.market_specs.minimum_average_flex:
                     profile = offer.base_power_profile - offer.pos_diff_profile
@@ -178,8 +181,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                 profile = profile.dropna()
                 profile.index += self.env.time
                 self.set("_P_external", profile)
-                # only activate a single offer, therefore setting end to inf
-                self.end = np.inf
+                self.end = profile.index[-1]
                 self.set("in_provision", True)
 
         self.write_results(offer)
