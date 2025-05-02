@@ -7,6 +7,7 @@ import math
 from agentlib.modules import get_all_module_types
 import inspect
 import os
+import importlib.util
 
 
 T = TypeVar('T', bound=BaseModuleConfig)
@@ -144,3 +145,25 @@ def subtract_relative_path(absolute_path, relative_path):
 
     # If the relative path component wasn't found, return the original path
     return absolute_path
+
+
+def get_class_from_file(file_path, class_name):
+    # Get the absolute path if needed
+    abs_path = os.path.abspath(file_path)
+
+    # Get the module name from the file path
+    module_name = os.path.splitext(os.path.basename(file_path))[0]
+
+    # Load the module specification
+    spec = importlib.util.spec_from_file_location(module_name, abs_path)
+
+    # Create the module
+    module = importlib.util.module_from_spec(spec)
+
+    # Execute the module
+    spec.loader.exec_module(module)
+
+    # Get the class from the module
+    target_class = getattr(module, class_name)
+
+    return target_class
