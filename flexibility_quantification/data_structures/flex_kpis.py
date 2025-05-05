@@ -77,7 +77,7 @@ class KPISeries(KPI):
         Integrate the value of the KPI over time by summing up the product of values and the time difference.
         """
 
-        return np.trapz(self.value.values, self.value.index)
+        return np.trapz(self.value.values, self.value.index)/ TIME_CONVERSION[time_unit]
 
         if self.dt is None:
             self._get_dt()
@@ -406,30 +406,12 @@ class FlexibilityData(pydantic.BaseModel):
                  time_step: int, prediction_horizon: int, **data):
         super().__init__(**data)
         self.switch_time = prep_time + market_time
-        self.flex_offer_time_grid = np.arange(self.switch_time, self.switch_time + flex_event_duration, time_step)
+        # TODO: when P_el depends on state, the value at the end of the FE is needed
+        self.flex_offer_time_grid = np.arange(self.switch_time, self.switch_time + flex_event_duration + time_step, time_step)
         self.mpc_time_grid = np.arange(0, prediction_horizon * time_step, time_step)
         self._common_time_grid = None  # Initialize common time grid
 
-    def format_predictor_inputs(self, series: pd.Series) -> pd.Series:
-        """
-        Format the input of the predictor to unify the data.
-
-        Args:
-            series: Input series from a predictor.
-            
-        Returns:
-            Formatted series.
-        """
-        series.index = series.index - series.index[0]
-        series = series.reindex(self.mpc_time_grid)
-        if any(series.isna()):
-            raise ValueError(f"The mpc time grid is not compatible with the predictor "
-                             f"input, which leads to NaN values in the series.\n"
-                             f"MPC time grid:{self.mpc_time_grid}\n"
-                             f"Series index:{series.index}")
-        return series
-
-    def unify_mpc_inputs(self, series: pd.Series) -> pd.Series:
+    def unify_inputs(self, series: pd.Series, mpc=True) -> pd.Series:
         """
         Format the input of the mpc to unify the data.
         
@@ -439,7 +421,10 @@ class FlexibilityData(pydantic.BaseModel):
         Returns:
             Formatted series.
         """
-        series = strip_multi_index(series)
+        if mpc:
+            series = strip_multi_index(series)
+        else:
+            series.index = series.index - series.index[0]
 
         # Ensure series has values at mpc_time_grid points
         mpc_points_in_series = np.isin(self.mpc_time_grid, series.index)
@@ -454,19 +439,22 @@ class FlexibilityData(pydantic.BaseModel):
             # Sort by index
             series = merged_series.sort_index()
         # Fill NaNs
-        series = fill_nans(series=series, method=MEAN)
+        if mpc:
+            series = fill_nans(series=series, method=MEAN)
 
-        # Initialize or update common time grid
-        if self._common_time_grid is None:
-            self._common_time_grid = series.index.values
-        else:
-            # Find intersection of current common grid and new series grid
-            # This gives us the points that appear in both time grids
-            self._common_time_grid = np.intersect1d(self._common_time_grid,
-                                                    series.index.values)
+            # Initialize or update common time grid only fro mpc inputs
+            if self._common_time_grid is None:
+                self._common_time_grid = series.index.values
+            else:
+                # Find intersection of current common grid and new series grid
+                # This gives us the points that appear in both time grids
+                self._common_time_grid = np.intersect1d(self._common_time_grid,
+                                                        series.index.values)
 
         # Return series reindexed to common time grid
         result = series.reindex(self._common_time_grid)
+        if not mpc:
+            result = result.ffill()  # price signals are typically steps
 
         # Check for NaNs after reindexing
         if any(result.isna()):
@@ -477,7 +465,7 @@ class FlexibilityData(pydantic.BaseModel):
                              f"Series index:{series.index} \n"
                              f"Check time steps of the mpcs as well as casadi simulator "
                              f"step sizes.")
-        return series
+        return result
 
     def calculate(self, enable_energy_costs_correction: bool) -> [FlexibilityKPIs, FlexibilityKPIs]:
         """

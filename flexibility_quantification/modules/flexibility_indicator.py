@@ -234,20 +234,20 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
 
         if not self.in_provision:
             if name == glbs.POWER_ALIAS_BASE:
-                self.data.power_profile_base = self.data.unify_mpc_inputs(inp.value)
+                self.data.power_profile_base = self.data.unify_inputs(inp.value)
             elif name == glbs.POWER_ALIAS_NEG:
-                self.data.power_profile_flex_neg = self.data.unify_mpc_inputs(inp.value)
+                self.data.power_profile_flex_neg = self.data.unify_inputs(inp.value)
             elif name == glbs.POWER_ALIAS_POS:
-                self.data.power_profile_flex_pos = self.data.unify_mpc_inputs(inp.value)
+                self.data.power_profile_flex_pos = self.data.unify_inputs(inp.value)
             elif name == glbs.STORED_ENERGY_ALIAS_BASE:
-                self.data.stored_energy_profile_base = self.data.unify_mpc_inputs(inp.value)
+                self.data.stored_energy_profile_base = self.data.unify_inputs(inp.value)
             elif name == glbs.STORED_ENERGY_ALIAS_NEG:
-                self.data.stored_energy_profile_flex_neg = self.data.unify_mpc_inputs(inp.value)
+                self.data.stored_energy_profile_flex_neg = self.data.unify_inputs(inp.value)
             elif name == glbs.STORED_ENERGY_ALIAS_POS:
-                self.data.stored_energy_profile_flex_pos = self.data.unify_mpc_inputs(inp.value)
+                self.data.stored_energy_profile_flex_pos = self.data.unify_inputs(inp.value)
             elif name == self.config.price_variable:
                 # price comes from predictor, so no stripping needed
-                self.data.electricity_price_series = self.data.format_predictor_inputs(inp.value)
+                self.data.electricity_price_series = self.data.unify_inputs(inp.value, mpc=False)
 
             necessary_input_for_calc_flex = [self.data.power_profile_base,
                                              self.data.power_profile_flex_neg,
@@ -298,8 +298,11 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         """
         results = []
         now = self.env.now
+
+        # First, collect all series and their indices
+        all_series = []
         for name in self.var_list:
-            # Use the power variables averaged for each timestep, not the collocation values
+            # Get the appropriate values based on name
             if name == glbs.POWER_ALIAS_BASE:
                 values = self.data.power_profile_base
             elif name == glbs.POWER_ALIAS_NEG:
@@ -315,11 +318,26 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             else:
                 values = self.get(name).value
 
-            if isinstance(values, pd.Series):
-                traj = values.reindex(np.arange(0, n * ts, ts))
-            else:
-                traj = pd.Series(values).reindex(np.arange(0, n * ts, ts))
-            results.append(traj)
+            # Convert to Series if not already
+            if not isinstance(values, pd.Series):
+                values = pd.Series(values)
+
+            all_series.append((name, values))
+
+        # Create the standard grid for reference
+        standard_grid = np.arange(0, n * ts, ts)
+
+        # Find the union of all indices to create a comprehensive grid
+        all_indices = set(standard_grid)
+        for _, series in all_series:
+            all_indices.update(series.index)
+        combined_index = sorted(all_indices)
+
+        # Reindex all series to the combined grid
+        for i, (name, series) in enumerate(all_series):
+            # Reindex to the comprehensive grid
+            reindexed = series.reindex(combined_index)
+            results.append(reindexed)
 
         if not now % ts:
             self.time.append(now)
