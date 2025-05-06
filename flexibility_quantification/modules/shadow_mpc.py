@@ -43,7 +43,8 @@ class FlexibilityShadowMPC(mpc_full.MPC):
             horizon_length = int(self.config.prediction_horizon*(self.config.time_step))
             time_points = math.floor((horizon_length)/dt) + 1  # if int then plus one
             index_first_level = [self.env.now] * time_points
-            multi_index = pd.MultiIndex.from_tuples(zip(index_first_level, range(0,horizon_length+dt,dt)), names=['time_step', 'time'])
+            index_second_level = range(0, horizon_length + dt, dt)
+            multi_index = pd.MultiIndex.from_tuples(zip(index_first_level, index_second_level), names=['time_step', 'time'])
             self.flex_results = pd.DataFrame(np.nan, index=multi_index, columns=self.var_ref.outputs)
 
             # initialize the flex_model for integration
@@ -51,21 +52,18 @@ class FlexibilityShadowMPC(mpc_full.MPC):
 
             # update the value of module inputs and parameters with value from config, since creating a model just reads the value in the model class but not the config
             for inp in self.config.inputs + self.config.parameters:
-                if not isinstance(inp.value, Iterable):
+               if not isinstance(inp.value, Iterable):
                     self.flex_model.set(inp.name, inp.value)
 
             # read the current optimization result
             result_df = solution.df
 
             # get control values from the mpc optimization result
-            control_values = result_df.variable[self.var_ref.controls]
-
-            # read the collocation order
-            collocation_order = int(self.config.optimization_backend['discretization_options']['collocation_order']) + 1
+            control_values = result_df.variable[self.var_ref.controls].dropna()
 
             for i in range(1, time_points, 1):
                 # set control
-                control_num = int((i*dt // self.config.time_step - (i*dt % self.config.time_step == 0)) * collocation_order)
+                control_num = int(i*dt // self.config.time_step - (i*dt % self.config.time_step == 0))
                 for control, value in zip(self.var_ref.controls, control_values.iloc[control_num]):
                     self.flex_model.set(control, value)
                 # set t_sample
