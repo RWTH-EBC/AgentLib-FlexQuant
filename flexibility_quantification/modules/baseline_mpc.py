@@ -23,11 +23,6 @@ class FlexibilityBaselineMPCConfig(mpc_full.MPCConfig):
 class FlexibilityBaselineMPC(mpc_full.MPC):
     config: FlexibilityBaselineMPCConfig
 
-    # def __init__(self, *args, **kwargs):
-    #     # create instance variable
-    #     super().__init__(*args, **kwargs)
-    #     self.full_controls: List[AgentVariable] = []
-
     def pre_computation_hook(self):
         if self.get("in_provision").value:
             timestep = (self.get("_P_external").value.index[1] -
