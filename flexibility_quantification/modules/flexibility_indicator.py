@@ -6,7 +6,8 @@ from typing import List, Optional
 import agentlib
 import numpy as np
 import pandas as pd
-from pydantic import BaseModel, ConfigDict, Field
+from agentlib.core.errors import ConfigurationError
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 import flexibility_quantification.data_structures.globals as glbs
 from flexibility_quantification.data_structures.flex_kpis import (
@@ -162,7 +163,6 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         )
     ]
 
-
     parameters: List[agentlib.AgentVariable] = [
         agentlib.AgentVariable(name=glbs.PREP_TIME, unit="s",
                                description="Preparation time"),
@@ -201,6 +201,13 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
 
     correct_costs: InputsForCorrectFlexCosts = InputsForCorrectFlexCosts()
 
+    @model_validator(mode="after")
+    def check_file_extension(self):
+        if self.results_filename and self.results_filename.suffix != ".csv":
+            raise ConfigurationError(
+                f"The extension for results_filename in indicator module config must be '.csv'."
+            )
+        return self
 
 class FlexibilityIndicatorModule(agentlib.BaseModule):
     config: FlexibilityIndicatorModuleConfig

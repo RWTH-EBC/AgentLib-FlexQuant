@@ -4,6 +4,7 @@ from typing import List, Optional, Union
 
 import pydantic
 from agentlib.core.agent import AgentConfig
+from agentlib.core.errors import ConfigurationError
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from pydantic import ConfigDict, model_validator
 
@@ -68,10 +69,17 @@ class FlexibilityIndicatorConfig(pydantic.BaseModel):
         extra='forbid'
     )
     agent_config: AgentConfig
-    name_of_created_file: str = pydantic.Field(
-        default="indicator.json",
+    name_of_created_file: Path = pydantic.Field(
+        default=Path("indicator.json"),
         description="Name of the config that is created by the generator",
     )
+    @model_validator(mode="after")
+    def check_file_extension(self):
+        if self.name_of_created_file and self.name_of_created_file.suffix != ".json":
+            raise ConfigurationError(
+                f"The extension for name_of_created_file in indicator config must be '.json'."
+            )
+        return self
 
 
 class FlexQuantConfig(pydantic.BaseModel):

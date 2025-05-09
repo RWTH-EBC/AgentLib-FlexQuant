@@ -6,10 +6,10 @@ import agentlib
 import numpy as np
 import pandas as pd
 import pydantic
+from agentlib.core.errors import ConfigurationError
+from pydantic import model_validator
 
-from flexibility_quantification.data_structures.flex_offer import (
-    OfferStatus
-)
+from flexibility_quantification.data_structures.flex_offer import OfferStatus
 from flexibility_quantification.data_structures.market import (
     MarketSpecifications
 )
@@ -59,6 +59,14 @@ class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
     )
 
     shared_variable_fields: List[str] = ["outputs"]
+
+    @model_validator(mode="after")
+    def check_file_extension(self):
+        if self.results_filename and self.results_filename.suffix != ".csv":
+            raise ConfigurationError(
+                f"The extension for results_filename in market module config must be '.csv'."
+            )
+        return self
 
 
 class FlexibilityMarketModule(agentlib.BaseModule):
