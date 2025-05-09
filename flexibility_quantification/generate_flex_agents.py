@@ -1,15 +1,33 @@
+import ast
+import atexit
 import inspect
 import logging
+import os
 from copy import deepcopy
-from agentlib.utils import custom_injection, load_config
+from pathlib import Path
+from typing import Union, List
+
+from pydantic import FilePath
+import black
+
+from agentlib.core.agent import AgentConfig
+from agentlib.core.datamodels import AgentVariable
 from agentlib.core.errors import ConfigurationError
+from agentlib.core.module import BaseModuleConfig
+from agentlib.utils import custom_injection, load_config
+from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
+from agentlib_mpc.models.casadi_model import CasadiModelConfig
+from agentlib_mpc.modules.mpc_full import BaseMPCConfig
+import flexibility_quantification.data_structures.globals as glbs
 from flexibility_quantification.data_structures.flexquant import (
     FlexQuantConfig,
     FlexibilityIndicatorConfig,
     FlexibilityMarketConfig,
 )
-import flexibility_quantification.data_structures.globals as glbs
-from flexibility_quantification.data_structures.mpcs import BaseMPCData, BaselineMPCData
+from flexibility_quantification.data_structures.mpcs import (
+    BaseMPCData,
+    BaselineMPCData,
+)
 import flexibility_quantification.utils.config_management as cmng
 from flexibility_quantification.modules.flexibility_indicator import (
     FlexibilityIndicatorModuleConfig,
@@ -17,19 +35,6 @@ from flexibility_quantification.modules.flexibility_indicator import (
 from flexibility_quantification.modules.flexibility_market import (
     FlexibilityMarketModuleConfig,
 )
-from agentlib_mpc.modules.mpc_full import BaseMPCConfig
-from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
-from agentlib_mpc.models.casadi_model import CasadiModelConfig
-from agentlib.core.agent import AgentConfig
-from agentlib.core.module import BaseModuleConfig
-from agentlib.core.datamodels import AgentVariable
-import ast
-import atexit
-import os
-from typing import Union, List
-from pydantic import FilePath
-from pathlib import Path
-import black
 
 
 class FlexAgentGenerator:
