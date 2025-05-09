@@ -116,85 +116,6 @@ class FlexAgentGenerator:
 
         self.run_config_validations()
 
-    def run_config_validations(self):
-        
-        # check if the power variable exists in the mpc config
-        if self.flex_config.baseline_config_generator_data.power_variable not in [
-            output.name for output in self.baseline_mpc_module_config.outputs
-        ]:
-            raise ConfigurationError(
-                f"Given power variable {self.flex_config.baseline_config_generator_data.power_variable} is not defined as output in baseline mpc config."
-            )
-       
-        # check if the comfort variable exists in the mpc slack variables
-        if self.flex_config.baseline_config_generator_data.comfort_variable:
-            file_path = self.baseline_mpc_module_config.optimization_backend["model"]["type"]["file"]
-            class_name = self.baseline_mpc_module_config.optimization_backend["model"]["type"]["class_name"]
-            # Get the class
-            dynamic_class = cmng.get_class_from_file(file_path, class_name)
-            if self.flex_config.baseline_config_generator_data.comfort_variable not in [
-                state.name for state in dynamic_class().states
-            ]:
-                raise ConfigurationError(
-                    f"Given comfort variable {self.flex_config.baseline_config_generator_data.comfort_variable} is not defined as state in baseline mpc config."
-                )
-            
-        # check if the energy storage variable exists in the mpc config
-        if self.indicator_module_config.correct_costs.enable_energy_costs_correction:
-            if self.indicator_module_config.correct_costs.stored_energy_variable not in [
-                output.name for output in self.baseline_mpc_module_config.outputs
-            ]:
-                raise ConfigurationError(
-                    f"The stored energy variable {self.indicator_module_config.correct_costs.stored_energy_variable} is not defined in baseline mpc config. "
-                    f"It must be defined in the base MPC model and config as output if the correction of costs is enabled."
-                )
-            
-        # raise warning if unsupported collocation method is used and change to supported method
-        if self.baseline_mpc_module_config.optimization_backend["discretization_options"]["collocation_method"] != "legendre":
-            self.logger.warning(f'Collocation method {self.baseline_mpc_module_config.optimization_backend["discretization_options"]["collocation_method"]} is not supported. '
-                                f'Switching to method legendre.')
-            self.baseline_mpc_module_config.optimization_backend["discretization_options"]["collocation_method"] = "legendre"
-            self.pos_flex_mpc_module_config.optimization_backend["discretization_options"]["collocation_method"] = "legendre"
-            self.neg_flex_mpc_module_config.optimization_backend["discretization_options"]["collocation_method"] = "legendre"
-
-        # raise warning if parameter value in flex indicator module config differs from value in flex config/ baseline mpc module config
-        param_list_flex = [glbs.PREP_TIME, glbs.MARKET_TIME, glbs.FLEX_EVENT_DURATION]
-        param_list_mpc = [glbs.PREDICTION_HORIZON, glbs.TIME_STEP]
-        for parameter in self.indicator_module_config.parameters:
-            if parameter.value is not None:
-                if parameter.name in param_list_flex:
-                    flex_value = getattr(self.flex_config, parameter.name, None)
-                    if parameter.value != flex_value:
-                        self.logger.warning(f'Value mismatch for {parameter.name} in flex config (field) and indicator module config (parameter). '
-                                            f'Flex config value will be used.')
-                elif parameter.name in param_list_mpc:
-                    mpc_value = getattr(self.baseline_mpc_module_config, parameter.name, None)
-                    if parameter.value != mpc_value:
-                        self.logger.warning(f'Value mismatch for {parameter.name} in baseline MPC module config (field) and indicator module config (parameter). '
-                                            f'Baseline MPC module config value will be used.')
-
-        #time data validations
-        flex_times = {
-            "prep_time": self.flex_config.prep_time,
-            "market_time": self.flex_config.market_time,
-            "flex_event_duration": self.flex_config.flex_event_duration
-        }
-        mpc_times = {
-            "time_step": self.baseline_mpc_module_config.time_step,
-            "prediction_horizon": self.baseline_mpc_module_config.prediction_horizon
-        }    
-        # total time length check (prep+market+flex_event)
-        if sum(flex_times.values()) > mpc_times["time_step"] * mpc_times["prediction_horizon"]:
-            raise ConfigurationError(f'Market time + prep time + flex event duration can not exceed the prediction horizon.')
-        # market time val check
-        if self.flex_config.market_config:
-            if flex_times["market_time"] != mpc_times["time_step"]:
-                raise ConfigurationError(f'Market time must be equal to the time step.')
-        # check for divisibility of flex_times by time_step 
-        for name, value in flex_times.items():
-            if value % mpc_times["time_step"] != 0:
-                raise ConfigurationError(f'{name} is not a multiple of the time step. Please redefine.')
-
     def generate_flex_agents(
         self,
     ) -> [
@@ -669,3 +590,82 @@ class FlexAgentGenerator:
         )
         if unknown_vars:
             raise ValueError(f"Unknown variables in new cost function: {unknown_vars}")
+
+    def run_config_validations(self):
+        
+        # check if the power variable exists in the mpc config
+        if self.flex_config.baseline_config_generator_data.power_variable not in [
+            output.name for output in self.baseline_mpc_module_config.outputs
+        ]:
+            raise ConfigurationError(
+                f"Given power variable {self.flex_config.baseline_config_generator_data.power_variable} is not defined as output in baseline mpc config."
+            )
+       
+        # check if the comfort variable exists in the mpc slack variables
+        if self.flex_config.baseline_config_generator_data.comfort_variable:
+            file_path = self.baseline_mpc_module_config.optimization_backend["model"]["type"]["file"]
+            class_name = self.baseline_mpc_module_config.optimization_backend["model"]["type"]["class_name"]
+            # Get the class
+            dynamic_class = cmng.get_class_from_file(file_path, class_name)
+            if self.flex_config.baseline_config_generator_data.comfort_variable not in [
+                state.name for state in dynamic_class().states
+            ]:
+                raise ConfigurationError(
+                    f"Given comfort variable {self.flex_config.baseline_config_generator_data.comfort_variable} is not defined as state in baseline mpc config."
+                )
+            
+        # check if the energy storage variable exists in the mpc config
+        if self.indicator_module_config.correct_costs.enable_energy_costs_correction:
+            if self.indicator_module_config.correct_costs.stored_energy_variable not in [
+                output.name for output in self.baseline_mpc_module_config.outputs
+            ]:
+                raise ConfigurationError(
+                    f"The stored energy variable {self.indicator_module_config.correct_costs.stored_energy_variable} is not defined in baseline mpc config. "
+                    f"It must be defined in the base MPC model and config as output if the correction of costs is enabled."
+                )
+            
+        # raise warning if unsupported collocation method is used and change to supported method
+        if self.baseline_mpc_module_config.optimization_backend["discretization_options"]["collocation_method"] != "legendre":
+            self.logger.warning(f'Collocation method {self.baseline_mpc_module_config.optimization_backend["discretization_options"]["collocation_method"]} is not supported. '
+                                f'Switching to method legendre.')
+            self.baseline_mpc_module_config.optimization_backend["discretization_options"]["collocation_method"] = "legendre"
+            self.pos_flex_mpc_module_config.optimization_backend["discretization_options"]["collocation_method"] = "legendre"
+            self.neg_flex_mpc_module_config.optimization_backend["discretization_options"]["collocation_method"] = "legendre"
+
+        # raise warning if parameter value in flex indicator module config differs from value in flex config/ baseline mpc module config
+        param_list_flex = [glbs.PREP_TIME, glbs.MARKET_TIME, glbs.FLEX_EVENT_DURATION]
+        param_list_mpc = [glbs.PREDICTION_HORIZON, glbs.TIME_STEP]
+        for parameter in self.indicator_module_config.parameters:
+            if parameter.value is not None:
+                if parameter.name in param_list_flex:
+                    flex_value = getattr(self.flex_config, parameter.name, None)
+                    if parameter.value != flex_value:
+                        self.logger.warning(f'Value mismatch for {parameter.name} in flex config (field) and indicator module config (parameter). '
+                                            f'Flex config value will be used.')
+                elif parameter.name in param_list_mpc:
+                    mpc_value = getattr(self.baseline_mpc_module_config, parameter.name, None)
+                    if parameter.value != mpc_value:
+                        self.logger.warning(f'Value mismatch for {parameter.name} in baseline MPC module config (field) and indicator module config (parameter). '
+                                            f'Baseline MPC module config value will be used.')
+
+        #time data validations
+        flex_times = {
+            "prep_time": self.flex_config.prep_time,
+            "market_time": self.flex_config.market_time,
+            "flex_event_duration": self.flex_config.flex_event_duration
+        }
+        mpc_times = {
+            "time_step": self.baseline_mpc_module_config.time_step,
+            "prediction_horizon": self.baseline_mpc_module_config.prediction_horizon
+        }    
+        # total time length check (prep+market+flex_event)
+        if sum(flex_times.values()) > mpc_times["time_step"] * mpc_times["prediction_horizon"]:
+            raise ConfigurationError(f'Market time + prep time + flex event duration can not exceed the prediction horizon.')
+        # market time val check
+        if self.flex_config.market_config:
+            if flex_times["market_time"] != mpc_times["time_step"]:
+                raise ConfigurationError(f'Market time must be equal to the time step.')
+        # check for divisibility of flex_times by time_step 
+        for name, value in flex_times.items():
+            if value % mpc_times["time_step"] != 0:
+                raise ConfigurationError(f'{name} is not a multiple of the time step. Please redefine.')
