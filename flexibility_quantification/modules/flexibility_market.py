@@ -1,12 +1,18 @@
-import agentlib
-from typing import List, Optional, Union
-import pandas as pd
-import numpy as np
 import os
-from flexibility_quantification.data_structures.flex_offer import OfferStatus
-import pydantic
 from pathlib import Path
-from flexibility_quantification.data_structures.market import MarketSpecifications
+from typing import List, Optional, Union
+
+import agentlib
+import numpy as np
+import pandas as pd
+import pydantic
+
+from flexibility_quantification.data_structures.flex_offer import (
+    OfferStatus
+)
+from flexibility_quantification.data_structures.market import (
+    MarketSpecifications
+)
 
 
 class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):

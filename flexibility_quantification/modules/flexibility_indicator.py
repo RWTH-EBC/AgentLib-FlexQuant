@@ -1,15 +1,18 @@
-import os
 import logging
-from typing import Optional, List
+import os
+from pathlib import Path
+from typing import List, Optional
+
 import agentlib
 import numpy as np
 import pandas as pd
-from pathlib import Path
-from pydantic import BaseModel, Field, ConfigDict
-
+from pydantic import BaseModel, ConfigDict, Field
 
 import flexibility_quantification.data_structures.globals as glbs
-from flexibility_quantification.data_structures.flex_kpis import FlexibilityData, FlexibilityKPIs
+from flexibility_quantification.data_structures.flex_kpis import (
+    FlexibilityData, 
+    FlexibilityKPIs
+)
 from flexibility_quantification.data_structures.flex_offer import FlexOffer
 
 

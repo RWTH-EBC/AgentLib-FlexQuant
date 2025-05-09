@@ -5,11 +5,9 @@ import logging
 import os
 from copy import deepcopy
 from pathlib import Path
-from typing import Union, List
+from typing import List, Union
 
-from pydantic import FilePath
 import black
-
 from agentlib.core.agent import AgentConfig
 from agentlib.core.datamodels import AgentVariable
 from agentlib.core.errors import ConfigurationError
@@ -18,23 +16,25 @@ from agentlib.utils import custom_injection, load_config
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from agentlib_mpc.models.casadi_model import CasadiModelConfig
 from agentlib_mpc.modules.mpc_full import BaseMPCConfig
+from pydantic import FilePath
+
 import flexibility_quantification.data_structures.globals as glbs
+import flexibility_quantification.utils.config_management as cmng
 from flexibility_quantification.data_structures.flexquant import (
-    FlexQuantConfig,
-    FlexibilityIndicatorConfig,
-    FlexibilityMarketConfig,
+    FlexibilityIndicatorConfig, 
+    FlexibilityMarketConfig, 
+    FlexQuantConfig
 )
 from flexibility_quantification.data_structures.mpcs import (
-    BaseMPCData,
     BaselineMPCData,
+    BaseMPCData
 )
-import flexibility_quantification.utils.config_management as cmng
 from flexibility_quantification.modules.flexibility_indicator import (
-    FlexibilityIndicatorModuleConfig,
-)
+    FlexibilityIndicatorModuleConfig
+)    
 from flexibility_quantification.modules.flexibility_market import (
-    FlexibilityMarketModuleConfig,
-)
+    FlexibilityMarketModuleConfig
+)   
 
 
 class FlexAgentGenerator:
@@ -496,11 +496,10 @@ class FlexAgentGenerator:
         the Baseline MPC model
 
         """
-        from flexibility_quantification.utils.parsing import (
-            SetupSystemModifier,
-            add_import_to_tree,
-        )
         import astor
+
+        from flexibility_quantification.utils.parsing import (
+            SetupSystemModifier, add_import_to_tree)
 
         output_file = os.path.join(
             self.flex_config.path_to_flex_files,
