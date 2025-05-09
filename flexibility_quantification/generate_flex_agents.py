@@ -252,7 +252,7 @@ class FlexAgentGenerator:
             module=indicator_module_config,
             agent=self.indicator_agent_config,
             module_type=cmng.INDICATOR_CONFIG_TYPE,
-            config_name=self.flex_config.indicator_config.name_of_created_file,
+            config_name=self.indicator_config.name_of_created_file,
         )
         if self.flex_config.market_config:
             self.append_module_and_dump_agent(
@@ -334,7 +334,7 @@ class FlexAgentGenerator:
             ),
             os.path.join(
                 self.flex_config.path_to_flex_files,
-                self.flex_config.indicator_config.name_of_created_file,
+                self.indicator_config.name_of_created_file,
             ),
         ]
         if self.flex_config.market_config:
