@@ -18,5 +18,5 @@ def return_baseline_cost_function(profile_deviation_weight, power_variable):
                  "ca.if_else(self.Time.sym < self.rel_start.sym, obj_std, "
                  "ca.if_else(self.Time.sym >= self.rel_end.sym, obj_std, "
                  f"sum([{profile_deviation_weight}*(self.{power_variable} - "
-                 "self._P_external)**2]))),obj_std)")
+                 "self._P_external)**2]) / (self.prediction_horizon * self.sample_time))),obj_std)")
     return cost_func

@@ -1,0 +1,172 @@
+{
+    "id": "SimAgent",
+    "modules": [
+        {
+            "module_id": "Ag2Com",
+            "type": "local_broadcast"
+        },
+        {
+            "module_id": "SimTestHall",
+            "type": "simulator",
+            "model": {
+                "type": "fmu",
+                "path": "Model/local/fmu/SimpleTestHall_selected_var.fmu",
+                "only_config_variables": true
+            },
+            "result_causalities": [
+                "input",
+                "output",
+                "local"
+            ],
+            "measurement_uncertainty": 0,
+            "t_sample": 300,
+            "t_start": 0,
+            "update_inputs_on_callback": true,
+            "save_results": true,
+            "result_filename": "results/sim_agent_pos.csv",
+            "overwrite_result_file": true,
+            "inputs": [
+                {
+                    "name": "QFlowTabsSet",
+                    "value": 0,
+                    "alias": "Q_Tabs_set"
+                },
+                {
+                    "name": "TAhuSet",
+                    "value": 291.15,
+                    "alias": "T_ahu_set"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "TAirRoom",
+                    "alias": "T_Air"
+                },
+                {
+                    "name": "T_IntWall"
+                },
+                {
+                    "name": "T_ExtWall"
+                },
+                {
+                    "name": "T_Win"
+                },
+                {
+                    "name": "T_Tabs"
+                },
+                {
+                    "name": "T_Tabs_Pipe"
+                },
+                {
+                    "name": "Q_tabs_del",
+                    "alias": "Q_Tabs_set_del"
+                },
+                {
+                    "name": "T_Roof"
+                },
+                {
+                    "name": "T_amb",
+                    "alias": "T_amb_fmu"
+                },
+                {
+                    "name": "solar_radiation",
+                    "alias": "Q_RadSol_fmu"
+                },
+                {
+                    "name": "Q_Tabs",
+                    "alias": "Q_Tabs_fmu"
+                },
+                {
+                    "name": "Q_Ahu",
+                    "alias": "Q_Ahu_fmu"
+                },
+                {
+                    "name": "QFlowHeat",
+                    "alias": "QFlowHeat"
+                },
+                {
+                    "name": "QFlowCold",
+                    "alias": "QFlowCold"
+                },
+                {
+                    "name": "TSupMea",
+                    "alias": "TSupMea"
+                },
+                {
+                    "name": "schedule_human",
+                    "alias": "schedule_human_sim"
+                }
+            ],
+            "states": [
+                {
+                    "name": "genericAHU1.genericAHUBus.TSupMea",
+                    "alias": "T_Ahu"
+                },
+                {
+                    "name": "hotEnergyCalc.y3",
+                    "alias": "tabs"
+                },
+                {
+                    "name": "coolEnergyCalc.y3",
+                    "alias": "ahu"
+                },
+                {
+                    "name": "thermalZone1.humanSenHeaDependent.convHeat.Q_flow",
+                    "alias": "internal_gains_human_conv"
+                },
+                {
+                    "name": "thermalZone1.humanSenHeaDependent.radHeat.Q_flow",
+                    "alias": "internal_gains_human_rad"
+                },
+                {
+                    "name": "thermalZone1.machinesSenHea.convHeat.Q_flow",
+                    "alias": "internal_gains_machine_conv"
+                },
+                {
+                    "name": "thermalZone1.machinesSenHea.radHeat.Q_flow",
+                    "alias": "internal_gains_machine_rad"
+                },
+                {
+                    "name": "thermalZone1.lights.convHeat.Q_flow",
+                    "alias": "internal_gains_lights_conv"
+                },
+                {
+                    "name": "thermalZone1.lights.radHeat.Q_flow",
+                    "alias": "internal_gains_lights_rad"
+                },
+                {
+                    "name": "thermalZone1.ROM.extWall.Q_flow",
+                    "alias": "q_flow_extwall_sim"
+                },
+                {
+                    "name": "thermalZone1.ROM.roof.Q_flow",
+                    "alias": "q_flow_roof_sim"
+                },
+                {
+                    "name": "thermalZone1.ROM.window.Q_flow",
+                    "alias": "q_flow_window_sim"
+                },
+                {
+                    "name": "thermalZone1.ROM.resExtWallWin.Q_flow",
+                    "alias": "q_flow_window_ext_sim"
+                },
+                {
+                    "name": "thermalZone1.ROM.resRoofWin.Q_flow",
+                    "alias": "q_flow_window_roof_sim"
+                },
+                {
+                    "name": "thermalZone1.ROM.resIntWallWin.Q_flow",
+                    "alias": "q_flow_window_int_sim"
+                },
+                {
+                    "name": "thermalZone1.ROM.convWin.Q_flow",
+                    "alias": "q_flow_window_air_sim"
+                },
+                {
+                    "name": "thermalZone1.preTemWin.port.T",
+                    "alias": "T_pre_Win"
+                }
+            ]
+        }
+    ]
+}

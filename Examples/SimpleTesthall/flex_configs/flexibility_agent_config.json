@@ -13,7 +13,7 @@
                 {
                     "module_id": "FlexibilityIndicator",
                     "type": "flexibility_quantification.flexibility_indicator",
-                    "results_file": "results/flexibility_indicator_neg.csv",
+                    "results_file": "results/flexibility_indicator_pos.csv",
                     "price_variable": "r_pel",
                     "parameters": [
                         {
@@ -60,18 +60,18 @@
     "market_config": "flex_configs/market.json",
     "baseline_config_generator_data": {
         "power_variable": "P_el_c",
-        "power_unit": "W",
-        "profile_deviation_weight": 100
+        "power_unit": "kW",
+        "profile_deviation_weight": 100000000
     },
     "shadow_mpc_config_generator_data": {
         "weights": [
             {
                 "name": "s_P",
-                "value": 100
+                "value": 1
             }
         ],
         "pos_flex": {
-            "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, self.s_P * self.P_el_c]) / (self.prediction_horizon * self.sample_time)"
+            "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, self.s_P * self.P_el_c * 1000]) / (self.prediction_horizon * self.sample_time)"
         },
         "neg_flex": {
             "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, -self.s_P * self.P_el_c]) / (self.prediction_horizon * self.sample_time)"

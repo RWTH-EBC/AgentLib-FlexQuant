@@ -1,0 +1,104 @@
+{
+    "id": "SimAgent",
+    "modules": [
+        {
+            "module_id": "Ag2Com",
+            "type": "local_broadcast"
+        },
+        {
+            "module_id": "SimTestHall",
+            "type": "simulator",
+            "model": {
+                "type": "fmu",
+                "path": "model/local/fmu/ASHRAE_900_2018_shading_15_winter.fmu",
+                "only_config_variables": true
+            },
+            "result_causalities": [
+                "input",
+                "output",
+                "local"
+            ],
+            "measurement_uncertainty": 0,
+            "t_sample": 10,
+            "t_start": 0,
+            "update_inputs_on_callback": false,
+            "save_results": true,
+            "result_filename": "results/sim_agent_simple_testhall.csv",
+            "overwrite_result_file": true,
+            "inputs": [
+                {
+                    "name": "QFlowTabsSet",
+                    "value": 1000,
+                    "alias": "Q_Tabs_set"
+                },
+                {
+                    "name": "TAhuSet",
+                    "value": 291.15,
+                    "alias": "T_ahu_set"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "TAirRoom",
+                    "alias": "T_Air"
+                },
+                {
+                    "name": "T_IntWall"
+                },
+                {
+                    "name": "T_ExtWall"
+                },
+                {
+                    "name": "T_Win"
+                },
+                {
+                    "name": "T_Tabs"
+                },
+                {
+                    "name": "T_Tabs_Pipe"
+                },
+                {
+                    "name": "Q_tabs_del",
+                    "alias": "Q_Tabs_set_del"
+                },
+                {
+                    "name": "T_Roof"
+                },
+                {
+                    "name": "T_amb",
+                    "alias": "T_amb_fmu"
+                },
+                {
+                    "name": "solar_radiation",
+                    "alias": "Q_RadSol_fmu"
+                },
+                {
+                    "name": "Q_Tabs",
+                    "alias": "Q_Tabs_fmu"
+                },
+                {
+                    "name": "Q_Ahu",
+                    "alias": "Q_Ahu_fmu"
+                },
+                {
+                    "name": "QFlowHeat",
+                    "alias": "QFlowHeat"
+                },
+                {
+                    "name": "QFlowCold",
+                    "alias": "QFlowCold"
+                },
+                {
+                    "name": "TSupMea",
+                    "alias": "TSupMea"
+                },
+                {
+                    "name": "schedule_human",
+                    "alias": "schedule_human_sim"
+                }
+            ],
+            "states": [
+            ]
+        }
+    ]
+}

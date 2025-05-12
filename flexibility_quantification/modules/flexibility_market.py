@@ -11,6 +11,9 @@ import matplotlib.pyplot as plt
 from flexibility_quantification.data_structures.market import MarketSpecifications
 
 
+bWriteResults = True
+
+
 class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
     # parameters: List[agentlib.AgentVariable] = [
     # ]
@@ -192,9 +195,9 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         profile: Union[None, pd.Series] = None
         time_steps: Union[None, list] = None
 
-        #if self.env.now >= self.env.config.offset + self.config.market_specs.options.start_time and not self.get("in_provision").value:
-        if self.env.now == 372600 and not self.get("in_provision").value:
-        #if False:
+        #if self.env.now == self.env.config.offset + self.config.market_specs.options.start_time + 86400 and not self.get("in_provision").value:
+        if self.env.now >= self.env.config.offset + self.config.market_specs.options.start_time and not self.get("in_provision").value:
+        #if self.env.now == 372600 and not self.get("in_provision").value:
 
             bDebug: bool = True
 
@@ -208,9 +211,9 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                 time_steps_data_plot = np.delete(flex_envelope.time_steps, 0)
 
                 fig, ax = plt.subplots()
-                ax.plot(time_steps_data_plot, flex_envelope.powerflex_base.values, label='powerflex_base')
-                ax.plot(time_steps_data_plot, flex_envelope.powerflex_pos.values, label='powerflex_pos')
-                ax.plot(time_steps_data_plot, flex_envelope.powerflex_neg.values, label='powerflex_neg')
+                ax.step(time_steps_data_plot, flex_envelope.powerflex_base.values, label='powerflex_base')
+                ax.step(time_steps_data_plot, flex_envelope.powerflex_pos.values, label='powerflex_pos')
+                ax.step(time_steps_data_plot, flex_envelope.powerflex_neg.values, label='powerflex_neg')
                 ax.set(xlabel='Zeit in s',
                        ylabel='Prädiktive Flexible Leistung $P_{el, pred}$ in kW',
                        title='Prädiktions Werte',
@@ -253,8 +256,8 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                 time_steps_data_plot = np.delete(flex_envelope.time_steps, 0)
 
                 fig, ax = plt.subplots()
-                ax.plot(time_steps_data_plot, profile_accepted.to_list(), label='ausgewählt')
-                ax.plot(time_steps_data_plot, base_profile.to_list(), label='basis')
+                ax.step(time_steps_data_plot, profile_accepted.to_list(), label='ausgewählt')
+                ax.step(time_steps_data_plot, base_profile.to_list(), label='basis')
                 ax.set(xlabel='Zeit in s',
                        ylabel='Leistungsprofil $P_{el}$ in kW',
                        title='Prädiktions Werte',
@@ -312,19 +315,23 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         if profile is not None:
             offer.status = OfferStatus.accepted
 
-            #time_step = profile.index[-1] - profile.index[-2]
-            #temp_Series = pd.Series(data=[0], index=[(profile.index[-1] + time_step)])
-            #profile = pd.concat([profile, temp_Series])
+            # time_step = profile.index[-1] - profile.index[-2]
+            # temp_Series = pd.Series(data=[0], index=[(profile.index[-1] + time_step)])
+            # profile = pd.concat([profile, temp_Series])
+
             profile = profile.ffill()
             profile.index += self.env.time
             self.set("_P_external", profile)
 
-            # only activate a single offer, therefore setting end to inf
-            self.end = self.env.now + time_steps[-1]
-            # self.end = np.inf
+            if self.config.market_specs.options.multi_offer:
+                self.end = self.env.now + time_steps[-1]
+            else:
+                self.end = np.inf
+
             self.set("in_provision", True)
 
-        self.write_results(offer)
+        if bWriteResults:
+            self.write_results(offer)
 
     def dummy_callback(self, inp, name):
         """Dummy function, that is included, when market type is not specified"""
@@ -393,11 +400,15 @@ def flex_profile_real(offer: FlexOffer) -> tuple[pd.Series, list]:
     e_el_min: float = p_el_min * (time_step/3600)
 
     for iIdx in range(1, profile_energy_neg.size):
-        usable_max_value: float = min(e_el_max + profile_selected[iIdx-1], profile_energy_neg[iIdx])
-        usable_min_value: float = max(e_el_min + profile_selected[iIdx-1], profile_energy_pos[iIdx])
+
+        # TODO: Find a better solution!
+
+        #usable_max_value: float = min(e_el_max + profile_selected[iIdx-1], profile_energy_neg[iIdx])
+        #usable_min_value: float = max(e_el_min + profile_selected[iIdx-1], profile_energy_pos[iIdx])
 
         # generate a random number between -usable_max_value and +usable_max_value
-        gen_number = random_generator.uniform(usable_min_value, usable_max_value)
+        #gen_number = random_generator.uniform(usable_min_value, usable_max_value)
+        gen_number = random_generator.uniform(profile_selected[iIdx-1], profile_energy_neg[iIdx])
         profile_selected.append(gen_number)
 
     profile: pd.Series = pd.Series(profile_selected)
@@ -421,7 +432,7 @@ def convert_profile(profile_energy: pd.Series, time_steps: list) -> pd.Series:
     time_step = 0
     for iIdx in range(len(profile_energy) - 1):
         time_step = (time_steps[iIdx + 1] - time_steps[iIdx])
-        flex_power.append(abs((profile_energy[iIdx + 1] - profile_energy[iIdx]) / (time_step / 3600)))
+        flex_power.append((profile_energy[iIdx + 1] - profile_energy[iIdx]) / (time_step / 3600))
 
     return pd.Series(data=flex_power, index=np.delete(time_steps, 0))
 

@@ -1,4 +1,3 @@
-import logging
 from pathlib import Path
 import pandas as pd
 from agentlib.utils.multi_agent_system import LocalMASAgency
@@ -17,8 +16,6 @@ from flexibility_quantification.generate_flex_agents import FlexAgentGenerator
 from flexibility_quantification.data_structures.flex_offer import OfferStatus
 import shutil
 import matplotlib.pyplot as plt
-from matplotlib.ticker import FormatStrFormatter
-from agentlib_mpc.utils.analysis import mpc_at_time_step
 import agentlib_mpc.utils.plotting.basic as mpcplot
 
 pd.set_option("display.max_rows", None)
@@ -35,7 +32,7 @@ def run_example(offer_type=None) -> None:
     # Config parameters:
     varying_price_signal: int = 2
     start_day: int = 2
-    duration: int = 1
+    duration: int = 3
     use_case: str = "Winter"
     fmu: bool = False
 
@@ -72,6 +69,8 @@ def run_example(offer_type=None) -> None:
     with open(f'results/results_file_{offer_type}.pkl', 'wb') as results_file:
         pickle.dump(results, results_file)
 
+    return None
+
     # create the folder to store the figure
     Path("plots").mkdir(parents=True, exist_ok=True)
     Path(f"plots/plots_{offer_type}").mkdir(parents=True, exist_ok=True)
@@ -100,18 +99,18 @@ def run_example(offer_type=None) -> None:
         ax1.plot(negFlexData.index + offer_Time_steps[iIdx], negFlexData.ffill().values, 'r--', label='neg')
         posFlexData = results["PosFlexMPC"]["PosFlexMPC"]['variable']['T_Air'][offer_Time_steps[iIdx]].head(31)
         ax1.plot(posFlexData.index + offer_Time_steps[iIdx], posFlexData.ffill().values, 'b--', label='pos')
-        baseFlexData = results["myMPCAgent"]["Baseline"]['variable']['T_Air'][offer_Time_steps[iIdx] + 1800].head(31)
-        ax1.plot(baseFlexData.index + (offer_Time_steps[iIdx] + 1800), baseFlexData.ffill().values, 'k--', label='base')
+        #baseFlexData = results["myMPCAgent"]["Baseline"]['variable']['T_Air'][offer_Time_steps[iIdx] + 1800].head(31)
+        #ax1.plot(baseFlexData.index + (offer_Time_steps[iIdx] + 1800), baseFlexData.ffill().values, 'k--', label='base')
 
         if iIdx == 0:
             ax1.legend()
 
-        ax1.vlines(offer_Time_steps[iIdx], ymin=0, ymax=500, colors="black")
-        ax1.vlines(offer_Time_steps[iIdx] + 1800, ymin=0, ymax=500, colors="black")
-        ax1.vlines(offer_Time_steps[iIdx] + 1800 + 1800, ymin=0, ymax=500, colors="black")
-        ax1.vlines(offer_Time_steps[iIdx] + 1800 + 1800 + 14400, ymin=0, ymax=500, colors="black")
+        ax1.vlines(offer_Time_steps[iIdx], ymin=0, ymax=300, colors="black")
+        ax1.vlines(offer_Time_steps[iIdx] + 1800, ymin=0, ymax=300, colors="black")
+        ax1.vlines(offer_Time_steps[iIdx] + 1800 + 1800, ymin=0, ymax=300, colors="black")
+        ax1.vlines(offer_Time_steps[iIdx] + 1800 + 1800 + 14400, ymin=0, ymax=300, colors="black")
 
-    ax1.set_ylim(290, 297)
+    ax1.set_ylim(290, 298.5)
     x_ticks = np.arange(initial_time, until, 3600)  # maybe also add 1 to until
     x_tick_labels = [int(tick / 3600) for tick in x_ticks]
     ax1.set_xticks(x_ticks)
@@ -130,7 +129,7 @@ def run_example(offer_type=None) -> None:
     (ax1, ax2, ax3) = axs
     fig.set_figwidth(13)
     # P_el
-    ax1.set_ylabel("$P_{el}$ in W")
+    ax1.set_ylabel("$P_{el,c}$ in kW")
 
     simData = results["SimAgent"]["SimTestHall"]["P_el_c"]
     ax1.plot(simData.index, simData.values, 'g-', label='sim')
@@ -139,18 +138,18 @@ def run_example(offer_type=None) -> None:
         ax1.plot(negFlexData.index + offer_Time_steps[iIdx], negFlexData.ffill().values, 'r--', label='neg')
         posFlexData = results["PosFlexMPC"]["PosFlexMPC"]['variable']['P_el_c'][offer_Time_steps[iIdx]].head(31)
         ax1.plot(posFlexData.index + offer_Time_steps[iIdx], posFlexData.ffill().values, 'b--', label='pos')
-        baseFlexData = results["myMPCAgent"]["Baseline"]['variable']['P_el_c'][offer_Time_steps[iIdx] + 1800].head(31)
-        ax1.plot(posFlexData.index + (offer_Time_steps[iIdx] + 1800), baseFlexData.ffill().values, 'k--', label='base')
+        #baseFlexData = results["myMPCAgent"]["Baseline"]['variable']['P_el_c'][offer_Time_steps[iIdx] + 1800].head(31)
+        #ax1.plot(posFlexData.index + (offer_Time_steps[iIdx] + 1800), baseFlexData.ffill().values, 'k--', label='base')
 
         if iIdx == 0:
             ax1.legend()
 
-        ax1.vlines(offer_Time_steps[iIdx], ymin=0, ymax=3000, colors="black")
-        ax1.vlines(offer_Time_steps[iIdx] + 1800, ymin=0, ymax=3000, colors="black")
-        ax1.vlines(offer_Time_steps[iIdx] + 1800 + 1800, ymin=0, ymax=3000, colors="black")
-        ax1.vlines(offer_Time_steps[iIdx] + 1800 + 1800 + 14400, ymin=0, ymax=3000, colors="black")
+        ax1.vlines(offer_Time_steps[iIdx], ymin=0, ymax=3, colors="black")
+        ax1.vlines(offer_Time_steps[iIdx] + 1800, ymin=0, ymax=3, colors="black")
+        ax1.vlines(offer_Time_steps[iIdx] + 1800 + 1800, ymin=0, ymax=3, colors="black")
+        ax1.vlines(offer_Time_steps[iIdx] + 1800 + 1800 + 14400, ymin=0, ymax=3, colors="black")
 
-    ax1.set_ylim(0, 2500)
+    #ax1.set_ylim(0, 3)
 
     # Q_Ahu (RLT)
     ax2.set_ylabel("Q_Ahu in W")
@@ -162,18 +161,18 @@ def run_example(offer_type=None) -> None:
         ax2.plot(negFlexData.index + offer_Time_steps[iIdx], negFlexData.ffill().values, 'r--', label='neg')
         posFlexData = results["PosFlexMPC"]["PosFlexMPC"]['variable']['Q_Ahu'][offer_Time_steps[iIdx]].head(31)
         ax2.plot(posFlexData.index + offer_Time_steps[iIdx], posFlexData.ffill().values, 'b--', label='pos')
-        baseFlexData = results["myMPCAgent"]["Baseline"]['variable']['Q_Ahu'][offer_Time_steps[iIdx] + 1800].head(31)
-        ax2.plot(posFlexData.index + (offer_Time_steps[iIdx] + 1800), baseFlexData.ffill().values, 'k--', label='base')
+        #baseFlexData = results["myMPCAgent"]["Baseline"]['variable']['Q_Ahu'][offer_Time_steps[iIdx] + 1800].head(31)
+        #ax2.plot(posFlexData.index + (offer_Time_steps[iIdx] + 1800), baseFlexData.ffill().values, 'k--', label='base')
 
         if iIdx == 0:
             ax2.legend()
 
-        ax2.vlines(offer_Time_steps[iIdx], ymin=0, ymax=3000, colors="black")
-        ax2.vlines(offer_Time_steps[iIdx] + 1800, ymin=0, ymax=3000, colors="black")
-        ax2.vlines(offer_Time_steps[iIdx] + 1800 + 1800, ymin=0, ymax=3000, colors="black")
-        ax2.vlines(offer_Time_steps[iIdx] + 1800 + 1800 + 14400, ymin=0, ymax=3000, colors="black")
+        ax2.vlines(offer_Time_steps[iIdx], ymin=0, ymax=3500, colors="black")
+        ax2.vlines(offer_Time_steps[iIdx] + 1800, ymin=0, ymax=3500, colors="black")
+        ax2.vlines(offer_Time_steps[iIdx] + 1800 + 1800, ymin=0, ymax=3500, colors="black")
+        ax2.vlines(offer_Time_steps[iIdx] + 1800 + 1800 + 14400, ymin=0, ymax=3500, colors="black")
 
-    ax2.set_ylim(500, 3000)
+    #ax2.set_ylim(500, 3500)
 
     # Q_Tabs (BKT)
     ax3.set_ylabel("Q_Tabs in W")
@@ -185,18 +184,18 @@ def run_example(offer_type=None) -> None:
         ax3.plot(negFlexData.index + offer_Time_steps[iIdx], negFlexData.ffill().values, 'r--', label='neg')
         posFlexData = results["PosFlexMPC"]["PosFlexMPC"]['variable']['Q_Tabs_set'][offer_Time_steps[iIdx]].head(31)
         ax3.plot(posFlexData.index + offer_Time_steps[iIdx], posFlexData.ffill().values, 'b--', label='pos')
-        baseFlexData = results["myMPCAgent"]["Baseline"]['variable']['Q_Tabs_set'][offer_Time_steps[iIdx] + 1800].head(31)
-        ax3.plot(posFlexData.index + (offer_Time_steps[iIdx] + 1800), baseFlexData.ffill().values, 'k--', label='base')
+        #baseFlexData = results["myMPCAgent"]["Baseline"]['variable']['Q_Tabs_set'][offer_Time_steps[iIdx] + 1800].head(31)
+        #ax3.plot(posFlexData.index + (offer_Time_steps[iIdx] + 1800), baseFlexData.ffill().values, 'k--', label='base')
 
         if iIdx == 0:
             ax3.legend()
 
-        ax3.vlines(offer_Time_steps[iIdx], ymin=0, ymax=3000, colors="black")
-        ax3.vlines(offer_Time_steps[iIdx] + 1800, ymin=0, ymax=3000, colors="black")
-        ax3.vlines(offer_Time_steps[iIdx] + 1800 + 1800, ymin=0, ymax=3000, colors="black")
-        ax3.vlines(offer_Time_steps[iIdx] + 1800 + 1800 + 14400, ymin=0, ymax=3000, colors="black")
+        ax3.vlines(offer_Time_steps[iIdx], ymin=0, ymax=5000, colors="black")
+        ax3.vlines(offer_Time_steps[iIdx] + 1800, ymin=0, ymax=5000, colors="black")
+        ax3.vlines(offer_Time_steps[iIdx] + 1800 + 1800, ymin=0, ymax=5000, colors="black")
+        ax3.vlines(offer_Time_steps[iIdx] + 1800 + 1800 + 14400, ymin=0, ymax=5000, colors="black")
 
-    ax3.set_ylim(500, 3000)
+    #ax3.set_ylim(500, 5000)
 
     x_ticks = np.arange(initial_time, until, 3600)  # maybe also add 1 to until
     x_tick_labels = [int(tick / 3600) for tick in x_ticks]
@@ -210,36 +209,6 @@ def run_example(offer_type=None) -> None:
     # save the figure
     plt.savefig(f"plots/plots_{offer_type}/predictions.svg", format='svg')
     plt.close()
-
-    # flexibility
-    # get only the first prediction time of each time step
-    # ind_res = results["FlexibilityIndicator"]["FlexibilityIndicator"]
-    # energy_flex_neg = ind_res.xs("energyflex_neg", axis=1).droplevel(1).dropna()
-    # energy_flex_pos = ind_res.xs("energyflex_pos", axis=1).droplevel(1).dropna()
-    # fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=1)
-    # ax1 = axs[0]
-    # fig.set_figwidth(13)
-    # ax1.set_ylabel("$\epsilon$ in kWh")
-    # energy_flex_neg.plot(ax=ax1, label="neg")
-    # energy_flex_pos.plot(ax=ax1, label="pos")
-    # energy_flex_neg.plot(ax=ax1, label="neg", color=mpcplot.EBCColors.red)
-    # energy_flex_pos.plot(ax=ax1, label="pos", color=mpcplot.EBCColors.blue)
-    # ax1.yaxis.set_major_formatter(FormatStrFormatter("%.4f"))
-    #
-    # ax1.legend()
-    #
-    # x_ticks = np.arange(initial_time, until, 3600)  # maybe also add 1 to until
-    # x_tick_labels = [int(tick / 3600) for tick in x_ticks]
-    # ax1.set_xticks(x_ticks)
-    # ax1.set_xticklabels(x_tick_labels)
-    # ax1.set_xlabel("Time in hours")
-    # for ax in axs:
-    #     mpcplot.make_grid(ax)
-    #     ax.set_xlim(initial_time, until)
-    #
-    # # save the figure
-    # plt.savefig(f"plots/plots_{offer_type}/flexibility.svg", format='svg')
-    # plt.close()
 
 
 def get_series_from_predictions(series, convert_to="seconds", fname=None, return_first=False, index_of_return=0):
@@ -365,6 +334,13 @@ def set_mean_values(arr) -> list[float]:
 
 def get_configs(predictor_config, mpc_config, flex_config, varying_price_signal, start_day, duration, use_case, fmu):
     agent_configs = FlexAgentGenerator(flex_config=flex_config, mpc_agent_config=mpc_config).generate_flex_agents()
+    # agent_configs = [
+    #     "created_flex_files/baseline.json",
+    #     "created_flex_files/neg_flex.json",
+    #     "created_flex_files/pos_flex.json",
+    #     "created_flex_files/indicator.json",
+    #     "created_flex_files/flexibility_market.json"
+    # ]
     agent_configs.extend([predictor_config])
 
     if fmu:
@@ -381,7 +357,7 @@ def get_configs(predictor_config, mpc_config, flex_config, varying_price_signal,
 
         case _:
             print("Wrong use_case selected ! Exiting program ...")
-            sys.exit(1)
+            sys.exit(-42)
 
     with open(mpc_config) as f:
         mpc_conf = json.load(f)
@@ -454,7 +430,7 @@ if __name__ == "__main__":
 
     # offer_types: list[str] = ["neg", "pos", "average"]
     # offer_types: list[str] = ["neg", "pos", "real"]
-    offer_types: list[str] = ["neg"]
+    offer_types: list[str] = ["neg", "pos"]
     for offer_type in offer_types:
         print(f'\n{"":-^50}')
         print(f'{f" Starting simulation with {offer_type} ":-^50}')
@@ -521,6 +497,21 @@ if __name__ == "__main__":
         # create new simple_sim.json
         with open(file_path, "w") as sim_config:
             json.dump(sim_config_data, sim_config, indent=4)
+
+        # read fmu\config.json
+        file_path: str = os.path.join("model", "local", "fmu", "config.json")
+        with open(file_path, "r") as fmu_config:
+            fmu_config_data = json.load(fmu_config)
+            fmu_config.close()
+
+        fmu_config_data["modules"][1]["result_filename"] = f"results/sim_agent_{offer_type}.csv"
+
+        # delete old json file
+        os.remove(file_path)
+
+        # create new simple_sim.json
+        with open(file_path, "w") as fmu_config:
+            json.dump(fmu_config_data, fmu_config, indent=4)
 
         run_example(offer_type=offer_type)
 

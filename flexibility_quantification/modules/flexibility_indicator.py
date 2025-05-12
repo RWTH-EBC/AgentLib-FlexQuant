@@ -14,6 +14,9 @@ from flexibility_quantification.utils.data_handling import strip_multi_index, fi
 sys.path.append(os.path.dirname(__file__))
 
 
+bWriteResults = True
+
+
 class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
     inputs: List[agentlib.AgentVariable] = [
         agentlib.AgentVariable(name="__P_el_pos", unit="W",
@@ -213,8 +216,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 # TODO: add other sources for price signal?
                 self._r_pel = inp.value
 
-            if all(var is not None for var in
-                   (self.base_vals, self.neg_vals, self.pos_vals, self._r_pel)):
+            if all(var is not None for var in (self.base_vals, self.neg_vals, self.pos_vals, self._r_pel)):
                 self.calc_flex()
 
     def get_results(self) -> Optional[pd.DataFrame]:
@@ -401,7 +403,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         base_profile = self.base_vals.reindex(index=flex_horizon)
 
         # find p_el_min and _max in config.parameters and return the values
-        p_el_min = -np.inf
+        p_el_min = 0
         p_el_max = np.inf
         for varParam in self.config.parameters:
             if varParam.name == "p_el_min":
@@ -419,8 +421,10 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                              flex_price_neg, powerflex_profile_neg,
                              flex_envelope)
 
-        self.df = self.write_results(df=self.df, ts=time_step, n=horizon)
-        self.df.to_csv(self.config.results_file)
+        if bWriteResults:
+            self.df = self.write_results(df=self.df, ts=time_step, n=horizon)
+            self.df.to_csv(self.config.results_file)
+
         # set the values to None to reset the callback
         self.base_vals = None
         self.neg_vals = None
