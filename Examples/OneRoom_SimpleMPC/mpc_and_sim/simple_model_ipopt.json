@@ -1,0 +1,100 @@
+{
+    "id": "FlexModel",
+    "modules": [
+        {
+            "module_id": "Ag1Com",
+            "type": "local_broadcast"
+        },
+        {
+            "module_id": "BaselineMPC",
+            "type": "agentlib_mpc.mpc",
+            "optimization_backend": {
+                "type": "casadi",
+                "model": {
+                    "type": {
+                        "file": "mpc_and_sim/simple_model.py",
+                        "class_name": "BaselineMPCModel"
+                    }
+                },
+                "discretization_options": {
+                    "collocation_order": 2,
+                    "collocation_method": "legendre"
+                },
+                "solver": {
+                    "name": "ipopt",
+                    "options": {
+                        "ipopt": {
+                            "max_iter": 1000,
+                            "tol": 0.0001,
+                            "acceptable_tol": 0.001,
+                            "acceptable_constr_viol_tol": 0.01,
+                            "acceptable_iter": 30,
+                            "acceptable_compl_inf_tol": 0.01,
+                            "print_level": 3
+                        }
+                    }
+                },
+                "results_file": "results/mpc.csv",
+                "save_results": true,
+                "overwrite_result_file": true
+            },
+            "time_step": 900,
+            "prediction_horizon": 48,
+            "set_outputs": true,
+            "parameters": [
+                {
+                    "name": "s_T",
+                    "value": 250
+                },
+                {
+                    "name": "r_mDot",
+                    "value": 1
+                }
+            ],
+            "inputs": [
+                {
+                    "name": "load",
+                    "value": 150
+                },
+                {
+                    "name": "T_upper",
+                    "value": 294.15
+                },
+                {
+                    "name": "T_lower",
+                    "value": 292.15
+                },
+                {
+                    "name": "T_in",
+                    "value": 280.15
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "T_out",
+                    "alias": "T_out"
+                },
+                {
+                    "name": "P_el",
+                    "alias": "P_el"
+                }
+            ],
+            "controls": [
+                {
+                    "name": "mDot",
+                    "value": 0.02,
+                    "ub": 0.05,
+                    "lb": 0
+                }
+            ],
+            "states": [
+                {
+                    "name": "T",
+                    "value": 293.15,
+                    "ub": 294.15,
+                    "lb": 292.15
+                }
+            ]
+        }
+    ]
+}

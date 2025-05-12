@@ -21,15 +21,20 @@
                     "collocation_method": "legendre"
                 },
                 "solver": {
-                    "name": "fatrop",
+                    "name": "ipopt",
                     "options": {
-                        "fatrop": {
-                            "max_iter": 100,
-                            "tol": 1e-4
+                        "ipopt": {
+                            "max_iter": 1000,
+                            "tol": 0.0001,
+                            "acceptable_tol": 0.001,
+                            "acceptable_constr_viol_tol": 0.01,
+                            "acceptable_iter": 30,
+                            "acceptable_compl_inf_tol": 0.01,
+                            "print_level": 3
                         }
                     }
                 },
-                "results_file": "results/mpc.csv",
+                "results_file": "results/mpc_pos.csv",
                 "save_results": true,
                 "overwrite_result_file": true
             },
@@ -89,9 +94,9 @@
             "states": [
                 {
                     "name": "T",
-                    "value": 298.16,
-                    "ub": 303.15,
-                    "lb": 288.15
+                    "value": 293.15,
+                    "ub": 294.15,
+                    "lb": 292.15
                 }
             ]
         }

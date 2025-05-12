@@ -128,7 +128,7 @@ class PFMPCData(BaseMPCData):
 
 
 class NFMPCData(BaseMPCData):
-    """Data class for PF-MPC"""
+    """Data class for NF-MPC"""
 
     # files and paths
     results_suffix: str = "_neg_flex.csv"

@@ -1,26 +1,32 @@
 {
     "agent_config": {
-      "id": "FlexibilityMarket",
-      "modules": [
-        {
-          "module_id": "Ag1Com",
-          "type": "local_broadcast"
-        },
-        {
-          "module_id": "FlexibilityMarket",
-          "type": "flexibility_quantification.flexibility_market",
-          "results_file": "results/flexibility_market.csv",
-          "market_specs": {
-            "type": "single",
-            "cooldown": 10,
-            "minimum_average_flex": 500,
-            "options": {
-              "start_time": 9000,
-              "direction": "positive"
+        "id": "FlexibilityMarket",
+        "modules": [
+            {
+                "module_id": "Ag1Com",
+                "type": "local_broadcast"
+            },
+            {
+                "module_id": "FlexibilityMarket",
+                "type": "flexibility_quantification.flexibility_market",
+                "results_file": "results/flexibility_market_pos.csv",
+                "time_step": 900,
+                "market_specs": {
+                    "type": "custom",
+                    "cooldown": 10,
+                    "minimum_average_flex": 0,
+                    "options": {
+                        "random_seed": 1,
+                        "pos_neg_rate": 1,
+                        "offer_acceptance_rate": 0.1,
+                        "start_time": 9000,
+                        "direction": "negative",
+                        "event_type": "pos",
+                        "results_file_offer": "results/flex_offer_pos.csv"
+                    }
+                }
             }
-          }
-        }
-      ]
+        ]
     },
     "name_of_created_file": "flexibility_market.json"
-  }
+}

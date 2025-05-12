@@ -1,0 +1,176 @@
+{
+    "id": "myPredictorAgent",
+    "modules": [
+        {
+            "module_id": "Ag4Com",
+            "type": "local_broadcast"
+        },
+        {
+            "module_id": "MyPredictor",
+            "type": {
+                "file": "model/local/predictor/simple_predictor.py",
+                "class_name": "PredictorModule"
+            },
+            "parameters": [
+                {
+                    "name": "sampling_time",
+                    "value": 300
+                },
+                {
+                    "name": "time_step",
+                    "value": 1800
+                },
+                {
+                    "name": "prediction_horizon",
+                    "value": 48
+                },
+                {
+                    "name": "varying_price_signal",
+                    "value": 2
+                },
+                {
+                    "name": "const_price",
+                    "value": 27.25
+                },
+                {
+                    "name": "power_price_base",
+                    "value": 24.5
+                },
+                {
+                    "name": "power_price_peak",
+                    "value": 30
+                },
+                {
+                    "name": "comfort_interval_start",
+                    "value": 7
+                },
+                {
+                    "name": "comfort_interval_end",
+                    "value": 19
+                },
+                {
+                    "name": "peakprice_interval_start",
+                    "value": 8
+                },
+                {
+                    "name": "peakprice_interval_end",
+                    "value": 20
+                },
+                {
+                    "name": "upper_comfort_high",
+                    "value": 298.15
+                },
+                {
+                    "name": "upper_comfort_low",
+                    "value": 296.15
+                },
+                {
+                    "name": "lower_comfort_high",
+                    "value": 292.15
+                },
+                {
+                    "name": "lower_comfort_low",
+                    "value": 290.15
+                },
+                {
+                    "name": "path_data_disturbances",
+                    "value": "model\\local\\predictor\\Disturbances_ASHRAE_365_d"
+                },
+                {
+                    "name": "path_mapping_disturbances",
+                    "value": "model\\local\\predictor\\disturbance_mapping.json"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "T_amb_pred",
+                    "value": 267.25
+                },
+                {
+                    "name": "T_upper_pred",
+                    "value": 298.15
+                },
+                {
+                    "name": "T_lower_pred",
+                    "value": 296.15
+                },
+                {
+                    "name": "Q_RadSol_pred",
+                    "value": 0.0
+                },
+                {
+                    "name": "T_preTemWin_pred",
+                    "value": 263.75
+                },
+                {
+                    "name": "T_preTemWall_pred",
+                    "value": 263.75
+                },
+                {
+                    "name": "T_preTemRoof_pred",
+                    "value": 263.75
+                },
+                {
+                    "name": "m_flow_ahu_pred",
+                    "value": 0.13
+                },
+                {
+                    "name": "schedule_human_pred",
+                    "value": 0
+                },
+                {
+                    "name": "schedule_dev_pred",
+                    "value": 0.1
+                },
+                {
+                    "name": "schedule_light_pred",
+                    "value": 0
+                },
+                {
+                    "name": "r_pel",
+                    "value": 27.25
+                },
+                {
+                    "name": "T_amb_sim",
+                    "value": 267.25
+                },
+                {
+                    "name": "T_upper_sim",
+                    "value": 298.15
+                },
+                {
+                    "name": "T_lower_sim",
+                    "value": 296.15
+                },
+                {
+                    "name": "Q_RadSol_sim",
+                    "value": 0.0
+                },
+                {
+                    "name": "T_preTemWin_sim",
+                    "value": 263.75
+                },
+                {
+                    "name": "T_preTemWall_sim",
+                    "value": 263.75
+                },
+                {
+                    "name": "T_preTemRoof_sim",
+                    "value": 263.75
+                },
+                {
+                    "name": "schedule_human_sim",
+                    "value": 0
+                },
+                {
+                    "name": "schedule_dev_sim",
+                    "value": 0.1
+                },
+                {
+                    "name": "schedule_light_sim",
+                    "value": 0
+                }
+            ]
+        }
+    ]
+}

@@ -13,6 +13,7 @@
                 {
                     "module_id": "FlexibilityIndicator",
                     "type": "flexibility_quantification.flexibility_indicator",
+                    "results_file": "results/flexibility_indicator_pos.csv",
                     "price_variable": "r_pel",
                     "parameters": [
                         {
@@ -34,6 +35,14 @@
                         {
                             "name": "prediction_horizon",
                             "value": 48
+                        },
+                        {
+                            "name": "p_el_min",
+                            "value": 0.0
+                        },
+                        {
+                            "name": "p_el_max",
+                            "value": 0.6
                         }
                     ],
                     "inputs": [
@@ -48,6 +57,7 @@
                 }
             ]
         },
+        "collocation_order": 2,
         "name_of_created_file": "indicator.json"
     },
     "market_config": "flex_configs/flexibility_market.json",

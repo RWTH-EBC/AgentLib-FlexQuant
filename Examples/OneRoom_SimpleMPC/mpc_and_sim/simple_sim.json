@@ -9,21 +9,38 @@
             "module_id": "room",
             "type": "simulator",
             "model": {
-                "type": {"file": "mpc_and_sim/simple_model.py", "class_name": "BaselineMPCModel"},
-                "states": [{"name": "T", "value": 298}]
-                
+                "type": {
+                    "file": "mpc_and_sim/simple_model.py",
+                    "class_name": "BaselineMPCModel"
+                },
+                "states": [
+                    {
+                        "name": "T",
+                        "value": 293.15
+                    }
+                ]
             },
             "t_sample": 10,
             "update_inputs_on_callback": false,
             "save_results": true,
-            "result_filename": "results/sim_room.csv",
+            "result_filename": "results/sim_room_pos.csv",
             "overwrite_result_file": true,
             "outputs": [
-                {"name": "T_out", "alias": "T"},
-                {"name": "P_el","alias": "P_el_sim"}
+                {
+                    "name": "T_out",
+                    "alias": "T"
+                },
+                {
+                    "name": "P_el",
+                    "alias": "P_el_sim"
+                }
             ],
             "inputs": [
-                {"name": "mDot", "value": 0.02, "alias": "mDot"}
+                {
+                    "name": "mDot",
+                    "value": 0.02,
+                    "alias": "mDot"
+                }
             ]
         }
     ]

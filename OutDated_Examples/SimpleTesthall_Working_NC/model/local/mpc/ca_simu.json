@@ -1,0 +1,192 @@
+{
+    "id": "SimAgent",
+    "modules": [
+        {
+            "module_id": "Ag2Com",
+            "type": "local_broadcast"
+        },
+        {
+            "module_id": "SimTestHall",
+            "type": "simulator",
+            "model": {
+                "type": {
+                    "file": "model/local/mpc/simple_test_hall.py",
+                    "class_name": "SimpleTestHall"
+                },
+                "states": [
+                    {
+                        "name": "T_Air",
+                        "value": 294.15
+                    },
+                    {
+                        "name": "T_Roof",
+                        "value": 291.15
+                    },
+                    {
+                        "name": "T_Floor",
+                        "value": 291.15
+                    },
+                    {
+                        "name": "T_ExtWall",
+                        "value": 290.15
+                    },
+                    {
+                        "name": "T_IntWall",
+                        "value": 290.15
+                    },
+                    {
+                        "name": "T_Win",
+                        "value": 290.15
+                    },
+                    {
+                        "name": "T_Tabs",
+                        "value": 291.15
+                    }
+                ]
+            },
+            "t_sample": 60,
+            "update_inputs_on_callback": true,
+            "save_results": true,
+            "result_filename": "results/sim_testhall_neg.csv",
+            "overwrite_result_file": true,
+            "result_causalities": [
+                "output",
+                "local",
+                "input"
+            ],
+            "inputs": [
+                {
+                    "name": "Q_Tabs_set",
+                    "value": 200,
+                    "ub": 5000,
+                    "lb": -5000,
+                    "alias": "Q_Tabs_set"
+                },
+                {
+                    "name": "T_ahu_set",
+                    "value": 291.15,
+                    "ub": 298.15,
+                    "lb": 291.15,
+                    "alias": "T_ahu_set"
+                },
+                {
+                    "name": "Q_RadSol",
+                    "value": 0,
+                    "alias": "Q_RadSol_scalar"
+                },
+                {
+                    "name": "T_amb",
+                    "value": 279.15,
+                    "alias": "T_amb_scalar"
+                },
+                {
+                    "name": "T_preTemWin",
+                    "value": 279.15,
+                    "alias": "T_preTemWin_scalar"
+                },
+                {
+                    "name": "T_preTemWall",
+                    "value": 278.15,
+                    "alias": "T_preTemWall_scalar"
+                },
+                {
+                    "name": "T_preTemRoof",
+                    "value": 278.15,
+                    "alias": "T_preTemRoof_scalar"
+                },
+                {
+                    "name": "m_flow_ahu",
+                    "value": 0.13158,
+                    "alias": "m_flow_ahu_pred"
+                },
+                {
+                    "name": "schedule_human",
+                    "value": 0,
+                    "alias": "schedule_human_scalar"
+                },
+                {
+                    "name": "schedule_dev",
+                    "value": 0,
+                    "alias": "schedule_dev_scalar"
+                },
+                {
+                    "name": "schedule_light",
+                    "value": 0,
+                    "alias": "schedule_light_scalar"
+                },
+                {
+                    "name": "T_upper",
+                    "value": 296.15,
+                    "alias": "T_upper_scalar"
+                },
+                {
+                    "name": "T_lower",
+                    "value": 292.15,
+                    "alias": "T_lower_scalar"
+                }
+            ],
+            "states": [
+                {
+                    "name": "T_Air",
+                    "value": 294.15,
+                    "shared": true,
+                    "alias": "T_Air"
+                },
+                {
+                    "name": "T_Roof",
+                    "value": 291.15,
+                    "shared": true,
+                    "alias": "T_Roof"
+                },
+                {
+                    "name": "T_Floor",
+                    "value": 291.15,
+                    "shared": true,
+                    "alias": "T_Floor"
+                },
+                {
+                    "name": "T_ExtWall",
+                    "value": 290.15,
+                    "shared": true,
+                    "alias": "T_ExtWall"
+                },
+                {
+                    "name": "T_IntWall",
+                    "value": 290.15,
+                    "shared": true,
+                    "alias": "T_IntWall"
+                },
+                {
+                    "name": "T_Win",
+                    "value": 290.15,
+                    "shared": true,
+                    "alias": "T_Win"
+                },
+                {
+                    "name": "T_Tabs",
+                    "value": 291.15,
+                    "shared": true,
+                    "alias": "T_Tabs"
+                },
+                {
+                    "name": "Q_Tabs_set_del",
+                    "value": 5000,
+                    "shared": true,
+                    "alias": "Q_Tabs_set_del"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "P_el_c"
+                },
+                {
+                    "name": "T_out",
+                    "alias": "T_Air"
+                }
+            ],
+            "shared_variable_fields": [
+                "states"
+            ]
+        }
+    ]
+}

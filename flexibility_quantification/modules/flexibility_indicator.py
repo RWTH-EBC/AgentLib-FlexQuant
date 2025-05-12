@@ -12,6 +12,7 @@ import flexibility_quantification.data_structures.globals as glbs
 from flexibility_quantification.data_structures.flex_kpis import FlexibilityData, FlexibilityKPIs
 from flexibility_quantification.data_structures.flex_offer import FlexOffer
 
+bWriteResults = True
 
 class InputsForCorrectFlexCosts(BaseModel):
     enable_energy_costs_correction: bool = Field(
@@ -436,3 +437,68 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         else:
             self.set(kpis_neg.power_flex_within_boundary.get_kpi_identifier(), True)
 
+        base_profile = self.base_vals.reindex(index=flex_horizon)
+
+        # find p_el_min and _max in config.parameters and return the values
+        p_el_min = 0
+        p_el_max = np.inf
+        for varParam in self.config.parameters:
+            if varParam.name == "p_el_min":
+                p_el_min = varParam.value
+            elif varParam.name == "p_el_max":
+                p_el_max = varParam.value
+
+        flex_envelope = calc_flex_envelop(powerflex_pos=self.pos_vals.reindex(index=flex_horizon),
+                                          powerflex_neg=self.neg_vals.reindex(index=flex_horizon),
+                                          powerflex_base=base_profile, time_step=time_step, horizon=flex_horizon,
+                                          scaler=scaler, p_el_min=p_el_min, p_el_max=p_el_max, time=self.env.now)
+
+        self.send_flex_offer("FlexibilityOffer", base_profile,
+                             flex_price_pos, powerflex_profile_pos,
+                             flex_price_neg, powerflex_profile_neg,
+                             flex_envelope)
+        if bWriteResults:
+            self.df = self.write_results(df=self.df, ts=time_step, n=horizon)
+            self.df.to_csv(self.config.results_file)
+
+        # set the values to None to reset the callback
+        self.base_vals = None
+        self.neg_vals = None
+        self.pos_vals = None
+        self._r_pel = None
+
+
+def calc_flex_envelop(powerflex_pos: pd.Series, powerflex_neg: pd.Series, time_step: int, horizon: np.ndarray,
+                      scaler: int, p_el_min: float, p_el_max: float, time: float, powerflex_base: pd.Series = None) -> FlexEnvelope:
+    """ powerflex_pos, powerflex_neg and powerflex_base are in (k)W, and the result is in (k)Wh. """
+
+    powerflex_pos_prepared = powerflex_pos.to_list()
+    powerflex_neg_prepared = powerflex_neg.to_list()
+    powerflex_base_prepared = powerflex_base.to_list()
+
+    # make the computation
+    powerflex_pos_prepared.insert(0, 0)
+    temp_energy = [x * (time_step / 3600) for x in powerflex_pos_prepared]
+    energyflex_pos = np.cumsum(temp_energy)
+
+    powerflex_neg_prepared.insert(0, 0)
+    temp_energy = [x * (time_step / 3600) for x in powerflex_neg_prepared]
+    energyflex_neg = np.cumsum(temp_energy)
+
+    powerflex_base_prepared.insert(0, 0)
+    temp_energy = [x * (time_step / 3600) for x in powerflex_base_prepared]
+    energyflex_base = np.cumsum(temp_energy)
+
+    horizon = np.append(horizon[0] - time_step, horizon)
+
+    return FlexEnvelope(energyflex_pos=pd.Series(energyflex_pos.tolist()),
+                        energyflex_neg=pd.Series(energyflex_neg.tolist()),
+                        energyflex_base=pd.Series(energyflex_base.tolist()),
+                        time_steps=horizon,
+                        powerflex_pos=pd.Series(powerflex_pos.to_list()),
+                        powerflex_neg=pd.Series(powerflex_neg.to_list()),
+                        powerflex_base=pd.Series(powerflex_base.to_list()),
+                        p_el_max=p_el_max,
+                        p_el_min=p_el_min,
+                        time=time,
+                        )
