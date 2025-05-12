@@ -1,0 +1,83 @@
+{
+    "prep_time": 1800,
+    "flex_event_duration": 14400,
+    "market_time": 1800,
+    "indicator_config": {
+        "agent_config": {
+            "id": "FlexibilityIndicator",
+            "modules": [
+                {
+                    "module_id": "Ag1Com",
+                    "type": "local_broadcast"
+                },
+                {
+                    "module_id": "FlexibilityIndicator",
+                    "type": "flexibility_quantification.flexibility_indicator",
+                    "results_file": "results/flexibility_indicator_neg.csv",
+                    "price_variable": "r_pel",
+                    "parameters": [
+                        {
+                            "name": "prep_time",
+                            "value": 1800
+                        },
+                        {
+                            "name": "market_time",
+                            "value": 1800
+                        },
+                        {
+                            "name": "flex_event_duration",
+                            "value": 14400
+                        },
+                        {
+                            "name": "time_step",
+                            "value": 1800
+                        },
+                        {
+                            "name": "prediction_horizon",
+                            "value": 24
+                        },
+                        {
+                            "name": "p_el_min",
+                            "value": 0
+                        },
+                        {
+                            "name": "p_el_max",
+                            "value": 400
+                        }
+                    ],
+                    "inputs": [
+                        {
+                            "name": "r_pel",
+                            "alias": "r_pel"
+                        }
+                    ]
+                }
+            ]
+        },
+        "collocation_order": 2,
+        "name_of_created_file": "indicator.json"
+    },
+    "market_config": "flex_configs/market.json",
+    "baseline_config_generator_data": {
+        "power_variable": "P_el_c",
+        "power_unit": "kW",
+        "profile_deviation_weight": 100000000
+    },
+    "shadow_mpc_config_generator_data": {
+        "weights": [
+            {
+                "name": "s_P",
+                "value": 1
+            }
+        ],
+        "pos_flex": {
+            "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, self.s_P * self.P_el_c * 1000]) / (self.prediction_horizon * self.sample_time)"
+        },
+        "neg_flex": {
+            "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, -self.s_P * self.P_el_c]) / (self.prediction_horizon * self.sample_time)"
+        }
+    },
+    "path_to_flex_files": "created_flex_files",
+    "delete_files": false,
+    "overwrite_files": true
+}
