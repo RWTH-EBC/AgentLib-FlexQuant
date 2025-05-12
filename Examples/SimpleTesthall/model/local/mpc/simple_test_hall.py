@@ -1,7 +1,6 @@
 import logging
-from itertools import combinations
 from typing import List
-from model.utils.modelica_parser import parse_modelica_record
+from Examples.SimpleTesthall.Model.utils.modelica_parser import parse_modelica_record
 from agentlib_mpc.models.casadi_model import (
     CasadiModel,
     CasadiInput,
@@ -13,13 +12,13 @@ from agentlib_mpc.models.casadi_model import (
 from math import inf
 import casadi as ca
 import pandas as pd
-from model.local.mpc.utils.calc_resistances import calc_resistances
+from Examples.SimpleTesthall.Model.local.mpc.utils.calc_resistances import calc_resistances
 
 logger = logging.getLogger(__name__)
 
 ASHRAE = 900
 # parameters for thermal zone
-path_to_mos = r"model\local\mpc\ASHRAE140_600.mo" if ASHRAE == 600 else r"model\local\mpc\ASHRAE140_900.mo"
+path_to_mos = r"Model\local\mpc\ASHRAE140_600.mo" if ASHRAE == 600 else r"Model\local\mpc\ASHRAE140_900.mo"
 # path_to_mos = r"mpc\Record_new_insulation_standard.mo"
 tz_par = parse_modelica_record(path_to_mos)
 

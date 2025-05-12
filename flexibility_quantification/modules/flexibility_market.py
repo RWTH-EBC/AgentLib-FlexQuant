@@ -54,7 +54,6 @@ class FlexibilityMarketModule(agentlib.BaseModule):
     """
     config: FlexibilityMarketModuleConfig
 
-
     df: pd.DataFrame = None
     df_flex_envelop: pd.DataFrame = None
 
@@ -251,7 +250,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                 plt.close()
 
                 # create accepted offer profile diagram (which will be sent back to the building)
-                base_profile = offer_data.base_power_profile
+                base_profile = offer_data.flex_envelope.powerflex_base
                 time_steps_data_plot = np.delete(flex_envelope.time_steps, 0)
 
                 fig, ax = plt.subplots()

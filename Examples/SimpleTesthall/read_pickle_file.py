@@ -737,9 +737,9 @@ def fmu_plots(results, initial_time, until, offer_type, offer_Time_steps) -> Non
 
 
 if __name__ == "__main__":
-    OFFER_TYPES = ["neg", "pos"]  # neg, pos, real
+    OFFER_TYPES = ["neg"]  # neg, pos, real
 
     for OFFER_TYPE in OFFER_TYPES:
-        PICKLE_FILE = f'D:\\fse-jkl\\GIT_FILES\\flexquant\\Examples\\SimpleTesthall\\One_Offer_FMU_Old\\results\\results_file_{OFFER_TYPE}.pkl'
+        PICKLE_FILE = f'D:\\fse-jkl\\GIT_FILES\\flexquant_update\\Examples\\SimpleTesthall\\results\\results_file_{OFFER_TYPE}.pkl'
         create_plots(offer_type=OFFER_TYPE, pickle_file=PICKLE_FILE)
     

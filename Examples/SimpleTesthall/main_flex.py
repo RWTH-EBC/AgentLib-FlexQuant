@@ -1,4 +1,3 @@
-import logging
 from pathlib import Path
 import pandas as pd
 from agentlib.utils.multi_agent_system import LocalMASAgency
@@ -342,9 +341,9 @@ def get_configs(predictor_config, mpc_config, flex_config, varying_price_signal,
     else:
         agent_configs.append("model/local/mpc/ca_simu.json")
 
-    if "Summer" == usecase:
+    if "Summer" == use_case:
         initial_time = 16502400 + 86400 * start_day
-    elif usecase == "Winter":
+    elif use_case == "Winter":
         initial_time = 172800 + 86400 * start_day
 
     with open(mpc_config) as f:
@@ -418,7 +417,7 @@ if __name__ == "__main__":
 
     # offer_types: list[str] = ["neg", "pos", "average"]
     # offer_types: list[str] = ["neg", "pos", "real"]
-    offer_types: list[str] = ["neg", "pos"]
+    offer_types: list[str] = ["neg"]
     for offer_type in offer_types:
         print(f'\n{"":-^50}')
         print(f'{f" Starting simulation with {offer_type} ":-^50}')

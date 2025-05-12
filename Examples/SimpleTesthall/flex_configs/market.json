@@ -9,8 +9,7 @@
             {
                 "module_id": "FlexibilityMarket",
                 "type": "flexibility_quantification.flexibility_market",
-                "results_file": "results/flexibility_market_pos.csv",
-                "time_step": 1800,
+                "results_file": "results/flexibility_market_neg.csv",
                 "market_specs": {
                     "type": "custom",
                     "cooldown": 10,
@@ -19,10 +18,10 @@
                         "random_seed": 1,
                         "pos_neg_rate": 1,
                         "offer_acceptance_rate": 0.1,
-                        "start_time": 129600,
+                        "start_time": 1800,
                         "direction": "negative",
-                        "event_type": "pos",
-                        "results_file_offer": "results/flex_offer_pos.csv",
+                        "event_type": "neg",
+                        "results_file_offer": "results/flex_offer_neg.csv",
                         "multi_offer": false
                     }
                 }

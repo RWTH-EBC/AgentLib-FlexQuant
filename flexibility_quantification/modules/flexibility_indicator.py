@@ -10,7 +10,7 @@ from pydantic import BaseModel, Field, field_validator
 
 import flexibility_quantification.data_structures.globals as glbs
 from flexibility_quantification.data_structures.flex_kpis import FlexibilityData, FlexibilityKPIs
-from flexibility_quantification.data_structures.flex_offer import FlexOffer
+from flexibility_quantification.data_structures.flex_offer import FlexOffer, FlexEnvelope
 
 bWriteResults = True
 
@@ -156,7 +156,6 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
             description="Corrected saved costs per energy due to baseline"
         )
     ]
-
 
     parameters: List[agentlib.AgentVariable] = [
         agentlib.AgentVariable(name=glbs.PREP_TIME, unit="s",
@@ -349,6 +348,20 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         # Calculate the flexibility KPIs for current predictions
         self.data.calculate(enable_energy_costs_correction=self.config.correct_costs.enable_energy_costs_correction)
 
+        # find p_el_min and _max in config.parameters and return the values
+        p_el_min = 0
+        p_el_max = np.inf
+        for varParam in self.config.parameters:
+            if varParam.name == "p_el_min":
+                p_el_min = varParam.value
+            elif varParam.name == "p_el_max":
+                p_el_max = varParam.value
+
+        flex_envelope = calc_flex_envelop(powerflex_pos=self.data.power_profile_flex_pos.reindex(index=self.data.flex_offer_time_grid),
+                                          powerflex_neg=self.data.power_profile_flex_neg.reindex(index=self.data.flex_offer_time_grid),
+                                          powerflex_base=self.data.power_profile_base.reindex(index=self.data.flex_offer_time_grid), time_step=self.get(glbs.TIME_STEP).value,
+                                          horizon=self.data.flex_offer_time_grid, p_el_min=p_el_min, p_el_max=p_el_max, time=self.env.now)
+
         # Send flex offer
         self.send_flex_offer(
             name=glbs.FlexibilityOffer,
@@ -357,6 +370,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             pos_price=self.data.kpis_pos.costs.value,
             neg_diff_profile=self.data.kpis_neg.power_flex_offer.value,
             neg_price=self.data.kpis_neg.costs.value,
+            flex_envelope=flex_envelope
         )
 
         # set outputs
@@ -365,23 +379,23 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 for output in self.config.outputs:
                     if output.name == kpi.get_kpi_identifier():
                         self.set(output.name, kpi.value)
-
-        # write results
-        self.df = self.write_results(
-            df=self.df,
-            ts=self.get(glbs.TIME_STEP).value,
-            n=self.get(glbs.PREDICTION_HORIZON).value
-        )
-
-        # save results
-        self.df.to_csv(self.config.results_file)
+        if bWriteResults:
+            # write results
+            self.df = self.write_results(
+                df=self.df,
+                ts=self.get(glbs.TIME_STEP).value,
+                n=self.get(glbs.PREDICTION_HORIZON).value
+            )
+            # save results
+            self.df.to_csv(self.config.results_file)
 
     def send_flex_offer(
             self, name,
             base_power_profile: pd.Series,
             pos_diff_profile: pd.Series, pos_price: float,
             neg_diff_profile: pd.Series, neg_price: float,
-            timestamp: float = None
+            flex_envelope: FlexEnvelope,
+            timestamp: float = None,
     ):
         """
         Send a flex offer as an agent Variable. The first offer is dismissed,
@@ -400,6 +414,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 base_power_profile=base_power_profile,
                 pos_diff_profile=pos_diff_profile, pos_price=pos_price,
                 neg_diff_profile=neg_diff_profile, neg_price=neg_price,
+                flex_envelope=flex_envelope
             )
             if timestamp is None:
                 timestamp = self.env.time
@@ -437,39 +452,9 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         else:
             self.set(kpis_neg.power_flex_within_boundary.get_kpi_identifier(), True)
 
-        base_profile = self.base_vals.reindex(index=flex_horizon)
-
-        # find p_el_min and _max in config.parameters and return the values
-        p_el_min = 0
-        p_el_max = np.inf
-        for varParam in self.config.parameters:
-            if varParam.name == "p_el_min":
-                p_el_min = varParam.value
-            elif varParam.name == "p_el_max":
-                p_el_max = varParam.value
-
-        flex_envelope = calc_flex_envelop(powerflex_pos=self.pos_vals.reindex(index=flex_horizon),
-                                          powerflex_neg=self.neg_vals.reindex(index=flex_horizon),
-                                          powerflex_base=base_profile, time_step=time_step, horizon=flex_horizon,
-                                          scaler=scaler, p_el_min=p_el_min, p_el_max=p_el_max, time=self.env.now)
-
-        self.send_flex_offer("FlexibilityOffer", base_profile,
-                             flex_price_pos, powerflex_profile_pos,
-                             flex_price_neg, powerflex_profile_neg,
-                             flex_envelope)
-        if bWriteResults:
-            self.df = self.write_results(df=self.df, ts=time_step, n=horizon)
-            self.df.to_csv(self.config.results_file)
-
-        # set the values to None to reset the callback
-        self.base_vals = None
-        self.neg_vals = None
-        self.pos_vals = None
-        self._r_pel = None
-
 
 def calc_flex_envelop(powerflex_pos: pd.Series, powerflex_neg: pd.Series, time_step: int, horizon: np.ndarray,
-                      scaler: int, p_el_min: float, p_el_max: float, time: float, powerflex_base: pd.Series = None) -> FlexEnvelope:
+                      p_el_min: float, p_el_max: float, time: float, powerflex_base: pd.Series = None) -> FlexEnvelope:
     """ powerflex_pos, powerflex_neg and powerflex_base are in (k)W, and the result is in (k)Wh. """
 
     powerflex_pos_prepared = powerflex_pos.to_list()
