@@ -294,12 +294,14 @@ class Results:
             },
             self.indicator_agent_config.id: {
                 self.indicator_module_config.module_id: load_indicator(
-                    Path(res_path, Path(self.indicator_module_config.results_file).name)
+                    Path(
+                        res_path, 
+                        Path(self.indicator_module_config.results_file).name,
+                    )
                 )
             }
         }
         if self.simulator_agent_config:
-
             res[self.simulator_agent_config.id] = {
                 self.simulator_module_config.module_id: load_sim(
                     Path(
@@ -311,7 +313,10 @@ class Results:
         if self.generator_config.market_config:
             res[self.market_agent_config.id] = {
                 self.market_module_config.module_id: load_market(
-                    Path(res_path, Path(self.market_module_config.results_file).name)
+                    Path(
+                        res_path, 
+                        Path(self.market_module_config.results_file).name,
+                    )
                 )
             }
         return res
