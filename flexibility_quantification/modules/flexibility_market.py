@@ -45,13 +45,9 @@ class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
 
     market_specs: MarketSpecifications
 
-    results_filename: Optional[Path] = pydantic.Field(
+    results_file: Optional[Path] = pydantic.Field(
         default=Path("flexibility_market.csv"),
         description="User specified results file name"
-    )
-    results_file: Optional[Path] = pydantic.Field(
-        default=Path("results/flexibility_market.csv"),
-        description="Automatically set results file path"
     )
     save_results: Optional[bool] = pydantic.Field(
         validate_default=True, 
@@ -61,10 +57,10 @@ class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
     shared_variable_fields: List[str] = ["outputs"]
 
     @model_validator(mode="after")
-    def check_file_extension(self):
-        if self.results_filename and self.results_filename.suffix != ".csv":
-            raise ConfigurationError(
-                f"The extension for results_filename in market module config must be '.csv'."
+    def check_results_file_extension(self):
+        if self.results_file and self.results_file.suffix != ".csv":
+            raise ValueError(
+                f"The extension for results_file in market module config must be '.csv'."
             )
         return self
 

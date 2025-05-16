@@ -176,13 +176,9 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
                                description="prediction horizon of the mpc solution")
     ]
 
-    results_filename: Optional[Path] = Field(
+    results_file: Optional[Path] = Field(
         default=Path("flexibility_indicator.csv"),
         description="User specified results file name"
-    )
-    results_file: Optional[Path] = Field(
-        default=Path("results/flexibility_indicator.csv"),
-        description="Automatically set results file path"
     )
     save_results: Optional[bool] = Field(
         validate_default=True, 
@@ -202,10 +198,10 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
     correct_costs: InputsForCorrectFlexCosts = InputsForCorrectFlexCosts()
 
     @model_validator(mode="after")
-    def check_file_extension(self):
-        if self.results_filename and self.results_filename.suffix != ".csv":
-            raise ConfigurationError(
-                f"The extension for results_filename in indicator module config must be '.csv'."
+    def check_results_file_extension(self):
+        if self.results_file and self.results_file.suffix != ".csv":
+            raise ValueError(
+                f"The extension for results_file in indicator module config must be '.csv'."
             )
         return self
 
