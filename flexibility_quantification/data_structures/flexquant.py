@@ -113,15 +113,19 @@ class FlexQuantConfig(pydantic.BaseModel):
         default=None,
         description="Path to the file or dict of market config",
     )
-    baseline_config_generator_data: Union[BaselineMPCData, Path] = pydantic.Field(
+    baseline_config_generator_data: BaselineMPCData = pydantic.Field(
         description="Baseline generator data config file or dict",
     )
-    shadow_mpc_config_generator_data: Union[ShadowMPCConfigGeneratorConfig, Path] = pydantic.Field(
+    shadow_mpc_config_generator_data: ShadowMPCConfigGeneratorConfig = pydantic.Field(
         description="Shadow mpc generator data config file or dict",
     )
     path_to_flex_files: Path = pydantic.Field(
         default="created_files",
-        description="Path where generated files should be stored",
+        description="Path where generated files (jsons + results) should be stored",
+    )
+    name_of_results_directory: Path = pydantic.Field(
+        default="results",
+        description="Directory where generated result files (CSVs) should be stored",
     )
     delete_files: bool = pydantic.Field(
         default=True,
@@ -131,3 +135,15 @@ class FlexQuantConfig(pydantic.BaseModel):
         default=False,
         description="If generated files should be overwritten by new files",
     )
+
+    @model_validator(mode="after")
+    def check_config_file_extension(self):
+        if isinstance(self.indicator_config, Path) and self.indicator_config.suffix != ".json":
+            raise ValueError(
+                f"The extension for the indicator config path must be '.json'."
+            )
+        if isinstance(self.market_config, Path) and self.market_config.suffix != ".json":
+            raise ValueError(
+                f"The extension for the market config path must be '.json'."
+            )
+        return self
