@@ -328,12 +328,19 @@ class FlexAgentGenerator:
             ),
             "class_name": mpc_dataclass.class_name,
         }
-        # update results file with suffix
-        module_config.optimization_backend["results_file"] = (
+        # update results file with suffix and parent directory
+        result_filename = (
             module_config.optimization_backend["results_file"].replace(
                 ".csv", mpc_dataclass.results_suffix
             )
         )
+        full_path = (
+            self.flex_config.path_to_flex_files
+            / self.flex_config.name_of_results_directory
+            / result_filename
+        )
+        full_path.parent.mkdir(parents=True, exist_ok=True)
+        module_config.optimization_backend["results_file"] = str(full_path)
         # change cia backend to custom backend of flexquant
         if module_config.optimization_backend["type"] == "casadi_cia":
             module_config.optimization_backend["type"] = "casadi_cia_cons"
@@ -466,10 +473,12 @@ class FlexAgentGenerator:
         module_config.power_unit = (
             self.flex_config.baseline_config_generator_data.power_unit
         )
-        module_config.results_file = Path(
-            Path(self.orig_mpc_module_config.optimization_backend["results_file"]).parent,
-            Path(module_config.results_filename).name,
+        module_config.results_file = (
+            self.flex_config.path_to_flex_files
+            / self.flex_config.name_of_results_directory
+            / module_config.results_file
         )
+        module_config.results_file.parent.mkdir(parents=True, exist_ok=True)
         module_config.model_config["frozen"] = True
         return module_config
 
@@ -484,10 +493,12 @@ class FlexAgentGenerator:
                 module_config.__setattr__(
                     field, getattr(self.market_module_config, field)
                 )
-        module_config.results_file = Path(
-            Path(self.orig_mpc_module_config.optimization_backend["results_file"]).parent,
-            Path(module_config.results_filename).name,
+        module_config.results_file = (
+            self.flex_config.path_to_flex_files
+            / self.flex_config.name_of_results_directory
+            / module_config.results_file
         )
+        module_config.results_file.parent.mkdir(parents=True, exist_ok=True)
         module_config.model_config["frozen"] = True
         return module_config
 
