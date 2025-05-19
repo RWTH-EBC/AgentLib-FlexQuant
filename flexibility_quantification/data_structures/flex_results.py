@@ -113,7 +113,7 @@ class Results:
         config_filename_neg_flex = NFMPCData.model_validate(
             self.generator_config.shadow_mpc_config_generator_data.neg_flex
         ).name_of_created_file
-        config_filename_indicator = (
+        config_filename_indicator = str(
             self.generator_config.indicator_config.name_of_created_file
         )
         if self.generator_config.market_config:
@@ -304,12 +304,14 @@ class Results:
             },
             self.indicator_agent_config.id: {
                 self.indicator_module_config.module_id: load_indicator(
-                    Path(res_path, Path(self.indicator_module_config.results_file).name)
+                    Path(
+                        res_path, 
+                        Path(self.indicator_module_config.results_file).name,
+                    )
                 )
             }
         }
         if self.simulator_agent_config:
-
             res[self.simulator_agent_config.id] = {
                 self.simulator_module_config.module_id: load_sim(
                     Path(
@@ -321,7 +323,10 @@ class Results:
         if self.generator_config.market_config:
             res[self.market_agent_config.id] = {
                 self.market_module_config.module_id: load_market(
-                    Path(res_path, Path(self.market_module_config.results_file).name)
+                    Path(
+                        res_path, 
+                        Path(self.market_module_config.results_file).name,
+                    )
                 )
             }
         return res

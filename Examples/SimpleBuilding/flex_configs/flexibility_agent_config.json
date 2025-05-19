@@ -13,7 +13,8 @@
                 {
                     "module_id": "FlexibilityIndicator",
                     "type": "flexibility_quantification.flexibility_indicator",
-                    "results_file": "results/flexibility_indicator.csv",
+                    "save_results": true,
+                    "results_file": "flexibility_indicator.csv",
                     "price_variable": "r_pel",
                     "parameters": [
                         {
@@ -37,16 +38,12 @@
                             "value": 48
                         }
                     ],
-                    "inputs": [
-                        {
-                            "name": "r_pel",
-                            "alias": "r_pel"
-                        }
-                    ]
+                    "correct_costs": {
+                        "enable_energy_costs_correction": false
+                    }
                 }
             ]
         },
-        "collocation_order": 2,
         "name_of_created_file": "indicator.json"
     },
     "market_config": "flex_configs/market.json",
@@ -70,6 +67,7 @@
         }
     },
     "path_to_flex_files": "created_flex_files",
+    "name_of_results_directory": "flex_results",
     "delete_files": false,
     "overwrite_files": true
 }

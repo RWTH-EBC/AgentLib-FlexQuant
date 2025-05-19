@@ -1,14 +1,17 @@
-import pydantic
-from pydantic import ConfigDict
-from pathlib import Path
-from typing import Union, List, Optional
 from enum import Enum
-from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
+from pathlib import Path
+from typing import List, Optional, Union
+
+import pydantic
 from agentlib.core.agent import AgentConfig
+from agentlib.core.errors import ConfigurationError
+from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
+from pydantic import ConfigDict, model_validator
+
 from flexibility_quantification.data_structures.mpcs import (
-    PFMPCData,
-    NFMPCData,
     BaselineMPCData,
+    NFMPCData,
+    PFMPCData
 )
 
 
@@ -18,32 +21,40 @@ class ForcedOffers(Enum):
 
 
 class ShadowMPCConfigGeneratorConfig(pydantic.BaseModel):
-    """Class defining the options to of the baseline config."""
-
+    """Class defining the options to initialize the shadow mpc config generation."""
+    model_config = ConfigDict(
+        json_encoders={MPCVariable: lambda v: v.dict()},
+        extra='forbid'
+    )    
     weights: List[MPCVariable] = pydantic.Field(
         default=[],
         description="Name and value of weights",
     )
-    pos_flex: PFMPCData
-    neg_flex: NFMPCData
-
-    model_config = ConfigDict(json_encoders={MPCVariable: lambda v: v.dict()})
-
-    def __init__(self, **data):
-        # Let Pydantic do its normal initialization first
-        super().__init__(**data)
-        # Automatically call update_weights after initialization
-        self.update_weights()
-
-    def update_weights(self):
+    pos_flex: PFMPCData = pydantic.Field(
+        default=None,
+        description="Data for PF-MPC"
+    )
+    neg_flex: NFMPCData = pydantic.Field(
+        default=None,
+        description="Data for NF-MPC"
+    )
+    @model_validator(mode="after")
+    def assign_weights_to_flex(self):
+        if self.pos_flex is None:
+            raise ValueError("Missing required field: 'pos_flex' specifying the pos flex cost function.")
+        if self.neg_flex is None:
+            raise ValueError("Missing required field: 'neg_flex' specifying the neg flex cost function.")
         if self.weights:
             self.pos_flex.weights = self.weights
             self.neg_flex.weights = self.weights
+        return self
 
 
 class FlexibilityMarketConfig(pydantic.BaseModel):
     """Class defining the options to initialize the market."""
-
+    model_config = ConfigDict(
+        extra='forbid'
+    )
     agent_config: AgentConfig
     name_of_created_file: str = pydantic.Field(
         default="flexibility_market.json",
@@ -53,20 +64,30 @@ class FlexibilityMarketConfig(pydantic.BaseModel):
 
 class FlexibilityIndicatorConfig(pydantic.BaseModel):
     """Class defining the options for the flexibility indicators."""
-
     model_config = ConfigDict(
-        json_encoders={Path: str, AgentConfig: lambda v: v.model_dump()}
+        json_encoders={Path: str, AgentConfig: lambda v: v.model_dump()},
+        extra='forbid'
     )
     agent_config: AgentConfig
-    name_of_created_file: str = pydantic.Field(
-        default="indicator.json",
+    name_of_created_file: Path = pydantic.Field(
+        default=Path("indicator.json"),
         description="Name of the config that is created by the generator",
     )
+    @model_validator(mode="after")
+    def check_file_extension(self):
+        if self.name_of_created_file and self.name_of_created_file.suffix != ".json":
+            raise ConfigurationError(
+                f"The extension for name_of_created_file in indicator config must be '.json'."
+            )
+        return self
 
 
 class FlexQuantConfig(pydantic.BaseModel):
     """Class defining the options to initialize the FlexQuant generation."""
-
+    model_config = ConfigDict(
+        json_encoders={Path: str},
+        extra='forbid'
+    )
     prep_time: int = pydantic.Field(
         default=1800,
         ge=0,
@@ -85,8 +106,7 @@ class FlexQuantConfig(pydantic.BaseModel):
         unit="s",
         description="Time for market interaction",
     )
-    indicator_config: FlexibilityIndicatorConfig = pydantic.Field(
-        default=None,
+    indicator_config: Union[FlexibilityIndicatorConfig, Path] = pydantic.Field(
         description="Path to the file or dict of flexibility indicator config",
     )
     market_config: Optional[Union[FlexibilityMarketConfig, Path]] = pydantic.Field(
@@ -94,16 +114,18 @@ class FlexQuantConfig(pydantic.BaseModel):
         description="Path to the file or dict of market config",
     )
     baseline_config_generator_data: BaselineMPCData = pydantic.Field(
-        default=None,
         description="Baseline generator data config file or dict",
     )
     shadow_mpc_config_generator_data: ShadowMPCConfigGeneratorConfig = pydantic.Field(
-        default=None,
         description="Shadow mpc generator data config file or dict",
     )
     path_to_flex_files: Path = pydantic.Field(
         default="created_files",
-        description="Path where generated files should be stored",
+        description="Path where generated files (jsons + results) should be stored",
+    )
+    name_of_results_directory: Path = pydantic.Field(
+        default="results",
+        description="Directory where generated result files (CSVs) should be stored",
     )
     delete_files: bool = pydantic.Field(
         default=True,
@@ -114,5 +136,14 @@ class FlexQuantConfig(pydantic.BaseModel):
         description="If generated files should be overwritten by new files",
     )
 
-    class Config:
-        json_encoders = {Path: str}
+    @model_validator(mode="after")
+    def check_config_file_extension(self):
+        if isinstance(self.indicator_config, Path) and self.indicator_config.suffix != ".json":
+            raise ValueError(
+                f"The extension for the indicator config path must be '.json'."
+            )
+        if isinstance(self.market_config, Path) and self.market_config.suffix != ".json":
+            raise ValueError(
+                f"The extension for the market config path must be '.json'."
+            )
+        return self
