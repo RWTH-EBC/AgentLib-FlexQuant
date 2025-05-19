@@ -1,3 +1,4 @@
+from copy import deepcopy
 from typing import Union, Optional
 
 import agentlib
@@ -127,17 +128,26 @@ class Results:
 
         # load the agent and module configs
         if simulator_agent_config:
-            # (don't validate config, as result file is deleted in simulator validator)
             with open(simulator_agent_config, "r") as f:
                 sim_config = json.load(f)
-            self.simulator_agent_config = AgentConfig.construct(**sim_config)
-            for module in self.simulator_agent_config.modules:
-                if module["type"] == "simulator":
-                    self.simulator_module_config = SimulatorConfig.construct(**module)
-            if not self.simulator_module_config:
-                raise ValueError("No simulator module in provided simulator config")
-        else:
-             self.simulator_agent_config = None
+            sim_module_config = next(
+                (module for module in sim_config["modules"] if module["type"] == "simulator"),
+                None
+            )
+            sim_module_config_copy = deepcopy(sim_module_config)
+            # create temp_filename to bypass pydantic field_validator for result_filename in SimulatorConfig
+            # and consequently avoid sim result file deletion due to renewed validation occuring below
+            actual_filename = sim_module_config_copy.get("result_filename")
+            temp_filename = f"temp_result_abc123.csv"
+            sim_module_config_copy["result_filename"] = temp_filename
+            # run validations
+            self.simulator_agent_config = AgentConfig.model_validate(sim_config)
+            self.simulator_module_config = SimulatorConfig(
+                **sim_module_config_copy, 
+                _agent_id=self.simulator_agent_config.id
+            )
+            # bypass pydantic immutability to directly restore orig filename
+            object.__setattr__(self.simulator_module_config, "result_filename", actual_filename)
 
         for file_path in Path(os.path.join(self.base_path, self.generator_config.path_to_flex_files)).rglob("*.json"):
             if file_path.name in config_filename_baseline:
