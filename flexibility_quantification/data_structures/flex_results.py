@@ -92,6 +92,7 @@ class Results:
         simulator_agent_config: Optional[Union[str, FilePath]],
         results: Union[str, FilePath, dict[str, dict[str, pd.DataFrame]]] = None,
         to_timescale: TimeConversionTypes = "seconds",
+        base_folder: str = ""
     ):
         # load configs of agents and modules
         # Generator config
@@ -99,7 +100,7 @@ class Results:
             config=flex_config, config_type=FlexQuantConfig
         )
         # get base path from flex_config to use relative paths
-        self.base_path = cmng.subtract_relative_path(os.path.abspath(os.path.normpath(self.generator_config.path_to_flex_files)),
+        self.base_path = cmng.subtract_relative_path(os.path.abspath(os.path.normpath(os.path.join(base_folder, self.generator_config.path_to_flex_files))),
                                                      os.path.normpath(self.generator_config.path_to_flex_files))
 
 
