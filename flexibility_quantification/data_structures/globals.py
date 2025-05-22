@@ -37,7 +37,7 @@ def return_baseline_cost_function(power_variable, comfort_variable):
                      "ca.if_else(self.Time.sym >= self.rel_end.sym, obj_std, "
                      f"sum([self.profile_deviation_weight*(self.{power_variable} - "
                      f"self._P_external)**2, "
-                     f"self.{comfort_variable} * self.profile_comfort_weight]))),obj_std)")
+                     f"self.{comfort_variable}**2 * self.profile_comfort_weight]))),obj_std)")
     else:
         cost_func = ("return ca.if_else(self.in_provision.sym, "
                      "ca.if_else(self.Time.sym < self.rel_start.sym, obj_std, "
