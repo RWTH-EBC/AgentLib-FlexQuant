@@ -1,6 +1,6 @@
 import pydantic
 from pydantic import ConfigDict, model_validator
-from typing import List, Optional
+from typing import List, Optional, Union
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 import flexibility_quantification.data_structures.globals as glbs
 import flexibility_quantification.utils.config_management as cmng
@@ -107,7 +107,7 @@ class PFMPCData(BaseMPCData):
     # variables
     power_alias: str = glbs.POWER_ALIAS_POS
     stored_energy_alias: str = glbs.STORED_ENERGY_ALIAS_POS
-    flex_cost_function: str = pydantic.Field(
+    flex_cost_function: Optional[Union[list[str], str]]  = pydantic.Field(
         default=None,
         description="Cost function of the PF-MPC",
     )
@@ -140,7 +140,7 @@ class NFMPCData(BaseMPCData):
     # variables
     power_alias: str = glbs.POWER_ALIAS_NEG
     stored_energy_alias: str = glbs.STORED_ENERGY_ALIAS_NEG
-    flex_cost_function: str = pydantic.Field(
+    flex_cost_function: Optional[Union[list[str], str]]  = pydantic.Field(
         default=None,
         description="Cost function of the NF-MPC",
     )
