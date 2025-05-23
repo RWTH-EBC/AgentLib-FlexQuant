@@ -192,7 +192,7 @@ class FlexAgentGenerator:
         self._generate_flex_model_definition()
 
         # save flex config to created flex files
-        with open(os.path.join(self.flex_config.path_to_flex_files, self.flex_config_file_name), "w") as f:
+        with open(os.path.join(self.flex_config.flex_files_directory, self.flex_config_file_name), "w") as f:
             config_json = self.flex_config.model_dump_json(exclude_defaults=True)
             f.write(config_json)
 
@@ -224,19 +224,17 @@ class FlexAgentGenerator:
             ):
                 agent.modules[i] = module_dict
 
-        # create folder
-        Path(self.flex_config.path_to_flex_files).mkdir(parents=True, exist_ok=True)
         # dump agent config
         if agent.modules:
             if self.flex_config.overwrite_files:
                 try:
                     Path(
-                        os.path.join(self.flex_config.path_to_flex_files, config_name)
+                        os.path.join(self.flex_config.flex_files_directory, config_name)
                     ).unlink()
                 except OSError:
                     pass
             with open(
-                os.path.join(self.flex_config.path_to_flex_files, config_name), "w+"
+                os.path.join(self.flex_config.flex_files_directory, config_name), "w+"
             ) as f:
                 module_json = agent.model_dump_json(exclude_defaults=True)
                 f.write(module_json)
@@ -247,26 +245,26 @@ class FlexAgentGenerator:
         """Returns a list of paths with the created config files"""
         paths = [
             os.path.join(
-                self.flex_config.path_to_flex_files,
+                self.flex_config.flex_files_directory,
                 self.flex_config.baseline_config_generator_data.name_of_created_file,
             ),
             os.path.join(
-                self.flex_config.path_to_flex_files,
+                self.flex_config.flex_files_directory,
                 self.flex_config.shadow_mpc_config_generator_data.pos_flex.name_of_created_file,
             ),
             os.path.join(
-                self.flex_config.path_to_flex_files,
+                self.flex_config.flex_files_directory,
                 self.flex_config.shadow_mpc_config_generator_data.neg_flex.name_of_created_file,
             ),
             os.path.join(
-                self.flex_config.path_to_flex_files,
+                self.flex_config.flex_files_directory,
                 self.indicator_config.name_of_created_file,
             ),
         ]
         if self.flex_config.market_config:
             paths.append(
                 os.path.join(
-                    self.flex_config.path_to_flex_files,
+                    self.flex_config.flex_files_directory,
                     self.market_config.name_of_created_file,
                 )
             )
@@ -277,14 +275,14 @@ class FlexAgentGenerator:
         to_be_deleted = self.get_config_file_paths()
         to_be_deleted.append(
             os.path.join(
-                self.flex_config.path_to_flex_files,
+                self.flex_config.flex_files_directory,
                 self.flex_config_file_name,
             ))
         # delete files
         for file in to_be_deleted:
             Path(file).unlink()
         # also delete folder
-        Path(self.flex_config.path_to_flex_files).rmdir()
+        Path(self.flex_config.flex_files_directory).rmdir()
 
     def adapt_mpc_module_config(
         self, module_config: BaseMPCConfig, mpc_dataclass: BaseMPCData
@@ -323,7 +321,7 @@ class FlexAgentGenerator:
         # update optimization backend to use the created mpc files and classes
         module_config.optimization_backend["model"]["type"] = {
             "file": os.path.join(
-                self.flex_config.path_to_flex_files,
+                self.flex_config.flex_files_directory,
                 mpc_dataclass.created_flex_mpcs_file,
             ),
             "class_name": mpc_dataclass.class_name,
@@ -335,11 +333,9 @@ class FlexAgentGenerator:
             )
         )
         full_path = (
-            self.flex_config.path_to_flex_files
-            / self.flex_config.name_of_results_directory
+            self.flex_config.results_directory
             / result_filename
         )
-        full_path.parent.mkdir(parents=True, exist_ok=True)
         module_config.optimization_backend["results_file"] = str(full_path)
         # change cia backend to custom backend of flexquant
         if module_config.optimization_backend["type"] == "casadi_cia":
@@ -474,11 +470,9 @@ class FlexAgentGenerator:
             self.flex_config.baseline_config_generator_data.power_unit
         )
         module_config.results_file = (
-            self.flex_config.path_to_flex_files
-            / self.flex_config.name_of_results_directory
-            / module_config.results_file
+            self.flex_config.results_directory
+            / module_config.results_file.name
         )
-        module_config.results_file.parent.mkdir(parents=True, exist_ok=True)
         module_config.model_config["frozen"] = True
         return module_config
 
@@ -494,11 +488,9 @@ class FlexAgentGenerator:
                     field, getattr(self.market_module_config, field)
                 )
         module_config.results_file = (
-            self.flex_config.path_to_flex_files
-            / self.flex_config.name_of_results_directory
-            / module_config.results_file
+            self.flex_config.results_directory
+            / module_config.results_file.name
         )
-        module_config.results_file.parent.mkdir(parents=True, exist_ok=True)
         module_config.model_config["frozen"] = True
         return module_config
 
@@ -513,7 +505,7 @@ class FlexAgentGenerator:
             SetupSystemModifier, add_import_to_tree)
 
         output_file = os.path.join(
-            self.flex_config.path_to_flex_files,
+            self.flex_config.flex_files_directory,
             self.flex_config.baseline_config_generator_data.created_flex_mpcs_file,
         )
         opt_backend = self.orig_mpc_module_config.optimization_backend["model"]["type"]
@@ -568,7 +560,7 @@ class FlexAgentGenerator:
             try:
                 Path(
                     os.path.join(
-                        self.flex_config.path_to_flex_files,
+                        self.flex_config.flex_files_directory,
                         self.flex_config.baseline_config_generator_data.created_flex_mpcs_file,
                     )
                 ).unlink()
