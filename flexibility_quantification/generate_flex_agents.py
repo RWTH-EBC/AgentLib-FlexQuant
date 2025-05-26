@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import List, Union
 
 import black
+import json
 from agentlib.core.agent import AgentConfig
 from agentlib.core.datamodels import AgentVariable
 from agentlib.core.errors import ConfigurationError
@@ -673,3 +674,19 @@ class FlexAgentGenerator:
                     if parameter.value != mpc_value:
                         self.logger.warning(f'Value mismatch for {parameter.name} in baseline MPC module config (field) and indicator module config (parameter). '
                                             f'Baseline MPC module config value will be used.')
+                        
+    def adapt_sim_results_path(self, simulator_agent_config: Union[str, Path]) -> dict:
+        """ Optional helper function to adapt file path for simulator results 
+        so that sim results land in the same results directory as flex results. """
+        # open config and extract sim module
+        with open(simulator_agent_config, "r") as f:
+            sim_config = json.load(f)
+        sim_module_config = next(
+            (module for module in sim_config["modules"] if module["type"] == "simulator"),
+            None
+        )
+        # convert filename string to path and extract the name
+        sim_file_name = Path(sim_module_config["result_filename"]).name
+        # set results path so that sim results lands in same directory as flex result CSVs
+        sim_module_config["result_filename"] = str(self.flex_config.results_directory / sim_file_name)
+        return sim_config

@@ -15,9 +15,12 @@ def run_example(until=until):
     predictor_config = "predictor/predictor_config.json"
     flex_config = "flex_configs/flexibility_agent_config.json"
 
-    config_list = FlexAgentGenerator(
+    generator =  FlexAgentGenerator(
         flex_config=flex_config, mpc_agent_config=mpc_config
-    ).generate_flex_agents()
+    )
+
+    config_list = generator.generate_flex_agents()
+    sim_config = generator.adapt_sim_results_path(sim_config)
 
     agent_configs = [sim_config, predictor_config]
     agent_configs.extend(config_list)

@@ -89,7 +89,7 @@ class Results:
     def __init__(
         self,
         flex_config: Union[str, FilePath],
-        simulator_agent_config: Optional[Union[str, FilePath]],
+        simulator_agent_config: Optional[Union[str, FilePath, dict]],
         results: Union[str, FilePath, dict[str, dict[str, pd.DataFrame]]] = None,
         to_timescale: TimeConversionTypes = "seconds",
     ):
@@ -127,8 +127,12 @@ class Results:
         # load the agent and module configs
         if simulator_agent_config:
             # (don't validate config, as result file is deleted in simulator validator)
-            with open(simulator_agent_config, "r") as f:
-                sim_config = json.load(f)
+            # check config type: with results path adaptation -> dict; without -> str/Path
+            if isinstance(simulator_agent_config, (str, Path)):
+                with open(simulator_agent_config, "r") as f:
+                    sim_config = json.load(f)
+            elif isinstance(simulator_agent_config, dict):
+                sim_config = simulator_agent_config
             self.simulator_agent_config = AgentConfig.construct(**sim_config)
             for module in self.simulator_agent_config.modules:
                 if module["type"] == "simulator":
