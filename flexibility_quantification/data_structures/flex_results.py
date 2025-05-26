@@ -127,8 +127,12 @@ class Results:
 
         # load the agent and module configs
         if simulator_agent_config:
-            with open(simulator_agent_config, "r") as f:
-                sim_config = json.load(f)
+            # check config type: with results path adaptation -> dict; without -> str/Path
+            if isinstance(simulator_agent_config, (str, Path)):
+                with open(simulator_agent_config, "r") as f:
+                    sim_config = json.load(f)
+            elif isinstance(simulator_agent_config, dict):
+                sim_config = simulator_agent_config
             sim_module_config = next(
                 (module for module in sim_config["modules"] if module["type"] == "simulator"),
                 None
