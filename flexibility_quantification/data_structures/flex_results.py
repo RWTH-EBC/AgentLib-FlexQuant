@@ -90,7 +90,7 @@ class Results:
     def __init__(
         self,
         flex_config: Union[str, FilePath],
-        simulator_agent_config: Optional[Union[str, FilePath]],
+        simulator_agent_config: Optional[Union[str, FilePath, dict]],
         results: Union[str, FilePath, dict[str, dict[str, pd.DataFrame]]] = None,
         to_timescale: TimeConversionTypes = "seconds",
     ):
@@ -100,8 +100,7 @@ class Results:
             config=flex_config, config_type=FlexQuantConfig
         )
         # get base path from flex_config to use relative paths
-        self.base_path = cmng.subtract_relative_path(os.path.abspath(os.path.normpath(self.generator_config.path_to_flex_files)),
-                                                     os.path.normpath(self.generator_config.path_to_flex_files))
+        # self.base_path = self.generator_config.flex_base_directory_path
 
         # get names of the config files
         config_filename_baseline = BaselineMPCData.model_validate(
@@ -149,7 +148,7 @@ class Results:
             # bypass pydantic immutability to directly restore orig filename
             object.__setattr__(self.simulator_module_config, "result_filename", actual_filename)
 
-        for file_path in Path(os.path.join(self.base_path, self.generator_config.path_to_flex_files)).rglob("*.json"):
+        for file_path in Path(self.generator_config.flex_files_directory).rglob("*.json"):
             if file_path.name in config_filename_baseline:
                 self.baseline_agent_config = load_config.load_config(
                     config=file_path, config_type=AgentConfig
@@ -199,13 +198,13 @@ class Results:
 
         # load results
         if results is None:
-            results_path = Path(os.path.join(self.base_path, self.indicator_module_config.results_file)).parent
+            results_path = self.generator_config.results_directory
             results = self._load_results(res_path=results_path)
         if isinstance(results, (str, Path)):
             results_path = results
             results = self._load_results(res_path=results_path)
         elif isinstance(results, dict):
-            results_path = Path(os.path.join(self.base_path, self.indicator_module_config.results_file)).parent
+            results_path = self.generator_config.results_directory
         else:
             raise ValueError("results must be a path or dict")
 

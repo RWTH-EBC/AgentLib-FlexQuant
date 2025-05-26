@@ -119,11 +119,15 @@ class FlexQuantConfig(pydantic.BaseModel):
     shadow_mpc_config_generator_data: ShadowMPCConfigGeneratorConfig = pydantic.Field(
         description="Shadow mpc generator data config file or dict",
     )
-    path_to_flex_files: Path = pydantic.Field(
-        default="created_files",
-        description="Path where generated files (jsons + results) should be stored",
+    flex_base_directory_path: Optional[Path] = pydantic.Field(
+        default_factory=lambda: Path.cwd() / "flex_output_data",
+        description="Base path where flex data is stored",
     )
-    name_of_results_directory: Path = pydantic.Field(
+    flex_files_directory: Path = pydantic.Field(
+        default="created_flex_files",
+        description="Directory where generated files (jsons) should be stored",
+    )
+    results_directory: Path = pydantic.Field(
         default="results",
         description="Directory where generated result files (CSVs) should be stored",
     )
@@ -146,4 +150,21 @@ class FlexQuantConfig(pydantic.BaseModel):
             raise ValueError(
                 f"The extension for the market config path must be '.json'."
             )
+        return self
+    
+    @model_validator(mode="after")
+    def adapt_paths_and_create_directory(self):
+        # adapt paths and use only names for user supplied data
+        self.flex_files_directory = (
+            self.flex_base_directory_path
+            / self.flex_files_directory.name
+        )
+        self.results_directory = (
+            self.flex_base_directory_path
+            / self.results_directory.name
+        )
+        # create directories if not already existing
+        self.flex_base_directory_path.mkdir(parents=True, exist_ok=True)
+        self.flex_files_directory.mkdir(parents=True, exist_ok=True)
+        self.results_directory.mkdir(parents=True, exist_ok=True)
         return self
