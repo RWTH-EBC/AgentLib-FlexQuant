@@ -11,7 +11,7 @@ from flexibility_quantification.data_structures.globals import (
     return_baseline_cost_function,
     full_trajectory_prefix,
     full_trajectory_suffix,
-    POFILE_DEVIATION_WEIGHT,
+    PROFILE_DEVIATION_WEIGHT,
     MARKET_TIME,
     PREP_TIME,
     FLEX_EVENT_DURATION
@@ -125,10 +125,14 @@ class SetupSystemModifier(ast.NodeTransformer):
         if isinstance(self.mpc_data, BaselineMPCData):
             module = add_import_to_tree(name="pandas", alias="pd", tree=module)
             module = add_import_to_tree(name="casadi", alias="ca", tree=module)
-        # delete imports for shadow MPCs
-        if isinstance(self.mpc_data, (NFMPCData, PFMPCData)):
+            module = add_objective_imports_to_tree(tree=module)  # Add objective imports
+        elif isinstance(self.mpc_data, (NFMPCData, PFMPCData)):
             module = remove_all_imports_from_tree(module)
-        # trigger the next visit method (ClassDef)
+            # Still need these imports for shadow MPCs
+            module = add_import_to_tree(name="pandas", alias="pd", tree=module)
+            module = add_import_to_tree(name="casadi", alias="ca", tree=module)
+            module = add_objective_imports_to_tree(tree=module)  # Add objective imports
+
         self.generic_visit(module)
         return module
 
@@ -203,7 +207,7 @@ class SetupSystemModifier(ast.NodeTransformer):
         """
         # loop over config object and modify fields
         for body in node.body:
-            # add full control trajectory inputs
+            # add control trajectory inputs
             if body.target.id == "inputs":
                 for control in self.controls:
                     body.value.elts.append(
@@ -336,8 +340,9 @@ class SetupSystemModifier(ast.NodeTransformer):
 
             # add the flex variables and the weights
             if body.target.id == "parameters":
+                for parameter in self.mpc_data.config_parameters_appendix:
                     body.value.elts.append(
-                        add_parameter(POFILE_DEVIATION_WEIGHT, 0, "-", "Weight of soft constraint for deviation from accepted flexible profile")
+                        add_parameter(parameter.name, 0, "-", parameter.description)
                     )
 
     def modify_setup_system_shadow(self, node):
@@ -371,7 +376,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                         node.body.insert(
                             0,
                             ast.parse(
-                                f"{control.name}_lower = ca.if_else(self.time < self.market_time.sym, "
+                                f"{control.name}_lower = ca.if_else(self.time  < self.market_time.sym, "
                                 f"self.{full_trajectory_prefix}{control.name}{full_trajectory_suffix}.sym, "
                                 f"self.{control.name}.lb)"
                             ).body[0],
@@ -392,7 +397,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                             node.body.insert(
                                 0,
                                 ast.parse(
-                                    f"{control.name}_upper = ca.if_else(self.time < self.market_time.sym, "
+                                    f"{control.name}_upper = ca.if_else(self.time  < self.market_time.sym, "
                                     f"self.{full_trajectory_prefix}{control.name}{full_trajectory_suffix}.sym, "
                                     f"self.{control.name}.ub)"
                                 ).body[0],
@@ -400,7 +405,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                             node.body.insert(
                                 0,
                                 ast.parse(
-                                    f"{control.name}_lower = ca.if_else(self.time < self.market_time.sym, "
+                                    f"{control.name}_lower = ca.if_else(self.time  < self.market_time.sym, "
                                     f"self.{full_trajectory_prefix}{control.name}{full_trajectory_suffix}.sym, "
                                     f"self.{control.name}.lb)"
                                 ).body[0],
@@ -415,41 +420,54 @@ class SetupSystemModifier(ast.NodeTransformer):
                             )
                             item.value.elts.append(new_element)
                     break
-        # loop through setup_system function to find return statement
         for i, stmt in enumerate(node.body):
             if isinstance(stmt, ast.Return):
                 # store current return statement
                 original_return = stmt.value
-                new_body = [
-                    # create new standard objective variable
-                    ast.Assign(
-                        targets=[ast.Name(id="obj_std", ctx=ast.Store())],
-                        value=original_return,
-                    ),
-                    # create flex objective variable
-                    ast.Assign(
-                        targets=[ast.Name(id="obj_flex", ctx=ast.Store())],
-                        value=ast.parse(
-                            self.mpc_data.flex_cost_function, mode="eval"
-                        ).body,
-                    ),
-                    # overwrite return statement with custom function
-                    ast.Return(value=ast.parse(SHADOW_MPC_COST_FUNCTION).body[0].value),
-                ]
-                # append new variables to end of function
-                node.body[i:] = new_body
+
+                # Create standard objective statement
+                std_obj_assign = ast.Assign(
+                    targets=[ast.Name(id="obj_std", ctx=ast.Store())],
+                    value=original_return
+                )
+
+                # Create market time condition
+                market_time_condition = ast.parse(
+                    "market_time_condition = ca.logic_and("
+                    "self.time >= (self.prep_time.sym + self.market_time.sym), "
+                    "self.time < (self.prep_time.sym + self.flex_event_duration.sym + self.market_time.sym))"
+                ).body[0]
+
+                # Parse and execute flex objective code lines
+                flex_obj_statements = []
+                if isinstance(self.mpc_data.flex_cost_function, list):
+                    for line in self.mpc_data.flex_cost_function:
+                        try:
+                            parsed_stmt = ast.parse(line).body
+                            flex_obj_statements.extend(parsed_stmt)
+                        except SyntaxError as e:
+                            print(f"Could not parse flex cost function line: {line}, error: {e}")
+                else:
+                    try:
+                        flex_obj_statements = ast.parse(self.mpc_data.flex_cost_function).body
+                    except SyntaxError as e:
+                        print(f"Could not parse flex cost function: {self.mpc_data.flex_cost_function}, error: {e}")
+
+                # Create conditional objective
+                cond_obj_stmt = ast.parse(
+                    "cond_obj = ConditionalObjective((market_time_condition, obj_flex), default_objective=obj_std)"
+                ).body[0]
+
+                # Return conditional objective
+                return_stmt = ast.Return(value=ast.Name(id="cond_obj", ctx=ast.Load()))
+
+                # Replace the return statement with our new statements
+                new_body = [std_obj_assign, market_time_condition] + flex_obj_statements + [cond_obj_stmt, return_stmt]
+                node.body[i:i + 1] = new_body
                 break
 
     def modify_setup_system_baseline(self, node):
-        """Modify the setup_system method of the baseline mpc model class.
-
-        This method changes the return statement of the setup_system method and adds
-        all necessary new lines of code.
-
-        Args:
-            node (ast.FunctionDef): The function definition node of setup_system.
-
-        """
+        """Modify the setup_system method of the baseline mpc model class."""
         # set the control trajectories with the respective variables
         if self.binary_controls:
             controls_list = self.controls + self.binary_controls
@@ -461,7 +479,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                     ast.Attribute(
                         value=ast.Name(id="self", ctx=ast.Load()),
                         attr=f"{full_trajectory_prefix}{control.name}"
-                        f"{full_trajectory_suffix}.alg",
+                             f"{full_trajectory_suffix}.alg",
                         ctx=ast.Store(),
                     )
                 ],
@@ -476,27 +494,56 @@ class SetupSystemModifier(ast.NodeTransformer):
         # loop through setup_system function to find return statement
         for i, stmt in enumerate(node.body):
             if isinstance(stmt, ast.Return):
-                # store current return statement
+                # Store current return statement
                 original_return = stmt.value
-                new_body = [
-                    # create new standard objective variable
-                    ast.Assign(
-                        targets=[ast.Name(id="obj_std", ctx=ast.Store())],
-                        value=original_return,
-                    ),
-                    # overwrite return statement with custom function
-                    ast.Return(
-                        value=ast.parse(
-                            return_baseline_cost_function(
-                                power_variable=self.mpc_data.power_variable
-                            )
-                        )
-                        .body[0]
-                        .value
-                    ),
-                ]
-                # append new variables to end of function
-                node.body[i:] = full_traj_list + new_body
+
+                # Create standard objective
+                std_obj_assign = ast.Assign(
+                    targets=[ast.Name(id="obj_std", ctx=ast.Store())],
+                    value=original_return
+                )
+
+                # Create provision objective
+                if self.mpc_data.comfort_variable:
+                    prov_obj_code = ast.parse(
+                        f"provision_obj = FullObjective("
+                        f"    SqObjective(expressions=self.{self.mpc_data.power_variable} - self._P_external, "
+                        f"               weight=self.profile_deviation_weight, "
+                        f"               name='profile_deviation'),"
+                        f"    SqObjective(expressions=self.{self.mpc_data.comfort_variable}, "
+                        f"               weight=self.profile_comfort_weight, "
+                        f"               name='comfort'),"
+                        f"    normalization=43200"
+                        f")"
+                    ).body[0]
+                else:
+                    prov_obj_code = ast.parse(
+                        f"provision_obj = FullObjective("
+                        f"    SqObjective(expressions=self.{self.mpc_data.power_variable} - self._P_external, "
+                        f"               weight=self.profile_deviation_weight, "
+                        f"               name='profile_deviation'),"
+                        f"    normalization=43200"
+                        f")"
+                    ).body[0]
+
+                # Create provision time condition
+                provision_cond_stmt = ast.parse(
+                    "provision_condition = ca.logic_and(self.in_provision.sym, "
+                    "ca.logic_and(self.time >= self.rel_start.sym, "
+                    "            self.time < self.rel_end.sym))"
+                ).body[0]
+
+                # Create conditional objective
+                cond_obj_code = ast.parse(
+                    "cond_obj = ConditionalObjective((provision_condition, provision_obj), default_objective=obj_std)"
+                ).body[0]
+
+                # Return conditional objective
+                return_stmt = ast.Return(value=ast.Name(id="cond_obj", ctx=ast.Load()))
+
+                # Replace the return statement with our new statements
+                new_body = [std_obj_assign, prov_obj_code, provision_cond_stmt, cond_obj_code, return_stmt]
+                node.body[i:i + 1] = full_traj_list + new_body
                 break
 
 
@@ -514,6 +561,36 @@ def add_import_to_tree(name: str, alias: str, tree: ast.Module):
             break
     else:
         tree.body.insert(0, import_statement)
+    return tree
+
+
+def add_objective_imports_to_tree(tree: ast.Module):
+    """Add imports for objective classes to the AST"""
+    objective_imports = ast.ImportFrom(
+        module="agentlib_mpc.data_structures.objective",
+        names=[
+            ast.alias(name="FullObjective", asname=None),
+            ast.alias(name="EqObjective", asname=None),
+            ast.alias(name="DeltaUObjective", asname=None),
+            ast.alias(name="SqObjective", asname=None),
+            ast.alias(name="ConditionalObjective", asname=None),
+        ],
+        level=0
+    )
+
+    # Check if the import already exists
+    for node in tree.body:
+        if (isinstance(node, ast.ImportFrom) and
+                node.module == "agentlib_mpc.data_structures.objective"):
+            # Add any missing names to the existing import
+            existing_names = {alias.name for alias in node.names}
+            for name in ["FullObjective", "EqObjective", "DeltaUObjective", "SqObjective", "ConditionalObjective"]:
+                if name not in existing_names:
+                    node.names.append(ast.alias(name=name, asname=None))
+            return tree
+
+    # Import doesn't exist, add it
+    tree.body.insert(0, objective_imports)
     return tree
 
 

@@ -40,8 +40,6 @@ class BaselineMPCModelConfig(CasadiModelConfig):
     ]
 
     states: List[CasadiState] = [
-        CasadiState(name="t_sim", value=0, unit="sec", description="simulation time"),
-
         # differential
         CasadiState(
             name="T", value=293.15, unit="K", description="Temperature of zone"
@@ -91,6 +89,7 @@ class BaselineMPCModelConfig(CasadiModelConfig):
         ),
         CasadiOutput(name="Time", unit="s", description="Test casadi time")
     ]
+
 
 class BaselineMPCModel(CasadiModel):
     config: BaselineMPCModelConfig
