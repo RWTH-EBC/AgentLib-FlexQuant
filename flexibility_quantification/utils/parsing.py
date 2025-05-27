@@ -150,13 +150,13 @@ class SetupSystemModifier(ast.NodeTransformer):
 
         """
         for base in node.bases:
-            if isinstance(base, ast.Name) and base.id == "CasadiModelConfig":
+            if isinstance(base, ast.Name) and (base.id == "CasadiModelConfig" or base.id == "CasadiMLModelConfig"):
                 # get ast object and trigger modification
                 self.config_obj = node
                 self.modify_config_class(node)
                 # change class name
                 node.name = self.mpc_data.class_name + "Config"
-            if isinstance(base, ast.Name) and base.id == "CasadiModel":
+            if isinstance(base, ast.Name) and (base.id == "CasadiModel" or base.id == "CasadiMLModel"):
                 # get ast object and trigger modification
                 self.model_obj = node
                 for item in node.body:

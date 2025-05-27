@@ -18,7 +18,6 @@ A publication regarding the FlexQuant is currently in the work. A preprint is av
 ## Tutorial
 This section provides tutorials to help you get started with FlexQuant. It begins with the framework's structure, followed by the application. Functionality of each agent is introduced at the end. For more details, please refer to the literature mentioned above.
 
-### The framework
 
 <figure>
   <img src="./docs/images/FlexQuantFramework.jpg" width="600" alt="framework">

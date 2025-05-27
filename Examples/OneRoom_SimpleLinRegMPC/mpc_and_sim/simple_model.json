@@ -9,21 +9,21 @@
             "module_id": "BaselineMPC",
             "type": "agentlib_mpc.mpc",
             "optimization_backend": {
-                "type": "casadi",
-                "model": {
-                    "type": {
-                        "file": "mpc_and_sim/simple_model.py",
-                        "class_name": "BaselineMPCModel"
-                    }
-                },
-                "discretization_options": {
-                    "collocation_order": 2,
-                    "collocation_method": "legendre"
-                },
+                    "type": "casadi_ml",
+                    "model": {
+                        "type": {
+                            "file": "mpc_and_sim/simple_model.py",
+                            "class_name": "BaselineMPCModel"
+                        },
+                        "ml_model_sources": ["mpc_and_sim/Trainer/ml_model.json"]
+                    },
+                    "discretization_options": {
+                        "method": "multiple_shooting"
+                    },
                 "solver": {
-                    "name": "fatrop",
+                    "name": "ipopt",
                     "options": {
-                        "fatrop": {
+                        "ipopt": {
                             "max_iter": 100,
                             "tol": 1e-4
                         }
@@ -72,14 +72,9 @@
                 {
                     "name": "P_el",
                     "alias": "P_el"
-                }
- {
-                    "name": "E_out",
-                    "alias": "E_out"
                 },
-{
+                {
                     "name": "Time"
-
                 }
             ],
             "controls": [
