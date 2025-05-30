@@ -88,18 +88,25 @@ class Results:
 
     def __init__(
         self,
-        flex_config: Union[str, FilePath],
+        flex_config: Union[str, FilePath, dict],
         simulator_agent_config: Optional[Union[str, FilePath, dict]],
+        generated_flex_files_base_path: Optional[Union[str, FilePath]] = None,
         results: Union[str, FilePath, dict[str, dict[str, pd.DataFrame]]] = None,
         to_timescale: TimeConversionTypes = "seconds",
     ):
+        # if generated flex files are saved at a custom base directory and path is provided,
+        # update and overwrite the path "flex_base_directory_path" in flex_config
+        # By default: current working directory is used as base
+        if generated_flex_files_base_path is not None:
+            if isinstance(flex_config, (str, Path)):
+                with open(flex_config, "r") as f:
+                    flex_config = json.load(f)
+            flex_config["flex_base_directory_path"] = str(generated_flex_files_base_path)
         # load configs of agents and modules
         # Generator config
         self.generator_config = load_config.load_config(
             config=flex_config, config_type=FlexQuantConfig
         )
-        # get base path from flex_config to use relative paths
-        # self.base_path = self.generator_config.flex_base_directory_path
 
         # get names of the config files
         config_filename_baseline = BaselineMPCData.model_validate(
