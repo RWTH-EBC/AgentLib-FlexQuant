@@ -10,6 +10,7 @@ POFILE_DEVIATION_WEIGHT = "profile_deviation_weight"
 TIME_STEP = "time_step"
 PREDICTION_HORIZON = "prediction_horizon"
 FlexibilityOffer = "FlexibilityOffer"
+ConstElectricityPrice = "const_electricity_price"
 
 FlexibilityDirections = Literal["positive", "negative"]
 

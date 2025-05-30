@@ -1,11 +1,13 @@
 import os
 import logging
-from typing import Optional, List
 import agentlib
 import numpy as np
 import pandas as pd
+from collections.abc import Iterable
+from typing import Optional, List
 from pathlib import Path
 from pydantic import BaseModel, Field, field_validator
+
 
 
 import flexibility_quantification.data_structures.globals as glbs
@@ -167,7 +169,9 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         agentlib.AgentVariable(name=glbs.TIME_STEP, unit="s",
                                description="timestep of the mpc solution"),
         agentlib.AgentVariable(name=glbs.PREDICTION_HORIZON, unit="-",
-                               description="prediction horizon of the mpc solution")
+                               description="prediction horizon of the mpc solution"),
+        agentlib.AgentVariable(name=glbs.ConstElectricityPrice, value=np.nan, unit="ct/kWh",
+                               description="constant electricity price should be used if it's defined as parameter in the mpc")
     ]
 
     results_file: Optional[Path] = Field(default=None)
@@ -248,6 +252,16 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             elif name == self.config.price_variable:
                 # price comes from predictor, so no stripping needed
                 self.data.electricity_price_series = self.data.format_predictor_inputs(inp.value)
+
+            # set the electricity price series if price is defined as parameter in MPC model
+            if self.data.electricity_price_series is None and isinstance(inp.value, Iterable):
+                const_electricity_price = self.get(glbs.ConstElectricityPrice).value
+                if const_electricity_price is not None:
+                    # get the index for the electricity price series
+                    grid = inp.value.index
+                    # fill the electricity_price_series with values
+                    electricity_price_series = pd.Series([const_electricity_price for i in grid], index=grid)
+                    self.data.electricity_price_series = self.data.format_predictor_inputs(electricity_price_series)
 
             necessary_input_for_calc_flex = [self.data.power_profile_base,
                                              self.data.power_profile_flex_neg,

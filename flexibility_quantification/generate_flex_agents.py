@@ -464,6 +464,12 @@ class FlexAgentGenerator:
                 parameter.value = self.baseline_mpc_module_config.time_step
             if parameter.name == "prediction_horizon":
                 parameter.value = self.baseline_mpc_module_config.prediction_horizon
+            if parameter.name == glbs.ConstElectricityPrice:
+                # TODO: replace r_pel with user defined variable when merging into main
+                # TODO: price must be defined in the config, otherwise throw error; or access it as parameter in the model?
+                for d in self.baseline_mpc_agent_config.modules[1]['parameters']:
+                    if d["name"] == "r_pel":
+                        parameter.value = d["value"]
         # set power unit
         module_config.power_unit = (
             self.flex_config.baseline_config_generator_data.power_unit
