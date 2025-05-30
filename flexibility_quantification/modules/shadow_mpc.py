@@ -15,20 +15,28 @@ class FlexibilityShadowMPC(mpc_full.MPC):
 
     def __init__(self, *args, **kwargs):
         # create instance variable
-        self._first_controls: Dict[str, Union[AgentVariable, None]] = {}
+        self._full_controls: Dict[str, Union[AgentVariable, None]] = {}
         super().__init__(*args, **kwargs)
 
     def register_callbacks(self):
         for control_var in self.config.controls:
+            # update using the first control from the baseline mpc
+            # self.agent.data_broker.register_callback(
+            #     name=f"{control_var.name}",
+            #     alias=f"{control_var.name}",
+            #     callback=self.calc_flex_callback,
+            # )
+            #-------------------------------------------------------#
+            # update using the full trajectory
             self.agent.data_broker.register_callback(
-                name=f"{control_var.name}",
-                alias=f"{control_var.name}",
+                name=f"{control_var.name}{full_trajectory_suffix}",
+                alias=f"{control_var.name}{full_trajectory_suffix}",
                 callback=self.calc_flex_callback,
-            )
+            ) #TODO: the module variable 'mDot_full' doesn't trigger this callback
         for input_var in self.config.inputs:
             adapted_name = input_var.name.replace(base_suffix, "")
             if adapted_name in [control_var.name for control_var in self.config.controls]:
-                self._first_controls[adapted_name] = input_var
+                self._full_controls[adapted_name] = input_var
 
         super().register_callbacks()
 
@@ -45,13 +53,15 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         if self.agent.config.id == inp.source.agent_id:
             return
 
-        self._first_controls[name].value = inp.value
-        self.set(name+base_suffix, inp.value)
+        key_name = name.replace(full_trajectory_suffix, "")
+        self._full_controls[key_name].value = inp.value
+        self.set(key_name+base_suffix, inp.value)
         # make sure all controls are set
-        if all(x.value is not None for x in self._first_controls.values()):
+        if all(x.value is not None for x in self._full_controls.values()):
             self.do_step()
-            for name in self._first_controls.keys():
-                self._first_controls[name].value = None
+            # set the full controls to None
+            for key_name in self._full_controls.keys():
+                self._full_controls[key_name].value = None
 
     def process(self):
         # the shadow mpc should only be run after the results of the baseline are sent
