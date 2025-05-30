@@ -77,7 +77,8 @@ class FlexibilityIndicatorConfig(pydantic.BaseModel):
     def check_file_extension(self):
         if self.name_of_created_file and self.name_of_created_file.suffix != ".json":
             raise ConfigurationError(
-                f"The extension for name_of_created_file in indicator config must be '.json'."
+                f"Invalid file extension for name_of_created_file: '{self.name_of_created_file}'. "
+                f"Expected a '.json' file."
             )
         return self
 
@@ -142,18 +143,34 @@ class FlexQuantConfig(pydantic.BaseModel):
 
     @model_validator(mode="after")
     def check_config_file_extension(self):
+        """
+        Validates that the indicator and market config file paths have a '.json' extension.
+    
+        Raises:
+            ValueError: If either file does not have the expected '.json' extension.
+        """
         if isinstance(self.indicator_config, Path) and self.indicator_config.suffix != ".json":
             raise ValueError(
-                f"The extension for the indicator config path must be '.json'."
+                f"Invalid file extension for indicator config: '{self.indicator_config}'. "
+                f"Expected a '.json' file."
             )
         if isinstance(self.market_config, Path) and self.market_config.suffix != ".json":
             raise ValueError(
-                f"The extension for the market config path must be '.json'."
+                f"Invalid file extension for market config: '{self.market_config}'. "
+                f"Expected a '.json' file."
             )
         return self
     
     @model_validator(mode="after")
     def adapt_paths_and_create_directory(self):
+        """
+        Adjusts and ensures the directory structure for flex file generation and results storage.
+
+        This method:
+        - Updates `flex_files_directory` and `results_directory` paths so they are relative to 
+        the base flex directory, using only the directory names (ignoring any user-supplied paths).
+        - Creates the base, flex files, and results directories if they do not already exist.
+        """
         # adapt paths and use only names for user supplied data
         self.flex_files_directory = (
             self.flex_base_directory_path

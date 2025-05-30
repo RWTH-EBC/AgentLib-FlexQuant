@@ -7,6 +7,7 @@ from copy import deepcopy
 from pathlib import Path
 from typing import List, Union
 
+import astor
 import black
 import json
 from agentlib.core.agent import AgentConfig
@@ -21,6 +22,10 @@ from pydantic import FilePath
 
 import flexibility_quantification.data_structures.globals as glbs
 import flexibility_quantification.utils.config_management as cmng
+from flexibility_quantification.utils.parsing import (
+    SetupSystemModifier, 
+    add_import_to_tree
+)
 from flexibility_quantification.data_structures.flexquant import (
     FlexibilityIndicatorConfig, 
     FlexibilityMarketConfig, 
@@ -327,12 +332,10 @@ class FlexAgentGenerator:
             ),
             "class_name": mpc_dataclass.class_name,
         }
-        # update results file with suffix and parent directory
-        result_filename = (
-            module_config.optimization_backend["results_file"].replace(
-                ".csv", mpc_dataclass.results_suffix
-            )
-        )
+        # extract filename from results file and update it with suffix and parent directory
+        result_filename = Path(
+            module_config.optimization_backend["results_file"]
+        ).name.replace(".csv", mpc_dataclass.results_suffix)
         full_path = (
             self.flex_config.results_directory
             / result_filename
@@ -500,11 +503,6 @@ class FlexAgentGenerator:
         the Baseline MPC model
 
         """
-        import astor
-
-        from flexibility_quantification.utils.parsing import (
-            SetupSystemModifier, add_import_to_tree)
-
         output_file = os.path.join(
             self.flex_config.flex_files_directory,
             self.flex_config.baseline_config_generator_data.created_flex_mpcs_file,
@@ -600,7 +598,23 @@ class FlexAgentGenerator:
             raise ValueError(f"Unknown variables in new cost function: {unknown_vars}")
 
     def run_config_validations(self):
-        
+        """
+        Function to validate integrity of user-supplied flex config.
+
+        The following checks are performed:
+        1. Ensures the specified power variable exists in the MPC model outputs.
+        2. Ensures the specified power variable exists in the MPC model outputs.
+        3. Validates that the stored energy variable exists in MPC outputs if energy cost correction is enabled.
+        4. Verifies the supported collocation method is used; otherwise, switches to 'legendre' and raises a warning.
+        5. Ensures that the sum of prep time, market time, and flex event duration does not exceed the prediction horizon.
+        6. Ensures market time equals the MPC model time step if market config is present.
+        7. Ensures that all flex time values are multiples of the MPC model time step.
+        8. Checks for mismatches between time-related parameters in the flex/MPC and indicator configs and issues warnings 
+       when discrepancies exist, using the flex/MPC config values as the source of truth.
+
+        Raises:
+            ConfigurationError: If required variables are missing or any time configuration is invalid.
+        """
         # check if the power variable exists in the mpc config
         if self.flex_config.baseline_config_generator_data.power_variable not in [
             output.name for output in self.baseline_mpc_module_config.outputs
@@ -676,8 +690,18 @@ class FlexAgentGenerator:
                                             f'Baseline MPC module config value will be used.')
                         
     def adapt_sim_results_path(self, simulator_agent_config: Union[str, Path]) -> dict:
-        """ Optional helper function to adapt file path for simulator results 
-        so that sim results land in the same results directory as flex results. """
+        """ 
+        Optional helper function to adapt file path for simulator results in sim config
+        so that sim results land in the same results directory as flex results.
+        Args:
+            simulator_agent_config (Union[str, Path]): Path to the simulator agent config JSON file.
+
+        Returns:
+            dict: The updated simulator config with the modified result file path.
+    
+        Raises:
+            FileNotFoundError: If the specified config file does not exist. 
+        """
         # open config and extract sim module
         with open(simulator_agent_config, "r") as f:
             sim_config = json.load(f)
