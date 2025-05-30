@@ -122,7 +122,7 @@ class FlexQuantConfig(pydantic.BaseModel):
     )
     flex_base_directory_path: Optional[Path] = pydantic.Field(
         default_factory=lambda: Path.cwd() / "flex_output_data",
-        description="Base path where flex data is stored",
+        description="Base path where generated flex data is stored",
     )
     flex_files_directory: Path = pydantic.Field(
         default="created_flex_files",
