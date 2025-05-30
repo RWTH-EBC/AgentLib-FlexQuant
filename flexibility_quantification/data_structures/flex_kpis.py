@@ -299,7 +299,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         """
         Calculate the relative costs of the flexibility event per energy flexibility.
         """
-        if self.energy_flex == 0:
+        if self.energy_flex.value == 0:
             costs_rel = 0
             corrected_costs_rel = 0
         else:
