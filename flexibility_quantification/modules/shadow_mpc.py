@@ -20,23 +20,15 @@ class FlexibilityShadowMPC(mpc_full.MPC):
 
     def register_callbacks(self):
         for control_var in self.config.controls:
-            # update using the first control from the baseline mpc
-            # self.agent.data_broker.register_callback(
-            #     name=f"{control_var.name}",
-            #     alias=f"{control_var.name}",
-            #     callback=self.calc_flex_callback,
-            # )
-            #-------------------------------------------------------#
-            # update using the full trajectory
             self.agent.data_broker.register_callback(
-                name=f"{control_var.name}{full_trajectory_suffix}",
-                alias=f"{control_var.name}{full_trajectory_suffix}",
+                name=f"{control_var.name+full_trajectory_suffix+base_suffix}",
+                alias=f"{control_var.name+full_trajectory_suffix+base_suffix}",
                 callback=self.calc_flex_callback,
-            ) #TODO: the module variable 'mDot_full' doesn't trigger this callback
+            )
         for input_var in self.config.inputs:
-            adapted_name = input_var.name.replace(base_suffix, "")
+            adapted_name = input_var.name.replace(full_trajectory_suffix, "")
             if adapted_name in [control_var.name for control_var in self.config.controls]:
-                self._full_controls[adapted_name] = input_var
+                self._full_controls[input_var.name] = input_var
 
         super().register_callbacks()
 
@@ -53,9 +45,12 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         if self.agent.config.id == inp.source.agent_id:
             return
 
-        key_name = name.replace(full_trajectory_suffix, "")
-        self._full_controls[key_name].value = inp.value
-        self.set(key_name+base_suffix, inp.value)
+        key_name = name.replace(base_suffix, "")
+        vals = strip_multi_index(inp.value)
+        # the MPC Predictions starts at t=env.now not t=0
+        vals.index += self.env.time
+        self._full_controls[key_name].value = vals
+        self.set(key_name, list(vals.values))
         # make sure all controls are set
         if all(x.value is not None for x in self._full_controls.values()):
             self.do_step()

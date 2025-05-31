@@ -3,7 +3,7 @@ from pydantic import model_validator, Field
 from agentlib import AgentVariable
 from agentlib_mpc.modules import mpc_full, minlp_mpc
 from agentlib_mpc.data_structures.mpc_datamodels import Results, MPCVariable
-from flexibility_quantification.data_structures.globals import full_trajectory_suffix
+from flexibility_quantification.data_structures.globals import full_trajectory_suffix, base_suffix
 
 
 class FlexibilityBaselineMPCConfig(mpc_full.MPCConfig):
@@ -16,7 +16,9 @@ class FlexibilityBaselineMPCConfig(mpc_full.MPCConfig):
         '''
         if not model.full_controls:
             for control in model.controls:
-                model.full_controls.append(AgentVariable(name=control.name+full_trajectory_suffix, alias=control.name+full_trajectory_suffix))
+                model.full_controls.append(AgentVariable(name=control.name+full_trajectory_suffix,
+                                                         alias=control.name+full_trajectory_suffix+base_suffix,
+                                                         shared=True))
             return model
 
 
@@ -42,7 +44,7 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
             # get the corresponding control name
             control = full_control.name.replace(full_trajectory_suffix, "")
             # set value to full_control
-            self.set(full_control.name, solution.df.variable[control])
+            self.set(full_control.name, solution.df.variable[control].dropna())
 
 
 class FlexibilityBaselineMINLPMPC(minlp_mpc.MINLPMPC):

@@ -11,7 +11,6 @@ from flexibility_quantification.data_structures.globals import (
     return_baseline_cost_function,
     full_trajectory_prefix,
     full_trajectory_suffix,
-    base_suffix,
     POFILE_DEVIATION_WEIGHT,
     MARKET_TIME,
     PREP_TIME,
@@ -212,11 +211,11 @@ class SetupSystemModifier(ast.NodeTransformer):
                 for control in self.controls:
                     body.value.elts.append(
                         add_input(
-                            f"{control.name}{base_suffix}",
-                            "0",
+                            f"{control.name}{full_trajectory_suffix}",
+                            0,
                             control.unit,
-                            "float",
-                            "first control output of baseline mpc",
+                            "full control trajectory output of baseline mpc",
+                            "list",
                         )
                     )
                 # also include binary controls
@@ -360,7 +359,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                             0,
                             ast.parse(
                                 f"{control.name}_upper = ca.if_else(self.Time.sym < self.market_time.sym, "
-                                f"self.{control.name}{base_suffix}.sym, "
+                                f"self.{control.name}{full_trajectory_suffix}.sym, "
                                 f"self.{control.name}.ub)"
                             ).body[0],
                         )
@@ -368,7 +367,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                             0,
                             ast.parse(
                                 f"{control.name}_lower = ca.if_else(self.Time.sym < self.market_time.sym, "
-                                f"self.{control.name}{base_suffix}.sym, "
+                                f"self.{control.name}{full_trajectory_suffix}.sym, "
                                 f"self.{control.name}.lb)"
                             ).body[0],
                         )

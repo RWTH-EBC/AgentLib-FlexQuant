@@ -357,8 +357,8 @@ class FlexAgentGenerator:
             for control in module_config.controls:
                 module_config.inputs.append(
                     MPCVariable(
-                        name=control.name + glbs.base_suffix,
-                        value=control.value,
+                        name=control.name + glbs.full_trajectory_suffix,
+                        value=[control.value]*self.baseline_mpc_module_config.prediction_horizon
                     )
                 )
                 control.alias = control.name + glbs.shadow_suffix
