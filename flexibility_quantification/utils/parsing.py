@@ -203,7 +203,7 @@ class SetupSystemModifier(ast.NodeTransformer):
         """
         # loop over config object and modify fields
         for body in node.body:
-            # add the time and baseline control inputs
+            # add the time and full baseline control trajectory as inputs
             if body.target.id == "inputs":
                 body.value.elts.append(
                     add_input("Time", 0, "s", "time trajectory", "list")
