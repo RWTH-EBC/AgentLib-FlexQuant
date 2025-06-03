@@ -27,7 +27,6 @@ SHADOW_MPC_COST_FUNCTION = ("return ca.if_else(self.Time.sym < self.prep_time.sy
 
 full_trajectory_suffix: str = "_full"
 full_trajectory_prefix: str = "_"
-base_suffix: str = "_base"
 shadow_suffix: str = "_shadow"
 
 def return_baseline_cost_function(power_variable):

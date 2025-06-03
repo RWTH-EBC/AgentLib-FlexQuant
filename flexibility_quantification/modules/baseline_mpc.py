@@ -3,7 +3,7 @@ from pydantic import model_validator, Field
 from agentlib import AgentVariable
 from agentlib_mpc.modules import mpc_full, minlp_mpc
 from agentlib_mpc.data_structures.mpc_datamodels import Results, MPCVariable
-from flexibility_quantification.data_structures.globals import full_trajectory_suffix, base_suffix
+from flexibility_quantification.data_structures.globals import full_trajectory_suffix
 
 
 class FlexibilityBaselineMPCConfig(mpc_full.MPCConfig):
@@ -17,7 +17,7 @@ class FlexibilityBaselineMPCConfig(mpc_full.MPCConfig):
         if not model.full_controls:
             for control in model.controls:
                 model.full_controls.append(AgentVariable(name=control.name+full_trajectory_suffix,
-                                                         alias=control.name+full_trajectory_suffix+base_suffix,
+                                                         alias=control.name+full_trajectory_suffix,
                                                          shared=True))
             return model
 

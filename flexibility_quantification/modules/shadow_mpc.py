@@ -2,8 +2,7 @@ from agentlib_mpc.modules import mpc_full, minlp_mpc
 from flexibility_quantification.utils.data_handling import strip_multi_index, fill_nans, MEAN, INTERPOLATE
 from flexibility_quantification.data_structures.globals import (
     full_trajectory_prefix,
-    full_trajectory_suffix,
-    base_suffix
+    full_trajectory_suffix
 )
 from typing import Dict, Union
 from agentlib.core.datamodels import AgentVariable
@@ -21,8 +20,8 @@ class FlexibilityShadowMPC(mpc_full.MPC):
     def register_callbacks(self):
         for control_var in self.config.controls:
             self.agent.data_broker.register_callback(
-                name=f"{control_var.name+full_trajectory_suffix+base_suffix}",
-                alias=f"{control_var.name+full_trajectory_suffix+base_suffix}",
+                name=f"{control_var.name+full_trajectory_suffix}",
+                alias=f"{control_var.name+full_trajectory_suffix}",
                 callback=self.calc_flex_callback,
             )
         for input_var in self.config.inputs:
@@ -45,12 +44,11 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         if self.agent.config.id == inp.source.agent_id:
             return
 
-        key_name = name.replace(base_suffix, "")
         vals = strip_multi_index(inp.value)
         # the MPC Predictions starts at t=env.now not t=0
         vals.index += self.env.time
-        self._full_controls[key_name].value = vals
-        self.set(key_name, list(vals.values))
+        self._full_controls[name].value = vals
+        self.set(name, list(vals.values))
         # make sure all controls are set
         if all(x.value is not None for x in self._full_controls.values()):
             self.do_step()
