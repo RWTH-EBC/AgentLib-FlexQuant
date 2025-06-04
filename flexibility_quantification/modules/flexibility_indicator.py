@@ -3,14 +3,11 @@ import logging
 import agentlib
 import numpy as np
 import pandas as pd
+import flexibility_quantification.data_structures.globals as glbs
 from collections.abc import Iterable
 from typing import Optional, List
 from pathlib import Path
 from pydantic import BaseModel, Field, field_validator
-
-
-
-import flexibility_quantification.data_structures.globals as glbs
 from flexibility_quantification.data_structures.flex_kpis import FlexibilityData, FlexibilityKPIs
 from flexibility_quantification.data_structures.flex_offer import FlexOffer
 
