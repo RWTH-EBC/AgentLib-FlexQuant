@@ -171,7 +171,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         agentlib.AgentVariable(name=glbs.PREDICTION_HORIZON, unit="-",
                                description="prediction horizon of the mpc solution"),
         agentlib.AgentVariable(name=glbs.ConstElectricityPrice, value=np.nan, unit="ct/kWh",
-                               description="constant electricity price should be used if it's defined as parameter in the mpc")
+                               description="constant electricity price")
     ]
 
     results_file: Optional[Path] = Field(default=None)
@@ -253,7 +253,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 # price comes from predictor, so no stripping needed
                 self.data.electricity_price_series = self.data.format_predictor_inputs(inp.value)
 
-            # set the electricity price series if price is defined as parameter in MPC model
+            # set the constant electricity price series if given
             if self.data.electricity_price_series is None and isinstance(inp.value, Iterable):
                 const_electricity_price = self.get(glbs.ConstElectricityPrice).value
                 if const_electricity_price is not None:

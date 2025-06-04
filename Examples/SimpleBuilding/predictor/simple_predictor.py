@@ -89,7 +89,7 @@ class PredictorModule(al.BaseModule):
         """Sets a new prediction at each time step"""
         self.env.process(self.send_upper_comfort_trajectory())
         self.env.process(self.send_lower_comfort_trajectory())
-        # self.env.process(self.send_price_var_trajectory())
+        self.env.process(self.send_price_var_trajectory())
         
         while True:
             ts = self.get("prediction_sampling_time").value
