@@ -215,7 +215,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                             0,
                             control.unit,
                             "full control trajectory output of baseline mpc",
-                            "list",
+                            "pd.Series",
                         )
                     )
                 # also include binary controls

@@ -48,7 +48,7 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         # the MPC Predictions starts at t=env.now not t=0
         vals.index += self.env.time
         self._full_controls[name].value = vals
-        self.set(name, list(vals.values))
+        self.set(name, vals)
         # make sure all controls are set
         if all(x.value is not None for x in self._full_controls.values()):
             self.do_step()

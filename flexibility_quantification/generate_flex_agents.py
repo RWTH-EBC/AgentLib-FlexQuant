@@ -1,6 +1,7 @@
 import inspect
 import logging
 from copy import deepcopy
+import pandas as pd
 from agentlib.utils import custom_injection, load_config
 from agentlib.core.errors import ConfigurationError
 from flexibility_quantification.data_structures.flexquant import (
@@ -368,7 +369,7 @@ class FlexAgentGenerator:
                 module_config.inputs.append(
                     MPCVariable(
                         name=control.name + glbs.full_trajectory_suffix,
-                        value=[control.value]*self.baseline_mpc_module_config.prediction_horizon
+                        value=pd.Series([control.value]*module_config.prediction_horizon, index=[i * module_config.time_step for i in range(module_config.prediction_horizon)])
                     )
                 )
                 control.alias = control.name + glbs.shadow_suffix
