@@ -191,7 +191,10 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         default=False,
         description="Use constant electricity price"
     ) #TODO: write validator: if this variable is true, a const price must be provided in config: if it's false, set the value in config to null (it won't be used, just for saving the results)
-
+    calculate_flex_cost: bool = Field(
+        default=True,
+        description="Calculate the flexibility cost"
+    )#TODO: write validator: either constant electricity price in indicator or price output in predictor should be defined if it's true
     shared_variable_fields: List[str] = ["outputs"]
 
     correct_costs: InputsForCorrectFlexCosts = InputsForCorrectFlexCosts()
@@ -270,8 +273,11 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
 
             necessary_input_for_calc_flex = [self.data.power_profile_base,
                                              self.data.power_profile_flex_neg,
-                                             self.data.power_profile_flex_pos,
-                                             self.data.electricity_price_series]
+                                             self.data.power_profile_flex_pos]
+
+            if self.config.calculate_flex_cost:
+                necessary_input_for_calc_flex.append(self.data.electricity_price_series)
+
             if self.config.correct_costs.enable_energy_costs_correction:
                 necessary_input_for_calc_flex.extend(
                                                 [self.data.stored_energy_profile_base,
@@ -365,7 +371,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         Calculate the flexibility KPIs for current predictions, send the flex offer and set the outputs, write and save the results.
         """
         # Calculate the flexibility KPIs for current predictions
-        self.data.calculate(enable_energy_costs_correction=self.config.correct_costs.enable_energy_costs_correction)
+        self.data.calculate(enable_energy_costs_correction=self.config.correct_costs.enable_energy_costs_correction, calculate_flex_cost=self.config.calculate_flex_cost)
 
         # Send flex offer
         self.send_flex_offer(
