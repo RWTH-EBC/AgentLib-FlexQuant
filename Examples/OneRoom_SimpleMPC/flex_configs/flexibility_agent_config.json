@@ -34,6 +34,10 @@
                         {
                             "name": "prediction_horizon",
                             "value": 48
+                        },
+                        {
+                            "name": "const_electricity_price",
+                            "value": 1
                         }
                     ],
                     "inputs": [
@@ -44,7 +48,8 @@
                     ],
                     "correct_costs": {"enable_energy_costs_correction": true,
                                       "absolute_power_deviation_tolerance": 0.05,
-                                      "stored_energy_variable": "E_out"}
+                                      "stored_energy_variable": "E_out"},
+                    "use_constant_electricity_price": true
                 }
             ]
         },

@@ -187,6 +187,10 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         default="kW",
         description="Unit of the power variable"
     )
+    use_constant_electricity_price: bool = Field(
+        default=False,
+        description="Use constant electricity price"
+    ) #TODO: write validator: if this variable is true, a const price must be provided in config: if it's false, set the value in config to null (it won't be used, just for saving the results)
 
     shared_variable_fields: List[str] = ["outputs"]
 
@@ -250,11 +254,12 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             elif name == glbs.STORED_ENERGY_ALIAS_POS:
                 self.data.stored_energy_profile_flex_pos = self.data.format_mpc_inputs(inp.value)
             elif name == self.config.price_variable:
-                # price comes from predictor, so no stripping needed
-                self.data.electricity_price_series = self.data.format_predictor_inputs(inp.value)
+                if not self.config.use_constant_electricity_price:
+                    # price comes from predictor, so no stripping needed
+                    self.data.electricity_price_series = self.data.format_predictor_inputs(inp.value)
 
             # set the constant electricity price series if given
-            if self.data.electricity_price_series is None and isinstance(inp.value, Iterable):
+            if self.config.use_constant_electricity_price and self.data.electricity_price_series is None and isinstance(inp.value, Iterable):
                 const_electricity_price = self.get(glbs.ConstElectricityPrice).value
                 if const_electricity_price is not None:
                     # get the index for the electricity price series
