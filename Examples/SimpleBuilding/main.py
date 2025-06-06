@@ -28,22 +28,7 @@ def run_example(until=until):
     mas = LocalMASAgency(
         agent_configs=agent_configs, env=ENV_CONFIG, variable_logging=False
     )
-    mas.run(until=until)
-
-    results = []
-    results = mas.get_results(cleanup=False)
-    
-    Dashboard( 
-        flex_config=flex_config,
-        simulator_agent_config=sim_config,
-        results=results
-    ).show(
-        custom_bounds=CustomBound(
-            for_variable="T_zone",
-            lb_name="T_lower",
-            ub_name="T_upper"
-        )
-    )    
+    mas.run(until=until)  
 
 if __name__ == "__main__":
     run_example(until)

@@ -201,7 +201,8 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
     def check_results_file_extension(self):
         if self.results_file and self.results_file.suffix != ".csv":
             raise ValueError(
-                f"The extension for results_file in indicator module config must be '.csv'."
+                f"Invalid file extension for 'results_file': '{self.results_file}'. "
+                f"Expected a '.csv' file."
             )
         return self
 
