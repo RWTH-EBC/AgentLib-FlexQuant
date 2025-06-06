@@ -1,8 +1,8 @@
 from copy import deepcopy
-from typing import Union, Optional
+from typing import Union, Optional, Dict, Any, List, Type
 
 import agentlib
-from pydantic import FilePath
+from pydantic import FilePath, BaseModel
 from pathlib import Path
 import json
 import os
@@ -144,20 +144,15 @@ class Results:
                 (module for module in sim_config["modules"] if module["type"] == "simulator"),
                 None
             )
-            sim_module_config_copy = deepcopy(sim_module_config)
-            # create temp_filename to bypass pydantic field_validator for result_filename in SimulatorConfig
-            # and consequently avoid sim result file deletion due to renewed validation occuring below
-            actual_filename = sim_module_config_copy.get("result_filename")
-            temp_filename = f"temp_result_abc123.csv"
-            sim_module_config_copy["result_filename"] = temp_filename
-            # run validations
+            # instantiate and validate sim agent config
             self.simulator_agent_config = AgentConfig.model_validate(sim_config)
-            self.simulator_module_config = SimulatorConfig(
-                **sim_module_config_copy, 
-                _agent_id=self.simulator_agent_config.id
+            # instantiate sim module config by skipping validation for result_filename 
+            # to prevent file deletion
+            self.simulator_module_config = self.create_instance_with_skipped_validation(
+                model_class=SimulatorConfig, 
+                config=sim_module_config, 
+                skip_fields=["result_filename"]
             )
-            # bypass pydantic immutability to directly restore orig filename
-            object.__setattr__(self.simulator_module_config, "result_filename", actual_filename)
 
         for file_path in Path(self.generator_config.flex_files_directory).rglob("*.json"):
             if file_path.name in config_filename_baseline:
@@ -399,3 +394,44 @@ class Results:
         )
 
         return id_alias_name_dict
+
+    def create_instance_with_skipped_validation(
+            self, 
+            model_class: Type[BaseModel], 
+            config: Dict[str, Any], 
+            skip_fields: Optional[List[str]] = None
+        ) -> BaseModel:
+        """
+        Create a Pydantic model instance while skipping validation for specified fields.
+
+        This function allows partial validation of a model's config dictionary by validating 
+        all fields except those listed in `skip_fields`. Skipped fields are set on the instance 
+        after construction without triggering their validators.
+
+        Args:
+            model_class (Type[BaseModel]): The Pydantic model class to instantiate.
+            config (Dict[str, Any]): The input configuration dictionary.
+            skip_fields (Optional[List[str]]): A list of field names to exclude from validation. 
+                                                These fields will be manually set after instantiation.
+
+        Returns:
+            BaseModel: An instance of the model_class with validated and skipped fields assigned.
+        """
+        if skip_fields is None:
+            skip_fields = []
+        # Separate data into validated and skipped fields
+        validated_fields = {field: value for field, value in config.items() if field not in skip_fields}
+        skipped_fields = {field: value for field, value in config.items() if field in skip_fields}
+        # Create instance with validation for non-skipped fields
+        if validated_fields:
+            instance = model_class(
+                **validated_fields, 
+                _agent_id=self.simulator_agent_config.id
+            )
+        else:
+            instance = model_class.model_construct()
+        # Add skipped fields without validation
+        for field, value in skipped_fields.items():
+            # bypass pydantic immutability to directly set attribute value
+            object.__setattr__(instance, field, value)
+        return instance
