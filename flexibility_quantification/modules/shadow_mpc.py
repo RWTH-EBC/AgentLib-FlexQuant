@@ -97,6 +97,52 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         # set the flex results format same as mpc result while updating Agengvariable
         self.flex_results.index = self.flex_results.index.get_level_values(1)
 
+    def register_callbacks(self):
+        for control_var in self.config.controls:
+            self.agent.data_broker.register_callback(
+                name=f"{full_trajectory_prefix}{control_var.name}{full_trajectory_suffix}",
+                alias=f"{full_trajectory_prefix}{control_var.name}{full_trajectory_suffix}",
+                callback=self.calc_flex_callback,
+            )
+        for input_var in self.config.inputs:
+            if input_var.name.replace(full_trajectory_prefix, "", 1).replace(
+                full_trajectory_suffix, ""
+            ) in [control_var.name for control_var in self.config.controls]:
+                self._full_controls[input_var.name] = input_var
+
+        super().register_callbacks()
+
+    def calc_flex_callback(self, inp, name):
+        """set the control trajectories before calculating the flexibility offer.
+        self.model should account for flexibility in its cost function
+
+        """
+        # during provision dont calculate flex
+        if self.get("in_provision").value:
+            return
+
+        # do not trigger callback on self set variables
+        if self.agent.config.id == inp.source.agent_id:
+            return
+
+        vals = inp.value
+        if vals.isna().any():
+            vals = fill_nans(series=vals, method=MEAN)
+
+        # the MPC Predictions starts at t=env.now not t=0
+        vals.index += self.env.time
+        self._full_controls[name].value = vals
+        self.set(name, vals)
+        # make sure all controls are set
+        if all(x.value is not None for x in self._full_controls.values()):
+            self.do_step()
+            for name in self._full_controls.keys():
+                self._full_controls[name].value = None
+
+    def process(self):
+        # the shadow mpc should only be run after the results of the baseline are sent
+        yield self.env.event()
+
     def _initialize_flex_results(self, n_simulation_steps, horizon_length, sim_time_step, result_df):
         '''Initialize the flex results dataframe with the correct dimension and index and fill with existing results from optimization'''
 
@@ -185,52 +231,6 @@ class FlexibilityShadowMPC(mpc_full.MPC):
                 self.flex_results.loc[(
                     self.env.now, sim_time_step * (i + 1)), output] = self.flex_model.get_output(
                     output).value
-
-    def register_callbacks(self):
-        for control_var in self.config.controls:
-            self.agent.data_broker.register_callback(
-                name=f"{full_trajectory_prefix}{control_var.name}{full_trajectory_suffix}",
-                alias=f"{full_trajectory_prefix}{control_var.name}{full_trajectory_suffix}",
-                callback=self.calc_flex_callback,
-            )
-        for input_var in self.config.inputs:
-            if input_var.name.replace(full_trajectory_prefix, "", 1).replace(
-                full_trajectory_suffix, ""
-            ) in [control_var.name for control_var in self.config.controls]:
-                self._full_controls[input_var.name] = input_var
-
-        super().register_callbacks()
-
-    def calc_flex_callback(self, inp, name):
-        """set the control trajectories before calculating the flexibility offer.
-        self.model should account for flexibility in its cost function
-
-        """
-        # during provision dont calculate flex
-        if self.get("in_provision").value:
-            return
-
-        # do not trigger callback on self set variables
-        if self.agent.config.id == inp.source.agent_id:
-            return
-
-        vals = inp.value
-        if vals.isna().any():
-            vals = fill_nans(series=vals, method=MEAN)
-
-        # the MPC Predictions starts at t=env.now not t=0
-        vals.index += self.env.time
-        self._full_controls[name].value = vals
-        self.set(name, vals)
-        # make sure all controls are set
-        if all(x.value is not None for x in self._full_controls.values()):
-            self.do_step()
-            for name in self._full_controls.keys():
-                self._full_controls[name].value = None
-
-    def process(self):
-        # the shadow mpc should only be run after the results of the baseline are sent
-        yield self.env.event()
 
 
 class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
