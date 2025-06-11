@@ -57,134 +57,135 @@ class FlexibilityShadowMPC(mpc_full.MPC):
                 self.set(output, series)
 
     def sim_flex_model(self, solution):
-        # read the high resolution time step
-        dt = self.config.casadi_sim_time_step
+        '''simulate the flex model over the preditcion horizon and save results'''
+
+        # return if sim_time_step is not a positive integer and system is in provision
+        if not (self.config.casadi_sim_time_step > 0 and not self.get("in_provision").value):
+            return
+
+        # read the defined simulation time step
+        sim_time_step = self.config.casadi_sim_time_step
         mpc_time_step = self.config.time_step
 
-        # simulate the flex_model if dt is a positive integer and system is not in provision
-        if dt > 0 and not self.get("in_provision").value:
+        # set the horizon length and the number of simulation steps
+        horizon_length = int(self.config.prediction_horizon * self.config.time_step)
+        n_simulation_steps = math.ceil(horizon_length / sim_time_step)
 
-            # initialize flex result
-            horizon_length = int(self.config.prediction_horizon * (self.config.time_step))
-            n_simulation_steps = math.floor((horizon_length) / dt)  # if int then plus one
-            index_first_level = [self.env.now] * (n_simulation_steps + 1)
+        # read the current optimization result
+        result_df = solution.df
 
-            # TODO: celanup + check with newer agentlib version (eval)
-            # create collocation index
-            parsed_tuples = []
-            for idx in solution.df.index:
-                parsed_tuples.append(eval(idx))
-            # Create a proper MultiIndex from the parsed tuples
-            index_coll = pd.MultiIndex.from_tuples(
-                parsed_tuples,
-                names=['time_step', 'time']
-                # Match the names with multi_index but note they're reversed
-            )
-            # create index for full sample times
-            index_full_sample = pd.MultiIndex.from_tuples(
-                zip(index_first_level, range(0, horizon_length + dt, dt)),
-                names=['time_step', 'time'])
-            # merge indexes
-            new_index = index_coll.union(index_full_sample).sort_values()
-            self.flex_results = pd.DataFrame(np.nan, index=new_index,
-                                             columns=self.var_ref.outputs)
-            # Get the optimization outputs
-            opti_outputs = solution.df.variable[self.config.power_variable_name]
-            # Fix the index on opti_outputs to match the structure
-            parsed_opti_tuples = []
-            for idx in opti_outputs.index:
-                # Check if idx is already a tuple or needs parsing
-                if isinstance(idx, str):
-                    parsed_opti_tuples.append(eval(idx))
-                else:
-                    parsed_opti_tuples.append(idx)
-            # Create a series with the correct MultiIndex format
-            fixed_series = pd.Series(
-                opti_outputs.values,
-                index=pd.MultiIndex.from_tuples(parsed_opti_tuples,
-                                                names=['time_step', 'time'])
-            )
+        # initialize the flex sim results Dataframe
+        self._initialize_flex_results(n_simulation_steps, horizon_length, sim_time_step, result_df)
 
-            for idx in fixed_series.index:
-                if idx in self.flex_results.index:
-                    self.flex_results.loc[idx, self.config.power_variable_name] = fixed_series[idx]
+        # Update model parameters and initial states
+        self._update_model_inputs_and_parameters()
+        self._update_initial_states(result_df)
 
-            # update the value of module inputs and parameters with value from config, since creating a model just reads the value in the model class but not the config
-            for inp in self.config.inputs + self.config.parameters:
-                if not isinstance(inp.value, Iterable):
-                    self.flex_model.set(inp.name, inp.value)
+        # Run simulation
+        self._run_simulation(n_simulation_steps, sim_time_step, mpc_time_step, result_df)
 
-            # read the current optimization result
-            result_df = solution.df
+        # set index of flex results to the same as mpc result
+        store_results_df = self.flex_results.copy(deep=True)
+        store_results_df.index = self.flex_results.index.tolist()
 
-            # get electrical power at collocation points
-            power_coll = result_df.variable[self.config.power_variable_name]
+        # save results
+        if not os.path.exists(self.res_file_flex):
+            store_results_df.to_csv(self.res_file_flex)
+        else:
+            store_results_df.to_csv(self.res_file_flex, mode='a', header=False)
 
-            # get control values from the mpc optimization result (only at main timesteps, not collocation points)
-            # Filter out collocation points - keep only the main timestep indices
-            collocation_order = int(
-                self.config.optimization_backend['discretization_options'][
-                    'collocation_order'])
-            n_points_per_interval = collocation_order + 1
+        # set the flex results format same as mpc result while updating Agengvariable
+        self.flex_results.index = self.flex_results.index.get_level_values(1)
 
-            # Extract only the main control points (skip collocation points)
-            main_indices = range(0, len(result_df), n_points_per_interval)
-            control_values = result_df.variable[self.var_ref.controls].iloc[
-                main_indices]
-            input_values = result_df.parameter[self.var_ref.inputs].iloc[main_indices]
+    def _initialize_flex_results(self, n_simulation_steps, horizon_length, sim_time_step, result_df):
+        '''Initialize the flex results dataframe with the correct dimension and index and fill with existing results from optimization'''
 
-            # get state values from the mpc optimization result
-            state_values = result_df.variable[self.var_ref.states]
-            # update state values with last measurement
-            for state, value in zip(self.var_ref.states, state_values.iloc[0]):
-                self.flex_model.set(state, value)
+        # create MultiIndex for collocation points
+        index_coll = pd.MultiIndex.from_arrays(
+            [[self.env.now] * len(result_df.index), result_df.index],
+            names=['time_step', 'time']
+            # Match the names with multi_index but note they're reversed
+        )
+        # create Multiindex for full simulation sample times
+        index_full_sample = pd.MultiIndex.from_tuples(
+            zip([self.env.now] * (n_simulation_steps + 1), range(0, horizon_length + sim_time_step, sim_time_step)),
+            names=['time_step', 'time'])
+        # merge indexes
+        new_index = index_coll.union(index_full_sample).sort_values()
+        # initialize the flex results
+        self.flex_results = pd.DataFrame(np.nan, index=new_index,
+                                         columns=self.var_ref.outputs)
 
-            # For each simulation step, determine which MPC interval we're in
-            current_control_idx = 0
-            last_control_time = 0
+        # Get the optimization outputs and create a series for fixed optimization outputs with the correct MultiIndex format
+        opti_outputs = result_df.variable[self.config.power_variable_name]
+        fixed_opti_output = pd.Series(
+            opti_outputs.values,
+            index=index_coll,
+        )
+        # fill the output value at the time step where it already exists in optimization output
+        for idx in fixed_opti_output.index:
+            if idx in self.flex_results.index:
+                self.flex_results.loc[idx, self.config.power_variable_name] = fixed_opti_output[idx]
 
-            control_dict = {}
+    def _update_model_inputs_and_parameters(self):
+        '''update the value of module inputs and parameters with value from config,
+           since creating a model just reads the value in the model class but not the config
+        '''
 
-            for i in range(0, n_simulation_steps):
-                current_sim_time = i * dt
+        for inp in self.config.inputs + self.config.parameters:
+            if not isinstance(inp.value, Iterable):
+                self.flex_model.set(inp.name, inp.value)
 
-                # Check if we need to update the control values
-                if current_sim_time >= last_control_time + mpc_time_step and current_control_idx < len(
-                        control_values) - 1:
-                    current_control_idx += 1
-                    last_control_time += mpc_time_step
+    def _update_initial_states(self, result_df):
+        '''set the initial value of states'''
 
-                # Apply control and input values from the appropriate MPC step
-                for control, value in zip(self.var_ref.controls,
-                                          control_values.iloc[current_control_idx]):
-                    self.flex_model.set(control, value)
-                control_dict[current_sim_time] = value
+        # get state values from the mpc optimization result
+        state_values = result_df.variable[self.var_ref.states]
+        # update state values with last measurement
+        for state, value in zip(self.var_ref.states, state_values.iloc[0]):
+            self.flex_model.set(state, value)
 
-                for input_var, value in zip(self.var_ref.inputs,
-                                            input_values.iloc[current_control_idx]):
-                    self.flex_model.set(input_var, value)
+    def _run_simulation(self, n_simulation_steps, sim_time_step, mpc_time_step, result_df):
+        '''simulate with flex model over the prediction horizon'''
 
-                # set t_sample
-                t_sample = self.flex_model.dt
+        # get control and input values from the mpc optimization result
+        control_values = result_df.variable[
+            self.var_ref.controls].dropna()  # value at last time step (nan) was eleminated
+        input_values = result_df.parameter[self.var_ref.inputs].dropna()  # value at last time step (nan) was eleminated
 
-                # do integration
-                self.flex_model.do_step(t_start=0, t_sample=t_sample)
-                # save output
-                for output in self.var_ref.outputs:
-                    self.flex_results.loc[(
-                        self.env.now, t_sample * (i + 1)), output] = self.flex_model.get_output(
-                        output).value
+        # For each simulation step, determine which MPC interval we're in
+        current_control_idx = 0
+        last_control_time = 0
 
-            # set index to the same as mpc result
-            store_results_df = self.flex_results.copy(deep=True)
-            store_results_df.index = new_index.tolist()
+        control_dict = {}
 
-            # save results
-            if not os.path.exists(self.res_file_flex):
-                store_results_df.to_csv(self.res_file_flex)
-            else:
-                store_results_df.to_csv(self.res_file_flex, mode='a', header=False)
+        for i in range(0, n_simulation_steps):
+            current_sim_time = i * sim_time_step
 
+            # Check if the control values need to be updated
+            if current_sim_time >= last_control_time + mpc_time_step and current_control_idx < len(
+                    control_values) - 1:
+                current_control_idx += 1
+                last_control_time += mpc_time_step
+
+            # Apply control and input values from the appropriate MPC step
+            for control, value in zip(self.var_ref.controls,
+                                      control_values.iloc[current_control_idx]):
+                self.flex_model.set(control, value)
+            control_dict[current_sim_time] = value
+
+            for input_var, value in zip(self.var_ref.inputs,
+                                        input_values.iloc[current_control_idx]):
+                self.flex_model.set(input_var, value)
+
+            # do integration
+            self.flex_model.do_step(t_start=0, t_sample=sim_time_step)
+
+            # save output
+            for output in self.var_ref.outputs:
+                self.flex_results.loc[(
+                    self.env.now, sim_time_step * (i + 1)), output] = self.flex_model.get_output(
+                    output).value
 
     def register_callbacks(self):
         for control_var in self.config.controls:
