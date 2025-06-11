@@ -84,7 +84,7 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
         self._initialize_flex_results(n_simulation_steps, horizon_length, sim_time_step, result_df)
 
         # Update model parameters and initial states
-        self._update_model_inputs_and_parameters()
+        self._update_model_parameters()
         self._update_initial_states(result_df)
 
         # Run simulation
@@ -133,14 +133,13 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
             if idx in self.flex_results.index:
                 self.flex_results.loc[idx, self.config.power_variable_name] = fixed_opti_output[idx]
 
-    def _update_model_inputs_and_parameters(self):
-        '''update the value of module inputs and parameters with value from config,
+    def _update_model_parameters(self):
+        '''update the value of module parameters with value from config,
            since creating a model just reads the value in the model class but not the config
         '''
 
-        for inp in self.config.inputs + self.config.parameters:
-            if not isinstance(inp.value, Iterable):
-                self.flex_model.set(inp.name, inp.value)
+        for par in self.config.parameters:
+            self.flex_model.set(par.name, par.value)
 
     def _update_initial_states(self, result_df):
         '''set the initial value of states'''
