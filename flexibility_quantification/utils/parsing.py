@@ -446,12 +446,6 @@ class SetupSystemModifier(ast.NodeTransformer):
             node (ast.FunctionDef): The function definition node of setup_system.
 
         """
-        # set the control trajectories with the respective variables
-        if self.binary_controls:
-            controls_list = self.controls + self.binary_controls
-        else:
-            controls_list = self.controls
-        full_traj_list = []
 
         # loop through setup_system function to find return statement
         for i, stmt in enumerate(node.body):
@@ -476,8 +470,6 @@ class SetupSystemModifier(ast.NodeTransformer):
                         .value
                     ),
                 ]
-                # append new variables to end of function
-                node.body[i:] = full_traj_list + new_body
                 break
 
 
