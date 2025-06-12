@@ -77,14 +77,7 @@ class KPISeries(KPI):
         Integrate the value of the KPI over time by summing up the product of values and the time difference.
         """
 
-        return np.trapz(self.value.values, self.value.index)/ TIME_CONVERSION[time_unit]
-
-        if self.dt is None:
-            self._get_dt()
-        products = self.value * self.dt / TIME_CONVERSION[time_unit]
-        integral = products.sum()
-        return integral
-
+        return np.trapz(self.value.values, self.value.index) / TIME_CONVERSION[time_unit]
 
 class FlexibilityKPIs(pydantic.BaseModel):
     """
@@ -213,7 +206,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
 
         # Costs KPIs
         if enable_energy_costs_correction:
-            stored_energy_diff = stored_energy_shadow.values[-1] - stored_energy_base.values[-1]
+            stored_energy_diff = stored_energy_shadow.values[-1] - stored_energy_base.values[-1] #TODO: currently it's the last collocation point, it's better to use the simulated results
         else:
             stored_energy_diff = 0
         self._calculate_costs(electricity_price_signal=electricity_price_series, stored_energy_diff=stored_energy_diff)
@@ -440,10 +433,10 @@ class FlexibilityData(pydantic.BaseModel):
             series = merged_series.sort_index()
         # Fill NaNs
         if mpc:
-            series = fill_nans(series=series, method=MEAN)
+            series = fill_nans(series=series, method=MEAN) # TODO: do we need to fill first nan of P_el, since it's given.
 
-            # Initialize or update common time grid only fro mpc inputs
-            if self._common_time_grid is None:
+            # Initialize or update common time grid only for mpc inputs
+            if self._common_time_grid is None: # TODO: check if this guarantee the right initialization of common_time_grid
                 self._common_time_grid = series.index.values
             else:
                 # Find intersection of current common grid and new series grid
