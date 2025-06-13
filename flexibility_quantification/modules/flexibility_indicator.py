@@ -329,6 +329,8 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 values = self.data.stored_energy_profile_flex_neg
             elif name == glbs.STORED_ENERGY_ALIAS_POS:
                 values = self.data.stored_energy_profile_flex_pos
+            elif name == self.config.price_variable:
+                values = self.data.format_predictor_inputs(self.get(name).value)
             else:
                 values = self.get(name).value
 
