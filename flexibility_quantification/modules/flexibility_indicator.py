@@ -343,11 +343,11 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             new_df = pd.DataFrame(results).T
             new_df.columns = self.var_list
             new_df.index.direction = "time"
-            new_df[glbs.TIME_STEP] = now
-            new_df.set_index([glbs.TIME_STEP, new_df.index], inplace=True)
+            new_df["current_time_step"] = now
+            new_df.set_index(["current_time_step", new_df.index], inplace=True)
             df = pd.concat([df, new_df])
             # set the indices once again as concat cant handle indices properly
-            indices = pd.MultiIndex.from_tuples(df.index, names=[glbs.TIME_STEP, "time"])
+            indices = pd.MultiIndex.from_tuples(df.index, names=["current_time_step", "time"])
             df.set_index(indices, inplace=True)
 
         return df
