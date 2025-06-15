@@ -206,7 +206,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         super().__init__(*args, **kwargs)
         self.var_list = []
         for variable in self.variables:
-            if variable == glbs.FlexibilityOffer:
+            if variable.name in [glbs.FlexibilityOffer, glbs.ConstElectricityPrice]:
                 continue
             self.var_list.append(variable.name)
         self.time = []
@@ -259,14 +259,18 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                     self.data.electricity_price_series = self.data.format_predictor_inputs(inp.value)
 
             # set the constant electricity price series if given
-            if self.config.use_constant_electricity_price and self.data.electricity_price_series is None and isinstance(inp.value, Iterable):
+            if self.config.use_constant_electricity_price and self.data.electricity_price_series is None:
                 const_electricity_price = self.get(glbs.ConstElectricityPrice).value
                 if const_electricity_price is not None:
                     # get the index for the electricity price series
-                    grid = inp.value.index
+                    n = self.get(glbs.PREDICTION_HORIZON).value
+                    ts = self.get(glbs.TIME_STEP).value
+                    grid = np.arange(0, n * ts, ts)
                     # fill the electricity_price_series with values
                     electricity_price_series = pd.Series([const_electricity_price for i in grid], index=grid)
                     self.data.electricity_price_series = self.data.format_predictor_inputs(electricity_price_series)
+                else:
+                    raise ValueError("Constant ekectricity price shouldn't be nan. Please specify it in config")# TODO: write a validator for this function
 
             necessary_input_for_calc_flex = [self.data.power_profile_base,
                                              self.data.power_profile_flex_neg,
@@ -334,6 +338,8 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 values = self.data.stored_energy_profile_flex_neg
             elif name == glbs.STORED_ENERGY_ALIAS_POS:
                 values = self.data.stored_energy_profile_flex_pos
+            elif name == self.config.price_variable:
+                values = self.data.electricity_price_series
             else:
                 values = self.get(name).value
 
