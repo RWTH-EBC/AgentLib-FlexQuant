@@ -399,7 +399,7 @@ class FlexibilityData(pydantic.BaseModel):
                  time_step: int, prediction_horizon: int, **data):
         super().__init__(**data)
         self.switch_time = prep_time + market_time
-        # TODO: when P_el depends on state, the value at the end of the FE is needed
+        # TODO: when P_el depends on state, the value at the end of the FE is needed: wenn collocation, dann mittlung, wenn simulation, dann integrieren. / doc:simulation nur nutzen, wenn leistung von der state abhängig ist
         self.flex_offer_time_grid = np.arange(self.switch_time, self.switch_time + flex_event_duration + time_step, time_step)
         self.mpc_time_grid = np.arange(0, prediction_horizon * time_step, time_step)
         self._common_time_grid = None  # Initialize common time grid
@@ -433,10 +433,10 @@ class FlexibilityData(pydantic.BaseModel):
             series = merged_series.sort_index()
         # Fill NaNs
         if mpc:
-            series = fill_nans(series=series, method=MEAN) # TODO: do we need to fill first nan of P_el, since it's given.
+            series = fill_nans(series=series, method=MEAN) # TODO: do we need to fill first nan of P_el, since it's given. lass es nan, und füge bei der differenz 0 ein. Doc: leistung bei baseline und shadow identisch
 
             # Initialize or update common time grid only for mpc inputs
-            if self._common_time_grid is None: # TODO: check if this guarantee the right initialization of common_time_grid
+            if self._common_time_grid is None: # TODO: check if this guarantee the right initialization of common_time_grid, find the finest time grid and interpolate, goal: align time grid for calcultion
                 self._common_time_grid = series.index.values
             else:
                 # Find intersection of current common grid and new series grid
