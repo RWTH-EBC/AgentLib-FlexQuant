@@ -23,6 +23,7 @@ from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from agentlib_mpc.models.casadi_model import CasadiModelConfig
 from agentlib.core.agent import AgentConfig
 from agentlib.core.module import BaseModuleConfig
+from agentlib.core.datamodels import AgentVariable
 import ast
 import atexit
 import os
@@ -76,6 +77,9 @@ class FlexAgentGenerator:
             config=self.baseline_mpc_agent_config,
             module_type=cmng.get_orig_module_type(self.orig_mpc_agent_config),
         )
+        # convert to flexquant Module Config
+        self.baseline_mpc_module_config = cmng.get_flex_mpc_module_config(agent_config=self.baseline_mpc_agent_config, module_config=self.baseline_mpc_module_config,
+                                                                          module_type=self.flex_config.baseline_config_generator_data.module_types[self.baseline_mpc_module_config.type])
         # pos module
         self.pos_flex_mpc_module_config = cmng.get_module(
             config=self.pos_flex_mpc_agent_config,
@@ -399,6 +403,9 @@ class FlexAgentGenerator:
                             value=control.value,
                         )
                     )
+            for control in module_config.controls:
+                module_config.full_controls.append(AgentVariable(name=control.name+glbs.full_trajectory_suffix, alias=control.name+glbs.full_trajectory_suffix,shared=True))
+
         module_config.set_outputs = True
         # add outputs for the power variables, for easier handling create a lookup dict
         output_dict = {output.name: output for output in module_config.outputs}

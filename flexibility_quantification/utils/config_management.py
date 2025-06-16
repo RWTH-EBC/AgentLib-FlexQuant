@@ -96,6 +96,14 @@ def get_module(config: AgentConfig, module_type: str) -> T:
             return MODULE_TYPE_DICT[mod["type"]](**mod, _agent_id=config_id)
 
 
+def get_flex_mpc_module_config(agent_config: AgentConfig, module_config: BaseModuleConfig, module_type: str):
+    """
+    gets a flex module config from an original module config
+    """
+    config_dict = module_config.model_dump()
+    return MODULE_TYPE_DICT[module_type](**config_dict, _agent_id=agent_config.id)
+
+
 def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig):
     """Removes unnecessary fields from the module to keep the created json simple
 
@@ -111,7 +119,7 @@ def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig):
             delete_list.append("ub")
         return delete_list
 
-    parent_dict = module.dict(exclude_defaults=True)
+    parent_dict = module.model_dump(exclude_defaults=True)
     # update every variable with a dict excluding the defined fields
     if "parameters" in parent_dict:
         parent_dict["parameters"] = [parameter.dict(exclude=check_bounds(parameter)) for parameter in module.parameters]
@@ -123,6 +131,9 @@ def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig):
         parent_dict["controls"] = [control.dict(exclude=check_bounds(control)) for control in module.controls]
     if "states" in parent_dict:
         parent_dict["states"] = [state.dict(exclude=check_bounds(state)) for state in module.states]
+    if "full_controls" in parent_dict:
+        parent_dict["full_controls"] = [full_control.dict(exclude=check_bounds(full_control).remove('shared')) for
+                                        full_control in module.full_controls]
 
     return parent_dict
 

@@ -8,18 +8,8 @@ from flexibility_quantification.data_structures.globals import full_trajectory_s
 
 class FlexibilityBaselineMPCConfig(mpc_full.MPCConfig):
 
+    # define an Agentvariable list for the full control trajectory, since use MPCVariable output affects the optimization result
     full_controls: List[AgentVariable] = Field(default=[])
-
-    @model_validator(mode='after')
-    def init_full_controls(cls, model):
-        '''fill the full_controls list if it's empty
-        '''
-        if not model.full_controls:
-            for control in model.controls:
-                model.full_controls.append(AgentVariable(name=control.name+full_trajectory_suffix,
-                                                         alias=control.name+full_trajectory_suffix,
-                                                         shared=True))
-            return model
 
 
 class FlexibilityBaselineMPC(mpc_full.MPC):
