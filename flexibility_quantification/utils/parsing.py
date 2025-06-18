@@ -9,7 +9,6 @@ from flexibility_quantification.data_structures.mpcs import (
 from flexibility_quantification.data_structures.globals import (
     SHADOW_MPC_COST_FUNCTION,
     return_baseline_cost_function,
-    full_trajectory_prefix,
     full_trajectory_suffix,
     PROFILE_DEVIATION_WEIGHT,
     MARKET_TIME,
@@ -223,11 +222,10 @@ class SetupSystemModifier(ast.NodeTransformer):
                     for control in self.binary_controls:
                         body.value.elts.append(
                             add_input(
-                                f"{full_trajectory_prefix}{control.name}"
-                                f"{full_trajectory_suffix}",
-                                "pd.Series([0])",
-                                "W",
-                                "full control output",
+                                f"{control.name}{full_trajectory_suffix}",
+                                0,
+                                control.unit,
+                                "full control trajectory output of baseline mpc",
                                 "pd.Series",
                             )
                         )
@@ -268,19 +266,6 @@ class SetupSystemModifier(ast.NodeTransformer):
                     # Complex case with concatenated lists or tuple
                     value_list = self.get_leftmost_list(body.value)
 
-                # also include binary controls
-                if self.binary_controls:
-                    for control in self.binary_controls:
-                        body.value.elts.append(
-                            add_output(
-                                f"{full_trajectory_prefix}{control.name}"
-                                f"{full_trajectory_suffix}",
-                                "W",
-                                "pd.Series",
-                                "pd.Series([0])",
-                                "full control output",
-                            )
-                        )
             # add the flexibility inputs
             if body.target.id == "inputs":
                 if isinstance(body.value, ast.List):
@@ -389,7 +374,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                                 0,
                                 ast.parse(
                                     f"{control.name}_upper = ca.if_else(self.Time.sym < self.market_time.sym, "
-                                    f"self.{full_trajectory_prefix}{control.name}{full_trajectory_suffix}.sym, "
+                                    f"self.{control.name}{full_trajectory_suffix}.sym, "
                                     f"self.{control.name}.ub)"
                                 ).body[0],
                             )
@@ -397,7 +382,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                                 0,
                                 ast.parse(
                                     f"{control.name}_lower = ca.if_else(self.Time.sym < self.market_time.sym, "
-                                    f"self.{full_trajectory_prefix}{control.name}{full_trajectory_suffix}.sym, "
+                                    f"self.{control.name}{full_trajectory_suffix}.sym, "
                                     f"self.{control.name}.lb)"
                                 ).body[0],
                             )

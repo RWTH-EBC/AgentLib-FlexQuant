@@ -373,7 +373,8 @@ class FlexAgentGenerator:
                 module_config.inputs.append(
                     MPCVariable(
                         name=control.name + glbs.full_trajectory_suffix,
-                        value=pd.Series([control.value]*module_config.prediction_horizon, index=[i * module_config.time_step for i in range(module_config.prediction_horizon)])
+                        value=None,
+                        description='only dummy value, true value is a series'
                     )
                 )
                 control.alias = control.name + glbs.shadow_suffix
@@ -382,30 +383,24 @@ class FlexAgentGenerator:
                 for control in module_config.binary_controls:
                     module_config.inputs.append(
                         MPCVariable(
-                            name=glbs.full_trajectory_prefix
-                            + control.name
-                            + glbs.full_trajectory_suffix,
-                            value=control.value,
+                            name=control.name + glbs.full_trajectory_suffix,
+                            value=None,
+                            description='only dummy value, true value is a series'
                         )
                     )
 
             # only communicate outputs for the shadow mpcs
             module_config.shared_variable_fields = ["outputs"]
         else:
-            # also include binary controls
-            if hasattr(module_config, "binary_controls"):
-                for control in module_config.binary_controls:
-                    module_config.outputs.append(
-                        MPCVariable(
-                            name=glbs.full_trajectory_prefix
-                            + control.name
-                            + glbs.full_trajectory_suffix,
-                            value=control.value,
-                        )
-                    )
             for control in module_config.controls:
-                module_config.full_controls.append(AgentVariable(name=control.name+glbs.full_trajectory_suffix, alias=control.name+glbs.full_trajectory_suffix,shared=True))
-
+                module_config.full_controls.append(AgentVariable(name=control.name+glbs.full_trajectory_suffix,
+                                                                 alias=control.name+glbs.full_trajectory_suffix,
+                                                                 shared=True))
+            if hasattr(module_config, "binary_controls"):
+                for binary_controls in module_config.binary_controls:
+                    module_config.full_controls.append(AgentVariable(name=binary_controls.name + glbs.full_trajectory_suffix,
+                                                                     alias=binary_controls.name + glbs.full_trajectory_suffix,
+                                                                     shared=True))
         module_config.set_outputs = True
         # add outputs for the power variables, for easier handling create a lookup dict
         output_dict = {output.name: output for output in module_config.outputs}

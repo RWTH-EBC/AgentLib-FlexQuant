@@ -27,7 +27,6 @@ SHADOW_MPC_COST_FUNCTION = ("return ca.if_else(self.Time.sym < self.prep_time.sy
                             "self.market_time.sym), obj_flex, obj_std))")
 
 full_trajectory_suffix: str = "_full"
-full_trajectory_prefix: str = "_"
 shadow_suffix: str = "_shadow"
 
 

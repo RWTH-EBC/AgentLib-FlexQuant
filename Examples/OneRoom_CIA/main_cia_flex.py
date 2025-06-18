@@ -44,7 +44,7 @@ def run_example(until=until):
     fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=1)
     ax1 = axs[0]
     # load
-    ax1.set_ylabel("$\dot{Q}_{Room}$ in W")
+    ax1.set_ylabel("$dot{Q}_{Room}$ in W")
     results["SimAgent"]["room"]["load"].plot(ax=ax1)
     x_ticks = np.arange(0, 3600 * 6 + 1, 3600)
     x_tick_labels = [int(tick / 3600) for tick in x_ticks]
@@ -134,7 +134,7 @@ def run_example(until=until):
     energy_flex_pos = ind_res.xs("energyflex_pos", axis=1).droplevel(1).dropna()
     fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=1)
     ax1 = axs[0]
-    ax1.set_ylabel("$\epsilon$ in kWh")
+    ax1.set_ylabel("$epsilon$ in kWh")
     energy_flex_neg.plot(ax=ax1, label="neg", color=mpcplot.EBCColors.red)
     energy_flex_pos.plot(ax=ax1, label="pos", color=mpcplot.EBCColors.blue)
     ax1.yaxis.set_major_formatter(FormatStrFormatter("%.4f"))

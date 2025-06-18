@@ -98,9 +98,10 @@ def get_module(config: AgentConfig, module_type: str) -> T:
 
 def get_flex_mpc_module_config(agent_config: AgentConfig, module_config: BaseModuleConfig, module_type: str):
     """
-    gets a flex module config from an original module config
+    gets a flexquant module config from an original agentlib module config
     """
     config_dict = module_config.model_dump()
+    config_dict['type'] = module_type
     return MODULE_TYPE_DICT[module_type](**config_dict, _agent_id=agent_config.id)
 
 

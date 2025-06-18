@@ -10,7 +10,6 @@ from pathlib import Path
 from agentlib.core.errors import OptionalDependencyError
 from agentlib_mpc.data_structures.mpc_datamodels import MINLPVariableReference
 from flexibility_quantification.data_structures.globals import (
-    full_trajectory_prefix,
     full_trajectory_suffix,
 )
 
@@ -61,23 +60,19 @@ class ConstrainedCasADiCIABackend(CasADiCIABackend):
         for bin_con in self.var_ref.binary_controls:
             # check for baseline or shadow MPC
             if (
-                full_trajectory_prefix + bin_con + full_trajectory_suffix
-                in self.model.get_output_names()
+                bin_con + full_trajectory_suffix
+                not in self.model.get_input_names()
             ):
                 continue
-            # if shadow MPC, get current value send by baseline and constrain pycombia
-            if (
-                full_trajectory_prefix + bin_con + full_trajectory_suffix
-                in self.model.get_input_names()
-            ):
-                if (
+            # if shadow MPC, get current value send by baseline and constrain pycombina
+            elif (
                     self.model.get_input(
-                        full_trajectory_prefix + bin_con + full_trajectory_suffix
+                        bin_con + full_trajectory_suffix
                     ).value
                     is not None
                 ):
                     cons = self.model.get_input(
-                        full_trajectory_prefix + bin_con + full_trajectory_suffix
+                        bin_con + full_trajectory_suffix
                     ).value
                     cons = cons[cons.index < self.config.market_time]
                     last_idx = 0
