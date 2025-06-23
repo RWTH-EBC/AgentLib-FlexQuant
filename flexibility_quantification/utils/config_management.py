@@ -33,8 +33,8 @@ SIMULATOR_CONFIG_TYPE: str = "simulator"
 
 
 def get_module_type_matching_dict(dictionary: dict):
-    """Creates two dictionaries, which map the modules types of the agentlib_mpc modules
-        to those of the flexquant modules. This is done by using the MODULE_TYPE_DICT
+    """ Creates two dictionaries, which map the modules types of the agentlib_mpc modules
+        to those of the flexquant modules. This is done by using the MODULE_NAME_DICT
 
     """
     # Create dictionaries to store keys grouped by values
