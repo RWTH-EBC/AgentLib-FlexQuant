@@ -1,7 +1,7 @@
 from flexibility_quantification.utils.interactive import Dashboard, CustomBound
 
 def plot_results(generated_flex_files_base_path):
-
+    
     sim_config = "mpc_and_sim/fmu_config.json" 
     flex_config = "flex_configs/flexibility_agent_config.json"
 
@@ -18,15 +18,9 @@ def plot_results(generated_flex_files_base_path):
         )
 
 if __name__ == "__main__":
-    # Custom base path for generated flex files directory (config + results directory)
-    generated_files_path_run_1 = "C:/Users/fse-ksu/flex_test/run_1"
-    generated_files_path_run_2 = "C:/Users/fse-ksu/flex_test/run_2"
-    generated_files_path_run_3 = "C:/Users/fse-ksu/flex_test/run_3"
-
-    # PLotting results
-    # Plotting with results extracted from current working directory as base
-    plot_results(None)
-    # Plotting with results extracted from custom base paths
-    plot_results(generated_files_path_run_1)
-    plot_results(generated_files_path_run_2)
-    plot_results(generated_files_path_run_3)
+    flex_event_durations = [7200, 8100, 6300]
+    for flex_event_duration in flex_event_durations:
+        # Plotting with results extracted from custom base paths defined in main_multi_run.py
+        # Press ctrl + C in the terminal to close plot for one run and start the plot for the next run
+        # Plots for all runs remain in the browser if the corresponding windows are not closed
+        plot_results(f"generated_files/run_with_flex_event_duration_{flex_event_duration}")

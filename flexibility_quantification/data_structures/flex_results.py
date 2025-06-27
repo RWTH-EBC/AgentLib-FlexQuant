@@ -89,12 +89,16 @@ class Results:
 
     def __init__(
         self,
-        flex_config: Union[str, FilePath, dict],
+        flex_config: Optional[Union[str, FilePath, dict]],
         simulator_agent_config: Optional[Union[str, FilePath, dict]],
         generated_flex_files_base_path: Optional[Union[str, FilePath]] = None,
-        results: Union[str, FilePath, dict[str, dict[str, pd.DataFrame]]] = None,
+        results: Optional[Union[str, FilePath, dict[str, dict[str, pd.DataFrame]], "Results"]] = None,
         to_timescale: TimeConversionTypes = "seconds",
     ):
+        if isinstance(results, Results):
+            # Already a Results instance — copy over its data
+            self.__dict__ = results.__dict__.copy()
+            return
         # if generated flex files are saved at a custom base directory and path is provided,
         # update and overwrite the path "flex_base_directory_path" in flex_config
         # By default: current working directory is used as base

@@ -9,7 +9,7 @@ until = 3600 * 24
 ENV_CONFIG = {"rt": False, "factor": 0.002, "t_sample": 1} 
 
 def run_example(until=until):
-
+    
     mpc_config = "mpc_and_sim/simple_model.json"
     sim_config = "mpc_and_sim/fmu_config.json" 
     predictor_config = "predictor/predictor_config.json"
@@ -31,4 +31,9 @@ def run_example(until=until):
     mas.run(until=until)  
 
 if __name__ == "__main__":
+    # Here the simulation is run once, 
+    # generated files are stored in --> the current working directory
+    # For an example with multiple runs, see: Examples\SimpleBuilding\main_multi_run.py
+    # For plotting of results generated from this main file, 
+    # see: Examples\SimpleBuilding\plot_results_single.py
     run_example(until)
