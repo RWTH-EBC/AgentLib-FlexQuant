@@ -344,13 +344,18 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             self.time.append(now)
             new_df = pd.DataFrame(results).T
             new_df.columns = self.var_list
+            # Rename time_step variable column
+            new_df.rename(columns={"time_step": "time_step_mpc"}, inplace=True)
             new_df.index.direction = "time"
-            new_df["current_time_step"] = now
-            new_df.set_index(["current_time_step", new_df.index], inplace=True)
+            new_df["time_step"] = now
+            new_df.set_index(["time_step", new_df.index], inplace=True)
             df = pd.concat([df, new_df])
             # set the indices once again as concat cant handle indices properly
-            indices = pd.MultiIndex.from_tuples(df.index, names=["current_time_step", "time"])
+            indices = pd.MultiIndex.from_tuples(df.index, names=["time_step", "time"])
             df.set_index(indices, inplace=True)
+            # Drop column time_step and keep it as an index onlys
+            if "time_step" in df.columns:
+                df.drop(columns=["time_step"], inplace=True)
 
         return df
 
