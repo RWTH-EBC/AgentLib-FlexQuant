@@ -208,6 +208,8 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         for variable in self.variables:
             if variable.name in [glbs.FlexibilityOffer, glbs.ConstElectricityPrice]:
                 continue
+            if not self.config.calculate_costs.calculate_flex_costs and ('costs' in variable.name or variable.name == self.config.price_variable):
+                continue
             self.var_list.append(variable.name)
         self.time = []
         self.in_provision = False
