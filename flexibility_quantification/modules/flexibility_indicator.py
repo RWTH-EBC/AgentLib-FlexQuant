@@ -187,7 +187,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
     use_constant_electricity_price: bool = Field(
         default=False,
         description="Use constant electricity price"
-    ) #TODO: write validator: if this variable is true, a const price must be provided in config: if it's false, set the value in config to null (it won't be used, just for saving the results)
+    ) #TODO: write validator: if this variable is true, a const price must be provided in config: if it's false, set the value in config to null
     calculate_flex_cost: bool = Field(
         default=True,
         description="Calculate the flexibility cost"
