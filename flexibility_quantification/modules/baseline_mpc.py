@@ -8,6 +8,7 @@ from pydantic import Field
 from collections.abc import Iterable
 from agentlib_mpc.utils.analysis import mpc_at_time_step
 from agentlib_mpc.modules import mpc_full, minlp_mpc
+from flexibility_quantification.data_structures import globals as glbs
 
 class FlexibilityBaselineMPCConfig(mpc_full.MPCConfig):
 
@@ -51,12 +52,16 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
 
         df = solution.df
         if hasattr(self, "flex_results"):
+            storage_variable_name = next(var.name for var in self.variables if var.alias == glbs.STORED_ENERGY_ALIAS_BASE)
             for output in self.var_ref.outputs:
-                if not output == self.config.power_variable_name:
+                if output not in [self.config.power_variable_name, storage_variable_name]:
                     series = df.variable[output]
                     self.set(output, series)
-            upsampled_output = self.flex_results[self.config.power_variable_name]
-            self.set(self.config.power_variable_name, upsampled_output)
+            # send the power and storage variable value from simulation results
+            upsampled_output_power = self.flex_results[self.config.power_variable_name]
+            upsampled_output_storage = self.flex_results[storage_variable_name]
+            self.set(self.config.power_variable_name, upsampled_output_power)
+            self.set(storage_variable_name, upsampled_output_storage.dropna()) #TODO: check if the last value is nan is time_step is not dividable by sim_step
         else:
             for output in self.var_ref.outputs:
                 series = df.variable[output]
