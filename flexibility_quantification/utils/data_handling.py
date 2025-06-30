@@ -38,12 +38,15 @@ def _set_mean_values(series: pd.Series) -> pd.Series:
                     start = index
                 else:
                     end = index
-                    intervals.append(pd.Interval(left=start, right=end, closed="left"))
+                    intervals.append(pd.Interval(left=start, right=end, closed="both"))
                     start = end
+            elif index == s.index[-1]:
+                end = index
+                intervals.append(pd.Interval(left=start, right=end, closed="both"))
         return intervals
 
     for interval in _get_intervals_for_mean(series):
-        interval_index = (interval.left <= series.index) & (series.index < interval.right)
+        interval_index = (interval.left <= series.index) & (series.index <= interval.right)
         series[interval.left] = series[interval_index].mean(skipna=True)
 
     # remove last entry if nan, e.g. with collocation
