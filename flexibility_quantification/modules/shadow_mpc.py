@@ -75,21 +75,21 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         mpc_time_step = self.config.time_step
 
         # set the horizon length and the number of simulation steps
-        horizon_length = int(self.config.prediction_horizon * self.config.time_step)
-        n_simulation_steps = math.ceil(horizon_length / sim_time_step)
+        total_horizon_time = int(self.config.prediction_horizon * self.config.time_step)
+        n_simulation_steps = math.ceil(total_horizon_time / sim_time_step)
 
         # read the current optimization result
         result_df = solution.df
 
         # initialize the flex sim results Dataframe
-        self._initialize_flex_results(n_simulation_steps, horizon_length, sim_time_step, result_df)
+        self._initialize_flex_results(n_simulation_steps, total_horizon_time, sim_time_step, result_df)
 
         # Update model parameters and initial states
         self._update_model_parameters()
         self._update_initial_states(result_df)
 
         # Run simulation
-        self._run_simulation(n_simulation_steps, sim_time_step, mpc_time_step, result_df)
+        self._run_simulation(n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time)
 
         # set index of flex results to the same as mpc result
         store_results_df = self.flex_results.copy(deep=True)
@@ -197,7 +197,7 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         for state, value in zip(self.var_ref.states, state_values.iloc[0]):
             self.flex_model.set(state, value)
 
-    def _run_simulation(self, n_simulation_steps, sim_time_step, mpc_time_step, result_df):
+    def _run_simulation(self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time):
         '''simulate with flex model over the prediction horizon'''
 
         # get control and input values from the mpc optimization result
@@ -231,12 +231,17 @@ class FlexibilityShadowMPC(mpc_full.MPC):
                 self.flex_model.set(input_var, value)
 
             # do integration
-            self.flex_model.do_step(t_start=0, t_sample=sim_time_step)
+            # reduce the simultion time step so that the total horizon time will not be exceeded
+            if current_sim_time + sim_time_step <= total_horizon_time:
+                t_sample = sim_time_step
+            else:
+                t_sample = total_horizon_time - current_sim_time
+            self.flex_model.do_step(t_start=0, t_sample=t_sample)
 
             # save output
             for output in self.var_ref.outputs:
                 self.flex_results.loc[(
-                    self.env.now, sim_time_step * (i + 1)), output] = self.flex_model.get_output(
+                    self.env.now, current_sim_time + t_sample), output] = self.flex_model.get_output(
                     output).value
 
 
