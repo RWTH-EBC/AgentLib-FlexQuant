@@ -253,6 +253,11 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                                              self.data.power_profile_flex_neg,
                                              self.data.power_profile_flex_pos,
                                              self.data.electricity_price_series]
+
+            if all(var is not None for var in necessary_input_for_calc_flex):
+                # align the index of price variable to the index of inputs from mpc; electricity price signal is usually steps
+                necessary_input_for_calc_flex[-1] = self.data.electricity_price_series.reindex(self.data.power_profile_base.index).ffill()
+
             if self.config.correct_costs.enable_energy_costs_correction:
                 necessary_input_for_calc_flex.extend(
                                                 [self.data.stored_energy_profile_base,

@@ -7,7 +7,7 @@ import pandas as pd
 
 from agentlib_mpc.utils import TimeConversionTypes, TIME_CONVERSION
 from flexibility_quantification.data_structures.globals import FlexibilityDirections
-from flexibility_quantification.utils.data_handling import  fill_nans, MEAN
+from flexibility_quantification.utils.data_handling import  fill_nans, MEAN, INTERPOLATE
 
 
 class KPI(pydantic.BaseModel):
@@ -206,7 +206,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
 
         # Costs KPIs
         if enable_energy_costs_correction:
-            stored_energy_diff = stored_energy_shadow.values[-1] - stored_energy_base.values[-1] #TODO: currently it's the last collocation point, it's better to use the simulated results
+            stored_energy_diff = stored_energy_shadow.values[-1] - stored_energy_base.values[-1]
         else:
             stored_energy_diff = 0
         self._calculate_costs(electricity_price_signal=electricity_price_series, stored_energy_diff=stored_energy_diff)
@@ -237,6 +237,8 @@ class FlexibilityKPIs(pydantic.BaseModel):
         # Set values to zero if the difference is small
         relative_difference = (power_flex / power_profile_base).abs()
         power_flex.loc[relative_difference < relative_error_acceptance] = 0
+        # set the first power_flex to zero
+        power_flex[0] = 0
 
         # Set values
         self.power_flex_full.value = power_flex
@@ -433,24 +435,17 @@ class FlexibilityData(pydantic.BaseModel):
             series = merged_series.sort_index()
         # Fill NaNs
         if mpc:
-            series = fill_nans(series=series, method=MEAN) # TODO: do we need to fill first nan of P_el, since it's given. lass es nan, und füge bei der differenz 0 ein. Doc: leistung bei baseline und shadow identisch
+            # only fill NaN if there is NaN except for the first value
+            if any(np.isnan(series.loc[1:])):
+                series = fill_nans(series=series, method=MEAN)
+            # ensure the first value is nan, since it is calculated with the state from the controlled system and thus the same for baseline and shadow mpcs
+            series[0] = np.nan
 
-            # Initialize or update common time grid only for mpc inputs
-            if self._common_time_grid is None: # TODO: check if this guarantee the right initialization of common_time_grid, find the finest time grid and interpolate, goal: align time grid for calcultion
-                self._common_time_grid = series.index.values
-            else:
-                # Find intersection of current common grid and new series grid
-                # This gives us the points that appear in both time grids
-                self._common_time_grid = np.intersect1d(self._common_time_grid,
-                                                        series.index.values)
-
-        # Return series reindexed to common time grid
-        result = series.reindex(self._common_time_grid)
         if not mpc:
-            result = result.ffill()  # price signals are typically steps
+            series = series.ffill()  # price signals are typically steps
 
-        # Check for NaNs after reindexing
-        if any(result.isna()):
+        # Check for NaNs
+        if any(series.loc[1:].isna()):
             raise ValueError(f"The mpc time grid is not compatible with the mpc input "
                              f"provided for kpi calculation, "
                              f"which leads to NaN values in the series.\n"
@@ -458,7 +453,7 @@ class FlexibilityData(pydantic.BaseModel):
                              f"Series index:{series.index} \n"
                              f"Check time steps of the mpcs as well as casadi simulator "
                              f"step sizes.")
-        return result
+        return series
 
     def calculate(self, enable_energy_costs_correction: bool) -> [FlexibilityKPIs, FlexibilityKPIs]:
         """
