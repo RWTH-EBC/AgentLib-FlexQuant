@@ -63,10 +63,19 @@
             }
         ],
         "pos_flex": {
-            "flex_cost_function": "sum([self.s_T * self.T_slack**2, self.s_P * self.P_el])"
+            "flex_cost_function": "sum([self.s_T * self.T_slack**2, self.s_P * self.P_el])",
+            "comfort_variable_boundaries": {
+                "T_upper": 299 ,
+                "T_lower": 289
+            }
+
         },
         "neg_flex": {
-            "flex_cost_function": "sum([self.s_T * self.T_slack**2, -self.s_P * self.P_el])"
+            "flex_cost_function": "sum([self.s_T * self.T_slack**2, -self.s_P * self.P_el])",
+            "comfort_variable_boundaries": {
+                "T_upper": 299,
+                "T_lower": 289
+            }
         }
     },
     "path_to_flex_files": "created_flex_files",

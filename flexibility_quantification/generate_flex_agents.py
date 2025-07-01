@@ -1,3 +1,23 @@
+"""
+This module defines the `FlexAgentGenerator` class, which is responsible for generating and managing configurations 
+for flexibility agents in the context of flexibility quantification. The class handles the initialization and loading 
+of various configurations required for flexibility agents, including MPC (Model Predictive Control) configurations, 
+flexibility indicator configurations, and flexibility market configurations.
+
+Key functionalities:
+- Imports necessary modules and data structures for flexibility quantification and agent management.
+- Defines the `FlexAgentGenerator` class with attributes for different module configurations.
+- Provides an initializer (`__init__`) to load and manage flexibility and MPC agent configurations from file paths 
+  or configuration objects.
+- Supports handling configuration files and default naming conventions for flexibility configurations.
+
+This module is part of a larger system for flexibility quantification and agent-based modeling, leveraging tools 
+like Pydantic for configuration validation and Casadi for model predictive control.
+
+The file is a utility for generating and managing flexible agent configurations.
+It abstracts the complexity of loading, parsing, and preparing multiple module configs for agents.
+It is designed for extensibility and integration with a larger agent-based simulation or control framework.
+"""
 import inspect
 import logging
 from copy import deepcopy
@@ -29,6 +49,8 @@ from typing import Union, List
 from pydantic import FilePath
 from pathlib import Path
 import black
+
+
 
 
 class FlexAgentGenerator:
@@ -127,7 +149,7 @@ class FlexAgentGenerator:
 
         # adapt modules to include necessary communication variables and dump jsons of the agents including the adapted module configs
         indicator_module_config = self.adapt_indicator_config(
-            module_config=self.indicator_module_config
+            module_config=self.indicator_module_config  
         )
         self.append_module_and_dump_agent(
             module=indicator_module_config,
@@ -385,6 +407,25 @@ class FlexAgentGenerator:
                             value=control.value,
                         )
                     )
+
+            # TODO
+            for input in module_config.inputs:#lwa
+                if input.name in mpc_dataclass.comfort_variable_boundaries: # = "T_upper":lwa 
+                    # set the value 
+                    input.value = mpc_dataclass.comfort_variable_boundaries[input.name]# nicht unbeding notwendig, falls der predictor auf den alias T_upper_shadow schreibt.
+                    # set the alias
+                    input.alias = input.name + "_shadow"
+            
+                
+                
+                    shifted_value_upper = abs(mpc_dataclass.comfort_variable_boundaries["T_upper"] - 295)              
+                    shifted_value_lower = abs(mpc_dataclass.comfort_variable_boundaries["T_lower"] - 292)
+                    module_config.optimization_backend["results_file"] = (
+                        module_config.optimization_backend["results_file"].replace(
+                            ".csv", f"_shifted_upper-{shifted_value_upper}_lower-{shifted_value_lower}" + mpc_dataclass.results_suffix
+                        )
+                    )
+
 
             # only communicate outputs for the shadow mpcs
             module_config.shared_variable_fields = ["outputs"]

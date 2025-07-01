@@ -30,7 +30,19 @@ class BaseMPCData(pydantic.BaseModel):
 
 
 class BaselineMPCData(BaseMPCData):
-    """Data class for Baseline MPC"""
+    """Data class for Baseline MPC
+    BaselineMPCData defines the configuration schema for a baseline MPC controller.
+
+    This data class extends BaseMPCData and is specialized for baseline control strategies.
+    It includes:
+    - File and module metadata used for baseline code generation
+    - Names and units of critical model variables (e.g., power, comfort)
+    - Soft constraint weights for control objectives such as comfort and profile adherence
+    - Input and parameter variables appended to the MPC config
+    - Automatic creation of MPCVariable instances for parameters based on user-specified weights
+
+    A model validator dynamically populates the configuration parameters with 
+    MPCVariable objects reflecting the controller's tuning weights."""
 
     # files and paths
     results_suffix: str = "_base.csv"
@@ -95,7 +107,21 @@ class BaselineMPCData(BaseMPCData):
 
 
 class PFMPCData(BaseMPCData):
-    """Data class for PF-MPC"""
+    """Data class for PF-MPC
+    PFMPCData defines the configuration schema for a Positive Flexibility MPC (PF-MPC).
+
+    This data class extends BaseMPCData and provides all necessary configuration
+    elements for setting up and generating PF-MPC controllers, including:
+    - File and module metadata for code generation
+    - Aliases for key model variables (power, energy)
+    - Optional cost function specification
+    - Default market-related parameters (e.g., preparation time, event duration)
+    - Inputs such as provision flags
+    - Weight definitions for optimization objectives
+    - Optional comfort constraint boundaries
+
+    It is used to generate valid MPC configuration files and ensure consistency
+    between model, optimizer, and runtime expectations."""
 
     # files and paths
     results_suffix: str = "_pos_flex.csv"
@@ -125,6 +151,7 @@ class PFMPCData(BaseMPCData):
         description="Name and value of weights",
     )
     model_config = ConfigDict(json_encoders={MPCVariable: lambda v: v.dict()})
+    comfort_variable_boundaries: dict = pydantic.Field(default_factory=dict)
 
 
 class NFMPCData(BaseMPCData):
@@ -133,7 +160,7 @@ class NFMPCData(BaseMPCData):
     # files and paths
     results_suffix: str = "_neg_flex.csv"
     name_of_created_file: str = "neg_flex.json"
-    # modules
+    # modules   
     module_types: dict = cmng.SHADOW_MODULE_TYPE_DICT
     class_name: str = "NegFlexModel"
     module_id: str = "NegFlexMPC"
@@ -158,3 +185,4 @@ class NFMPCData(BaseMPCData):
         description="Name and value of weights",
     )
     model_config = ConfigDict(json_encoders={MPCVariable: lambda v: v.dict()})
+    comfort_variable_boundaries: dict = pydantic.Field(default_factory=dict)

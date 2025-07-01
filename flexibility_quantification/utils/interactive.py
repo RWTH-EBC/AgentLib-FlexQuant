@@ -1,3 +1,50 @@
+"""
+This module provides utilities for interactive visualization and analysis of flexibility quantification results 
+using Dash and Plotly. It defines two main classes, `CustomBound` and `Dashboard`, which facilitate user-defined 
+bounds for MPC (Model Predictive Control) variables and the creation of a dashboard for visualizing FlexQuant results.
+
+### Key Functionalities:
+1. **CustomBound Class**:
+   - Allows users to define custom bounds for MPC variables.
+   - Provides attributes for specifying the variable name, lower bound, and upper bound.
+   - Designed to integrate with MPC-based analysis and plotting tools.
+
+   #### Attributes:
+   - `for_variable`: The name of the variable for which bounds are defined.
+   - `lower_bound`: Optional; the name of the lower bound variable in the MPC.
+   - `upper_bound`: Optional; the name of the upper bound variable in the MPC.
+
+   #### Methods:
+   - `__init__`: Initializes the `CustomBound` object with the variable name and optional lower/upper bound names.
+
+2. **Dashboard Class**:
+   - Extends the `flex_results.Results` class to provide interactive dashboards for FlexQuant results.
+   - Utilizes Dash and Plotly for creating web-based visualizations.
+   - Designed for analyzing and visualizing flexibility quantification data, including MPC iterations and flexibility KPIs.
+
+   #### Attributes:
+   - `MPC_ITERATIONS`: A constant string representing the key for MPC iteration counts.
+   - `label_positive`: A label for positive flexibility values.
+   - `label_negative`: A label for negative flexibility values.
+
+   #### Usage:
+   - The `Dashboard` class is intended to be used for creating interactive dashboards that display FlexQuant results.
+   - It integrates with FlexQuant's data structures and plotting utilities to provide a seamless visualization experience.
+
+### Dependencies:
+- **Dash**: Used for creating interactive web-based dashboards.
+- **Plotly**: Used for generating high-quality visualizations.
+- **Pandas**: Used for data manipulation and analysis.
+- **AgentLib and AgentLib_MPC**: Provides utilities for MPC analysis, time conversion, and plotting.
+- **Flexibility Quantification Modules**: Provides data structures and utilities for managing FlexQuant configurations, results, KPIs, and offers.
+
+### Example Workflow:
+1. Define custom bounds for MPC variables using the `CustomBound` class.
+2. Use the `Dashboard` class to create an interactive dashboard for visualizing FlexQuant results.
+3. Leverage Dash callbacks and Plotly graphs to enable dynamic exploration of flexibility data.
+
+This module is part of the FlexQuant system, which focuses on flexibility quantification and agent-based modeling.
+"""
 from typing import get_args, Union, Optional
 from pydantic import FilePath
 import pandas as pd
@@ -317,6 +364,7 @@ class Dashboard(flex_results.Results):
                         mode="lines",
                         line=self.LINE_PROPERTIES[self.bounds_key],
                         zorder=1,
+                        connectgaps=False,
                     )
                 )
             if df_ub is not None:
@@ -325,9 +373,10 @@ class Dashboard(flex_results.Results):
                         name="Upper bound",
                         x=df_ub.index,
                         y=df_ub,
-                        mode="lines",
+                        mode="lines+markers",
                         line=self.LINE_PROPERTIES[self.bounds_key],
                         zorder=1,
+                        connectgaps=False,
                     )
                 )
 

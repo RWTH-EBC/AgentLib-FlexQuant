@@ -1,0 +1,22 @@
+Metadata-Version: 2.4
+Name: flexquant
+Version: 0.1.0
+Summary: Flexibility quantification setup based on agentlib_mpc
+Author: 
+Author-email: 
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Operating System :: OS Independent
+Requires-Dist: setuptools
+Requires-Dist: agentlib[full]==0.8.2
+Requires-Dist: agentlib_mpc[full]@ git+https://github.com/RWTH-EBC/AgentLib-MPC.git@d1a9c206d3f83581fd7dd12a8ed583388ac15b3e
+Requires-Dist: pathlib
+Requires-Dist: astor==0.8.1
+Requires-Dist: black
+Requires-Dist: pre-commit
+Dynamic: classifier
+Dynamic: requires-dist
+Dynamic: summary
