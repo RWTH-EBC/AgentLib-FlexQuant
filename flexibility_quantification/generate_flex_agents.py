@@ -316,7 +316,6 @@ class FlexAgentGenerator:
         - names of the control variables for the shadow mpcs
         - reduce communicated variables of shadow mpcs to outputs
         - add the power variable to the outputs
-        - add the Time variable to the inputs
         - add parameters for the activation and quantification of flexibility
 
         """
@@ -432,16 +431,7 @@ class FlexAgentGenerator:
                 self.indicator_module_config.correct_costs.stored_energy_variable
             ].alias = mpc_dataclass.stored_energy_alias
 
-        # add inputs for the Time variable as well as extra inputs needed for activation of flex
-        module_config.inputs.append(
-            MPCVariable(
-                name="Time",
-                value=[
-                    i * module_config.time_step
-                    for i in range(module_config.prediction_horizon)
-                ],
-            )
-        )
+
         module_config.inputs.extend(mpc_dataclass.config_inputs_appendix)
         # CONFIG_PARAMETERS_APPENDIX only includes dummy values
         # overwrite dummy values with values from flex config and append it to module config
