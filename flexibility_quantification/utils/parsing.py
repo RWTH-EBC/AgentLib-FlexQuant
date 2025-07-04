@@ -364,7 +364,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                         node.body.insert(
                             0,
                             ast.parse(
-                                f"{control.name}_upper = ca.if_else(self.time.sym < self.market_time.sym, "
+                                f"{control.name}_upper = ca.if_else(self.time < self.market_time.sym, "
                                 f"self.{full_trajectory_prefix}{control.name}{full_trajectory_suffix}.sym, "
                                 f"self.{control.name}.ub)"
                             ).body[0],
@@ -372,7 +372,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                         node.body.insert(
                             0,
                             ast.parse(
-                                f"{control.name}_lower = ca.if_else(self.time.sym < self.market_time.sym, "
+                                f"{control.name}_lower = ca.if_else(self.time < self.market_time.sym, "
                                 f"self.{full_trajectory_prefix}{control.name}{full_trajectory_suffix}.sym, "
                                 f"self.{control.name}.lb)"
                             ).body[0],
@@ -393,7 +393,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                             node.body.insert(
                                 0,
                                 ast.parse(
-                                    f"{control.name}_upper = ca.if_else(self.time.sym < self.market_time.sym, "
+                                    f"{control.name}_upper = ca.if_else(self.time < self.market_time.sym, "
                                     f"self.{full_trajectory_prefix}{control.name}{full_trajectory_suffix}.sym, "
                                     f"self.{control.name}.ub)"
                                 ).body[0],
@@ -401,7 +401,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                             node.body.insert(
                                 0,
                                 ast.parse(
-                                    f"{control.name}_lower = ca.if_else(self.time.sym < self.market_time.sym, "
+                                    f"{control.name}_lower = ca.if_else(self.time < self.market_time.sym, "
                                     f"self.{full_trajectory_prefix}{control.name}{full_trajectory_suffix}.sym, "
                                     f"self.{control.name}.lb)"
                                 ).body[0],
