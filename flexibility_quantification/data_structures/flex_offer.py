@@ -1,9 +1,9 @@
-from pydantic import BaseModel
 import pydantic
-from agentlib.core.datamodels import _TYPE_MAP
 import pandas as pd
 from enum import Enum
-
+from pydantic import BaseModel
+from typing import Optional
+from agentlib.core.datamodels import _TYPE_MAP
 
 class OfferStatus(Enum):
     not_accepted = "Not Accepted"
@@ -21,7 +21,7 @@ class FlexOffer(BaseModel):
         scalar=False,
         description="Power profile of the baseline MPC",
     )
-    pos_price: float = pydantic.Field(
+    pos_price: Optional[float] = pydantic.Field(
         default=None,
         unit="ct",
         scalar=True,
@@ -33,7 +33,7 @@ class FlexOffer(BaseModel):
         scalar=False,
         description="Power profile for the positive difference",
     )
-    neg_price: float = pydantic.Field(
+    neg_price: Optional[float] = pydantic.Field(
         default=None,
         unit="ct",
         scalar=True,

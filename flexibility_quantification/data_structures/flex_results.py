@@ -12,7 +12,7 @@ from agentlib.core.agent import AgentConfig
 from agentlib.core.module import BaseModuleConfig
 from agentlib.utils import load_config
 from agentlib_mpc.modules.mpc import BaseMPCConfig
-from agentlib.modules.simulator import SimulatorConfig
+from agentlib.modules.simulation.simulator import SimulatorConfig
 from flexibility_quantification.data_structures.flexquant import (
     FlexQuantConfig,
     FlexibilityIndicatorConfig,
