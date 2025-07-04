@@ -337,6 +337,9 @@ class Dashboard(flex_results.Results):
 
         def plot_flexibility_kpi(fig: go.Figure, variable) -> go.Figure:
             df_ind = self.df_indicator.xs(0, level=1)
+            # if the variable only has NaN, don't plot
+            if df_ind[self.kpi_names_pos[variable]].isna().all():
+                return
             fig.add_trace(
                 go.Scatter(
                     name=self.label_positive,
