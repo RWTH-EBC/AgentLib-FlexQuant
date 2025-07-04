@@ -126,8 +126,7 @@ class Dashboard(flex_results.Results):
         )
         # Flexibility kpis
         self.plotting_variables.append(kpis_pos.energy_flex.name)
-        if any('costs' in col for col in results['FlexibilityIndicator']['FlexibilityIndicator'].columns):
-            self.plotting_variables.append(kpis_pos.costs.name)
+        self.plotting_variables.append(kpis_pos.costs.name)
         # for kpi in kpis_pos.get_kpi_dict(direction_name=False).values():
         #     if not isinstance(kpi.value, pd.Series):
         #         self.plotting_variables.append(kpi.name)
@@ -336,6 +335,9 @@ class Dashboard(flex_results.Results):
 
         def plot_flexibility_kpi(fig: go.Figure, variable) -> go.Figure:
             df_ind = self.df_indicator.xs(0, level=1)
+            # if the variable only has NaN, don't plot
+            if df_ind[self.kpi_names_pos[variable]].isna().all():
+                return
             fig.add_trace(
                 go.Scatter(
                     name=self.label_positive,
