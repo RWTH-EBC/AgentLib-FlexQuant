@@ -40,7 +40,7 @@ class InputsForCalculateFlexCosts(BaseModel):
     calculate_flex_costs: bool = Field(
         default=True,
         description="Calculate the flexibility cost"
-    )#TODO: write validator: either constant electricity price in indicator or price output in predictor should be defined if it's true
+    )
     const_electricity_price: float = Field(
         default=np.nan,
         description="constant electricity price in ct/kWh"
@@ -49,7 +49,9 @@ class InputsForCalculateFlexCosts(BaseModel):
     @model_validator(mode="after")
     def validate_constant_price(cls, model):
         if model.use_constant_electricity_price and np.isnan(model.const_electricity_price):
-            raise Exception(f"Constant electricity price must have a valid value in float if it is to be used for calculation. Recieved {model.const_electricity_price}")
+            raise Exception(f'Constant electricity price must have a valid value in float if it is to be used for calculation. '
+                            f'Received "use_constant_electricity_price": true, "const_electricity_price": {model.const_electricity_price}. '
+                            f'Please specify them correctly in "calculate_costs" field in flex config.')
         return model
 
 
