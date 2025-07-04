@@ -432,17 +432,16 @@ class FlexAgentGenerator:
                 self.indicator_module_config.correct_costs.stored_energy_variable
             ].alias = mpc_dataclass.stored_energy_alias
 
-        # add inputs for the Time variable as well as extra inputs needed for activation of flex
-        module_config.inputs.append(
+        # add extra inputs needed for activation of flex
+        module_config.inputs.extend(mpc_dataclass.config_inputs_appendix)
+
+        # add parameter for the time variable
+        module_config.parameters.append(
             MPCVariable(
-                name="Time",
-                value=[
-                    i * module_config.time_step
-                    for i in range(module_config.prediction_horizon)
-                ],
+                name="time",
+                value=0,
             )
         )
-        module_config.inputs.extend(mpc_dataclass.config_inputs_appendix)
         # CONFIG_PARAMETERS_APPENDIX only includes dummy values
         # overwrite dummy values with values from flex config and append it to module config
         for var in mpc_dataclass.config_parameters_appendix:
