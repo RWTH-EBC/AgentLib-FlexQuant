@@ -97,7 +97,7 @@ class Results:
     ):
         if isinstance(results, Results):
             # Already a Results instance — copy over its data
-            self.__dict__ = results.__dict__.copy()
+            self.__dict__ = deepcopy(results.__dict__)
             return
         # if generated flex files are saved at a custom base directory and path is provided,
         # update and overwrite the path "flex_base_directory_path" in flex_config
