@@ -218,6 +218,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
 
     correct_costs: InputsForCorrectFlexCosts = InputsForCorrectFlexCosts()
     calculate_costs: InputsForCalculateFlexCosts = InputsForCalculateFlexCosts()
+    
     @model_validator(mode="after")
     def check_results_file_extension(self):
         if self.results_file and self.results_file.suffix != ".csv":
