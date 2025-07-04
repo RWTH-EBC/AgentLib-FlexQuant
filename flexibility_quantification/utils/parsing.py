@@ -247,9 +247,6 @@ class SetupSystemModifier(ast.NodeTransformer):
                             "Weight for P in objective function",
                         )
                     )
-                body.value.elts.append(
-                    add_parameter("time", 0, "s", "time on the horizon")
-                )
 
     def modify_config_class_baseline(self, node):
         """Modify the config class of the baseline mpc.
@@ -343,9 +340,6 @@ class SetupSystemModifier(ast.NodeTransformer):
                     body.value.elts.append(
                         add_parameter(parameter.name, 0, "-", parameter.description)
                     )
-                body.value.elts.append(
-                    add_parameter("time", 0, "s", "time on the horizon")
-                )
 
     def modify_setup_system_shadow(self, node):
         """Modify the setup_system method of the shadow mpc model class.

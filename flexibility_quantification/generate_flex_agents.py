@@ -434,14 +434,6 @@ class FlexAgentGenerator:
 
         # add extra inputs needed for activation of flex
         module_config.inputs.extend(mpc_dataclass.config_inputs_appendix)
-
-        # add parameter for the time variable
-        module_config.parameters.append(
-            MPCVariable(
-                name="time",
-                value=0,
-            )
-        )
         # CONFIG_PARAMETERS_APPENDIX only includes dummy values
         # overwrite dummy values with values from flex config and append it to module config
         for var in mpc_dataclass.config_parameters_appendix:
