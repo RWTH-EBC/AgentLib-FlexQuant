@@ -9,7 +9,6 @@ from flexibility_quantification.data_structures.mpcs import (
 from flexibility_quantification.data_structures.globals import (
     SHADOW_MPC_COST_FUNCTION,
     return_baseline_cost_function,
-    full_trajectory_prefix,
     full_trajectory_suffix,
     PROFILE_DEVIATION_WEIGHT,
     MARKET_TIME,
