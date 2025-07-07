@@ -9,6 +9,7 @@ from flexibility_quantification.data_structures.mpcs import (
 from flexibility_quantification.data_structures.globals import (
     SHADOW_MPC_COST_FUNCTION,
     return_baseline_cost_function,
+    full_trajectory_prefix,
     full_trajectory_suffix,
     PROFILE_DEVIATION_WEIGHT,
     MARKET_TIME,
@@ -204,9 +205,6 @@ class SetupSystemModifier(ast.NodeTransformer):
         for body in node.body:
             # add the time and full baseline control trajectory as inputs
             if body.target.id == "inputs":
-                body.value.elts.append(
-                    add_input("Time", 0, "s", "time trajectory", "list")
-                )
                 for control in self.controls:
                     body.value.elts.append(
                         add_input(
@@ -275,9 +273,6 @@ class SetupSystemModifier(ast.NodeTransformer):
                     # Complex case with concatenated lists or tuple
                     value_list = self.get_leftmost_list(body.value)
                 value_list.elts.append(
-                    add_input("Time", 0, "s", "time trajectory", "list")
-                )
-                value_list.elts.append(
                     add_input(
                         "_P_external",
                         0,
@@ -344,7 +339,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                         node.body.insert(
                             0,
                             ast.parse(
-                                f"{control.name}_upper = ca.if_else(self.Time.sym < self.market_time.sym, "
+                                f"{control.name}_upper = ca.if_else(self.time < self.market_time.sym, "
                                 f"self.{control.name}{full_trajectory_suffix}.sym, "
                                 f"self.{control.name}.ub)"
                             ).body[0],
@@ -352,7 +347,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                         node.body.insert(
                             0,
                             ast.parse(
-                                f"{control.name}_lower = ca.if_else(self.Time.sym < self.market_time.sym, "
+                                f"{control.name}_lower = ca.if_else(self.time < self.market_time.sym, "
                                 f"self.{control.name}{full_trajectory_suffix}.sym, "
                                 f"self.{control.name}.lb)"
                             ).body[0],
@@ -373,7 +368,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                             node.body.insert(
                                 0,
                                 ast.parse(
-                                    f"{control.name}_upper = ca.if_else(self.Time.sym < self.market_time.sym, "
+                                    f"{control.name}_upper = ca.if_else(self.time < self.market_time.sym, "
                                     f"self.{control.name}{full_trajectory_suffix}.sym, "
                                     f"self.{control.name}.ub)"
                                 ).body[0],
@@ -381,7 +376,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                             node.body.insert(
                                 0,
                                 ast.parse(
-                                    f"{control.name}_lower = ca.if_else(self.Time.sym < self.market_time.sym, "
+                                    f"{control.name}_lower = ca.if_else(self.time < self.market_time.sym, "
                                     f"self.{control.name}{full_trajectory_suffix}.sym, "
                                     f"self.{control.name}.lb)"
                                 ).body[0],
