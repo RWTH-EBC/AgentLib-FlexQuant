@@ -133,8 +133,8 @@ def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig):
     if "states" in parent_dict:
         parent_dict["states"] = [state.dict(exclude=check_bounds(state)) for state in module.states]
     if "full_controls" in parent_dict:
-        parent_dict["full_controls"] = [full_control.dict(exclude=check_bounds(full_control).remove('shared')) for
-                                        full_control in module.full_controls]
+        parent_dict["full_controls"] = [full_control.dict(exclude=(lambda ex: ex.remove('shared') or ex)(check_bounds(full_control)))
+                                        for full_control in module.full_controls]
 
     return parent_dict
 

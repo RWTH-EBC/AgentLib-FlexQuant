@@ -44,7 +44,7 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
             # get the corresponding control name
             control = self._controls_name_mapping[full_control.name]
             # set value to full_control
-            self.set(full_control.name, solution.df.variable[control].dropna())
+            self.set(full_control.name, solution.df.variable[control].ffill())
 
 
 class FlexibilityBaselineMINLPMPCConfig(minlp_mpc.MINLPMPCConfig):
