@@ -393,8 +393,8 @@ class FlexAgentGenerator:
             module_config.shared_variable_fields = ["outputs"]
         else:
             for control in module_config.controls:
-                module_config.full_controls.append(AgentVariable(name=control.name+glbs.full_trajectory_suffix,
-                                                                 alias=control.name+glbs.full_trajectory_suffix,
+                module_config.full_controls.append(AgentVariable(name=control.name + glbs.full_trajectory_suffix,
+                                                                 alias=control.name + glbs.full_trajectory_suffix,
                                                                  shared=True))
             if hasattr(module_config, "binary_controls"):
                 for binary_controls in module_config.binary_controls:
