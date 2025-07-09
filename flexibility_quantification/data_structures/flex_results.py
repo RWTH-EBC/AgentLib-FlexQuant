@@ -123,9 +123,7 @@ class Results:
         config_filename_neg_flex = NFMPCData.model_validate(
             self.generator_config.shadow_mpc_config_generator_data.neg_flex
         ).name_of_created_file
-        config_filename_indicator = str(
-            self.generator_config.indicator_config.name_of_created_file
-        )
+        config_filename_indicator = self.generator_config.indicator_config.name_of_created_file
         if self.generator_config.market_config:
             if self.generator_config.market_config is str or Path:
                 config_filename_market = FlexibilityMarketConfig.parse_file(
