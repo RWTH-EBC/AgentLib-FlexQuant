@@ -65,8 +65,9 @@ class Dashboard(flex_results.Results):
 
     def __init__(
         self,
-        flex_config: Union[str, FilePath, FlexQuantConfig],
-        simulator_agent_config: Union[str, FilePath, AgentConfig],
+        flex_config: Optional[Union[str, FilePath, FlexQuantConfig]] = None,
+        simulator_agent_config: Optional[Union[str, FilePath, AgentConfig]] = None,
+        generated_flex_files_base_path: Optional[Union[str, FilePath]] = None,
         results: Union[str, FilePath, dict[str, dict[str, pd.DataFrame]]] = None,
         to_timescale: TimeConversionTypes = "hours",
         port: int = None
@@ -74,6 +75,7 @@ class Dashboard(flex_results.Results):
         super().__init__(
             flex_config=flex_config,
             simulator_agent_config=simulator_agent_config,
+            generated_flex_files_base_path=generated_flex_files_base_path,
             results=results,
             to_timescale=to_timescale,
         )
@@ -335,6 +337,9 @@ class Dashboard(flex_results.Results):
 
         def plot_flexibility_kpi(fig: go.Figure, variable) -> go.Figure:
             df_ind = self.df_indicator.xs(0, level=1)
+            # if the variable only has NaN, don't plot
+            if df_ind[self.kpi_names_pos[variable]].isna().all():
+                return
             fig.add_trace(
                 go.Scatter(
                     name=self.label_positive,

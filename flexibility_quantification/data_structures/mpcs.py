@@ -51,7 +51,8 @@ class BaselineMPCData(BaseMPCData):
         description="Weight of soft constraint for deviation from accepted flexible profile",
     )
     power_unit: str = pydantic.Field(
-        default="kW", description="Unit of the power variable"
+        default="kW", 
+        description="Unit of the power variable"
     )
     comfort_variable: str = pydantic.Field(
         default=None,

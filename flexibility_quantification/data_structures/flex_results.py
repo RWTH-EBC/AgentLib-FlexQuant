@@ -1,3 +1,4 @@
+from copy import deepcopy
 from typing import Union, Optional
 
 import agentlib
@@ -88,21 +89,29 @@ class Results:
 
     def __init__(
         self,
-        flex_config: Union[str, FilePath],
-        simulator_agent_config: Optional[Union[str, FilePath]],
-        results: Union[str, FilePath, dict[str, dict[str, pd.DataFrame]]] = None,
+        flex_config: Optional[Union[str, FilePath, dict]],
+        simulator_agent_config: Optional[Union[str, FilePath, dict]],
+        generated_flex_files_base_path: Optional[Union[str, FilePath]] = None,
+        results: Optional[Union[str, FilePath, dict[str, dict[str, pd.DataFrame]], "Results"]] = None,
         to_timescale: TimeConversionTypes = "seconds",
-        base_folder: str = ""
     ):
+        if isinstance(results, Results):
+            # Already a Results instance — copy over its data
+            self.__dict__ = deepcopy(results.__dict__)
+            return
+        # if generated flex files are saved at a custom base directory and path is provided,
+        # update and overwrite the path "flex_base_directory_path" in flex_config
+        # By default: current working directory is used as base
+        if generated_flex_files_base_path is not None:
+            if isinstance(flex_config, (str, Path)):
+                with open(flex_config, "r") as f:
+                    flex_config = json.load(f)
+            flex_config["flex_base_directory_path"] = str(generated_flex_files_base_path)
         # load configs of agents and modules
         # Generator config
         self.generator_config = load_config.load_config(
             config=flex_config, config_type=FlexQuantConfig
         )
-        # get base path from flex_config to use relative paths
-        self.base_path = cmng.subtract_relative_path(os.path.abspath(os.path.normpath(os.path.join(base_folder, self.generator_config.path_to_flex_files))),
-                                                     os.path.normpath(self.generator_config.path_to_flex_files))
-
 
         # get names of the config files
         config_filename_baseline = BaselineMPCData.model_validate(
@@ -114,9 +123,7 @@ class Results:
         config_filename_neg_flex = NFMPCData.model_validate(
             self.generator_config.shadow_mpc_config_generator_data.neg_flex
         ).name_of_created_file
-        config_filename_indicator = (
-            self.generator_config.indicator_config.name_of_created_file
-        )
+        config_filename_indicator = self.generator_config.indicator_config.name_of_created_file
         if self.generator_config.market_config:
             if self.generator_config.market_config is str or Path:
                 config_filename_market = FlexibilityMarketConfig.parse_file(
@@ -130,8 +137,12 @@ class Results:
         # load the agent and module configs
         if simulator_agent_config:
             # (don't validate config, as result file is deleted in simulator validator)
-            with open(simulator_agent_config, "r") as f:
-                sim_config = json.load(f)
+            # check config type: with results path adaptation -> dict; without -> str/Path
+            if isinstance(simulator_agent_config, (str, Path)):
+                with open(simulator_agent_config, "r") as f:
+                    sim_config = json.load(f)
+            elif isinstance(simulator_agent_config, dict):
+                sim_config = simulator_agent_config
             self.simulator_agent_config = AgentConfig.construct(**sim_config)
             for module in self.simulator_agent_config.modules:
                 if module["type"] == "simulator":
@@ -141,7 +152,7 @@ class Results:
         else:
              self.simulator_agent_config = None
 
-        for file_path in Path(os.path.join(self.base_path, self.generator_config.path_to_flex_files)).rglob("*.json"):
+        for file_path in Path(self.generator_config.flex_files_directory).rglob("*.json"):
             if file_path.name in config_filename_baseline:
                 self.baseline_agent_config = load_config.load_config(
                     config=file_path, config_type=AgentConfig
@@ -191,13 +202,13 @@ class Results:
 
         # load results
         if results is None:
-            results_path = Path(os.path.join(self.base_path, self.indicator_module_config.results_file)).parent
+            results_path = self.generator_config.results_directory
             results = self._load_results(res_path=results_path)
         if isinstance(results, (str, Path)):
             results_path = results
             results = self._load_results(res_path=results_path)
         elif isinstance(results, dict):
-            results_path = Path(os.path.join(self.base_path, self.indicator_module_config.results_file)).parent
+            results_path = self.generator_config.results_directory
         else:
             raise ValueError("results must be a path or dict")
 
@@ -296,12 +307,14 @@ class Results:
             },
             self.indicator_agent_config.id: {
                 self.indicator_module_config.module_id: load_indicator(
-                    Path(res_path, Path(self.indicator_module_config.results_file).name)
+                    Path(
+                        res_path,
+                        Path(self.indicator_module_config.results_file).name,
+                    )
                 )
             }
         }
         if self.simulator_agent_config:
-
             res[self.simulator_agent_config.id] = {
                 self.simulator_module_config.module_id: load_sim(
                     Path(
@@ -313,7 +326,10 @@ class Results:
         if self.generator_config.market_config:
             res[self.market_agent_config.id] = {
                 self.market_module_config.module_id: load_market(
-                    Path(res_path, Path(self.market_module_config.results_file).name)
+                    Path(
+                        res_path,
+                        Path(self.market_module_config.results_file).name,
+                    )
                 )
             }
         return res

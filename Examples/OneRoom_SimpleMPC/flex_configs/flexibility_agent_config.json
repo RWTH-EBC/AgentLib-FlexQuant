@@ -44,7 +44,11 @@
                     ],
                     "correct_costs": {"enable_energy_costs_correction": true,
                                       "absolute_power_deviation_tolerance": 0.05,
-                                      "stored_energy_variable": "E_out"}
+                                      "stored_energy_variable": "E_out"},
+                    "calculate_costs": {"calculate_flex_costs": true,
+                                        "use_constant_electricity_price": true,
+                                        "const_electricity_price": 10}
+
                 }
             ]
         },
