@@ -132,6 +132,8 @@ def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig):
         parent_dict["outputs"] = [output.dict(exclude=check_bounds(output)) for output in module.outputs]
     if "controls" in parent_dict:
         parent_dict["controls"] = [control.dict(exclude=check_bounds(control)) for control in module.controls]
+    if "binary_controls" in parent_dict:
+        parent_dict["binary_controls"] = [binary_control.dict(exclude=check_bounds(binary_control)) for binary_control in module.binary_controls]
     if "states" in parent_dict:
         parent_dict["states"] = [state.dict(exclude=check_bounds(state)) for state in module.states]
     if "full_controls" in parent_dict:
