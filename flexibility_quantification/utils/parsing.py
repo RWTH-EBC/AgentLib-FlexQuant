@@ -208,7 +208,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                     body.value.elts.append(
                         add_input(
                             f"{control.name}{full_trajectory_suffix}",
-                            0,
+                            None,
                             control.unit,
                             "full control trajectory output of baseline mpc",
                             "pd.Series",
@@ -220,7 +220,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                         body.value.elts.append(
                             add_input(
                                 f"{control.name}{full_trajectory_suffix}",
-                                0,
+                                None,
                                 control.unit,
                                 "full control trajectory output of baseline mpc",
                                 "pd.Series",
