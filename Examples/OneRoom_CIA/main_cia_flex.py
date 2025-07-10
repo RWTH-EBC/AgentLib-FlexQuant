@@ -10,6 +10,7 @@ from agentlib_mpc.utils.analysis import mpc_at_time_step
 from flexibility_quantification.generate_flex_agents import FlexAgentGenerator
 import logging
 import pandas as pd
+from flexibility_quantification.utils.interactive import Dashboard
 
 # Set the log-level
 logging.basicConfig(level=logging.WARN)
@@ -152,6 +153,11 @@ def run_example(until=until):
 
     plt.show()
 
+    Dashboard(
+        flex_config="flex_configs/flexibility_agent_config.json",
+        simulator_agent_config="mpc_and_sim/simple_cia_sim.json",
+        results=results
+    ).show()
 
 if __name__ == "__main__":
     run_example(until)
