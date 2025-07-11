@@ -367,7 +367,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             elif name == glbs.STORED_ENERGY_ALIAS_POS:
                 values = self.data.stored_energy_profile_flex_pos
             elif name == self.config.price_variable:
-                values = self.data.format_predictor_inputs(self.get(name).value)
+                values = self.data.electricity_price_series
             else:
                 values = self.get(name).value
 
@@ -382,17 +382,17 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             new_df = pd.DataFrame(results).T
             new_df.columns = self.var_list
             # Rename time_step variable column
-            new_df.rename(columns={"time_step": "time_step_mpc"}, inplace=True)
+            new_df.rename(columns={glbs.TIME_STEP: f"{glbs.TIME_STEP}_mpc"}, inplace=True)
             new_df.index.direction = "time"
-            new_df["time_step"] = now
-            new_df.set_index(["time_step", new_df.index], inplace=True)
+            new_df[glbs.TIME_STEP] = now
+            new_df.set_index([glbs.TIME_STEP, new_df.index], inplace=True)
             df = pd.concat([df, new_df])
             # set the indices once again as concat cant handle indices properly
-            indices = pd.MultiIndex.from_tuples(df.index, names=["time_step", "time"])
+            indices = pd.MultiIndex.from_tuples(df.index, names=[glbs.TIME_STEP, "time"])
             df.set_index(indices, inplace=True)
-            # Drop column time_step and keep it as an index onlys
-            if "time_step" in df.columns:
-                df.drop(columns=["time_step"], inplace=True)
+            # Drop column time_step and keep it as an index only
+            if glbs.TIME_STEP in df.columns:
+                df.drop(columns=[glbs.TIME_STEP], inplace=True)
 
         return df
 
