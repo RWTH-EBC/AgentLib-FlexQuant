@@ -69,17 +69,19 @@ class FlexibilityIndicatorConfig(pydantic.BaseModel):
         extra='forbid'
     )
     agent_config: AgentConfig
-    name_of_created_file: Path = pydantic.Field(
-        default=Path("indicator.json"),
+    name_of_created_file: str = pydantic.Field(
+        default="indicator.json",
         description="Name of the config that is created by the generator",
     )
     @model_validator(mode="after")
     def check_file_extension(self):
-        if self.name_of_created_file and self.name_of_created_file.suffix != ".json":
-            raise ConfigurationError(
-                f"Invalid file extension for name_of_created_file: '{self.name_of_created_file}'. "
-                f"Expected a '.json' file."
-            )
+        if self.name_of_created_file: 
+            file_path = Path(self.name_of_created_file)
+            if file_path.suffix != ".json":
+                raise ConfigurationError(
+                    f"Invalid file extension for name_of_created_file: '{self.name_of_created_file}'. "
+                    f"Expected a '.json' file."
+                )
         return self
 
 
