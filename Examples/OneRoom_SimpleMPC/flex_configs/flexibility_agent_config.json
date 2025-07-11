@@ -36,12 +36,6 @@
                             "value": 48
                         }
                     ],
-                    "inputs": [
-                        {
-                            "name": "r_pel",
-                            "alias": "r_pel"
-                        }
-                    ],
                     "correct_costs": {"enable_energy_costs_correction": true,
                                       "absolute_power_deviation_tolerance": 0.05,
                                       "stored_energy_variable": "E_out"},
@@ -71,8 +65,9 @@
             "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, -self.s_P * self.P_el])"
         }
     },
-    "casadi_sim_time_step" : 100,
-    "path_to_flex_files": "created_flex_files",
+    "casadi_sim_time_step" : 0,
+    "flex_files_directory": "created_flex_files",
+    "results_directory": "Examples/OneRoom_SimpleMPC/results",
     "delete_files": false,
     "overwrite_files": true
 }
