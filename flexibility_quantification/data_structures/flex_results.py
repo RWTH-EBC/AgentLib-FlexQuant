@@ -1,4 +1,4 @@
-from copy import deepcopy
+import copy
 from typing import Union, Optional, Dict, Any, List, Type
 
 import agentlib
@@ -12,7 +12,7 @@ from agentlib.core.agent import AgentConfig
 from agentlib.core.module import BaseModuleConfig
 from agentlib.utils import load_config
 from agentlib_mpc.modules.mpc import BaseMPCConfig
-from agentlib.modules.simulator import SimulatorConfig
+from agentlib.modules.simulation.simulator import SimulatorConfig
 from flexibility_quantification.data_structures.flexquant import (
     FlexQuantConfig,
     FlexibilityIndicatorConfig,
@@ -97,7 +97,7 @@ class Results:
     ):
         if isinstance(results, Results):
             # Already a Results instance — copy over its data
-            self.__dict__ = results.__dict__.copy()
+            self.__dict__ = copy.deepcopy(results).__dict__
             return
         # if generated flex files are saved at a custom base directory and path is provided,
         # update and overwrite the path "flex_base_directory_path" in flex_config
@@ -123,9 +123,7 @@ class Results:
         config_filename_neg_flex = NFMPCData.model_validate(
             self.generator_config.shadow_mpc_config_generator_data.neg_flex
         ).name_of_created_file
-        config_filename_indicator = str(
-            self.generator_config.indicator_config.name_of_created_file
-        )
+        config_filename_indicator = self.generator_config.indicator_config.name_of_created_file
         if self.generator_config.market_config:
             if self.generator_config.market_config is str or Path:
                 config_filename_market = FlexibilityMarketConfig.parse_file(
@@ -438,4 +436,29 @@ class Results:
         for field, value in skipped_fields.items():
             # bypass pydantic immutability to directly set attribute value
             object.__setattr__(instance, field, value)
+        # Store metadata about bypassed fields for deepcopy compatibility
+        object.__setattr__(instance, '_bypassed_fields', skip_fields)
+        object.__setattr__(instance, '_original_config', config)
         return instance
+    
+    def __deepcopy__(self, memo: Dict[int, Any]) -> "Results":
+        """
+        Custom deepcopy implementation that handles Pydantic models with bypassed validation.
+        """
+        # Create a new instance of the same class
+        new_instance = self.__class__.__new__(self.__class__)
+        # Add to memo immediately to prevent circular reference issues
+        memo[id(self)] = new_instance
+        for key, value in self.__dict__.items():
+            if key in ['simulator_module_config'] and hasattr(value, '_original_config'):
+                # Reconstruct the specific problematic object instead of deepcopying
+                new_value = self.create_instance_with_skipped_validation(
+                    model_class=value.__class__,
+                    config=copy.deepcopy(value._original_config, memo),
+                    skip_fields=getattr(value, '_bypassed_fields', [])
+                )
+                setattr(new_instance, key, new_value)
+            else:
+                # Everything else should deepcopy normally
+                setattr(new_instance, key, copy.deepcopy(value, memo))
+        return new_instance
