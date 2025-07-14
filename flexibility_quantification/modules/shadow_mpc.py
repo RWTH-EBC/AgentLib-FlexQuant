@@ -6,6 +6,8 @@ from flexibility_quantification.data_structures.globals import (
 )
 from typing import Dict, Union
 from agentlib.core.datamodels import AgentVariable
+from agentlib_mpc.data_structures.mpc_datamodels import Results
+
 
 
 class FlexibilityShadowMPC(mpc_full.MPC):
@@ -63,6 +65,17 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         # the shadow mpc should only be run after the results of the baseline are sent
         yield self.env.event()
 
+    def set_actuation(self, solution: Results):
+        """Takes the solution from optimization backend and sends the first
+        step to AgentVariables."""
+        self.logger.info("Sending optimal control values to data_broker.")
+        tolerance = 1e-5
+        for control in self.var_ref.controls:
+            ub = self.get(control).ub
+            lb = self.get(control).lb
+            # take the first entry of the control trajectory
+            actuation = solution.df.variable[control].dropna()
+            self.set(control, actuation)
 
 class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
 
