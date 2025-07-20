@@ -123,7 +123,7 @@ class FlexQuantConfig(pydantic.BaseModel):
         description="Shadow mpc generator data config file or dict",
     )
     flex_base_directory_path: Optional[Path] = pydantic.Field(
-        default_factory=lambda: Path.cwd() / "flex_output_data",
+        default_factory=lambda: Path.cwd() ,#/ "flex_output_data",
         description="Base path where generated flex data is stored",
     )
     flex_files_directory: Path = pydantic.Field(
