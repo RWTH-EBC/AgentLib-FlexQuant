@@ -240,7 +240,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             if variable.name in [glbs.FlexibilityOffer]:
                 continue
             self.var_list.append(variable.name)
-        self.time = []
+        self.sim_time = []
         self.in_provision = False
         self.offer_count = 0
         self.data = FlexibilityData(
@@ -378,7 +378,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             results.append(traj)
 
         if not now % ts:
-            self.time.append(now)
+            self.sim_time.append(now)
             new_df = pd.DataFrame(results).T
             new_df.columns = self.var_list
             # Rename time_step variable column
