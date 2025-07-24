@@ -1,19 +1,15 @@
 import ast
+import astor
 import atexit
 import black
 import os
 import inspect
 import logging
-import flexibility_quantification.data_structures.globals as glbs
-import flexibility_quantification.utils.config_management as cmng
+import json
 from typing import Union, List
 from pydantic import FilePath
 from pathlib import Path
 from copy import deepcopy
-from pathlib import Path
-import astor
-import black
-import json
 from agentlib.core.agent import AgentConfig
 from agentlib.core.datamodels import AgentVariable
 from agentlib.core.errors import ConfigurationError
@@ -22,8 +18,6 @@ from agentlib.utils import custom_injection, load_config
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from agentlib_mpc.models.casadi_model import CasadiModelConfig
 from agentlib_mpc.modules.mpc_full import BaseMPCConfig
-from pydantic import FilePath
-
 import flexibility_quantification.data_structures.globals as glbs
 import flexibility_quantification.utils.config_management as cmng
 from flexibility_quantification.utils.parsing import (
@@ -44,7 +38,7 @@ from flexibility_quantification.modules.flexibility_indicator import (
 )
 from flexibility_quantification.modules.flexibility_market import (
     FlexibilityMarketModuleConfig
-)   #TODO: clean up import
+)
 
 class FlexAgentGenerator:
     orig_mpc_module_config: BaseMPCConfig

@@ -1,19 +1,15 @@
-import pydantic
-from pydantic import ConfigDict, field_validator
-from pathlib import Path
-from typing import Union, List, Optional
+from pydantic import field_validator, ConfigDict, model_validator, Field, BaseModel
 from enum import Enum
 from pathlib import Path
 from typing import List, Optional, Union
 from agentlib.core.agent import AgentConfig
 from agentlib.core.errors import ConfigurationError
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
-from pydantic import ConfigDict, model_validator
 from flexibility_quantification.data_structures.mpcs import (
     BaselineMPCData,
     NFMPCData,
     PFMPCData
-) #TODO: clean up import
+) 
 
 
 class ForcedOffers(Enum):
@@ -21,21 +17,21 @@ class ForcedOffers(Enum):
     negative = "negative"
 
 
-class ShadowMPCConfigGeneratorConfig(pydantic.BaseModel):
+class ShadowMPCConfigGeneratorConfig(BaseModel):
     """Class defining the options to initialize the shadow mpc config generation."""
     model_config = ConfigDict(
         json_encoders={MPCVariable: lambda v: v.dict()},
         extra='forbid'
     )
-    weights: List[MPCVariable] = pydantic.Field(
+    weights: List[MPCVariable] = Field(
         default=[],
         description="Name and value of weights",
     )
-    pos_flex: PFMPCData = pydantic.Field(
+    pos_flex: PFMPCData = Field(
         default=None,
         description="Data for PF-MPC"
     )
-    neg_flex: NFMPCData = pydantic.Field(
+    neg_flex: NFMPCData = Field(
         default=None,
         description="Data for NF-MPC"
     )
@@ -51,26 +47,26 @@ class ShadowMPCConfigGeneratorConfig(pydantic.BaseModel):
         return self
 
 
-class FlexibilityMarketConfig(pydantic.BaseModel):
+class FlexibilityMarketConfig(BaseModel):
     """Class defining the options to initialize the market."""
     model_config = ConfigDict(
         extra='forbid'
     )
     agent_config: AgentConfig
-    name_of_created_file: str = pydantic.Field(
+    name_of_created_file: str = Field(
         default="flexibility_market.json",
         description="Name of the config that is created by the generator",
     )
 
 
-class FlexibilityIndicatorConfig(pydantic.BaseModel):
+class FlexibilityIndicatorConfig(BaseModel):
     """Class defining the options for the flexibility indicators."""
     model_config = ConfigDict(
         json_encoders={Path: str, AgentConfig: lambda v: v.model_dump()},
         extra='forbid'
     )
     agent_config: AgentConfig
-    name_of_created_file: str = pydantic.Field(
+    name_of_created_file: str = Field(
         default="indicator.json",
         description="Name of the config that is created by the generator",
     )
@@ -86,64 +82,66 @@ class FlexibilityIndicatorConfig(pydantic.BaseModel):
         return self
 
 
-class FlexQuantConfig(pydantic.BaseModel):
+class FlexQuantConfig(BaseModel):
     """Class defining the options to initialize the FlexQuant generation."""
     model_config = ConfigDict(
         json_encoders={Path: str},
         extra='forbid'
     )
-    prep_time: int = pydantic.Field(
+    prep_time: int = Field(
         default=1800,
         ge=0,
         unit="s",
         description="Preparation time before the flexibility event",
     )
-    flex_event_duration: int = pydantic.Field(
+    flex_event_duration: int = Field(
         default=7200,
         ge=0,
         unit="s",
         description="Flexibility event duration",
     )
-    market_time: int = pydantic.Field(
+    market_time: int = Field(
         default=900,
         ge=0,
         unit="s",
         description="Time for market interaction",
     )
-    indicator_config: Union[FlexibilityIndicatorConfig, Path] = pydantic.Field(
+    indicator_config: Union[FlexibilityIndicatorConfig, Path] = Field(
         description="Path to the file or dict of flexibility indicator config",
     )
-    market_config: Optional[Union[FlexibilityMarketConfig, Path]] = pydantic.Field(
+    market_config: Optional[Union[FlexibilityMarketConfig, Path]] = Field(
         default=None,
         description="Path to the file or dict of market config",
     )
-    baseline_config_generator_data: BaselineMPCData = pydantic.Field(
+    baseline_config_generator_data: BaselineMPCData = Field(
         description="Baseline generator data config file or dict",
     )
-    shadow_mpc_config_generator_data: ShadowMPCConfigGeneratorConfig = pydantic.Field(
+    shadow_mpc_config_generator_data: ShadowMPCConfigGeneratorConfig = Field(
         description="Shadow mpc generator data config file or dict",
     )
-    casadi_sim_time_step: int = pydantic.Field(
+    casadi_sim_time_step: int = Field(
         default=0,
-        description="Simulate over the prediction horizon with a defined resolution using Casadi simulator. Set to 0 to skip simulation",
+        description="Simulate over the prediction horizon with a defined resolution using Casadi simulator. "
+                    "Only use it when the power depends on the states. Don't use it when power itself is the control variable."
+                    "Set to 0 to skip simulation",
     )
-    flex_base_directory_path: Optional[Path] = pydantic.Field(
+    flex_base_directory_path: Optional[Path] = Field(
         default_factory=lambda: Path.cwd() / "flex_output_data",
         description="Base path where generated flex data is stored",
     )
-    flex_files_directory: Path = pydantic.Field(
+    flex_files_directory: Path = Field(
         default="created_flex_files",
         description="Directory where generated files (jsons) should be stored",
     )
-    results_directory: Path = pydantic.Field(
+    results_directory: Path = Field(
         default="results",
         description="Directory where generated result files (CSVs) should be stored",
     )
-    delete_files: bool = pydantic.Field(
+    delete_files: bool = Field(
         default=True,
         description="If generated files should be deleted afterwards",
     )
-    overwrite_files: bool = pydantic.Field(
+    overwrite_files: bool = Field(
         default=False,
         description="If generated files should be overwritten by new files",
     )
@@ -174,7 +172,6 @@ class FlexQuantConfig(pydantic.BaseModel):
         if value < 0:
             raise ValueError(f'{value} is not a non-negative integer')
         return value
-
 
     @model_validator(mode="after")
     def adapt_paths_and_create_directory(self):
