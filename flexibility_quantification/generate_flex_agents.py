@@ -429,10 +429,9 @@ class FlexAgentGenerator:
                 )
             )
         # add or change alias for stored energy variable
-        if self.indicator_module_config.correct_costs.enable_energy_costs_correction:
-            output_dict[
-                self.indicator_module_config.correct_costs.stored_energy_variable
-            ].alias = mpc_dataclass.stored_energy_alias
+        output_dict[
+            self.indicator_module_config.correct_costs.stored_energy_variable
+        ].alias = mpc_dataclass.stored_energy_alias
 
         # add extra inputs needed for activation of flex
         module_config_flex.inputs.extend(mpc_dataclass.config_inputs_appendix)

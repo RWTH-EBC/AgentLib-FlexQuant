@@ -11,6 +11,9 @@ PROFILE_COMFORT_WEIGHT = "profile_comfort_weight"
 TIME_STEP = "time_step"
 PREDICTION_HORIZON = "prediction_horizon"
 FlexibilityOffer = "FlexibilityOffer"
+LINEAR = 'linear'
+CONSTANT = 'constant'
+INTEGRATION_METHOD = Literal[LINEAR, CONSTANT]
 
 FlexibilityDirections = Literal["positive", "negative"]
 
