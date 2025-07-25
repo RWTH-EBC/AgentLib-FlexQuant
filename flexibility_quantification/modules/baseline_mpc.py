@@ -173,7 +173,7 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
             current_sim_time = i * sim_time_step
 
             # Apply control and input values from the appropriate MPC step
-            for control, value in zip(self.var_ref.controls, control_values_full.loc[current_sim_time]): #TODO: set the right input value
+            for control, value in zip(self.var_ref.controls, control_values_full.loc[current_sim_time]):
                 self.flex_model.set(control, value)
 
             for input_var, value in zip(self.var_ref.inputs, input_values_full.loc[current_sim_time]):
