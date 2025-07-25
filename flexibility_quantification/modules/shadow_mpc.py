@@ -204,26 +204,21 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         control_values = result_df.variable[self.var_ref.controls].dropna()
         input_values = result_df.parameter[self.var_ref.inputs].dropna()
 
-        # For each simulation step, determine which MPC interval we're in
-        current_control_idx = 0
-        last_control_time = 0
+        # Get the simulation time step index
+        sim_time_index = np.arange(0, (n_simulation_steps + 1) * sim_time_step, sim_time_step)
 
-        control_dict = {}
+        # Reindex the controls and inputs to sim_time_index
+        control_values_full = control_values.copy().reindex(sim_time_index, method='ffill')
+        input_values_full = input_values.copy().reindex(sim_time_index, method='nearest')
 
         for i in range(0, n_simulation_steps):
             current_sim_time = i * sim_time_step
 
-            # Check if the control values need to be updated
-            if current_sim_time >= last_control_time + mpc_time_step and current_control_idx < len(control_values) - 1:
-                current_control_idx += 1
-                last_control_time += mpc_time_step
-
             # Apply control and input values from the appropriate MPC step
-            for control, value in zip(self.var_ref.controls, control_values.iloc[current_control_idx]):
+            for control, value in zip(self.var_ref.controls, control_values_full.loc[current_sim_time]):  # TODO: set the right input value
                 self.flex_model.set(control, value)
-            control_dict[current_sim_time] = value
 
-            for input_var, value in zip(self.var_ref.inputs, input_values.iloc[current_control_idx]):
+            for input_var, value in zip(self.var_ref.inputs, input_values_full.loc[current_sim_time]):
                 self.flex_model.set(input_var, value)
 
             # do integration
@@ -239,7 +234,6 @@ class FlexibilityShadowMPC(mpc_full.MPC):
                 self.flex_results.loc[(
                     self.env.now, current_sim_time + t_sample), output] = self.flex_model.get_output(
                     output).value
-
 
 class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
 
