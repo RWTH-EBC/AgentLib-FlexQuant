@@ -1,17 +1,26 @@
-import agentlib
-from typing import List, Optional, Union
-import pandas as pd
-import numpy as np
 import os
-from flexibility_quantification.data_structures.flex_offer import OfferStatus
-import pydantic
 from pathlib import Path
-from flexibility_quantification.data_structures.market import MarketSpecifications
+from typing import List, Optional, Union
+
+import agentlib
+import numpy as np
+import pandas as pd
+import pydantic
+from agentlib.core.errors import ConfigurationError
+from pydantic import model_validator
+
+from flexibility_quantification.data_structures.flex_offer import OfferStatus
+from flexibility_quantification.data_structures.market import (
+    MarketSpecifications
+)
 
 
 class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
     # parameters: List[agentlib.AgentVariable] = [
     # ]
+    model_config = pydantic.ConfigDict(
+        extra='forbid'
+    )
     inputs: List[agentlib.AgentVariable] = [
         agentlib.AgentVariable(name="FlexibilityOffer")
     ]
@@ -36,11 +45,25 @@ class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
 
     market_specs: MarketSpecifications
 
-    results_file: Optional[Path] = pydantic.Field(default=None)
-    save_results: Optional[bool] = pydantic.Field(validate_default=True, default=None)
-    overwrite_result_file: Optional[bool] = pydantic.Field(default=False, validate_default=True)
+    results_file: Optional[Path] = pydantic.Field(
+        default=Path("flexibility_market.csv"),
+        description="User specified results file name"
+    )
+    save_results: Optional[bool] = pydantic.Field(
+        validate_default=True, 
+        default=True
+    )
 
     shared_variable_fields: List[str] = ["outputs"]
+
+    @model_validator(mode="after")
+    def check_results_file_extension(self):
+        if self.results_file and self.results_file.suffix != ".csv":
+            raise ValueError(
+                f"Invalid file extension for 'results_file': '{self.results_file}'. "
+                f"Expected a '.csv' file."
+            )
+        return self
 
 
 class FlexibilityMarketModule(agentlib.BaseModule):
@@ -100,7 +123,9 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         self.df = pd.concat((self.df, df.set_index(multi_index)))
         indices = pd.MultiIndex.from_tuples(self.df.index, names=["time_step", "time"])
         self.df.set_index(indices, inplace=True)
-        self.df.to_csv(self.config.results_file)
+
+        if self.config.save_results:
+            self.df.to_csv(self.config.results_file)
 
     def random_flexibility_callback(self, inp, name):
         """
@@ -150,7 +175,10 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         """
         offer = inp.value
         profile = None
-        if self.env.now >= self.env.config.offset + self.config.market_specs.options.start_time and not self.get("in_provision").value:
+        t_sample = offer.base_power_profile.index[1]-offer.base_power_profile.index[0]
+        acceptance_time_lower = self.env.config.offset + self.config.market_specs.options.start_time
+        acceptance_time_upper = self.env.config.offset + self.config.market_specs.options.start_time + t_sample
+        if acceptance_time_lower <= self.env.now < acceptance_time_upper and not self.get("in_provision").value:
             if self.config.market_specs.options.direction == "positive":
                 if np.average(offer.pos_diff_profile) > self.config.market_specs.minimum_average_flex:
                     profile = offer.base_power_profile - offer.pos_diff_profile
@@ -164,8 +192,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                 profile = profile.dropna()
                 profile.index += self.env.time
                 self.set("_P_external", profile)
-                # only activate a single offer, therefore setting end to inf
-                self.end = np.inf
+                self.end = profile.index[-1]
                 self.set("in_provision", True)
 
         self.write_results(offer)

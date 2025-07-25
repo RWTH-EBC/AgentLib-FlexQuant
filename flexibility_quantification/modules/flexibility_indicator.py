@@ -1,15 +1,19 @@
-import os
 import logging
-from typing import Optional, List
+import os
+from pathlib import Path
+from typing import List, Optional
+
 import agentlib
 import numpy as np
 import pandas as pd
-from pathlib import Path
-from pydantic import BaseModel, Field, field_validator
-
+from agentlib.core.errors import ConfigurationError
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 import flexibility_quantification.data_structures.globals as glbs
-from flexibility_quantification.data_structures.flex_kpis import FlexibilityData, FlexibilityKPIs
+from flexibility_quantification.data_structures.flex_kpis import (
+    FlexibilityData,
+    FlexibilityKPIs
+)
 from flexibility_quantification.data_structures.flex_offer import FlexOffer
 
 
@@ -17,7 +21,7 @@ class InputsForCorrectFlexCosts(BaseModel):
     enable_energy_costs_correction: bool = Field(
         name="enable_energy_costs_correction",
         description="Variable determining whether to correct the costs of the flexible energy"
-                    "Define the storage variable 'E_stored' in the base MPC model and config as output if the correction of costs is enabled",
+                    "Define the variable for stored electrical energy in the base MPC model and config as output if the correction of costs is enabled",
         default=False
     )
 
@@ -27,6 +31,34 @@ class InputsForCorrectFlexCosts(BaseModel):
         description="Absolute tolerance in kW within which no warning is thrown"
     )
 
+    stored_energy_variable: str = Field(
+        name="stored_energy_variable",
+        default="E_stored",
+        description="Name of the variable representing the stored electrical energy in the baseline config"
+    )
+
+class InputsForCalculateFlexCosts(BaseModel):
+    use_constant_electricity_price: bool = Field(
+        default=False,
+        description="Use constant electricity price"
+    )
+    calculate_flex_costs: bool = Field(
+        default=True,
+        description="Calculate the flexibility cost"
+    )
+    const_electricity_price: float = Field(
+        default=np.nan,
+        description="constant electricity price in ct/kWh"
+    )
+
+    @model_validator(mode="after")
+    def validate_constant_price(cls, model):
+        if model.use_constant_electricity_price and np.isnan(model.const_electricity_price):
+            raise Exception(f'Constant electricity price must have a valid value in float if it is to be used for calculation. '
+                            f'Received "use_constant_electricity_price": true, "const_electricity_price": {model.const_electricity_price}. '
+                            f'Please specify them correctly in "calculate_costs" field in flex config.')
+        return model
+
 
 # Pos and neg kpis to get the right names for plotting
 kpis_pos = FlexibilityKPIs(direction="positive")
@@ -34,6 +66,11 @@ kpis_neg = FlexibilityKPIs(direction="negative")
 
 
 class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
+
+    model_config = ConfigDict(
+        extra='forbid'
+    )
+
     inputs: List[agentlib.AgentVariable] = [
         agentlib.AgentVariable(name=glbs.POWER_ALIAS_BASE, unit="W", type="pd.Series",
                                description="The power input to the system"),
@@ -41,8 +78,6 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
                                description="The power input to the system"),
         agentlib.AgentVariable(name=glbs.POWER_ALIAS_POS, unit="W", type="pd.Series",
                                description="The power input to the system"),
-        agentlib.AgentVariable(name="r_pel", unit="ct/kWh", type="pd.Series",
-                               description="electricity price"),
         agentlib.AgentVariable(name=glbs.STORED_ENERGY_ALIAS_BASE, unit="kWh", type="pd.Series",
                                description="Energy stored in the system w.r.t. 0K"),
         agentlib.AgentVariable(name=glbs.STORED_ENERGY_ALIAS_NEG, unit="kWh", type="pd.Series",
@@ -150,7 +185,6 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         )
     ]
 
-
     parameters: List[agentlib.AgentVariable] = [
         agentlib.AgentVariable(name=glbs.PREP_TIME, unit="s",
                                description="Preparation time"),
@@ -164,24 +198,39 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
                                description="prediction horizon of the mpc solution")
     ]
 
-    results_file: Optional[Path] = Field(default=None)
-
-    save_results: Optional[bool] = Field(validate_default=True, default=None)
-    overwrite_result_file: Optional[bool] = Field(default=False, validate_default=True)
-
+    results_file: Optional[Path] = Field(
+        default=Path("flexibility_indicator.csv"),
+        description="User specified results file name"
+    )
+    save_results: Optional[bool] = Field(
+        validate_default=True,
+        default=True
+    )
     price_variable: str = Field(
-        default="r_pel",
+        default="c_pel",
         description="Name of the price variable sent by a predictor",
     )
     power_unit: str = Field(
         default="kW",
         description="Unit of the power variable"
     )
-
+    integration_method: glbs.INTEGRATION_METHOD = Field(
+        default=glbs.LINEAR,
+        description="how to integrate over series variable"
+    )
     shared_variable_fields: List[str] = ["outputs"]
 
     correct_costs: InputsForCorrectFlexCosts = InputsForCorrectFlexCosts()
+    calculate_costs: InputsForCalculateFlexCosts = InputsForCalculateFlexCosts()
 
+    @model_validator(mode="after")
+    def check_results_file_extension(self):
+        if self.results_file and self.results_file.suffix != ".csv":
+            raise ValueError(
+                f"Invalid file extension for 'results_file': '{self.results_file}'. "
+                f"Expected a '.csv' file."
+            )
+        return self
 
 class FlexibilityIndicatorModule(agentlib.BaseModule):
     config: FlexibilityIndicatorModuleConfig
@@ -192,7 +241,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         super().__init__(*args, **kwargs)
         self.var_list = []
         for variable in self.variables:
-            if variable == glbs.FlexibilityOffer:
+            if variable.name in [glbs.FlexibilityOffer]:
                 continue
             self.var_list.append(variable.name)
         self.time = []
@@ -228,25 +277,42 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
 
         if not self.in_provision:
             if name == glbs.POWER_ALIAS_BASE:
-                self.data.power_profile_base = self.data.format_mpc_inputs(inp.value)
+                self.data.power_profile_base = self.data.unify_inputs(inp.value)
             elif name == glbs.POWER_ALIAS_NEG:
-                self.data.power_profile_flex_neg = self.data.format_mpc_inputs(inp.value)
+                self.data.power_profile_flex_neg = self.data.unify_inputs(inp.value)
             elif name == glbs.POWER_ALIAS_POS:
-                self.data.power_profile_flex_pos = self.data.format_mpc_inputs(inp.value)
+                self.data.power_profile_flex_pos = self.data.unify_inputs(inp.value)
             elif name == glbs.STORED_ENERGY_ALIAS_BASE:
-                self.data.stored_energy_profile_base = self.data.format_mpc_inputs(inp.value)
+                self.data.stored_energy_profile_base = self.data.unify_inputs(inp.value)
             elif name == glbs.STORED_ENERGY_ALIAS_NEG:
-                self.data.stored_energy_profile_flex_neg = self.data.format_mpc_inputs(inp.value)
+                self.data.stored_energy_profile_flex_neg = self.data.unify_inputs(inp.value)
             elif name == glbs.STORED_ENERGY_ALIAS_POS:
-                self.data.stored_energy_profile_flex_pos = self.data.format_mpc_inputs(inp.value)
+                self.data.stored_energy_profile_flex_pos = self.data.unify_inputs(inp.value)
             elif name == self.config.price_variable:
-                # price comes from predictor, so no stripping needed
-                self.data.electricity_price_series = self.data.format_predictor_inputs(inp.value)
+                if not self.config.calculate_costs.use_constant_electricity_price:
+                    # price comes from predictor
+                    self.data.electricity_price_series = self.data.unify_inputs(inp.value, mpc=False)
+
+            # set the constant electricity price series if given
+            if self.config.calculate_costs.use_constant_electricity_price and self.data.electricity_price_series is None:
+                # get the index for the electricity price series
+                n = self.get(glbs.PREDICTION_HORIZON).value
+                ts = self.get(glbs.TIME_STEP).value
+                grid = np.arange(0, n * ts, ts)
+                # fill the electricity_price_series with values
+                self.data.electricity_price_series = pd.Series([self.config.calculate_costs.const_electricity_price for i in grid], index=grid)
 
             necessary_input_for_calc_flex = [self.data.power_profile_base,
                                              self.data.power_profile_flex_neg,
-                                             self.data.power_profile_flex_pos,
-                                             self.data.electricity_price_series]
+                                             self.data.power_profile_flex_pos]
+
+            if self.config.calculate_costs.calculate_flex_costs:
+                necessary_input_for_calc_flex.append(self.data.electricity_price_series)
+
+            if all(var is not None for var in necessary_input_for_calc_flex) and len(necessary_input_for_calc_flex) == 4:
+                # align the index of price variable to the index of inputs from mpc; electricity price signal is usually steps
+                necessary_input_for_calc_flex[-1] = self.data.electricity_price_series.reindex(self.data.power_profile_base.index).ffill()
+
             if self.config.correct_costs.enable_energy_costs_correction:
                 necessary_input_for_calc_flex.extend(
                                                 [self.data.stored_energy_profile_base,
@@ -292,8 +358,11 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         """
         results = []
         now = self.env.now
+
+        # First, collect all series and their indices
+        all_series = []
         for name in self.var_list:
-            # Use the power variables averaged for each timestep, not the collocation values
+            # Get the appropriate values based on name
             if name == glbs.POWER_ALIAS_BASE:
                 values = self.data.power_profile_base
             elif name == glbs.POWER_ALIAS_NEG:
@@ -306,14 +375,31 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 values = self.data.stored_energy_profile_flex_neg
             elif name == glbs.STORED_ENERGY_ALIAS_POS:
                 values = self.data.stored_energy_profile_flex_pos
+            elif name == self.config.price_variable:
+                values = self.data.electricity_price_series
             else:
                 values = self.get(name).value
 
-            if isinstance(values, pd.Series):
-                traj = values.reindex(np.arange(0, n * ts, ts))
-            else:
-                traj = pd.Series(values).reindex(np.arange(0, n * ts, ts))
-            results.append(traj)
+            # Convert to Series if not already
+            if not isinstance(values, pd.Series):
+                values = pd.Series(values)
+
+            all_series.append((name, values))
+
+        # Create the standard grid for reference
+        standard_grid = np.arange(0, n * ts, ts)
+
+        # Find the union of all indices to create a comprehensive grid
+        all_indices = set(standard_grid)
+        for _, series in all_series:
+            all_indices.update(series.index)
+        combined_index = sorted(all_indices)
+
+        # Reindex all series to the combined grid
+        for i, (name, series) in enumerate(all_series):
+            # Reindex to the comprehensive grid
+            reindexed = series.reindex(combined_index)
+            results.append(reindexed)
 
         if not now % ts:
             self.time.append(now)
@@ -340,7 +426,8 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         Calculate the flexibility KPIs for current predictions, send the flex offer and set the outputs, write and save the results.
         """
         # Calculate the flexibility KPIs for current predictions
-        self.data.calculate(enable_energy_costs_correction=self.config.correct_costs.enable_energy_costs_correction)
+        self.data.calculate(enable_energy_costs_correction=self.config.correct_costs.enable_energy_costs_correction,
+                            calculate_flex_cost=self.config.calculate_costs.calculate_flex_costs, integration_method=self.config.integration_method)
 
         # Send flex offer
         self.send_flex_offer(
@@ -367,7 +454,8 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         )
 
         # save results
-        self.df.to_csv(self.config.results_file)
+        if self.config.save_results:
+            self.df.to_csv(self.config.results_file)
 
     def send_flex_offer(
             self, name,

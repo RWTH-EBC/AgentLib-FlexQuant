@@ -26,6 +26,7 @@ def fill_nans(series: pd.Series, method: FillNansMethods) -> pd.Series:
         raise ValueError(f"NaN values are still present in the series after filling them with the method {method}\n{series}")
     return series
 
+
 def _set_mean_values(series: pd.Series) -> pd.Series:
     """ Fills intervals including the nan with the mean of the following values. """
     def _get_intervals_for_mean(s: pd.Series) -> list[pd.Interval]:
@@ -37,12 +38,15 @@ def _set_mean_values(series: pd.Series) -> pd.Series:
                     start = index
                 else:
                     end = index
-                    intervals.append(pd.Interval(left=start, right=end, closed="left"))
+                    intervals.append(pd.Interval(left=start, right=end, closed="both"))
                     start = end
+            elif index == s.index[-1]:
+                end = index
+                intervals.append(pd.Interval(left=start, right=end, closed="both"))
         return intervals
 
     for interval in _get_intervals_for_mean(series):
-        interval_index = (interval.left <= series.index) & (series.index < interval.right)
+        interval_index = (interval.left <= series.index) & (series.index <= interval.right)
         series[interval.left] = series[interval_index].mean(skipna=True)
 
     # remove last entry if nan, e.g. with collocation
@@ -61,8 +65,8 @@ def strip_multi_index(series: pd.Series) -> pd.Series:
     if isinstance(series.index[0], str):
         series.index = series.index.map(lambda x: eval(x))
         series.index = pd.MultiIndex.from_tuples(series.index)
-        # vals is multicolumn so get rid of first value (start time of predictions)
-        series.index = series.index.get_level_values(1).astype(float)
+    # vals is multicolumn so get rid of first value (start time of predictions)
+    series.index = series.index.get_level_values(1).astype(float)
     return series
 
 
