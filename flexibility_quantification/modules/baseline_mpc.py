@@ -159,8 +159,8 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
         '''simulate with flex model over the prediction horizon'''
 
         # get control and input values from the mpc optimization result
-        control_values = result_df.variable[self.var_ref.controls].dropna() # value at last time step (nan) was eleminated
-        input_values = result_df.parameter[self.var_ref.inputs].dropna() # value at last time step (nan) was eleminated
+        control_values = result_df.variable[self.var_ref.controls].dropna()
+        input_values = result_df.parameter[self.var_ref.inputs].dropna()
 
         # For each simulation step, determine which MPC interval we're in
         current_control_idx = 0
@@ -172,19 +172,16 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
             current_sim_time = i * sim_time_step
 
             # Check if the control values need to be updated
-            if current_sim_time >= last_control_time + mpc_time_step and current_control_idx < len(
-                    control_values) - 1:
+            if current_sim_time >= last_control_time + mpc_time_step and current_control_idx < len(control_values) - 1:
                 current_control_idx += 1
                 last_control_time += mpc_time_step
 
             # Apply control and input values from the appropriate MPC step
-            for control, value in zip(self.var_ref.controls,
-                                      control_values.iloc[current_control_idx]):
+            for control, value in zip(self.var_ref.controls, control_values.iloc[current_control_idx]):
                 self.flex_model.set(control, value)
             control_dict[current_sim_time] = value
 
-            for input_var, value in zip(self.var_ref.inputs,
-                                        input_values.iloc[current_control_idx]):
+            for input_var, value in zip(self.var_ref.inputs, input_values.iloc[current_control_idx]):
                 self.flex_model.set(input_var, value)
 
             # do integration
