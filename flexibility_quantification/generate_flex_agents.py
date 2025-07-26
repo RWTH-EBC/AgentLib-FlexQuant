@@ -649,8 +649,8 @@ class FlexAgentGenerator:
             raise ConfigurationError(f'Market time + prep time + flex event duration can not exceed the prediction horizon.')
         # market time val check
         if self.flex_config.market_config:
-            if flex_times["market_time"] != mpc_times["time_step"]:
-                raise ConfigurationError(f'Market time must be equal to the time step.')
+            if flex_times["market_time"] % mpc_times["time_step"] != 0:
+                raise ConfigurationError(f'Market time must be divisible by the time step.')
         # check for divisibility of flex_times by time_step
         for name, value in flex_times.items():
             if value % mpc_times["time_step"] != 0:
