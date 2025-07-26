@@ -130,8 +130,8 @@ def run_example(until=until):
     # flexibility
     # get only the first prediction time of each time step
     ind_res = results["FlexibilityIndicator"]["FlexibilityIndicator"]
-    energy_flex_neg = ind_res.xs("energyflex_neg", axis=1).droplevel(1).dropna()
-    energy_flex_pos = ind_res.xs("energyflex_pos", axis=1).droplevel(1).dropna()
+    energy_flex_neg = ind_res.xs("negative_energy_flex", axis=1).droplevel(1).dropna()
+    energy_flex_pos = ind_res.xs("positive_energy_flex", axis=1).droplevel(1).dropna()
     fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=1)
     ax1 = axs[0]
     ax1.set_ylabel("$\epsilon$ in kWh")

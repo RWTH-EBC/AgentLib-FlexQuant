@@ -15,6 +15,7 @@
                     "type": "flexibility_quantification.flexibility_indicator",
                     "results_file": "results\\flexibility_indicator.csv",
                     "price_variable": "r_pel",
+                    "integration_method": "constant",
                     "parameters": [
                         {
                             "name": "prep_time",
@@ -37,16 +38,14 @@
                             "value": 16
                         }
                     ],
-                    "inputs": [
-                        {
-                            "name": "r_pel",
-                            "alias": "r_pel"
-                        }
-                    ]
+                    "correct_costs": {"enable_energy_costs_correction": false,
+                                      "absolute_power_deviation_tolerance": 0.05},
+                    "calculate_costs": {"calculate_flex_costs": true,
+                                        "use_constant_electricity_price": true,
+                                        "const_electricity_price": 10}
                 }
             ]
         },
-        "collocation_order": 2,
         "name_of_created_file": "indicator.json"
     },
     "market_config": "flex_configs\\market.json",
@@ -64,7 +63,9 @@
             "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, -self.s_P * self.P_el])"
         }
     },
-    "path_to_flex_files": "created_flex_files",
+    "casadi_sim_time_step": 100,
+    "flex_files_directory": "created_flex_files",
+    "results_directory": "Examples/OneRoom_CIA/results",
     "delete_files": false,
     "overwrite_files": true
 }
