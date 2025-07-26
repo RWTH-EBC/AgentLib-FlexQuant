@@ -1,16 +1,16 @@
 import ast
+import astor
 import atexit
+import black
+import json
 import inspect
 import logging
 import os
-from copy import deepcopy
 import pandas as pd
+from copy import deepcopy
 from pathlib import Path
+from pydantic import FilePath
 from typing import List, Union
-
-import astor
-import black
-import json
 from agentlib.core.agent import AgentConfig
 from agentlib.core.datamodels import AgentVariable
 from agentlib.core.errors import ConfigurationError
@@ -19,8 +19,6 @@ from agentlib.utils import custom_injection, load_config
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from agentlib_mpc.models.casadi_model import CasadiModelConfig
 from agentlib_mpc.modules.mpc_full import BaseMPCConfig
-from pydantic import FilePath
-
 import flexibility_quantification.data_structures.globals as glbs
 import flexibility_quantification.utils.config_management as cmng
 from flexibility_quantification.utils.parsing import (
@@ -42,22 +40,6 @@ from flexibility_quantification.modules.flexibility_indicator import (
 from flexibility_quantification.modules.flexibility_market import (
     FlexibilityMarketModuleConfig
 )
-    FlexibilityMarketModuleConfig,
-)
-from agentlib_mpc.modules.mpc_full import BaseMPCConfig
-from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
-from agentlib_mpc.models.casadi_model import CasadiModelConfig
-from agentlib.core.agent import AgentConfig
-from agentlib.core.module import BaseModuleConfig
-from agentlib.core.datamodels import AgentVariable
-import ast
-import atexit
-import os
-from typing import Union, List
-from pydantic import FilePath
-from pathlib import Path
-import black
-# TODO clean up
 
 class FlexAgentGenerator:
     orig_mpc_module_config: BaseMPCConfig

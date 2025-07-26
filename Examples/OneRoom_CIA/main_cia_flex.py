@@ -151,7 +151,7 @@ def run_example(until=until):
         mpcplot.make_grid(ax)
         ax.set_xlim(0, 3600 * 6)
 
-    plt.show()
+    # plt.show()
 
     Dashboard(
         flex_config="flex_configs/flexibility_agent_config.json",
