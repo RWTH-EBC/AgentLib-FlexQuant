@@ -54,7 +54,7 @@ class FlexOffer(BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
-    def as_dataframe(self):
+    def as_dataframe(self) -> pd.DataFrame:
         """Returns the offer as a dataframe. Scalar values are written on the first timestep
 
         """

@@ -1,18 +1,19 @@
-from copy import deepcopy
-from typing import Union, Optional
-
 import agentlib
-from pydantic import FilePath
-from pathlib import Path
 import json
 import os
 import pandas as pd
-
+import flexibility_quantification.utils.config_management as cmng
+from copy import deepcopy
+from typing import Union, Optional
+from pydantic import FilePath
+from pathlib import Path
 from agentlib.core.agent import AgentConfig
 from agentlib.core.module import BaseModuleConfig
 from agentlib.utils import load_config
-from agentlib_mpc.modules.mpc import BaseMPCConfig
 from agentlib.modules.simulation.simulator import SimulatorConfig
+from agentlib_mpc.modules.mpc import BaseMPCConfig
+from agentlib_mpc.utils import TimeConversionTypes
+from agentlib_mpc.utils.analysis import load_sim, load_mpc, load_mpc_stats
 from flexibility_quantification.data_structures.flexquant import (
     FlexQuantConfig,
     FlexibilityIndicatorConfig,
@@ -24,16 +25,8 @@ from flexibility_quantification.data_structures.mpcs import (
     PFMPCData,
 )
 from flexibility_quantification.utils.data_handling import convert_timescale_of_index
-from agentlib_mpc.utils import TimeConversionTypes
-from agentlib_mpc.utils.analysis import load_sim, load_mpc, load_mpc_stats
-
-from flexibility_quantification.modules.flexibility_indicator import (
-    FlexibilityIndicatorModuleConfig,
-)
-from flexibility_quantification.modules.flexibility_market import (
-    FlexibilityMarketModuleConfig,
-)
-import flexibility_quantification.utils.config_management as cmng
+from flexibility_quantification.modules.flexibility_indicator import FlexibilityIndicatorModuleConfig
+from flexibility_quantification.modules.flexibility_market import FlexibilityMarketModuleConfig
 
 
 def load_indicator(file_path: Union[str, FilePath]) -> pd.DataFrame:
@@ -265,9 +258,7 @@ class Results:
         # Convert the time in the dataframes to the desired timescale
         self.convert_timescale_of_dataframe_index(to_timescale=to_timescale)
 
-    def _load_results(
-        self, res_path: Union[str, Path]
-    ) -> dict[str, dict[str, pd.DataFrame]]:
+    def _load_results(self, res_path: Union[str, Path]) -> dict[str, dict[str, pd.DataFrame]]:
         res = {
             self.baseline_agent_config.id: {
                 self.baseline_module_config.module_id: load_mpc(

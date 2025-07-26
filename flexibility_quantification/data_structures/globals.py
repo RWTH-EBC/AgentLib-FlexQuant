@@ -30,18 +30,16 @@ full_trajectory_suffix: str = "_full"
 full_trajectory_prefix: str = "_"
 
 
-def return_baseline_cost_function(power_variable, comfort_variable):
+def return_baseline_cost_function(power_variable: str, comfort_variable: str) -> str:
     if comfort_variable:
         cost_func = ("return ca.if_else(self.in_provision.sym, "
                      "ca.if_else(self.time < self.rel_start.sym, obj_std, "
                      "ca.if_else(self.time >= self.rel_end.sym, obj_std, "
-                     f"sum([self.profile_deviation_weight*(self.{power_variable} - "
-                     f"self._P_external)**2, "
+                     f"sum([self.profile_deviation_weight*(self.{power_variable} - self._P_external)**2, "
                      f"self.{comfort_variable}**2 * self.profile_comfort_weight]))),obj_std)")
     else:
         cost_func = ("return ca.if_else(self.in_provision.sym, "
                      "ca.if_else(self.time < self.rel_start.sym, obj_std, "
                      "ca.if_else(self.time >= self.rel_end.sym, obj_std, "
-                     f"sum([self.profile_deviation_weight*(self.{power_variable} - "
-                     f"self._P_external)**2]))),obj_std)")
+                     f"sum([self.profile_deviation_weight*(self.{power_variable} - self._P_external)**2]))),obj_std)")
     return cost_func
