@@ -360,35 +360,6 @@ class SetupSystemModifier(ast.NodeTransformer):
                             .value
                         )
                         item.value.elts.append(new_element)
-                    # also include binary controls
-                    if self.binary_controls:
-                        for ind, control in enumerate(self.binary_controls):
-                            # insert control boundaries at beginning of function
-                            node.body.insert(
-                                0,
-                                ast.parse(
-                                    f"{control.name}_upper = ca.if_else(self.time < self.market_time.sym, "
-                                    f"self.{control.name}{full_trajectory_suffix}.sym, "
-                                    f"self.{control.name}.ub)"
-                                ).body[0],
-                            )
-                            node.body.insert(
-                                0,
-                                ast.parse(
-                                    f"{control.name}_lower = ca.if_else(self.time < self.market_time.sym, "
-                                    f"self.{control.name}{full_trajectory_suffix}.sym, "
-                                    f"self.{control.name}.lb)"
-                                ).body[0],
-                            )
-                            # append to constraints
-                            new_element = (
-                                ast.parse(
-                                    f"({control.name}_lower, self.{control.name}, {control.name}_upper)"
-                                )
-                                .body[0]
-                                .value
-                            )
-                            item.value.elts.append(new_element)
                     break
         # loop through setup_system function to find return statement
         for i, stmt in enumerate(node.body):
