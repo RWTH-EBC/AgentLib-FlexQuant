@@ -222,7 +222,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
 
     def _calculate_power_flex(self, power_profile_base: pd.Series, power_profile_shadow: pd.Series,
                               flex_offer_time_grid: np.ndarray,
-                              relative_error_acceptance: float = 0.01) -> pd.Series:
+                              relative_error_acceptance: float = 0.01):
         """
         Calculate the power flexibility based on the base and flexibility power profiles.
 
@@ -249,9 +249,9 @@ class FlexibilityKPIs(pydantic.BaseModel):
         # Set values
         self.power_flex_full.value = power_flex
         self.power_flex_offer.value = power_flex.loc[flex_offer_time_grid[0]:flex_offer_time_grid[-1]]
-        return power_flex
 
-    def _calculate_power_flex_stats(self) -> [float]:
+
+    def _calculate_power_flex_stats(self):
         """
         Calculate the characteristic values of the power flexibility for the offer.
         """
@@ -267,9 +267,8 @@ class FlexibilityKPIs(pydantic.BaseModel):
         self.power_flex_offer_max.value = power_flex_offer_max
         self.power_flex_offer_min.value = power_flex_offer_min
         self.power_flex_offer_avg.value = power_flex_offer_avg
-        return power_flex_offer_max, power_flex_offer_min, power_flex_offer_avg
 
-    def _calculate_energy_flex(self) -> float:
+    def _calculate_energy_flex(self):
         """
         Calculate the energy flexibility by integrating the power flexibility of the offer window.
         """
@@ -281,9 +280,8 @@ class FlexibilityKPIs(pydantic.BaseModel):
 
         # Set value
         self.energy_flex.value = energy_flex
-        return energy_flex
 
-    def _calculate_costs(self, electricity_price_signal: pd.Series, stored_energy_diff: float) -> [float, pd.Series]:
+    def _calculate_costs(self, electricity_price_signal: pd.Series, stored_energy_diff: float):
         """
         Calculate the costs of the flexibility event based on the electricity costs profile and the power flexibility profile.
         """
@@ -299,7 +297,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         self.costs.value = costs
         self.corrected_costs.value = corrected_costs
 
-    def _calculate_costs_rel(self) -> float:
+    def _calculate_costs_rel(self):
         """
         Calculate the relative costs of the flexibility event per energy flexibility.
         """
@@ -450,7 +448,7 @@ class FlexibilityData(pydantic.BaseModel):
                              f"Series index:{series.index}")
         return series
 
-    def calculate(self, enable_energy_costs_correction: bool, calculate_flex_cost: bool) -> [FlexibilityKPIs, FlexibilityKPIs]:
+    def calculate(self, enable_energy_costs_correction: bool, calculate_flex_cost: bool):
         """
         Calculate the KPIs for the positive and negative flexibility.
 
@@ -479,7 +477,6 @@ class FlexibilityData(pydantic.BaseModel):
             enable_energy_costs_correction=enable_energy_costs_correction,
             calculate_flex_cost=calculate_flex_cost
         )
-        return self.kpis_pos, self.kpis_neg
 
     def get_kpis(self) -> dict[str, KPI]:
         kpis_dict = self.kpis_pos.get_kpi_dict(identifier=True) | self.kpis_neg.get_kpi_dict(identifier=True)
