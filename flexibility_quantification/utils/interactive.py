@@ -65,8 +65,9 @@ class Dashboard(flex_results.Results):
 
     def __init__(
         self,
-        flex_config: Union[str, FilePath, FlexQuantConfig],
-        simulator_agent_config: Union[str, FilePath, AgentConfig],
+        flex_config: Optional[Union[str, FilePath, FlexQuantConfig]] = None,
+        simulator_agent_config: Optional[Union[str, FilePath, AgentConfig]] = None,
+        generated_flex_files_base_path: Optional[Union[str, FilePath]] = None,
         results: Union[str, FilePath, dict[str, dict[str, pd.DataFrame]]] = None,
         to_timescale: TimeConversionTypes = "hours",
         port: int = None
@@ -74,6 +75,7 @@ class Dashboard(flex_results.Results):
         super().__init__(
             flex_config=flex_config,
             simulator_agent_config=simulator_agent_config,
+            generated_flex_files_base_path=generated_flex_files_base_path,
             results=results,
             to_timescale=to_timescale,
         )

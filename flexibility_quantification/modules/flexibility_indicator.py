@@ -1,14 +1,19 @@
-import os
 import logging
+import os
+from pathlib import Path
+from typing import List, Optional
+
 import agentlib
 import numpy as np
 import pandas as pd
+from agentlib.core.errors import ConfigurationError
+from pydantic import BaseModel, ConfigDict, Field, model_validator
+
 import flexibility_quantification.data_structures.globals as glbs
-from collections.abc import Iterable
-from typing import Optional, List
-from pathlib import Path
-from pydantic import BaseModel, Field, field_validator, model_validator
-from flexibility_quantification.data_structures.flex_kpis import FlexibilityData, FlexibilityKPIs
+from flexibility_quantification.data_structures.flex_kpis import (
+    FlexibilityData, 
+    FlexibilityKPIs
+)
 from flexibility_quantification.data_structures.flex_offer import FlexOffer
 
 
@@ -61,6 +66,11 @@ kpis_neg = FlexibilityKPIs(direction="negative")
 
 
 class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
+
+    model_config = ConfigDict(
+        extra='forbid'
+    )
+
     inputs: List[agentlib.AgentVariable] = [
         agentlib.AgentVariable(name=glbs.POWER_ALIAS_BASE, unit="W", type="pd.Series",
                                description="The power input to the system"),
@@ -68,8 +78,6 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
                                description="The power input to the system"),
         agentlib.AgentVariable(name=glbs.POWER_ALIAS_POS, unit="W", type="pd.Series",
                                description="The power input to the system"),
-        agentlib.AgentVariable(name="r_pel", unit="ct/kWh", type="pd.Series",
-                               description="electricity price"),
         agentlib.AgentVariable(name=glbs.STORED_ENERGY_ALIAS_BASE, unit="kWh", type="pd.Series",
                                description="Energy stored in the system w.r.t. 0K"),
         agentlib.AgentVariable(name=glbs.STORED_ENERGY_ALIAS_NEG, unit="kWh", type="pd.Series",
@@ -177,7 +185,6 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         )
     ]
 
-
     parameters: List[agentlib.AgentVariable] = [
         agentlib.AgentVariable(name=glbs.PREP_TIME, unit="s",
                                description="Preparation time"),
@@ -191,13 +198,16 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
                                description="prediction horizon of the mpc solution")
     ]
 
-    results_file: Optional[Path] = Field(default=None)
-
-    save_results: Optional[bool] = Field(validate_default=True, default=None)
-    overwrite_result_file: Optional[bool] = Field(default=False, validate_default=True)
-
+    results_file: Optional[Path] = Field(
+        default=Path("flexibility_indicator.csv"),
+        description="User specified results file name"
+    )
+    save_results: Optional[bool] = Field(
+        validate_default=True, 
+        default=True
+    )
     price_variable: str = Field(
-        default="r_pel",
+        default="c_pel",
         description="Name of the price variable sent by a predictor",
     )
     power_unit: str = Field(
@@ -208,7 +218,15 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
 
     correct_costs: InputsForCorrectFlexCosts = InputsForCorrectFlexCosts()
     calculate_costs: InputsForCalculateFlexCosts = InputsForCalculateFlexCosts()
-
+    
+    @model_validator(mode="after")
+    def check_results_file_extension(self):
+        if self.results_file and self.results_file.suffix != ".csv":
+            raise ValueError(
+                f"Invalid file extension for 'results_file': '{self.results_file}'. "
+                f"Expected a '.csv' file."
+            )
+        return self
 
 class FlexibilityIndicatorModule(agentlib.BaseModule):
     config: FlexibilityIndicatorModuleConfig
@@ -363,6 +381,8 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             self.time.append(now)
             new_df = pd.DataFrame(results).T
             new_df.columns = self.var_list
+            # Rename time_step variable column
+            new_df.rename(columns={glbs.TIME_STEP: f"{glbs.TIME_STEP}_mpc"}, inplace=True)
             new_df.index.direction = "time"
             new_df[glbs.TIME_STEP] = now
             new_df.set_index([glbs.TIME_STEP, new_df.index], inplace=True)
@@ -370,6 +390,9 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             # set the indices once again as concat cant handle indices properly
             indices = pd.MultiIndex.from_tuples(df.index, names=[glbs.TIME_STEP, "time"])
             df.set_index(indices, inplace=True)
+            # Drop column time_step and keep it as an index only
+            if glbs.TIME_STEP in df.columns:
+                df.drop(columns=[glbs.TIME_STEP], inplace=True)
 
         return df
 
@@ -411,7 +434,8 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         )
 
         # save results
-        self.df.to_csv(self.config.results_file)
+        if self.config.save_results:
+            self.df.to_csv(self.config.results_file)
 
     def send_flex_offer(
             self, name,
