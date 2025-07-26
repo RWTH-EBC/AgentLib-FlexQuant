@@ -31,9 +31,9 @@ class InputsForCorrectFlexCosts(BaseModel):
         description="Absolute tolerance in kW within which no warning is thrown"
     )
 
-    stored_energy_variable: str = Field(
+    stored_energy_variable: Optional[str] = Field(
         name="stored_energy_variable",
-        default="E_stored",
+        default=None,
         description="Name of the variable representing the stored electrical energy in the baseline config"
     )
 

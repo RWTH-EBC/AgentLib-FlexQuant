@@ -315,7 +315,8 @@ class FlexAgentGenerator:
         # set the MPC config type from the MPCConfig in agentlib_mpc to the corresponding one in flexquant and add additional fields
         module_config_flex = cmng.MODULE_TYPE_DICT[module_config.type](**module_config.dict(), _agent_id=agent_id,
                                                                        casadi_sim_time_step=self.flex_config.casadi_sim_time_step,
-                                                                       power_variable_name=self.flex_config.baseline_config_generator_data.power_variable)
+                                                                       power_variable_name=self.flex_config.baseline_config_generator_data.power_variable,
+                                                                       storage_variable_name=self.indicator_module_config.correct_costs.stored_energy_variable)
 
         # allow the module config to be changed
         module_config_flex.model_config["frozen"] = False
@@ -423,9 +424,10 @@ class FlexAgentGenerator:
                 )
             )
         # add or change alias for stored energy variable
-        output_dict[
-            self.indicator_module_config.correct_costs.stored_energy_variable
-        ].alias = mpc_dataclass.stored_energy_alias
+        if self.indicator_module_config.correct_costs.enable_energy_costs_correction:
+            output_dict[
+                self.indicator_module_config.correct_costs.stored_energy_variable
+            ].alias = mpc_dataclass.stored_energy_alias
 
         # add extra inputs needed for activation of flex
         module_config_flex.inputs.extend(mpc_dataclass.config_inputs_appendix)

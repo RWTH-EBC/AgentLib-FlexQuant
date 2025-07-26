@@ -14,6 +14,7 @@ class FlexibilityBaselineMPCConfig(mpc_full.MPCConfig):
 
     casadi_sim_time_step: int = Field(default=0, description="Time step for simulation with Casadi simulator. Value is read from FlexQuantConfig")
     power_variable_name: str = Field(default=None, description="Name of the power variable in the baseline mpc model.")
+    storage_variable_name: Optional[str] = Field(default=None, description="Name of the storage variable in the baseline mpc model.")
 
 
 class FlexibilityBaselineMPC(mpc_full.MPC):
@@ -52,16 +53,16 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
 
         df = solution.df
         if hasattr(self, "flex_results"):
-            storage_variable_name = next(var.name for var in self.variables if var.alias == glbs.STORED_ENERGY_ALIAS_BASE)
             for output in self.var_ref.outputs:
-                if output not in [self.config.power_variable_name, storage_variable_name]:
+                if output not in [self.config.power_variable_name, self.config.storage_variable_name]:
                     series = df.variable[output]
                     self.set(output, series)
             # send the power and storage variable value from simulation results
             upsampled_output_power = self.flex_results[self.config.power_variable_name]
-            upsampled_output_storage = self.flex_results[storage_variable_name]
             self.set(self.config.power_variable_name, upsampled_output_power)
-            self.set(storage_variable_name, upsampled_output_storage.dropna())
+            if self.config.storage_variable_name is not None:
+                upsampled_output_storage = self.flex_results[self.config.storage_variable_name]
+                self.set(self.config.storage_variable_name, upsampled_output_storage.dropna())
         else:
             for output in self.var_ref.outputs:
                 series = df.variable[output]
