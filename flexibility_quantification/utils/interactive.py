@@ -1,19 +1,15 @@
+import webbrowser
+import pandas as pd
+import flexibility_quantification.data_structures.globals as glbs
+import flexibility_quantification.data_structures.flex_results as flex_results
 from typing import get_args, Union, Optional
 from pydantic import FilePath
-import pandas as pd
-
-import webbrowser
 from dash import Dash, html, dcc, callback, Output, Input, ctx
 from plotly import graph_objects as go
-
 from agentlib.core.agent import AgentConfig
-
 from agentlib_mpc.utils import TimeConversionTypes, TIME_CONVERSION
 from agentlib_mpc.utils.analysis import mpc_at_time_step
 from agentlib_mpc.utils.plotting.interactive import get_port
-
-import flexibility_quantification.data_structures.globals as glbs
-import flexibility_quantification.data_structures.flex_results as flex_results
 from flexibility_quantification.data_structures.flexquant import FlexQuantConfig
 from flexibility_quantification.data_structures.flex_kpis import FlexibilityKPIs
 from flexibility_quantification.data_structures.flex_offer import OfferStatus
@@ -153,6 +149,7 @@ class Dashboard(flex_results.Results):
         else:
             self.custom_bounds = custom_bounds
 
+
         # Plotting functions
         def plot_mpc_stats(fig: go.Figure, variable: str) -> go.Figure:
             fig.add_trace(
@@ -184,9 +181,7 @@ class Dashboard(flex_results.Results):
             )
             return fig
 
-        def plot_one_mpc_variable(
-            fig: go.Figure, variable: str, time_step: float
-        ) -> go.Figure:
+        def plot_one_mpc_variable(fig: go.Figure, variable: str, time_step: float) -> go.Figure:
             # Get the mpc data for the plot
             series_neg = mpc_at_time_step(
                 data=self.df_neg_flex,
@@ -284,10 +279,10 @@ class Dashboard(flex_results.Results):
             )
 
             # Get the data for the bounds
-            def _get_mpc_series(var_type: str, var_name: str):
+            def _get_mpc_series(var_type: str, var_name: str) -> pd.Series:
                 return self.df_baseline[(var_type, var_name)].xs(0, level=1)
 
-            def _get_bound(var_name: str):
+            def _get_bound(var_name: str) -> Optional[pd.Series]:
                 if var_name in self.df_baseline.columns.get_level_values(1):
                     try:
                         bound = _get_mpc_series(var_type="variable", var_name=var_name)
@@ -335,7 +330,7 @@ class Dashboard(flex_results.Results):
 
             return fig
 
-        def plot_flexibility_kpi(fig: go.Figure, variable) -> go.Figure:
+        def plot_flexibility_kpi(fig: go.Figure, variable: str) -> go.Figure:
             df_ind = self.df_indicator.xs(0, level=1)
             # if the variable only has NaN, don't plot
             if df_ind[self.kpi_names_pos[variable]].isna().all():
@@ -395,7 +390,7 @@ class Dashboard(flex_results.Results):
             return fig
 
         # Marking times
-        def get_characteristic_times(at_time_step: float) -> [int, int, int]:
+        def get_characteristic_times(at_time_step: float) -> (float, float, float):
             df_characteristic_times = self.df_indicator.xs(0, level="time")
             rel_market_time = (
                 df_characteristic_times.loc[at_time_step, glbs.MARKET_TIME]
@@ -411,15 +406,11 @@ class Dashboard(flex_results.Results):
             )
             return rel_market_time, rel_prep_time, flex_event_duration
 
-        def mark_time(
-            fig: go.Figure, at_time_step: float, line_prop: dict
-        ) -> go.Figure:
+        def mark_time(fig: go.Figure, at_time_step: float, line_prop: dict) -> go.Figure:
             fig.add_vline(x=at_time_step, line=line_prop, layer="below")
             return fig
 
-        def mark_characteristic_times(
-            fig: go.Figure, offer_time: float, line_prop: dict = None
-        ) -> go.Figure:
+        def mark_characteristic_times(fig: go.Figure, offer_time: float, line_prop: dict = None) -> go.Figure:
             """
             Add markers of the characteristic times to the plot for a time step
 
@@ -712,7 +703,7 @@ class Dashboard(flex_results.Results):
         )
         def update_time_index_of_input(
             time_typing: float, time_slider: float, time_unit: TimeConversionTypes
-        ) -> [float]:
+        ) -> (int, float, float, float, int, float, float, float):
             # get trigger id
             trigger_id = ctx.triggered[0]["prop_id"].split(".")[0]
 
@@ -765,7 +756,7 @@ class Dashboard(flex_results.Results):
             show_current_characteristic_times: bool,
             zoom_to_offer_window: bool,
             zoom_to_prediction_interval: bool,
-        ):
+        ) -> list[dcc.Graph]:
             """Update all graphs based on the options and slider values"""
             figs = []
             for variable in self.plotting_variables:

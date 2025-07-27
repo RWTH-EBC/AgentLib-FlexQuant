@@ -1,5 +1,7 @@
 import ast
 from typing import Union, List, Optional
+from string import Template
+from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from flexibility_quantification.data_structures.mpcs import (
     BaseMPCData,
     PFMPCData,
@@ -16,8 +18,7 @@ from flexibility_quantification.data_structures.globals import (
     PREP_TIME,
     FLEX_EVENT_DURATION
 )
-from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
-from string import Template
+
 
 # Constants
 CASADI_INPUT = "CasadiInput"
@@ -36,11 +37,11 @@ OUTPUT_TEMPLATE = Template(
 )
 
 
-def create_ast_element(template_string):
+def create_ast_element(template_string: str) -> ast.Call:
     return ast.parse(template_string).body[0].value
 
 
-def add_input(name, value, unit, description, type):
+def add_input(name: str, value: Union[bool, str, int], unit: str, description: str, type: str) -> ast.Call:
     return create_ast_element(
         INPUT_TEMPLATE.substitute(
             class_name=CASADI_INPUT,
@@ -53,7 +54,7 @@ def add_input(name, value, unit, description, type):
     )
 
 
-def add_parameter(name, value, unit, description):
+def add_parameter(name: str, value: Union[int, float], unit: str, description: str) -> ast.Call:
     return create_ast_element(
         PARAMETER_TEMPLATE.substitute(
             class_name=CASADI_PARAMETER,
@@ -65,7 +66,7 @@ def add_parameter(name, value, unit, description):
     )
 
 
-def add_output(name, unit, type, value, description):
+def add_output(name: str, unit: str, type: str, value: Union[str, float], description: str) -> ast.Call:
     return create_ast_element(
         OUTPUT_TEMPLATE.substitute(
             class_name=CASADI_OUTPUT,
@@ -109,7 +110,7 @@ class SetupSystemModifier(ast.NodeTransformer):
             self.modify_config_class = self.modify_config_class_baseline
             self.modify_setup_system = self.modify_setup_system_baseline
 
-    def visit_Module(self, module):
+    def visit_Module(self, module: ast.Module) -> ast.Module:
         """Visit a module definition in the AST.
 
         Appends or deletes the import statements at the top of the module.
@@ -132,7 +133,7 @@ class SetupSystemModifier(ast.NodeTransformer):
         self.generic_visit(module)
         return module
 
-    def visit_ClassDef(self, node):
+    def visit_ClassDef(self, node: ast.ClassDef) -> ast.ClassDef:
         """Visit a class definition in the AST.
 
         This method is called for each class definition in the AST. It identifies the
@@ -172,7 +173,7 @@ class SetupSystemModifier(ast.NodeTransformer):
 
         return node
 
-    def get_leftmost_list(self, node):
+    def get_leftmost_list(self, node: Union[ast.Tuple, ast.BinOp, ast.List]) -> Optional[ast.List]:
         """
         Recursively traverse binary operations to get the leftmost list.
 
@@ -194,7 +195,7 @@ class SetupSystemModifier(ast.NodeTransformer):
         # If we get here, we couldn't find a list
         return None
 
-    def modify_config_class_shadow(self, node):
+    def modify_config_class_shadow(self, node: ast.ClassDef):
         """Modify the config class of the shadow mpc.
 
         Args:
@@ -248,7 +249,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                         )
                     )
 
-    def modify_config_class_baseline(self, node):
+    def modify_config_class_baseline(self, node: ast.ClassDef):
         """Modify the config class of the baseline mpc.
 
         Args:
@@ -341,7 +342,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                         add_parameter(parameter.name, 0, "-", parameter.description)
                     )
 
-    def modify_setup_system_shadow(self, node):
+    def modify_setup_system_shadow(self, node: ast.FunctionDef):
         """Modify the setup_system method of the shadow mpc model class.
 
         This method changes the return statement of the setup_system method and adds
@@ -441,7 +442,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                 node.body[i:] = new_body
                 break
 
-    def modify_setup_system_baseline(self, node):
+    def modify_setup_system_baseline(self, node: ast.FunctionDef):
         """Modify the setup_system method of the baseline mpc model class.
 
         This method changes the return statement of the setup_system method and adds
@@ -502,7 +503,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                 break
 
 
-def add_import_to_tree(name: str, alias: str, tree: ast.Module):
+def add_import_to_tree(name: str, alias: str, tree: ast.Module) -> ast.Module:
     import_statement = ast.Import(names=[ast.alias(name=name, asname=alias)])
     for node in tree.body:
         if isinstance(node, ast.Import):
@@ -519,7 +520,7 @@ def add_import_to_tree(name: str, alias: str, tree: ast.Module):
     return tree
 
 
-def remove_all_imports_from_tree(tree: ast.Module):
+def remove_all_imports_from_tree(tree: ast.Module) -> ast.Module:
     # Create a new list to hold nodes that are not imports
     new_body = [
         node for node in tree.body if not isinstance(node, (ast.Import, ast.ImportFrom))
