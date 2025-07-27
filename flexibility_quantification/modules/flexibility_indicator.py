@@ -228,7 +228,6 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
 
 class FlexibilityIndicatorModule(agentlib.BaseModule):
     config: FlexibilityIndicatorModuleConfig
-
     data: FlexibilityData
 
     def __init__(self, *args, **kwargs):
@@ -390,6 +389,9 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         return df
 
     def cleanup_results(self):
+        """
+        removes the existing result files
+        """
         results_file = self.config.results_file
         if not results_file:
             return
@@ -441,12 +443,14 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         Send a flex offer as an agent Variable. The first offer is dismissed,
         since the different MPCs need one time step to fully initialize.
 
-        Inputs:
-
-        name: name of the agent variable
-        indicator_data: the indicator data object
-        timestamp: the time offer was generated
-
+        Args:
+            name: name of the agent variable
+            base_power_profile: time series of power from baseline mpc
+            pos_diff_profile: power profile for the positive difference (base-pos) in flexibility event time grid
+            pos_price: price for positive flexibility
+            neg_diff_profile: power profile for the negative difference (neg-base) in flexibility event time grid
+            neg_price: price for negative flexibility
+            timestamp: the time offer was generated
         """
         if self.offer_count > 0:
             var = self._variables_dict[name]
