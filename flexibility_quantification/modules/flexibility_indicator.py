@@ -1,15 +1,13 @@
 import logging
 import os
-from pathlib import Path
-from typing import List, Optional
-
 import agentlib
 import numpy as np
 import pandas as pd
+import flexibility_quantification.data_structures.globals as glbs
+from pathlib import Path
+from typing import List, Optional
 from agentlib.core.errors import ConfigurationError
 from pydantic import BaseModel, ConfigDict, Field, model_validator
-
-import flexibility_quantification.data_structures.globals as glbs
 from flexibility_quantification.data_structures.flex_kpis import (
     FlexibilityData, 
     FlexibilityKPIs
@@ -338,7 +336,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             self.logger.error("Results file %s was not found.", results_file)
             return None
 
-    def write_results(self, df, ts, n):
+    def write_results(self, df: pd.DataFrame, ts: float, n: int) -> pd.DataFrame:
         """
         Write every data of variables in self.var_list in an DataFrame
         DataFrame will be updated every time step
@@ -433,7 +431,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             self.df.to_csv(self.config.results_file)
 
     def send_flex_offer(
-            self, name,
+            self, name: str,
             base_power_profile: pd.Series,
             pos_diff_profile: pd.Series, pos_price: float,
             neg_diff_profile: pd.Series, neg_price: float,

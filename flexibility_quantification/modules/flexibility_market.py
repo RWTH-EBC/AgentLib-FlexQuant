@@ -1,43 +1,41 @@
 import os
-from pathlib import Path
-from typing import List, Optional, Union
-
+import pydantic
 import agentlib
 import numpy as np
 import pandas as pd
-import pydantic
-from agentlib.core.errors import ConfigurationError
+from pathlib import Path
 from pydantic import model_validator
-
-from flexibility_quantification.data_structures.flex_offer import OfferStatus
-from flexibility_quantification.data_structures.market import (
-    MarketSpecifications
-)
+from typing import List, Optional, Union
+from agentlib.core.datamodels import AgentVariable
+from agentlib.core.errors import ConfigurationError
+from flexibility_quantification.data_structures.flex_offer import OfferStatus, FlexOffer
+from flexibility_quantification.data_structures.market import MarketSpecifications
 
 
 class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
-    # parameters: List[agentlib.AgentVariable] = [
-    # ]
+
     model_config = pydantic.ConfigDict(
         extra='forbid'
     )
-    inputs: List[agentlib.AgentVariable] = [
-        agentlib.AgentVariable(name="FlexibilityOffer")
+
+    inputs: List[AgentVariable] = [
+        AgentVariable(name="FlexibilityOffer")
     ]
-    outputs: List[agentlib.AgentVariable] = [
-        agentlib.AgentVariable(
+
+    outputs: List[AgentVariable] = [
+        AgentVariable(
             name="_P_external", alias="_P_external",
             description="External Power IO"
         ),
-        agentlib.AgentVariable(
+        AgentVariable(
             name="rel_start", alias="rel_start",
             description="relative start time of the flexibility event"
         ),
-        agentlib.AgentVariable(
+        AgentVariable(
             name="rel_end", alias="rel_end",
             description="relative end time of the flexibility event"
         ),
-        agentlib.AgentVariable(
+        AgentVariable(
             name="in_provision", alias="in_provision",
             description="Set if the system is in provision", value=False
         )
@@ -76,7 +74,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
     df: pd.DataFrame = None
     end: Union[int, float] = 0
 
-    def set_random_seed(self, random_seed):
+    def set_random_seed(self, random_seed: int):
         """set the random seed for reproducability"""
         self.random_generator = np.random.default_rng(seed=random_seed)
 
@@ -114,7 +112,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         self.df = None
         self.cooldown_ticker = 0
 
-    def write_results(self, offer):
+    def write_results(self, offer: FlexOffer):
         if self.df is None:
             self.df = pd.DataFrame()
         df = offer.as_dataframe()
@@ -127,7 +125,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         if self.config.save_results:
             self.df.to_csv(self.config.results_file)
 
-    def random_flexibility_callback(self, inp, name):
+    def random_flexibility_callback(self, inp: AgentVariable, name: str):
         """
         When a flexibility offer is sent this function is called. 
         
@@ -169,7 +167,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
 
         self.write_results(offer)
 
-    def single_flexibility_callback(self, inp, name):
+    def single_flexibility_callback(self, inp: AgentVariable, name: str):
         """Callback to activate a single, predefined flexibility offer.
 
         """
@@ -197,11 +195,11 @@ class FlexibilityMarketModule(agentlib.BaseModule):
 
         self.write_results(offer)
 
-    def custom_flexibility_callback(self, inp, name):
+    def custom_flexibility_callback(self, inp: AgentVariable, name: str):
         """Placeholder for a custom flexibility callback"""
         pass
 
-    def dummy_callback(self, inp, name):
+    def dummy_callback(self, inp: AgentVariable, name: str):
         """Dummy function, that is included, when market type is not specified"""
         self.logger.warning("No market type provided. No market interaction.")
 

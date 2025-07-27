@@ -32,7 +32,7 @@ class FlexibilityShadowMPC(mpc_full.MPC):
 
         super().register_callbacks()
 
-    def calc_flex_callback(self, inp, name):
+    def calc_flex_callback(self, inp: AgentVariable, name: str):
         """set the control trajectories before calculating the flexibility offer.
         self.model should account for flexibility in its cost function
 
@@ -88,7 +88,7 @@ class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
 
         super().register_callbacks()
 
-    def calc_flex_callback(self, inp, name):
+    def calc_flex_callback(self, inp: AgentVariable, name: str):
         """set the control trajectories before calculating the flexibility offer.
         self.model should account for flexibility in its cost function
 
