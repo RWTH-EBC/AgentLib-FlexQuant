@@ -6,7 +6,7 @@ from plot_results import plot_results
 
 # Set the log-level
 logging.basicConfig(level=logging.WARN)
-until = 21600
+until = 1800
 
 ENV_CONFIG = {"rt": False, "factor": 0.01, "t_sample": 60}
 

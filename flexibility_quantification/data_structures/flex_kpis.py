@@ -39,6 +39,8 @@ class KPI(pydantic.BaseModel):
 
 
 class KPISeries(KPI):
+    """ Class defining extra attributes of the indicator KPISeries in addition to KPI """
+
     value: Union[pd.Series, None] = pydantic.Field(
         default=None,
         description="Value of the flexibility KPI",
@@ -57,14 +59,20 @@ class KPISeries(KPI):
         return dt
 
     def min(self) -> float:
+        """
+        Gets the minimum of a KPISeries
+        """
         return self.value.min()
 
     def max(self) -> float:
+        """
+        Gets the maximum of a KPISeries
+        """
         return self.value.max()
 
     def avg(self) -> float:
         """
-        Calculate the average value of the KPI over time.
+        Calculate the average value of the KPISeries over time.
         """
         if self.dt is None:
             self._get_dt()
@@ -74,7 +82,11 @@ class KPISeries(KPI):
 
     def integrate(self, time_unit: TimeConversionTypes = "seconds") -> float:
         """
-        Integrate the value of the KPI over time by summing up the product of values and the time difference.
+        Integrate the value of the KPISeries over time by summing up the product of values and the time difference.
+        Args:
+            time_unit: the time unit the integrated value should have
+        Returns:
+            integral: the integrated value of the KPISeries
         """
         if self.dt is None:
             self._get_dt()
@@ -202,7 +214,16 @@ class FlexibilityKPIs(pydantic.BaseModel):
     ):
         """
         Calculate the KPIs based on the power and electricity input profiles.
-        Time grids needed for indexing of the power flexibility profiles.
+        Args:
+            power_profile_base: power profile from baseline mpc
+            power_profile_shadow: power profile from shadow mpc
+            electricity_price_series: time series of electricity prices
+            mpc_time_grid: time grid over the MPC horizon with intervals of time_step
+            flex_offer_time_grid: time grid over which the flexibility offer is calculated, for indexing of the power flexibility profiles
+            stored_energy_base: time series of stored energy from baseline mpc
+            stored_energy_shadow: time series of stored energy from shadow mpc
+            enable_energy_costs_correction: whether the energy costs should be corrected
+            calculate_flex_cost: whether the cost of the flexibility should be calculated
         """
         # Power / energy KPIs
         self._calculate_power_flex(power_profile_base=power_profile_base, power_profile_shadow=power_profile_shadow, flex_offer_time_grid=flex_offer_time_grid)
@@ -221,12 +242,14 @@ class FlexibilityKPIs(pydantic.BaseModel):
 
 
     def _calculate_power_flex(self, power_profile_base: pd.Series, power_profile_shadow: pd.Series,
-                              flex_offer_time_grid: np.ndarray,
-                              relative_error_acceptance: float = 0.01):
+                              flex_offer_time_grid: np.ndarray, relative_error_acceptance: float = 0.01):
         """
         Calculate the power flexibility based on the base and flexibility power profiles.
 
         Args:
+            power_profile_base: power profile from the baseline mpc
+            power_profile_shadow: power profile from the shadow mpc
+            flex_offer_time_grid: time grid over which the flexibility offer is calculated
             relative_error_acceptance: threshold for the relative error between the baseline and shadow mpc to set the power flexibility to zero
         """
         if not power_profile_shadow.index.equals(power_profile_base.index):
@@ -283,7 +306,10 @@ class FlexibilityKPIs(pydantic.BaseModel):
 
     def _calculate_costs(self, electricity_price_signal: pd.Series, stored_energy_diff: float):
         """
-        Calculate the costs of the flexibility event based on the electricity costs profile and the power flexibility profile.
+        Calculate the costs of the flexibility event based on the electricity costs profile, the power flexibility profile and difference of stored energy.
+        Args:
+            electricity_price_signal: time series of the electricity price signal
+            stored_energy_diff: the difference of the stored energy between baseline and shadow mpc
         """
         # Calculate series
         self.electricity_costs_series.value = electricity_price_signal * self.power_flex_full.value
@@ -317,7 +343,9 @@ class FlexibilityKPIs(pydantic.BaseModel):
         Get the KPIs as a dictionary with names or identifier as keys.
         
         Args:
-            identifier: If True, the keys are the identifiers of the KPIs, otherwise the name of the kpi.
+            identifier: If True, the keys are the identifiers of the KPIs, otherwise the name of the KPI.
+        Returns:
+            kpi_dict: dictionary mapping desired KPI keys to KPI.
         """
         kpi_dict = {}
         for kpi in vars(self).values():
@@ -451,9 +479,9 @@ class FlexibilityData(pydantic.BaseModel):
     def calculate(self, enable_energy_costs_correction: bool, calculate_flex_cost: bool):
         """
         Calculate the KPIs for the positive and negative flexibility.
-
-        Returns:
-            positive KPIs, negative KPIs
+        Args:
+            enable_energy_costs_correction: whether the energy costs should be corrected
+            calculate_flex_cost: whether the cost of the flexibility should be calculated
         """
         self.kpis_pos.calculate(
             power_profile_base=self.power_profile_base,

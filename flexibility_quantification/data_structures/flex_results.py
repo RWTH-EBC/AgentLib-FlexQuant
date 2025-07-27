@@ -29,17 +29,25 @@ from flexibility_quantification.modules.flexibility_indicator import Flexibility
 from flexibility_quantification.modules.flexibility_market import FlexibilityMarketModuleConfig
 
 
-def load_indicator(file_path: Union[str, FilePath]) -> pd.DataFrame:
+def load_indicator_results(file_path: Union[str, FilePath]) -> pd.DataFrame:
     """
     Load the flexibility indicator results from the given file path
+    Args:
+        file_path: the file path of the indicator results file
+    Returns:
+        df: DataFrame containing the indicator results
     """
     df = pd.read_csv(file_path, header=0, index_col=[0, 1])
     return df
 
 
-def load_market(file_path: Union[str, FilePath]) -> pd.DataFrame:
+def load_market_results(file_path: Union[str, FilePath]) -> pd.DataFrame:
     """
     Load the market results from the given file path
+    Args:
+        file_path: the file path of the market results file
+    Returns:
+        df: DataFrame containing the market results
     """
     df = pd.read_csv(file_path, header=0, index_col=[0, 1])
     return df
@@ -259,6 +267,13 @@ class Results:
         self.convert_timescale_of_dataframe_index(to_timescale=to_timescale)
 
     def _load_results(self, res_path: Union[str, Path]) -> dict[str, dict[str, pd.DataFrame]]:
+        """
+        read the results file depending on the given res_path
+        Args:
+            res_path: path to the results file
+        Returns:
+            results: a dictionary containing all the results of the experiment
+        """
         res = {
             self.baseline_agent_config.id: {
                 self.baseline_module_config.module_id: load_mpc(
@@ -297,7 +312,7 @@ class Results:
                 )
             },
             self.indicator_agent_config.id: {
-                self.indicator_module_config.module_id: load_indicator(
+                self.indicator_module_config.module_id: load_indicator_results(
                     Path(
                         res_path, 
                         Path(self.indicator_module_config.results_file).name,
@@ -316,7 +331,7 @@ class Results:
             }
         if self.generator_config.market_config:
             res[self.market_agent_config.id] = {
-                self.market_module_config.module_id: load_market(
+                self.market_module_config.module_id: load_market_results(
                     Path(
                         res_path, 
                         Path(self.market_module_config.results_file).name,
@@ -326,10 +341,10 @@ class Results:
         return res
 
     def convert_timescale_of_dataframe_index(self, to_timescale: TimeConversionTypes):
-        """Convert the time in the dataframes to the desired timescale
-
-        Keyword arguments:
-        timescale -- The timescale to convert the data to
+        """
+        Convert the time in the dataframes to the desired timescale
+        Args:
+            timescale: The timescale to convert the data to
         """
         # Convert the time in the dataframes
         for df in ([
@@ -352,9 +367,9 @@ class Results:
     def get_intersection_mpcs_sim(self) -> dict[str, dict[str, str]]:
         """
         Get the intersection of the MPCs and the simulator variables.
-        returns a dictionary with the following structure:
-        Key: variable alias (from baseline)
-        Value: {module id: variable name}
+        Returns:
+             dictionary with the following structure: Key: variable alias (from baseline)
+                                                    Value: {module id: variable name}
         """
         id_alias_name_dict = {}
 
