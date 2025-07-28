@@ -119,7 +119,7 @@ class SetupSystemModifier(ast.NodeTransformer):
             module (ast.Module): The module definition node in the AST.
 
         Returns:
-            ast.Module: The possibly modified module definition node.
+            module (ast.Module): The possibly modified module definition node.
 
         """
         # append imports for baseline
@@ -143,7 +143,7 @@ class SetupSystemModifier(ast.NodeTransformer):
             node (ast.ClassDef): The class definition node in the AST.
 
         Returns:
-            ast.ClassDef: The possibly modified class definition node.
+            node (ast.ClassDef): The possibly modified class definition node.
 
         """
         for base in node.bases:
@@ -504,6 +504,14 @@ class SetupSystemModifier(ast.NodeTransformer):
 
 
 def add_import_to_tree(name: str, alias: str, tree: ast.Module) -> ast.Module:
+    """ add import to the module, the statement 'import name as alias' will be added'
+    Args:
+        name (str): name of the module to be imported
+        alias (str): alias of the module
+        tree (ast.Module): the tree to be imported
+    Returns:
+        tree: the tree updated with the import statement
+    """
     import_statement = ast.Import(names=[ast.alias(name=name, asname=alias)])
     for node in tree.body:
         if isinstance(node, ast.Import):
