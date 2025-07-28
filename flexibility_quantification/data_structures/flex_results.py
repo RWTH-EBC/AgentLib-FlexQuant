@@ -4,8 +4,8 @@ import os
 import pandas as pd
 import flexibility_quantification.utils.config_management as cmng
 from copy import deepcopy
-from typing import Union, Optional
-from pydantic import FilePath
+from typing import Union, Optional, Dict, Any, List, Type
+from pydantic import FilePath, BaseModel
 from pathlib import Path
 from agentlib.core.agent import AgentConfig
 from agentlib.core.module import BaseModuleConfig
