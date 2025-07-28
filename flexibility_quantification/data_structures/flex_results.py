@@ -90,7 +90,7 @@ class Results:
     ):
         if isinstance(results, Results):
             # Already a Results instance — copy over its data
-            self.__dict__ = deepcopy(results.__dict__)
+            self.__dict__ = deepcopy(results).__dict__
             return
         # if generated flex files are saved at a custom base directory and path is provided,
         # update and overwrite the path "flex_base_directory_path" in flex_config
@@ -129,21 +129,25 @@ class Results:
 
         # load the agent and module configs
         if simulator_agent_config:
-            # (don't validate config, as result file is deleted in simulator validator)
             # check config type: with results path adaptation -> dict; without -> str/Path
             if isinstance(simulator_agent_config, (str, Path)):
                 with open(simulator_agent_config, "r") as f:
                     sim_config = json.load(f)
             elif isinstance(simulator_agent_config, dict):
                 sim_config = simulator_agent_config
-            self.simulator_agent_config = AgentConfig.construct(**sim_config)
-            for module in self.simulator_agent_config.modules:
-                if module["type"] == "simulator":
-                    self.simulator_module_config = SimulatorConfig.construct(**module)
-            if not self.simulator_module_config:
-                raise ValueError("No simulator module in provided simulator config")
-        else:
-             self.simulator_agent_config = None
+            sim_module_config = next(
+                (module for module in sim_config["modules"] if module["type"] == "simulator"),
+                None
+            )
+            # instantiate and validate sim agent config
+            self.simulator_agent_config = AgentConfig.model_validate(sim_config)
+            # instantiate sim module config by skipping validation for result_filename
+            # to prevent file deletion
+            self.simulator_module_config = self.create_instance_with_skipped_validation(
+                model_class=SimulatorConfig,
+                config=sim_module_config,
+                skip_fields=["result_filename"]
+            )
 
         for file_path in Path(self.generator_config.flex_files_directory).rglob("*.json"):
             if file_path.name in config_filename_baseline:
@@ -383,3 +387,69 @@ class Results:
         )
 
         return id_alias_name_dict
+
+    def create_instance_with_skipped_validation(
+            self,
+            model_class: Type[BaseModel],
+            config: Dict[str, Any],
+            skip_fields: Optional[List[str]] = None
+        ) -> BaseModel:
+        """
+        Create a Pydantic model instance while skipping validation for specified fields.
+
+        This function allows partial validation of a model's config dictionary by validating
+        all fields except those listed in `skip_fields`. Skipped fields are set on the instance
+        after construction without triggering their validators.
+
+        Args:
+            model_class (Type[BaseModel]): The Pydantic model class to instantiate.
+            config (Dict[str, Any]): The input configuration dictionary.
+            skip_fields (Optional[List[str]]): A list of field names to exclude from validation.
+                                                These fields will be manually set after instantiation.
+
+        Returns:
+            BaseModel: An instance of the model_class with validated and skipped fields assigned.
+        """
+        if skip_fields is None:
+            skip_fields = []
+        # Separate data into validated and skipped fields
+        validated_fields = {field: value for field, value in config.items() if field not in skip_fields}
+        skipped_fields = {field: value for field, value in config.items() if field in skip_fields}
+        # Create instance with validation for non-skipped fields
+        if validated_fields:
+            instance = model_class(
+                **validated_fields,
+                _agent_id=self.simulator_agent_config.id
+            )
+        else:
+            instance = model_class.model_construct()
+        # Add skipped fields without validation
+        for field, value in skipped_fields.items():
+            # bypass pydantic immutability to directly set attribute value
+            object.__setattr__(instance, field, value)
+        # Store metadata about bypassed fields for deepcopy compatibility
+        object.__setattr__(instance, '_bypassed_fields', skip_fields)
+        object.__setattr__(instance, '_original_config', config)
+        return instance
+
+    def __deepcopy__(self, memo: Dict[int, Any]) -> "Results":
+        """
+        Custom deepcopy implementation that handles Pydantic models with bypassed validation.
+        """
+        # Create a new instance of the same class
+        new_instance = self.__class__.__new__(self.__class__)
+        # Add to memo immediately to prevent circular reference issues
+        memo[id(self)] = new_instance
+        for key, value in self.__dict__.items():
+            if key in ['simulator_module_config'] and hasattr(value, '_original_config'):
+                # Reconstruct the specific problematic object instead of deepcopying
+                new_value = self.create_instance_with_skipped_validation(
+                    model_class=value.__class__,
+                    config=copy.deepcopy(value._original_config, memo),
+                    skip_fields=getattr(value, '_bypassed_fields', [])
+                )
+                setattr(new_instance, key, new_value)
+            else:
+                # Everything else should deepcopy normally
+                setattr(new_instance, key, copy.deepcopy(value, memo))
+        return new_instance
