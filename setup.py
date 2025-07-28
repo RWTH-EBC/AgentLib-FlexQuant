@@ -1,8 +1,15 @@
 import setuptools
 
-# Read requirements.txt
-with open('requirements.txt') as f:
-    requirements = f.read().splitlines()
+requirements = [
+    "setuptools",
+    "agentlib[full]==0.8.7",
+    "agentlib_mpc[full] @ git+https://github.com/RWTH-EBC/AgentLib-MPC.git@849f87ddc674bedf24c2b98e92496f300b61da5a",
+    "pathlib",
+    "astor==0.8.1",
+    "black",
+    "pre-commit",
+]
+
 
 setuptools.setup(
     name="flexquant",
