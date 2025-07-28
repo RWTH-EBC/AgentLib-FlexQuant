@@ -70,9 +70,10 @@ class FlexibilityMarketModule(agentlib.BaseModule):
     """
     config: FlexibilityMarketModuleConfig
 
-
-    df: pd.DataFrame = None
-    end: Union[int, float] = 0
+    # DataFrame for flex offer. Multiindex: (time_step, time). Columns: pos_price, neg_price, status
+    flex_offer_df: pd.DataFrame = None
+    # absolute end time of a flexibility event (now + relative end time of the flexibility event on the mpc horizon)
+    abs_flex_event_end: Union[int, float] = 0
 
     def set_random_seed(self, random_seed: int):
         """set the random seed for reproducability"""
@@ -109,21 +110,22 @@ class FlexibilityMarketModule(agentlib.BaseModule):
             callback=callback_function
         )
 
-        self.df = None
+        self.flex_offer_df = None
         self.cooldown_ticker = 0
 
     def write_results(self, offer: FlexOffer):
-        if self.df is None:
-            self.df = pd.DataFrame()
+        """ Save the flex offer results depending on the config """
+        if self.flex_offer_df is None:
+            self.flex_offer_df = pd.DataFrame()
         df = offer.as_dataframe()
         index_first_level = [self.env.now] * len(df.index)
         multi_index = pd.MultiIndex.from_tuples(zip(index_first_level, df.index))
-        self.df = pd.concat((self.df, df.set_index(multi_index)))
-        indices = pd.MultiIndex.from_tuples(self.df.index, names=["time_step", "time"])
-        self.df.set_index(indices, inplace=True)
+        self.flex_offer_df = pd.concat((self.flex_offer_df, df.set_index(multi_index)))
+        indices = pd.MultiIndex.from_tuples(self.flex_offer_df.index, names=["time_step", "time"])
+        self.flex_offer_df.set_index(indices, inplace=True)
 
         if self.config.save_results:
-            self.df.to_csv(self.config.results_file)
+            self.flex_offer_df.to_csv(self.config.results_file)
 
     def random_flexibility_callback(self, inp: AgentVariable, name: str):
         """
@@ -158,7 +160,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                     profile = profile.dropna()
                     profile.index += self.env.time
                     self.set("_P_external", profile)
-                    self.end = profile.index[-1]
+                    self.abs_flex_event_end = profile.index[-1]
                     self.set("in_provision", True)
                     self.cooldown_ticker = self.config.market_specs.cooldown
 
@@ -190,7 +192,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                 profile = profile.dropna()
                 profile.index += self.env.time
                 self.set("_P_external", profile)
-                self.end = profile.index[-1]
+                self.abs_flex_event_end = profile.index[-1]
                 self.set("in_provision", True)
 
         self.write_results(offer)
@@ -204,6 +206,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         self.logger.warning("No market type provided. No market interaction.")
 
     def cleanup_results(self):
+        """remove the results if already exist"""
         results_file = self.config.results_file
         if not results_file:
             return
@@ -212,6 +215,6 @@ class FlexibilityMarketModule(agentlib.BaseModule):
     def process(self):
         while True:
             # End the provision at the appropriate time
-            if self.end < self.env.time:
+            if self.abs_flex_event_end < self.env.time:
                 self.set("in_provision", False)
             yield self.env.timeout(self.env.config.t_sample)
