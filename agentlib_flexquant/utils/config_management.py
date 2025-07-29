@@ -1,6 +1,6 @@
 from agentlib.core.agent import AgentConfig
 from agentlib.core.module import BaseModuleConfig
-import flexibility_quantification.data_structures.globals as glbs
+import agentlib_flexquant.data_structures.globals as glbs
 from copy import deepcopy
 from typing import TypeVar
 import math
@@ -13,7 +13,7 @@ import importlib.util
 T = TypeVar('T', bound=BaseModuleConfig)
 
 
-all_module_types = get_all_module_types(["agentlib_mpc", "flexibility_quantification"])
+all_module_types = get_all_module_types(["agentlib_mpc", "agentlib_flexquant"])
 # remove ML models, since import takes ages
 all_module_types.pop("agentlib_mpc.ann_trainer")
 all_module_types.pop("agentlib_mpc.gpr_trainer")
@@ -26,10 +26,10 @@ all_module_types.pop("clonemap")
 MODULE_TYPE_DICT = {name: inspect.get_annotations(class_type.import_class())["config"] for name, class_type in all_module_types.items()}
 
 MPC_CONFIG_TYPE: str = "agentlib_mpc.mpc"
-BASELINEMPC_CONFIG_TYPE: str = "flexibility_quantification.baseline_mpc"
-SHADOWMPC_CONFIG_TYPE: str = "flexibility_quantification.shadow_mpc"
-INDICATOR_CONFIG_TYPE: str = "flexibility_quantification.flexibility_indicator"
-MARKET_CONFIG_TYPE: str = "flexibility_quantification.flexibility_market"
+BASELINEMPC_CONFIG_TYPE: str = "agentlib_flexquant.baseline_mpc"
+SHADOWMPC_CONFIG_TYPE: str = "agentlib_flexquant.shadow_mpc"
+INDICATOR_CONFIG_TYPE: str = "agentlib_flexquant.flexibility_indicator"
+MARKET_CONFIG_TYPE: str = "agentlib_flexquant.flexibility_market"
 SIMULATOR_CONFIG_TYPE: str = "simulator"
 
 
@@ -41,7 +41,7 @@ def get_module_type_matching_dict(dictionary: dict):
     # Create dictionaries to store keys grouped by values
     value_to_keys = {}
     for k, v in dictionary.items():
-        if k.startswith(('agentlib_mpc.', 'flexibility_quantification.')):
+        if k.startswith(('agentlib_mpc.', 'agentlib_flexquant.')):
             if v not in value_to_keys:
                 value_to_keys[v] = {'agentlib': [], 'flex': []}
             if k.startswith('agentlib_mpc.'):
@@ -92,6 +92,10 @@ def get_module(config: AgentConfig, module_type: str) -> T:
             config_id = deepcopy(config.id)
             mod = deepcopy(module)
             return MODULE_TYPE_DICT[mod["type"]](**mod, _agent_id=config_id)
+        else:
+            raise ModuleNotFoundError(f"Module type {module['type']} not found in "
+                                      f"agentlib and its plug ins.")
+
 
 
 def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig):
