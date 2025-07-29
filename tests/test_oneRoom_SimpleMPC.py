@@ -65,7 +65,7 @@ def test_oneroom_simple_mpc(snapshot):
     full resulting dataframes against stored snapshots.
     """
     # Define the path to the example directory
-    example_path = root_path / 'Examples' / 'oneroom_simpleMPC'
+    example_path = root_path / 'Examples' / 'OneRoom_SimpleMPC'
 
     # Run the example and get the results object
     res = run_example_from_path(example_path)
