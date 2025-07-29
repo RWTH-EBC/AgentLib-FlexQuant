@@ -8,6 +8,8 @@ from .modules import baseline_mpc
 from .modules import flexibility_indicator
 from .modules import flexibility_market
 
+__version__ = "0.1.0"
+
 MODULE_TYPES = {
     "shadow_mpc": ModuleImport(
         import_path="agentlib_flexquant.modules.shadow_mpc",
