@@ -162,8 +162,8 @@ def plot_results(results_data: dict = None):
 
     # flexibility
     # get only the first prediction time of each time step
-    energy_flex_neg = res.df_indicator.xs("energyflex_neg", axis=1).droplevel(1).dropna()
-    energy_flex_pos = res.df_indicator.xs("energyflex_pos", axis=1).droplevel(1).dropna()
+    energy_flex_neg = res.df_indicator.xs("negative_energy_flex", axis=1).droplevel(1).dropna()
+    energy_flex_pos = res.df_indicator.xs("positive_energy_flex", axis=1).droplevel(1).dropna()
     fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=1)
     ax1 = axs[0]
     ax1.set_ylabel(r"$\epsilon$ in kWh")

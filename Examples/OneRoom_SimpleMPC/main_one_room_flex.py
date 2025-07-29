@@ -11,7 +11,7 @@ until = 21600
 ENV_CONFIG = {"rt": False, "factor": 0.01, "t_sample": 60}
 
 
-def run_example(until=until):
+def run_example(until=until, with_plots=False):
     results = []
     mpc_config = "mpc_and_sim/simple_model.json"
     sim_config = "mpc_and_sim/simple_sim.json"
@@ -31,19 +31,21 @@ def run_example(until=until):
     mas.run(until=until)
     results = mas.get_results(cleanup=False)
 
-    # plot_results(results_data=results)    # Alternative plotscript using matplotlib,
-    Dashboard(
-        flex_config="flex_configs/flexibility_agent_config.json",
-        simulator_agent_config="mpc_and_sim/simple_sim.json",
-        results=results
-    ).show(
-        custom_bounds=CustomBound(
-            for_variable="T",
-            lb_name="T_lower",
-            ub_name="T_upper"
+    if with_plots:
+        Dashboard(
+            flex_config="flex_configs/flexibility_agent_config.json",
+            simulator_agent_config="mpc_and_sim/simple_sim.json",
+            results=results
+        ).show(
+            custom_bounds=CustomBound(
+                for_variable="T",
+                lb_name="T_lower",
+                ub_name="T_upper"
+            )
         )
-    )
+        # plot_results(results_data=results)    # Alternative plotscript using matplotlib,
+    return results
 
 
 if __name__ == "__main__":
-    run_example(until)
+    run_example(until, with_plots=True)

@@ -127,11 +127,11 @@ class FlexQuantConfig(pydantic.BaseModel):
         description="Base path where generated flex data is stored",
     )
     flex_files_directory: Path = pydantic.Field(
-        default="created_flex_files",
+        default=Path("created_flex_files"),
         description="Directory where generated files (jsons) should be stored",
     )
     results_directory: Path = pydantic.Field(
-        default="results",
+        default=Path("results"),
         description="Directory where generated result files (CSVs) should be stored",
     )
     delete_files: bool = pydantic.Field(
