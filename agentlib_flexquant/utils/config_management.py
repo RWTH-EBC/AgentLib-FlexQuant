@@ -92,9 +92,9 @@ def get_module(config: AgentConfig, module_type: str) -> T:
             config_id = deepcopy(config.id)
             mod = deepcopy(module)
             return MODULE_TYPE_DICT[mod["type"]](**mod, _agent_id=config_id)
-        else:
-            raise ModuleNotFoundError(f"Module type {module['type']} not found in "
-                                      f"agentlib and its plug ins.")
+    else:
+        raise ModuleNotFoundError(f"Module type {module['type']} not found in "
+                                  f"agentlib and its plug ins.")
 
 
 
