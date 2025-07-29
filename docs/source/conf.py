@@ -74,8 +74,8 @@ html_theme_options = {
     "color_primary": "red",
     "color_accent": "red",
     # Set the repo location to get a badge with stats
-    "repo_url": "https://github.com/RWTH-EBC/AgentLib-MPC",
-    "repo_name": "AgentLib-MPC: An MPC plugin for AgentLib",
+    "repo_url": "https://github.com/RWTH-EBC/AgentLib-FlexQuant",
+    "repo_name": "AgentLib-FlexQuant: A flexibility quantification plugin for AgentLib",
     # Visible levels of the global TOC; -1 means unlimited
     "globaltoc_depth": 3,
     # If False, expand all TOC entries
