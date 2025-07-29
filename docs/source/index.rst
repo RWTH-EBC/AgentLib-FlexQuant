@@ -16,6 +16,11 @@
     tutorial
     api
 
+Readme
+-----------------------
+
+.. mdinclude::  ../../README.md
+
  Indices and tables
  ==================
 
