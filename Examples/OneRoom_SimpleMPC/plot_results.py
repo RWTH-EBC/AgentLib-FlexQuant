@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import agentlib_mpc.utils.plotting.basic as mpcplot
 from agentlib_mpc.utils.analysis import mpc_at_time_step
-from flexibility_quantification.data_structures.flex_results import Results
+from agentlib_flexquant.data_structures.flex_results import Results
 
 
 def plot_results(results_data: dict = None):

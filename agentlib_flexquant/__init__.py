@@ -10,27 +10,27 @@ from .modules import flexibility_market
 
 MODULE_TYPES = {
     "shadow_mpc": ModuleImport(
-        import_path="flexibility_quantification.modules.shadow_mpc",
+        import_path="agentlib_flexquant.modules.shadow_mpc",
         class_name=shadow_mpc.FlexibilityShadowMPC.__name__,
     ),
     "shadow_minlp_mpc": ModuleImport(
-        import_path="flexibility_quantification.modules.shadow_mpc",
+        import_path="agentlib_flexquant.modules.shadow_mpc",
         class_name=shadow_mpc.FlexibilityShadowMINLPMPC.__name__,
     ),
     "baseline_mpc": ModuleImport(
-        import_path="flexibility_quantification.modules.baseline_mpc",
+        import_path="agentlib_flexquant.modules.baseline_mpc",
         class_name=baseline_mpc.FlexibilityBaselineMPC.__name__,
     ),
     "baseline_minlp_mpc": ModuleImport(
-        import_path="flexibility_quantification.modules.baseline_mpc",
+        import_path="agentlib_flexquant.modules.baseline_mpc",
         class_name=baseline_mpc.FlexibilityBaselineMINLPMPC.__name__,
     ),
     "flexibility_indicator": ModuleImport(
-        import_path="flexibility_quantification.modules.flexibility_indicator",
+        import_path="agentlib_flexquant.modules.flexibility_indicator",
         class_name=flexibility_indicator.FlexibilityIndicatorModule.__name__,
     ),
     "flexibility_market": ModuleImport(
-        import_path="flexibility_quantification.modules.flexibility_market",
+        import_path="agentlib_flexquant.modules.flexibility_market",
         class_name=flexibility_market.FlexibilityMarketModule.__name__,
     ),
 }
@@ -39,7 +39,7 @@ MODULE_TYPES = {
 backend_types.update(
     {
         "casadi_cia_cons": BackendImport(
-            import_path="flexibility_quantification.optimization_backends.constrained_cia",
+            import_path="agentlib_flexquant.optimization_backends.constrained_cia",
             class_name="ConstrainedCasADiCIABackend",
         )
     }

@@ -1,6 +1,6 @@
 import pydantic
 from typing import Union, Literal
-from flexibility_quantification.data_structures.globals import FlexibilityDirections
+from agentlib_flexquant.data_structures.globals import FlexibilityDirections
 
 
 class RandomOptions(pydantic.BaseModel):

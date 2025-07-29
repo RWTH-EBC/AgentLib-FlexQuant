@@ -6,8 +6,8 @@ from copy import deepcopy
 
 from agentlib.utils.multi_agent_system import LocalMASAgency
 
-from flexibility_quantification.generate_flex_agents import FlexAgentGenerator
-from flexibility_quantification.utils.interactive import Dashboard, CustomBound
+from agentlib_flexquant.generate_flex_agents import FlexAgentGenerator
+from agentlib_flexquant.utils.interactive import Dashboard, CustomBound
 
 
 logging.basicConfig(level=logging.WARN)

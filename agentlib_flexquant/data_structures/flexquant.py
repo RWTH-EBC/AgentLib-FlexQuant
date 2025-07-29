@@ -8,7 +8,7 @@ from agentlib.core.errors import ConfigurationError
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from pydantic import ConfigDict, model_validator
 
-from flexibility_quantification.data_structures.mpcs import (
+from agentlib_flexquant.data_structures.mpcs import (
     BaselineMPCData,
     NFMPCData,
     PFMPCData

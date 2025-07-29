@@ -1,6 +1,6 @@
-import flexibility_quantification.data_structures.globals as glbs
-from flexibility_quantification.utils.interactive import Dashboard, CustomBound
-from flexibility_quantification.data_structures.flex_results import Results
+import agentlib_flexquant.data_structures.globals as glbs
+from agentlib_flexquant.utils.interactive import Dashboard, CustomBound
+from agentlib_flexquant.data_structures.flex_results import Results
 
 def plot_results(results):
 # loaded results can be passed to the Dashboard for plotting 

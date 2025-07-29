@@ -9,12 +9,12 @@ import pandas as pd
 from agentlib.core.errors import ConfigurationError
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-import flexibility_quantification.data_structures.globals as glbs
-from flexibility_quantification.data_structures.flex_kpis import (
+import agentlib_flexquant.data_structures.globals as glbs
+from agentlib_flexquant.data_structures.flex_kpis import (
     FlexibilityData, 
     FlexibilityKPIs
 )
-from flexibility_quantification.data_structures.flex_offer import FlexOffer
+from agentlib_flexquant.data_structures.flex_offer import FlexOffer
 
 
 class InputsForCorrectFlexCosts(BaseModel):

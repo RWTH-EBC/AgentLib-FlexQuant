@@ -20,25 +20,25 @@ from agentlib_mpc.models.casadi_model import CasadiModelConfig
 from agentlib_mpc.modules.mpc_full import BaseMPCConfig
 from pydantic import FilePath
 
-import flexibility_quantification.data_structures.globals as glbs
-import flexibility_quantification.utils.config_management as cmng
-from flexibility_quantification.utils.parsing import (
+import agentlib_flexquant.data_structures.globals as glbs
+import agentlib_flexquant.utils.config_management as cmng
+from agentlib_flexquant.utils.parsing import (
     SetupSystemModifier, 
     add_import_to_tree
 )
-from flexibility_quantification.data_structures.flexquant import (
+from agentlib_flexquant.data_structures.flexquant import (
     FlexibilityIndicatorConfig, 
     FlexibilityMarketConfig, 
     FlexQuantConfig
 )
-from flexibility_quantification.data_structures.mpcs import (
+from agentlib_flexquant.data_structures.mpcs import (
     BaselineMPCData,
     BaseMPCData
 )
-from flexibility_quantification.modules.flexibility_indicator import (
+from agentlib_flexquant.modules.flexibility_indicator import (
     FlexibilityIndicatorModuleConfig
 )    
-from flexibility_quantification.modules.flexibility_market import (
+from agentlib_flexquant.modules.flexibility_market import (
     FlexibilityMarketModuleConfig
 )   
 
