@@ -3,18 +3,18 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
- Welcome to AgentLib-FlexQuant's documentation!
- ===============================================
+Welcome to AgentLib-FlexQuant's documentation!
+===============================================
 
- This project is a plugin for the AgentLib. This agent-based framework employs model predictive control (MPC) to quantify flexibility offers of electricity usage of building energy systems (BES) during operation.
+This project is a plugin for the AgentLib. This agent-based framework employs model predictive control (MPC) to quantify flexibility offers of electricity usage of building energy systems (BES) during operation.
 
- .. toctree::
-    :maxdepth: 2
-    :caption: Contents:
+.. toctree::
+ :maxdepth: 2
+ :caption: Contents:
 
-    installation
-    tutorial
-    api
+ installation
+ tutorial
+ api
 
 Readme
 -----------------------
