@@ -12,11 +12,11 @@ from agentlib_mpc.utils import TimeConversionTypes, TIME_CONVERSION
 from agentlib_mpc.utils.analysis import mpc_at_time_step
 from agentlib_mpc.utils.plotting.interactive import get_port
 
-import flexibility_quantification.data_structures.globals as glbs
-import flexibility_quantification.data_structures.flex_results as flex_results
-from flexibility_quantification.data_structures.flexquant import FlexQuantConfig
-from flexibility_quantification.data_structures.flex_kpis import FlexibilityKPIs
-from flexibility_quantification.data_structures.flex_offer import OfferStatus
+import agentlib_flexquant.data_structures.globals as glbs
+import agentlib_flexquant.data_structures.flex_results as flex_results
+from agentlib_flexquant.data_structures.flexquant import FlexQuantConfig
+from agentlib_flexquant.data_structures.flex_kpis import FlexibilityKPIs
+from agentlib_flexquant.data_structures.flex_offer import OfferStatus
 
 
 class CustomBound:

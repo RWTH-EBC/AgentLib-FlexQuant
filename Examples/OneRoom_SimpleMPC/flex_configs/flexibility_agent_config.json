@@ -12,7 +12,7 @@
                 },
                 {
                     "module_id": "FlexibilityIndicator",
-                    "type": "flexibility_quantification.flexibility_indicator",
+                    "type": "agentlib_flexquant.flexibility_indicator",
                     "price_variable": "r_pel",
                     "parameters": [
                         {
@@ -34,12 +34,6 @@
                         {
                             "name": "prediction_horizon",
                             "value": 48
-                        }
-                    ],
-                    "inputs": [
-                        {
-                            "name": "r_pel",
-                            "alias": "r_pel"
                         }
                     ],
                     "correct_costs": {"enable_energy_costs_correction": true,
@@ -71,7 +65,7 @@
             "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, -self.s_P * self.P_el])"
         }
     },
-    "path_to_flex_files": "created_flex_files",
+    "flex_files_directory": "created_flex_files",
     "delete_files": false,
     "overwrite_files": true
 }

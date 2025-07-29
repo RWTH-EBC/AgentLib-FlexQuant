@@ -13,8 +13,8 @@ import pickle
 import logging
 from copy import copy
 from scipy import integrate
-from flexibility_quantification.generate_flex_agents import FlexAgentGenerator
-from flexibility_quantification.data_structures.flex_offer import OfferStatus
+from agentlib_flexquant.generate_flex_agents import FlexAgentGenerator
+from agentlib_flexquant.data_structures.flex_offer import OfferStatus
 
 pd.set_option("display.max_rows", None)
 

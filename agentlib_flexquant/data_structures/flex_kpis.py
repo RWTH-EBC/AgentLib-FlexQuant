@@ -6,8 +6,8 @@ import numpy as np
 import pandas as pd
 
 from agentlib_mpc.utils import TimeConversionTypes, TIME_CONVERSION
-from flexibility_quantification.data_structures.globals import FlexibilityDirections
-from flexibility_quantification.utils.data_handling import strip_multi_index, fill_nans, MEAN
+from agentlib_flexquant.data_structures.globals import FlexibilityDirections
+from agentlib_flexquant.utils.data_handling import strip_multi_index, fill_nans, MEAN
 
 
 class KPI(pydantic.BaseModel):

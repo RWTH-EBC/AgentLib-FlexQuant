@@ -8,7 +8,7 @@ from agentlib.core.errors import ConfigurationError
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from pydantic import ConfigDict, model_validator
 
-from flexibility_quantification.data_structures.mpcs import (
+from agentlib_flexquant.data_structures.mpcs import (
     BaselineMPCData,
     NFMPCData,
     PFMPCData
@@ -127,11 +127,11 @@ class FlexQuantConfig(pydantic.BaseModel):
         description="Base path where generated flex data is stored",
     )
     flex_files_directory: Path = pydantic.Field(
-        default="created_flex_files",
+        default=Path("created_flex_files"),
         description="Directory where generated files (jsons) should be stored",
     )
     results_directory: Path = pydantic.Field(
-        default="results",
+        default=Path("results"),
         description="Directory where generated result files (CSVs) should be stored",
     )
     delete_files: bool = pydantic.Field(

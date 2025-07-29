@@ -9,8 +9,8 @@ import pydantic
 from agentlib.core.errors import ConfigurationError
 from pydantic import model_validator
 
-from flexibility_quantification.data_structures.flex_offer import OfferStatus
-from flexibility_quantification.data_structures.market import (
+from agentlib_flexquant.data_structures.flex_offer import OfferStatus
+from agentlib_flexquant.data_structures.market import (
     MarketSpecifications
 )
 

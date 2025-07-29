@@ -1,12 +1,12 @@
 import ast
 from typing import Union, List, Optional
-from flexibility_quantification.data_structures.mpcs import (
+from agentlib_flexquant.data_structures.mpcs import (
     BaseMPCData,
     PFMPCData,
     NFMPCData,
     BaselineMPCData,
 )
-from flexibility_quantification.data_structures.globals import (
+from agentlib_flexquant.data_structures.globals import (
     SHADOW_MPC_COST_FUNCTION,
     return_baseline_cost_function,
     full_trajectory_prefix,

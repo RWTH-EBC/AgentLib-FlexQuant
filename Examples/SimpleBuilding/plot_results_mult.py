@@ -1,4 +1,4 @@
-from flexibility_quantification.utils.interactive import Dashboard, CustomBound
+from agentlib_flexquant.utils.interactive import Dashboard, CustomBound
 
 def plot_results(generated_flex_files_base_path):
     

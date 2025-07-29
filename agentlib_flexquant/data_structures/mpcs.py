@@ -2,8 +2,8 @@ import pydantic
 from pydantic import ConfigDict, model_validator
 from typing import List, Optional
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
-import flexibility_quantification.data_structures.globals as glbs
-import flexibility_quantification.utils.config_management as cmng
+import agentlib_flexquant.data_structures.globals as glbs
+import agentlib_flexquant.utils.config_management as cmng
 
 
 class BaseMPCData(pydantic.BaseModel):

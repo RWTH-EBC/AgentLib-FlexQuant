@@ -9,7 +9,7 @@ from typing import Optional
 from pathlib import Path
 from agentlib.core.errors import OptionalDependencyError
 from agentlib_mpc.data_structures.mpc_datamodels import MINLPVariableReference
-from flexibility_quantification.data_structures.globals import (
+from agentlib_flexquant.data_structures.globals import (
     full_trajectory_prefix,
     full_trajectory_suffix,
 )

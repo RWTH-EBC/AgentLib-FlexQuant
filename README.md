@@ -1,4 +1,7 @@
 # Flexibility Quantification
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![pylint](https://rwth-ebc.github.io/AgentLib-FlexQuant/main/pylint/pylint.svg)](https://rwth-ebc.github.io/AgentLib-FlexQuant/main/pylint/pylint.html)
+[![documentation](https://rwth-ebc.github.io/AgentLib-FlexQuant/main/docs/doc.svg)](https://rwth-ebc.github.io/AgentLib-FlexQuant/main/docs/index.html)
 
 This project is a plugin for the [AgentLib](https://github.com/RWTH-EBC/AgentLib). This agent-based framework employs model predictive control (MPC) to quantify flexibility offers of electricity usage of building energy systems (BES) during operation.
 
@@ -35,7 +38,7 @@ In general, a use case has the two following types of files:
 - Flex_config: this is a json file that defines the configurations for the agents represented by the grey boxes in the [framework figure](#the-framework). It also specifies the modifications to the Baseline MPC when used in a FlexQuant framework compared to the standard control case. Note that not all the configurations are explicitly detailed within this file; instead, it may reference other configuration files, such as an indicator config in a separate JSON file.
 - Modules: Each use case has its own specific BES, (Baseline) MPC and predictor module, represented as black boxes in the [framework figure](#the-framework). These Agents are implemented using the standard methods from  [AgentLib](https://github.com/RWTH-EBC/AgentLib) and [Agentlib-MPC](https://github.com/RWTH-EBC/AgentLib-MPC/tree/main/agentlib_mpc). For every module, there is a corresponding python file that defines its variables and functionality. Additionally, each module has a configuration JSON file, which can override the default variable values if specified.
 
-To see how the package works in detail, read more [here](flexibility_quantification/README.md)
+To see how the package works in detail, read more [here](agentlib_flexquant/README.md)
 
 ### The Agents
 

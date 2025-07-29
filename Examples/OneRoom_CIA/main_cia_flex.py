@@ -7,7 +7,7 @@ import numpy as np
 import agentlib_mpc.utils.plotting.basic as mpcplot
 from agentlib_mpc.utils.analysis import load_sim, load_mpc
 from agentlib_mpc.utils.analysis import mpc_at_time_step
-from flexibility_quantification.generate_flex_agents import FlexAgentGenerator
+from agentlib_flexquant.generate_flex_agents import FlexAgentGenerator
 import logging
 import pandas as pd
 
