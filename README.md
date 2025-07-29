@@ -9,12 +9,6 @@ This project is a plugin for the [AgentLib](https://github.com/RWTH-EBC/AgentLib
 To install, you can either use the ``requirements.txt`` or go for package installation with ``pip install -e .``.
 The ``-e`` option installs the package in editable mode, which should be done when working on this package. Please use Python version 3.10, 3.11 or 3.12.
 
-## Authors
-- Felix Stegemerten 
-- Peter Kröning
-- Hexuan Zhao
-- Karthik Suresh
-
 ## Referencing the FlexQuant
 A publication regarding the FlexQuant is currently in the work. A preprint is available under https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5015569
 
@@ -77,4 +71,10 @@ three MPCs to calculate key performance indicators for quantifying available fle
 
 <ins>Market Agent</ins> \
 Once the Market Agent decides to accept a flexibility offer, it sends the accepted flexibility trajectory back to the baseline MPC, which must deliver it in the corresponding time interval t<sub>FE</sub>.
+
+## Authors
+- Felix Stegemerten 
+- Peter Kröning
+- Hexuan Zhao
+- Karthik Suresh
 
