@@ -8,6 +8,8 @@ requirements = [
     "astor==0.8.1",
     "black",
     "pre-commit",
+    "pytest",
+    "pytest-snapshot"
 ]
 
 
