@@ -20,6 +20,7 @@ Readme
 -----------------------
 
 ```{include} ../../README.md
+```
 
  Indices and tables
  ==================
