@@ -13,7 +13,7 @@ This project is a plugin for the AgentLib. This agent-based framework employs mo
  :caption: Contents:
 
  installation
- tutorial
+ tutorials
  api
 
 Readme
