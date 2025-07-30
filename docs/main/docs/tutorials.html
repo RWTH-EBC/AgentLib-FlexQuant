@@ -1,0 +1,171 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial &mdash; agentlib_flexquant 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/autodoc_pydantic.css" />
+
+  
+      <script src="_static/jquery.js"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+      <script src="_static/doctools.js"></script>
+      <script src="_static/sphinx_highlight.js"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            agentlib_flexquant
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">agentlib_flexquant</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Tutorial</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/tutorials.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tutorial">
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this heading"></a></h1>
+<p>This section provides tutorials to help you get started with FlexQuant. It begins with the framework’s structure, followed by the application. Functionality of each agent is introduced at the end. For more details, please refer to the literature mentioned above.</p>
+<section id="the-framework">
+<h2>The framework<a class="headerlink" href="#the-framework" title="Permalink to this heading"></a></h2>
+<figure class="align-default" id="id2">
+<span id="framework-figure"></span><a class="reference internal image-reference" href="_images/FlexQuantFramework.jpg"><img alt="framework" src="_images/FlexQuantFramework.jpg" style="width: 600px;" /></a>
+<figcaption>
+<p><span class="caption-text">Framework and data flow of the seven agents in FlexQuant</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>In total, the framework consists of seven agents: Predictor Agent, BES Agent, three MPC Agents, an Indicator Agent and a market agent. The data exchange between these agents is illustrated with the arrows in the image above. The black boxes are a standard MPC setup created with <a class="reference external" href="https://github.com/RWTH-EBC/AgentLib">AgentLib</a> and <a class="reference external" href="https://github.com/RWTH-EBC/AgentLib-MPC">AgentLib-MPC</a>. They serve as input for flexquant, the resulting output of which is represented with the grey boxes. For the normal use case without flexibility quantification, only the agents and communications in black are active. The ones in grey are generated while quantifying the flexibility. Detailed descriptions for each agent and their interactions can be found in this <a class="reference internal" href="#the-agents"><span class="std std-ref">section</span></a>.</p>
+</section>
+<section id="application">
+<h2>Application<a class="headerlink" href="#application" title="Permalink to this heading"></a></h2>
+<p>This section demonstrates how to use the FlexQuant package. Examples can be found in the folder <span class="xref std std-doc">Examples</span>.</p>
+<p>In general, a use case has the two following types of files:</p>
+<ul class="simple">
+<li><p><strong>Flex_config</strong>: this is a json file that defines the configurations for the agents represented by the grey boxes in the <a class="reference internal" href="#framework-figure"><span class="std std-ref">framework figure</span></a>. It also specifies the modifications to the Baseline MPC when used in a FlexQuant framework compared to the standard control case. Note that not all the configurations are explicitly detailed within this file; instead, it may reference other configuration files, such as an indicator config in a separate JSON file.</p></li>
+<li><p><strong>Modules</strong>: Each use case has its own specific BES, (Baseline) MPC and predictor module, represented as black boxes in the <a class="reference internal" href="#framework-figure"><span class="std std-ref">framework figure</span></a>. These Agents are implemented using the standard methods from <a class="reference external" href="https://github.com/RWTH-EBC/AgentLib">AgentLib</a> and <a class="reference external" href="https://github.com/RWTH-EBC/AgentLib-MPC">AgentLib-MPC</a>. For every module, there is a corresponding python file that defines its variables and functionality. Additionally, each module has a configuration JSON file, which can override the default variable values if specified.</p></li>
+</ul>
+</section>
+<section id="the-agents">
+<span id="id1"></span><h2>The Agents<a class="headerlink" href="#the-agents" title="Permalink to this heading"></a></h2>
+<p>The key components of the FlexQuant framework are the three MPCs: the <strong>baseline MPC</strong>, which controls the BES and two <strong>shadow MPCs</strong> for the calculation of the available flexibility.</p>
+<section id="predictor-agent">
+<h3>Predictor Agent<a class="headerlink" href="#predictor-agent" title="Permalink to this heading"></a></h3>
+<p>The Predictor Agent provides a prediction trajectory of the boundary conditions for the given use case to the MPC Agents. This includes factors such as weather conditions, electricity tariffs, comfort boundaries, and occupancy schedules. The data can either be historical or retrieved via API services to support real-time operation.</p>
+</section>
+<section id="bes-agent">
+<h3>BES Agent<a class="headerlink" href="#bes-agent" title="Permalink to this heading"></a></h3>
+<p>The BES Agent simulates the energy system to be controlled. It can either use the same model as the MPC or a higher-fidelity one. In the latter case, the BES model does not need to be Python-based; for example, a Modelica model or even a real-world BES can be utilized. The BES Agent receives control signals from the MPC, applies them to the system, and subsequently sends the resulting measurements back to the MPC.</p>
+</section>
+<section id="mpc-agents">
+<h3>MPC Agents<a class="headerlink" href="#mpc-agents" title="Permalink to this heading"></a></h3>
+<p>The <strong>Baseline MPC</strong> is responsible for optimizing the operation of the BES with the objective of minimizing operational costs over the prediction horizon. While used for flexibility quantification, it is slightly modified to include the extra function of delivering the accepted flex offer.</p>
+<p>The <strong>Shadow MPCs</strong> are designed to assess the maximum possible flexibility of electricity usage over a user-defined flexibility event duration. They are termed “shadow” because they do not directly control the BES but only support the evaluation of system flexibility. Two Shadow MPCs are employed: The Negative Shadow MPC calculates the control trajectory that maximizes BES power consumption, leading to a negative power contribution to the market (i.e., higher grid consumption). The Positive Shadow MPC does the opposite. The prediction horizon of the Shadow MPCs is divided as following:</p>
+<figure class="align-default" id="id3">
+<a class="reference internal image-reference" href="images/ShadowMPCTimeSlpit.jpg"><img alt="Split of the prediction horizon of the Shadow MPCs" src="images/ShadowMPCTimeSlpit.jpg" style="width: 600px;" /></a>
+<figcaption>
+<p><span class="caption-text">Split of the prediction horizon of the Shadow MPCs</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>The time t<sub>MC</sub> is the market clearing time, during which a flexibility offer in t<sub>FE</sub> is reserved and the market can decide whether to take it. The preparation time t<sub>Prep</sub> allows the system to prepare itself for the upcoming flexibility event in advance to maximize the flexibility in t<sub>FE</sub>, where the flexibility event takes place.</p>
+<p>Both the baseline and the shadow MPCs must have the storage variable <code class="docutils literal notranslate"><span class="pre">E_stored</span></code> for electrical energy as output, if the correction of the flexible energy cost is activated. According to definition in the package, <code class="docutils literal notranslate"><span class="pre">E_stored</span></code> increases as more electrical energy is stored in the system. Therefore, it should be defined as following:</p>
+<ul>
+<li><p>for heating case:</p>
+<div class="math notranslate nohighlight">
+\[E_{stored} = \sum \frac{C \cdot T}{\eta} + \text{other stored electrical energy}\]</div>
+</li>
+<li><p>for cooling case:</p>
+<div class="math notranslate nohighlight">
+\[E_{stored} = - \sum \frac{C \cdot T}{\eta} + \text{other stored electrical energy}\]</div>
+</li>
+</ul>
+<p>where T is the temperature of the components in the system and η could be e.g. the COP of a heat pump.</p>
+</section>
+<section id="indicator-agent">
+<h3>Indicator Agent<a class="headerlink" href="#indicator-agent" title="Permalink to this heading"></a></h3>
+<p>The Indicator Agent utilizes the power consumption predictions of the three MPCs to calculate key performance indicators for quantifying available flexibility offers. They could be the total energy, the peak power, the average power or the cost etc.</p>
+</section>
+<section id="market-agent">
+<h3>Market Agent<a class="headerlink" href="#market-agent" title="Permalink to this heading"></a></h3>
+<p>Once the Market Agent decides to accept a flexibility offer, it sends the accepted flexibility trajectory back to the baseline MPC, which must deliver it in the corresponding time interval t<sub>FE</sub>.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Felix Stegemerten.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

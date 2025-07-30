@@ -1,0 +1,690 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>agentlib_flexquant package &mdash; agentlib_flexquant 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
+
+  
+      <script src="../_static/jquery.js"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+      <script src="../_static/doctools.js"></script>
+      <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            agentlib_flexquant
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">agentlib_flexquant</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">agentlib_flexquant package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/code/agentlib_flexquant.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-agentlib_flexquant">
+<span id="agentlib-flexquant-package"></span><h1>agentlib_flexquant package<a class="headerlink" href="#module-agentlib_flexquant" title="Permalink to this heading"></a></h1>
+<p>agentlib plugin</p>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="agentlib_flexquant.data_structures.html">agentlib_flexquant.data_structures package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="agentlib_flexquant.data_structures.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="agentlib_flexquant.data_structures.html#module-agentlib_flexquant.data_structures.flex_kpis">agentlib_flexquant.data_structures.flex_kpis module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData"><code class="docutils literal notranslate"><span class="pre">FlexibilityData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData.electricity_price_series"><code class="docutils literal notranslate"><span class="pre">FlexibilityData.electricity_price_series</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData.flex_offer_time_grid"><code class="docutils literal notranslate"><span class="pre">FlexibilityData.flex_offer_time_grid</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData.kpis_neg"><code class="docutils literal notranslate"><span class="pre">FlexibilityData.kpis_neg</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData.kpis_pos"><code class="docutils literal notranslate"><span class="pre">FlexibilityData.kpis_pos</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData.mpc_time_grid"><code class="docutils literal notranslate"><span class="pre">FlexibilityData.mpc_time_grid</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData.power_profile_base"><code class="docutils literal notranslate"><span class="pre">FlexibilityData.power_profile_base</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData.power_profile_flex_neg"><code class="docutils literal notranslate"><span class="pre">FlexibilityData.power_profile_flex_neg</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData.power_profile_flex_pos"><code class="docutils literal notranslate"><span class="pre">FlexibilityData.power_profile_flex_pos</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData.stored_energy_profile_base"><code class="docutils literal notranslate"><span class="pre">FlexibilityData.stored_energy_profile_base</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData.stored_energy_profile_flex_neg"><code class="docutils literal notranslate"><span class="pre">FlexibilityData.stored_energy_profile_flex_neg</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData.stored_energy_profile_flex_pos"><code class="docutils literal notranslate"><span class="pre">FlexibilityData.stored_energy_profile_flex_pos</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData.switch_time"><code class="docutils literal notranslate"><span class="pre">FlexibilityData.switch_time</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData.Config"><code class="docutils literal notranslate"><span class="pre">FlexibilityData.Config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData.calculate"><code class="docutils literal notranslate"><span class="pre">FlexibilityData.calculate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData.format_mpc_inputs"><code class="docutils literal notranslate"><span class="pre">FlexibilityData.format_mpc_inputs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData.format_predictor_inputs"><code class="docutils literal notranslate"><span class="pre">FlexibilityData.format_predictor_inputs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData.get_kpis"><code class="docutils literal notranslate"><span class="pre">FlexibilityData.get_kpis()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs"><code class="docutils literal notranslate"><span class="pre">FlexibilityKPIs</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs.corrected_costs"><code class="docutils literal notranslate"><span class="pre">FlexibilityKPIs.corrected_costs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs.corrected_costs_rel"><code class="docutils literal notranslate"><span class="pre">FlexibilityKPIs.corrected_costs_rel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs.costs"><code class="docutils literal notranslate"><span class="pre">FlexibilityKPIs.costs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs.costs_rel"><code class="docutils literal notranslate"><span class="pre">FlexibilityKPIs.costs_rel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs.direction"><code class="docutils literal notranslate"><span class="pre">FlexibilityKPIs.direction</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs.electricity_costs_series"><code class="docutils literal notranslate"><span class="pre">FlexibilityKPIs.electricity_costs_series</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs.energy_flex"><code class="docutils literal notranslate"><span class="pre">FlexibilityKPIs.energy_flex</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs.power_flex_full"><code class="docutils literal notranslate"><span class="pre">FlexibilityKPIs.power_flex_full</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs.power_flex_offer"><code class="docutils literal notranslate"><span class="pre">FlexibilityKPIs.power_flex_offer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs.power_flex_offer_avg"><code class="docutils literal notranslate"><span class="pre">FlexibilityKPIs.power_flex_offer_avg</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs.power_flex_offer_max"><code class="docutils literal notranslate"><span class="pre">FlexibilityKPIs.power_flex_offer_max</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs.power_flex_offer_min"><code class="docutils literal notranslate"><span class="pre">FlexibilityKPIs.power_flex_offer_min</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs.power_flex_within_boundary"><code class="docutils literal notranslate"><span class="pre">FlexibilityKPIs.power_flex_within_boundary</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs.calculate"><code class="docutils literal notranslate"><span class="pre">FlexibilityKPIs.calculate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs.get_kpi_dict"><code class="docutils literal notranslate"><span class="pre">FlexibilityKPIs.get_kpi_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs.get_name_dict"><code class="docutils literal notranslate"><span class="pre">FlexibilityKPIs.get_name_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.KPI"><code class="docutils literal notranslate"><span class="pre">KPI</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.KPI.direction"><code class="docutils literal notranslate"><span class="pre">KPI.direction</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.KPI.name"><code class="docutils literal notranslate"><span class="pre">KPI.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.KPI.unit"><code class="docutils literal notranslate"><span class="pre">KPI.unit</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.KPI.value"><code class="docutils literal notranslate"><span class="pre">KPI.value</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.KPI.Config"><code class="docutils literal notranslate"><span class="pre">KPI.Config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.KPI.get_kpi_identifier"><code class="docutils literal notranslate"><span class="pre">KPI.get_kpi_identifier()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.KPISeries"><code class="docutils literal notranslate"><span class="pre">KPISeries</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.KPISeries.dt"><code class="docutils literal notranslate"><span class="pre">KPISeries.dt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.KPISeries.value"><code class="docutils literal notranslate"><span class="pre">KPISeries.value</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.KPISeries.avg"><code class="docutils literal notranslate"><span class="pre">KPISeries.avg()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.KPISeries.integrate"><code class="docutils literal notranslate"><span class="pre">KPISeries.integrate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.KPISeries.max"><code class="docutils literal notranslate"><span class="pre">KPISeries.max()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.KPISeries.min"><code class="docutils literal notranslate"><span class="pre">KPISeries.min()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="agentlib_flexquant.data_structures.html#module-agentlib_flexquant.data_structures.flex_offer">agentlib_flexquant.data_structures.flex_offer module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.FlexOffer"><code class="docutils literal notranslate"><span class="pre">FlexOffer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.FlexOffer.base_power_profile"><code class="docutils literal notranslate"><span class="pre">FlexOffer.base_power_profile</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.FlexOffer.neg_diff_profile"><code class="docutils literal notranslate"><span class="pre">FlexOffer.neg_diff_profile</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.FlexOffer.neg_price"><code class="docutils literal notranslate"><span class="pre">FlexOffer.neg_price</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.FlexOffer.pos_diff_profile"><code class="docutils literal notranslate"><span class="pre">FlexOffer.pos_diff_profile</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.FlexOffer.pos_price"><code class="docutils literal notranslate"><span class="pre">FlexOffer.pos_price</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.FlexOffer.status"><code class="docutils literal notranslate"><span class="pre">FlexOffer.status</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.FlexOffer.Config"><code class="docutils literal notranslate"><span class="pre">FlexOffer.Config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.FlexOffer.as_dataframe"><code class="docutils literal notranslate"><span class="pre">FlexOffer.as_dataframe()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.OfferStatus"><code class="docutils literal notranslate"><span class="pre">OfferStatus</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.OfferStatus.accepted_negative"><code class="docutils literal notranslate"><span class="pre">OfferStatus.accepted_negative</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.OfferStatus.accepted_positive"><code class="docutils literal notranslate"><span class="pre">OfferStatus.accepted_positive</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.OfferStatus.not_accepted"><code class="docutils literal notranslate"><span class="pre">OfferStatus.not_accepted</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="agentlib_flexquant.data_structures.html#module-agentlib_flexquant.data_structures.flex_results">agentlib_flexquant.data_structures.flex_results module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results"><code class="docutils literal notranslate"><span class="pre">Results</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.baseline_agent_config"><code class="docutils literal notranslate"><span class="pre">Results.baseline_agent_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.baseline_module_config"><code class="docutils literal notranslate"><span class="pre">Results.baseline_module_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.convert_timescale_of_dataframe_index"><code class="docutils literal notranslate"><span class="pre">Results.convert_timescale_of_dataframe_index()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.create_instance_with_skipped_validation"><code class="docutils literal notranslate"><span class="pre">Results.create_instance_with_skipped_validation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.current_timescale_of_data"><code class="docutils literal notranslate"><span class="pre">Results.current_timescale_of_data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.df_baseline"><code class="docutils literal notranslate"><span class="pre">Results.df_baseline</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.df_baseline_stats"><code class="docutils literal notranslate"><span class="pre">Results.df_baseline_stats</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.df_indicator"><code class="docutils literal notranslate"><span class="pre">Results.df_indicator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.df_market"><code class="docutils literal notranslate"><span class="pre">Results.df_market</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.df_neg_flex"><code class="docutils literal notranslate"><span class="pre">Results.df_neg_flex</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.df_neg_flex_stats"><code class="docutils literal notranslate"><span class="pre">Results.df_neg_flex_stats</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.df_pos_flex"><code class="docutils literal notranslate"><span class="pre">Results.df_pos_flex</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.df_pos_flex_stats"><code class="docutils literal notranslate"><span class="pre">Results.df_pos_flex_stats</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.df_simulation"><code class="docutils literal notranslate"><span class="pre">Results.df_simulation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.generator_config"><code class="docutils literal notranslate"><span class="pre">Results.generator_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.get_intersection_mpcs_sim"><code class="docutils literal notranslate"><span class="pre">Results.get_intersection_mpcs_sim()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.indicator_agent_config"><code class="docutils literal notranslate"><span class="pre">Results.indicator_agent_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.indicator_module_config"><code class="docutils literal notranslate"><span class="pre">Results.indicator_module_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.market_agent_config"><code class="docutils literal notranslate"><span class="pre">Results.market_agent_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.market_module_config"><code class="docutils literal notranslate"><span class="pre">Results.market_module_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.neg_flex_agent_config"><code class="docutils literal notranslate"><span class="pre">Results.neg_flex_agent_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.neg_flex_module_config"><code class="docutils literal notranslate"><span class="pre">Results.neg_flex_module_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.pos_flex_agent_config"><code class="docutils literal notranslate"><span class="pre">Results.pos_flex_agent_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.pos_flex_module_config"><code class="docutils literal notranslate"><span class="pre">Results.pos_flex_module_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.simulator_agent_config"><code class="docutils literal notranslate"><span class="pre">Results.simulator_agent_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.simulator_module_config"><code class="docutils literal notranslate"><span class="pre">Results.simulator_module_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.load_indicator"><code class="docutils literal notranslate"><span class="pre">load_indicator()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.load_market"><code class="docutils literal notranslate"><span class="pre">load_market()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="agentlib_flexquant.data_structures.html#module-agentlib_flexquant.data_structures.flexquant">agentlib_flexquant.data_structures.flexquant module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig"><code class="docutils literal notranslate"><span class="pre">FlexQuantConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.baseline_config_generator_data"><code class="docutils literal notranslate"><span class="pre">FlexQuantConfig.baseline_config_generator_data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.delete_files"><code class="docutils literal notranslate"><span class="pre">FlexQuantConfig.delete_files</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.flex_base_directory_path"><code class="docutils literal notranslate"><span class="pre">FlexQuantConfig.flex_base_directory_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.flex_event_duration"><code class="docutils literal notranslate"><span class="pre">FlexQuantConfig.flex_event_duration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.flex_files_directory"><code class="docutils literal notranslate"><span class="pre">FlexQuantConfig.flex_files_directory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.indicator_config"><code class="docutils literal notranslate"><span class="pre">FlexQuantConfig.indicator_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.market_config"><code class="docutils literal notranslate"><span class="pre">FlexQuantConfig.market_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.market_time"><code class="docutils literal notranslate"><span class="pre">FlexQuantConfig.market_time</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.overwrite_files"><code class="docutils literal notranslate"><span class="pre">FlexQuantConfig.overwrite_files</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.prep_time"><code class="docutils literal notranslate"><span class="pre">FlexQuantConfig.prep_time</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.results_directory"><code class="docutils literal notranslate"><span class="pre">FlexQuantConfig.results_directory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.shadow_mpc_config_generator_data"><code class="docutils literal notranslate"><span class="pre">FlexQuantConfig.shadow_mpc_config_generator_data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory"><code class="docutils literal notranslate"><span class="pre">FlexQuantConfig.adapt_paths_and_create_directory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension"><code class="docutils literal notranslate"><span class="pre">FlexQuantConfig.check_config_file_extension</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.agent_config"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorConfig.agent_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.name_of_created_file"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorConfig.name_of_created_file</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.check_file_extension"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorConfig.check_file_extension</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.agent_config"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketConfig.agent_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.name_of_created_file"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketConfig.name_of_created_file</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.ForcedOffers"><code class="docutils literal notranslate"><span class="pre">ForcedOffers</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.ForcedOffers.negative"><code class="docutils literal notranslate"><span class="pre">ForcedOffers.negative</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.ForcedOffers.positive"><code class="docutils literal notranslate"><span class="pre">ForcedOffers.positive</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.ShadowMPCConfigGeneratorConfig"><code class="docutils literal notranslate"><span class="pre">ShadowMPCConfigGeneratorConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.ShadowMPCConfigGeneratorConfig.neg_flex"><code class="docutils literal notranslate"><span class="pre">ShadowMPCConfigGeneratorConfig.neg_flex</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.ShadowMPCConfigGeneratorConfig.pos_flex"><code class="docutils literal notranslate"><span class="pre">ShadowMPCConfigGeneratorConfig.pos_flex</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.ShadowMPCConfigGeneratorConfig.weights"><code class="docutils literal notranslate"><span class="pre">ShadowMPCConfigGeneratorConfig.weights</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.ShadowMPCConfigGeneratorConfig.assign_weights_to_flex"><code class="docutils literal notranslate"><span class="pre">ShadowMPCConfigGeneratorConfig.assign_weights_to_flex</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="agentlib_flexquant.data_structures.html#module-agentlib_flexquant.data_structures.globals">agentlib_flexquant.data_structures.globals module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.globals.return_baseline_cost_function"><code class="docutils literal notranslate"><span class="pre">return_baseline_cost_function()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="agentlib_flexquant.data_structures.html#module-agentlib_flexquant.data_structures.market">agentlib_flexquant.data_structures.market module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.CustomOptions"><code class="docutils literal notranslate"><span class="pre">CustomOptions</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.CustomOptions.type"><code class="docutils literal notranslate"><span class="pre">CustomOptions.type</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.MarketSpecifications"><code class="docutils literal notranslate"><span class="pre">MarketSpecifications</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.MarketSpecifications.cooldown"><code class="docutils literal notranslate"><span class="pre">MarketSpecifications.cooldown</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.MarketSpecifications.minimum_average_flex"><code class="docutils literal notranslate"><span class="pre">MarketSpecifications.minimum_average_flex</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.MarketSpecifications.options"><code class="docutils literal notranslate"><span class="pre">MarketSpecifications.options</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.MarketSpecifications.type"><code class="docutils literal notranslate"><span class="pre">MarketSpecifications.type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.MarketSpecifications.set_options_type"><code class="docutils literal notranslate"><span class="pre">MarketSpecifications.set_options_type</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.RandomMarket"><code class="docutils literal notranslate"><span class="pre">RandomMarket</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.RandomMarket.type"><code class="docutils literal notranslate"><span class="pre">RandomMarket.type</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.RandomOptions"><code class="docutils literal notranslate"><span class="pre">RandomOptions</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.RandomOptions.offer_acceptance_rate"><code class="docutils literal notranslate"><span class="pre">RandomOptions.offer_acceptance_rate</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.RandomOptions.pos_neg_rate"><code class="docutils literal notranslate"><span class="pre">RandomOptions.pos_neg_rate</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.RandomOptions.random_seed"><code class="docutils literal notranslate"><span class="pre">RandomOptions.random_seed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.RandomOptions.type"><code class="docutils literal notranslate"><span class="pre">RandomOptions.type</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.SingleOptions"><code class="docutils literal notranslate"><span class="pre">SingleOptions</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.SingleOptions.direction"><code class="docutils literal notranslate"><span class="pre">SingleOptions.direction</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.SingleOptions.start_time"><code class="docutils literal notranslate"><span class="pre">SingleOptions.start_time</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.SingleOptions.type"><code class="docutils literal notranslate"><span class="pre">SingleOptions.type</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="agentlib_flexquant.data_structures.html#module-agentlib_flexquant.data_structures.mpcs">agentlib_flexquant.data_structures.mpcs module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaseMPCData"><code class="docutils literal notranslate"><span class="pre">BaseMPCData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaseMPCData.class_name"><code class="docutils literal notranslate"><span class="pre">BaseMPCData.class_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaseMPCData.config_inputs_appendix"><code class="docutils literal notranslate"><span class="pre">BaseMPCData.config_inputs_appendix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaseMPCData.config_parameters_appendix"><code class="docutils literal notranslate"><span class="pre">BaseMPCData.config_parameters_appendix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaseMPCData.created_flex_mpcs_file"><code class="docutils literal notranslate"><span class="pre">BaseMPCData.created_flex_mpcs_file</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaseMPCData.module_id"><code class="docutils literal notranslate"><span class="pre">BaseMPCData.module_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaseMPCData.module_types"><code class="docutils literal notranslate"><span class="pre">BaseMPCData.module_types</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaseMPCData.name_of_created_file"><code class="docutils literal notranslate"><span class="pre">BaseMPCData.name_of_created_file</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaseMPCData.power_alias"><code class="docutils literal notranslate"><span class="pre">BaseMPCData.power_alias</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaseMPCData.results_suffix"><code class="docutils literal notranslate"><span class="pre">BaseMPCData.results_suffix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaseMPCData.stored_energy_alias"><code class="docutils literal notranslate"><span class="pre">BaseMPCData.stored_energy_alias</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaseMPCData.weights"><code class="docutils literal notranslate"><span class="pre">BaseMPCData.weights</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaselineMPCData"><code class="docutils literal notranslate"><span class="pre">BaselineMPCData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.class_name"><code class="docutils literal notranslate"><span class="pre">BaselineMPCData.class_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.comfort_variable"><code class="docutils literal notranslate"><span class="pre">BaselineMPCData.comfort_variable</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.config_inputs_appendix"><code class="docutils literal notranslate"><span class="pre">BaselineMPCData.config_inputs_appendix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.config_parameters_appendix"><code class="docutils literal notranslate"><span class="pre">BaselineMPCData.config_parameters_appendix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.module_id"><code class="docutils literal notranslate"><span class="pre">BaselineMPCData.module_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.module_types"><code class="docutils literal notranslate"><span class="pre">BaselineMPCData.module_types</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.name_of_created_file"><code class="docutils literal notranslate"><span class="pre">BaselineMPCData.name_of_created_file</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.power_alias"><code class="docutils literal notranslate"><span class="pre">BaselineMPCData.power_alias</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.power_unit"><code class="docutils literal notranslate"><span class="pre">BaselineMPCData.power_unit</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.power_variable"><code class="docutils literal notranslate"><span class="pre">BaselineMPCData.power_variable</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.profile_comfort_weight"><code class="docutils literal notranslate"><span class="pre">BaselineMPCData.profile_comfort_weight</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.profile_deviation_weight"><code class="docutils literal notranslate"><span class="pre">BaselineMPCData.profile_deviation_weight</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.results_suffix"><code class="docutils literal notranslate"><span class="pre">BaselineMPCData.results_suffix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.stored_energy_alias"><code class="docutils literal notranslate"><span class="pre">BaselineMPCData.stored_energy_alias</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.weights"><code class="docutils literal notranslate"><span class="pre">BaselineMPCData.weights</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.update_config_parameters_appendix"><code class="docutils literal notranslate"><span class="pre">BaselineMPCData.update_config_parameters_appendix</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.NFMPCData"><code class="docutils literal notranslate"><span class="pre">NFMPCData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.NFMPCData.class_name"><code class="docutils literal notranslate"><span class="pre">NFMPCData.class_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.NFMPCData.config_inputs_appendix"><code class="docutils literal notranslate"><span class="pre">NFMPCData.config_inputs_appendix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.NFMPCData.config_parameters_appendix"><code class="docutils literal notranslate"><span class="pre">NFMPCData.config_parameters_appendix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.NFMPCData.flex_cost_function"><code class="docutils literal notranslate"><span class="pre">NFMPCData.flex_cost_function</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.NFMPCData.module_id"><code class="docutils literal notranslate"><span class="pre">NFMPCData.module_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.NFMPCData.module_types"><code class="docutils literal notranslate"><span class="pre">NFMPCData.module_types</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.NFMPCData.name_of_created_file"><code class="docutils literal notranslate"><span class="pre">NFMPCData.name_of_created_file</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.NFMPCData.power_alias"><code class="docutils literal notranslate"><span class="pre">NFMPCData.power_alias</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.NFMPCData.results_suffix"><code class="docutils literal notranslate"><span class="pre">NFMPCData.results_suffix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.NFMPCData.stored_energy_alias"><code class="docutils literal notranslate"><span class="pre">NFMPCData.stored_energy_alias</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.NFMPCData.weights"><code class="docutils literal notranslate"><span class="pre">NFMPCData.weights</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.PFMPCData"><code class="docutils literal notranslate"><span class="pre">PFMPCData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.PFMPCData.class_name"><code class="docutils literal notranslate"><span class="pre">PFMPCData.class_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.PFMPCData.config_inputs_appendix"><code class="docutils literal notranslate"><span class="pre">PFMPCData.config_inputs_appendix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.PFMPCData.config_parameters_appendix"><code class="docutils literal notranslate"><span class="pre">PFMPCData.config_parameters_appendix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.PFMPCData.flex_cost_function"><code class="docutils literal notranslate"><span class="pre">PFMPCData.flex_cost_function</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.PFMPCData.module_id"><code class="docutils literal notranslate"><span class="pre">PFMPCData.module_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.PFMPCData.module_types"><code class="docutils literal notranslate"><span class="pre">PFMPCData.module_types</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.PFMPCData.name_of_created_file"><code class="docutils literal notranslate"><span class="pre">PFMPCData.name_of_created_file</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.PFMPCData.power_alias"><code class="docutils literal notranslate"><span class="pre">PFMPCData.power_alias</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.PFMPCData.results_suffix"><code class="docutils literal notranslate"><span class="pre">PFMPCData.results_suffix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.PFMPCData.stored_energy_alias"><code class="docutils literal notranslate"><span class="pre">PFMPCData.stored_energy_alias</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.PFMPCData.weights"><code class="docutils literal notranslate"><span class="pre">PFMPCData.weights</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="agentlib_flexquant.modules.html">agentlib_flexquant.modules package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="agentlib_flexquant.modules.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="agentlib_flexquant.modules.html#module-agentlib_flexquant.modules.baseline_mpc">agentlib_flexquant.modules.baseline_mpc module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC"><code class="docutils literal notranslate"><span class="pre">FlexibilityBaselineMINLPMPC</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.pre_computation_hook"><code class="docutils literal notranslate"><span class="pre">FlexibilityBaselineMINLPMPC.pre_computation_hook()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC"><code class="docutils literal notranslate"><span class="pre">FlexibilityBaselineMPC</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.pre_computation_hook"><code class="docutils literal notranslate"><span class="pre">FlexibilityBaselineMPC.pre_computation_hook()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="agentlib_flexquant.modules.html#module-agentlib_flexquant.modules.flexibility_indicator">agentlib_flexquant.modules.flexibility_indicator module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorModule</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.calc_and_send_offer"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorModule.calc_and_send_offer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.callback"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorModule.callback()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.check_power_end_deviation"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorModule.check_power_end_deviation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.cleanup_results"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorModule.cleanup_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.data"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorModule.data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.get_results"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorModule.get_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.process"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorModule.process()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.register_callbacks"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorModule.register_callbacks()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.send_flex_offer"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorModule.send_flex_offer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.write_results"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorModule.write_results()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorModuleConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.calculate_costs"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorModuleConfig.calculate_costs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.correct_costs"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorModuleConfig.correct_costs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.inputs"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorModuleConfig.inputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.outputs"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorModuleConfig.outputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.parameters"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorModuleConfig.parameters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.power_unit"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorModuleConfig.power_unit</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.price_variable"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorModuleConfig.price_variable</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.results_file"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorModuleConfig.results_file</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.save_results"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorModuleConfig.save_results</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.shared_variable_fields"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorModuleConfig.shared_variable_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorModuleConfig.check_results_file_extension</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.model_post_init"><code class="docutils literal notranslate"><span class="pre">FlexibilityIndicatorModuleConfig.model_post_init()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts"><code class="docutils literal notranslate"><span class="pre">InputsForCalculateFlexCosts</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.calculate_flex_costs"><code class="docutils literal notranslate"><span class="pre">InputsForCalculateFlexCosts.calculate_flex_costs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.const_electricity_price"><code class="docutils literal notranslate"><span class="pre">InputsForCalculateFlexCosts.const_electricity_price</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.use_constant_electricity_price"><code class="docutils literal notranslate"><span class="pre">InputsForCalculateFlexCosts.use_constant_electricity_price</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price"><code class="docutils literal notranslate"><span class="pre">InputsForCalculateFlexCosts.validate_constant_price</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts"><code class="docutils literal notranslate"><span class="pre">InputsForCorrectFlexCosts</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.absolute_power_deviation_tolerance"><code class="docutils literal notranslate"><span class="pre">InputsForCorrectFlexCosts.absolute_power_deviation_tolerance</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.enable_energy_costs_correction"><code class="docutils literal notranslate"><span class="pre">InputsForCorrectFlexCosts.enable_energy_costs_correction</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.stored_energy_variable"><code class="docutils literal notranslate"><span class="pre">InputsForCorrectFlexCosts.stored_energy_variable</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="agentlib_flexquant.modules.html#module-agentlib_flexquant.modules.flexibility_market">agentlib_flexquant.modules.flexibility_market module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketModule</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.cleanup_results"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketModule.cleanup_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.custom_flexibility_callback"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketModule.custom_flexibility_callback()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.df"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketModule.df</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.dummy_callback"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketModule.dummy_callback()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.end"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketModule.end</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.get_results"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketModule.get_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.process"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketModule.process()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.random_flexibility_callback"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketModule.random_flexibility_callback()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.register_callbacks"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketModule.register_callbacks()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.set_random_seed"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketModule.set_random_seed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.single_flexibility_callback"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketModule.single_flexibility_callback()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.write_results"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketModule.write_results()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketModuleConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.inputs"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketModuleConfig.inputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.market_specs"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketModuleConfig.market_specs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.outputs"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketModuleConfig.outputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.results_file"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketModuleConfig.results_file</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.save_results"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketModuleConfig.save_results</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.shared_variable_fields"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketModuleConfig.shared_variable_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.check_results_file_extension"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketModuleConfig.check_results_file_extension</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.model_post_init"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketModuleConfig.model_post_init()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="agentlib_flexquant.modules.html#module-agentlib_flexquant.modules.shadow_mpc">agentlib_flexquant.modules.shadow_mpc module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPC"><code class="docutils literal notranslate"><span class="pre">FlexibilityShadowMINLPMPC</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPC.calc_flex_callback"><code class="docutils literal notranslate"><span class="pre">FlexibilityShadowMINLPMPC.calc_flex_callback()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPC.process"><code class="docutils literal notranslate"><span class="pre">FlexibilityShadowMINLPMPC.process()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPC.register_callbacks"><code class="docutils literal notranslate"><span class="pre">FlexibilityShadowMINLPMPC.register_callbacks()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPC"><code class="docutils literal notranslate"><span class="pre">FlexibilityShadowMPC</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPC.calc_flex_callback"><code class="docutils literal notranslate"><span class="pre">FlexibilityShadowMPC.calc_flex_callback()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPC.process"><code class="docutils literal notranslate"><span class="pre">FlexibilityShadowMPC.process()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPC.register_callbacks"><code class="docutils literal notranslate"><span class="pre">FlexibilityShadowMPC.register_callbacks()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="agentlib_flexquant.optimization_backends.html">agentlib_flexquant.optimization_backends package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="agentlib_flexquant.optimization_backends.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="agentlib_flexquant.optimization_backends.html#agentlib-flexquant-optimization-backends-constrained-cia-module">agentlib_flexquant.optimization_backends.constrained_cia module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="agentlib_flexquant.utils.html">agentlib_flexquant.utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="agentlib_flexquant.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="agentlib_flexquant.utils.html#module-agentlib_flexquant.utils.config_management">agentlib_flexquant.utils.config_management module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.config_management.get_class_from_file"><code class="docutils literal notranslate"><span class="pre">get_class_from_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.config_management.get_module"><code class="docutils literal notranslate"><span class="pre">get_module()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.config_management.get_module_type_matching_dict"><code class="docutils literal notranslate"><span class="pre">get_module_type_matching_dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.config_management.get_orig_module_type"><code class="docutils literal notranslate"><span class="pre">get_orig_module_type()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.config_management.subtract_relative_path"><code class="docutils literal notranslate"><span class="pre">subtract_relative_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.config_management.to_dict_and_remove_unnecessary_fields"><code class="docutils literal notranslate"><span class="pre">to_dict_and_remove_unnecessary_fields()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="agentlib_flexquant.utils.html#module-agentlib_flexquant.utils.data_handling">agentlib_flexquant.utils.data_handling module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.data_handling.convert_timescale_of_index"><code class="docutils literal notranslate"><span class="pre">convert_timescale_of_index()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.data_handling.fill_nans"><code class="docutils literal notranslate"><span class="pre">fill_nans()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.data_handling.strip_multi_index"><code class="docutils literal notranslate"><span class="pre">strip_multi_index()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="agentlib_flexquant.utils.html#module-agentlib_flexquant.utils.interactive">agentlib_flexquant.utils.interactive module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.CustomBound"><code class="docutils literal notranslate"><span class="pre">CustomBound</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.CustomBound.for_variable"><code class="docutils literal notranslate"><span class="pre">CustomBound.for_variable</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.CustomBound.lower_bound"><code class="docutils literal notranslate"><span class="pre">CustomBound.lower_bound</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.CustomBound.upper_bound"><code class="docutils literal notranslate"><span class="pre">CustomBound.upper_bound</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.Dashboard"><code class="docutils literal notranslate"><span class="pre">Dashboard</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.Dashboard.MPC_ITERATIONS"><code class="docutils literal notranslate"><span class="pre">Dashboard.MPC_ITERATIONS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.Dashboard.bounds_key"><code class="docutils literal notranslate"><span class="pre">Dashboard.bounds_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.Dashboard.characteristic_times_accepted_key"><code class="docutils literal notranslate"><span class="pre">Dashboard.characteristic_times_accepted_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.Dashboard.characteristic_times_current_key"><code class="docutils literal notranslate"><span class="pre">Dashboard.characteristic_times_current_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.Dashboard.custom_bounds"><code class="docutils literal notranslate"><span class="pre">Dashboard.custom_bounds</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.Dashboard.label_negative"><code class="docutils literal notranslate"><span class="pre">Dashboard.label_negative</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.Dashboard.label_positive"><code class="docutils literal notranslate"><span class="pre">Dashboard.label_positive</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.Dashboard.show"><code class="docutils literal notranslate"><span class="pre">Dashboard.show()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="agentlib_flexquant.utils.html#module-agentlib_flexquant.utils.parsing">agentlib_flexquant.utils.parsing module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier"><code class="docutils literal notranslate"><span class="pre">SetupSystemModifier</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.mpc_data"><code class="docutils literal notranslate"><span class="pre">SetupSystemModifier.mpc_data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.get_leftmost_list"><code class="docutils literal notranslate"><span class="pre">SetupSystemModifier.get_leftmost_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.modify_config_class_baseline"><code class="docutils literal notranslate"><span class="pre">SetupSystemModifier.modify_config_class_baseline()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.modify_config_class_shadow"><code class="docutils literal notranslate"><span class="pre">SetupSystemModifier.modify_config_class_shadow()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.modify_setup_system_baseline"><code class="docutils literal notranslate"><span class="pre">SetupSystemModifier.modify_setup_system_baseline()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.modify_setup_system_shadow"><code class="docutils literal notranslate"><span class="pre">SetupSystemModifier.modify_setup_system_shadow()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.visit_ClassDef"><code class="docutils literal notranslate"><span class="pre">SetupSystemModifier.visit_ClassDef()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.visit_Module"><code class="docutils literal notranslate"><span class="pre">SetupSystemModifier.visit_Module()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_import_to_tree"><code class="docutils literal notranslate"><span class="pre">add_import_to_tree()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_input"><code class="docutils literal notranslate"><span class="pre">add_input()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_output"><code class="docutils literal notranslate"><span class="pre">add_output()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_parameter"><code class="docutils literal notranslate"><span class="pre">add_parameter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.create_ast_element"><code class="docutils literal notranslate"><span class="pre">create_ast_element()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.remove_all_imports_from_tree"><code class="docutils literal notranslate"><span class="pre">remove_all_imports_from_tree()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-agentlib_flexquant.generate_flex_agents">
+<span id="agentlib-flexquant-generate-flex-agents-module"></span><h2>agentlib_flexquant.generate_flex_agents module<a class="headerlink" href="#module-agentlib_flexquant.generate_flex_agents" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="agentlib_flexquant.generate_flex_agents.FlexAgentGenerator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.generate_flex_agents.</span></span><span class="sig-name descname"><span class="pre">FlexAgentGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flex_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig"><span class="pre">FlexQuantConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpc_agent_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">AgentConfig</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/generate_flex_agents.html#FlexAgentGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_indicator_config">
+<span class="sig-name descname"><span class="pre">adapt_indicator_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig"><span class="pre">FlexibilityIndicatorModuleConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig"><span class="pre">FlexibilityIndicatorModuleConfig</span></a></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/generate_flex_agents.html#FlexAgentGenerator.adapt_indicator_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_indicator_config" title="Permalink to this definition"></a></dt>
+<dd><p>Adapts the indicator module config for automated flexibility quantification.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_market_config">
+<span class="sig-name descname"><span class="pre">adapt_market_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig" title="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig"><span class="pre">FlexibilityMarketModuleConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig" title="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig"><span class="pre">FlexibilityMarketModuleConfig</span></a></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/generate_flex_agents.html#FlexAgentGenerator.adapt_market_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_market_config" title="Permalink to this definition"></a></dt>
+<dd><p>Adapts the market module config for automated flexibility quantification.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_mpc_module_config">
+<span class="sig-name descname"><span class="pre">adapt_mpc_module_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseMPCConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpc_dataclass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaseMPCData" title="agentlib_flexquant.data_structures.mpcs.BaseMPCData"><span class="pre">BaseMPCData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">BaseMPCConfig</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/generate_flex_agents.html#FlexAgentGenerator.adapt_mpc_module_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_mpc_module_config" title="Permalink to this definition"></a></dt>
+<dd><p>Adapts the mpc module config for automated flexibility quantification.
+Things adapted among others are:
+- the file name/path of the mpc config file
+- names of the control variables for the shadow mpcs
+- reduce communicated variables of shadow mpcs to outputs
+- add the power variable to the outputs
+- add the Time variable to the inputs
+- add parameters for the activation and quantification of flexibility</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_sim_results_path">
+<span class="sig-name descname"><span class="pre">adapt_sim_results_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulator_agent_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/generate_flex_agents.html#FlexAgentGenerator.adapt_sim_results_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_sim_results_path" title="Permalink to this definition"></a></dt>
+<dd><p>Optional helper function to adapt file path for simulator results in sim config
+so that sim results land in the same results directory as flex results.
+:param simulator_agent_config: Path to the simulator agent config JSON file.
+:type simulator_agent_config: Union[str, Path]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The updated simulator config with the modified result file path.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>FileNotFoundError</strong> – If the specified config file does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.append_module_and_dump_agent">
+<span class="sig-name descname"><span class="pre">append_module_and_dump_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseModuleConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AgentConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/generate_flex_agents.html#FlexAgentGenerator.append_module_and_dump_agent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.append_module_and_dump_agent" title="Permalink to this definition"></a></dt>
+<dd><p>Appends the given module config to the given agent config and dumps the agent config to a
+json file. The json file is named based on the config_name.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.baseline_mpc_module_config">
+<span class="sig-name descname"><span class="pre">baseline_mpc_module_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">BaseMPCConfig</span></em><a class="headerlink" href="#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.baseline_mpc_module_config" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.check_variables_in_casadi_config">
+<span class="sig-name descname"><span class="pre">check_variables_in_casadi_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CasadiModelConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/generate_flex_agents.html#FlexAgentGenerator.check_variables_in_casadi_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.check_variables_in_casadi_config" title="Permalink to this definition"></a></dt>
+<dd><p>Check if all variables in the expression are defined in the config.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>CasadiModelConfig</em>) – casadi model config.</p></li>
+<li><p><strong>expr</strong> (<em>str</em>) – The expression to check.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If any variable in the expression is not defined in the config.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.generate_flex_agents">
+<span class="sig-name descname"><span class="pre">generate_flex_agents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">[&lt;class</span> <span class="pre">'agentlib_mpc.modules.mpc.BaseMPCConfig'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'agentlib_mpc.modules.mpc.BaseMPCConfig'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'agentlib_mpc.modules.mpc.BaseMPCConfig'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig'&gt;]</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/generate_flex_agents.html#FlexAgentGenerator.generate_flex_agents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.generate_flex_agents" title="Permalink to this definition"></a></dt>
+<dd><p>Generates the configs and the python module for the flexibility agents.
+Power variable must be defined in the mpc config.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.get_config_file_paths">
+<span class="sig-name descname"><span class="pre">get_config_file_paths</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/generate_flex_agents.html#FlexAgentGenerator.get_config_file_paths"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.get_config_file_paths" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a list of paths with the created config files</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.indicator_module_config">
+<span class="sig-name descname"><span class="pre">indicator_module_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig"><span class="pre">FlexibilityIndicatorModuleConfig</span></a></em><a class="headerlink" href="#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.indicator_module_config" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.market_module_config">
+<span class="sig-name descname"><span class="pre">market_module_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig" title="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig"><span class="pre">FlexibilityMarketModuleConfig</span></a></em><a class="headerlink" href="#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.market_module_config" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.neg_flex_mpc_module_config">
+<span class="sig-name descname"><span class="pre">neg_flex_mpc_module_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">BaseMPCConfig</span></em><a class="headerlink" href="#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.neg_flex_mpc_module_config" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.orig_mpc_module_config">
+<span class="sig-name descname"><span class="pre">orig_mpc_module_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">BaseMPCConfig</span></em><a class="headerlink" href="#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.orig_mpc_module_config" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.pos_flex_mpc_module_config">
+<span class="sig-name descname"><span class="pre">pos_flex_mpc_module_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">BaseMPCConfig</span></em><a class="headerlink" href="#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.pos_flex_mpc_module_config" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.run_config_validations">
+<span class="sig-name descname"><span class="pre">run_config_validations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/generate_flex_agents.html#FlexAgentGenerator.run_config_validations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.run_config_validations" title="Permalink to this definition"></a></dt>
+<dd><blockquote>
+<div><p>Function to validate integrity of user-supplied flex config.</p>
+<p>The following checks are performed:
+1. Ensures the specified power variable exists in the MPC model outputs.
+2. Ensures the specified power variable exists in the MPC model outputs.
+3. Validates that the stored energy variable exists in MPC outputs if energy cost correction is enabled.
+4. Verifies the supported collocation method is used; otherwise, switches to ‘legendre’ and raises a warning.
+5. Ensures that the sum of prep time, market time, and flex event duration does not exceed the prediction horizon.
+6. Ensures market time equals the MPC model time step if market config is present.
+7. Ensures that all flex time values are multiples of the MPC model time step.
+8. Checks for mismatches between time-related parameters in the flex/MPC and indicator configs and issues warnings</p>
+</div></blockquote>
+<p>when discrepancies exist, using the flex/MPC config values as the source of truth.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Raises:</dt><dd><p>ConfigurationError: If required variables are missing or any time configuration is invalid.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Felix Stegemerten.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

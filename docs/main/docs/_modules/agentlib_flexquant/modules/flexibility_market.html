@@ -1,0 +1,322 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>agentlib_flexquant.modules.flexibility_market &mdash; agentlib_flexquant 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
+
+  
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            agentlib_flexquant
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">agentlib_flexquant</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">agentlib_flexquant.modules.flexibility_market</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for agentlib_flexquant.modules.flexibility_market</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">agentlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pydantic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigurationError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">model_validator</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.flex_offer</span><span class="w"> </span><span class="kn">import</span> <span class="n">OfferStatus</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.market</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">MarketSpecifications</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="FlexibilityMarketModuleConfig"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityMarketModuleConfig</span><span class="p">(</span><span class="n">agentlib</span><span class="o">.</span><span class="n">BaseModuleConfig</span><span class="p">):</span>
+    <span class="c1"># parameters: List[agentlib.AgentVariable] = [</span>
+    <span class="c1"># ]</span>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">ConfigDict</span><span class="p">(</span>
+        <span class="n">extra</span><span class="o">=</span><span class="s1">&#39;forbid&#39;</span>
+    <span class="p">)</span>
+    <span class="n">inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;FlexibilityOffer&quot;</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">outputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;_P_external&quot;</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;_P_external&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;External Power IO&quot;</span>
+        <span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;rel_start&quot;</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;rel_start&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;relative start time of the flexibility event&quot;</span>
+        <span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;rel_end&quot;</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;rel_end&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;relative end time of the flexibility event&quot;</span>
+        <span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;in_provision&quot;</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;in_provision&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Set if the system is in provision&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+    <span class="p">]</span>
+
+    <span class="n">market_specs</span><span class="p">:</span> <span class="n">MarketSpecifications</span>
+
+    <span class="n">results_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;flexibility_market.csv&quot;</span><span class="p">),</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;User specified results file name&quot;</span>
+    <span class="p">)</span>
+    <span class="n">save_results</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
+        <span class="n">validate_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+        <span class="n">default</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="n">shared_variable_fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;outputs&quot;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="FlexibilityMarketModuleConfig.check_results_file_extension"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.check_results_file_extension">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_results_file_extension</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">results_file</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="o">.</span><span class="n">suffix</span> <span class="o">!=</span> <span class="s2">&quot;.csv&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid file extension for &#39;results_file&#39;: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Expected a &#39;.csv&#39; file.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div></div>
+
+
+<div class="viewcode-block" id="FlexibilityMarketModule"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityMarketModule</span><span class="p">(</span><span class="n">agentlib</span><span class="o">.</span><span class="n">BaseModule</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class to emulate flexibility market. Receives flex offers and accepts these.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">FlexibilityMarketModuleConfig</span>
+
+
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">end</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="FlexibilityMarketModule.set_random_seed"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.set_random_seed">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_random_seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random_seed</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;set the random seed for reproducability&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_generator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">random_seed</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FlexibilityMarketModule.get_results"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.get_results">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_results</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Opens results file of flexibilityindicators.py</span>
+<span class="sd">        results_file defined in __init__</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">results_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">results_file</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">results_file</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">index_col</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">results</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Results file </span><span class="si">%s</span><span class="s2"> was not found.&quot;</span><span class="p">,</span> <span class="n">results_file</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="FlexibilityMarketModule.register_callbacks"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.register_callbacks">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">register_callbacks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;custom&quot;</span><span class="p">:</span>
+            <span class="n">callback_function</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_flexibility_callback</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;single&quot;</span><span class="p">:</span>
+            <span class="n">callback_function</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">single_flexibility_callback</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;random&quot;</span><span class="p">:</span>
+            <span class="n">callback_function</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_flexibility_callback</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_random_seed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">random_seed</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;No market type defined. Available market types are single, random &quot;</span>
+                              <span class="s2">&quot;and custom. Code will proceed without market interaction.&quot;</span><span class="p">)</span>
+            <span class="n">callback_function</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dummy_callback</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">data_broker</span><span class="o">.</span><span class="n">register_callback</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;FlexibilityOffer&quot;</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;FlexibilityOffer&quot;</span><span class="p">,</span>
+            <span class="n">callback</span><span class="o">=</span><span class="n">callback_function</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cooldown_ticker</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="FlexibilityMarketModule.write_results"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.write_results">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">write_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offer</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">offer</span><span class="o">.</span><span class="n">as_dataframe</span><span class="p">()</span>
+        <span class="n">index_first_level</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+        <span class="n">multi_index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_tuples</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">index_first_level</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">multi_index</span><span class="p">)))</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_tuples</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;time_step&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">save_results</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">results_file</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FlexibilityMarketModule.random_flexibility_callback"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.random_flexibility_callback">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">random_flexibility_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        When a flexibility offer is sent this function is called. </span>
+<span class="sd">        </span>
+<span class="sd">            The offer is accepted randomly. The factor self.offer_acceptance_rate determines the</span>
+<span class="sd">                random factor for offer acceptance. self.pos_neg_rate is the random factor for</span>
+<span class="sd">                the direction of the flexibility. A higher rate means that more positive offers will be accepted.</span>
+<span class="sd">            </span>
+<span class="sd">            Constraints:</span>
+<span class="sd">                cooldown: during $cooldown steps after a flexibility event no offer is accepted</span>
+<span class="sd">                minimum_average_flex: min amount of flexibility to be accepted, to account for the model error</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">offer</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">value</span>
+        <span class="c1"># check if there is a flexibility provision and the cooldown is finished</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;in_provision&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">cooldown_ticker</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_generator</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">offer_acceptance_rate</span><span class="p">:</span>
+                <span class="n">profile</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="c1"># if random value is below pos_neg_rate, positive offer is accepted.</span>
+                <span class="c1"># Otherwise, negative offer</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_generator</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">pos_neg_rate</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">offer</span><span class="o">.</span><span class="n">pos_diff_profile</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">minimum_average_flex</span><span class="p">:</span>
+                        <span class="n">profile</span> <span class="o">=</span> <span class="n">offer</span><span class="o">.</span><span class="n">base_power_profile</span> <span class="o">-</span> <span class="n">offer</span><span class="o">.</span><span class="n">pos_diff_profile</span>
+                        <span class="n">offer</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OfferStatus</span><span class="o">.</span><span class="n">accepted_positive</span><span class="o">.</span><span class="n">value</span>
+
+                <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">offer</span><span class="o">.</span><span class="n">neg_diff_profile</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">minimum_average_flex</span><span class="p">:</span>
+                    <span class="n">profile</span> <span class="o">=</span> <span class="n">offer</span><span class="o">.</span><span class="n">base_power_profile</span> <span class="o">+</span> <span class="n">offer</span><span class="o">.</span><span class="n">neg_diff_profile</span>
+                    <span class="n">offer</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OfferStatus</span><span class="o">.</span><span class="n">accepted_negative</span><span class="o">.</span><span class="n">value</span>
+
+                <span class="k">if</span> <span class="n">profile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">profile</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+                    <span class="n">profile</span><span class="o">.</span><span class="n">index</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;_P_external&quot;</span><span class="p">,</span> <span class="n">profile</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;in_provision&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">cooldown_ticker</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">cooldown</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">cooldown_ticker</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cooldown_ticker</span> <span class="o">-=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_results</span><span class="p">(</span><span class="n">offer</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FlexibilityMarketModule.single_flexibility_callback"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.single_flexibility_callback">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">single_flexibility_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Callback to activate a single, predefined flexibility offer.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">offer</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">profile</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">t_sample</span> <span class="o">=</span> <span class="n">offer</span><span class="o">.</span><span class="n">base_power_profile</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">offer</span><span class="o">.</span><span class="n">base_power_profile</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">acceptance_time_lower</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">offset</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">start_time</span>
+        <span class="n">acceptance_time_upper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">offset</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">start_time</span> <span class="o">+</span> <span class="n">t_sample</span>
+        <span class="k">if</span> <span class="n">acceptance_time_lower</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span> <span class="o">&lt;</span> <span class="n">acceptance_time_upper</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;in_provision&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">direction</span> <span class="o">==</span> <span class="s2">&quot;positive&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">offer</span><span class="o">.</span><span class="n">pos_diff_profile</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">minimum_average_flex</span><span class="p">:</span>
+                    <span class="n">profile</span> <span class="o">=</span> <span class="n">offer</span><span class="o">.</span><span class="n">base_power_profile</span> <span class="o">-</span> <span class="n">offer</span><span class="o">.</span><span class="n">pos_diff_profile</span>
+                    <span class="n">offer</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OfferStatus</span><span class="o">.</span><span class="n">accepted_positive</span><span class="o">.</span><span class="n">value</span>
+
+            <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">offer</span><span class="o">.</span><span class="n">neg_diff_profile</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">minimum_average_flex</span><span class="p">:</span>
+                <span class="n">profile</span> <span class="o">=</span> <span class="n">offer</span><span class="o">.</span><span class="n">base_power_profile</span> <span class="o">+</span> <span class="n">offer</span><span class="o">.</span><span class="n">neg_diff_profile</span>
+                <span class="n">offer</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OfferStatus</span><span class="o">.</span><span class="n">accepted_negative</span><span class="o">.</span><span class="n">value</span>
+
+            <span class="k">if</span> <span class="n">profile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">profile</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+                <span class="n">profile</span><span class="o">.</span><span class="n">index</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;_P_external&quot;</span><span class="p">,</span> <span class="n">profile</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;in_provision&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_results</span><span class="p">(</span><span class="n">offer</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FlexibilityMarketModule.custom_flexibility_callback"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.custom_flexibility_callback">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">custom_flexibility_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Placeholder for a custom flexibility callback&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="FlexibilityMarketModule.dummy_callback"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.dummy_callback">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">dummy_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Dummy function, that is included, when market type is not specified&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No market type provided. No market interaction.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FlexibilityMarketModule.cleanup_results"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.cleanup_results">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">cleanup_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">results_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">results_file</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">results_file</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">results_file</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FlexibilityMarketModule.process"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.process">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="c1"># End the provision at the appropriate time</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;in_provision&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">timeout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">t_sample</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Felix Stegemerten.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
