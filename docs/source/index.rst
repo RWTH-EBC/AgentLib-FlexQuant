@@ -7,6 +7,7 @@ Welcome to AgentLib-FlexQuant's documentation!
 ===============================================
 
 This project is a plugin for the AgentLib. This agent-based framework employs model predictive control (MPC) to quantify flexibility offers of electricity usage of building energy systems (BES) during operation.
+The code is published in this GitHub repo.
 
 .. toctree::
  :maxdepth: 2
@@ -20,6 +21,7 @@ Readme
 -----------------------
 
 ```{include} ../../README.md
+
 ```
 
  Indices and tables
