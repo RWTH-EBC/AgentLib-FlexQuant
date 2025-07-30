@@ -47,7 +47,7 @@ The **Baseline MPC** is responsible for optimizing the operation of the BES with
 
 The **Shadow MPCs** are designed to assess the maximum possible flexibility of electricity usage over a user-defined flexibility event duration. They are termed "shadow" because they do not directly control the BES but only support the evaluation of system flexibility. Two Shadow MPCs are employed: The Negative Shadow MPC calculates the control trajectory that maximizes BES power consumption, leading to a negative power contribution to the market (i.e., higher grid consumption). The Positive Shadow MPC does the opposite. The prediction horizon of the Shadow MPCs is divided as following:
 
-.. figure:: ./images/ShadowMPCTimeSlpit.jpg
+.. figure:: ../../images/ShadowMPCTimeSlpit.jpg
    :width: 600px
    :alt: Split of the prediction horizon of the Shadow MPCs
 
