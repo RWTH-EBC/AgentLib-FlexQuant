@@ -47,7 +47,8 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.githubpages",
     "sphinx.ext.coverage",
-    "m2r2",  # Enable .md files
+    # "m2r2",  # Enable .md files
+    "myst_parser",
     "sphinx.ext.napoleon",  # Enable google docstrings
     "sphinxcontrib.autodoc_pydantic",
 ]

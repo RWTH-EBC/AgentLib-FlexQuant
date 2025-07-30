@@ -248,7 +248,9 @@ class FlexAgentGenerator:
             logging.error("Provided agent config does not contain any modules.")
 
     def get_config_file_paths(self) -> List[str]:
-        """Returns a list of paths with the created config files"""
+        """Returns a list of paths with the created config files
+
+        """
         paths = [
             os.path.join(
                 self.flex_config.flex_files_directory,
@@ -277,7 +279,9 @@ class FlexAgentGenerator:
         return paths
 
     def _delete_created_files(self):
-        """Function to run at exit if the files are to be deleted"""
+        """Function to run at exit if the files are to be deleted
+
+        """
         to_be_deleted = self.get_config_file_paths()
         to_be_deleted.append(
             os.path.join(
@@ -437,7 +441,9 @@ class FlexAgentGenerator:
     def adapt_indicator_config(
         self, module_config: FlexibilityIndicatorModuleConfig
     ) -> FlexibilityIndicatorModuleConfig:
-        """Adapts the indicator module config for automated flexibility quantification."""
+        """Adapts the indicator module config for automated flexibility quantification.
+
+        """
         # append user-defined price var to indicator module config
         module_config.inputs.append(
             AgentVariable(
@@ -475,7 +481,9 @@ class FlexAgentGenerator:
     def adapt_market_config(
         self, module_config: FlexibilityMarketModuleConfig
     ) -> FlexibilityMarketModuleConfig:
-        """Adapts the market module config for automated flexibility quantification."""
+        """Adapts the market module config for automated flexibility quantification.
+
+        """
         # allow the module config to be changed
         module_config.model_config["frozen"] = False
         for field in module_config.__fields__:
@@ -606,6 +614,7 @@ class FlexAgentGenerator:
 
         Raises:
             ConfigurationError: If required variables are missing or any time configuration is invalid.
+
         """
         # check if the power variable exists in the mpc config
         if self.flex_config.baseline_config_generator_data.power_variable not in [
@@ -692,7 +701,8 @@ class FlexAgentGenerator:
             dict: The updated simulator config with the modified result file path.
     
         Raises:
-            FileNotFoundError: If the specified config file does not exist. 
+            FileNotFoundError: If the specified config file does not exist.
+
         """
         # open config and extract sim module
         with open(simulator_agent_config, "r") as f:

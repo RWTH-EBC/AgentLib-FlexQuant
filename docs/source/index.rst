@@ -19,7 +19,7 @@ This project is a plugin for the AgentLib. This agent-based framework employs mo
 Readme
 -----------------------
 
-.. mdinclude::  ../../README.md
+```{include} ../../README.md
 
  Indices and tables
  ==================
