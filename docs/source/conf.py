@@ -9,8 +9,6 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, os.path.abspath('../../'))
-sys.path.insert(0, os.path.abspath("."))
-sys.path.insert(0, os.path.abspath("../"))
 sys.setrecursionlimit(1500)
 
 # -- Project information -----------------------------------------------------
@@ -58,7 +56,10 @@ templates_path = ['_templates']
 autodoc_pydantic_model_show_json = False
 autodoc_pydantic_model_show_config = False
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
-source_suffix = [".rst", ".md"]
+source_suffix = {
+    '.rst': 'restructuredtext',
+    '.md': 'markdown',
+}
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
