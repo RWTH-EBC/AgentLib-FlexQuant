@@ -78,3 +78,8 @@ A publication regarding the FlexQuant is currently in the work. A preprint is av
 - Hexuan Zhao
 - Karthik Suresh
 
+## Acknowledgments
+We gratefully acknowledge the financial support by Federal Ministry \\ for Economic Affairs and Climate Action (BMWK), promotional reference 03EI4081A and 03EN3092B.
+
+<img src="./docs/source/images/BMWK_logo.png" alt="BMWK" width="200"/>
+
