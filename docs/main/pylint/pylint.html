@@ -4096,7 +4096,18 @@
             self.logger.error(&#34;Results file %s was not found.&#34;, results_file)
             return None
 
-    def register_callbacks(self):</pre></td>
+    def write_results(self, df, ts, n):
+        &#34;&#34;&#34;
+        Write every data of variables in self.var_list in an DataFrame
+        DataFrame will be updated every time step
+
+        Args:
+            df: DataFrame which is initialised as an empty DataFrame with columns according to self.var_list
+            ts: time step
+            n: number of time steps during prediction horizon
+        Returns:
+            DataFrame with results of every variable in self.var_list
+        &#34;&#34;&#34;</pre></td>
             </tr>
             
             <tr>
@@ -4134,7 +4145,8 @@
         ge=0,
         unit=&#34;s&#34;,
         description=&#34;Time for market interaction&#34;,
-    )</pre></td>
+    )
+</pre></td>
             </tr>
             
             <tr>
