@@ -3,7 +3,7 @@ import setuptools
 requirements = [
     "setuptools",
     "agentlib[full]==0.8.7",
-    "agentlib_mpc[fmu, interactive] @ git+https://github.com/RWTH-EBC/AgentLib-MPC.git@849f87ddc674bedf24c2b98e92496f300b61da5a",
+    "agentlib_mpc[fmu, interactive] @ git+https://github.com/RWTH-EBC/AgentLib-MPC.git",
     "pathlib",
     "astor==0.8.1",
     "black",
