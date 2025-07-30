@@ -7,4 +7,4 @@ This page contains the auto-generated API reference for the AgentLib-FlexQuant p
    :maxdepth: 2
    :caption: Modules:
 
-   code/agentlib_flexquant
+   code/modules
