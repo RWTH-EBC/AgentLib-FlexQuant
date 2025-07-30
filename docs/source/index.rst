@@ -20,8 +20,7 @@ The code is published in `this <https://github.com/RWTH-EBC/AgentLib-FlexQuant>`
 Readme
 -----------------------
 
-.. include:: ../../README.md
-   :parser: myst_parser.sphinx_
+.. mdinclude:: ../../README.md
 
  Indices and tables
  ==================
