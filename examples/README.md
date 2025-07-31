@@ -5,7 +5,8 @@ This section begins with the framework's structure, followed by the application.
 ## The framework
 
 ![Framework and data flow of the seven agents in FlexQuant](../docs/images/FlexQuantFramework.jpg)
-*Framework and data flow of the seven agents in FlexQuant*
+
+[//]: # (*Framework and data flow of the seven agents in FlexQuant*)
 
 In total, the framework consists of seven agents: Predictor Agent, BES Agent, three MPC Agents, an Indicator Agent and a market agent. The data exchange between these agents is illustrated with the arrows in the image above. The black boxes are a standard MPC setup created with [AgentLib](https://github.com/RWTH-EBC/AgentLib) and [Agentlib-MPC](https://github.com/RWTH-EBC/AgentLib-MPC/tree/main/agentlib_mpc). They serve as input for flexquant, the resulting output of which is represented with the grey boxes. For the normal use case without flexibility quantification, only the agents and communications in black are active. The ones in grey are generated while quantifying the flexibility. Detailed descriptions for each agent and their interactions can be found in this [section](#the-agents).
 
@@ -27,7 +28,15 @@ The **Shadow MPCs** are designed to assess the maximum possible flexibility of e
  The Positive Shadow MPC does the opposite. The prediction horizon of the Shadow MPCs is divided as following:
 
 ![Split of the prediction horizon of the Shadow MPCs](../docs/images/ShadowMPCTimeSlpit.jpg)
-*Split of the prediction horizon of the Shadow MPCs*
+
+[//]: # (*Split of the prediction horizon of the Shadow MPCs*)
+
+```{image} ../docs/images/ShadowMPCTimeSlpit.jpg
+:alt: test
+:class: bg-primary
+:width: 200px
+:align: center
+```
 
 The time t_MC is the market clearing time, during which a flexibility offer in t_FE is reserved and the market can decide whether to take it. The preparation time t_Prep allows the system to prepare itself for the upcoming flexibility event in advance to maximize the flexibility in t_FE, where the flexibility event takes place. 
 
