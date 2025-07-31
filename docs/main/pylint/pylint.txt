@@ -499,18 +499,7 @@ agentlib_flexquant/utils/config_management.py:1:0: R0801: Similar lines in 2 fil
             self.logger.error("Results file %s was not found.", results_file)
             return None
 
-    def write_results(self, df, ts, n):
-        """
-        Write every data of variables in self.var_list in an DataFrame
-        DataFrame will be updated every time step
-
-        Args:
-            df: DataFrame which is initialised as an empty DataFrame with columns according to self.var_list
-            ts: time step
-            n: number of time steps during prediction horizon
-        Returns:
-            DataFrame with results of every variable in self.var_list
-        """ (duplicate-code)
+    def register_callbacks(self): (duplicate-code)
 agentlib_flexquant/utils/config_management.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.flexibility_indicator:[223:230]
 ==agentlib_flexquant.modules.flexibility_market:[60:68]
@@ -520,6 +509,7 @@ agentlib_flexquant/utils/config_management.py:1:0: R0801: Similar lines in 2 fil
                 f"Expected a '.csv' file."
             )
         return self
+
  (duplicate-code)
 agentlib_flexquant/utils/config_management.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.data_structures.flexquant:[105:111]
@@ -529,8 +519,7 @@ agentlib_flexquant/utils/config_management.py:1:0: R0801: Similar lines in 2 fil
         ge=0,
         unit="s",
         description="Time for market interaction",
-    )
- (duplicate-code)
+    ) (duplicate-code)
 
 -----------------------------------
 Your code has been rated at 5.52/10
