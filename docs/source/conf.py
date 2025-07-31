@@ -47,8 +47,7 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.githubpages",
     "sphinx.ext.coverage",
-    # "m2r2",  # Enable .md files
-    "myst_parser",
+    "m2r2",  # Enable .md files
     "sphinx.ext.napoleon",  # Enable google docstrings
     "sphinxcontrib.autodoc_pydantic",
 ]
@@ -57,10 +56,7 @@ templates_path = ['_templates']
 autodoc_pydantic_model_show_json = False
 autodoc_pydantic_model_show_config = False
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
-source_suffix = {
-    '.rst': 'restructuredtext',
-    '.md': 'markdown',
-}
+source_suffix = ['.rst', '.md']
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
