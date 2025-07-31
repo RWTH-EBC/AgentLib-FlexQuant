@@ -93,6 +93,90 @@ The code is published in <a class="reference external" href="https://github.com/
 </li>
 </ul>
 </div>
+<section id="flexibility-quantification">
+<h2>Flexibility Quantification<a class="headerlink" href="#flexibility-quantification" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://opensource.org/licenses/BSD-3-Clause"><img alt="License" src="https://img.shields.io/badge/License-BSD%203--Clause-blue.svg" /></a>
+<a class="reference external" href="https://rwth-ebc.github.io/AgentLib-FlexQuant/main/pylint/pylint.html"><img alt="pylint" src="https://rwth-ebc.github.io/AgentLib-FlexQuant/main/pylint/pylint.svg" /></a>
+<a class="reference external" href="https://rwth-ebc.github.io/AgentLib-FlexQuant/main/docs/index.html"><img alt="documentation" src="https://rwth-ebc.github.io/AgentLib-FlexQuant/main/docs/doc.svg" /></a></p>
+<p>This project is a plugin for the <a class="reference external" href="https://github.com/RWTH-EBC/AgentLib">AgentLib</a>. This agent-based framework employs model predictive control (MPC) to quantify flexibility offers of electricity usage of building energy systems (BES) during operation.</p>
+<section id="installation">
+<h3>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h3>
+<p>To install, you can either use the <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> or go for package installation with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.</span></code>.
+The <code class="docutils literal notranslate"><span class="pre">-e</span></code> option installs the package in editable mode, which should be done when working on this package. Please use Python version 3.10, 3.11 or 3.12.</p>
+</section>
+<section id="tutorial">
+<h3>Tutorial<a class="headerlink" href="#tutorial" title="Link to this heading"></a></h3>
+<p>This section provides tutorials to help you get started with FlexQuant. It begins with the framework’s structure, followed by the application. Functionality of each agent is introduced at the end. For more details, please refer to the literature mentioned above.</p>
+<section id="the-framework">
+<h4>The framework<a class="headerlink" href="#the-framework" title="Link to this heading"></a></h4>
+<p><img alt="Framework and data flow of the seven agents in FlexQuant" src="docs/images/FlexQuantFramework.jpg" />
+<em>Framework and data flow of the seven agents in FlexQuant</em></p>
+<p>In total, the framework consists of seven agents: Predictor Agent, BES Agent, three MPC Agents, an Indicator Agent and a market agent. The data exchange between these agents is illustrated with the arrows in the image above. The black boxes are a standard MPC setup created with <a class="reference external" href="https://github.com/RWTH-EBC/AgentLib">AgentLib</a> and <a class="reference external" href="https://github.com/RWTH-EBC/AgentLib-MPC/tree/main/agentlib_mpc">Agentlib-MPC</a>. They serve as input for flexquant, the resulting output of which is represented with the grey boxes. For the normal use case without flexibility quantification, only the agents and communications in black are active. The ones in grey are generated while quantifying the flexibility. Detailed descriptions for each agent and their interactions can be found in this <a class="reference internal" href="#the-agents"><span class="xref myst">section</span></a>.</p>
+</section>
+<section id="application">
+<h4>Application<a class="headerlink" href="#application" title="Link to this heading"></a></h4>
+<p>This section demonstrates how to use the FlexQuant package. Examples can be found in the folder <a class="reference internal" href="#Examples"><span class="xref myst">Examples</span></a>.</p>
+<p>In general, a use case has the two following types of files:</p>
+<ul class="simple">
+<li><p>Flex_config: this is a json file that defines the configurations for the agents represented by the grey boxes in the <a class="reference internal" href="#the-framework"><span class="xref myst">framework figure</span></a>. It also specifies the modifications to the Baseline MPC when used in a FlexQuant framework compared to the standard control case. Note that not all the configurations are explicitly detailed within this file; instead, it may reference other configuration files, such as an indicator config in a separate JSON file.</p></li>
+<li><p>Modules: Each use case has its own specific BES, (Baseline) MPC and predictor module, represented as black boxes in the <a class="reference internal" href="#the-framework"><span class="xref myst">framework figure</span></a>. These Agents are implemented using the standard methods from  <a class="reference external" href="https://github.com/RWTH-EBC/AgentLib">AgentLib</a> and <a class="reference external" href="https://github.com/RWTH-EBC/AgentLib-MPC/tree/main/agentlib_mpc">Agentlib-MPC</a>. For every module, there is a corresponding python file that defines its variables and functionality. Additionally, each module has a configuration JSON file, which can override the default variable values if specified.</p></li>
+</ul>
+<p>To see how the package works in detail, read more <a class="reference internal" href="#agentlib_flexquant/README.md"><span class="xref myst">here</span></a></p>
+</section>
+<section id="the-agents">
+<h4>The Agents<a class="headerlink" href="#the-agents" title="Link to this heading"></a></h4>
+<section id="predictor-agent">
+<h5>Predictor Agent<a class="headerlink" href="#predictor-agent" title="Link to this heading"></a></h5>
+<p>The Predictor Agent provides a prediction trajectory of the boundary
+conditions for the given use case to the MPC Agents. This includes factors such as weather conditions, electricity tariffs, comfort boundaries, and occupancy schedules. The data can either be historical or retrieved via API services to support real-time operation.</p>
+</section>
+<section id="bes-agent">
+<h5>BES Agent<a class="headerlink" href="#bes-agent" title="Link to this heading"></a></h5>
+<p>The BES Agent simulates the energy system to be controlled. It can either use the same model as the MPC or a higher-fidelity one. In the latter case, the BES model does not need to be Python-based; for example, a Modelica model or even a real-world BES can be utilized. The BES Agent receives control signals from the MPC, applies them to the system, and subsequently sends the resulting measurements back to the MPC.</p>
+</section>
+<section id="mpc-agents">
+<h5>MPC Agents<a class="headerlink" href="#mpc-agents" title="Link to this heading"></a></h5>
+<p>The key components of the FlexQuant framework are the three MPCs: the <strong>baseline MPC</strong>, which controls the BES and two <strong>shadow MPCs</strong> for the calculation of the available flexibility.</p>
+<p>The <strong>Baseline MPC</strong> is responsible for optimizing the operation of the BES with the objective of minimizing operational costs over the prediction horizon. While used for flexibility quantification, it is slightly modified to include the extra function of delivering the accepted flex offer.</p>
+<p>The <strong>Shadow MPCs</strong> are designed to assess the maximum possible flexibility of electricity usage over a user-defined flexibility event duration. They are termed “shadow” because they do not directly control the BES but only support the evaluation of system flexibility. Two Shadow MPCs are employed: The Negative Shadow MPC calculates the control trajectory that maximizes BES power consumption, leading to a negative power contribution to the market (i.e., higher grid consumption).
+The Positive Shadow MPC does the opposite. The prediction horizon of the Shadow MPCs is divided as following:</p>
+<p><img alt="Split of the prediction horizon of the Shadow MPCs" src="docs/images/ShadowMPCTimeSlpit.jpg" />
+<em>Split of the prediction horizon of the Shadow MPCs</em></p>
+<p>The time t_MC is the market clearing time, during which a flexibility offer in t_FE is reserved and the market can decide whether to take it. The preparation time t_Prep allows the system to prepare itself for the upcoming flexibility event in advance to maximize the flexibility in t_FE, where the flexibility event takes place.</p>
+<p>Both the baseline and the shadow MPCs must have the storage variable <code class="docutils literal notranslate"><span class="pre">E_stored</span></code> for electrical energy as output, if the correction of the flexible energy cost is activated. According to definition in the package, <code class="docutils literal notranslate"><span class="pre">E_stored</span></code> increases as more electrical energy is stored in the system. Therefore, it should be defined as following:</p>
+<ul class="simple">
+<li><p>for heating case, E_stored = ∑ C * T / η + other stored electrical energy</p></li>
+<li><p>for cooling case, E_stored = - ∑ C * T / η + other stored electrical energy</p></li>
+</ul>
+<p>where T is the temperature of the components in the system and η could be e.g. the COP of a heat pump.</p>
+<p><ins>Indicator Agent</ins> <br />
+The Indicator Agent utilizes the power consumption predictions of the
+three MPCs to calculate key performance indicators for quantifying available flexibility offers. They could be the total energy, the peak power, the average power or the cost etc.</p>
+<p><ins>Market Agent</ins> <br />
+Once the Market Agent decides to accept a flexibility offer, it sends the accepted flexibility trajectory back to the baseline MPC, which must deliver it in the corresponding time interval t<sub>FE</sub>.</p>
+</section>
+</section>
+</section>
+<section id="referencing-the-flexquant">
+<h3>Referencing the FlexQuant<a class="headerlink" href="#referencing-the-flexquant" title="Link to this heading"></a></h3>
+<p>A publication regarding the FlexQuant is currently in the work. A preprint is available under https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5015569</p>
+</section>
+<section id="authors">
+<h3>Authors<a class="headerlink" href="#authors" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Felix Stegemerten</p></li>
+<li><p>Peter Kröning</p></li>
+<li><p>Hexuan Zhao</p></li>
+<li><p>Karthik Suresh</p></li>
+</ul>
+</section>
+<section id="acknowledgments">
+<h3>Acknowledgments<a class="headerlink" href="#acknowledgments" title="Link to this heading"></a></h3>
+<p>We gratefully acknowledge the financial support by Federal Ministry for Economic Affairs and Energy (BMWE), promotional reference 03EI4081A and 03EN3092B.</p>
+<a href="https://www.bundeswirtschaftsministerium.de/Navigation/EN/Home/home.html" target="_blank">
+  <img src="./docs/images/BMWK.png" alt="BMWK" width="200"/>
+</a></section>
+</section>
 </section>
 <section id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h1>
