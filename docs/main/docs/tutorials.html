@@ -97,7 +97,7 @@
 This section begins with the framework’s structure, followed by the application. For more details, please refer to the <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0378778825002300">published paper</a>.</p>
 <section id="the-framework">
 <h2>The framework<a class="headerlink" href="#the-framework" title="Link to this heading"></a></h2>
-<p><img alt="Framework and data flow of the seven agents in FlexQuant" src="../docs/images/FlexQuantFramework.jpg" /></p>
+<p><img alt="Framework and data flow of the seven agents in FlexQuant" src="https://raw.githubusercontent.com/RWTH-EBC/AgentLib-FlexQuant/main/docs/images/FlexQuantFramework.jpg" /></p>
 <p>In total, the framework consists of seven agents: Predictor Agent, BES Agent, three MPC Agents, an Indicator Agent and a market agent. The data exchange between these agents is illustrated with the arrows in the image above. The black boxes are a standard MPC setup created with <a class="reference external" href="https://github.com/RWTH-EBC/AgentLib">AgentLib</a> and <a class="reference external" href="https://github.com/RWTH-EBC/AgentLib-MPC/tree/main/agentlib_mpc">Agentlib-MPC</a>. They serve as input for flexquant, the resulting output of which is represented with the grey boxes. For the normal use case without flexibility quantification, only the agents and communications in black are active. The ones in grey are generated while quantifying the flexibility. Detailed descriptions for each agent and their interactions can be found in this <a class="reference internal" href="#the-agents">section</a>.</p>
 <section id="the-agents">
 <h3>The Agents<a class="headerlink" href="#the-agents" title="Link to this heading"></a></h3>
