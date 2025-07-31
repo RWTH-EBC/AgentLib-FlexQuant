@@ -666,7 +666,7 @@ Power variable must be defined in the mpc config.</p>
 <div><p>Function to validate integrity of user-supplied flex config.</p>
 <p>The following checks are performed:
 1. Ensures the specified power variable exists in the MPC model outputs.
-2. Ensures the specified power variable exists in the MPC model outputs.
+2. Ensures the specified comfort variable exists in the MPC model states.
 3. Validates that the stored energy variable exists in MPC outputs if energy cost correction is enabled.
 4. Verifies the supported collocation method is used; otherwise, switches to ‘legendre’ and raises a warning.
 5. Ensures that the sum of prep time, market time, and flex event duration does not exceed the prediction horizon.
