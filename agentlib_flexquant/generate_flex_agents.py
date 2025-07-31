@@ -609,11 +609,8 @@ class FlexAgentGenerator:
         5. Ensures that the sum of prep time, market time, and flex event duration does not exceed the prediction horizon.
         6. Ensures market time equals the MPC model time step if market config is present.
         7. Ensures that all flex time values are multiples of the MPC model time step.
-        8. Checks for mismatches between time-related parameters in the flex/MPC and indicator configs and issues warnings 
-       when discrepancies exist, using the flex/MPC config values as the source of truth.
-
-        Raises:
-            ConfigurationError: If required variables are missing or any time configuration is invalid.
+        8. Checks for mismatches between time-related parameters in the flex/MPC and indicator configs and issues warnings
+        when discrepancies exist, using the flex/MPC config values as the source of truth.
 
         """
         # check if the power variable exists in the mpc config
