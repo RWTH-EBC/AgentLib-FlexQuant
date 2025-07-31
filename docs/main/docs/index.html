@@ -113,15 +113,15 @@ The <code class="docutils literal notranslate"><span class="pre">-e</span></code
   <img src="./docs/images/FlexQuantFramework.jpg" width="600" alt="framework">
   <figcaption>Framework and data flow of the seven agents in FlexQuant</figcaption>
 </figure>
-<p>In total, the framework consists of seven agents: Predictor Agent, BES Agent, three MPC Agents, an Indicator Agent and a market agent. The data exchange between these agents is illustrated with the arrows in the image above. The black boxes are a standard MPC setup created with <a class="reference external" href="https://github.com/RWTH-EBC/AgentLib">AgentLib</a> and <a class="reference external" href="https://github.com/RWTH-EBC/AgentLib-MPC/tree/main/agentlib_mpc">Agentlib-MPC</a>. They serve as input for flexquant, the resulting output of which is represented with the grey boxes. For the normal use case without flexibility quantification, only the agents and communications in black are active. The ones in grey are generated while quantifying the flexibility. Detailed descriptions for each agent and their interactions can be found in this <a class="reference internal" href="#the-agents"><span class="xref myst">section</span></a>.</p>
+<p>In total, the framework consists of seven agents: Predictor Agent, BES Agent, three MPC Agents, an Indicator Agent and a market agent. The data exchange between these agents is illustrated with the arrows in the image above. The black boxes are a standard MPC setup created with <a class="reference external" href="https://github.com/RWTH-EBC/AgentLib">AgentLib</a> and <a class="reference external" href="https://github.com/RWTH-EBC/AgentLib-MPC/tree/main/agentlib_mpc">Agentlib-MPC</a>. They serve as input for flexquant, the resulting output of which is represented with the grey boxes. For the normal use case without flexibility quantification, only the agents and communications in black are active. The ones in grey are generated while quantifying the flexibility. Detailed descriptions for each agent and their interactions can be found in this <a class="reference internal" href="#the-agents">section</a>.</p>
 </section>
 <section id="application">
 <h4>Application<a class="headerlink" href="#application" title="Link to this heading"></a></h4>
 <p>This section demonstrates how to use the FlexQuant package. Examples can be found in the folder <a class="reference internal" href="#Examples"><span class="xref myst">Examples</span></a>.</p>
 <p>In general, a use case has the two following types of files:</p>
 <ul class="simple">
-<li><p>Flex_config: this is a json file that defines the configurations for the agents represented by the grey boxes in the <a class="reference internal" href="#the-framework"><span class="xref myst">framework figure</span></a>. It also specifies the modifications to the Baseline MPC when used in a FlexQuant framework compared to the standard control case. Note that not all the configurations are explicitly detailed within this file; instead, it may reference other configuration files, such as an indicator config in a separate JSON file.</p></li>
-<li><p>Modules: Each use case has its own specific BES, (Baseline) MPC and predictor module, represented as black boxes in the <a class="reference internal" href="#the-framework"><span class="xref myst">framework figure</span></a>. These Agents are implemented using the standard methods from  <a class="reference external" href="https://github.com/RWTH-EBC/AgentLib">AgentLib</a> and <a class="reference external" href="https://github.com/RWTH-EBC/AgentLib-MPC/tree/main/agentlib_mpc">Agentlib-MPC</a>. For every module, there is a corresponding python file that defines its variables and functionality. Additionally, each module has a configuration JSON file, which can override the default variable values if specified.</p></li>
+<li><p>Flex_config: this is a json file that defines the configurations for the agents represented by the grey boxes in the <a class="reference internal" href="#the-framework">framework figure</a>. It also specifies the modifications to the Baseline MPC when used in a FlexQuant framework compared to the standard control case. Note that not all the configurations are explicitly detailed within this file; instead, it may reference other configuration files, such as an indicator config in a separate JSON file.</p></li>
+<li><p>Modules: Each use case has its own specific BES, (Baseline) MPC and predictor module, represented as black boxes in the <a class="reference internal" href="#the-framework">framework figure</a>. These Agents are implemented using the standard methods from  <a class="reference external" href="https://github.com/RWTH-EBC/AgentLib">AgentLib</a> and <a class="reference external" href="https://github.com/RWTH-EBC/AgentLib-MPC/tree/main/agentlib_mpc">Agentlib-MPC</a>. For every module, there is a corresponding python file that defines its variables and functionality. Additionally, each module has a configuration JSON file, which can override the default variable values if specified.</p></li>
 </ul>
 <p>To see how the package works in detail, read more <a class="reference internal" href="#agentlib_flexquant/README.md"><span class="xref myst">here</span></a></p>
 </section>
@@ -153,17 +153,21 @@ The Positive Shadow MPC does the opposite. The prediction horizon of the Shadow 
 <li><p>for cooling case, E_stored = - ∑ C * T / η + other stored electrical energy</p></li>
 </ul>
 <p>where T is the temperature of the components in the system and η could be e.g. the COP of a heat pump.</p>
-<p><ins>Indicator Agent</ins> <br />
-The Indicator Agent utilizes the power consumption predictions of the
+</section>
+<section id="indicator-agent">
+<h5>Indicator Agent<a class="headerlink" href="#indicator-agent" title="Link to this heading"></a></h5>
+<p>The Indicator Agent utilizes the power consumption predictions of the
 three MPCs to calculate key performance indicators for quantifying available flexibility offers. They could be the total energy, the peak power, the average power or the cost etc.</p>
-<p><ins>Market Agent</ins> <br />
-Once the Market Agent decides to accept a flexibility offer, it sends the accepted flexibility trajectory back to the baseline MPC, which must deliver it in the corresponding time interval t<sub>FE</sub>.</p>
+</section>
+<section id="market-agent">
+<h5>Market Agent<a class="headerlink" href="#market-agent" title="Link to this heading"></a></h5>
+<p>Once the Market Agent decides to accept a flexibility offer, it sends the accepted flexibility trajectory back to the baseline MPC, which must deliver it in the corresponding time interval t<sub>FE</sub>.</p>
 </section>
 </section>
 </section>
 <section id="referencing-the-flexquant">
 <h3>Referencing the FlexQuant<a class="headerlink" href="#referencing-the-flexquant" title="Link to this heading"></a></h3>
-<p>A publication regarding the FlexQuant is currently in the work. A preprint is available under https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5015569</p>
+<p>A publication is available <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0378778825002300">here</a>.</p>
 </section>
 <section id="authors">
 <h3>Authors<a class="headerlink" href="#authors" title="Link to this heading"></a></h3>
