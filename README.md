@@ -23,5 +23,6 @@ A publication is available [here](https://www.sciencedirect.com/science/article/
 
 ## Acknowledgments
 We gratefully acknowledge the financial support by Federal Ministry for Economic Affairs and Energy (BMWE), promotional reference 03EI4081A and 03EN3092B.
+
 <img src="./docs/images/BMWK.png" alt="BMWK" width="200"/>
 
