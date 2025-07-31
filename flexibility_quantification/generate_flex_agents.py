@@ -44,6 +44,15 @@ from flexibility_quantification.modules.flexibility_market import (
 
 
 class FlexAgentGenerator:
+    """Class for generating the flex agents
+
+    orig_mpc_module_config: the config for the original mpc, which has nothing to do with the flexibility quantification
+    baseline_mpc_module_config: the config for the baseline mpc for flexibility quantification
+    pos_flex_mpc_module_config: the config for the positive flexibility mpc for flexibility quantification
+    neg_flex_mpc_module_config: the config for the negative flexibility mpc for flexibility quantification
+    indicator_module_config: the config for the indicator for flexibility quantification
+    market_module_config: the config for the market for flexibility quantification
+    """
     orig_mpc_module_config: MPCConfig
     baseline_mpc_module_config: MPCConfig
     pos_flex_mpc_module_config: MPCConfig
@@ -131,6 +140,8 @@ class FlexAgentGenerator:
         """Generates the configs and the python module for the flexibility agents.
         Power variable must be defined in the mpc config.
 
+        Returns:
+            list of the full path for baseline mpc, pos_flex mpc, neg_flex mpc, indicator and market config
         """
         # adapt modules to include necessary communication variables
         baseline_mpc_config = self.adapt_mpc_module_config(
@@ -207,7 +218,14 @@ class FlexAgentGenerator:
         config_name: str,
     ):
         """Appends the given module config to the given agent config and dumps the agent config to a
-        json file. The json file is named based on the config_name."""
+        json file. The json file is named based on the config_name.
+
+        Args:
+            module: The module config to be appended.
+            agent: The agent config to be updated.
+            module_type: The type of the module
+            config_name: The name of the json file for module config (e.g. baseline.json)
+        """
 
         # if module is not from the baseline, set a new agent id, based on module id
         if module.type is not self.baseline_mpc_module_config.type:
@@ -293,6 +311,13 @@ class FlexAgentGenerator:
         - add the power variable to the outputs
         - add the Time variable to the inputs
         - add parameters for the activation and quantification of flexibility
+
+        Args:
+            module_config: The module config to be adapted
+            mpc_dataclass: The dataclass corresponding to the type of the MPC module.
+                           It contains all the extra data necessary for flexibility quantification, which will be used to update the module_config.
+        Returns:
+            module_config: The adapted module config
 
         """
         # allow the module config to be changed
