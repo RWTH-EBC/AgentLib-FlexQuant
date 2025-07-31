@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../../../">
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>agentlib_flexquant.modules.flexibility_indicator &mdash; agentlib_flexquant 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
 
   
-      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -91,9 +91,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.flex_offer</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlexOffer</span>
 
 
-<div class="viewcode-block" id="InputsForCorrectFlexCosts">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">InputsForCorrectFlexCosts</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="InputsForCorrectFlexCosts"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">InputsForCorrectFlexCosts</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">enable_energy_costs_correction</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">name</span><span class="o">=</span><span class="s2">&quot;enable_energy_costs_correction&quot;</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Variable determining whether to correct the costs of the flexible energy&quot;</span>
@@ -113,10 +111,7 @@
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the variable representing the stored electrical energy in the baseline config&quot;</span>
     <span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="InputsForCalculateFlexCosts">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">InputsForCalculateFlexCosts</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="InputsForCalculateFlexCosts"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">InputsForCalculateFlexCosts</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">use_constant_electricity_price</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Use constant electricity price&quot;</span>
@@ -130,17 +125,13 @@
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;constant electricity price in ct/kWh&quot;</span>
     <span class="p">)</span>
 
-<div class="viewcode-block" id="InputsForCalculateFlexCosts.validate_constant_price">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price">[docs]</a>
-    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="InputsForCalculateFlexCosts.validate_constant_price"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">validate_constant_price</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">use_constant_electricity_price</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">const_electricity_price</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Constant electricity price must have a valid value in float if it is to be used for calculation. &#39;</span>
                             <span class="sa">f</span><span class="s1">&#39;Received &quot;use_constant_electricity_price&quot;: true, &quot;const_electricity_price&quot;: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">const_electricity_price</span><span class="si">}</span><span class="s1">. &#39;</span>
                             <span class="sa">f</span><span class="s1">&#39;Please specify them correctly in &quot;calculate_costs&quot; field in flex config.&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">model</span></div>
-</div>
-
+        <span class="k">return</span> <span class="n">model</span></div></div>
 
 
 <span class="c1"># Pos and neg kpis to get the right names for plotting</span>
@@ -148,9 +139,7 @@
 <span class="n">kpis_neg</span> <span class="o">=</span> <span class="n">FlexibilityKPIs</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="s2">&quot;negative&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="FlexibilityIndicatorModuleConfig">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityIndicatorModuleConfig</span><span class="p">(</span><span class="n">agentlib</span><span class="o">.</span><span class="n">BaseModuleConfig</span><span class="p">):</span>
+<div class="viewcode-block" id="FlexibilityIndicatorModuleConfig"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityIndicatorModuleConfig</span><span class="p">(</span><span class="n">agentlib</span><span class="o">.</span><span class="n">BaseModuleConfig</span><span class="p">):</span>
 
     <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span>
         <span class="n">extra</span><span class="o">=</span><span class="s1">&#39;forbid&#39;</span>
@@ -304,22 +293,16 @@
     <span class="n">correct_costs</span><span class="p">:</span> <span class="n">InputsForCorrectFlexCosts</span> <span class="o">=</span> <span class="n">InputsForCorrectFlexCosts</span><span class="p">()</span>
     <span class="n">calculate_costs</span><span class="p">:</span> <span class="n">InputsForCalculateFlexCosts</span> <span class="o">=</span> <span class="n">InputsForCalculateFlexCosts</span><span class="p">()</span>
     
-<div class="viewcode-block" id="FlexibilityIndicatorModuleConfig.check_results_file_extension">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension">[docs]</a>
-    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="FlexibilityIndicatorModuleConfig.check_results_file_extension"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">check_results_file_extension</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">results_file</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="o">.</span><span class="n">suffix</span> <span class="o">!=</span> <span class="s2">&quot;.csv&quot;</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Invalid file extension for &#39;results_file&#39;: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;Expected a &#39;.csv&#39; file.&quot;</span>
             <span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span></div>
-</div>
+        <span class="k">return</span> <span class="bp">self</span></div></div>
 
-
-<div class="viewcode-block" id="FlexibilityIndicatorModule">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityIndicatorModule</span><span class="p">(</span><span class="n">agentlib</span><span class="o">.</span><span class="n">BaseModule</span><span class="p">):</span>
+<div class="viewcode-block" id="FlexibilityIndicatorModule"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityIndicatorModule</span><span class="p">(</span><span class="n">agentlib</span><span class="o">.</span><span class="n">BaseModule</span><span class="p">):</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">FlexibilityIndicatorModuleConfig</span>
 
     <span class="n">data</span><span class="p">:</span> <span class="n">FlexibilityData</span>
@@ -343,9 +326,7 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_list</span><span class="p">))</span>
 
-<div class="viewcode-block" id="FlexibilityIndicatorModule.register_callbacks">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.register_callbacks">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">register_callbacks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="FlexibilityIndicatorModule.register_callbacks"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.register_callbacks">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">register_callbacks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">inputs</span>
         <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">data_broker</span><span class="o">.</span><span class="n">register_callback</span><span class="p">(</span>
@@ -355,16 +336,10 @@
             <span class="n">name</span><span class="o">=</span><span class="s2">&quot;in_provision&quot;</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;in_provision&quot;</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">callback</span>
         <span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="FlexibilityIndicatorModule.process">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.process">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="FlexibilityIndicatorModule.process"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.process">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">event</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="FlexibilityIndicatorModule.callback">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.callback">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="FlexibilityIndicatorModule.callback"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.callback">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;in_provision&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">in_provision</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">value</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_provision</span><span class="p">:</span>
@@ -424,10 +399,7 @@
                 <span class="c1"># set the values to None to reset the callback</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_set_inputs_to_none</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="FlexibilityIndicatorModule.get_results">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.get_results">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_results</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+<div class="viewcode-block" id="FlexibilityIndicatorModule.get_results"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.get_results">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_results</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Opens results file of flexibility_indicator.py</span>
 <span class="sd">        results_file defined in __init__</span>
@@ -440,10 +412,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Results file </span><span class="si">%s</span><span class="s2"> was not found.&quot;</span><span class="p">,</span> <span class="n">results_file</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">None</span></div>
 
-
-<div class="viewcode-block" id="FlexibilityIndicatorModule.write_results">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.write_results">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">write_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">ts</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+<div class="viewcode-block" id="FlexibilityIndicatorModule.write_results"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.write_results">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">write_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">ts</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Write every data of variables in self.var_list in an DataFrame</span>
 <span class="sd">        DataFrame will be updated every time step</span>
@@ -501,19 +470,13 @@
 
         <span class="k">return</span> <span class="n">df</span></div>
 
-
-<div class="viewcode-block" id="FlexibilityIndicatorModule.cleanup_results">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.cleanup_results">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">cleanup_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="FlexibilityIndicatorModule.cleanup_results"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.cleanup_results">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">cleanup_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">results_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">results_file</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">results_file</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">results_file</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="FlexibilityIndicatorModule.calc_and_send_offer">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.calc_and_send_offer">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">calc_and_send_offer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="FlexibilityIndicatorModule.calc_and_send_offer"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.calc_and_send_offer">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">calc_and_send_offer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the flexibility KPIs for current predictions, send the flex offer and set the outputs, write and save the results.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -548,10 +511,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">save_results</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">results_file</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="FlexibilityIndicatorModule.send_flex_offer">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.send_flex_offer">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">send_flex_offer</span><span class="p">(</span>
+<div class="viewcode-block" id="FlexibilityIndicatorModule.send_flex_offer"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.send_flex_offer">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">send_flex_offer</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
             <span class="n">base_power_profile</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
             <span class="n">pos_diff_profile</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">pos_price</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -585,7 +545,6 @@
             <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">offer_count</span> <span class="o">+=</span> <span class="mi">1</span></div>
 
-
     <span class="k">def</span><span class="w"> </span><span class="nf">_set_inputs_to_none</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_base</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_flex_neg</span> <span class="o">=</span> <span class="kc">None</span>
@@ -595,9 +554,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_flex_neg</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_flex_pos</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="FlexibilityIndicatorModule.check_power_end_deviation">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.check_power_end_deviation">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">check_power_end_deviation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<div class="viewcode-block" id="FlexibilityIndicatorModule.check_power_end_deviation"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.check_power_end_deviation">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">check_power_end_deviation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        calculates the deviation of the final value of the power profiles and warn the user if it exceeds the tolerance</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -613,9 +570,7 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There is an average deviation of </span><span class="si">{</span><span class="n">dev_pos</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> kW between the final values of power profiles of negative shadow MPC and the baseline. Correction of energy costs might be necessary.&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">kpis_neg</span><span class="o">.</span><span class="n">power_flex_within_boundary</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="kc">False</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">kpis_neg</span><span class="o">.</span><span class="n">power_flex_within_boundary</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="kc">True</span><span class="p">)</span></div>
-</div>
-
+            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">kpis_neg</span><span class="o">.</span><span class="n">power_flex_within_boundary</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="kc">True</span><span class="p">)</span></div></div>
 
 </pre></div>
 

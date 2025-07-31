@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../../../">
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>agentlib_flexquant.data_structures.flex_results &mdash; agentlib_flexquant 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
 
   
-      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -110,9 +110,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">agentlib_flexquant.utils.config_management</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cmng</span>
 
 
-<div class="viewcode-block" id="load_indicator">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.load_indicator">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">load_indicator</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FilePath</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<div class="viewcode-block" id="load_indicator"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.load_indicator">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_indicator</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FilePath</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Load the flexibility indicator results from the given file path</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -120,10 +118,7 @@
     <span class="k">return</span> <span class="n">df</span></div>
 
 
-
-<div class="viewcode-block" id="load_market">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.load_market">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">load_market</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FilePath</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<div class="viewcode-block" id="load_market"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.load_market">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_market</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FilePath</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Load the market results from the given file path</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -131,10 +126,7 @@
     <span class="k">return</span> <span class="n">df</span></div>
 
 
-
-<div class="viewcode-block" id="Results">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Results</span><span class="p">:</span>
+<div class="viewcode-block" id="Results"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Results</span><span class="p">:</span>
     <span class="c1"># Configs:</span>
     <span class="c1"># Generator</span>
     <span class="n">generator_config</span><span class="p">:</span> <span class="n">FlexQuantConfig</span>
@@ -420,9 +412,7 @@
             <span class="p">}</span>
         <span class="k">return</span> <span class="n">res</span>
 
-<div class="viewcode-block" id="Results.convert_timescale_of_dataframe_index">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.convert_timescale_of_dataframe_index">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">convert_timescale_of_dataframe_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to_timescale</span><span class="p">:</span> <span class="n">TimeConversionTypes</span><span class="p">):</span>
+<div class="viewcode-block" id="Results.convert_timescale_of_dataframe_index"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.convert_timescale_of_dataframe_index">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">convert_timescale_of_dataframe_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to_timescale</span><span class="p">:</span> <span class="n">TimeConversionTypes</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert the time in the dataframes to the desired timescale</span>
 
 <span class="sd">        Keyword arguments:</span>
@@ -446,10 +436,7 @@
         <span class="c1"># Update current unit</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_timescale_of_data</span> <span class="o">=</span> <span class="n">to_timescale</span></div>
 
-
-<div class="viewcode-block" id="Results.get_intersection_mpcs_sim">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.get_intersection_mpcs_sim">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_intersection_mpcs_sim</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+<div class="viewcode-block" id="Results.get_intersection_mpcs_sim"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.get_intersection_mpcs_sim">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_intersection_mpcs_sim</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the intersection of the MPCs and the simulator variables.</span>
 <span class="sd">        returns a dictionary with the following structure:</span>
@@ -484,10 +471,7 @@
 
         <span class="k">return</span> <span class="n">id_alias_name_dict</span></div>
 
-
-<div class="viewcode-block" id="Results.create_instance_with_skipped_validation">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.create_instance_with_skipped_validation">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_instance_with_skipped_validation</span><span class="p">(</span>
+<div class="viewcode-block" id="Results.create_instance_with_skipped_validation"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.create_instance_with_skipped_validation">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">create_instance_with_skipped_validation</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> 
             <span class="n">model_class</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">],</span> 
             <span class="n">config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> 
@@ -530,7 +514,6 @@
         <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s1">&#39;_bypassed_fields&#39;</span><span class="p">,</span> <span class="n">skip_fields</span><span class="p">)</span>
         <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s1">&#39;_original_config&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">instance</span></div>
-
     
     <span class="k">def</span><span class="w"> </span><span class="nf">__deepcopy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memo</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;Results&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -553,7 +536,6 @@
                 <span class="c1"># Everything else should deepcopy normally</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="n">new_instance</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">memo</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">new_instance</span></div>
-
 </pre></div>
 
            </div>

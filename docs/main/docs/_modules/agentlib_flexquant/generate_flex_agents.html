@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../../">
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>agentlib_flexquant.generate_flex_agents &mdash; agentlib_flexquant 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
 
   
-      <script src="../../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=01f34227"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/jquery.js"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+      <script src="../../_static/doctools.js"></script>
+      <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -117,9 +117,7 @@
 <span class="p">)</span>   
 
 
-<div class="viewcode-block" id="FlexAgentGenerator">
-<a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">FlexAgentGenerator</span><span class="p">:</span>
+<div class="viewcode-block" id="FlexAgentGenerator"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexAgentGenerator</span><span class="p">:</span>
     <span class="n">orig_mpc_module_config</span><span class="p">:</span> <span class="n">BaseMPCConfig</span>
     <span class="n">baseline_mpc_module_config</span><span class="p">:</span> <span class="n">BaseMPCConfig</span>
     <span class="n">pos_flex_mpc_module_config</span><span class="p">:</span> <span class="n">BaseMPCConfig</span>
@@ -203,9 +201,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">run_config_validations</span><span class="p">()</span>
 
-<div class="viewcode-block" id="FlexAgentGenerator.generate_flex_agents">
-<a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.generate_flex_agents">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">generate_flex_agents</span><span class="p">(</span>
+<div class="viewcode-block" id="FlexAgentGenerator.generate_flex_agents"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.generate_flex_agents">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">generate_flex_agents</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span>
         <span class="n">BaseMPCConfig</span><span class="p">,</span>
@@ -285,10 +281,7 @@
             <span class="n">atexit</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delete_created_files</span><span class="p">())</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_config_file_paths</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="FlexAgentGenerator.append_module_and_dump_agent">
-<a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.append_module_and_dump_agent">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">append_module_and_dump_agent</span><span class="p">(</span>
+<div class="viewcode-block" id="FlexAgentGenerator.append_module_and_dump_agent"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.append_module_and_dump_agent">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">append_module_and_dump_agent</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">module</span><span class="p">:</span> <span class="n">BaseModuleConfig</span><span class="p">,</span>
         <span class="n">agent</span><span class="p">:</span> <span class="n">AgentConfig</span><span class="p">,</span>
@@ -328,10 +321,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Provided agent config does not contain any modules.&quot;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="FlexAgentGenerator.get_config_file_paths">
-<a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.get_config_file_paths">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_config_file_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="FlexAgentGenerator.get_config_file_paths"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.get_config_file_paths">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_config_file_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a list of paths with the created config files</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -362,7 +352,6 @@
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">paths</span></div>
 
-
     <span class="k">def</span><span class="w"> </span><span class="nf">_delete_created_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Function to run at exit if the files are to be deleted</span>
 
@@ -379,9 +368,7 @@
         <span class="c1"># also delete folder</span>
         <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">flex_files_directory</span><span class="p">)</span><span class="o">.</span><span class="n">rmdir</span><span class="p">()</span>
 
-<div class="viewcode-block" id="FlexAgentGenerator.adapt_mpc_module_config">
-<a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_mpc_module_config">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">adapt_mpc_module_config</span><span class="p">(</span>
+<div class="viewcode-block" id="FlexAgentGenerator.adapt_mpc_module_config"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_mpc_module_config">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">adapt_mpc_module_config</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">module_config</span><span class="p">:</span> <span class="n">BaseMPCConfig</span><span class="p">,</span> <span class="n">mpc_dataclass</span><span class="p">:</span> <span class="n">BaseMPCData</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseMPCConfig</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Adapts the mpc module config for automated flexibility quantification.</span>
@@ -525,10 +512,7 @@
 
         <span class="k">return</span> <span class="n">module_config</span></div>
 
-
-<div class="viewcode-block" id="FlexAgentGenerator.adapt_indicator_config">
-<a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_indicator_config">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">adapt_indicator_config</span><span class="p">(</span>
+<div class="viewcode-block" id="FlexAgentGenerator.adapt_indicator_config"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_indicator_config">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">adapt_indicator_config</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">module_config</span><span class="p">:</span> <span class="n">FlexibilityIndicatorModuleConfig</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FlexibilityIndicatorModuleConfig</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Adapts the indicator module config for automated flexibility quantification.</span>
@@ -568,10 +552,7 @@
         <span class="n">module_config</span><span class="o">.</span><span class="n">model_config</span><span class="p">[</span><span class="s2">&quot;frozen&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="n">module_config</span></div>
 
-
-<div class="viewcode-block" id="FlexAgentGenerator.adapt_market_config">
-<a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_market_config">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">adapt_market_config</span><span class="p">(</span>
+<div class="viewcode-block" id="FlexAgentGenerator.adapt_market_config"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_market_config">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">adapt_market_config</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">module_config</span><span class="p">:</span> <span class="n">FlexibilityMarketModuleConfig</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FlexibilityMarketModuleConfig</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Adapts the market module config for automated flexibility quantification.</span>
@@ -590,7 +571,6 @@
         <span class="p">)</span>
         <span class="n">module_config</span><span class="o">.</span><span class="n">model_config</span><span class="p">[</span><span class="s2">&quot;frozen&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="n">module_config</span></div>
-
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_generate_flex_model_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates a python module for negative and positive flexibility agents from</span>
@@ -663,9 +643,7 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">formatted_code</span><span class="p">)</span>
 
-<div class="viewcode-block" id="FlexAgentGenerator.check_variables_in_casadi_config">
-<a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.check_variables_in_casadi_config">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">check_variables_in_casadi_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">CasadiModelConfig</span><span class="p">,</span> <span class="n">expr</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="FlexAgentGenerator.check_variables_in_casadi_config"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.check_variables_in_casadi_config">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">check_variables_in_casadi_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">CasadiModelConfig</span><span class="p">,</span> <span class="n">expr</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if all variables in the expression are defined in the config.</span>
 
 <span class="sd">        Args:</span>
@@ -693,10 +671,7 @@
         <span class="k">if</span> <span class="n">unknown_vars</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown variables in new cost function: </span><span class="si">{</span><span class="n">unknown_vars</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="FlexAgentGenerator.run_config_validations">
-<a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.run_config_validations">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">run_config_validations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="FlexAgentGenerator.run_config_validations"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.run_config_validations">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">run_config_validations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function to validate integrity of user-supplied flex config.</span>
 
@@ -788,11 +763,8 @@
                     <span class="k">if</span> <span class="n">parameter</span><span class="o">.</span><span class="n">value</span> <span class="o">!=</span> <span class="n">mpc_value</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Value mismatch for </span><span class="si">{</span><span class="n">parameter</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> in baseline MPC module config (field) and indicator module config (parameter). &#39;</span>
                                             <span class="sa">f</span><span class="s1">&#39;Baseline MPC module config value will be used.&#39;</span><span class="p">)</span></div>
-
                         
-<div class="viewcode-block" id="FlexAgentGenerator.adapt_sim_results_path">
-<a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_sim_results_path">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">adapt_sim_results_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">simulator_agent_config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="viewcode-block" id="FlexAgentGenerator.adapt_sim_results_path"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_sim_results_path">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">adapt_sim_results_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">simulator_agent_config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">        Optional helper function to adapt file path for simulator results in sim config</span>
 <span class="sd">        so that sim results land in the same results directory as flex results.</span>
@@ -817,9 +789,7 @@
         <span class="n">sim_file_name</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">sim_module_config</span><span class="p">[</span><span class="s2">&quot;result_filename&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">name</span>
         <span class="c1"># set results path so that sim results lands in same directory as flex result CSVs</span>
         <span class="n">sim_module_config</span><span class="p">[</span><span class="s2">&quot;result_filename&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">results_directory</span> <span class="o">/</span> <span class="n">sim_file_name</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">sim_config</span></div>
-</div>
-
+        <span class="k">return</span> <span class="n">sim_config</span></div></div>
 </pre></div>
 
            </div>

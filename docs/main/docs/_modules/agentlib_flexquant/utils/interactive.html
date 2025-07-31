@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../../../">
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>agentlib_flexquant.utils.interactive &mdash; agentlib_flexquant 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
 
   
-      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -93,9 +93,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.flex_offer</span><span class="w"> </span><span class="kn">import</span> <span class="n">OfferStatus</span>
 
 
-<div class="viewcode-block" id="CustomBound">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.CustomBound">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">CustomBound</span><span class="p">:</span>
+<div class="viewcode-block" id="CustomBound"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.CustomBound">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">CustomBound</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Dataclass to let the user define custom bounds for the mpc variables</span>
 
@@ -119,10 +117,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">upper_bound</span> <span class="o">=</span> <span class="n">ub_name</span></div>
 
 
-
-<div class="viewcode-block" id="Dashboard">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.Dashboard">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Dashboard</span><span class="p">(</span><span class="n">flex_results</span><span class="o">.</span><span class="n">Results</span><span class="p">):</span>
+<div class="viewcode-block" id="Dashboard"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.Dashboard">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Dashboard</span><span class="p">(</span><span class="n">flex_results</span><span class="o">.</span><span class="n">Results</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class for the dashboard of flexquant</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -212,9 +207,7 @@
         <span class="c1">#     if not isinstance(kpi.value, pd.Series):</span>
         <span class="c1">#         self.plotting_variables.append(kpi.name)</span>
 
-<div class="viewcode-block" id="Dashboard.show">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.Dashboard.show">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">custom_bounds</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">CustomBound</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">CustomBound</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Dashboard.show"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.Dashboard.show">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">custom_bounds</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">CustomBound</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">CustomBound</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Shows the dashboard in a web browser containing:</span>
 <span class="sd">        -- Statistics of the MPCs solver</span>
@@ -867,9 +860,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">port</span> <span class="o">=</span> <span class="n">get_port</span><span class="p">()</span>
         <span class="n">webbrowser</span><span class="o">.</span><span class="n">open_new_tab</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;http://localhost:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">)</span></div>
-</div>
-
+        <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>
