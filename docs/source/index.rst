@@ -17,7 +17,7 @@ The code is published in `this <https://github.com/RWTH-EBC/AgentLib-FlexQuant>`
    tutorials
    api
 
-.. include:: README.md
+.. include:: ../../README.md
    :parser: myst_parser.sphinx_
 
 Indices and tables
