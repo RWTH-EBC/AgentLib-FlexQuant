@@ -4,7 +4,7 @@ This section begins with the framework's structure, followed by the application.
 
 ## The framework
 
-![Framework and data flow of the seven agents in FlexQuant](../docs/images/FlexQuantFramework.jpg)
+![Framework and data flow of the seven agents in FlexQuant](https://raw.githubusercontent.com/RWTH-EBC/AgentLib-FlexQuant/main/docs/images/FlexQuantFramework.jpg)
 
 [//]: # (*Framework and data flow of the seven agents in FlexQuant*)
 
