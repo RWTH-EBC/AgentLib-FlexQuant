@@ -62,15 +62,15 @@ Both the baseline and the shadow MPCs must have the storage variable ``E_stored`
 
 where T is the temperature of the components in the system and &eta; could be e.g. the COP of a heat pump.
 
-<ins>Indicator Agent</ins> \
+#### Indicator Agent
 The Indicator Agent utilizes the power consumption predictions of the
 three MPCs to calculate key performance indicators for quantifying available flexibility offers. They could be the total energy, the peak power, the average power or the cost etc.
 
-<ins>Market Agent</ins> \
+#### Market Agent
 Once the Market Agent decides to accept a flexibility offer, it sends the accepted flexibility trajectory back to the baseline MPC, which must deliver it in the corresponding time interval t<sub>FE</sub>.
 
 ## Referencing the FlexQuant
-A publication regarding the FlexQuant is currently in the work. A preprint is available under https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5015569
+A publication is available [here](https://www.sciencedirect.com/science/article/pii/S0378778825002300).
 
 ## Authors
 - Felix Stegemerten 

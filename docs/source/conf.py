@@ -58,6 +58,11 @@ autodoc_pydantic_model_show_config = False
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 # source_suffix = ['.rst', '.md']
 
+myst_heading_anchors = 3
+myst_enable_extensions = [
+    "html_image",
+]
+
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
