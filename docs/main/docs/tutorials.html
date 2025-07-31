@@ -97,7 +97,8 @@
 This section begins with the framework’s structure, followed by the application. For more details, please refer to the <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0378778825002300">published paper</a>.</p>
 <section id="the-framework">
 <h2>The framework<a class="headerlink" href="#the-framework" title="Link to this heading"></a></h2>
-<p><img alt="Framework and data flow of the seven agents in FlexQuant" src="https://raw.githubusercontent.com/RWTH-EBC/AgentLib-FlexQuant/main/docs/images/FlexQuantFramework.jpg" /></p>
+<p><img alt="Framework and data flow of the seven agents in FlexQuant" src="https://raw.githubusercontent.com/RWTH-EBC/AgentLib-FlexQuant/main/docs/images/FlexQuantFramework.jpg" />
+<em>Framework and data flow of the seven agents in FlexQuant</em></p>
 <p>In total, the framework consists of seven agents: Predictor Agent, BES Agent, three MPC Agents, an Indicator Agent and a market agent. The data exchange between these agents is illustrated with the arrows in the image above. The black boxes are a standard MPC setup created with <a class="reference external" href="https://github.com/RWTH-EBC/AgentLib">AgentLib</a> and <a class="reference external" href="https://github.com/RWTH-EBC/AgentLib-MPC/tree/main/agentlib_mpc">Agentlib-MPC</a>. They serve as input for flexquant, the resulting output of which is represented with the grey boxes. For the normal use case without flexibility quantification, only the agents and communications in black are active. The ones in grey are generated while quantifying the flexibility. Detailed descriptions for each agent and their interactions can be found in this <a class="reference internal" href="#the-agents">section</a>.</p>
 <section id="the-agents">
 <h3>The Agents<a class="headerlink" href="#the-agents" title="Link to this heading"></a></h3>
@@ -116,9 +117,8 @@ conditions for the given use case to the MPC Agents. This includes factors such 
 <p>The <strong>Baseline MPC</strong> is responsible for optimizing the operation of the BES with the objective of minimizing operational costs over the prediction horizon. While used for flexibility quantification, it is slightly modified to include the extra function of delivering the accepted flex offer.</p>
 <p>The <strong>Shadow MPCs</strong> are designed to assess the maximum possible flexibility of electricity usage over a user-defined flexibility event duration. They are termed “shadow” because they do not directly control the BES but only support the evaluation of system flexibility. Two Shadow MPCs are employed: The Negative Shadow MPC calculates the control trajectory that maximizes BES power consumption, leading to a negative power contribution to the market (i.e., higher grid consumption).
 The Positive Shadow MPC does the opposite. The prediction horizon of the Shadow MPCs is divided as following:</p>
-<p><img alt="Split of the prediction horizon of the Shadow MPCs" src="../docs/images/ShadowMPCTimeSlpit.jpg" /></p>
-<a class="bg-primary reference internal image-reference" href="../docs/images/ShadowMPCTimeSlpit.jpg"><img alt="test" class="bg-primary align-center" src="../docs/images/ShadowMPCTimeSlpit.jpg" style="width: 200px;" />
-</a>
+<p><img alt="Split of the prediction horizon of the Shadow MPCs" src="https://raw.githubusercontent.com/RWTH-EBC/AgentLib-FlexQuant/main/docs/images/ShadowMPCTimeSlpit.jpg" />
+<em>Split of the prediction horizon of the Shadow MPCs</em></p>
 <p>The time t_MC is the market clearing time, during which a flexibility offer in t_FE is reserved and the market can decide whether to take it. The preparation time t_Prep allows the system to prepare itself for the upcoming flexibility event in advance to maximize the flexibility in t_FE, where the flexibility event takes place.</p>
 <p>Both the baseline and the shadow MPCs must have the storage variable <code class="docutils literal notranslate"><span class="pre">E_stored</span></code> for electrical energy as output, if the correction of the flexible energy cost is activated. According to definition in the package, <code class="docutils literal notranslate"><span class="pre">E_stored</span></code> increases as more electrical energy is stored in the system. Therefore, it should be defined as following:</p>
 <ul class="simple">
