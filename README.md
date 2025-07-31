@@ -14,10 +14,8 @@ This section provides tutorials to help you get started with FlexQuant. It begin
 
 ### The framework
 
-<figure>
-  <img src="./docs/images/FlexQuantFramework.jpg" width="600" alt="framework">
-  <figcaption>Framework and data flow of the seven agents in FlexQuant</figcaption>
-</figure>
+![Framework and data flow of the seven agents in FlexQuant](./docs/images/FlexQuantFramework.jpg)
+*Framework and data flow of the seven agents in FlexQuant*
 
 
 In total, the framework consists of seven agents: Predictor Agent, BES Agent, three MPC Agents, an Indicator Agent and a market agent. The data exchange between these agents is illustrated with the arrows in the image above. The black boxes are a standard MPC setup created with [AgentLib](https://github.com/RWTH-EBC/AgentLib) and [Agentlib-MPC](https://github.com/RWTH-EBC/AgentLib-MPC/tree/main/agentlib_mpc). They serve as input for flexquant, the resulting output of which is represented with the grey boxes. For the normal use case without flexibility quantification, only the agents and communications in black are active. The ones in grey are generated while quantifying the flexibility. Detailed descriptions for each agent and their interactions can be found in this [section](#the-agents).
@@ -33,27 +31,25 @@ To see how the package works in detail, read more [here](agentlib_flexquant/READ
 
 ### The Agents
 
-<ins>Predictor Agent</ins> \
+#### Predictor Agent
 The Predictor Agent provides a prediction trajectory of the boundary
 conditions for the given use case to the MPC Agents. This includes factors such as weather conditions, electricity tariffs, comfort boundaries, and occupancy schedules. The data can either be historical or retrieved via API services to support real-time operation.
 
-<ins>BES Agent</ins> \
+#### BES Agent
 The BES Agent simulates the energy system to be controlled. It can either use the same model as the MPC or a higher-fidelity one. In the latter case, the BES model does not need to be Python-based; for example, a Modelica model or even a real-world BES can be utilized. The BES Agent receives control signals from the MPC, applies them to the system, and subsequently sends the resulting measurements back to the MPC. 
 
-<ins>MPC Agents</ins> \
+#### MPC Agents
 The key components of the FlexQuant framework are the three MPCs: the **baseline MPC**, which controls the BES and two **shadow MPCs** for the calculation of the available flexibility.  
 
 The **Baseline MPC** is responsible for optimizing the operation of the BES with the objective of minimizing operational costs over the prediction horizon. While used for flexibility quantification, it is slightly modified to include the extra function of delivering the accepted flex offer.
 
 The **Shadow MPCs** are designed to assess the maximum possible flexibility of electricity usage over a user-defined flexibility event duration. They are termed "shadow" because they do not directly control the BES but only support the evaluation of system flexibility. Two Shadow MPCs are employed: The Negative Shadow MPC calculates the control trajectory that maximizes BES power consumption, leading to a negative power contribution to the market (i.e., higher grid consumption).
- The Positive Shadow MPC does the opposite. The prediction horizon of the Shadow MPCs is divided as following: 
+ The Positive Shadow MPC does the opposite. The prediction horizon of the Shadow MPCs is divided as following:
 
-<figure>
-  <img src="./docs/images/ShadowMPCTimeSlpit.jpg" width="600" alt="framework">
-  <figcaption>Split of the prediction horizon of the Shadow MPCs</figcaption>
-</figure>
+![Split of the prediction horizon of the Shadow MPCs](./docs/images/ShadowMPCTimeSlpit.jpg)
+*Split of the prediction horizon of the Shadow MPCs*
 
-The time t<sub>MC</sub> is the market clearing time, during which a flexibility offer in t<sub>FE</sub> is reserved and the market can decide whether to take it. The preparation time t<sub>Prep</sub> allows the system to prepare itself for the upcoming flexibility event in advance to maximize the flexibility in t<sub>FE</sub>, where the flexibility event takes place. 
+The time t_MC is the market clearing time, during which a flexibility offer in t_FE is reserved and the market can decide whether to take it. The preparation time t_Prep allows the system to prepare itself for the upcoming flexibility event in advance to maximize the flexibility in t_FE, where the flexibility event takes place. 
 
 Both the baseline and the shadow MPCs must have the storage variable ``E_stored`` for electrical energy as output, if the correction of the flexible energy cost is activated. According to definition in the package, ``E_stored`` increases as more electrical energy is stored in the system. Therefore, it should be defined as following:
 
@@ -81,6 +77,4 @@ A publication regarding the FlexQuant is currently in the work. A preprint is av
 ## Acknowledgments
 We gratefully acknowledge the financial support by Federal Ministry for Economic Affairs and Energy (BMWE), promotional reference 03EI4081A and 03EN3092B.
 
-<a href="https://www.bundeswirtschaftsministerium.de/Navigation/EN/Home/home.html" target="_blank">
-  <img src="./docs/images/BMWK.png" alt="BMWK" width="200"/>
-</a>
+[![BMWK](./docs/images/BMWK.png)](https://www.bundeswirtschaftsministerium.de/Navigation/EN/Home/home.html)
