@@ -75,3 +75,5 @@ html_theme_options = {
     "globaltoc_includehidden": False,
 }
 html_static_path = []
+html_split_index = True
+modindex_common_prefix = ['agentlib_flexquant.']
