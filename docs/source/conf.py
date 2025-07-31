@@ -17,7 +17,6 @@ sys.setrecursionlimit(1500)
 project = 'agentlib_flexquant'
 copyright = '2025, Felix Stegemerten'
 author = 'Felix Stegemerten'
-release = '0.1.0'
 
 # The full version, including alpha/beta/rc tags
 with open(Path(__file__).parents[2].joinpath(project, "__init__.py"), "r") as file:
@@ -47,7 +46,8 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.githubpages",
     "sphinx.ext.coverage",
-    "m2r2",  # Enable .md files
+    # "m2r2",  # Enable .md files
+    "myst_parser",
     "sphinx.ext.napoleon",  # Enable google docstrings
     "sphinxcontrib.autodoc_pydantic",
 ]
@@ -56,7 +56,7 @@ templates_path = ['_templates']
 autodoc_pydantic_model_show_json = False
 autodoc_pydantic_model_show_config = False
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
-source_suffix = ['.rst', '.md']
+# source_suffix = ['.rst', '.md']
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
