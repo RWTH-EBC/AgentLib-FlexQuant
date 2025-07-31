@@ -73,7 +73,7 @@ if __name__ == "__main__":
     for flex_event_duration in flex_event_durations:
         # Here the simulation is run multiple times,
         # generated files are stored in --> custom base paths
-        # For an example with single run, see: Examples\SimpleBuilding\main_single_run.py
+        # For an example with single run, see: examples\SimpleBuilding\main_single_run.py
         # For plotting of results generated from this main file, 
-        # see: Examples\SimpleBuilding\plot_results_mult.py
+        # see: examples\SimpleBuilding\plot_results_mult.py
         run_example(flex_event_duration, until)

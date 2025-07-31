@@ -33,7 +33,7 @@ def run_example(until=until):
 if __name__ == "__main__":
     # Here the simulation is run once, 
     # generated files are stored in --> the current working directory
-    # For an example with multiple runs, see: Examples\SimpleBuilding\main_multi_run.py
+    # For an example with multiple runs, see: examples\SimpleBuilding\main_multi_run.py
     # For plotting of results generated from this main file, 
-    # see: Examples\SimpleBuilding\plot_results_single.py
+    # see: examples\SimpleBuilding\plot_results_single.py
     run_example(until)

@@ -147,7 +147,7 @@ def calc_resistances(tz_par, split_sol, split_ig):
 
 
 if __name__ == "__main__":
-    from Examples.SimpleTesthall.Model.utils.modelica_parser import parse_modelica_record
+    from examples.SimpleTesthall.Model.utils.modelica_parser import parse_modelica_record
     path_to_mos = r"D:\01_Git\02_Python\flexquant_branch\flexquant\Examples\SimpleTesthall\Model\local\mpc\ASHRAE140_900.mo"
     tz_par = parse_modelica_record(path_to_mos)
     tz_par['AWintot'] = 12
