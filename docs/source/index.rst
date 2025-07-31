@@ -10,15 +10,16 @@ This project is a plugin for the AgentLib. This agent-based framework employs mo
 The code is published in `this <https://github.com/RWTH-EBC/AgentLib-FlexQuant>`_ GitHub repo.
 
 .. toctree::
- :maxdepth: 2
- :caption: Contents:
+   :maxdepth: 2
+   :caption: Contents:
 
- installation
- tutorials
- api
+   installation
+   tutorials
+   api
 
-Readme
------------------------
+-----------
+Readme File
+-----------
 
 .. mdinclude:: ../../README.md
 

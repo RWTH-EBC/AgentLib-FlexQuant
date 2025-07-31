@@ -77,4 +77,6 @@ A publication regarding the FlexQuant is currently in the work. A preprint is av
 ## Acknowledgments
 We gratefully acknowledge the financial support by Federal Ministry for Economic Affairs and Energy (BMWE), promotional reference 03EI4081A and 03EN3092B.
 
-[![BMWK](./docs/images/BMWK.png)](https://www.bundeswirtschaftsministerium.de/Navigation/EN/Home/home.html)
+<a href="https://www.bundeswirtschaftsministerium.de/Navigation/EN/Home/home.html" target="_blank">
+  <img src="./docs/images/BMWK.png" alt="BMWK" width="200"/>
+</a>
