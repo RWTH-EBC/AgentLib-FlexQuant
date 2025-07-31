@@ -662,8 +662,7 @@ Power variable must be defined in the mpc config.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.run_config_validations">
 <span class="sig-name descname"><span class="pre">run_config_validations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/generate_flex_agents.html#FlexAgentGenerator.run_config_validations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.run_config_validations" title="Link to this definition"></a></dt>
-<dd><blockquote>
-<div><p>Function to validate integrity of user-supplied flex config.</p>
+<dd><p>Function to validate integrity of user-supplied flex config.</p>
 <p>The following checks are performed:
 1. Ensures the specified power variable exists in the MPC model outputs.
 2. Ensures the specified comfort variable exists in the MPC model states.
@@ -672,15 +671,8 @@ Power variable must be defined in the mpc config.</p>
 5. Ensures that the sum of prep time, market time, and flex event duration does not exceed the prediction horizon.
 6. Ensures market time equals the MPC model time step if market config is present.
 7. Ensures that all flex time values are multiples of the MPC model time step.
-8. Checks for mismatches between time-related parameters in the flex/MPC and indicator configs and issues warnings</p>
-</div></blockquote>
-<p>when discrepancies exist, using the flex/MPC config values as the source of truth.</p>
-<blockquote>
-<div><dl class="simple">
-<dt>Raises:</dt><dd><p>ConfigurationError: If required variables are missing or any time configuration is invalid.</p>
-</dd>
-</dl>
-</div></blockquote>
+8. Checks for mismatches between time-related parameters in the flex/MPC and indicator configs and issues warnings
+when discrepancies exist, using the flex/MPC config values as the source of truth.</p>
 </dd></dl>
 
 </dd></dl>

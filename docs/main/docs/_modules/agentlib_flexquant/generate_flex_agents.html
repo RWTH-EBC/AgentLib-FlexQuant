@@ -708,11 +708,8 @@
 <span class="sd">        5. Ensures that the sum of prep time, market time, and flex event duration does not exceed the prediction horizon.</span>
 <span class="sd">        6. Ensures market time equals the MPC model time step if market config is present.</span>
 <span class="sd">        7. Ensures that all flex time values are multiples of the MPC model time step.</span>
-<span class="sd">        8. Checks for mismatches between time-related parameters in the flex/MPC and indicator configs and issues warnings </span>
-<span class="sd">       when discrepancies exist, using the flex/MPC config values as the source of truth.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            ConfigurationError: If required variables are missing or any time configuration is invalid.</span>
+<span class="sd">        8. Checks for mismatches between time-related parameters in the flex/MPC and indicator configs and issues warnings</span>
+<span class="sd">        when discrepancies exist, using the flex/MPC config values as the source of truth.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># check if the power variable exists in the mpc config</span>
