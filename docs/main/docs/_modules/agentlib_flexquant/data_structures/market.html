@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>agentlib_flexquant.data_structures.market &mdash; agentlib_flexquant 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
 
   
-      <script src="../../../_static/jquery.js"></script>
-      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-      <script src="../../../_static/doctools.js"></script>
-      <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -77,7 +77,9 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlexibilityDirections</span>
 
 
-<div class="viewcode-block" id="RandomOptions"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.RandomOptions">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">RandomOptions</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="RandomOptions">
+<a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.RandomOptions">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RandomOptions</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;random&quot;</span><span class="p">]</span>
     <span class="n">random_seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">name</span><span class="o">=</span><span class="s2">&quot;random_seed&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -98,20 +100,29 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="SingleOptions"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.SingleOptions">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">SingleOptions</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SingleOptions">
+<a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.SingleOptions">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SingleOptions</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;single&quot;</span><span class="p">]</span>
     <span class="n">start_time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;After this time, the first available flex offer&quot;</span>
                                                    <span class="s2">&quot; is accepted&quot;</span><span class="p">)</span>
     <span class="n">direction</span><span class="p">:</span> <span class="n">FlexibilityDirections</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;positive&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Direction of the flexibility&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="CustomOptions"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.CustomOptions">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">CustomOptions</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CustomOptions">
+<a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.CustomOptions">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomOptions</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;custom&quot;</span><span class="p">]</span>
 
     <span class="n">model_config</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">ConfigDict</span><span class="p">(</span><span class="n">extra</span><span class="o">=</span><span class="s2">&quot;allow&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="MarketSpecifications"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.MarketSpecifications">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">MarketSpecifications</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
+
+<div class="viewcode-block" id="MarketSpecifications">
+<a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.MarketSpecifications">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MarketSpecifications</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of market type&quot;</span>
@@ -135,7 +146,9 @@
     <span class="p">)</span>
 
     <span class="c1"># Root validator to automatically populate the options.type from the top-level type</span>
-<div class="viewcode-block" id="MarketSpecifications.set_options_type"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.MarketSpecifications.set_options_type">[docs]</a>    <span class="nd">@pydantic</span><span class="o">.</span><span class="n">model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;before&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="MarketSpecifications.set_options_type">
+<a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.MarketSpecifications.set_options_type">[docs]</a>
+    <span class="nd">@pydantic</span><span class="o">.</span><span class="n">model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;before&#39;</span><span class="p">)</span>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_options_type</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
         <span class="n">market_type</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">)</span>
@@ -146,11 +159,16 @@
             <span class="n">options</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">market_type</span>
             <span class="n">values</span><span class="p">[</span><span class="s1">&#39;options&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">options</span>
 
-        <span class="k">return</span> <span class="n">values</span></div></div>
+        <span class="k">return</span> <span class="n">values</span></div>
+</div>
 
 
-<div class="viewcode-block" id="RandomMarket"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.RandomMarket">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">RandomMarket</span><span class="p">(</span><span class="n">MarketSpecifications</span><span class="p">):</span>
+
+<div class="viewcode-block" id="RandomMarket">
+<a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.RandomMarket">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RandomMarket</span><span class="p">(</span><span class="n">MarketSpecifications</span><span class="p">):</span>
     <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;random&quot;</span></div>
+
 </pre></div>
 
            </div>

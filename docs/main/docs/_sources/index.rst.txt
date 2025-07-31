@@ -17,15 +17,12 @@ The code is published in `this <https://github.com/RWTH-EBC/AgentLib-FlexQuant>`
    tutorials
    api
 
------------
-Readme File
------------
+.. include:: README.md
+   :parser: myst_parser.sphinx_
 
-.. mdinclude:: ../../README.md
+Indices and tables
+==================
 
- Indices and tables
- ==================
-
- * :ref:`genindex`
- * :ref:`modindex`
- * :ref:`search`
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
