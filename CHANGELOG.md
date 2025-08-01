@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-- 
+- Added coverage report and badge
 
 ## 0.1.0
 
