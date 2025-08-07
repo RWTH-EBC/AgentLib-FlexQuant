@@ -124,28 +124,6 @@ def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig) -> dict:
     return parent_dict
 
 
-def subtract_relative_path(absolute_path, relative_path): # TODO: find usage in other branches
-    # Normalize paths (convert slashes to the correct system format)
-    absolute_path = os.path.normpath(absolute_path)
-    relative_path = os.path.normpath(relative_path)
-
-    # Split relative path to get the first component
-    rel_parts = relative_path.split(os.sep)
-    first_rel_component = rel_parts[0]
-
-    # Find where the relative path starts in the absolute path
-    if first_rel_component in absolute_path:
-        # Find the last occurrence of the first component of the relative path
-        index = absolute_path.rfind(first_rel_component)
-
-        if index != -1:
-            # Return the part of absolute_path before the relative path component
-            return absolute_path[:index].rstrip(os.sep)
-
-    # If the relative path component wasn't found, return the original path
-    return absolute_path
-
-
 def get_class_from_file(file_path: str, class_name: str) -> ABCMeta:
     # Get the absolute path if needed
     abs_path = os.path.abspath(file_path)
