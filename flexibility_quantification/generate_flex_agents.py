@@ -356,7 +356,7 @@ class FlexAgentGenerator:
                     MPCVariable(
                         name=control.name + glbs.full_trajectory_suffix,
                         value=None,
-                        description='only dummy value, true value is a series'
+                        type='pd.Series'
                     )
                 )
                 control.alias = control.name + glbs.shadow_suffix
@@ -367,7 +367,7 @@ class FlexAgentGenerator:
                         MPCVariable(
                             name=control.name + glbs.full_trajectory_suffix,
                             value=None,
-                            description='only dummy value, true value is a series'
+                            type = 'pd.Series'
                         )
                     )
 

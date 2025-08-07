@@ -25,7 +25,7 @@ CASADI_OUTPUT = "CasadiOutput"
 
 # String templates
 INPUT_TEMPLATE = Template(
-    "$class_name(name='$name', value=$value, unit='$unit', description='$description')"
+    "$class_name(name='$name', value=$value, unit='$unit', type='$type', description='$description')"
 )
 PARAMETER_TEMPLATE = Template(
     "$class_name(name='$name', value=$value, unit='$unit', description='$description')"
@@ -211,7 +211,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                             None,
                             control.unit,
                             "full control trajectory output of baseline mpc",
-                            "pd.Series",
+                            type="pd.Series",
                         )
                     )
                 # also include binary controls
@@ -223,7 +223,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                                 None,
                                 control.unit,
                                 "full control trajectory output of baseline mpc",
-                                "pd.Series",
+                                type="pd.Series",
                             )
                         )
                 body.value.elts.append(

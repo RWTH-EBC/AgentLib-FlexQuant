@@ -43,10 +43,13 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         if self.agent.config.id == inp.source.agent_id:
             return
 
+        # get the value of the input and reformat index
         vals = strip_multi_index(inp.value)
         # the MPC Predictions starts at t=env.now not t=0
         vals.index += self.env.time
+        # update value in the mapping dictionary
         self._full_controls[name].value = vals
+        # update the Agentvariable
         self.set(name, vals)
         # make sure all controls are set
         if all(x.value is not None for x in self._full_controls.values()):
@@ -96,11 +99,16 @@ class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
         if self.agent.config.id == inp.source.agent_id:
             return
 
+        # get the value of the input and reformat index
         vals = strip_multi_index(inp.value)
         # the MPC Predictions starts at t=env.now not t=0
         vals.index += self.env.time
+        # update value in the mapping dictionary
         self._full_controls[name].value = vals
+        # update the Agentvariable
         self.set(name, vals)
+        # update the value of the variable in the model if we want to limit the binary control in the market time during optimization
+        # self.model.set(name, vals)
         # make sure all controls are set
         if all(x.value is not None for x in self._full_controls.values()):
             self.do_step()
