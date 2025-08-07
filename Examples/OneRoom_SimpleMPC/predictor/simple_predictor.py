@@ -13,10 +13,7 @@ class PredictorModuleConfig(al.BaseModuleConfig):
     outputs: al.AgentVariables = [
         al.AgentVariable(
             name="r_pel", unit="ct/kWh", type="pd.Series", description="Weight for P_el in objective function"
-        ),
-        # al.AgentVariable(
-        #     name="mDot", unit="kg/s", type="float", description="Air mass flow into zone"
-        # )
+        )
     ]
     parameters: al.AgentVariables = [
         al.AgentVariable(
@@ -51,14 +48,6 @@ class PredictorModule(al.BaseModule):
 
             grid = np.arange(now, now + k * ts + 1, sample_time)
             p_traj = pd.Series([1 for i in grid], index=list(grid))
-
-            # if now < 14000:
-            #     self.set("mDot", 0.05)
-            # elif now < 14900:
-            #     self.set("mDot", 0)
-            # else:
-            #     self.set("mDot", 0.05)
-
             self.set("r_pel", p_traj)
 
             yield self.env.timeout(sample_time)
