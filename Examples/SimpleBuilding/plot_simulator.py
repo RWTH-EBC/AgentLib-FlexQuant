@@ -7,9 +7,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from agentlib_mpc.utils.analysis import mpc_at_time_step
 
-# define the path and extract time resolution
-results_path = "02_SimpleBuilding_dt_100"
-dt = re.search(r'(\d+)$', results_path).group(1)
+# define the path for result folder, simulation time step, number of mpc time steps and horizon length in second
+results_path = "flex_output_data/results"
+dt = 100
 time_steps = 48
 horizon_length = 43200
 
