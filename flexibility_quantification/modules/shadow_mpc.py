@@ -29,25 +29,30 @@ class FlexibilityShadowMPC(mpc_full.MPC):
     def __init__(self, *args, **kwargs):
         # create instance variable
         self._full_controls: Dict[str, Union[AgentVariable, None]] = {}
+        # initialize flex_results with None
+        self.flex_results = None
         super().__init__(*args, **kwargs)
-        # clear the casadi simulator result at the first time step
-        self.res_file_flex = self.config.optimization_backend['results_file'].replace('mpc', 'mpc_sim')
-        # initialize the flex_model for integration
-        self.flex_model = type(self.model)(dt=self.config.casadi_sim_time_step)
-        try:
-            os.remove(self.res_file_flex)
-        except:
-            pass
+        # set up necessary components if simulation is enabled
+        if self.config.casadi_sim_time_step > 0:
+            # generate a separate flex_model for integration to ensure the model used in MPC optimization remains unaffected
+            self.flex_model = type(self.model)(dt=self.config.casadi_sim_time_step)
+            # generate the filename for the simulation results
+            self.res_file_flex = self.config.optimization_backend['results_file'].replace('mpc', 'mpc_sim')
+            # clear the casadi simulator result at the first time step if already exists
+            try:
+                os.remove(self.res_file_flex)
+            except:
+                pass
 
     def set_output(self, solution):
         """Takes the solution from optimization backend and sends it to AgentVariables."""
-        # Output must be defined in the conig as "type"="pd.Series"
+        # Output must be defined in the config as "type"="pd.Series"
         if not self.config.set_outputs:
             return
         self.logger.info("Sending optimal output values to data_broker.")
         df = solution.df
         self.sim_flex_model(solution)
-        if hasattr(self, "flex_results"):
+        if self.flex_results is not None:
             for output in self.var_ref.outputs:
                 if output not in [self.config.power_variable_name, self.config.storage_variable_name]:
                     series = df.variable[output]
@@ -101,7 +106,7 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         else:
             store_results_df.to_csv(self.res_file_flex, mode='a', header=False)
 
-        # set the flex results format same as mpc result while updating Agengvariable
+        # set the flex results format same as mpc result while updating Agentvariable
         self.flex_results.index = self.flex_results.index.get_level_values(1)
 
     def register_callbacks(self):
@@ -165,7 +170,7 @@ class FlexibilityShadowMPC(mpc_full.MPC):
             names=['time_step', 'time'])
         # merge indexes
         new_index = index_coll.union(index_full_sample).sort_values()
-        # initialize the flex results
+        # initialize the flex results with correct dimension
         self.flex_results = pd.DataFrame(np.nan, index=new_index,
                                          columns=self.var_ref.outputs)
 
@@ -248,15 +253,20 @@ class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
     def __init__(self, *args, **kwargs):
         # create instance variable
         self._full_controls: Dict[str, Union[AgentVariable, None]] = {}
+        # initialize flex_results with None
+        self.flex_results = None
         super().__init__(*args, **kwargs)
-        # clear the casadi simulator result at the first time step
-        self.res_file_flex = self.config.optimization_backend['results_file'].replace('mpc', 'mpc_sim')
-        # initialize the flex_model for integration
-        self.flex_model = type(self.model)(dt=self.config.casadi_sim_time_step)
-        try:
-            os.remove(self.res_file_flex)
-        except:
-            pass
+        # set up necessary components if simulation is enabled
+        if self.config.casadi_sim_time_step > 0:
+            # generate a separate flex_model for integration to ensure the model used in MPC optimization remains unaffected
+            self.flex_model = type(self.model)(dt=self.config.casadi_sim_time_step)
+            # generate the filename for the simulation results
+            self.res_file_flex = self.config.optimization_backend['results_file'].replace('mpc', 'mpc_sim')
+            # clear the casadi simulator result at the first time step if already exists
+            try:
+                os.remove(self.res_file_flex)
+            except:
+                pass
 
     def register_callbacks(self):
         for control_var in self.config.controls + self.config.binary_controls:
@@ -306,7 +316,7 @@ class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
 
     def set_output(self, solution):
         """Takes the solution from optimization backend and sends it to AgentVariables."""
-        # Output must be defined in the conig as "type"="pd.Series"
+        # Output must be defined in the config as "type"="pd.Series"
         if not self.config.set_outputs:
             return
         self.logger.info("Sending optimal output values to data_broker.")
@@ -315,7 +325,7 @@ class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
         self.sim_flex_model(solution)
 
         df = solution.df
-        if hasattr(self, "flex_results"):
+        if self.flex_results is not None:
             for output in self.var_ref.outputs:
                 if output not in [self.config.power_variable_name, self.config.storage_variable_name]:
                     series = df.variable[output]
@@ -369,7 +379,7 @@ class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
         else:
             store_results_df.to_csv(self.res_file_flex, mode='a', header=False)
 
-        # set the flex results format same as mpc result while updating Agengvariable
+        # set the flex results format same as mpc result while updating Agentvariable
         self.flex_results.index = self.flex_results.index.get_level_values(1)
 
     def _initialize_flex_results(self, n_simulation_steps, horizon_length, sim_time_step, result_df):
@@ -387,7 +397,7 @@ class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
             names=['time_step', 'time'])
         # merge indexes
         new_index = index_coll.union(index_full_sample).sort_values()
-        # initialize the flex results
+        # initialize the flex results with correct dimension
         self.flex_results = pd.DataFrame(np.nan, index=new_index,
                                          columns=self.var_ref.outputs)
 
