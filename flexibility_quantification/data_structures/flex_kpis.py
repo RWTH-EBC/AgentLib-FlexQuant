@@ -49,13 +49,15 @@ class KPISeries(KPI):
     )
     integration_method: INTEGRATION_METHOD = pydantic.Field(
         default=LINEAR,
-        description="how to integrate over series variable"
+        description="Method set to integrate series variable"
     )
     def _get_dt(self) -> pd.Series:
         """
-        Get the time differences between the timestamps of the series.
+        Get the forward time differences between the timestamps of the series.
         """
-        dt = pd.Series(index=self.value.index, data=self.value.index).diff().shift(-1).ffill()
+        # compute forward differences between consecutive timestamps
+        dt = pd.Series(index=self.value.index, data=self.value.index).diff().shift(-1)
+        # set the last value of dt to zero since there is no subsequent time step to compute a difference with
         dt.iloc[-1] = 0
         self.dt = dt
         return dt
@@ -81,8 +83,10 @@ class KPISeries(KPI):
         Integrate the value of the KPI over time by summing up the product of values and the time difference.
         """
         if self.integration_method == LINEAR:
+            # Linear integration: apply the trapezoidal rule, which assumes the function changes linearly between sample points
             return np.trapz(self.value.values, self.value.index) / TIME_CONVERSION[time_unit]
         if self.integration_method == CONSTANT:
+            # Constant integration: use a step-wise constant approach by holding the value constant over each interval
             return np.sum(self.value.values[:-1] * np.diff(self.value.index)) / TIME_CONVERSION[time_unit]
 
 class FlexibilityKPIs(pydantic.BaseModel):
@@ -253,7 +257,8 @@ class FlexibilityKPIs(pydantic.BaseModel):
         # Set values to zero if the difference is small
         relative_difference = (power_flex / power_profile_base).abs()
         power_flex.loc[relative_difference < relative_error_acceptance] = 0
-        # set the first power_flex to zero
+        # Set the first value of power_flex to zero, since it comes from the measurement/simulator and is the same for baseline and shadow mpcs.
+        # For quantification of flexibility, only power difference is of interest.
         power_flex[0] = 0
 
         # Set values
@@ -288,7 +293,14 @@ class FlexibilityKPIs(pydantic.BaseModel):
         self.power_flex_offer_min.value = power_flex_offer_min
         self.power_flex_offer_avg.value = power_flex_offer_avg
 
-    def _get_series_for_integration(self, series: KPISeries, mpc_time_grid):
+    def _get_series_for_integration(self, series: KPISeries, mpc_time_grid: np.ndarray) -> pd.Series:
+        """
+        Returns the KPISeries value sampled on the MPC time grid when the integration method is constant.
+        Otherwise, the original value is returned.
+        Args:
+            series: the KPISeries to get value from
+            mpc_time_grid: the MPC time grid over the horizon
+        """
         if series.integration_method == CONSTANT:
             return series.value.reindex(mpc_time_grid).dropna()
         else:
