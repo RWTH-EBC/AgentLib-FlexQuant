@@ -216,7 +216,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
     )
     integration_method: glbs.INTEGRATION_METHOD = Field(
         default=glbs.LINEAR,
-        description="how to integrate over series variable"
+        description="Method set to integrate series variable"
     )
     shared_variable_fields: List[str] = ["outputs"]
 
