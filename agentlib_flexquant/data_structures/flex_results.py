@@ -95,69 +95,77 @@ class Results:
         results: Optional[Union[str, FilePath, dict[str, dict[str, pd.DataFrame]], "Results"]] = None,
         to_timescale: TimeConversionTypes = "seconds",
     ):
+        # Already a Results instance — copy over its data
         if isinstance(results, Results):
-            # Already a Results instance — copy over its data
             self.__dict__ = copy.deepcopy(results).__dict__
             return
-        # if generated flex files are saved at a custom base directory and path is provided,
-        # update and overwrite the path "flex_base_directory_path" in flex_config
-        # By default: current working directory is used as base
-        if generated_flex_files_base_path is not None:
+        
+        # Load flex config
+        self._load_flex_config(flex_config, generated_flex_files_base_path)
+        # Get filenames of configs to load agents and modules
+        self._get_config_filenames()
+        # Load configs for mpc, indicator, market
+        self._load_agent_module_configs()
+        # Load sim configs if present
+        if simulator_agent_config:
+            self._load_simulator_config(simulator_agent_config)
+        # Load results and get a dict for generating dataframes
+        results_dict, results_path = self._load_results(results)
+        # Get dataframes for mpc, sim, flex indicator results
+        self._load_results_dataframes(results_dict)
+        # Get dataframes for mpc stats
+        self._load_stats_dataframes(results_path)
+        # Convert the time in the dataframes to the desired timescale
+        self.convert_timescale_of_dataframe_index(to_timescale=to_timescale)
+
+    def _load_flex_config(self, flex_config, custom_base_path):
+        """
+        Load the flex config and optionally override the base directory path.
+        If a custom base path is provided, it overwrites the "flex_base_directory_path"
+        in the given config. This is useful when the generated flex files are saved
+        to a custom directory instead of the default (current working directory).
+
+        """
+        if custom_base_path is not None:
             if isinstance(flex_config, (str, Path)):
                 with open(flex_config, "r") as f:
                     flex_config = json.load(f)
-            flex_config["flex_base_directory_path"] = str(generated_flex_files_base_path)
-        # load configs of agents and modules
-        # Generator config
-        self.generator_config = load_config.load_config(
-            config=flex_config, config_type=FlexQuantConfig
-        )
+            flex_config["flex_base_directory_path"] = str(custom_base_path)
 
-        # get names of the config files
-        config_filename_baseline = BaselineMPCData.model_validate(
+        self.generator_config = load_config.load_config(
+            config=flex_config, config_type=FlexQuantConfig)
+    
+    def _get_config_filenames(self):
+        """
+        Get filenames of configs to load agents and modules.
+        """
+        self.config_filename_baseline = BaselineMPCData.model_validate(
             self.generator_config.baseline_config_generator_data
         ).name_of_created_file
-        config_filename_pos_flex = PFMPCData.model_validate(
+        self.config_filename_pos_flex = PFMPCData.model_validate(
             self.generator_config.shadow_mpc_config_generator_data.pos_flex
         ).name_of_created_file
-        config_filename_neg_flex = NFMPCData.model_validate(
+        self.config_filename_neg_flex = NFMPCData.model_validate(
             self.generator_config.shadow_mpc_config_generator_data.neg_flex
         ).name_of_created_file
-        config_filename_indicator = self.generator_config.indicator_config.name_of_created_file
+        self.config_filename_indicator = self.generator_config.indicator_config.name_of_created_file
+        
         if self.generator_config.market_config:
-            if self.generator_config.market_config is str or Path:
-                config_filename_market = FlexibilityMarketConfig.parse_file(
-                    self.generator_config.market_config
-                ).name_of_created_file
+            market_config_raw = self.generator_config.market_config
+            if isinstance(market_config_raw, (str, Path)):
+                market_config = FlexibilityMarketConfig.model_validate_json(
+                    Path(market_config_raw).read_text()
+                )
             else:
-                config_filename_market = FlexibilityMarketConfig.model_validate(
-                    self.generator_config.market_config
-                ).name_of_created_file
-
-        # load the agent and module configs
-        if simulator_agent_config:
-            # check config type: with results path adaptation -> dict; without -> str/Path
-            if isinstance(simulator_agent_config, (str, Path)):
-                with open(simulator_agent_config, "r") as f:
-                    sim_config = json.load(f)
-            elif isinstance(simulator_agent_config, dict):
-                sim_config = simulator_agent_config
-            sim_module_config = next(
-                (module for module in sim_config["modules"] if module["type"] == "simulator"),
-                None
-            )
-            # instantiate and validate sim agent config
-            self.simulator_agent_config = AgentConfig.model_validate(sim_config)
-            # instantiate sim module config by skipping validation for result_filename 
-            # to prevent file deletion
-            self.simulator_module_config = self.create_instance_with_skipped_validation(
-                model_class=SimulatorConfig, 
-                config=sim_module_config, 
-                skip_fields=["result_filename"]
-            )
-
+                market_config = FlexibilityMarketConfig.model_validate(market_config_raw)
+            self.config_filename_market = market_config.name_of_created_file
+        
+    def _load_agent_module_configs(self):
+        """
+        Load agent and module configs.
+        """
         for file_path in Path(self.generator_config.flex_files_directory).rglob("*.json"):
-            if file_path.name in config_filename_baseline:
+            if file_path.name in self.config_filename_baseline:
                 self.baseline_agent_config = load_config.load_config(
                     config=file_path, config_type=AgentConfig
                 )
@@ -166,7 +174,7 @@ class Results:
                     module_type=cmng.BASELINEMPC_CONFIG_TYPE,
                 )
 
-            elif file_path.name in config_filename_pos_flex:
+            elif file_path.name in self.config_filename_pos_flex:
                 self.pos_flex_agent_config = load_config.load_config(
                     config=file_path, config_type=AgentConfig
                 )
@@ -175,7 +183,7 @@ class Results:
                     module_type=cmng.SHADOWMPC_CONFIG_TYPE,
                 )
 
-            elif file_path.name in config_filename_neg_flex:
+            elif file_path.name in self.config_filename_neg_flex:
                 self.neg_flex_agent_config = load_config.load_config(
                     config=file_path, config_type=AgentConfig
                 )
@@ -184,7 +192,7 @@ class Results:
                     module_type=cmng.SHADOWMPC_CONFIG_TYPE,
                 )
 
-            elif file_path.name in config_filename_indicator:
+            elif file_path.name in self.config_filename_indicator:
                 self.indicator_agent_config = load_config.load_config(
                     config=file_path, config_type=AgentConfig
                 )
@@ -195,83 +203,57 @@ class Results:
 
             elif (
                 self.generator_config.market_config
-                and file_path.name in config_filename_market
+                and file_path.name in self.config_filename_market
             ):
                 self.market_agent_config = load_config.load_config(
                     config=file_path, config_type=AgentConfig
                 )
                 self.market_module_config = cmng.get_module(
-                    config=self.market_agent_config, module_type=cmng.MARKET_CONFIG_TYPE
+                    config=self.market_agent_config, 
+                    module_type=cmng.MARKET_CONFIG_TYPE
                 )
 
-        # load results
-        if results is None:
-            results_path = self.generator_config.results_directory
-            results = self._load_results(res_path=results_path)
-        if isinstance(results, (str, Path)):
-            results_path = results
-            results = self._load_results(res_path=results_path)
-        elif isinstance(results, dict):
-            results_path = self.generator_config.results_directory
-        else:
-            raise ValueError("results must be a path or dict")
-
-        # Get result dataframes
-        if simulator_agent_config:
-            self.df_simulation = results[self.simulator_agent_config.id][
-                self.simulator_module_config.module_id
-            ]
-        self.df_baseline = results[self.baseline_agent_config.id][
-            self.baseline_module_config.module_id
-        ]
-        self.df_pos_flex = results[self.pos_flex_agent_config.id][
-            self.pos_flex_module_config.module_id
-        ]
-        self.df_neg_flex = results[self.neg_flex_agent_config.id][
-            self.neg_flex_module_config.module_id
-        ]
-        self.df_indicator = results[self.indicator_agent_config.id][
-            self.indicator_module_config.module_id
-        ]
-        if self.generator_config.market_config:
-            self.df_market = results[self.market_agent_config.id][
-                self.market_module_config.module_id
-            ]
-        else:
-            self.df_market = None
-
-        # Load the statistics
-        self.df_baseline_stats = load_mpc_stats(
-            Path(
-                results_path,
-                Path(
-                    self.baseline_module_config.optimization_backend["results_file"]
-                ).name,
-            )
+    def _load_simulator_config(self, simulator_agent_config):
+        """
+        Load simulator agent and module config separately.
+        Separate loading is required to skip pydantic validation for specific field(s).
+        """
+        # check config type: with results path adaptation -> dict; without -> str/Path
+        if isinstance(simulator_agent_config, (str, Path)):
+            with open(simulator_agent_config, "r") as f:
+                sim_config = json.load(f)
+        elif isinstance(simulator_agent_config, dict):
+            sim_config = simulator_agent_config
+        sim_module_config = next(
+            (module for module in sim_config["modules"] if module["type"] == "simulator"),
+            None
         )
-        self.df_pos_flex_stats = load_mpc_stats(
-            Path(
-                results_path,
-                Path(
-                    self.pos_flex_module_config.optimization_backend["results_file"]
-                ).name,
-            )
+        # instantiate and validate sim agent config
+        self.simulator_agent_config = AgentConfig.model_validate(sim_config)
+        # instantiate sim module config by skipping validation for result_filename 
+        # to prevent file deletion
+        self.simulator_module_config = self.create_instance_with_skipped_validation(
+            model_class=SimulatorConfig, 
+            config=sim_module_config, 
+            skip_fields=["result_filename"]
         )
-        self.df_neg_flex_stats = load_mpc_stats(
-            Path(
-                results_path,
-                Path(
-                    self.neg_flex_module_config.optimization_backend["results_file"]
-                ).name,
-            )
-        )
-
-        # Convert the time in the dataframes to the desired timescale
-        self.convert_timescale_of_dataframe_index(to_timescale=to_timescale)
 
     def _load_results(
-        self, res_path: Union[str, Path]
+        self, results: Union[str, Path, dict]
     ) -> dict[str, dict[str, pd.DataFrame]]:
+        """
+        Load dict with results for mpc, indicator, market and sim from specified results path.
+        """
+        # load results
+        if results is None:
+            res_path = self.generator_config.results_directory
+        elif isinstance(results, (str, Path)):
+            res_path = results
+        elif isinstance(results, dict):
+            res_path = self.generator_config.results_directory
+        else:
+            raise ValueError("results must be a path or dict")
+        
         res = {
             self.baseline_agent_config.id: {
                 self.baseline_module_config.module_id: load_mpc(
@@ -336,7 +318,63 @@ class Results:
                     )
                 )
             }
-        return res
+        return res, res_path
+
+    def _load_results_dataframes(self, results_dict):
+        """
+        Load results dataframes for mpc, indicator, market and sim.
+        """        
+        if self.simulator_agent_config:
+            self.df_simulation = results_dict[self.simulator_agent_config.id][
+                self.simulator_module_config.module_id
+            ]
+        self.df_baseline = results_dict[self.baseline_agent_config.id][
+            self.baseline_module_config.module_id
+        ]
+        self.df_pos_flex = results_dict[self.pos_flex_agent_config.id][
+            self.pos_flex_module_config.module_id
+        ]
+        self.df_neg_flex = results_dict[self.neg_flex_agent_config.id][
+            self.neg_flex_module_config.module_id
+        ]
+        self.df_indicator = results_dict[self.indicator_agent_config.id][
+            self.indicator_module_config.module_id
+        ]
+        if self.generator_config.market_config:
+            self.df_market = results_dict[self.market_agent_config.id][
+                self.market_module_config.module_id
+            ]
+        else:
+            self.df_market = None
+
+    def _load_stats_dataframes(self, results_path):
+        """
+        Load dataframes for mpc stats.
+        """
+        self.df_baseline_stats = load_mpc_stats(
+            Path(
+                results_path,
+                Path(
+                    self.baseline_module_config.optimization_backend["results_file"]
+                ).name,
+            )
+        )
+        self.df_pos_flex_stats = load_mpc_stats(
+            Path(
+                results_path,
+                Path(
+                    self.pos_flex_module_config.optimization_backend["results_file"]
+                ).name,
+            )
+        )
+        self.df_neg_flex_stats = load_mpc_stats(
+            Path(
+                results_path,
+                Path(
+                    self.neg_flex_module_config.optimization_backend["results_file"]
+                ).name,
+            )
+        )
 
     def convert_timescale_of_dataframe_index(self, to_timescale: TimeConversionTypes):
         """Convert the time in the dataframes to the desired timescale
@@ -344,7 +382,6 @@ class Results:
         Keyword arguments:
         timescale -- The timescale to convert the data to
         """
-        # Convert the time in the dataframes
         for df in ([
             self.df_baseline,
             self.df_baseline_stats,
