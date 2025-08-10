@@ -3,6 +3,7 @@ from agentlib.core.module import BaseModuleConfig
 import agentlib_flexquant.data_structures.globals as glbs
 from copy import deepcopy
 from typing import TypeVar
+from abc import ABCMeta
 import math
 from agentlib.modules import get_all_module_types
 import inspect

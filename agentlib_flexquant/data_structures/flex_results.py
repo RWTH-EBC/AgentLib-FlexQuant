@@ -48,7 +48,7 @@ def load_indicator(file_path: Union[str, FilePath]) -> pd.DataFrame:
     return df
 
 
-def load_market_results(file_path: Union[str, FilePath]) -> pd.DataFrame:
+def load_market(file_path: Union[str, FilePath]) -> pd.DataFrame:
     """
     Load the market results from the given file path
     Args:
@@ -300,7 +300,7 @@ class Results:
                 )
             },
             self.indicator_agent_config.id: {
-                self.indicator_module_config.module_id: load_indicator_results(
+                self.indicator_module_config.module_id: load_indicator(
                     Path(
                         res_path, 
                         Path(self.indicator_module_config.results_file).name,
@@ -312,14 +312,14 @@ class Results:
             res[self.simulator_agent_config.id] = {
                 self.simulator_module_config.module_id: load_sim(
                     Path(
-                        res_path,
-                        Path(self.simulator_module_config.result_filename).name,
+                        res_path.parent.parent,
+                        Path(self.simulator_module_config.result_filename),
                     )
                 )
             }
         if self.generator_config.market_config:
             res[self.market_agent_config.id] = {
-                self.market_module_config.module_id: load_market_results(
+                self.market_module_config.module_id: load_market(
                     Path(
                         res_path, 
                         Path(self.market_module_config.results_file).name,
