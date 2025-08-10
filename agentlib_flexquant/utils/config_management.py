@@ -1,17 +1,16 @@
+from agentlib.core.agent import AgentConfig
+from agentlib.core.module import BaseModuleConfig
+import agentlib_flexquant.data_structures.globals as glbs
+from copy import deepcopy
+from typing import TypeVar
 import math
+from agentlib.modules import get_all_module_types
 import inspect
 import os
 import importlib.util
-from abc import ABCMeta
-from copy import deepcopy
-from typing import TypeVar
-from agentlib.core.agent import AgentConfig
-from agentlib.core.module import BaseModuleConfig
-from agentlib.modules import get_all_module_types
 
 
 T = TypeVar('T', bound=BaseModuleConfig)
-
 
 all_module_types = get_all_module_types(["agentlib_mpc", "agentlib_flexquant"])
 # remove ML models, since import takes ages

@@ -1,15 +1,18 @@
 import os
-import pydantic
+from pathlib import Path
+from typing import List, Optional, Union
+
 import agentlib
 import numpy as np
 import pandas as pd
-from pathlib import Path
-from pydantic import model_validator
-from typing import List, Optional, Union
+import pydantic
 from agentlib.core.datamodels import AgentVariable
-from agentlib.core.errors import ConfigurationError
+from pydantic import model_validator
+
 from agentlib_flexquant.data_structures.flex_offer import OfferStatus, FlexOffer
-from agentlib_flexquant.data_structures.market import MarketSpecifications
+from agentlib_flexquant.data_structures.market import (
+    MarketSpecifications
+)
 
 
 class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):

@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 from agentlib.core.errors import ConfigurationError
 from pydantic import BaseModel, ConfigDict, Field, model_validator
+
 import agentlib_flexquant.data_structures.globals as glbs
 from agentlib_flexquant.data_structures.flex_kpis import (
     FlexibilityData, 

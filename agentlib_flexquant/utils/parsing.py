@@ -13,7 +13,6 @@ from agentlib_flexquant.data_structures.globals import (
     return_baseline_cost_function,
     full_trajectory_prefix,
     full_trajectory_suffix,
-    PROFILE_DEVIATION_WEIGHT,
     MARKET_TIME,
     PREP_TIME,
     FLEX_EVENT_DURATION

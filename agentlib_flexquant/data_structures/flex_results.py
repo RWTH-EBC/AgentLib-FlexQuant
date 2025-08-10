@@ -35,7 +35,8 @@ from agentlib_flexquant.modules.flexibility_market import (
 )
 import agentlib_flexquant.utils.config_management as cmng
 
-def load_indicator_results(file_path: Union[str, FilePath]) -> pd.DataFrame:
+
+def load_indicator(file_path: Union[str, FilePath]) -> pd.DataFrame:
     """
     Load the flexibility indicator results from the given file path
     Args:

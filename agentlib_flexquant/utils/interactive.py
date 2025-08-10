@@ -1,7 +1,7 @@
 import webbrowser
 import pandas as pd
-import flexibility_quantification.data_structures.globals as glbs
-import flexibility_quantification.data_structures.flex_results as flex_results
+import agentlib_flexquant.data_structures.globals as glbs
+import agentlib_flexquant.data_structures.flex_results as flex_results
 from typing import get_args, Union, Optional
 from pydantic import FilePath
 from dash import Dash, html, dcc, callback, Output, Input, ctx
