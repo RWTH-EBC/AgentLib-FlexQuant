@@ -1,0 +1,92 @@
+{
+    "prep_time": 1000,
+    "flex_event_duration": 1000,
+    "market_time": 1000,
+    "indicator_config": {
+        "agent_config": {
+            "id": "FlexibilityIndicator",
+            "modules": [
+                {
+                    "module_id": "Ag1Com",
+                    "type": "local_broadcast"
+                },
+                {
+                    "module_id": "FlexibilityIndicator",
+                    "type": "agentlib_flexquant.flexibility_indicator",
+                    "results_file": "results/flexibility_indicator.csv",
+                    "price_variable": "r_pel",
+                    "parameters": [
+                        {
+                            "name": "prep_time",
+                            "value": 1000
+                        },
+                        {
+                            "name": "flex_event_duration",
+                            "value": 1000
+                        },
+                        {
+                            "name": "time_step",
+                            "value": 100
+                        },
+                        {
+                            "name": "prediction_horizon",
+                            "value": 50
+                        }
+                    ],
+                    "inputs": [
+                        {
+                            "name": "r_pel",
+                            "alias": "r_pel"
+                        }
+                    ]
+                }
+            ]
+        },
+        "name_of_created_file": "indicator.json"
+    },
+    "market_config": {
+        "agent_config": {
+            "id": "FlexibilityMarket",
+            "modules": [
+                {
+                    "module_id": "Ag1Com",
+                    "type": "local_broadcast"
+                },
+                {
+                    "module_id": "FlexibilityMarket",
+                    "type": "agentlib_flexquant.flexibility_market",
+                    "results_file": "results/flexibility_market_results.csv",
+                    "market_specs": {
+                        "type": "random",
+                        "cooldown": 6,
+                        "minimum_average_flex": 0,
+                        "options": {
+                          "random_seed": 1,
+                          "pos_neg_rate": 1,
+                          "offer_acceptance_rate": 0.1
+                    }
+                  }
+                }
+            ]
+
+        },
+        "name_of_created_file": "flexibility_market.json"
+    },
+    "baseline_config_generator_data": {
+        "power_variable": "P_el",
+        "profile_deviation_weight": 100
+    },
+    "shadow_mpc_config_generator_data": {
+        "weights": [{"name": "s_P", "value": 10}],
+        "profile_deviation_weight": 1,
+        "pos_flex": {
+            "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, self.s_P * self.P_el])"
+        },
+        "neg_flex": {
+            "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, -self.s_P * self.P_el])"
+        }
+    },
+    "path_to_flex_files": "created_flex_files",
+    "delete_files": false,
+    "overwrite_files": true
+}
