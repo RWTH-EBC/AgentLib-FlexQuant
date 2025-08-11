@@ -379,7 +379,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             new_df.index.direction = "time"
             new_df[glbs.TIME_STEP] = now
             new_df.set_index([glbs.TIME_STEP, new_df.index], inplace=True)
-            df = pd.concat([df, new_df])
+            df = pd.concat([df.dropna(axis=1, how='all'), new_df])
             # set the indices once again as concat cant handle indices properly
             indices = pd.MultiIndex.from_tuples(df.index, names=[glbs.TIME_STEP, "time"])
             df.set_index(indices, inplace=True)
