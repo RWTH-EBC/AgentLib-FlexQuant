@@ -28,9 +28,9 @@
 
         
         <h2>Score</h2>
-        5.54 / 10
+        5.87 / 10
             
-            (previous score: 5.54 / 10)
+            (previous score: 5.87 / 10)
             
         
 
@@ -100,8 +100,8 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.flexibility_indicator:[331:351]
-==agentlib_flexquant.modules.flexibility_market:[89:98]
+==agentlib_flexquant.modules.flexibility_indicator:[325:345]
+==agentlib_flexquant.modules.flexibility_market:[84:93]
         results_file = self.config.results_file
         try:
             results = pd.read_csv(results_file, header=[0], index_col=[0, 1])
@@ -132,14 +132,15 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.flexibility_indicator:[223:230]
-==agentlib_flexquant.modules.flexibility_market:[61:69]
+==agentlib_flexquant.modules.flexibility_indicator:[217:224]
+==agentlib_flexquant.modules.flexibility_market:[56:64]
         if self.results_file and self.results_file.suffix != &#34;.csv&#34;:
             raise ValueError(
                 f&#34;Invalid file extension for &#39;results_file&#39;: &#39;{self.results_file}&#39;. &#34;
                 f&#34;Expected a &#39;.csv&#39; file.&#34;
             )
         return self
+
 </pre></td>
             </tr>
             
@@ -151,14 +152,15 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.data_structures.flexquant:[105:111]
+==agentlib_flexquant.data_structures.flexquant:[99:105]
 ==agentlib_flexquant.optimization_backends.constrained_cia:[19:26]
     market_time: int = pydantic.Field(
         default=900,
         ge=0,
         unit=&#34;s&#34;,
         description=&#34;Time for market interaction&#34;,
-    )</pre></td>
+    )
+</pre></td>
             </tr>
             
         </table>
@@ -186,27 +188,7 @@
             </tr>
             
             <tr>
-                <td>3</td>
-                <td>0</td>
-                <td>error</td>
-                <td><code>import-error</code></td>
-                <td>E0401</td>
-                <td></td>
-                <td><pre>Unable to import &#39;numpy&#39;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>3</td>
-                <td>0</td>
-                <td>warning</td>
-                <td><code>unused-import</code></td>
-                <td>W0611</td>
-                <td></td>
-                <td><pre>Unused import numpy</pre></td>
-            </tr>
-            
-            <tr>
-                <td>4</td>
+                <td>1</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -216,17 +198,7 @@
             </tr>
             
             <tr>
-                <td>5</td>
-                <td>0</td>
-                <td>warning</td>
-                <td><code>reimported</code></td>
-                <td>W0404</td>
-                <td></td>
-                <td><pre>Reimport &#39;numpy&#39; (imported line 3)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>5</td>
+                <td>2</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -236,17 +208,7 @@
             </tr>
             
             <tr>
-                <td>5</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>ungrouped-imports</code></td>
-                <td>C0412</td>
-                <td></td>
-                <td><pre>Imports from package numpy are not grouped</pre></td>
-            </tr>
-            
-            <tr>
-                <td>6</td>
+                <td>3</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -256,7 +218,17 @@
             </tr>
             
             <tr>
-                <td>8</td>
+                <td>4</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>standard import &#34;from typing import Union, Optional&#34; should be placed before &#34;import pydantic&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>5</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -266,7 +238,7 @@
             </tr>
             
             <tr>
-                <td>13</td>
+                <td>10</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -276,7 +248,7 @@
             </tr>
             
             <tr>
-                <td>33</td>
+                <td>30</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
@@ -286,7 +258,7 @@
             </tr>
             
             <tr>
-                <td>33</td>
+                <td>30</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -296,7 +268,7 @@
             </tr>
             
             <tr>
-                <td>36</td>
+                <td>33</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -306,7 +278,7 @@
             </tr>
             
             <tr>
-                <td>57</td>
+                <td>54</td>
                 <td>8</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -316,7 +288,7 @@
             </tr>
             
             <tr>
-                <td>58</td>
+                <td>55</td>
                 <td>8</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -326,7 +298,7 @@
             </tr>
             
             <tr>
-                <td>85</td>
+                <td>82</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -336,7 +308,7 @@
             </tr>
             
             <tr>
-                <td>156</td>
+                <td>153</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -346,7 +318,7 @@
             </tr>
             
             <tr>
-                <td>203</td>
+                <td>200</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
@@ -356,7 +328,7 @@
             </tr>
             
             <tr>
-                <td>208</td>
+                <td>205</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>unused-argument</code></td>
@@ -366,7 +338,7 @@
             </tr>
             
             <tr>
-                <td>222</td>
+                <td>219</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -376,7 +348,7 @@
             </tr>
             
             <tr>
-                <td>229</td>
+                <td>226</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -386,7 +358,7 @@
             </tr>
             
             <tr>
-                <td>240</td>
+                <td>237</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -396,7 +368,7 @@
             </tr>
             
             <tr>
-                <td>245</td>
+                <td>242</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -406,7 +378,7 @@
             </tr>
             
             <tr>
-                <td>253</td>
+                <td>250</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -416,7 +388,7 @@
             </tr>
             
             <tr>
-                <td>274</td>
+                <td>271</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -426,7 +398,7 @@
             </tr>
             
             <tr>
-                <td>309</td>
+                <td>306</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -436,7 +408,7 @@
             </tr>
             
             <tr>
-                <td>346</td>
+                <td>343</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -446,7 +418,7 @@
             </tr>
             
             <tr>
-                <td>370</td>
+                <td>367</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-many-instance-attributes</code></td>
@@ -456,7 +428,7 @@
             </tr>
             
             <tr>
-                <td>429</td>
+                <td>426</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
@@ -466,7 +438,7 @@
             </tr>
             
             <tr>
-                <td>429</td>
+                <td>426</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -476,7 +448,7 @@
             </tr>
             
             <tr>
-                <td>432</td>
+                <td>429</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
@@ -486,7 +458,7 @@
             </tr>
             
             <tr>
-                <td>436</td>
+                <td>433</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -496,7 +468,7 @@
             </tr>
             
             <tr>
-                <td>509</td>
+                <td>506</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -506,7 +478,7 @@
             </tr>
             
             <tr>
-                <td>510</td>
+                <td>507</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -714,23 +686,23 @@
             </tr>
             
             <tr>
-                <td>4</td>
+                <td>3</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
                 <td>E0401</td>
                 <td></td>
-                <td><pre>Unable to import &#39;agentlib&#39;</pre></td>
+                <td><pre>Unable to import &#39;pandas&#39;</pre></td>
             </tr>
             
             <tr>
                 <td>4</td>
                 <td>0</td>
-                <td>warning</td>
-                <td><code>unused-import</code></td>
-                <td>W0611</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
                 <td></td>
-                <td><pre>Unused import agentlib</pre></td>
+                <td><pre>standard import &#34;from typing import Union, Optional, Dict, Any, List, Type&#34; should be placed before &#34;import pandas as pd&#34;</pre></td>
             </tr>
             
             <tr>
@@ -750,51 +722,11 @@
                 <td><code>wrong-import-order</code></td>
                 <td>C0411</td>
                 <td></td>
-                <td><pre>standard import &#34;from pathlib import Path&#34; should be placed before &#34;import agentlib&#34;</pre></td>
+                <td><pre>standard import &#34;from pathlib import Path&#34; should be placed before &#34;import pandas as pd&#34;</pre></td>
             </tr>
             
             <tr>
                 <td>7</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>wrong-import-order</code></td>
-                <td>C0411</td>
-                <td></td>
-                <td><pre>standard import &#34;import json&#34; should be placed before &#34;import agentlib&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>8</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>wrong-import-order</code></td>
-                <td>C0411</td>
-                <td></td>
-                <td><pre>standard import &#34;import os&#34; should be placed before &#34;import agentlib&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>8</td>
-                <td>0</td>
-                <td>warning</td>
-                <td><code>unused-import</code></td>
-                <td>W0611</td>
-                <td></td>
-                <td><pre>Unused import os</pre></td>
-            </tr>
-            
-            <tr>
-                <td>9</td>
-                <td>0</td>
-                <td>error</td>
-                <td><code>import-error</code></td>
-                <td>E0401</td>
-                <td></td>
-                <td><pre>Unable to import &#39;pandas&#39;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>11</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -804,27 +736,7 @@
             </tr>
             
             <tr>
-                <td>12</td>
-                <td>0</td>
-                <td>error</td>
-                <td><code>import-error</code></td>
-                <td>E0401</td>
-                <td></td>
-                <td><pre>Unable to import &#39;agentlib.core.module&#39;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>12</td>
-                <td>0</td>
-                <td>warning</td>
-                <td><code>unused-import</code></td>
-                <td>W0611</td>
-                <td></td>
-                <td><pre>Unused BaseModuleConfig imported from agentlib.core.module</pre></td>
-            </tr>
-            
-            <tr>
-                <td>13</td>
+                <td>8</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -834,17 +746,7 @@
             </tr>
             
             <tr>
-                <td>14</td>
-                <td>0</td>
-                <td>error</td>
-                <td><code>import-error</code></td>
-                <td>E0401</td>
-                <td></td>
-                <td><pre>Unable to import &#39;agentlib_mpc.modules.mpc&#39;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>15</td>
+                <td>9</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -854,27 +756,17 @@
             </tr>
             
             <tr>
-                <td>15</td>
+                <td>10</td>
                 <td>0</td>
-                <td>convention</td>
-                <td><code>ungrouped-imports</code></td>
-                <td>C0412</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
                 <td></td>
-                <td><pre>Imports from package agentlib are not grouped</pre></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.modules.mpc&#39;</pre></td>
             </tr>
             
             <tr>
-                <td>16</td>
-                <td>0</td>
-                <td>warning</td>
-                <td><code>unused-import</code></td>
-                <td>W0611</td>
-                <td></td>
-                <td><pre>Unused FlexibilityIndicatorConfig imported from agentlib_flexquant.data_structures.flexquant</pre></td>
-            </tr>
-            
-            <tr>
-                <td>27</td>
+                <td>11</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -884,27 +776,7 @@
             </tr>
             
             <tr>
-                <td>27</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>wrong-import-order</code></td>
-                <td>C0411</td>
-                <td></td>
-                <td><pre>third party import &#34;from agentlib_mpc.utils import TimeConversionTypes&#34; should be placed before &#34;from agentlib_flexquant.data_structures.flexquant import FlexQuantConfig, FlexibilityIndicatorConfig, FlexibilityMarketConfig&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>27</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>ungrouped-imports</code></td>
-                <td>C0412</td>
-                <td></td>
-                <td><pre>Imports from package agentlib_mpc are not grouped</pre></td>
-            </tr>
-            
-            <tr>
-                <td>28</td>
+                <td>12</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -914,27 +786,7 @@
             </tr>
             
             <tr>
-                <td>28</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>wrong-import-order</code></td>
-                <td>C0411</td>
-                <td></td>
-                <td><pre>third party import &#34;from agentlib_mpc.utils.analysis import load_sim, load_mpc, load_mpc_stats&#34; should be placed before &#34;from agentlib_flexquant.data_structures.flexquant import FlexQuantConfig, FlexibilityIndicatorConfig, FlexibilityMarketConfig&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>30</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>ungrouped-imports</code></td>
-                <td>C0412</td>
-                <td></td>
-                <td><pre>Imports from package agentlib_flexquant are not grouped</pre></td>
-            </tr>
-            
-            <tr>
-                <td>47</td>
+                <td>29</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -944,17 +796,17 @@
             </tr>
             
             <tr>
-                <td>59</td>
+                <td>41</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
                 <td>C0103</td>
-                <td>load_market_results</td>
+                <td>load_market</td>
                 <td><pre>Variable name &#34;df&#34; doesn&#39;t conform to snake_case naming style</pre></td>
             </tr>
             
             <tr>
-                <td>63</td>
+                <td>45</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
@@ -964,7 +816,7 @@
             </tr>
             
             <tr>
-                <td>63</td>
+                <td>45</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-many-instance-attributes</code></td>
@@ -974,7 +826,7 @@
             </tr>
             
             <tr>
-                <td>98</td>
+                <td>80</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
@@ -984,7 +836,7 @@
             </tr>
             
             <tr>
-                <td>103</td>
+                <td>85</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -994,7 +846,7 @@
             </tr>
             
             <tr>
-                <td>139</td>
+                <td>121</td>
                 <td>21</td>
                 <td>warning</td>
                 <td><code>unspecified-encoding</code></td>
@@ -1004,7 +856,7 @@
             </tr>
             
             <tr>
-                <td>139</td>
+                <td>121</td>
                 <td>47</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1014,7 +866,7 @@
             </tr>
             
             <tr>
-                <td>165</td>
+                <td>147</td>
                 <td>20</td>
                 <td>warning</td>
                 <td><code>unspecified-encoding</code></td>
@@ -1024,7 +876,7 @@
             </tr>
             
             <tr>
-                <td>231</td>
+                <td>213</td>
                 <td>17</td>
                 <td>warning</td>
                 <td><code>unspecified-encoding</code></td>
@@ -1034,7 +886,7 @@
             </tr>
             
             <tr>
-                <td>231</td>
+                <td>213</td>
                 <td>54</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1044,17 +896,7 @@
             </tr>
             
             <tr>
-                <td>303</td>
-                <td>56</td>
-                <td>error</td>
-                <td><code>undefined-variable</code></td>
-                <td>E0602</td>
-                <td>Results._load_results</td>
-                <td><pre>Undefined variable &#39;load_indicator_results&#39;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>305</td>
+                <td>287</td>
                 <td>33</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -1064,7 +906,7 @@
             </tr>
             
             <tr>
-                <td>324</td>
+                <td>306</td>
                 <td>33</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -1074,7 +916,7 @@
             </tr>
             
             <tr>
-                <td>393</td>
+                <td>375</td>
                 <td>12</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1084,7 +926,7 @@
             </tr>
             
             <tr>
-                <td>429</td>
+                <td>411</td>
                 <td>23</td>
                 <td>refactor</td>
                 <td><code>consider-using-in</code></td>
@@ -1094,7 +936,7 @@
             </tr>
             
             <tr>
-                <td>462</td>
+                <td>444</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1104,7 +946,7 @@
             </tr>
             
             <tr>
-                <td>470</td>
+                <td>452</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1114,7 +956,7 @@
             </tr>
             
             <tr>
-                <td>509</td>
+                <td>491</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-final-newline</code></td>
@@ -1145,6 +987,46 @@
                 <td>C0114</td>
                 <td></td>
                 <td><pre>Missing module docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;pydantic&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>2</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>standard import &#34;from enum import Enum&#34; should be placed before &#34;import pydantic&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>3</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>standard import &#34;from pathlib import Path&#34; should be placed before &#34;import pydantic&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>4</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>standard import &#34;from typing import List, Optional, Union&#34; should be placed before &#34;import pydantic&#34;</pre></td>
             </tr>
             
             <tr>
@@ -1188,17 +1070,7 @@
             </tr>
             
             <tr>
-                <td>9</td>
-                <td>0</td>
-                <td>error</td>
-                <td><code>import-error</code></td>
-                <td>E0401</td>
-                <td></td>
-                <td><pre>Unable to import &#39;pydantic&#39;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>18</td>
+                <td>12</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
@@ -1208,7 +1080,7 @@
             </tr>
             
             <tr>
-                <td>19</td>
+                <td>13</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1218,7 +1090,7 @@
             </tr>
             
             <tr>
-                <td>20</td>
+                <td>14</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1228,7 +1100,7 @@
             </tr>
             
             <tr>
-                <td>23</td>
+                <td>17</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -1238,7 +1110,7 @@
             </tr>
             
             <tr>
-                <td>28</td>
+                <td>22</td>
                 <td>5</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -1248,7 +1120,7 @@
             </tr>
             
             <tr>
-                <td>42</td>
+                <td>36</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -1258,7 +1130,7 @@
             </tr>
             
             <tr>
-                <td>44</td>
+                <td>38</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1268,7 +1140,7 @@
             </tr>
             
             <tr>
-                <td>46</td>
+                <td>40</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1278,7 +1150,7 @@
             </tr>
             
             <tr>
-                <td>53</td>
+                <td>47</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -1288,7 +1160,7 @@
             </tr>
             
             <tr>
-                <td>65</td>
+                <td>59</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -1298,7 +1170,7 @@
             </tr>
             
             <tr>
-                <td>77</td>
+                <td>71</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -1308,7 +1180,7 @@
             </tr>
             
             <tr>
-                <td>78</td>
+                <td>72</td>
                 <td>37</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -1318,7 +1190,7 @@
             </tr>
             
             <tr>
-                <td>82</td>
+                <td>76</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1328,7 +1200,7 @@
             </tr>
             
             <tr>
-                <td>165</td>
+                <td>159</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -1338,7 +1210,7 @@
             </tr>
             
             <tr>
-                <td>189</td>
+                <td>183</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-final-newline</code></td>
@@ -1744,7 +1616,7 @@
             </tr>
             
             <tr>
-                <td>10</td>
+                <td>6</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -1754,7 +1626,7 @@
             </tr>
             
             <tr>
-                <td>11</td>
+                <td>7</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -1764,13 +1636,53 @@
             </tr>
             
             <tr>
-                <td>12</td>
+                <td>8</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>wrong-import-order</code></td>
                 <td>C0411</td>
                 <td></td>
                 <td><pre>standard import &#34;import json&#34; should be placed before &#34;import astor&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>9</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>standard import &#34;from copy import deepcopy&#34; should be placed before &#34;import astor&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>10</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>standard import &#34;from pathlib import Path&#34; should be placed before &#34;import astor&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>11</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>standard import &#34;from typing import List, Union&#34; should be placed before &#34;import astor&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>12</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;pydantic&#39;</pre></td>
             </tr>
             
             <tr>
@@ -1854,77 +1766,17 @@
             </tr>
             
             <tr>
-                <td>21</td>
-                <td>0</td>
-                <td>error</td>
-                <td><code>import-error</code></td>
-                <td>E0401</td>
-                <td></td>
-                <td><pre>Unable to import &#39;pydantic&#39;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>25</td>
-                <td>0</td>
-                <td>warning</td>
-                <td><code>unused-import</code></td>
-                <td>W0611</td>
-                <td></td>
-                <td><pre>Unused add_import_to_tree imported from agentlib_flexquant.utils.parsing</pre></td>
-            </tr>
-            
-            <tr>
-                <td>26</td>
                 <td>24</td>
+                <td>0</td>
                 <td>convention</td>
-                <td><code>trailing-whitespace</code></td>
-                <td>C0303</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
                 <td></td>
-                <td><pre>Trailing whitespace</pre></td>
+                <td><pre>Line too long (125/100)</pre></td>
             </tr>
             
             <tr>
                 <td>30</td>
-                <td>31</td>
-                <td>convention</td>
-                <td><code>trailing-whitespace</code></td>
-                <td>C0303</td>
-                <td></td>
-                <td><pre>Trailing whitespace</pre></td>
-            </tr>
-            
-            <tr>
-                <td>31</td>
-                <td>28</td>
-                <td>convention</td>
-                <td><code>trailing-whitespace</code></td>
-                <td>C0303</td>
-                <td></td>
-                <td><pre>Trailing whitespace</pre></td>
-            </tr>
-            
-            <tr>
-                <td>40</td>
-                <td>1</td>
-                <td>convention</td>
-                <td><code>trailing-whitespace</code></td>
-                <td>C0303</td>
-                <td></td>
-                <td><pre>Trailing whitespace</pre></td>
-            </tr>
-            
-            <tr>
-                <td>43</td>
-                <td>1</td>
-                <td>convention</td>
-                <td><code>trailing-whitespace</code></td>
-                <td>C0303</td>
-                <td></td>
-                <td><pre>Trailing whitespace</pre></td>
-            </tr>
-            
-            <tr>
-                <td>46</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-many-instance-attributes</code></td>
@@ -1934,7 +1786,7 @@
             </tr>
             
             <tr>
-                <td>49</td>
+                <td>33</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1944,7 +1796,7 @@
             </tr>
             
             <tr>
-                <td>51</td>
+                <td>35</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1954,7 +1806,7 @@
             </tr>
             
             <tr>
-                <td>52</td>
+                <td>36</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1964,7 +1816,7 @@
             </tr>
             
             <tr>
-                <td>144</td>
+                <td>128</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1974,7 +1826,7 @@
             </tr>
             
             <tr>
-                <td>166</td>
+                <td>150</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -1984,7 +1836,7 @@
             </tr>
             
             <tr>
-                <td>178</td>
+                <td>162</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1994,7 +1846,7 @@
             </tr>
             
             <tr>
-                <td>184</td>
+                <td>168</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2004,7 +1856,7 @@
             </tr>
             
             <tr>
-                <td>199</td>
+                <td>183</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2014,7 +1866,7 @@
             </tr>
             
             <tr>
-                <td>204</td>
+                <td>188</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2024,7 +1876,7 @@
             </tr>
             
             <tr>
-                <td>204</td>
+                <td>188</td>
                 <td>13</td>
                 <td>warning</td>
                 <td><code>unspecified-encoding</code></td>
@@ -2034,7 +1886,7 @@
             </tr>
             
             <tr>
-                <td>204</td>
+                <td>188</td>
                 <td>107</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2044,7 +1896,7 @@
             </tr>
             
             <tr>
-                <td>210</td>
+                <td>194</td>
                 <td>28</td>
                 <td>warning</td>
                 <td><code>unnecessary-lambda</code></td>
@@ -2054,7 +1906,7 @@
             </tr>
             
             <tr>
-                <td>252</td>
+                <td>236</td>
                 <td>17</td>
                 <td>warning</td>
                 <td><code>unspecified-encoding</code></td>
@@ -2064,7 +1916,7 @@
             </tr>
             
             <tr>
-                <td>254</td>
+                <td>238</td>
                 <td>17</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2074,7 +1926,7 @@
             </tr>
             
             <tr>
-                <td>307</td>
+                <td>291</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-branches</code></td>
@@ -2084,7 +1936,7 @@
             </tr>
             
             <tr>
-                <td>322</td>
+                <td>306</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2094,7 +1946,7 @@
             </tr>
             
             <tr>
-                <td>374</td>
+                <td>358</td>
                 <td>11</td>
                 <td>convention</td>
                 <td><code>unidiomatic-typecheck</code></td>
@@ -2104,7 +1956,7 @@
             </tr>
             
             <tr>
-                <td>508</td>
+                <td>492</td>
                 <td>16</td>
                 <td>convention</td>
                 <td><code>unnecessary-dunder-call</code></td>
@@ -2114,7 +1966,7 @@
             </tr>
             
             <tr>
-                <td>518</td>
+                <td>502</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-locals</code></td>
@@ -2124,7 +1976,7 @@
             </tr>
             
             <tr>
-                <td>542</td>
+                <td>526</td>
                 <td>13</td>
                 <td>warning</td>
                 <td><code>unspecified-encoding</code></td>
@@ -2134,7 +1986,7 @@
             </tr>
             
             <tr>
-                <td>542</td>
+                <td>526</td>
                 <td>47</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2144,7 +1996,7 @@
             </tr>
             
             <tr>
-                <td>550</td>
+                <td>534</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2154,7 +2006,7 @@
             </tr>
             
             <tr>
-                <td>555</td>
+                <td>539</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2164,7 +2016,7 @@
             </tr>
             
             <tr>
-                <td>560</td>
+                <td>544</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2174,7 +2026,7 @@
             </tr>
             
             <tr>
-                <td>586</td>
+                <td>570</td>
                 <td>13</td>
                 <td>warning</td>
                 <td><code>unspecified-encoding</code></td>
@@ -2184,7 +2036,7 @@
             </tr>
             
             <tr>
-                <td>586</td>
+                <td>570</td>
                 <td>39</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2194,7 +2046,7 @@
             </tr>
             
             <tr>
-                <td>617</td>
+                <td>601</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-branches</code></td>
@@ -2204,7 +2056,7 @@
             </tr>
             
             <tr>
-                <td>624</td>
+                <td>608</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2214,7 +2066,7 @@
             </tr>
             
             <tr>
-                <td>625</td>
+                <td>609</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2224,7 +2076,7 @@
             </tr>
             
             <tr>
-                <td>626</td>
+                <td>610</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2234,7 +2086,7 @@
             </tr>
             
             <tr>
-                <td>629</td>
+                <td>613</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2244,7 +2096,7 @@
             </tr>
             
             <tr>
-                <td>638</td>
+                <td>622</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2254,7 +2106,7 @@
             </tr>
             
             <tr>
-                <td>640</td>
+                <td>624</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2264,7 +2116,7 @@
             </tr>
             
             <tr>
-                <td>643</td>
+                <td>627</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2274,7 +2126,7 @@
             </tr>
             
             <tr>
-                <td>644</td>
+                <td>628</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2284,7 +2136,7 @@
             </tr>
             
             <tr>
-                <td>651</td>
+                <td>635</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2294,7 +2146,7 @@
             </tr>
             
             <tr>
-                <td>653</td>
+                <td>637</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2304,7 +2156,7 @@
             </tr>
             
             <tr>
-                <td>660</td>
+                <td>644</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2314,7 +2166,7 @@
             </tr>
             
             <tr>
-                <td>661</td>
+                <td>645</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2324,7 +2176,7 @@
             </tr>
             
             <tr>
-                <td>663</td>
+                <td>647</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2334,7 +2186,7 @@
             </tr>
             
             <tr>
-                <td>665</td>
+                <td>649</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2344,7 +2196,7 @@
             </tr>
             
             <tr>
-                <td>666</td>
+                <td>650</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2354,13 +2206,43 @@
             </tr>
             
             <tr>
-                <td>666</td>
+                <td>650</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>logging-fstring-interpolation</code></td>
                 <td>W1203</td>
                 <td>FlexAgentGenerator.run_config_validations</td>
                 <td><pre>Use lazy % formatting in logging functions</pre></td>
+            </tr>
+            
+            <tr>
+                <td>652</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (125/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>653</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (125/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>654</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (125/100)</pre></td>
             </tr>
             
             <tr>
@@ -2374,37 +2256,7 @@
             </tr>
             
             <tr>
-                <td>669</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>line-too-long</code></td>
-                <td>C0301</td>
-                <td></td>
-                <td><pre>Line too long (125/100)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>670</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>line-too-long</code></td>
-                <td>C0301</td>
-                <td></td>
-                <td><pre>Line too long (125/100)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>684</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>line-too-long</code></td>
-                <td>C0301</td>
-                <td></td>
-                <td><pre>Line too long (125/100)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>684</td>
+                <td>668</td>
                 <td>37</td>
                 <td>warning</td>
                 <td><code>f-string-without-interpolation</code></td>
@@ -2414,7 +2266,7 @@
             </tr>
             
             <tr>
-                <td>688</td>
+                <td>672</td>
                 <td>41</td>
                 <td>warning</td>
                 <td><code>f-string-without-interpolation</code></td>
@@ -2424,7 +2276,7 @@
             </tr>
             
             <tr>
-                <td>689</td>
+                <td>673</td>
                 <td>59</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2434,7 +2286,7 @@
             </tr>
             
             <tr>
-                <td>692</td>
+                <td>676</td>
                 <td>104</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2444,7 +2296,7 @@
             </tr>
             
             <tr>
-                <td>692</td>
+                <td>676</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2454,7 +2306,7 @@
             </tr>
             
             <tr>
-                <td>693</td>
+                <td>677</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2464,7 +2316,7 @@
             </tr>
             
             <tr>
-                <td>699</td>
+                <td>683</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2474,7 +2326,7 @@
             </tr>
             
             <tr>
-                <td>699</td>
+                <td>683</td>
                 <td>24</td>
                 <td>warning</td>
                 <td><code>logging-fstring-interpolation</code></td>
@@ -2484,7 +2336,7 @@
             </tr>
             
             <tr>
-                <td>704</td>
+                <td>688</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2494,7 +2346,7 @@
             </tr>
             
             <tr>
-                <td>704</td>
+                <td>688</td>
                 <td>24</td>
                 <td>warning</td>
                 <td><code>logging-fstring-interpolation</code></td>
@@ -2504,7 +2356,7 @@
             </tr>
             
             <tr>
-                <td>706</td>
+                <td>690</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2514,7 +2366,7 @@
             </tr>
             
             <tr>
-                <td>722</td>
+                <td>706</td>
                 <td>13</td>
                 <td>warning</td>
                 <td><code>unspecified-encoding</code></td>
@@ -2524,7 +2376,7 @@
             </tr>
             
             <tr>
-                <td>722</td>
+                <td>706</td>
                 <td>50</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2534,7 +2386,7 @@
             </tr>
             
             <tr>
-                <td>731</td>
+                <td>715</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2662,17 +2514,7 @@
             </tr>
             
             <tr>
-                <td>6</td>
-                <td>0</td>
-                <td>error</td>
-                <td><code>import-error</code></td>
-                <td>E0401</td>
-                <td></td>
-                <td><pre>Unable to import &#39;agentlib&#39;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>7</td>
+                <td>3</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -2682,7 +2524,7 @@
             </tr>
             
             <tr>
-                <td>8</td>
+                <td>4</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -2692,27 +2534,27 @@
             </tr>
             
             <tr>
-                <td>9</td>
+                <td>5</td>
                 <td>0</td>
-                <td>error</td>
-                <td><code>import-error</code></td>
-                <td>E0401</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
                 <td></td>
-                <td><pre>Unable to import &#39;agentlib.core.errors&#39;</pre></td>
+                <td><pre>standard import &#34;from pathlib import Path&#34; should be placed before &#34;import numpy as np&#34;</pre></td>
             </tr>
             
             <tr>
-                <td>9</td>
+                <td>6</td>
                 <td>0</td>
-                <td>warning</td>
-                <td><code>unused-import</code></td>
-                <td>W0611</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
                 <td></td>
-                <td><pre>Unused ConfigurationError imported from agentlib.core.errors</pre></td>
+                <td><pre>standard import &#34;from typing import List, Optional&#34; should be placed before &#34;import numpy as np&#34;</pre></td>
             </tr>
             
             <tr>
-                <td>10</td>
+                <td>7</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -2722,17 +2564,17 @@
             </tr>
             
             <tr>
-                <td>14</td>
-                <td>20</td>
-                <td>convention</td>
-                <td><code>trailing-whitespace</code></td>
-                <td>C0303</td>
+                <td>8</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
                 <td></td>
-                <td><pre>Trailing whitespace</pre></td>
+                <td><pre>Unable to import &#39;agentlib&#39;</pre></td>
             </tr>
             
             <tr>
-                <td>20</td>
+                <td>14</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
@@ -2742,7 +2584,7 @@
             </tr>
             
             <tr>
-                <td>20</td>
+                <td>14</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -2752,7 +2594,7 @@
             </tr>
             
             <tr>
-                <td>24</td>
+                <td>18</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2762,7 +2604,7 @@
             </tr>
             
             <tr>
-                <td>37</td>
+                <td>31</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2772,7 +2614,7 @@
             </tr>
             
             <tr>
-                <td>40</td>
+                <td>34</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
@@ -2782,7 +2624,7 @@
             </tr>
             
             <tr>
-                <td>40</td>
+                <td>34</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -2792,7 +2634,7 @@
             </tr>
             
             <tr>
-                <td>55</td>
+                <td>49</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -2802,7 +2644,7 @@
             </tr>
             
             <tr>
-                <td>55</td>
+                <td>49</td>
                 <td>4</td>
                 <td>error</td>
                 <td><code>no-self-argument</code></td>
@@ -2812,7 +2654,7 @@
             </tr>
             
             <tr>
-                <td>57</td>
+                <td>51</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2822,7 +2664,7 @@
             </tr>
             
             <tr>
-                <td>57</td>
+                <td>51</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>broad-exception-raised</code></td>
@@ -2832,7 +2674,7 @@
             </tr>
             
             <tr>
-                <td>58</td>
+                <td>52</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2842,7 +2684,7 @@
             </tr>
             
             <tr>
-                <td>59</td>
+                <td>53</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2852,7 +2694,7 @@
             </tr>
             
             <tr>
-                <td>68</td>
+                <td>62</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
@@ -2862,7 +2704,7 @@
             </tr>
             
             <tr>
-                <td>68</td>
+                <td>62</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -2872,7 +2714,7 @@
             </tr>
             
             <tr>
-                <td>136</td>
+                <td>130</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2882,7 +2724,7 @@
             </tr>
             
             <tr>
-                <td>140</td>
+                <td>134</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2892,7 +2734,7 @@
             </tr>
             
             <tr>
-                <td>206</td>
+                <td>200</td>
                 <td>30</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2902,7 +2744,7 @@
             </tr>
             
             <tr>
-                <td>221</td>
+                <td>215</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2912,7 +2754,7 @@
             </tr>
             
             <tr>
-                <td>223</td>
+                <td>217</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -2922,7 +2764,7 @@
             </tr>
             
             <tr>
-                <td>231</td>
+                <td>225</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
@@ -2932,7 +2774,7 @@
             </tr>
             
             <tr>
-                <td>252</td>
+                <td>246</td>
                 <td>8</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2942,7 +2784,7 @@
             </tr>
             
             <tr>
-                <td>254</td>
+                <td>248</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -2952,7 +2794,7 @@
             </tr>
             
             <tr>
-                <td>264</td>
+                <td>258</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -2962,7 +2804,7 @@
             </tr>
             
             <tr>
-                <td>267</td>
+                <td>261</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -2972,7 +2814,7 @@
             </tr>
             
             <tr>
-                <td>267</td>
+                <td>261</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-branches</code></td>
@@ -2982,7 +2824,7 @@
             </tr>
             
             <tr>
-                <td>289</td>
+                <td>283</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2992,7 +2834,7 @@
             </tr>
             
             <tr>
-                <td>292</td>
+                <td>286</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3002,7 +2844,7 @@
             </tr>
             
             <tr>
-                <td>294</td>
+                <td>288</td>
                 <td>16</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -3012,7 +2854,7 @@
             </tr>
             
             <tr>
-                <td>295</td>
+                <td>289</td>
                 <td>16</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -3022,7 +2864,7 @@
             </tr>
             
             <tr>
-                <td>298</td>
+                <td>292</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3032,7 +2874,7 @@
             </tr>
             
             <tr>
-                <td>299</td>
+                <td>293</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3042,7 +2884,7 @@
             </tr>
             
             <tr>
-                <td>319</td>
+                <td>313</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3052,7 +2894,7 @@
             </tr>
             
             <tr>
-                <td>340</td>
+                <td>334</td>
                 <td>28</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -3062,7 +2904,7 @@
             </tr>
             
             <tr>
-                <td>340</td>
+                <td>334</td>
                 <td>46</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -3072,7 +2914,7 @@
             </tr>
             
             <tr>
-                <td>340</td>
+                <td>334</td>
                 <td>57</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -3082,7 +2924,7 @@
             </tr>
             
             <tr>
-                <td>340</td>
+                <td>334</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-branches</code></td>
@@ -3092,7 +2934,7 @@
             </tr>
             
             <tr>
-                <td>346</td>
+                <td>340</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3102,7 +2944,7 @@
             </tr>
             
             <tr>
-                <td>409</td>
+                <td>403</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3112,7 +2954,7 @@
             </tr>
             
             <tr>
-                <td>412</td>
+                <td>406</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3122,7 +2964,7 @@
             </tr>
             
             <tr>
-                <td>426</td>
+                <td>420</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3132,7 +2974,7 @@
             </tr>
             
             <tr>
-                <td>442</td>
+                <td>436</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
@@ -3142,7 +2984,7 @@
             </tr>
             
             <tr>
-                <td>456</td>
+                <td>450</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3152,7 +2994,7 @@
             </tr>
             
             <tr>
-                <td>458</td>
+                <td>452</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3162,7 +3004,7 @@
             </tr>
             
             <tr>
-                <td>489</td>
+                <td>483</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3172,7 +3014,7 @@
             </tr>
             
             <tr>
-                <td>492</td>
+                <td>486</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3182,7 +3024,7 @@
             </tr>
             
             <tr>
-                <td>493</td>
+                <td>487</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3192,7 +3034,7 @@
             </tr>
             
             <tr>
-                <td>495</td>
+                <td>489</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3202,7 +3044,7 @@
             </tr>
             
             <tr>
-                <td>495</td>
+                <td>489</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>logging-fstring-interpolation</code></td>
@@ -3212,7 +3054,7 @@
             </tr>
             
             <tr>
-                <td>500</td>
+                <td>494</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3222,7 +3064,7 @@
             </tr>
             
             <tr>
-                <td>500</td>
+                <td>494</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>logging-fstring-interpolation</code></td>
@@ -3232,7 +3074,7 @@
             </tr>
             
             <tr>
-                <td>504</td>
+                <td>498</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-newlines</code></td>
@@ -3266,17 +3108,7 @@
             </tr>
             
             <tr>
-                <td>5</td>
-                <td>0</td>
-                <td>error</td>
-                <td><code>import-error</code></td>
-                <td>E0401</td>
-                <td></td>
-                <td><pre>Unable to import &#39;agentlib&#39;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>6</td>
+                <td>2</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -3286,7 +3118,7 @@
             </tr>
             
             <tr>
-                <td>7</td>
+                <td>3</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -3296,7 +3128,27 @@
             </tr>
             
             <tr>
-                <td>8</td>
+                <td>4</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>standard import &#34;from pathlib import Path&#34; should be placed before &#34;import numpy as np&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>5</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>standard import &#34;from typing import List, Optional, Union&#34; should be placed before &#34;import numpy as np&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>6</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -3306,7 +3158,17 @@
             </tr>
             
             <tr>
-                <td>9</td>
+                <td>7</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>8</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -3316,17 +3178,7 @@
             </tr>
             
             <tr>
-                <td>10</td>
-                <td>0</td>
-                <td>error</td>
-                <td><code>import-error</code></td>
-                <td>E0401</td>
-                <td></td>
-                <td><pre>Unable to import &#39;pydantic&#39;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>18</td>
+                <td>13</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
@@ -3336,7 +3188,7 @@
             </tr>
             
             <tr>
-                <td>18</td>
+                <td>13</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -3346,7 +3198,7 @@
             </tr>
             
             <tr>
-                <td>54</td>
+                <td>49</td>
                 <td>30</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -3356,7 +3208,7 @@
             </tr>
             
             <tr>
-                <td>61</td>
+                <td>56</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -3366,7 +3218,7 @@
             </tr>
             
             <tr>
-                <td>78</td>
+                <td>73</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3376,7 +3228,7 @@
             </tr>
             
             <tr>
-                <td>83</td>
+                <td>78</td>
                 <td>8</td>
                 <td>warning</td>
                 <td><code>attribute-defined-outside-init</code></td>
@@ -3386,7 +3238,7 @@
             </tr>
             
             <tr>
-                <td>98</td>
+                <td>93</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -3396,7 +3248,7 @@
             </tr>
             
             <tr>
-                <td>117</td>
+                <td>112</td>
                 <td>8</td>
                 <td>warning</td>
                 <td><code>attribute-defined-outside-init</code></td>
@@ -3406,7 +3258,7 @@
             </tr>
             
             <tr>
-                <td>123</td>
+                <td>118</td>
                 <td>8</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -3416,7 +3268,7 @@
             </tr>
             
             <tr>
-                <td>133</td>
+                <td>128</td>
                 <td>62</td>
                 <td>warning</td>
                 <td><code>unused-argument</code></td>
@@ -3426,7 +3278,7 @@
             </tr>
             
             <tr>
-                <td>139</td>
+                <td>134</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3436,7 +3288,7 @@
             </tr>
             
             <tr>
-                <td>143</td>
+                <td>138</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3446,7 +3298,7 @@
             </tr>
             
             <tr>
-                <td>149</td>
+                <td>144</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3456,7 +3308,7 @@
             </tr>
             
             <tr>
-                <td>154</td>
+                <td>149</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3466,7 +3318,7 @@
             </tr>
             
             <tr>
-                <td>158</td>
+                <td>153</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3476,7 +3328,7 @@
             </tr>
             
             <tr>
-                <td>168</td>
+                <td>163</td>
                 <td>20</td>
                 <td>warning</td>
                 <td><code>attribute-defined-outside-init</code></td>
@@ -3486,7 +3338,7 @@
             </tr>
             
             <tr>
-                <td>175</td>
+                <td>170</td>
                 <td>62</td>
                 <td>warning</td>
                 <td><code>unused-argument</code></td>
@@ -3496,7 +3348,7 @@
             </tr>
             
             <tr>
-                <td>183</td>
+                <td>178</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3506,7 +3358,7 @@
             </tr>
             
             <tr>
-                <td>184</td>
+                <td>179</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3516,7 +3368,7 @@
             </tr>
             
             <tr>
-                <td>186</td>
+                <td>181</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3526,7 +3378,7 @@
             </tr>
             
             <tr>
-                <td>205</td>
+                <td>200</td>
                 <td>8</td>
                 <td>warning</td>
                 <td><code>unnecessary-pass</code></td>
@@ -3536,7 +3388,7 @@
             </tr>
             
             <tr>
-                <td>207</td>
+                <td>202</td>
                 <td>29</td>
                 <td>warning</td>
                 <td><code>unused-argument</code></td>
@@ -3546,7 +3398,7 @@
             </tr>
             
             <tr>
-                <td>207</td>
+                <td>202</td>
                 <td>49</td>
                 <td>warning</td>
                 <td><code>unused-argument</code></td>
@@ -3556,7 +3408,7 @@
             </tr>
             
             <tr>
-                <td>218</td>
+                <td>213</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -3590,37 +3442,7 @@
             </tr>
             
             <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>error</td>
-                <td><code>import-error</code></td>
-                <td>E0401</td>
-                <td></td>
-                <td><pre>Unable to import &#39;agentlib_mpc.modules&#39;</pre></td>
-            </tr>
-            
-            <tr>
                 <td>2</td>
-                <td>0</td>
-                <td>warning</td>
-                <td><code>unused-import</code></td>
-                <td>W0611</td>
-                <td></td>
-                <td><pre>Unused INTERPOLATE imported from agentlib_flexquant.utils.data_handling</pre></td>
-            </tr>
-            
-            <tr>
-                <td>7</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>wrong-import-order</code></td>
-                <td>C0411</td>
-                <td></td>
-                <td><pre>standard import &#34;from typing import Dict, Union&#34; should be placed before &#34;from agentlib_mpc.modules import mpc_full, minlp_mpc&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>8</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -3630,17 +3452,27 @@
             </tr>
             
             <tr>
-                <td>8</td>
+                <td>3</td>
                 <td>0</td>
-                <td>convention</td>
-                <td><code>wrong-import-order</code></td>
-                <td>C0411</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
                 <td></td>
-                <td><pre>third party import &#34;from agentlib.core.datamodels import AgentVariable&#34; should be placed before &#34;from agentlib_flexquant.utils.data_handling import strip_multi_index, fill_nans, MEAN, INTERPOLATE&#34;</pre></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.modules&#39;</pre></td>
             </tr>
             
             <tr>
-                <td>11</td>
+                <td>5</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (101/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>8</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
@@ -3650,7 +3482,7 @@
             </tr>
             
             <tr>
-                <td>20</td>
+                <td>17</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -3660,7 +3492,7 @@
             </tr>
             
             <tr>
-                <td>59</td>
+                <td>56</td>
                 <td>12</td>
                 <td>convention</td>
                 <td><code>consider-using-dict-items</code></td>
@@ -3670,7 +3502,7 @@
             </tr>
             
             <tr>
-                <td>59</td>
+                <td>56</td>
                 <td>16</td>
                 <td>refactor</td>
                 <td><code>redefined-argument-from-local</code></td>
@@ -3680,7 +3512,7 @@
             </tr>
             
             <tr>
-                <td>59</td>
+                <td>56</td>
                 <td>24</td>
                 <td>convention</td>
                 <td><code>consider-iterating-dictionary</code></td>
@@ -3690,7 +3522,7 @@
             </tr>
             
             <tr>
-                <td>62</td>
+                <td>59</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -3700,7 +3532,7 @@
             </tr>
             
             <tr>
-                <td>67</td>
+                <td>64</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
@@ -3710,7 +3542,7 @@
             </tr>
             
             <tr>
-                <td>76</td>
+                <td>73</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -3720,7 +3552,7 @@
             </tr>
             
             <tr>
-                <td>86</td>
+                <td>83</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3730,7 +3562,7 @@
             </tr>
             
             <tr>
-                <td>115</td>
+                <td>112</td>
                 <td>12</td>
                 <td>convention</td>
                 <td><code>consider-using-dict-items</code></td>
@@ -3740,7 +3572,7 @@
             </tr>
             
             <tr>
-                <td>115</td>
+                <td>112</td>
                 <td>16</td>
                 <td>refactor</td>
                 <td><code>redefined-argument-from-local</code></td>
@@ -3750,7 +3582,7 @@
             </tr>
             
             <tr>
-                <td>115</td>
+                <td>112</td>
                 <td>24</td>
                 <td>convention</td>
                 <td><code>consider-iterating-dictionary</code></td>
@@ -3760,7 +3592,7 @@
             </tr>
             
             <tr>
-                <td>118</td>
+                <td>115</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -3988,67 +3820,7 @@
             </tr>
             
             <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>error</td>
-                <td><code>import-error</code></td>
-                <td>E0401</td>
-                <td></td>
-                <td><pre>Unable to import &#39;agentlib.core.agent&#39;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>2</td>
-                <td>0</td>
-                <td>error</td>
-                <td><code>import-error</code></td>
-                <td>E0401</td>
-                <td></td>
-                <td><pre>Unable to import &#39;agentlib.core.module&#39;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>3</td>
-                <td>0</td>
-                <td>warning</td>
-                <td><code>unused-import</code></td>
-                <td>W0611</td>
-                <td></td>
-                <td><pre>Unused agentlib_flexquant.data_structures.globals imported as glbs</pre></td>
-            </tr>
-            
-            <tr>
-                <td>4</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>wrong-import-order</code></td>
-                <td>C0411</td>
-                <td></td>
-                <td><pre>standard import &#34;from copy import deepcopy&#34; should be placed before &#34;from agentlib.core.agent import AgentConfig&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>5</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>wrong-import-order</code></td>
-                <td>C0411</td>
-                <td></td>
-                <td><pre>standard import &#34;from typing import TypeVar&#34; should be placed before &#34;from agentlib.core.agent import AgentConfig&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>6</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>wrong-import-order</code></td>
-                <td>C0411</td>
-                <td></td>
-                <td><pre>standard import &#34;import math&#34; should be placed before &#34;from agentlib.core.agent import AgentConfig&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>7</td>
+                <td>8</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -4058,53 +3830,23 @@
             </tr>
             
             <tr>
-                <td>7</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>wrong-import-order</code></td>
-                <td>C0411</td>
-                <td></td>
-                <td><pre>third party import &#34;from agentlib.modules import get_all_module_types&#34; should be placed before &#34;import agentlib_flexquant.data_structures.globals as glbs&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>7</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>ungrouped-imports</code></td>
-                <td>C0412</td>
-                <td></td>
-                <td><pre>Imports from package agentlib are not grouped</pre></td>
-            </tr>
-            
-            <tr>
-                <td>8</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>wrong-import-order</code></td>
-                <td>C0411</td>
-                <td></td>
-                <td><pre>standard import &#34;import inspect&#34; should be placed before &#34;from agentlib.core.agent import AgentConfig&#34;</pre></td>
-            </tr>
-            
-            <tr>
                 <td>9</td>
                 <td>0</td>
-                <td>convention</td>
-                <td><code>wrong-import-order</code></td>
-                <td>C0411</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
                 <td></td>
-                <td><pre>standard import &#34;import os&#34; should be placed before &#34;from agentlib.core.agent import AgentConfig&#34;</pre></td>
+                <td><pre>Unable to import &#39;agentlib.core.agent&#39;</pre></td>
             </tr>
             
             <tr>
                 <td>10</td>
                 <td>0</td>
-                <td>convention</td>
-                <td><code>wrong-import-order</code></td>
-                <td>C0411</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
                 <td></td>
-                <td><pre>standard import &#34;import importlib.util&#34; should be placed before &#34;from agentlib.core.agent import AgentConfig&#34;</pre></td>
+                <td><pre>Unable to import &#39;agentlib.core.module&#39;</pre></td>
             </tr>
             
             <tr>
@@ -4217,16 +3959,6 @@
                 <td><pre>Missing function or method docstring</pre></td>
             </tr>
             
-            <tr>
-                <td>153</td>
-                <td>60</td>
-                <td>error</td>
-                <td><code>undefined-variable</code></td>
-                <td>E0602</td>
-                <td>get_class_from_file</td>
-                <td><pre>Undefined variable &#39;ABCMeta&#39;</pre></td>
-            </tr>
-            
         </table>
         
         <h3>Module <code>agentlib_flexquant.utils.data_handling</code> (<code>agentlib_flexquant/utils/data_handling.py</code>)</h3>
@@ -4252,13 +3984,23 @@
             </tr>
             
             <tr>
-                <td>2</td>
+                <td>1</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
                 <td>E0401</td>
                 <td></td>
                 <td><pre>Unable to import &#39;pandas&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>2</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>standard import &#34;from typing import Literal&#34; should be placed before &#34;import pandas as pd&#34;</pre></td>
             </tr>
             
             <tr>
@@ -4396,17 +4138,7 @@
             </tr>
             
             <tr>
-                <td>4</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>consider-using-from-import</code></td>
-                <td>R0402</td>
-                <td></td>
-                <td><pre>Use &#39;from agentlib_flexquant.data_structures import flex_results&#39; instead</pre></td>
-            </tr>
-            
-            <tr>
-                <td>5</td>
+                <td>3</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>wrong-import-order</code></td>
@@ -4416,7 +4148,7 @@
             </tr>
             
             <tr>
-                <td>6</td>
+                <td>4</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -4426,17 +4158,7 @@
             </tr>
             
             <tr>
-                <td>6</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>wrong-import-order</code></td>
-                <td>C0411</td>
-                <td></td>
-                <td><pre>third party import &#34;from pydantic import FilePath&#34; should be placed before &#34;import agentlib_flexquant.data_structures.globals as glbs&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>7</td>
+                <td>5</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -4446,17 +4168,7 @@
             </tr>
             
             <tr>
-                <td>7</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>wrong-import-order</code></td>
-                <td>C0411</td>
-                <td></td>
-                <td><pre>third party import &#34;from dash import Dash, html, dcc, callback, Output, Input, ctx&#34; should be placed before &#34;import agentlib_flexquant.data_structures.globals as glbs&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>8</td>
+                <td>6</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -4466,17 +4178,7 @@
             </tr>
             
             <tr>
-                <td>8</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>wrong-import-order</code></td>
-                <td>C0411</td>
-                <td></td>
-                <td><pre>third party import &#34;from plotly import graph_objects as go&#34; should be placed before &#34;import agentlib_flexquant.data_structures.globals as glbs&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>9</td>
+                <td>7</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -4486,17 +4188,7 @@
             </tr>
             
             <tr>
-                <td>9</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>wrong-import-order</code></td>
-                <td>C0411</td>
-                <td></td>
-                <td><pre>third party import &#34;from agentlib.core.agent import AgentConfig&#34; should be placed before &#34;import agentlib_flexquant.data_structures.globals as glbs&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>10</td>
+                <td>8</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -4506,17 +4198,7 @@
             </tr>
             
             <tr>
-                <td>10</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>wrong-import-order</code></td>
-                <td>C0411</td>
-                <td></td>
-                <td><pre>third party import &#34;from agentlib_mpc.utils import TimeConversionTypes, TIME_CONVERSION&#34; should be placed before &#34;import agentlib_flexquant.data_structures.globals as glbs&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>11</td>
+                <td>9</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -4526,17 +4208,7 @@
             </tr>
             
             <tr>
-                <td>11</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>wrong-import-order</code></td>
-                <td>C0411</td>
-                <td></td>
-                <td><pre>third party import &#34;from agentlib_mpc.utils.analysis import mpc_at_time_step&#34; should be placed before &#34;import agentlib_flexquant.data_structures.globals as glbs&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>12</td>
+                <td>10</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -4548,11 +4220,11 @@
             <tr>
                 <td>12</td>
                 <td>0</td>
-                <td>convention</td>
-                <td><code>wrong-import-order</code></td>
-                <td>C0411</td>
+                <td>refactor</td>
+                <td><code>consider-using-from-import</code></td>
+                <td>R0402</td>
                 <td></td>
-                <td><pre>third party import &#34;from agentlib_mpc.utils.plotting.interactive import get_port&#34; should be placed before &#34;import agentlib_flexquant.data_structures.globals as glbs&#34;</pre></td>
+                <td><pre>Use &#39;from agentlib_flexquant.data_structures import flex_results&#39; instead</pre></td>
             </tr>
             
             <tr>
@@ -5044,12 +4716,12 @@
             
             <tr>
                 <td>error</td>
-                <td>78</td>
+                <td>71</td>
             </tr>
             
             <tr>
                 <td>convention</td>
-                <td>285</td>
+                <td>269</td>
             </tr>
             
             <tr>
@@ -5059,7 +4731,7 @@
             
             <tr>
                 <td>warning</td>
-                <td>48</td>
+                <td>38</td>
             </tr>
             
         </table>
@@ -5074,17 +4746,17 @@
             
             <tr>
                 <td>import-error</td>
-                <td>75</td>
-            </tr>
-            
-            <tr>
-                <td>trailing-whitespace</td>
-                <td>23</td>
+                <td>70</td>
             </tr>
             
             <tr>
                 <td>line-too-long</td>
-                <td>115</td>
+                <td>117</td>
+            </tr>
+            
+            <tr>
+                <td>trailing-whitespace</td>
+                <td>17</td>
             </tr>
             
             <tr>
@@ -5144,12 +4816,7 @@
             
             <tr>
                 <td>wrong-import-order</td>
-                <td>27</td>
-            </tr>
-            
-            <tr>
-                <td>unused-import</td>
-                <td>10</td>
+                <td>20</td>
             </tr>
             
             <tr>
@@ -5268,16 +4935,6 @@
             </tr>
             
             <tr>
-                <td>undefined-variable</td>
-                <td>2</td>
-            </tr>
-            
-            <tr>
-                <td>ungrouped-imports</td>
-                <td>5</td>
-            </tr>
-            
-            <tr>
                 <td>eval-used</td>
                 <td>1</td>
             </tr>
@@ -5303,7 +4960,7 @@
             </tr>
             
             <tr>
-                <td>reimported</td>
+                <td>unused-import</td>
                 <td>1</td>
             </tr>
             
@@ -5339,7 +4996,7 @@
             
             <tr>
                 <td>agentlib_flexquant.generate_flex_agents</td>
-                <td>81</td>
+                <td>79</td>
             </tr>
             
             <tr>
@@ -5354,17 +5011,17 @@
             
             <tr>
                 <td>agentlib_flexquant.modules.shadow_mpc</td>
-                <td>19</td>
+                <td>17</td>
             </tr>
             
             <tr>
                 <td>agentlib_flexquant.modules.flexibility_market</td>
-                <td>31</td>
+                <td>32</td>
             </tr>
             
             <tr>
                 <td>agentlib_flexquant.modules.flexibility_indicator</td>
-                <td>59</td>
+                <td>58</td>
             </tr>
             
             <tr>
@@ -5374,17 +5031,17 @@
             
             <tr>
                 <td>agentlib_flexquant.utils.config_management</td>
-                <td>25</td>
+                <td>15</td>
             </tr>
             
             <tr>
                 <td>agentlib_flexquant.utils.data_handling</td>
-                <td>12</td>
+                <td>13</td>
             </tr>
             
             <tr>
                 <td>agentlib_flexquant.utils.interactive</td>
-                <td>37</td>
+                <td>30</td>
             </tr>
             
             <tr>
@@ -5394,7 +5051,7 @@
             
             <tr>
                 <td>agentlib_flexquant.data_structures.flex_kpis</td>
-                <td>34</td>
+                <td>31</td>
             </tr>
             
             <tr>
@@ -5409,12 +5066,12 @@
             
             <tr>
                 <td>agentlib_flexquant.data_structures.flex_results</td>
-                <td>42</td>
+                <td>29</td>
             </tr>
             
             <tr>
                 <td>agentlib_flexquant.data_structures.flexquant</td>
-                <td>21</td>
+                <td>24</td>
             </tr>
             
             <tr>
@@ -5444,7 +5101,7 @@
             
             <tr>
                 <td>agentlib_flexquant/generate_flex_agents.py</td>
-                <td>81</td>
+                <td>79</td>
             </tr>
             
             <tr>
@@ -5459,17 +5116,17 @@
             
             <tr>
                 <td>agentlib_flexquant/modules/shadow_mpc.py</td>
-                <td>19</td>
+                <td>17</td>
             </tr>
             
             <tr>
                 <td>agentlib_flexquant/modules/flexibility_market.py</td>
-                <td>31</td>
+                <td>32</td>
             </tr>
             
             <tr>
                 <td>agentlib_flexquant/modules/flexibility_indicator.py</td>
-                <td>59</td>
+                <td>58</td>
             </tr>
             
             <tr>
@@ -5479,17 +5136,17 @@
             
             <tr>
                 <td>agentlib_flexquant/utils/config_management.py</td>
-                <td>25</td>
+                <td>15</td>
             </tr>
             
             <tr>
                 <td>agentlib_flexquant/utils/data_handling.py</td>
-                <td>12</td>
+                <td>13</td>
             </tr>
             
             <tr>
                 <td>agentlib_flexquant/utils/interactive.py</td>
-                <td>37</td>
+                <td>30</td>
             </tr>
             
             <tr>
@@ -5499,7 +5156,7 @@
             
             <tr>
                 <td>agentlib_flexquant/data_structures/flex_kpis.py</td>
-                <td>34</td>
+                <td>31</td>
             </tr>
             
             <tr>
@@ -5514,12 +5171,12 @@
             
             <tr>
                 <td>agentlib_flexquant/data_structures/flex_results.py</td>
-                <td>42</td>
+                <td>29</td>
             </tr>
             
             <tr>
                 <td>agentlib_flexquant/data_structures/flexquant.py</td>
-                <td>21</td>
+                <td>24</td>
             </tr>
             
             <tr>
