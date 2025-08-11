@@ -1,0 +1,798 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>agentlib_flexquant.modules package &mdash; agentlib_flexquant 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="agentlib_flexquant.optimization_backends package" href="agentlib_flexquant.optimization_backends.html" />
+    <link rel="prev" title="agentlib_flexquant.data_structures package" href="agentlib_flexquant.data_structures.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            agentlib_flexquant
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html">agentlib_flexquant</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="agentlib_flexquant.html">agentlib_flexquant package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="agentlib_flexquant.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.html#module-agentlib_flexquant.generate_flex_agents">agentlib_flexquant.generate_flex_agents module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">agentlib_flexquant</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="modules.html">agentlib_flexquant</a></li>
+          <li class="breadcrumb-item"><a href="agentlib_flexquant.html">agentlib_flexquant package</a></li>
+      <li class="breadcrumb-item active">agentlib_flexquant.modules package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/code/agentlib_flexquant.modules.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-agentlib_flexquant.modules">
+<span id="agentlib-flexquant-modules-package"></span><h1>agentlib_flexquant.modules package<a class="headerlink" href="#module-agentlib_flexquant.modules" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-agentlib_flexquant.modules.baseline_mpc">
+<span id="agentlib-flexquant-modules-baseline-mpc-module"></span><h2>agentlib_flexquant.modules.baseline_mpc module<a class="headerlink" href="#module-agentlib_flexquant.modules.baseline_mpc" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.modules.baseline_mpc.</span></span><span class="sig-name descname"><span class="pre">FlexibilityBaselineMINLPMPC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/baseline_mpc.html#FlexibilityBaselineMINLPMPC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MINLPMPC</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.pre_computation_hook">
+<span class="sig-name descname"><span class="pre">pre_computation_hook</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/baseline_mpc.html#FlexibilityBaselineMINLPMPC.pre_computation_hook"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.pre_computation_hook" title="Link to this definition"></a></dt>
+<dd><p>This method is called in every computation step before the optimization starts.
+Overwrite this method in a derived subclass if you want to take some actions
+each time before the optimal control problem is solved.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.modules.baseline_mpc.</span></span><span class="sig-name descname"><span class="pre">FlexibilityBaselineMPC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/baseline_mpc.html#FlexibilityBaselineMPC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MPC</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.pre_computation_hook">
+<span class="sig-name descname"><span class="pre">pre_computation_hook</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/baseline_mpc.html#FlexibilityBaselineMPC.pre_computation_hook"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.pre_computation_hook" title="Link to this definition"></a></dt>
+<dd><p>This method is called in every computation step before the optimization starts.
+Overwrite this method in a derived subclass if you want to take some actions
+each time before the optimal control problem is solved.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-agentlib_flexquant.modules.flexibility_indicator">
+<span id="agentlib-flexquant-modules-flexibility-indicator-module"></span><h2>agentlib_flexquant.modules.flexibility_indicator module<a class="headerlink" href="#module-agentlib_flexquant.modules.flexibility_indicator" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.modules.flexibility_indicator.</span></span><span class="sig-name descname"><span class="pre">FlexibilityIndicatorModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#FlexibilityIndicatorModule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModule</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.calc_and_send_offer">
+<span class="sig-name descname"><span class="pre">calc_and_send_offer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#FlexibilityIndicatorModule.calc_and_send_offer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.calc_and_send_offer" title="Link to this definition"></a></dt>
+<dd><p>Calculate the flexibility KPIs for current predictions, send the flex offer and set the outputs, write and save the results.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.callback">
+<span class="sig-name descname"><span class="pre">callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#FlexibilityIndicatorModule.callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.callback" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.check_power_end_deviation">
+<span class="sig-name descname"><span class="pre">check_power_end_deviation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#FlexibilityIndicatorModule.check_power_end_deviation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.check_power_end_deviation" title="Link to this definition"></a></dt>
+<dd><p>calculates the deviation of the final value of the power profiles and warn the user if it exceeds the tolerance</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.cleanup_results">
+<span class="sig-name descname"><span class="pre">cleanup_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#FlexibilityIndicatorModule.cleanup_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.cleanup_results" title="Link to this definition"></a></dt>
+<dd><p>Deletes all files this module created.</p>
+<p>Override this method, if your module creates e.g. results files etc.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.data">
+<span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData" title="agentlib_flexquant.data_structures.flex_kpis.FlexibilityData"><span class="pre">FlexibilityData</span></a></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.get_results">
+<span class="sig-name descname"><span class="pre">get_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#FlexibilityIndicatorModule.get_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.get_results" title="Link to this definition"></a></dt>
+<dd><p>Opens results file of flexibility_indicator.py
+results_file defined in __init__</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.process">
+<span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#FlexibilityIndicatorModule.process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.process" title="Link to this definition"></a></dt>
+<dd><p>This abstract method must be implemented in order to sync the module
+with the other processes of the agent and the whole MAS.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.register_callbacks">
+<span class="sig-name descname"><span class="pre">register_callbacks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#FlexibilityIndicatorModule.register_callbacks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.register_callbacks" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.send_flex_offer">
+<span class="sig-name descname"><span class="pre">send_flex_offer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_power_profile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_diff_profile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_price</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neg_diff_profile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neg_price</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#FlexibilityIndicatorModule.send_flex_offer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.send_flex_offer" title="Link to this definition"></a></dt>
+<dd><p>Send a flex offer as an agent Variable. The first offer is dismissed,
+since the different MPCs need one time step to fully initialize.</p>
+<p>Inputs:</p>
+<p>name: name of the agent variable
+indicator_data: the indicator data object
+timestamp: the time offer was generated</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.write_results">
+<span class="sig-name descname"><span class="pre">write_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#FlexibilityIndicatorModule.write_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.write_results" title="Link to this definition"></a></dt>
+<dd><p>Write every data of variables in self.var_list in an DataFrame
+DataFrame will be updated every time step</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – DataFrame which is initialised as an empty DataFrame with columns according to self.var_list</p></li>
+<li><p><strong>ts</strong> – time step</p></li>
+<li><p><strong>n</strong> – number of time steps during prediction horizon</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>DataFrame with results of every variable in self.var_list</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class pydantic_model">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig">
+<em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.modules.flexibility_indicator.</span></span><span class="sig-name descname"><span class="pre">FlexibilityIndicatorModuleConfig</span></span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#FlexibilityIndicatorModuleConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModuleConfig</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Config<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arbitrary_types_allowed</strong>: <em>bool = True</em></p></li>
+<li><p><strong>validate_assignment</strong>: <em>bool = True</em></p></li>
+<li><p><strong>extra</strong>: <em>str = forbid</em></p></li>
+<li><p><strong>frozen</strong>: <em>bool = True</em></p></li>
+</ul>
+</dd>
+<dt class="field-even">Fields<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.calculate_costs" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.calculate_costs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_costs</span> <span class="pre">(agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.correct_costs" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.correct_costs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">correct_costs</span> <span class="pre">(agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.inputs" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.inputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span> <span class="pre">(List[agentlib.core.datamodels.AgentVariable])</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.outputs" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.outputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">outputs</span> <span class="pre">(List[agentlib.core.datamodels.AgentVariable])</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.parameters" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameters</span> <span class="pre">(List[agentlib.core.datamodels.AgentVariable])</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.power_unit" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.power_unit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">power_unit</span> <span class="pre">(str)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.price_variable" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.price_variable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">price_variable</span> <span class="pre">(str)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.results_file" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.results_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">results_file</span> <span class="pre">(pathlib.Path</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.save_results" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.save_results"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_results</span> <span class="pre">(bool</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.shared_variable_fields" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.shared_variable_fields"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shared_variable_fields</span> <span class="pre">(List[str])</span></code></a></p></li>
+</ul>
+</dd>
+<dt class="field-odd">Validators<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_valid_fields</span></code> » <a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.shared_variable_fields" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.shared_variable_fields"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shared_variable_fields</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.calculate_costs">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calculate_costs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts"><span class="pre">InputsForCalculateFlexCosts</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">InputsForCalculateFlexCosts(use_constant_electricity_price=False,</span> <span class="pre">calculate_flex_costs=True,</span> <span class="pre">const_electricity_price=nan)</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.calculate_costs" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.correct_costs">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">correct_costs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts"><span class="pre">InputsForCorrectFlexCosts</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">InputsForCorrectFlexCosts(enable_energy_costs_correction=False,</span> <span class="pre">absolute_power_deviation_tolerance=0.1,</span> <span class="pre">stored_energy_variable='E_stored')</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.correct_costs" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.inputs">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">inputs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">AgentVariable</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[AgentVariable(name='_P_el_base',</span> <span class="pre">type='pd.Series',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='W',</span> <span class="pre">description='The</span> <span class="pre">power</span> <span class="pre">input</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">system',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='_P_el_base',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='_P_el_neg',</span> <span class="pre">type='pd.Series',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='W',</span> <span class="pre">description='The</span> <span class="pre">power</span> <span class="pre">input</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">system',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='_P_el_neg',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='_P_el_pos',</span> <span class="pre">type='pd.Series',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='W',</span> <span class="pre">description='The</span> <span class="pre">power</span> <span class="pre">input</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">system',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='_P_el_pos',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='_E_stored_base',</span> <span class="pre">type='pd.Series',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='kWh',</span> <span class="pre">description='Energy</span> <span class="pre">stored</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">system</span> <span class="pre">w.r.t.</span> <span class="pre">0K',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='_E_stored_base',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='_E_stored_neg',</span> <span class="pre">type='pd.Series',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='kWh',</span> <span class="pre">description='Energy</span> <span class="pre">stored</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">system</span> <span class="pre">w.r.t.</span> <span class="pre">0K',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='_E_stored_neg',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='_E_stored_pos',</span> <span class="pre">type='pd.Series',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='kWh',</span> <span class="pre">description='Energy</span> <span class="pre">stored</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">system</span> <span class="pre">w.r.t.</span> <span class="pre">0K',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='_E_stored_pos',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None)]</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.inputs" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.outputs">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">outputs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">AgentVariable</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[AgentVariable(name='FlexibilityOffer',</span> <span class="pre">type='FlexOffer',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='Not</span> <span class="pre">defined',</span> <span class="pre">description='Not</span> <span class="pre">defined',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='FlexibilityOffer',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='negative_power_flex_full',</span> <span class="pre">type='pd.Series',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='W',</span> <span class="pre">description='Negative</span> <span class="pre">power</span> <span class="pre">flexibility',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='negative_power_flex_full',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='positive_power_flex_full',</span> <span class="pre">type='pd.Series',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='W',</span> <span class="pre">description='Positive</span> <span class="pre">power</span> <span class="pre">flexibility',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='positive_power_flex_full',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='negative_power_flex_offer',</span> <span class="pre">type='pd.Series',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='W',</span> <span class="pre">description='Negative</span> <span class="pre">power</span> <span class="pre">flexibility',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='negative_power_flex_offer',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='positive_power_flex_offer',</span> <span class="pre">type='pd.Series',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='W',</span> <span class="pre">description='Positive</span> <span class="pre">power</span> <span class="pre">flexibility',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='positive_power_flex_offer',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='negative_power_flex_offer_min',</span> <span class="pre">type='float',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='W',</span> <span class="pre">description='Minimum</span> <span class="pre">of</span> <span class="pre">negative</span> <span class="pre">power</span> <span class="pre">flexibility',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='negative_power_flex_offer_min',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='positive_power_flex_offer_min',</span> <span class="pre">type='float',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='W',</span> <span class="pre">description='Minimum</span> <span class="pre">of</span> <span class="pre">positive</span> <span class="pre">power</span> <span class="pre">flexibility',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='positive_power_flex_offer_min',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='negative_power_flex_offer_max',</span> <span class="pre">type='float',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='W',</span> <span class="pre">description='Maximum</span> <span class="pre">of</span> <span class="pre">negative</span> <span class="pre">power</span> <span class="pre">flexibility',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='negative_power_flex_offer_max',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='positive_power_flex_offer_max',</span> <span class="pre">type='float',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='W',</span> <span class="pre">description='Maximum</span> <span class="pre">of</span> <span class="pre">positive</span> <span class="pre">power</span> <span class="pre">flexibility',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='positive_power_flex_offer_max',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='negative_power_flex_offer_avg',</span> <span class="pre">type='float',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='W',</span> <span class="pre">description='Average</span> <span class="pre">of</span> <span class="pre">negative</span> <span class="pre">power</span> <span class="pre">flexibility',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='negative_power_flex_offer_avg',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='positive_power_flex_offer_avg',</span> <span class="pre">type='float',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='W',</span> <span class="pre">description='Average</span> <span class="pre">of</span> <span class="pre">positive</span> <span class="pre">power</span> <span class="pre">flexibility',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='positive_power_flex_offer_avg',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='negative_power_flex_within_boundary',</span> <span class="pre">type='bool',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='-',</span> <span class="pre">description='Variable</span> <span class="pre">indicating</span> <span class="pre">whether</span> <span class="pre">the</span> <span class="pre">baseline</span> <span class="pre">power</span> <span class="pre">and</span> <span class="pre">flex</span> <span class="pre">power</span> <span class="pre">align</span> <span class="pre">at</span> <span class="pre">the</span> <span class="pre">horizon</span> <span class="pre">end',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='negative_power_flex_within_boundary',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='positive_power_flex_within_boundary',</span> <span class="pre">type='bool',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='-',</span> <span class="pre">description='Variable</span> <span class="pre">indicating</span> <span class="pre">whether</span> <span class="pre">the</span> <span class="pre">baseline</span> <span class="pre">power</span> <span class="pre">and</span> <span class="pre">flex</span> <span class="pre">power</span> <span class="pre">align</span> <span class="pre">at</span> <span class="pre">the</span> <span class="pre">horizon</span> <span class="pre">end',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='positive_power_flex_within_boundary',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='negative_energy_flex',</span> <span class="pre">type='float',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='kWh',</span> <span class="pre">description='Negative</span> <span class="pre">energy</span> <span class="pre">flexibility',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='negative_energy_flex',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='positive_energy_flex',</span> <span class="pre">type='float',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='kWh',</span> <span class="pre">description='Positive</span> <span class="pre">energy</span> <span class="pre">flexibility',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='positive_energy_flex',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='negative_costs',</span> <span class="pre">type='float',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='ct',</span> <span class="pre">description='Saved</span> <span class="pre">costs</span> <span class="pre">due</span> <span class="pre">to</span> <span class="pre">baseline',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='negative_costs',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='positive_costs',</span> <span class="pre">type='float',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='ct',</span> <span class="pre">description='Saved</span> <span class="pre">costs</span> <span class="pre">due</span> <span class="pre">to</span> <span class="pre">baseline',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='positive_costs',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='negative_corrected_costs',</span> <span class="pre">type='float',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='ct',</span> <span class="pre">description='Corrected</span> <span class="pre">saved</span> <span class="pre">costs</span> <span class="pre">due</span> <span class="pre">to</span> <span class="pre">baseline',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='negative_corrected_costs',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='positive_corrected_costs',</span> <span class="pre">type='float',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='ct',</span> <span class="pre">description='Corrected</span> <span class="pre">saved</span> <span class="pre">costs</span> <span class="pre">due</span> <span class="pre">to</span> <span class="pre">baseline',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='positive_corrected_costs',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='negative_costs_rel',</span> <span class="pre">type='float',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='ct/kWh',</span> <span class="pre">description='Saved</span> <span class="pre">costs</span> <span class="pre">due</span> <span class="pre">to</span> <span class="pre">baseline',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='negative_costs_rel',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='positive_costs_rel',</span> <span class="pre">type='float',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='ct/kWh',</span> <span class="pre">description='Saved</span> <span class="pre">costs</span> <span class="pre">due</span> <span class="pre">to</span> <span class="pre">baseline',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='positive_costs_rel',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='negative_corrected_costs_rel',</span> <span class="pre">type='float',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='ct/kWh',</span> <span class="pre">description='Corrected</span> <span class="pre">saved</span> <span class="pre">costs</span> <span class="pre">per</span> <span class="pre">energy</span> <span class="pre">due</span> <span class="pre">to</span> <span class="pre">baseline',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='negative_corrected_costs_rel',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='positive_corrected_costs_rel',</span> <span class="pre">type='float',</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='ct/kWh',</span> <span class="pre">description='Corrected</span> <span class="pre">saved</span> <span class="pre">costs</span> <span class="pre">per</span> <span class="pre">energy</span> <span class="pre">due</span> <span class="pre">to</span> <span class="pre">baseline',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='positive_corrected_costs_rel',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None)]</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.outputs" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.parameters">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parameters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">AgentVariable</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[AgentVariable(name='prep_time',</span> <span class="pre">type=None,</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='s',</span> <span class="pre">description='Preparation</span> <span class="pre">time',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='prep_time',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='market_time',</span> <span class="pre">type=None,</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='s',</span> <span class="pre">description='Market</span> <span class="pre">time',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='market_time',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='flex_event_duration',</span> <span class="pre">type=None,</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='s',</span> <span class="pre">description='time</span> <span class="pre">to</span> <span class="pre">switch</span> <span class="pre">objective',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='flex_event_duration',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='time_step',</span> <span class="pre">type=None,</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='s',</span> <span class="pre">description='timestep</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">mpc</span> <span class="pre">solution',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='time_step',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='prediction_horizon',</span> <span class="pre">type=None,</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='-',</span> <span class="pre">description='prediction</span> <span class="pre">horizon</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">mpc</span> <span class="pre">solution',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='prediction_horizon',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None)]</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.parameters" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.power_unit">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">power_unit</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'kW'</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.power_unit" title="Link to this definition"></a></dt>
+<dd><p>Unit of the power variable</p>
+<dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.price_variable">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">price_variable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'c_pel'</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.price_variable" title="Link to this definition"></a></dt>
+<dd><p>Name of the price variable sent by a predictor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.results_file">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">results_file</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">PosixPath('flexibility_indicator.csv')</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.results_file" title="Link to this definition"></a></dt>
+<dd><p>User specified results file name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.save_results">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">save_results</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.save_results" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.shared_variable_fields">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">shared_variable_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['outputs']</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.shared_variable_fields" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_valid_fields</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method pydantic_validator">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension">
+<em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_results_file_extension</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#FlexibilityIndicatorModuleConfig.check_results_file_extension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.model_post_init">
+<span class="sig-name descname"><span class="pre">model_post_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.model_post_init" title="Link to this definition"></a></dt>
+<dd><p>This function is meant to behave like a BaseModel method to initialise private attributes.</p>
+<p>It takes context as an argument since that’s what pydantic-core passes when calling it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – The BaseModel instance.</p></li>
+<li><p><strong>context</strong> – The context.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class pydantic_model">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts">
+<em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.modules.flexibility_indicator.</span></span><span class="sig-name descname"><span class="pre">InputsForCalculateFlexCosts</span></span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#InputsForCalculateFlexCosts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Fields<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.calculate_flex_costs" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.calculate_flex_costs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_flex_costs</span> <span class="pre">(bool)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.const_electricity_price" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.const_electricity_price"><code class="xref py py-obj docutils literal notranslate"><span class="pre">const_electricity_price</span> <span class="pre">(float)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.use_constant_electricity_price" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.use_constant_electricity_price"><code class="xref py py-obj docutils literal notranslate"><span class="pre">use_constant_electricity_price</span> <span class="pre">(bool)</span></code></a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Validators<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_constant_price</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.calculate_flex_costs">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calculate_flex_costs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.calculate_flex_costs" title="Link to this definition"></a></dt>
+<dd><p>Calculate the flexibility cost</p>
+<dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_constant_price</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.const_electricity_price">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">const_electricity_price</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">nan</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.const_electricity_price" title="Link to this definition"></a></dt>
+<dd><p>constant electricity price in ct/kWh</p>
+<dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_constant_price</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.use_constant_electricity_price">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">use_constant_electricity_price</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.use_constant_electricity_price" title="Link to this definition"></a></dt>
+<dd><p>Use constant electricity price</p>
+<dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_constant_price</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method pydantic_validator">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price">
+<em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate_constant_price</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#InputsForCalculateFlexCosts.validate_constant_price"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class pydantic_model">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts">
+<em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.modules.flexibility_indicator.</span></span><span class="sig-name descname"><span class="pre">InputsForCorrectFlexCosts</span></span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#InputsForCorrectFlexCosts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Fields<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.absolute_power_deviation_tolerance" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.absolute_power_deviation_tolerance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">absolute_power_deviation_tolerance</span> <span class="pre">(float)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.enable_energy_costs_correction" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.enable_energy_costs_correction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">enable_energy_costs_correction</span> <span class="pre">(bool)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.stored_energy_variable" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.stored_energy_variable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stored_energy_variable</span> <span class="pre">(str)</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.absolute_power_deviation_tolerance">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">absolute_power_deviation_tolerance</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.1</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.absolute_power_deviation_tolerance" title="Link to this definition"></a></dt>
+<dd><p>Absolute tolerance in kW within which no warning is thrown</p>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.enable_energy_costs_correction">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">enable_energy_costs_correction</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.enable_energy_costs_correction" title="Link to this definition"></a></dt>
+<dd><p>Variable determining whether to correct the costs of the flexible energyDefine the variable for stored electrical energy in the base MPC model and config as output if the correction of costs is enabled</p>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.stored_energy_variable">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stored_energy_variable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'E_stored'</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.stored_energy_variable" title="Link to this definition"></a></dt>
+<dd><p>Name of the variable representing the stored electrical energy in the baseline config</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-agentlib_flexquant.modules.flexibility_market">
+<span id="agentlib-flexquant-modules-flexibility-market-module"></span><h2>agentlib_flexquant.modules.flexibility_market module<a class="headerlink" href="#module-agentlib_flexquant.modules.flexibility_market" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.modules.flexibility_market.</span></span><span class="sig-name descname"><span class="pre">FlexibilityMarketModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_market.html#FlexibilityMarketModule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModule</span></code></p>
+<p>Class to emulate flexibility market. Receives flex offers and accepts these.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.cleanup_results">
+<span class="sig-name descname"><span class="pre">cleanup_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_market.html#FlexibilityMarketModule.cleanup_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.cleanup_results" title="Link to this definition"></a></dt>
+<dd><p>Deletes all files this module created.</p>
+<p>Override this method, if your module creates e.g. results files etc.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.custom_flexibility_callback">
+<span class="sig-name descname"><span class="pre">custom_flexibility_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AgentVariable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_market.html#FlexibilityMarketModule.custom_flexibility_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.custom_flexibility_callback" title="Link to this definition"></a></dt>
+<dd><p>Placeholder for a custom flexibility callback</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.df">
+<span class="sig-name descname"><span class="pre">df</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">DataFrame</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.df" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.dummy_callback">
+<span class="sig-name descname"><span class="pre">dummy_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AgentVariable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_market.html#FlexibilityMarketModule.dummy_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.dummy_callback" title="Link to this definition"></a></dt>
+<dd><p>Dummy function, that is included, when market type is not specified</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.end">
+<span class="sig-name descname"><span class="pre">end</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.end" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.get_results">
+<span class="sig-name descname"><span class="pre">get_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_market.html#FlexibilityMarketModule.get_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.get_results" title="Link to this definition"></a></dt>
+<dd><p>Opens results file of flexibilityindicators.py
+results_file defined in __init__</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.process">
+<span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_market.html#FlexibilityMarketModule.process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.process" title="Link to this definition"></a></dt>
+<dd><p>This abstract method must be implemented in order to sync the module
+with the other processes of the agent and the whole MAS.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.random_flexibility_callback">
+<span class="sig-name descname"><span class="pre">random_flexibility_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AgentVariable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_market.html#FlexibilityMarketModule.random_flexibility_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.random_flexibility_callback" title="Link to this definition"></a></dt>
+<dd><p>When a flexibility offer is sent this function is called.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>The offer is accepted randomly. The factor self.offer_acceptance_rate determines the</dt><dd><p>random factor for offer acceptance. self.pos_neg_rate is the random factor for
+the direction of the flexibility. A higher rate means that more positive offers will be accepted.</p>
+</dd>
+<dt>Constraints:</dt><dd><p>cooldown: during $cooldown steps after a flexibility event no offer is accepted
+minimum_average_flex: min amount of flexibility to be accepted, to account for the model error</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.register_callbacks">
+<span class="sig-name descname"><span class="pre">register_callbacks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_market.html#FlexibilityMarketModule.register_callbacks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.register_callbacks" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.set_random_seed">
+<span class="sig-name descname"><span class="pre">set_random_seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">random_seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_market.html#FlexibilityMarketModule.set_random_seed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.set_random_seed" title="Link to this definition"></a></dt>
+<dd><p>set the random seed for reproducability</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.single_flexibility_callback">
+<span class="sig-name descname"><span class="pre">single_flexibility_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AgentVariable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_market.html#FlexibilityMarketModule.single_flexibility_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.single_flexibility_callback" title="Link to this definition"></a></dt>
+<dd><p>Callback to activate a single, predefined flexibility offer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.write_results">
+<span class="sig-name descname"><span class="pre">write_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">offer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.FlexOffer" title="agentlib_flexquant.data_structures.flex_offer.FlexOffer"><span class="pre">FlexOffer</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_market.html#FlexibilityMarketModule.write_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.write_results" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class pydantic_model">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig">
+<em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.modules.flexibility_market.</span></span><span class="sig-name descname"><span class="pre">FlexibilityMarketModuleConfig</span></span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_market.html#FlexibilityMarketModuleConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModuleConfig</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Config<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arbitrary_types_allowed</strong>: <em>bool = True</em></p></li>
+<li><p><strong>validate_assignment</strong>: <em>bool = True</em></p></li>
+<li><p><strong>extra</strong>: <em>str = forbid</em></p></li>
+<li><p><strong>frozen</strong>: <em>bool = True</em></p></li>
+</ul>
+</dd>
+<dt class="field-even">Fields<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.inputs" title="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.inputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span> <span class="pre">(List[agentlib.core.datamodels.AgentVariable])</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.market_specs" title="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.market_specs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">market_specs</span> <span class="pre">(agentlib_flexquant.data_structures.market.MarketSpecifications)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.outputs" title="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.outputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">outputs</span> <span class="pre">(List[agentlib.core.datamodels.AgentVariable])</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.results_file" title="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.results_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">results_file</span> <span class="pre">(pathlib.Path</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.save_results" title="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.save_results"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_results</span> <span class="pre">(bool</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.shared_variable_fields" title="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.shared_variable_fields"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shared_variable_fields</span> <span class="pre">(List[str])</span></code></a></p></li>
+</ul>
+</dd>
+<dt class="field-odd">Validators<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_valid_fields</span></code> » <a class="reference internal" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.shared_variable_fields" title="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.shared_variable_fields"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shared_variable_fields</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.inputs">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">inputs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">AgentVariable</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[AgentVariable(name='FlexibilityOffer',</span> <span class="pre">type=None,</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='Not</span> <span class="pre">defined',</span> <span class="pre">description='Not</span> <span class="pre">defined',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='FlexibilityOffer',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None)]</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.inputs" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.market_specs">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">market_specs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.MarketSpecifications" title="agentlib_flexquant.data_structures.market.MarketSpecifications"><span class="pre">MarketSpecifications</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.market_specs" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.outputs">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">outputs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">AgentVariable</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[AgentVariable(name='_P_external',</span> <span class="pre">type=None,</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='Not</span> <span class="pre">defined',</span> <span class="pre">description='External</span> <span class="pre">Power</span> <span class="pre">IO',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='_P_external',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='rel_start',</span> <span class="pre">type=None,</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='Not</span> <span class="pre">defined',</span> <span class="pre">description='relative</span> <span class="pre">start</span> <span class="pre">time</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">flexibility</span> <span class="pre">event',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='rel_start',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='rel_end',</span> <span class="pre">type=None,</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='Not</span> <span class="pre">defined',</span> <span class="pre">description='relative</span> <span class="pre">end</span> <span class="pre">time</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">flexibility</span> <span class="pre">event',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=None,</span> <span class="pre">alias='rel_end',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None),</span> <span class="pre">AgentVariable(name='in_provision',</span> <span class="pre">type=None,</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='Not</span> <span class="pre">defined',</span> <span class="pre">description='Set</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">system</span> <span class="pre">is</span> <span class="pre">in</span> <span class="pre">provision',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=False,</span> <span class="pre">alias='in_provision',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None)]</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.outputs" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.results_file">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">results_file</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">PosixPath('flexibility_market.csv')</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.results_file" title="Link to this definition"></a></dt>
+<dd><p>User specified results file name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.save_results">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">save_results</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.save_results" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.shared_variable_fields">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">shared_variable_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['outputs']</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.shared_variable_fields" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_valid_fields</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method pydantic_validator">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.check_results_file_extension">
+<em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_results_file_extension</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_market.html#FlexibilityMarketModuleConfig.check_results_file_extension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.check_results_file_extension" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.model_post_init">
+<span class="sig-name descname"><span class="pre">model_post_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.model_post_init" title="Link to this definition"></a></dt>
+<dd><p>This function is meant to behave like a BaseModel method to initialise private attributes.</p>
+<p>It takes context as an argument since that’s what pydantic-core passes when calling it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – The BaseModel instance.</p></li>
+<li><p><strong>context</strong> – The context.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-agentlib_flexquant.modules.shadow_mpc">
+<span id="agentlib-flexquant-modules-shadow-mpc-module"></span><h2>agentlib_flexquant.modules.shadow_mpc module<a class="headerlink" href="#module-agentlib_flexquant.modules.shadow_mpc" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPC">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.modules.shadow_mpc.</span></span><span class="sig-name descname"><span class="pre">FlexibilityShadowMINLPMPC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/shadow_mpc.html#FlexibilityShadowMINLPMPC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPC" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MINLPMPC</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPC.calc_flex_callback">
+<span class="sig-name descname"><span class="pre">calc_flex_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AgentVariable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/shadow_mpc.html#FlexibilityShadowMINLPMPC.calc_flex_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPC.calc_flex_callback" title="Link to this definition"></a></dt>
+<dd><p>set the control trajectories before calculating the flexibility offer.
+self.model should account for flexibility in its cost function</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPC.process">
+<span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/shadow_mpc.html#FlexibilityShadowMINLPMPC.process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPC.process" title="Link to this definition"></a></dt>
+<dd><p>This abstract method must be implemented in order to sync the module
+with the other processes of the agent and the whole MAS.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPC.register_callbacks">
+<span class="sig-name descname"><span class="pre">register_callbacks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/shadow_mpc.html#FlexibilityShadowMINLPMPC.register_callbacks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPC.register_callbacks" title="Link to this definition"></a></dt>
+<dd><p>Registers the init_optimization callback to all parameters which
+cannot be changed without recreating the optimization problem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPC">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.modules.shadow_mpc.</span></span><span class="sig-name descname"><span class="pre">FlexibilityShadowMPC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/shadow_mpc.html#FlexibilityShadowMPC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPC" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MPC</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPC.calc_flex_callback">
+<span class="sig-name descname"><span class="pre">calc_flex_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AgentVariable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/shadow_mpc.html#FlexibilityShadowMPC.calc_flex_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPC.calc_flex_callback" title="Link to this definition"></a></dt>
+<dd><p>set the control trajectories before calculating the flexibility offer.
+self.model should account for flexibility in its cost function</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPC.process">
+<span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/shadow_mpc.html#FlexibilityShadowMPC.process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPC.process" title="Link to this definition"></a></dt>
+<dd><p>This abstract method must be implemented in order to sync the module
+with the other processes of the agent and the whole MAS.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPC.register_callbacks">
+<span class="sig-name descname"><span class="pre">register_callbacks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/shadow_mpc.html#FlexibilityShadowMPC.register_callbacks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPC.register_callbacks" title="Link to this definition"></a></dt>
+<dd><p>Registers the init_optimization callback to all parameters which
+cannot be changed without recreating the optimization problem.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="agentlib_flexquant.data_structures.html" class="btn btn-neutral float-left" title="agentlib_flexquant.data_structures package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="agentlib_flexquant.optimization_backends.html" class="btn btn-neutral float-right" title="agentlib_flexquant.optimization_backends package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Felix Stegemerten.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

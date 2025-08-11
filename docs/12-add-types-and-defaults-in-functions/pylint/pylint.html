@@ -1,0 +1,5360 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Pylint report</title>
+        <meta charset="utf-8">
+        <meta name="description" content="auto generated pylint report from JSON">
+        <style type="text/css">
+        body {
+            padding: 1em;
+            margin: 0;
+            background-color: #fffffe;
+            font-family: sans-serif;
+        }
+        table {
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 0.5em;
+            border: 1px solid #333333;
+        }
+        th {
+            background-color: #DCDCDC;
+        }
+        </style>
+    </head>
+    <body>
+        <h1>Pylint report from report.jinja2</h1>
+
+        
+        <h2>Score</h2>
+        5.63 / 10
+            
+            (previous score: 5.63 / 10)
+            
+        
+
+        <h2>Messages</h2>
+        
+        <h3>Module <code>agentlib_flexquant</code> (<code>agentlib_flexquant/__init__.py</code>)</h3>
+        <table>
+            <tr>
+                <th>Line</th>
+                <th>Col.</th>
+                <th>Type</th>
+                <th>Symbol</th>
+                <th>ID</th>
+                <th>Obj</th>
+                <th>Message</th>
+            </tr>
+            
+            <tr>
+                <td>3</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib.utils.plugin_import&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>4</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.optimization_backends&#39;</pre></td>
+            </tr>
+            
+        </table>
+        
+        <h3>Module <code>agentlib_flexquant.data_structures.__init__</code> (<code>agentlib_flexquant/data_structures/__init__.py</code>)</h3>
+        <table>
+            <tr>
+                <th>Line</th>
+                <th>Col.</th>
+                <th>Type</th>
+                <th>Symbol</th>
+                <th>ID</th>
+                <th>Obj</th>
+                <th>Message</th>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>trailing-newlines</code></td>
+                <td>C0305</td>
+                <td></td>
+                <td><pre>Trailing newlines</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==agentlib_flexquant.modules.flexibility_indicator:[332:352]
+==agentlib_flexquant.modules.flexibility_market:[86:95]
+        results_file = self.config.results_file
+        try:
+            results = pd.read_csv(results_file, header=[0], index_col=[0, 1])
+            return results
+        except FileNotFoundError:
+            self.logger.error(&#34;Results file %s was not found.&#34;, results_file)
+            return None
+
+    def register_callbacks(self):</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==agentlib_flexquant.modules.flexibility_indicator:[223:230]
+==agentlib_flexquant.modules.flexibility_market:[59:67]
+        if self.results_file and self.results_file.suffix != &#34;.csv&#34;:
+            raise ValueError(
+                f&#34;Invalid file extension for &#39;results_file&#39;: &#39;{self.results_file}&#39;. &#34;
+                f&#34;Expected a &#39;.csv&#39; file.&#34;
+            )
+        return self
+
+</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==agentlib_flexquant.data_structures.flexquant:[105:111]
+==agentlib_flexquant.optimization_backends.constrained_cia:[22:29]
+    market_time: int = pydantic.Field(
+        default=900,
+        ge=0,
+        unit=&#34;s&#34;,
+        description=&#34;Time for market interaction&#34;,
+    )
+</pre></td>
+            </tr>
+            
+        </table>
+        
+        <h3>Module <code>agentlib_flexquant.data_structures.flex_kpis</code> (<code>agentlib_flexquant/data_structures/flex_kpis.py</code>)</h3>
+        <table>
+            <tr>
+                <th>Line</th>
+                <th>Col.</th>
+                <th>Type</th>
+                <th>Symbol</th>
+                <th>ID</th>
+                <th>Obj</th>
+                <th>Message</th>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-module-docstring</code></td>
+                <td>C0114</td>
+                <td></td>
+                <td><pre>Missing module docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>3</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;numpy&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>3</td>
+                <td>0</td>
+                <td>warning</td>
+                <td><code>unused-import</code></td>
+                <td>W0611</td>
+                <td></td>
+                <td><pre>Unused import numpy</pre></td>
+            </tr>
+            
+            <tr>
+                <td>4</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;pydantic&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>5</td>
+                <td>0</td>
+                <td>warning</td>
+                <td><code>reimported</code></td>
+                <td>W0404</td>
+                <td></td>
+                <td><pre>Reimport &#39;numpy&#39; (imported line 3)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>5</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;numpy&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>5</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>ungrouped-imports</code></td>
+                <td>C0412</td>
+                <td></td>
+                <td><pre>Imports from package numpy are not grouped</pre></td>
+            </tr>
+            
+            <tr>
+                <td>6</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;pandas&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>8</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.utils&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>13</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>KPI</td>
+                <td><pre>Too few public methods (1/2)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>33</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-class-docstring</code></td>
+                <td>C0115</td>
+                <td>KPI.Config</td>
+                <td><pre>Missing class docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>33</td>
+                <td>4</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>KPI.Config</td>
+                <td><pre>Too few public methods (0/2)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>36</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>KPI.get_kpi_identifier</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>41</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-class-docstring</code></td>
+                <td>C0115</td>
+                <td>KPISeries</td>
+                <td><pre>Missing class docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>55</td>
+                <td>8</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>KPISeries._get_dt</td>
+                <td><pre>Variable name &#34;dt&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>56</td>
+                <td>8</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>KPISeries._get_dt</td>
+                <td><pre>Attribute name &#34;dt&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>59</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>KPISeries.min</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>62</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>KPISeries.max</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>77</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (109/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>144</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (109/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>191</td>
+                <td>4</td>
+                <td>refactor</td>
+                <td><code>too-many-arguments</code></td>
+                <td>R0913</td>
+                <td>FlexibilityKPIs.calculate</td>
+                <td><pre>Too many arguments (10/5)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>196</td>
+                <td>12</td>
+                <td>warning</td>
+                <td><code>unused-argument</code></td>
+                <td>W0613</td>
+                <td>FlexibilityKPIs.calculate</td>
+                <td><pre>Unused argument &#39;mpc_time_grid&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>208</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (159/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>219</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (123/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>230</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (144/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>251</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (102/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>286</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (126/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>320</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (105/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>342</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-many-instance-attributes</code></td>
+                <td>R0902</td>
+                <td>FlexibilityData</td>
+                <td><pre>Too many instance attributes (10/7)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>401</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-class-docstring</code></td>
+                <td>C0115</td>
+                <td>FlexibilityData.Config</td>
+                <td><pre>Missing class docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>401</td>
+                <td>4</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>FlexibilityData.Config</td>
+                <td><pre>Too few public methods (0/2)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>404</td>
+                <td>4</td>
+                <td>refactor</td>
+                <td><code>too-many-arguments</code></td>
+                <td>R0913</td>
+                <td>FlexibilityData.__init__</td>
+                <td><pre>Too many arguments (6/5)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>408</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (114/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>481</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>FlexibilityData.get_kpis</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>482</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (109/100)</pre></td>
+            </tr>
+            
+        </table>
+        
+        <h3>Module <code>agentlib_flexquant.data_structures.flex_offer</code> (<code>agentlib_flexquant/data_structures/flex_offer.py</code>)</h3>
+        <table>
+            <tr>
+                <th>Line</th>
+                <th>Col.</th>
+                <th>Type</th>
+                <th>Symbol</th>
+                <th>ID</th>
+                <th>Obj</th>
+                <th>Message</th>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-module-docstring</code></td>
+                <td>C0114</td>
+                <td></td>
+                <td><pre>Missing module docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;pydantic&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>2</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;pandas&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>3</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>standard import &#34;from enum import Enum&#34; should be placed before &#34;import pydantic&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>4</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;pydantic&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>5</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>standard import &#34;from typing import Optional&#34; should be placed before &#34;import pydantic&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>6</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib.core.datamodels&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>8</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-class-docstring</code></td>
+                <td>C0115</td>
+                <td>OfferStatus</td>
+                <td><pre>Missing class docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>9</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>OfferStatus</td>
+                <td><pre>Class constant name &#34;not_accepted&#34; doesn&#39;t conform to UPPER_CASE naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>10</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>OfferStatus</td>
+                <td><pre>Class constant name &#34;accepted_positive&#34; doesn&#39;t conform to UPPER_CASE naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>11</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>OfferStatus</td>
+                <td><pre>Class constant name &#34;accepted_negative&#34; doesn&#39;t conform to UPPER_CASE naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>14</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>FlexOffer</td>
+                <td><pre>Too few public methods (1/2)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>54</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-class-docstring</code></td>
+                <td>C0115</td>
+                <td>FlexOffer.Config</td>
+                <td><pre>Missing class docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>54</td>
+                <td>4</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>FlexOffer.Config</td>
+                <td><pre>Too few public methods (0/2)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>72</td>
+                <td>8</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>FlexOffer.as_dataframe</td>
+                <td><pre>Variable name &#34;df&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+        </table>
+        
+        <h3>Module <code>agentlib_flexquant.data_structures.flex_results</code> (<code>agentlib_flexquant/data_structures/flex_results.py</code>)</h3>
+        <table>
+            <tr>
+                <th>Line</th>
+                <th>Col.</th>
+                <th>Type</th>
+                <th>Symbol</th>
+                <th>ID</th>
+                <th>Obj</th>
+                <th>Message</th>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-module-docstring</code></td>
+                <td>C0114</td>
+                <td></td>
+                <td><pre>Missing module docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>4</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>4</td>
+                <td>0</td>
+                <td>warning</td>
+                <td><code>unused-import</code></td>
+                <td>W0611</td>
+                <td></td>
+                <td><pre>Unused import agentlib</pre></td>
+            </tr>
+            
+            <tr>
+                <td>5</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;pydantic&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>6</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>standard import &#34;from pathlib import Path&#34; should be placed before &#34;import agentlib&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>7</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>standard import &#34;import json&#34; should be placed before &#34;import agentlib&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>8</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>standard import &#34;import os&#34; should be placed before &#34;import agentlib&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>8</td>
+                <td>0</td>
+                <td>warning</td>
+                <td><code>unused-import</code></td>
+                <td>W0611</td>
+                <td></td>
+                <td><pre>Unused import os</pre></td>
+            </tr>
+            
+            <tr>
+                <td>9</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;pandas&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>11</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib.core.agent&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>12</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib.core.module&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>12</td>
+                <td>0</td>
+                <td>warning</td>
+                <td><code>unused-import</code></td>
+                <td>W0611</td>
+                <td></td>
+                <td><pre>Unused BaseModuleConfig imported from agentlib.core.module</pre></td>
+            </tr>
+            
+            <tr>
+                <td>13</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib.utils&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>14</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.modules.mpc&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>15</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib.modules.simulation.simulator&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>15</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>ungrouped-imports</code></td>
+                <td>C0412</td>
+                <td></td>
+                <td><pre>Imports from package agentlib are not grouped</pre></td>
+            </tr>
+            
+            <tr>
+                <td>16</td>
+                <td>0</td>
+                <td>warning</td>
+                <td><code>unused-import</code></td>
+                <td>W0611</td>
+                <td></td>
+                <td><pre>Unused FlexibilityIndicatorConfig imported from agentlib_flexquant.data_structures.flexquant</pre></td>
+            </tr>
+            
+            <tr>
+                <td>27</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.utils&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>27</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>third party import &#34;from agentlib_mpc.utils import TimeConversionTypes&#34; should be placed before &#34;from agentlib_flexquant.data_structures.flexquant import FlexQuantConfig, FlexibilityIndicatorConfig, FlexibilityMarketConfig&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>27</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>ungrouped-imports</code></td>
+                <td>C0412</td>
+                <td></td>
+                <td><pre>Imports from package agentlib_mpc are not grouped</pre></td>
+            </tr>
+            
+            <tr>
+                <td>28</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.utils.analysis&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>28</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>third party import &#34;from agentlib_mpc.utils.analysis import load_sim, load_mpc, load_mpc_stats&#34; should be placed before &#34;from agentlib_flexquant.data_structures.flexquant import FlexQuantConfig, FlexibilityIndicatorConfig, FlexibilityMarketConfig&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>30</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>ungrouped-imports</code></td>
+                <td>C0412</td>
+                <td></td>
+                <td><pre>Imports from package agentlib_flexquant are not grouped</pre></td>
+            </tr>
+            
+            <tr>
+                <td>43</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>load_indicator</td>
+                <td><pre>Variable name &#34;df&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>51</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>load_market</td>
+                <td><pre>Variable name &#34;df&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>55</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-class-docstring</code></td>
+                <td>C0115</td>
+                <td>Results</td>
+                <td><pre>Missing class docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>55</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-many-instance-attributes</code></td>
+                <td>R0902</td>
+                <td>Results</td>
+                <td><pre>Too many instance attributes (29/7)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>90</td>
+                <td>4</td>
+                <td>refactor</td>
+                <td><code>too-many-arguments</code></td>
+                <td>R0913</td>
+                <td>Results.__init__</td>
+                <td><pre>Too many arguments (6/5)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>95</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (102/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>131</td>
+                <td>21</td>
+                <td>warning</td>
+                <td><code>unspecified-encoding</code></td>
+                <td>W1514</td>
+                <td>Results._load_flex_config</td>
+                <td><pre>Using open without explicitly specifying an encoding</pre></td>
+            </tr>
+            
+            <tr>
+                <td>131</td>
+                <td>47</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>Results._load_flex_config</td>
+                <td><pre>Variable name &#34;f&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>157</td>
+                <td>20</td>
+                <td>warning</td>
+                <td><code>unspecified-encoding</code></td>
+                <td>W1514</td>
+                <td>Results._get_config_filenames</td>
+                <td><pre>Using open without explicitly specifying an encoding</pre></td>
+            </tr>
+            
+            <tr>
+                <td>223</td>
+                <td>17</td>
+                <td>warning</td>
+                <td><code>unspecified-encoding</code></td>
+                <td>W1514</td>
+                <td>Results._load_simulator_config</td>
+                <td><pre>Using open without explicitly specifying an encoding</pre></td>
+            </tr>
+            
+            <tr>
+                <td>223</td>
+                <td>54</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>Results._load_simulator_config</td>
+                <td><pre>Variable name &#34;f&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>297</td>
+                <td>33</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>316</td>
+                <td>33</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>385</td>
+                <td>12</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>Results.convert_timescale_of_dataframe_index</td>
+                <td><pre>Variable name &#34;df&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>421</td>
+                <td>23</td>
+                <td>refactor</td>
+                <td><code>consider-using-in</code></td>
+                <td>R1714</td>
+                <td>Results.get_intersection_mpcs_sim.get_id_alias_name_dict_element</td>
+                <td><pre>Consider merging these comparisons with &#39;in&#39; by using &#39;alias in (var.alias, var.name)&#39;. Use a set instead if elements are hashable.</pre></td>
+            </tr>
+            
+            <tr>
+                <td>454</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (102/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>462</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (104/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>501</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-final-newline</code></td>
+                <td>C0304</td>
+                <td></td>
+                <td><pre>Final newline missing</pre></td>
+            </tr>
+            
+        </table>
+        
+        <h3>Module <code>agentlib_flexquant.data_structures.flexquant</code> (<code>agentlib_flexquant/data_structures/flexquant.py</code>)</h3>
+        <table>
+            <tr>
+                <th>Line</th>
+                <th>Col.</th>
+                <th>Type</th>
+                <th>Symbol</th>
+                <th>ID</th>
+                <th>Obj</th>
+                <th>Message</th>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-module-docstring</code></td>
+                <td>C0114</td>
+                <td></td>
+                <td><pre>Missing module docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>5</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;pydantic&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>6</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib.core.agent&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>7</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib.core.errors&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>8</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.data_structures.mpc_datamodels&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>9</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;pydantic&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>18</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-class-docstring</code></td>
+                <td>C0115</td>
+                <td>ForcedOffers</td>
+                <td><pre>Missing class docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>19</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>ForcedOffers</td>
+                <td><pre>Class constant name &#34;positive&#34; doesn&#39;t conform to UPPER_CASE naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>20</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>ForcedOffers</td>
+                <td><pre>Class constant name &#34;negative&#34; doesn&#39;t conform to UPPER_CASE naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>23</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>ShadowMPCConfigGeneratorConfig</td>
+                <td><pre>Too few public methods (1/2)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>28</td>
+                <td>5</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>42</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>ShadowMPCConfigGeneratorConfig.assign_weights_to_flex</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>44</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (105/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>46</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (105/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>53</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>FlexibilityMarketConfig</td>
+                <td><pre>Too few public methods (0/2)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>65</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>FlexibilityIndicatorConfig</td>
+                <td><pre>Too few public methods (1/2)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>77</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>FlexibilityIndicatorConfig.check_file_extension</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>78</td>
+                <td>37</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>82</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (103/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>165</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>189</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-final-newline</code></td>
+                <td>C0304</td>
+                <td></td>
+                <td><pre>Final newline missing</pre></td>
+            </tr>
+            
+        </table>
+        
+        <h3>Module <code>agentlib_flexquant.data_structures.globals</code> (<code>agentlib_flexquant/data_structures/globals.py</code>)</h3>
+        <table>
+            <tr>
+                <th>Line</th>
+                <th>Col.</th>
+                <th>Type</th>
+                <th>Symbol</th>
+                <th>ID</th>
+                <th>Obj</th>
+                <th>Message</th>
+            </tr>
+            
+            <tr>
+                <td>13</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td></td>
+                <td><pre>Constant name &#34;FlexibilityOffer&#34; doesn&#39;t conform to UPPER_CASE naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>33</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>return_baseline_cost_function</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>38</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (106/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>44</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (118/100)</pre></td>
+            </tr>
+            
+        </table>
+        
+        <h3>Module <code>agentlib_flexquant.data_structures.market</code> (<code>agentlib_flexquant/data_structures/market.py</code>)</h3>
+        <table>
+            <tr>
+                <th>Line</th>
+                <th>Col.</th>
+                <th>Type</th>
+                <th>Symbol</th>
+                <th>ID</th>
+                <th>Obj</th>
+                <th>Message</th>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-module-docstring</code></td>
+                <td>C0114</td>
+                <td></td>
+                <td><pre>Missing module docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;pydantic&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>2</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>standard import &#34;from typing import Union, Literal&#34; should be placed before &#34;import pydantic&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>6</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-class-docstring</code></td>
+                <td>C0115</td>
+                <td>RandomOptions</td>
+                <td><pre>Missing class docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>6</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>RandomOptions</td>
+                <td><pre>Too few public methods (0/2)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>27</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-class-docstring</code></td>
+                <td>C0115</td>
+                <td>SingleOptions</td>
+                <td><pre>Missing class docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>27</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>SingleOptions</td>
+                <td><pre>Too few public methods (0/2)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>31</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (117/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>34</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-class-docstring</code></td>
+                <td>C0115</td>
+                <td>CustomOptions</td>
+                <td><pre>Missing class docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>34</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>CustomOptions</td>
+                <td><pre>Too few public methods (0/2)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>40</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-class-docstring</code></td>
+                <td>C0115</td>
+                <td>MarketSpecifications</td>
+                <td><pre>Missing class docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>40</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>MarketSpecifications</td>
+                <td><pre>Too few public methods (1/2)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>66</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>MarketSpecifications.set_options_type</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>78</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-class-docstring</code></td>
+                <td>C0115</td>
+                <td>RandomMarket</td>
+                <td><pre>Missing class docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>78</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>RandomMarket</td>
+                <td><pre>Too few public methods (1/2)</pre></td>
+            </tr>
+            
+        </table>
+        
+        <h3>Module <code>agentlib_flexquant.data_structures.mpcs</code> (<code>agentlib_flexquant/data_structures/mpcs.py</code>)</h3>
+        <table>
+            <tr>
+                <th>Line</th>
+                <th>Col.</th>
+                <th>Type</th>
+                <th>Symbol</th>
+                <th>ID</th>
+                <th>Obj</th>
+                <th>Message</th>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-module-docstring</code></td>
+                <td>C0114</td>
+                <td></td>
+                <td><pre>Missing module docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;pydantic&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>2</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;pydantic&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>3</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>standard import &#34;from typing import List, Optional&#34; should be placed before &#34;import pydantic&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>3</td>
+                <td>0</td>
+                <td>warning</td>
+                <td><code>unused-import</code></td>
+                <td>W0611</td>
+                <td></td>
+                <td><pre>Unused Optional imported from typing</pre></td>
+            </tr>
+            
+            <tr>
+                <td>4</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.data_structures.mpc_datamodels&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>9</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>BaseMPCData</td>
+                <td><pre>Too few public methods (0/2)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>32</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>BaselineMPCData</td>
+                <td><pre>Too few public methods (1/2)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>54</td>
+                <td>21</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>59</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (105/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>79</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>BaselineMPCData.update_config_parameters_appendix</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>98</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>PFMPCData</td>
+                <td><pre>Too few public methods (0/2)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>131</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>NFMPCData</td>
+                <td><pre>Too few public methods (0/2)</pre></td>
+            </tr>
+            
+        </table>
+        
+        <h3>Module <code>agentlib_flexquant.generate_flex_agents</code> (<code>agentlib_flexquant/generate_flex_agents.py</code>)</h3>
+        <table>
+            <tr>
+                <th>Line</th>
+                <th>Col.</th>
+                <th>Type</th>
+                <th>Symbol</th>
+                <th>ID</th>
+                <th>Obj</th>
+                <th>Message</th>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-module-docstring</code></td>
+                <td>C0114</td>
+                <td></td>
+                <td><pre>Missing module docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>10</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;astor&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>11</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;black&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>12</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>standard import &#34;import json&#34; should be placed before &#34;import astor&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>13</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib.core.agent&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>14</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib.core.datamodels&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>15</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib.core.errors&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>16</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib.core.module&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>17</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib.utils&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>18</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.data_structures.mpc_datamodels&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>19</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.models.casadi_model&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>20</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.modules.mpc_full&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>21</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;pydantic&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>25</td>
+                <td>0</td>
+                <td>warning</td>
+                <td><code>unused-import</code></td>
+                <td>W0611</td>
+                <td></td>
+                <td><pre>Unused add_import_to_tree imported from agentlib_flexquant.utils.parsing</pre></td>
+            </tr>
+            
+            <tr>
+                <td>26</td>
+                <td>24</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>30</td>
+                <td>31</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>31</td>
+                <td>28</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>40</td>
+                <td>1</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>43</td>
+                <td>1</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>46</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-class-docstring</code></td>
+                <td>C0115</td>
+                <td>FlexAgentGenerator</td>
+                <td><pre>Missing class docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>46</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-many-instance-attributes</code></td>
+                <td>R0902</td>
+                <td>FlexAgentGenerator</td>
+                <td><pre>Too many instance attributes (17/7)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>155</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>167</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (104/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>173</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (104/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>188</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>193</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (109/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>193</td>
+                <td>13</td>
+                <td>warning</td>
+                <td><code>unspecified-encoding</code></td>
+                <td>W1514</td>
+                <td>FlexAgentGenerator.generate_flex_agents</td>
+                <td><pre>Using open without explicitly specifying an encoding</pre></td>
+            </tr>
+            
+            <tr>
+                <td>193</td>
+                <td>107</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>FlexAgentGenerator.generate_flex_agents</td>
+                <td><pre>Variable name &#34;f&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>199</td>
+                <td>28</td>
+                <td>warning</td>
+                <td><code>unnecessary-lambda</code></td>
+                <td>W0108</td>
+                <td>FlexAgentGenerator.generate_flex_agents.&lt;lambda&gt;</td>
+                <td><pre>Lambda may not be necessary</pre></td>
+            </tr>
+            
+            <tr>
+                <td>234</td>
+                <td>17</td>
+                <td>warning</td>
+                <td><code>unspecified-encoding</code></td>
+                <td>W1514</td>
+                <td>FlexAgentGenerator.append_module_and_dump_agent</td>
+                <td><pre>Using open without explicitly specifying an encoding</pre></td>
+            </tr>
+            
+            <tr>
+                <td>236</td>
+                <td>17</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>FlexAgentGenerator.append_module_and_dump_agent</td>
+                <td><pre>Variable name &#34;f&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>289</td>
+                <td>4</td>
+                <td>refactor</td>
+                <td><code>too-many-branches</code></td>
+                <td>R0912</td>
+                <td>FlexAgentGenerator.adapt_mpc_module_config</td>
+                <td><pre>Too many branches (18/12)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>349</td>
+                <td>11</td>
+                <td>convention</td>
+                <td><code>unidiomatic-typecheck</code></td>
+                <td>C0123</td>
+                <td>FlexAgentGenerator.adapt_mpc_module_config</td>
+                <td><pre>Use isinstance() rather than type() for a typecheck.</pre></td>
+            </tr>
+            
+            <tr>
+                <td>483</td>
+                <td>16</td>
+                <td>convention</td>
+                <td><code>unnecessary-dunder-call</code></td>
+                <td>C2801</td>
+                <td>FlexAgentGenerator.adapt_market_config</td>
+                <td><pre>Unnecessarily calls dunder method __setattr__. Set attribute directly or use setattr built-in function.</pre></td>
+            </tr>
+            
+            <tr>
+                <td>493</td>
+                <td>4</td>
+                <td>refactor</td>
+                <td><code>too-many-locals</code></td>
+                <td>R0914</td>
+                <td>FlexAgentGenerator._generate_flex_model_definition</td>
+                <td><pre>Too many local variables (17/15)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>517</td>
+                <td>13</td>
+                <td>warning</td>
+                <td><code>unspecified-encoding</code></td>
+                <td>W1514</td>
+                <td>FlexAgentGenerator._generate_flex_model_definition</td>
+                <td><pre>Using open without explicitly specifying an encoding</pre></td>
+            </tr>
+            
+            <tr>
+                <td>517</td>
+                <td>47</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>FlexAgentGenerator._generate_flex_model_definition</td>
+                <td><pre>Variable name &#34;f&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>525</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (149/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>530</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (149/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>535</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (149/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>561</td>
+                <td>13</td>
+                <td>warning</td>
+                <td><code>unspecified-encoding</code></td>
+                <td>W1514</td>
+                <td>FlexAgentGenerator._generate_flex_model_definition</td>
+                <td><pre>Using open without explicitly specifying an encoding</pre></td>
+            </tr>
+            
+            <tr>
+                <td>561</td>
+                <td>39</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>FlexAgentGenerator._generate_flex_model_definition</td>
+                <td><pre>Variable name &#34;f&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>592</td>
+                <td>4</td>
+                <td>refactor</td>
+                <td><code>too-many-branches</code></td>
+                <td>R0912</td>
+                <td>FlexAgentGenerator.run_config_validations</td>
+                <td><pre>Too many branches (17/12)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>599</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (112/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>600</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (117/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>601</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (122/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>604</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (122/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>613</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (153/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>615</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>618</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (101/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>619</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (108/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>626</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (160/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>628</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>635</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (157/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>636</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (123/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>638</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>640</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (126/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>641</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (175/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>641</td>
+                <td>12</td>
+                <td>warning</td>
+                <td><code>logging-fstring-interpolation</code></td>
+                <td>W1203</td>
+                <td>FlexAgentGenerator.run_config_validations</td>
+                <td><pre>Use lazy % formatting in logging functions</pre></td>
+            </tr>
+            
+            <tr>
+                <td>643</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (125/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>644</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (125/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>645</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (125/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>659</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (125/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>659</td>
+                <td>37</td>
+                <td>warning</td>
+                <td><code>f-string-without-interpolation</code></td>
+                <td>W1309</td>
+                <td>FlexAgentGenerator.run_config_validations</td>
+                <td><pre>Using an f-string that does not have any interpolated variables</pre></td>
+            </tr>
+            
+            <tr>
+                <td>663</td>
+                <td>41</td>
+                <td>warning</td>
+                <td><code>f-string-without-interpolation</code></td>
+                <td>W1309</td>
+                <td>FlexAgentGenerator.run_config_validations</td>
+                <td><pre>Using an f-string that does not have any interpolated variables</pre></td>
+            </tr>
+            
+            <tr>
+                <td>664</td>
+                <td>59</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>667</td>
+                <td>104</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>667</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (104/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>668</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (136/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>674</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (147/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>674</td>
+                <td>24</td>
+                <td>warning</td>
+                <td><code>logging-fstring-interpolation</code></td>
+                <td>W1203</td>
+                <td>FlexAgentGenerator.run_config_validations</td>
+                <td><pre>Use lazy % formatting in logging functions</pre></td>
+            </tr>
+            
+            <tr>
+                <td>679</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (162/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>679</td>
+                <td>24</td>
+                <td>warning</td>
+                <td><code>logging-fstring-interpolation</code></td>
+                <td>W1203</td>
+                <td>FlexAgentGenerator.run_config_validations</td>
+                <td><pre>Use lazy % formatting in logging functions</pre></td>
+            </tr>
+            
+            <tr>
+                <td>681</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>697</td>
+                <td>13</td>
+                <td>warning</td>
+                <td><code>unspecified-encoding</code></td>
+                <td>W1514</td>
+                <td>FlexAgentGenerator.adapt_sim_results_path</td>
+                <td><pre>Using open without explicitly specifying an encoding</pre></td>
+            </tr>
+            
+            <tr>
+                <td>697</td>
+                <td>50</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>FlexAgentGenerator.adapt_sim_results_path</td>
+                <td><pre>Variable name &#34;f&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>706</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (102/100)</pre></td>
+            </tr>
+            
+        </table>
+        
+        <h3>Module <code>agentlib_flexquant.modules.baseline_mpc</code> (<code>agentlib_flexquant/modules/baseline_mpc.py</code>)</h3>
+        <table>
+            <tr>
+                <th>Line</th>
+                <th>Col.</th>
+                <th>Type</th>
+                <th>Symbol</th>
+                <th>ID</th>
+                <th>Obj</th>
+                <th>Message</th>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-module-docstring</code></td>
+                <td>C0114</td>
+                <td></td>
+                <td><pre>Missing module docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.modules&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>4</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-class-docstring</code></td>
+                <td>C0115</td>
+                <td>FlexibilityBaselineMPC</td>
+                <td><pre>Missing class docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>4</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>FlexibilityBaselineMPC</td>
+                <td><pre>Too few public methods (1/2)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>7</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>FlexibilityBaselineMPC.pre_computation_hook</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>19</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-class-docstring</code></td>
+                <td>C0115</td>
+                <td>FlexibilityBaselineMINLPMPC</td>
+                <td><pre>Missing class docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>19</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>FlexibilityBaselineMINLPMPC</td>
+                <td><pre>Too few public methods (1/2)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>22</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>FlexibilityBaselineMINLPMPC.pre_computation_hook</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+        </table>
+        
+        <h3>Module <code>agentlib_flexquant.modules.flexibility_indicator</code> (<code>agentlib_flexquant/modules/flexibility_indicator.py</code>)</h3>
+        <table>
+            <tr>
+                <th>Line</th>
+                <th>Col.</th>
+                <th>Type</th>
+                <th>Symbol</th>
+                <th>ID</th>
+                <th>Obj</th>
+                <th>Message</th>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-module-docstring</code></td>
+                <td>C0114</td>
+                <td></td>
+                <td><pre>Missing module docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>6</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>7</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;numpy&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>8</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;pandas&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>9</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib.core.errors&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>9</td>
+                <td>0</td>
+                <td>warning</td>
+                <td><code>unused-import</code></td>
+                <td>W0611</td>
+                <td></td>
+                <td><pre>Unused ConfigurationError imported from agentlib.core.errors</pre></td>
+            </tr>
+            
+            <tr>
+                <td>10</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;pydantic&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>14</td>
+                <td>20</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>20</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-class-docstring</code></td>
+                <td>C0115</td>
+                <td>InputsForCorrectFlexCosts</td>
+                <td><pre>Missing class docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>20</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>InputsForCorrectFlexCosts</td>
+                <td><pre>Too few public methods (0/2)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>24</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (152/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>37</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (107/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>40</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-class-docstring</code></td>
+                <td>C0115</td>
+                <td>InputsForCalculateFlexCosts</td>
+                <td><pre>Missing class docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>40</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>InputsForCalculateFlexCosts</td>
+                <td><pre>Too few public methods (1/2)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>55</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>InputsForCalculateFlexCosts.validate_constant_price</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>55</td>
+                <td>4</td>
+                <td>error</td>
+                <td><code>no-self-argument</code></td>
+                <td>E0213</td>
+                <td>InputsForCalculateFlexCosts.validate_constant_price</td>
+                <td><pre>Method &#39;validate_constant_price&#39; should have &#34;self&#34; as first argument</pre></td>
+            </tr>
+            
+            <tr>
+                <td>57</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (128/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>57</td>
+                <td>12</td>
+                <td>warning</td>
+                <td><code>broad-exception-raised</code></td>
+                <td>W0719</td>
+                <td>InputsForCalculateFlexCosts.validate_constant_price</td>
+                <td><pre>Raising too general exception: Exception</pre></td>
+            </tr>
+            
+            <tr>
+                <td>58</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (140/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>59</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (104/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>68</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-class-docstring</code></td>
+                <td>C0115</td>
+                <td>FlexibilityIndicatorModuleConfig</td>
+                <td><pre>Missing class docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>68</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>FlexibilityIndicatorModuleConfig</td>
+                <td><pre>Too few public methods (1/2)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>136</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (112/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>140</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (112/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>206</td>
+                <td>30</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>221</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>223</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>FlexibilityIndicatorModuleConfig.check_results_file_extension</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>231</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-class-docstring</code></td>
+                <td>C0115</td>
+                <td>FlexibilityIndicatorModule</td>
+                <td><pre>Missing class docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>253</td>
+                <td>8</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>FlexibilityIndicatorModule.__init__</td>
+                <td><pre>Attribute name &#34;df&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>255</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>FlexibilityIndicatorModule.register_callbacks</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>265</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>FlexibilityIndicatorModule.process</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>268</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>FlexibilityIndicatorModule.callback</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>268</td>
+                <td>4</td>
+                <td>refactor</td>
+                <td><code>too-many-branches</code></td>
+                <td>R0912</td>
+                <td>FlexibilityIndicatorModule.callback</td>
+                <td><pre>Too many branches (16/12)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>290</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (101/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>293</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (121/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>295</td>
+                <td>16</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>FlexibilityIndicatorModule.callback</td>
+                <td><pre>Variable name &#34;n&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>296</td>
+                <td>16</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>FlexibilityIndicatorModule.callback</td>
+                <td><pre>Variable name &#34;ts&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>299</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (133/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>300</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (112/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>320</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (116/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>341</td>
+                <td>28</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>FlexibilityIndicatorModule.write_results</td>
+                <td><pre>Argument name &#34;df&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>341</td>
+                <td>46</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>FlexibilityIndicatorModule.write_results</td>
+                <td><pre>Argument name &#34;ts&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>341</td>
+                <td>57</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>FlexibilityIndicatorModule.write_results</td>
+                <td><pre>Argument name &#34;n&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>341</td>
+                <td>4</td>
+                <td>refactor</td>
+                <td><code>too-many-branches</code></td>
+                <td>R0912</td>
+                <td>FlexibilityIndicatorModule.write_results</td>
+                <td><pre>Too many branches (13/12)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>347</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (108/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>399</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>FlexibilityIndicatorModule.cleanup_results</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>407</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (132/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>410</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (186/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>424</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (164/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>440</td>
+                <td>4</td>
+                <td>refactor</td>
+                <td><code>too-many-arguments</code></td>
+                <td>R0913</td>
+                <td>FlexibilityIndicatorModule.send_flex_offer</td>
+                <td><pre>Too many arguments (8/5)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>485</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (119/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>488</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (114/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>489</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (114/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>491</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (211/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>491</td>
+                <td>12</td>
+                <td>warning</td>
+                <td><code>logging-fstring-interpolation</code></td>
+                <td>W1203</td>
+                <td>FlexibilityIndicatorModule.check_power_end_deviation</td>
+                <td><pre>Use lazy % formatting in logging functions</pre></td>
+            </tr>
+            
+            <tr>
+                <td>496</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (211/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>496</td>
+                <td>12</td>
+                <td>warning</td>
+                <td><code>logging-fstring-interpolation</code></td>
+                <td>W1203</td>
+                <td>FlexibilityIndicatorModule.check_power_end_deviation</td>
+                <td><pre>Use lazy % formatting in logging functions</pre></td>
+            </tr>
+            
+            <tr>
+                <td>500</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>trailing-newlines</code></td>
+                <td>C0305</td>
+                <td></td>
+                <td><pre>Trailing newlines</pre></td>
+            </tr>
+            
+        </table>
+        
+        <h3>Module <code>agentlib_flexquant.modules.flexibility_market</code> (<code>agentlib_flexquant/modules/flexibility_market.py</code>)</h3>
+        <table>
+            <tr>
+                <th>Line</th>
+                <th>Col.</th>
+                <th>Type</th>
+                <th>Symbol</th>
+                <th>ID</th>
+                <th>Obj</th>
+                <th>Message</th>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-module-docstring</code></td>
+                <td>C0114</td>
+                <td></td>
+                <td><pre>Missing module docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>2</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;pydantic&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>3</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>4</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;numpy&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>5</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;pandas&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>6</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>standard import &#34;from pathlib import Path&#34; should be placed before &#34;import pydantic&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>7</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;pydantic&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>9</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>standard import &#34;from typing import List, Optional, Union&#34; should be placed before &#34;import pydantic&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>10</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib.core.datamodels&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>10</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>third party import &#34;from agentlib.core.datamodels import AgentVariable&#34; should be placed before &#34;from agentlib_flexquant.data_structures.flex_offer import OfferStatus&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>11</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib.core.errors&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>11</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>third party import &#34;from agentlib.core.errors import ConfigurationError&#34; should be placed before &#34;from agentlib_flexquant.data_structures.flex_offer import OfferStatus&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>11</td>
+                <td>0</td>
+                <td>warning</td>
+                <td><code>unused-import</code></td>
+                <td>W0611</td>
+                <td></td>
+                <td><pre>Unused ConfigurationError imported from agentlib.core.errors</pre></td>
+            </tr>
+            
+            <tr>
+                <td>12</td>
+                <td>0</td>
+                <td>warning</td>
+                <td><code>reimported</code></td>
+                <td>W0404</td>
+                <td></td>
+                <td><pre>Reimport &#39;OfferStatus&#39; (imported line 8)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>12</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>ungrouped-imports</code></td>
+                <td>C0412</td>
+                <td></td>
+                <td><pre>Imports from package agentlib_flexquant are not grouped</pre></td>
+            </tr>
+            
+            <tr>
+                <td>16</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-class-docstring</code></td>
+                <td>C0115</td>
+                <td>FlexibilityMarketModuleConfig</td>
+                <td><pre>Missing class docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>16</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>FlexibilityMarketModuleConfig</td>
+                <td><pre>Too few public methods (1/2)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>52</td>
+                <td>30</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>59</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>FlexibilityMarketModuleConfig.check_results_file_extension</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>80</td>
+                <td>8</td>
+                <td>warning</td>
+                <td><code>attribute-defined-outside-init</code></td>
+                <td>W0201</td>
+                <td>FlexibilityMarketModule.set_random_seed</td>
+                <td><pre>Attribute &#39;random_generator&#39; defined outside __init__</pre></td>
+            </tr>
+            
+            <tr>
+                <td>95</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>FlexibilityMarketModule.register_callbacks</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>113</td>
+                <td>8</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>FlexibilityMarketModule.register_callbacks</td>
+                <td><pre>Attribute name &#34;df&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>114</td>
+                <td>8</td>
+                <td>warning</td>
+                <td><code>attribute-defined-outside-init</code></td>
+                <td>W0201</td>
+                <td>FlexibilityMarketModule.register_callbacks</td>
+                <td><pre>Attribute &#39;cooldown_ticker&#39; defined outside __init__</pre></td>
+            </tr>
+            
+            <tr>
+                <td>116</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>FlexibilityMarketModule.write_results</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>119</td>
+                <td>8</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>FlexibilityMarketModule.write_results</td>
+                <td><pre>Variable name &#34;df&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>129</td>
+                <td>62</td>
+                <td>warning</td>
+                <td><code>unused-argument</code></td>
+                <td>W0613</td>
+                <td>FlexibilityMarketModule.random_flexibility_callback</td>
+                <td><pre>Unused argument &#39;name&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>135</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (113/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>139</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (110/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>145</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (103/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>150</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (106/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>154</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (104/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>164</td>
+                <td>20</td>
+                <td>warning</td>
+                <td><code>attribute-defined-outside-init</code></td>
+                <td>W0201</td>
+                <td>FlexibilityMarketModule.random_flexibility_callback</td>
+                <td><pre>Attribute &#39;cooldown_ticker&#39; defined outside __init__</pre></td>
+            </tr>
+            
+            <tr>
+                <td>171</td>
+                <td>62</td>
+                <td>warning</td>
+                <td><code>unused-argument</code></td>
+                <td>W0613</td>
+                <td>FlexibilityMarketModule.single_flexibility_callback</td>
+                <td><pre>Unused argument &#39;name&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>179</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (111/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>180</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (112/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>182</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (102/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>201</td>
+                <td>8</td>
+                <td>warning</td>
+                <td><code>unnecessary-pass</code></td>
+                <td>W0107</td>
+                <td>FlexibilityMarketModule.custom_flexibility_callback</td>
+                <td><pre>Unnecessary pass statement</pre></td>
+            </tr>
+            
+            <tr>
+                <td>203</td>
+                <td>29</td>
+                <td>warning</td>
+                <td><code>unused-argument</code></td>
+                <td>W0613</td>
+                <td>FlexibilityMarketModule.dummy_callback</td>
+                <td><pre>Unused argument &#39;inp&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>203</td>
+                <td>49</td>
+                <td>warning</td>
+                <td><code>unused-argument</code></td>
+                <td>W0613</td>
+                <td>FlexibilityMarketModule.dummy_callback</td>
+                <td><pre>Unused argument &#39;name&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>207</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>FlexibilityMarketModule.cleanup_results</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>213</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>FlexibilityMarketModule.process</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+        </table>
+        
+        <h3>Module <code>agentlib_flexquant.modules.shadow_mpc</code> (<code>agentlib_flexquant/modules/shadow_mpc.py</code>)</h3>
+        <table>
+            <tr>
+                <th>Line</th>
+                <th>Col.</th>
+                <th>Type</th>
+                <th>Symbol</th>
+                <th>ID</th>
+                <th>Obj</th>
+                <th>Message</th>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-module-docstring</code></td>
+                <td>C0114</td>
+                <td></td>
+                <td><pre>Missing module docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.modules&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>2</td>
+                <td>0</td>
+                <td>warning</td>
+                <td><code>unused-import</code></td>
+                <td>W0611</td>
+                <td></td>
+                <td><pre>Unused INTERPOLATE imported from agentlib_flexquant.utils.data_handling</pre></td>
+            </tr>
+            
+            <tr>
+                <td>7</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>standard import &#34;from typing import Dict, Union&#34; should be placed before &#34;from agentlib_mpc.modules import mpc_full, minlp_mpc&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>8</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib.core.datamodels&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>8</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>third party import &#34;from agentlib.core.datamodels import AgentVariable&#34; should be placed before &#34;from agentlib_flexquant.utils.data_handling import strip_multi_index, fill_nans, MEAN, INTERPOLATE&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>11</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-class-docstring</code></td>
+                <td>C0115</td>
+                <td>FlexibilityShadowMPC</td>
+                <td><pre>Missing class docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>20</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>FlexibilityShadowMPC.register_callbacks</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>59</td>
+                <td>12</td>
+                <td>convention</td>
+                <td><code>consider-using-dict-items</code></td>
+                <td>C0206</td>
+                <td>FlexibilityShadowMPC.calc_flex_callback</td>
+                <td><pre>Consider iterating with .items()</pre></td>
+            </tr>
+            
+            <tr>
+                <td>59</td>
+                <td>16</td>
+                <td>refactor</td>
+                <td><code>redefined-argument-from-local</code></td>
+                <td>R1704</td>
+                <td>FlexibilityShadowMPC.calc_flex_callback</td>
+                <td><pre>Redefining argument with the local name &#39;name&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>59</td>
+                <td>24</td>
+                <td>convention</td>
+                <td><code>consider-iterating-dictionary</code></td>
+                <td>C0201</td>
+                <td>FlexibilityShadowMPC.calc_flex_callback</td>
+                <td><pre>Consider iterating the dictionary directly instead of calling .keys()</pre></td>
+            </tr>
+            
+            <tr>
+                <td>62</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>FlexibilityShadowMPC.process</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>67</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-class-docstring</code></td>
+                <td>C0115</td>
+                <td>FlexibilityShadowMINLPMPC</td>
+                <td><pre>Missing class docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>76</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>FlexibilityShadowMINLPMPC.register_callbacks</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>86</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (106/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>115</td>
+                <td>12</td>
+                <td>convention</td>
+                <td><code>consider-using-dict-items</code></td>
+                <td>C0206</td>
+                <td>FlexibilityShadowMINLPMPC.calc_flex_callback</td>
+                <td><pre>Consider iterating with .items()</pre></td>
+            </tr>
+            
+            <tr>
+                <td>115</td>
+                <td>16</td>
+                <td>refactor</td>
+                <td><code>redefined-argument-from-local</code></td>
+                <td>R1704</td>
+                <td>FlexibilityShadowMINLPMPC.calc_flex_callback</td>
+                <td><pre>Redefining argument with the local name &#39;name&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>115</td>
+                <td>24</td>
+                <td>convention</td>
+                <td><code>consider-iterating-dictionary</code></td>
+                <td>C0201</td>
+                <td>FlexibilityShadowMINLPMPC.calc_flex_callback</td>
+                <td><pre>Consider iterating the dictionary directly instead of calling .keys()</pre></td>
+            </tr>
+            
+            <tr>
+                <td>118</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>FlexibilityShadowMINLPMPC.process</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+        </table>
+        
+        <h3>Module <code>agentlib_flexquant.optimization_backends.constrained_cia</code> (<code>agentlib_flexquant/optimization_backends/constrained_cia.py</code>)</h3>
+        <table>
+            <tr>
+                <th>Line</th>
+                <th>Col.</th>
+                <th>Type</th>
+                <th>Symbol</th>
+                <th>ID</th>
+                <th>Obj</th>
+                <th>Message</th>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-module-docstring</code></td>
+                <td>C0114</td>
+                <td></td>
+                <td><pre>Missing module docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;pydantic&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>2</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;numpy&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>3</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib.core.errors&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>4</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.optimization_backends.casadi_.minlp_cia&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>5</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.optimization_backends.casadi_.core.casadi_backend&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>6</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.data_structures.mpc_datamodels&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>15</td>
+                <td>4</td>
+                <td>warning</td>
+                <td><code>raise-missing-from</code></td>
+                <td>W0707</td>
+                <td></td>
+                <td><pre>Consider explicitly re-raising using &#39;except ImportError as exc&#39; and &#39;raise OptionalDependencyError(used_object=&#39;Pycombina&#39;, dependency_install=&#39;.\\ after cloning pycombina. Instructions: https://pycombina.readthedocs.io/en/latest/install.html#&#39;) from exc&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>17</td>
+                <td>29</td>
+                <td>warning</td>
+                <td><code>anomalous-backslash-in-string</code></td>
+                <td>W1401</td>
+                <td></td>
+                <td><pre>Anomalous backslash in string: &#39;\ &#39;. String constant might be missing an r prefix.</pre></td>
+            </tr>
+            
+            <tr>
+                <td>22</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-class-docstring</code></td>
+                <td>C0115</td>
+                <td>ConstrainedCIABackendConfig</td>
+                <td><pre>Missing class docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>22</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>ConstrainedCIABackendConfig</td>
+                <td><pre>Too few public methods (0/2)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>30</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-class-docstring</code></td>
+                <td>C0115</td>
+                <td>ConstrainedCIABackendConfig.Config</td>
+                <td><pre>Missing class docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>30</td>
+                <td>4</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>ConstrainedCIABackendConfig.Config</td>
+                <td><pre>Too few public methods (0/2)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>35</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-class-docstring</code></td>
+                <td>C0115</td>
+                <td>ConstrainedCasADiCIABackend</td>
+                <td><pre>Missing class docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>35</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>ConstrainedCasADiCIABackend</td>
+                <td><pre>Too few public methods (1/2)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>39</td>
+                <td>4</td>
+                <td>warning</td>
+                <td><code>useless-parent-delegation</code></td>
+                <td>W0246</td>
+                <td>ConstrainedCasADiCIABackend.__init__</td>
+                <td><pre>Useless parent or super() delegation in method &#39;__init__&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>42</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>ConstrainedCasADiCIABackend.do_pycombina</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+        </table>
+        
+        <h3>Module <code>agentlib_flexquant.utils.config_management</code> (<code>agentlib_flexquant/utils/config_management.py</code>)</h3>
+        <table>
+            <tr>
+                <th>Line</th>
+                <th>Col.</th>
+                <th>Type</th>
+                <th>Symbol</th>
+                <th>ID</th>
+                <th>Obj</th>
+                <th>Message</th>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-module-docstring</code></td>
+                <td>C0114</td>
+                <td></td>
+                <td><pre>Missing module docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>8</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib.core.agent&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>9</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib.core.module&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>10</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib.modules&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>25</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (136/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>42</td>
+                <td>11</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>get_module_type_matching_dict</td>
+                <td><pre>Variable name &#34;v&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>55</td>
+                <td>8</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>get_module_type_matching_dict</td>
+                <td><pre>Variable name &#34;v&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>73</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>inconsistent-return-statements</code></td>
+                <td>R1710</td>
+                <td>get_orig_module_type</td>
+                <td><pre>Either all return statements in a function should return an expression, or none of them should.</pre></td>
+            </tr>
+            
+            <tr>
+                <td>94</td>
+                <td>4</td>
+                <td>warning</td>
+                <td><code>useless-else-on-loop</code></td>
+                <td>W0120</td>
+                <td>get_module</td>
+                <td><pre>Else clause on loop without a break statement, remove the else and de-indent all the code inside it</pre></td>
+            </tr>
+            
+            <tr>
+                <td>118</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (120/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>122</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (105/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>124</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (110/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>131</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>get_class_from_file</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+        </table>
+        
+        <h3>Module <code>agentlib_flexquant.utils.data_handling</code> (<code>agentlib_flexquant/utils/data_handling.py</code>)</h3>
+        <table>
+            <tr>
+                <th>Line</th>
+                <th>Col.</th>
+                <th>Type</th>
+                <th>Symbol</th>
+                <th>ID</th>
+                <th>Obj</th>
+                <th>Message</th>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-module-docstring</code></td>
+                <td>C0114</td>
+                <td></td>
+                <td><pre>Missing module docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>2</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;pandas&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>3</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.utils&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>26</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (125/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>32</td>
+                <td>32</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>_set_mean_values._get_intervals_for_mean</td>
+                <td><pre>Argument name &#34;s&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>56</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>strip_multi_index</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>59</td>
+                <td>40</td>
+                <td>warning</td>
+                <td><code>unnecessary-lambda</code></td>
+                <td>W0108</td>
+                <td>strip_multi_index.&lt;lambda&gt;</td>
+                <td><pre>Lambda may not be necessary</pre></td>
+            </tr>
+            
+            <tr>
+                <td>59</td>
+                <td>50</td>
+                <td>warning</td>
+                <td><code>eval-used</code></td>
+                <td>W0123</td>
+                <td>strip_multi_index.&lt;lambda&gt;</td>
+                <td><pre>Use of eval</pre></td>
+            </tr>
+            
+            <tr>
+                <td>66</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (123/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>66</td>
+                <td>31</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>convert_timescale_of_index</td>
+                <td><pre>Argument name &#34;df&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>76</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (108/100)</pre></td>
+            </tr>
+            
+        </table>
+        
+        <h3>Module <code>agentlib_flexquant.utils.interactive</code> (<code>agentlib_flexquant/utils/interactive.py</code>)</h3>
+        <table>
+            <tr>
+                <th>Line</th>
+                <th>Col.</th>
+                <th>Type</th>
+                <th>Symbol</th>
+                <th>ID</th>
+                <th>Obj</th>
+                <th>Message</th>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-module-docstring</code></td>
+                <td>C0114</td>
+                <td></td>
+                <td><pre>Missing module docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>2</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;pydantic&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>3</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;pandas&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>5</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
+                <td></td>
+                <td><pre>standard import &#34;import webbrowser&#34; should be placed before &#34;from pydantic import FilePath&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>6</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;dash&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>7</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;plotly&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>9</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib.core.agent&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>11</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.utils&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>12</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.utils.analysis&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>13</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.utils.plotting.interactive&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>16</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>consider-using-from-import</code></td>
+                <td>R0402</td>
+                <td></td>
+                <td><pre>Use &#39;from agentlib_flexquant.data_structures import flex_results&#39; instead</pre></td>
+            </tr>
+            
+            <tr>
+                <td>22</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-few-public-methods</code></td>
+                <td>R0903</td>
+                <td>CustomBound</td>
+                <td><pre>Too few public methods (0/2)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>27</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (101/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>28</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (101/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>46</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>too-many-instance-attributes</code></td>
+                <td>R0902</td>
+                <td>Dashboard</td>
+                <td><pre>Too many instance attributes (8/7)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>66</td>
+                <td>4</td>
+                <td>refactor</td>
+                <td><code>too-many-arguments</code></td>
+                <td>R0913</td>
+                <td>Dashboard.__init__</td>
+                <td><pre>Too many arguments (7/5)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>90</td>
+                <td>8</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>Dashboard.__init__</td>
+                <td><pre>Attribute name &#34;LINE_PROPERTIES&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>127</td>
+                <td>12</td>
+                <td>refactor</td>
+                <td><code>unnecessary-comprehension</code></td>
+                <td>R1721</td>
+                <td>Dashboard.__init__</td>
+                <td><pre>Unnecessary use of a comprehension, use list(self.intersection_mpcs_sim.keys()) instead.</pre></td>
+            </tr>
+            
+            <tr>
+                <td>127</td>
+                <td>28</td>
+                <td>convention</td>
+                <td><code>consider-iterating-dictionary</code></td>
+                <td>C0201</td>
+                <td>Dashboard.__init__</td>
+                <td><pre>Consider iterating the dictionary directly instead of calling .keys()</pre></td>
+            </tr>
+            
+            <tr>
+                <td>136</td>
+                <td>4</td>
+                <td>refactor</td>
+                <td><code>too-many-statements</code></td>
+                <td>R0915</td>
+                <td>Dashboard.show</td>
+                <td><pre>Too many statements (135/50)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>145</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (112/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>215</td>
+                <td>34</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>Dashboard.show.plot_one_mpc_variable._add_step_to_data</td>
+                <td><pre>Argument name &#34;s&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>337</td>
+                <td>8</td>
+                <td>refactor</td>
+                <td><code>inconsistent-return-statements</code></td>
+                <td>R1710</td>
+                <td>Dashboard.show.plot_flexibility_kpi</td>
+                <td><pre>Either all return statements in a function should return an expression, or none of them should.</pre></td>
+            </tr>
+            
+            <tr>
+                <td>417</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (110/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>455</td>
+                <td>8</td>
+                <td>refactor</td>
+                <td><code>inconsistent-return-statements</code></td>
+                <td>R1710</td>
+                <td>Dashboard.show.mark_characteristic_times_of_accepted_offers</td>
+                <td><pre>Either all return statements in a function should return an expression, or none of them should.</pre></td>
+            </tr>
+            
+            <tr>
+                <td>480</td>
+                <td>8</td>
+                <td>refactor</td>
+                <td><code>too-many-arguments</code></td>
+                <td>R0913</td>
+                <td>Dashboard.show.create_plot</td>
+                <td><pre>Too many arguments (6/5)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>505</td>
+                <td>29</td>
+                <td>convention</td>
+                <td><code>consider-iterating-dictionary</code></td>
+                <td>C0201</td>
+                <td>Dashboard.show.create_plot</td>
+                <td><pre>Consider iterating the dictionary directly instead of calling .keys()</pre></td>
+            </tr>
+            
+            <tr>
+                <td>523</td>
+                <td>16</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>Dashboard.show.create_plot</td>
+                <td><pre>Variable name &#34;ts&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>550</td>
+                <td>23</td>
+                <td>refactor</td>
+                <td><code>use-dict-literal</code></td>
+                <td>R1735</td>
+                <td>Dashboard.show.create_plot</td>
+                <td><pre>Consider using &#39;{&#34;t&#34;: 20, &#34;b&#34;: 20}&#39; instead of a call to &#39;dict&#39;.</pre></td>
+            </tr>
+            
+            <tr>
+                <td>640</td>
+                <td>41</td>
+                <td>warning</td>
+                <td><code>f-string-without-interpolation</code></td>
+                <td>W1309</td>
+                <td>Dashboard.show</td>
+                <td><pre>Using an f-string that does not have any interpolated variables</pre></td>
+            </tr>
+            
+        </table>
+        
+        <h3>Module <code>agentlib_flexquant.utils.parsing</code> (<code>agentlib_flexquant/utils/parsing.py</code>)</h3>
+        <table>
+            <tr>
+                <th>Line</th>
+                <th>Col.</th>
+                <th>Type</th>
+                <th>Symbol</th>
+                <th>ID</th>
+                <th>Obj</th>
+                <th>Message</th>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-module-docstring</code></td>
+                <td>C0114</td>
+                <td></td>
+                <td><pre>Missing module docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>4</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.data_structures.mpc_datamodels&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>11</td>
+                <td>0</td>
+                <td>warning</td>
+                <td><code>unused-import</code></td>
+                <td>W0611</td>
+                <td></td>
+                <td><pre>Unused PROFILE_DEVIATION_WEIGHT imported from agentlib_flexquant.data_structures.globals</pre></td>
+            </tr>
+            
+            <tr>
+                <td>36</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (101/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>40</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>create_ast_element</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>44</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (107/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>44</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>add_input</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>44</td>
+                <td>84</td>
+                <td>warning</td>
+                <td><code>redefined-builtin</code></td>
+                <td>W0622</td>
+                <td>add_input</td>
+                <td><pre>Redefining built-in &#39;type&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>57</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>add_parameter</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>69</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (104/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>69</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>add_output</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>69</td>
+                <td>37</td>
+                <td>warning</td>
+                <td><code>redefined-builtin</code></td>
+                <td>W0622</td>
+                <td>add_output</td>
+                <td><pre>Redefining built-in &#39;type&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>113</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>SetupSystemModifier.visit_Module</td>
+                <td><pre>Method name &#34;visit_Module&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>136</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>SetupSystemModifier.visit_ClassDef</td>
+                <td><pre>Method name &#34;visit_ClassDef&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>186</td>
+                <td>8</td>
+                <td>refactor</td>
+                <td><code>no-else-return</code></td>
+                <td>R1705</td>
+                <td>SetupSystemModifier.get_leftmost_list</td>
+                <td><pre>Unnecessary &#34;elif&#34; after &#34;return&#34;, remove the leading &#34;el&#34; from &#34;elif&#34;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>266</td>
+                <td>21</td>
+                <td>refactor</td>
+                <td><code>consider-merging-isinstance</code></td>
+                <td>R1701</td>
+                <td>SetupSystemModifier.modify_config_class_baseline</td>
+                <td><pre>Consider merging these isinstance calls to isinstance(body.value, (ast.BinOp, ast.Tuple))</pre></td>
+            </tr>
+            
+            <tr>
+                <td>298</td>
+                <td>21</td>
+                <td>refactor</td>
+                <td><code>consider-merging-isinstance</code></td>
+                <td>R1701</td>
+                <td>SetupSystemModifier.modify_config_class_baseline</td>
+                <td><pre>Consider merging these isinstance calls to isinstance(body.value, (ast.BinOp, ast.Tuple))</pre></td>
+            </tr>
+            
+            <tr>
+                <td>363</td>
+                <td>24</td>
+                <td>warning</td>
+                <td><code>unused-variable</code></td>
+                <td>W0612</td>
+                <td>SetupSystemModifier.modify_setup_system_shadow</td>
+                <td><pre>Unused variable &#39;ind&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>368</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (103/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>369</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (108/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>376</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (103/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>377</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (108/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>397</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (107/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>398</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (112/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>405</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (107/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>406</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (112/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>413</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (104/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>506</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>add_import_to_tree</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>523</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>remove_all_imports_from_tree</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+        </table>
+        
+
+        <h2>Metrics</h2>
+        
+
+        <h3>Count per types</h3>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Count</th>
+            </tr>
+            
+            <tr>
+                <td>error</td>
+                <td>77</td>
+            </tr>
+            
+            <tr>
+                <td>convention</td>
+                <td>269</td>
+            </tr>
+            
+            <tr>
+                <td>refactor</td>
+                <td>58</td>
+            </tr>
+            
+            <tr>
+                <td>warning</td>
+                <td>49</td>
+            </tr>
+            
+        </table>
+        
+
+        <h3>Count per messages</h3>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Count</th>
+            </tr>
+            
+            <tr>
+                <td>import-error</td>
+                <td>76</td>
+            </tr>
+            
+            <tr>
+                <td>trailing-whitespace</td>
+                <td>23</td>
+            </tr>
+            
+            <tr>
+                <td>line-too-long</td>
+                <td>100</td>
+            </tr>
+            
+            <tr>
+                <td>missing-module-docstring</td>
+                <td>16</td>
+            </tr>
+            
+            <tr>
+                <td>missing-class-docstring</td>
+                <td>25</td>
+            </tr>
+            
+            <tr>
+                <td>too-many-instance-attributes</td>
+                <td>4</td>
+            </tr>
+            
+            <tr>
+                <td>unspecified-encoding</td>
+                <td>8</td>
+            </tr>
+            
+            <tr>
+                <td>invalid-name</td>
+                <td>36</td>
+            </tr>
+            
+            <tr>
+                <td>unnecessary-lambda</td>
+                <td>2</td>
+            </tr>
+            
+            <tr>
+                <td>unidiomatic-typecheck</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>too-many-branches</td>
+                <td>4</td>
+            </tr>
+            
+            <tr>
+                <td>unnecessary-dunder-call</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>too-many-locals</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>logging-fstring-interpolation</td>
+                <td>5</td>
+            </tr>
+            
+            <tr>
+                <td>f-string-without-interpolation</td>
+                <td>3</td>
+            </tr>
+            
+            <tr>
+                <td>wrong-import-order</td>
+                <td>17</td>
+            </tr>
+            
+            <tr>
+                <td>unused-import</td>
+                <td>11</td>
+            </tr>
+            
+            <tr>
+                <td>anomalous-backslash-in-string</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>raise-missing-from</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>too-few-public-methods</td>
+                <td>27</td>
+            </tr>
+            
+            <tr>
+                <td>useless-parent-delegation</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>missing-function-docstring</td>
+                <td>35</td>
+            </tr>
+            
+            <tr>
+                <td>consider-using-dict-items</td>
+                <td>2</td>
+            </tr>
+            
+            <tr>
+                <td>redefined-argument-from-local</td>
+                <td>2</td>
+            </tr>
+            
+            <tr>
+                <td>consider-iterating-dictionary</td>
+                <td>4</td>
+            </tr>
+            
+            <tr>
+                <td>reimported</td>
+                <td>2</td>
+            </tr>
+            
+            <tr>
+                <td>unused-argument</td>
+                <td>5</td>
+            </tr>
+            
+            <tr>
+                <td>unnecessary-pass</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>attribute-defined-outside-init</td>
+                <td>3</td>
+            </tr>
+            
+            <tr>
+                <td>ungrouped-imports</td>
+                <td>5</td>
+            </tr>
+            
+            <tr>
+                <td>trailing-newlines</td>
+                <td>2</td>
+            </tr>
+            
+            <tr>
+                <td>no-self-argument</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>broad-exception-raised</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>too-many-arguments</td>
+                <td>6</td>
+            </tr>
+            
+            <tr>
+                <td>redefined-builtin</td>
+                <td>2</td>
+            </tr>
+            
+            <tr>
+                <td>no-else-return</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>consider-merging-isinstance</td>
+                <td>2</td>
+            </tr>
+            
+            <tr>
+                <td>unused-variable</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>inconsistent-return-statements</td>
+                <td>3</td>
+            </tr>
+            
+            <tr>
+                <td>useless-else-on-loop</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>eval-used</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>consider-using-from-import</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>unnecessary-comprehension</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>use-dict-literal</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>too-many-statements</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>missing-final-newline</td>
+                <td>2</td>
+            </tr>
+            
+            <tr>
+                <td>consider-using-in</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>duplicate-code</td>
+                <td>3</td>
+            </tr>
+            
+        </table>
+        
+
+        <h3>Count per modules</h3>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Count</th>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant</td>
+                <td>2</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.generate_flex_agents</td>
+                <td>77</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.optimization_backends.constrained_cia</td>
+                <td>17</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.modules.baseline_mpc</td>
+                <td>8</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.modules.shadow_mpc</td>
+                <td>19</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.modules.flexibility_market</td>
+                <td>41</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.modules.flexibility_indicator</td>
+                <td>58</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.utils.parsing</td>
+                <td>29</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.utils.config_management</td>
+                <td>13</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.utils.data_handling</td>
+                <td>11</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.utils.interactive</td>
+                <td>30</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.data_structures.market</td>
+                <td>15</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.data_structures.flex_kpis</td>
+                <td>35</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.data_structures.mpcs</td>
+                <td>13</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.data_structures.flex_offer</td>
+                <td>15</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.data_structures.flex_results</td>
+                <td>41</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.data_structures.flexquant</td>
+                <td>21</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.data_structures.globals</td>
+                <td>4</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.data_structures.__init__</td>
+                <td>4</td>
+            </tr>
+            
+        </table>
+        
+
+        <h3>Count per path</h3>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Count</th>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/__init__.py</td>
+                <td>2</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/generate_flex_agents.py</td>
+                <td>77</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/optimization_backends/constrained_cia.py</td>
+                <td>17</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/modules/baseline_mpc.py</td>
+                <td>8</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/modules/shadow_mpc.py</td>
+                <td>19</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/modules/flexibility_market.py</td>
+                <td>41</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/modules/flexibility_indicator.py</td>
+                <td>58</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/utils/parsing.py</td>
+                <td>29</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/utils/config_management.py</td>
+                <td>13</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/utils/data_handling.py</td>
+                <td>11</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/utils/interactive.py</td>
+                <td>30</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/data_structures/market.py</td>
+                <td>15</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/data_structures/flex_kpis.py</td>
+                <td>35</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/data_structures/mpcs.py</td>
+                <td>13</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/data_structures/flex_offer.py</td>
+                <td>15</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/data_structures/flex_results.py</td>
+                <td>41</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/data_structures/flexquant.py</td>
+                <td>21</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/data_structures/globals.py</td>
+                <td>4</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/data_structures/__init__.py</td>
+                <td>4</td>
+            </tr>
+            
+        </table>
+        
+
+    </body>
+</html>

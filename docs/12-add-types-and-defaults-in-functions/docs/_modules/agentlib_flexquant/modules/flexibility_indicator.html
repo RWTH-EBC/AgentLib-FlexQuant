@@ -1,0 +1,649 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>agentlib_flexquant.modules.flexibility_indicator &mdash; agentlib_flexquant 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            agentlib_flexquant
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">agentlib_flexquant</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">agentlib_flexquant.modules.flexibility_indicator</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for agentlib_flexquant.modules.flexibility_indicator</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">agentlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigurationError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">ConfigDict</span><span class="p">,</span> <span class="n">Field</span><span class="p">,</span> <span class="n">model_validator</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">glbs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.flex_kpis</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">FlexibilityData</span><span class="p">,</span> 
+    <span class="n">FlexibilityKPIs</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.flex_offer</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlexOffer</span>
+
+
+<div class="viewcode-block" id="InputsForCorrectFlexCosts">
+<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">InputsForCorrectFlexCosts</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">enable_energy_costs_correction</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;enable_energy_costs_correction&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Variable determining whether to correct the costs of the flexible energy&quot;</span>
+                    <span class="s2">&quot;Define the variable for stored electrical energy in the base MPC model and config as output if the correction of costs is enabled&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+
+    <span class="n">absolute_power_deviation_tolerance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;absolute_power_deviation_tolerance&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Absolute tolerance in kW within which no warning is thrown&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">stored_energy_variable</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;stored_energy_variable&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;E_stored&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the variable representing the stored electrical energy in the baseline config&quot;</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InputsForCalculateFlexCosts">
+<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">InputsForCalculateFlexCosts</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">use_constant_electricity_price</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Use constant electricity price&quot;</span>
+    <span class="p">)</span>
+    <span class="n">calculate_flex_costs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Calculate the flexibility cost&quot;</span>
+    <span class="p">)</span>
+    <span class="n">const_electricity_price</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;constant electricity price in ct/kWh&quot;</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="InputsForCalculateFlexCosts.validate_constant_price">
+<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price">[docs]</a>
+    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_constant_price</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">use_constant_electricity_price</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">const_electricity_price</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Constant electricity price must have a valid value in float if it is to be used for calculation. &#39;</span>
+                            <span class="sa">f</span><span class="s1">&#39;Received &quot;use_constant_electricity_price&quot;: true, &quot;const_electricity_price&quot;: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">const_electricity_price</span><span class="si">}</span><span class="s1">. &#39;</span>
+                            <span class="sa">f</span><span class="s1">&#39;Please specify them correctly in &quot;calculate_costs&quot; field in flex config.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">model</span></div>
+</div>
+
+
+
+<span class="c1"># Pos and neg kpis to get the right names for plotting</span>
+<span class="n">kpis_pos</span> <span class="o">=</span> <span class="n">FlexibilityKPIs</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="s2">&quot;positive&quot;</span><span class="p">)</span>
+<span class="n">kpis_neg</span> <span class="o">=</span> <span class="n">FlexibilityKPIs</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="s2">&quot;negative&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="FlexibilityIndicatorModuleConfig">
+<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityIndicatorModuleConfig</span><span class="p">(</span><span class="n">agentlib</span><span class="o">.</span><span class="n">BaseModuleConfig</span><span class="p">):</span>
+
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span>
+        <span class="n">extra</span><span class="o">=</span><span class="s1">&#39;forbid&#39;</span>
+    <span class="p">)</span>
+
+    <span class="n">inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">POWER_ALIAS_BASE</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;W&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;pd.Series&quot;</span><span class="p">,</span>
+                               <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The power input to the system&quot;</span><span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">POWER_ALIAS_NEG</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;W&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;pd.Series&quot;</span><span class="p">,</span>
+                               <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The power input to the system&quot;</span><span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">POWER_ALIAS_POS</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;W&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;pd.Series&quot;</span><span class="p">,</span>
+                               <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The power input to the system&quot;</span><span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">STORED_ENERGY_ALIAS_BASE</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;kWh&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;pd.Series&quot;</span><span class="p">,</span>
+                               <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Energy stored in the system w.r.t. 0K&quot;</span><span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">STORED_ENERGY_ALIAS_NEG</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;kWh&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;pd.Series&quot;</span><span class="p">,</span>
+                               <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Energy stored in the system w.r.t. 0K&quot;</span><span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">STORED_ENERGY_ALIAS_POS</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;kWh&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;pd.Series&quot;</span><span class="p">,</span>
+                               <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Energy stored in the system w.r.t. 0K&quot;</span><span class="p">)</span>
+    <span class="p">]</span>
+
+    <span class="n">outputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="c1"># Flexibility offer</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">FlexibilityOffer</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;FlexOffer&quot;</span><span class="p">),</span>
+
+        <span class="c1"># Power KPIs</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">kpis_neg</span><span class="o">.</span><span class="n">power_flex_full</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;W&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;pd.Series&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Negative power flexibility&quot;</span>
+        <span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">kpis_pos</span><span class="o">.</span><span class="n">power_flex_full</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;W&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;pd.Series&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Positive power flexibility&quot;</span>
+        <span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">kpis_neg</span><span class="o">.</span><span class="n">power_flex_offer</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;W&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;pd.Series&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Negative power flexibility&quot;</span>
+        <span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">kpis_pos</span><span class="o">.</span><span class="n">power_flex_offer</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;W&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;pd.Series&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Positive power flexibility&quot;</span>
+        <span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">kpis_neg</span><span class="o">.</span><span class="n">power_flex_offer_min</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;W&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Minimum of negative power flexibility&quot;</span>
+        <span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">kpis_pos</span><span class="o">.</span><span class="n">power_flex_offer_min</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;W&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Minimum of positive power flexibility&quot;</span>
+        <span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">kpis_neg</span><span class="o">.</span><span class="n">power_flex_offer_max</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;W&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Maximum of negative power flexibility&quot;</span>
+        <span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">kpis_pos</span><span class="o">.</span><span class="n">power_flex_offer_max</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;W&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Maximum of positive power flexibility&quot;</span>
+        <span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">kpis_neg</span><span class="o">.</span><span class="n">power_flex_offer_avg</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;W&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Average of negative power flexibility&quot;</span>
+        <span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">kpis_pos</span><span class="o">.</span><span class="n">power_flex_offer_avg</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;W&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Average of positive power flexibility&quot;</span>
+        <span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">kpis_neg</span><span class="o">.</span><span class="n">power_flex_within_boundary</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;bool&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Variable indicating whether the baseline power and flex power align at the horizon end&quot;</span>
+        <span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">kpis_pos</span><span class="o">.</span><span class="n">power_flex_within_boundary</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;bool&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Variable indicating whether the baseline power and flex power align at the horizon end&quot;</span>
+        <span class="p">),</span>
+
+        <span class="c1"># Energy KPIs</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">kpis_neg</span><span class="o">.</span><span class="n">energy_flex</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;kWh&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Negative energy flexibility&quot;</span>
+        <span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">kpis_pos</span><span class="o">.</span><span class="n">energy_flex</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;kWh&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Positive energy flexibility&quot;</span>
+        <span class="p">),</span>
+
+        <span class="c1"># Costs KPIs</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">kpis_neg</span><span class="o">.</span><span class="n">costs</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;ct&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Saved costs due to baseline&quot;</span>
+        <span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">kpis_pos</span><span class="o">.</span><span class="n">costs</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;ct&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Saved costs due to baseline&quot;</span>
+        <span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">kpis_neg</span><span class="o">.</span><span class="n">corrected_costs</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;ct&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Corrected saved costs due to baseline&quot;</span>
+        <span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">kpis_pos</span><span class="o">.</span><span class="n">corrected_costs</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;ct&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Corrected saved costs due to baseline&quot;</span>
+        <span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">kpis_neg</span><span class="o">.</span><span class="n">costs_rel</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;ct/kWh&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Saved costs due to baseline&quot;</span>
+        <span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">kpis_pos</span><span class="o">.</span><span class="n">costs_rel</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;ct/kWh&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Saved costs due to baseline&quot;</span>
+        <span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">kpis_neg</span><span class="o">.</span><span class="n">corrected_costs_rel</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;ct/kWh&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Corrected saved costs per energy due to baseline&quot;</span>
+        <span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">kpis_pos</span><span class="o">.</span><span class="n">corrected_costs_rel</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;ct/kWh&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;float&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Corrected saved costs per energy due to baseline&quot;</span>
+        <span class="p">)</span>
+    <span class="p">]</span>
+
+    <span class="n">parameters</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">PREP_TIME</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span>
+                               <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Preparation time&quot;</span><span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">MARKET_TIME</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span>
+                               <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Market time&quot;</span><span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">FLEX_EVENT_DURATION</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span>
+                               <span class="n">description</span><span class="o">=</span><span class="s2">&quot;time to switch objective&quot;</span><span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">TIME_STEP</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span>
+                               <span class="n">description</span><span class="o">=</span><span class="s2">&quot;timestep of the mpc solution&quot;</span><span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">PREDICTION_HORIZON</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span>
+                               <span class="n">description</span><span class="o">=</span><span class="s2">&quot;prediction horizon of the mpc solution&quot;</span><span class="p">)</span>
+    <span class="p">]</span>
+
+    <span class="n">results_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;flexibility_indicator.csv&quot;</span><span class="p">),</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;User specified results file name&quot;</span>
+    <span class="p">)</span>
+    <span class="n">save_results</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">validate_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+        <span class="n">default</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+    <span class="n">price_variable</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;c_pel&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the price variable sent by a predictor&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">power_unit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;kW&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unit of the power variable&quot;</span>
+    <span class="p">)</span>
+    <span class="n">shared_variable_fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;outputs&quot;</span><span class="p">]</span>
+
+    <span class="n">correct_costs</span><span class="p">:</span> <span class="n">InputsForCorrectFlexCosts</span> <span class="o">=</span> <span class="n">InputsForCorrectFlexCosts</span><span class="p">()</span>
+    <span class="n">calculate_costs</span><span class="p">:</span> <span class="n">InputsForCalculateFlexCosts</span> <span class="o">=</span> <span class="n">InputsForCalculateFlexCosts</span><span class="p">()</span>
+    
+<div class="viewcode-block" id="FlexibilityIndicatorModuleConfig.check_results_file_extension">
+<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension">[docs]</a>
+    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_results_file_extension</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">results_file</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="o">.</span><span class="n">suffix</span> <span class="o">!=</span> <span class="s2">&quot;.csv&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid file extension for &#39;results_file&#39;: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Expected a &#39;.csv&#39; file.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+</div>
+
+
+<div class="viewcode-block" id="FlexibilityIndicatorModule">
+<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityIndicatorModule</span><span class="p">(</span><span class="n">agentlib</span><span class="o">.</span><span class="n">BaseModule</span><span class="p">):</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">FlexibilityIndicatorModuleConfig</span>
+
+    <span class="n">data</span><span class="p">:</span> <span class="n">FlexibilityData</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">variable</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="n">glbs</span><span class="o">.</span><span class="n">FlexibilityOffer</span><span class="p">]:</span>
+                <span class="k">continue</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">var_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">variable</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_provision</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offer_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">FlexibilityData</span><span class="p">(</span>
+            <span class="n">prep_time</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">PREP_TIME</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">market_time</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">MARKET_TIME</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">flex_event_duration</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">FLEX_EVENT_DURATION</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">time_step</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">TIME_STEP</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">prediction_horizon</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">PREDICTION_HORIZON</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_list</span><span class="p">))</span>
+
+<div class="viewcode-block" id="FlexibilityIndicatorModule.register_callbacks">
+<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.register_callbacks">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">register_callbacks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">inputs</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">data_broker</span><span class="o">.</span><span class="n">register_callback</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">var</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="n">var</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">callback</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">data_broker</span><span class="o">.</span><span class="n">register_callback</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;in_provision&quot;</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;in_provision&quot;</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">callback</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="FlexibilityIndicatorModule.process">
+<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.process">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">event</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="FlexibilityIndicatorModule.callback">
+<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.callback">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;in_provision&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">in_provision</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">value</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_provision</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_set_inputs_to_none</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_provision</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">POWER_ALIAS_BASE</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">format_mpc_inputs</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">POWER_ALIAS_NEG</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_flex_neg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">format_mpc_inputs</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">POWER_ALIAS_POS</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_flex_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">format_mpc_inputs</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">STORED_ENERGY_ALIAS_BASE</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">format_mpc_inputs</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">STORED_ENERGY_ALIAS_NEG</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_flex_neg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">format_mpc_inputs</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">STORED_ENERGY_ALIAS_POS</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_flex_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">format_mpc_inputs</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">price_variable</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">use_constant_electricity_price</span><span class="p">:</span>
+                    <span class="c1"># price comes from predictor, so no stripping needed</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">electricity_price_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">format_predictor_inputs</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+            <span class="c1"># set the constant electricity price series if given</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">use_constant_electricity_price</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">electricity_price_series</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># get the index for the electricity price series</span>
+                <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">PREDICTION_HORIZON</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+                <span class="n">ts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">TIME_STEP</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+                <span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">*</span> <span class="n">ts</span><span class="p">,</span> <span class="n">ts</span><span class="p">)</span>
+                <span class="c1"># fill the electricity_price_series with values</span>
+                <span class="n">electricity_price_series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">const_electricity_price</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">grid</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">grid</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">electricity_price_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">format_predictor_inputs</span><span class="p">(</span><span class="n">electricity_price_series</span><span class="p">)</span>
+
+
+            <span class="n">necessary_input_for_calc_flex</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_base</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_flex_neg</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_flex_pos</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">calculate_flex_costs</span><span class="p">:</span>
+                <span class="n">necessary_input_for_calc_flex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">electricity_price_series</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">enable_energy_costs_correction</span><span class="p">:</span>
+                <span class="n">necessary_input_for_calc_flex</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                                                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_base</span><span class="p">,</span>
+                                                 <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_flex_neg</span><span class="p">,</span>
+                                                 <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_flex_pos</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">var</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">necessary_input_for_calc_flex</span><span class="p">):</span>
+
+                <span class="c1"># check the power profile end deviation</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">enable_energy_costs_correction</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">check_power_end_deviation</span><span class="p">(</span><span class="n">tol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">absolute_power_deviation_tolerance</span><span class="p">)</span>
+
+                <span class="c1"># Calculate the flexibility, send the offer, write and save the results</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">calc_and_send_offer</span><span class="p">()</span>
+
+                <span class="c1"># set the values to None to reset the callback</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_set_inputs_to_none</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="FlexibilityIndicatorModule.get_results">
+<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.get_results">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_results</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Opens results file of flexibility_indicator.py</span>
+<span class="sd">        results_file defined in __init__</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">results_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">results_file</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">results_file</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">index_col</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">results</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Results file </span><span class="si">%s</span><span class="s2"> was not found.&quot;</span><span class="p">,</span> <span class="n">results_file</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="FlexibilityIndicatorModule.write_results">
+<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.write_results">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">ts</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write every data of variables in self.var_list in an DataFrame</span>
+<span class="sd">        DataFrame will be updated every time step</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df: DataFrame which is initialised as an empty DataFrame with columns according to self.var_list</span>
+<span class="sd">            ts: time step</span>
+<span class="sd">            n: number of time steps during prediction horizon</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            DataFrame with results of every variable in self.var_list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_list</span><span class="p">:</span>
+            <span class="c1"># Use the power variables averaged for each timestep, not the collocation values</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">POWER_ALIAS_BASE</span><span class="p">:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_base</span>
+            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">POWER_ALIAS_NEG</span><span class="p">:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_flex_neg</span>
+            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">POWER_ALIAS_POS</span><span class="p">:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_flex_pos</span>
+            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">STORED_ENERGY_ALIAS_BASE</span><span class="p">:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_base</span>
+            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">STORED_ENERGY_ALIAS_NEG</span><span class="p">:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_flex_neg</span>
+            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">STORED_ENERGY_ALIAS_POS</span><span class="p">:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_flex_pos</span>
+            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">price_variable</span><span class="p">:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">electricity_price_series</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+                <span class="n">traj</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">*</span> <span class="n">ts</span><span class="p">,</span> <span class="n">ts</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">traj</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">*</span> <span class="n">ts</span><span class="p">,</span> <span class="n">ts</span><span class="p">))</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">traj</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">now</span> <span class="o">%</span> <span class="n">ts</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">now</span><span class="p">)</span>
+            <span class="n">new_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+            <span class="n">new_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_list</span>
+            <span class="c1"># Rename time_step variable column</span>
+            <span class="n">new_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="n">glbs</span><span class="o">.</span><span class="n">TIME_STEP</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">glbs</span><span class="o">.</span><span class="n">TIME_STEP</span><span class="si">}</span><span class="s2">_mpc&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">new_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="s2">&quot;time&quot;</span>
+            <span class="n">new_df</span><span class="p">[</span><span class="n">glbs</span><span class="o">.</span><span class="n">TIME_STEP</span><span class="p">]</span> <span class="o">=</span> <span class="n">now</span>
+            <span class="n">new_df</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="n">glbs</span><span class="o">.</span><span class="n">TIME_STEP</span><span class="p">,</span> <span class="n">new_df</span><span class="o">.</span><span class="n">index</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="p">,</span> <span class="n">new_df</span><span class="p">])</span>
+            <span class="c1"># set the indices once again as concat cant handle indices properly</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_tuples</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="n">glbs</span><span class="o">.</span><span class="n">TIME_STEP</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">])</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="c1"># Drop column time_step and keep it as an index only</span>
+            <span class="k">if</span> <span class="n">glbs</span><span class="o">.</span><span class="n">TIME_STEP</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">glbs</span><span class="o">.</span><span class="n">TIME_STEP</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">df</span></div>
+
+
+<div class="viewcode-block" id="FlexibilityIndicatorModule.cleanup_results">
+<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.cleanup_results">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cleanup_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">results_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">results_file</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">results_file</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">results_file</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="FlexibilityIndicatorModule.calc_and_send_offer">
+<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.calc_and_send_offer">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calc_and_send_offer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate the flexibility KPIs for current predictions, send the flex offer and set the outputs, write and save the results.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Calculate the flexibility KPIs for current predictions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">enable_energy_costs_correction</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">enable_energy_costs_correction</span><span class="p">,</span> <span class="n">calculate_flex_cost</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">calculate_flex_costs</span><span class="p">)</span>
+
+        <span class="c1"># Send flex offer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send_flex_offer</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">FlexibilityOffer</span><span class="p">,</span>
+            <span class="n">base_power_profile</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_base</span><span class="p">,</span>
+            <span class="n">pos_diff_profile</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">kpis_pos</span><span class="o">.</span><span class="n">power_flex_offer</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">pos_price</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">kpis_pos</span><span class="o">.</span><span class="n">costs</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">neg_diff_profile</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">kpis_neg</span><span class="o">.</span><span class="n">power_flex_offer</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">neg_price</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">kpis_neg</span><span class="o">.</span><span class="n">costs</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># set outputs</span>
+        <span class="k">for</span> <span class="n">kpi</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get_kpis</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">kpi</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">kpis_pos</span><span class="o">.</span><span class="n">power_flex_within_boundary</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="n">kpis_neg</span><span class="o">.</span><span class="n">power_flex_within_boundary</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">()]:</span>
+                <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">kpi</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">():</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">kpi</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="c1"># write results</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_results</span><span class="p">(</span>
+            <span class="n">df</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">,</span>
+            <span class="n">ts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">TIME_STEP</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">n</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">PREDICTION_HORIZON</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+        <span class="p">)</span>
+
+        <span class="c1"># save results</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">save_results</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">results_file</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="FlexibilityIndicatorModule.send_flex_offer">
+<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.send_flex_offer">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">send_flex_offer</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="n">base_power_profile</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
+            <span class="n">pos_diff_profile</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">pos_price</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+            <span class="n">neg_diff_profile</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">neg_price</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+            <span class="n">timestamp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Send a flex offer as an agent Variable. The first offer is dismissed,</span>
+<span class="sd">        since the different MPCs need one time step to fully initialize.</span>
+
+<span class="sd">        Inputs:</span>
+
+<span class="sd">        name: name of the agent variable</span>
+<span class="sd">        indicator_data: the indicator data object</span>
+<span class="sd">        timestamp: the time offer was generated</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">offer_count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_variables_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">FlexOffer</span><span class="p">(</span>
+                <span class="n">base_power_profile</span><span class="o">=</span><span class="n">base_power_profile</span><span class="p">,</span>
+                <span class="n">pos_diff_profile</span><span class="o">=</span><span class="n">pos_diff_profile</span><span class="p">,</span> <span class="n">pos_price</span><span class="o">=</span><span class="n">pos_price</span><span class="p">,</span>
+                <span class="n">neg_diff_profile</span><span class="o">=</span><span class="n">neg_diff_profile</span><span class="p">,</span> <span class="n">neg_price</span><span class="o">=</span><span class="n">neg_price</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">timestamp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">timestamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">timestamp</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">data_broker</span><span class="o">.</span><span class="n">send_variable</span><span class="p">(</span>
+                <span class="n">variable</span><span class="o">=</span><span class="n">var</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">}),</span>
+                <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offer_count</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_inputs_to_none</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_base</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_flex_neg</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_flex_pos</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">electricity_price_series</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_base</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_flex_neg</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_flex_pos</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="FlexibilityIndicatorModule.check_power_end_deviation">
+<a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.check_power_end_deviation">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_power_end_deviation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        calculates the deviation of the final value of the power profiles and warn the user if it exceeds the tolerance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="n">dev_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_flex_pos</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_base</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:])</span>
+        <span class="n">dev_neg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_flex_neg</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_base</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:])</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dev_pos</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">tol</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There is an average deviation of </span><span class="si">{</span><span class="n">dev_pos</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> kW between the final values of power profiles of positive shadow MPC and the baseline. Correction of energy costs might be necessary.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">kpis_pos</span><span class="o">.</span><span class="n">power_flex_within_boundary</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">kpis_pos</span><span class="o">.</span><span class="n">power_flex_within_boundary</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dev_neg</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">tol</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There is an average deviation of </span><span class="si">{</span><span class="n">dev_pos</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> kW between the final values of power profiles of negative shadow MPC and the baseline. Correction of energy costs might be necessary.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">kpis_neg</span><span class="o">.</span><span class="n">power_flex_within_boundary</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">kpis_neg</span><span class="o">.</span><span class="n">power_flex_within_boundary</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="kc">True</span><span class="p">)</span></div>
+</div>
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Felix Stegemerten.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
