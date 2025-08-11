@@ -1,18 +1,12 @@
+import pydantic
 from enum import Enum
 from pathlib import Path
 from typing import List, Optional, Union
-
-import pydantic
+from pydantic import ConfigDict, model_validator
 from agentlib.core.agent import AgentConfig
 from agentlib.core.errors import ConfigurationError
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
-from pydantic import ConfigDict, model_validator
-
-from agentlib_flexquant.data_structures.mpcs import (
-    BaselineMPCData,
-    NFMPCData,
-    PFMPCData
-)
+from agentlib_flexquant.data_structures.mpcs import BaselineMPCData, NFMPCData, PFMPCData
 
 
 class ForcedOffers(Enum):

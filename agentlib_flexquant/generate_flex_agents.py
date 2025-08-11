@@ -3,13 +3,13 @@ import atexit
 import inspect
 import logging
 import os
-from copy import deepcopy
-from pathlib import Path
-from typing import List, Union
-
 import astor
 import black
 import json
+from copy import deepcopy
+from pathlib import Path
+from typing import List, Union
+from pydantic import FilePath
 from agentlib.core.agent import AgentConfig
 from agentlib.core.datamodels import AgentVariable
 from agentlib.core.errors import ConfigurationError
@@ -18,29 +18,13 @@ from agentlib.utils import custom_injection, load_config
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from agentlib_mpc.models.casadi_model import CasadiModelConfig
 from agentlib_mpc.modules.mpc_full import MPCConfig
-from pydantic import FilePath
-
 import agentlib_flexquant.data_structures.globals as glbs
 import agentlib_flexquant.utils.config_management as cmng
-from agentlib_flexquant.utils.parsing import (
-    SetupSystemModifier, 
-    add_import_to_tree
-)
-from agentlib_flexquant.data_structures.flexquant import (
-    FlexibilityIndicatorConfig, 
-    FlexibilityMarketConfig, 
-    FlexQuantConfig
-)
-from agentlib_flexquant.data_structures.mpcs import (
-    BaselineMPCData,
-    BaseMPCData
-)
-from agentlib_flexquant.modules.flexibility_indicator import (
-    FlexibilityIndicatorModuleConfig
-)    
-from agentlib_flexquant.modules.flexibility_market import (
-    FlexibilityMarketModuleConfig
-)   
+from agentlib_flexquant.utils.parsing import SetupSystemModifier
+from agentlib_flexquant.data_structures.flexquant import FlexibilityIndicatorConfig, FlexibilityMarketConfig, FlexQuantConfig
+from agentlib_flexquant.data_structures.mpcs import BaselineMPCData, BaseMPCData
+from agentlib_flexquant.modules.flexibility_indicator import FlexibilityIndicatorModuleConfig
+from agentlib_flexquant.modules.flexibility_market import FlexibilityMarketModuleConfig
 
 
 class FlexAgentGenerator:

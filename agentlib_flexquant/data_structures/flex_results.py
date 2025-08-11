@@ -1,39 +1,21 @@
 import copy
+import json
+import pandas as pd
 from typing import Union, Optional, Dict, Any, List, Type
-
-import agentlib
 from pydantic import FilePath, BaseModel
 from pathlib import Path
-import json
-import os
-import pandas as pd
-
 from agentlib.core.agent import AgentConfig
-from agentlib.core.module import BaseModuleConfig
 from agentlib.utils import load_config
-from agentlib_mpc.modules.mpc import BaseMPCConfig
 from agentlib.modules.simulation.simulator import SimulatorConfig
-from agentlib_flexquant.data_structures.flexquant import (
-    FlexQuantConfig,
-    FlexibilityIndicatorConfig,
-    FlexibilityMarketConfig,
-)
-from agentlib_flexquant.data_structures.mpcs import (
-    BaselineMPCData,
-    NFMPCData,
-    PFMPCData,
-)
-from agentlib_flexquant.utils.data_handling import convert_timescale_of_index
+from agentlib_mpc.modules.mpc import BaseMPCConfig
 from agentlib_mpc.utils import TimeConversionTypes
 from agentlib_mpc.utils.analysis import load_sim, load_mpc, load_mpc_stats
-
-from agentlib_flexquant.modules.flexibility_indicator import (
-    FlexibilityIndicatorModuleConfig,
-)
-from agentlib_flexquant.modules.flexibility_market import (
-    FlexibilityMarketModuleConfig,
-)
 import agentlib_flexquant.utils.config_management as cmng
+from agentlib_flexquant.data_structures.flexquant import FlexQuantConfig, FlexibilityMarketConfig
+from agentlib_flexquant.data_structures.mpcs import BaselineMPCData, NFMPCData, PFMPCData
+from agentlib_flexquant.utils.data_handling import convert_timescale_of_index
+from agentlib_flexquant.modules.flexibility_indicator import FlexibilityIndicatorModuleConfig
+from agentlib_flexquant.modules.flexibility_market import FlexibilityMarketModuleConfig
 
 
 def load_indicator(file_path: Union[str, FilePath]) -> pd.DataFrame:

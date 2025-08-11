@@ -1,11 +1,8 @@
-from agentlib_mpc.modules import mpc_full, minlp_mpc
-from agentlib_flexquant.utils.data_handling import strip_multi_index, fill_nans, MEAN, INTERPOLATE
-from agentlib_flexquant.data_structures.globals import (
-    full_trajectory_prefix,
-    full_trajectory_suffix,
-)
 from typing import Dict, Union
 from agentlib.core.datamodels import AgentVariable
+from agentlib_mpc.modules import mpc_full, minlp_mpc
+from agentlib_flexquant.utils.data_handling import strip_multi_index, fill_nans, MEAN
+from agentlib_flexquant.data_structures.globals import full_trajectory_prefix, full_trajectory_suffix
 
 
 class FlexibilityShadowMPC(mpc_full.MPC):

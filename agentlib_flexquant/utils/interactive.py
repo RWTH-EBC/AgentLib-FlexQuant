@@ -1,7 +1,5 @@
 import webbrowser
 import pandas as pd
-import agentlib_flexquant.data_structures.globals as glbs
-import agentlib_flexquant.data_structures.flex_results as flex_results
 from typing import get_args, Union, Optional
 from pydantic import FilePath
 from dash import Dash, html, dcc, callback, Output, Input, ctx
@@ -10,6 +8,8 @@ from agentlib.core.agent import AgentConfig
 from agentlib_mpc.utils import TimeConversionTypes, TIME_CONVERSION
 from agentlib_mpc.utils.analysis import mpc_at_time_step
 from agentlib_mpc.utils.plotting.interactive import get_port
+import agentlib_flexquant.data_structures.globals as glbs
+import agentlib_flexquant.data_structures.flex_results as flex_results
 from agentlib_flexquant.data_structures.flexquant import FlexQuantConfig
 from agentlib_flexquant.data_structures.flex_kpis import FlexibilityKPIs
 from agentlib_flexquant.data_structures.flex_offer import OfferStatus

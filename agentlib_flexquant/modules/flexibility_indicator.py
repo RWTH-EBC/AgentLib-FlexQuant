@@ -1,19 +1,13 @@
 import logging
 import os
-from pathlib import Path
-from typing import List, Optional
-
-import agentlib
 import numpy as np
 import pandas as pd
-from agentlib.core.errors import ConfigurationError
+from pathlib import Path
+from typing import List, Optional
 from pydantic import BaseModel, ConfigDict, Field, model_validator
-
+import agentlib
 import agentlib_flexquant.data_structures.globals as glbs
-from agentlib_flexquant.data_structures.flex_kpis import (
-    FlexibilityData, 
-    FlexibilityKPIs
-)
+from agentlib_flexquant.data_structures.flex_kpis import FlexibilityData, FlexibilityKPIs
 from agentlib_flexquant.data_structures.flex_offer import FlexOffer
 
 

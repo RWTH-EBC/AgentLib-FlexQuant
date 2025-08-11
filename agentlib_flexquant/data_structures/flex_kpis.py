@@ -1,10 +1,7 @@
-from typing import Union, Optional
-
-import numpy
 import pydantic
 import numpy as np
 import pandas as pd
-
+from typing import Union, Optional
 from agentlib_mpc.utils import TimeConversionTypes, TIME_CONVERSION
 from agentlib_flexquant.data_structures.globals import FlexibilityDirections
 from agentlib_flexquant.utils.data_handling import strip_multi_index, fill_nans, MEAN

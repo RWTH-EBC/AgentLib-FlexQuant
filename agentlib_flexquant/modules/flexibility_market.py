@@ -1,23 +1,18 @@
 import os
-from pathlib import Path
-from typing import List, Optional, Union
-
-import agentlib
 import numpy as np
 import pandas as pd
-import pydantic
+from pathlib import Path
+from typing import List, Optional, Union
+from pydantic import model_validator, ConfigDict, Field
+import agentlib
 from agentlib.core.datamodels import AgentVariable
-from pydantic import model_validator
-
 from agentlib_flexquant.data_structures.flex_offer import OfferStatus, FlexOffer
-from agentlib_flexquant.data_structures.market import (
-    MarketSpecifications
-)
+from agentlib_flexquant.data_structures.market import MarketSpecifications
 
 
 class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
 
-    model_config = pydantic.ConfigDict(
+    model_config = ConfigDict(
         extra='forbid'
     )
 
@@ -46,11 +41,11 @@ class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
 
     market_specs: MarketSpecifications
 
-    results_file: Optional[Path] = pydantic.Field(
+    results_file: Optional[Path] = Field(
         default=Path("flexibility_market.csv"),
         description="User specified results file name"
     )
-    save_results: Optional[bool] = pydantic.Field(
+    save_results: Optional[bool] = Field(
         validate_default=True, 
         default=True
     )

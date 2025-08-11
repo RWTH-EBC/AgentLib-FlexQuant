@@ -1,14 +1,13 @@
-from agentlib.core.agent import AgentConfig
-from agentlib.core.module import BaseModuleConfig
-import agentlib_flexquant.data_structures.globals as glbs
-from copy import deepcopy
-from typing import TypeVar
-from abc import ABCMeta
 import math
-from agentlib.modules import get_all_module_types
 import inspect
 import os
 import importlib.util
+from copy import deepcopy
+from typing import TypeVar
+from abc import ABCMeta
+from agentlib.modules import get_all_module_types
+from agentlib.core.agent import AgentConfig
+from agentlib.core.module import BaseModuleConfig
 
 
 T = TypeVar('T', bound=BaseModuleConfig)
