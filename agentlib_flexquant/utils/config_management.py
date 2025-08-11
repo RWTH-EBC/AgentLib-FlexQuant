@@ -29,8 +29,8 @@ MODULE_NAME_DICT = all_module_types
 MPC_CONFIG_TYPE: str = "agentlib_mpc.mpc"
 BASELINEMPC_CONFIG_TYPE: str = "agentlib_flexquant.baseline_mpc"
 SHADOWMPC_CONFIG_TYPE: str = "agentlib_flexquant.shadow_mpc"
-BASELINEMINLPMPC_CONFIG_TYPE: str = "flexibility_quantification.baseline_minlp_mpc"
-SHADOWMINLPMPC_CONFIG_TYPE: str = "flexibility_quantification.shadow_minlp_mpc"
+BASELINEMINLPMPC_CONFIG_TYPE: str = "agentlib_flexquant.baseline_minlp_mpc"
+SHADOWMINLPMPC_CONFIG_TYPE: str = "agentlib_flexquant.shadow_minlp_mpc"
 INDICATOR_CONFIG_TYPE: str = "agentlib_flexquant.flexibility_indicator"
 MARKET_CONFIG_TYPE: str = "agentlib_flexquant.flexibility_market"
 SIMULATOR_CONFIG_TYPE: str = "simulator"
@@ -48,7 +48,7 @@ def get_module_type_matching_dict(dictionary: dict):
             if v not in value_to_keys:
                 value_to_keys[v] = {'agentlib': [], 'flex': []}
             value_to_keys[v]['agentlib'].append(k)
-        if k.startswith('flexibility_quantification.'):
+        if k.startswith('agentlib_flexquant.'):
             # find the parent class of the module in the flexquant in agentlib_mpc
             for vv in value_to_keys:
                 if vv.import_class() is v.import_class().__bases__[0]:

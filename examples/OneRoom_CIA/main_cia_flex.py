@@ -10,7 +10,7 @@ from agentlib_mpc.utils.analysis import mpc_at_time_step
 from agentlib_flexquant.generate_flex_agents import FlexAgentGenerator
 import logging
 import pandas as pd
-from flexibility_quantification.utils.interactive import Dashboard
+from agentlib_flexquant.utils.interactive import Dashboard
 
 # Set the log-level
 logging.basicConfig(level=logging.WARN)

@@ -3,7 +3,7 @@ from pydantic import model_validator, Field
 from agentlib import AgentVariable
 from agentlib_mpc.modules import mpc_full, minlp_mpc
 from agentlib_mpc.data_structures.mpc_datamodels import Results, MPCVariable
-from flexibility_quantification.data_structures.globals import full_trajectory_suffix
+from agentlib_flexquant.data_structures.globals import full_trajectory_suffix
 
 
 class FlexibilityBaselineMPCConfig(mpc_full.MPCConfig):
