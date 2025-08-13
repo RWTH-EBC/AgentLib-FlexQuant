@@ -31,6 +31,7 @@ class InputsForCorrectFlexCosts(BaseModel):
         description="Name of the variable representing the stored electrical energy in the baseline config"
     )
 
+
 class InputsForCalculateFlexCosts(BaseModel):
     use_constant_electricity_price: bool = Field(
         default=False,
@@ -222,6 +223,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
             )
         return self
 
+
 class FlexibilityIndicatorModule(agentlib.BaseModule):
     config: FlexibilityIndicatorModuleConfig
     data: FlexibilityData
@@ -292,7 +294,6 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 electricity_price_series = pd.Series([self.config.calculate_costs.const_electricity_price for i in grid], index=grid)
                 self.data.electricity_price_series = self.data.format_predictor_inputs(electricity_price_series)
 
-
             necessary_input_for_calc_flex = [self.data.power_profile_base,
                                              self.data.power_profile_flex_neg,
                                              self.data.power_profile_flex_pos]
@@ -319,10 +320,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 self._set_inputs_to_none()
 
     def get_results(self) -> Optional[pd.DataFrame]:
-        """
-        Opens results file of flexibility_indicator.py
-        results_file defined in __init__
-        """
+        """Open results file of flexibility_indicator.py."""
         results_file = self.config.results_file
         try:
             results = pd.read_csv(results_file, header=[0], index_col=[0, 1])
@@ -332,16 +330,18 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             return None
 
     def write_results(self, df: pd.DataFrame, ts: float, n: int) -> pd.DataFrame:
-        """
-        Write every data of variables in self.var_list in an DataFrame
+        """Write every data of variables in self.var_list in an DataFrame.
+
         DataFrame will be updated every time step
 
         Args:
             df: DataFrame which is initialised as an empty DataFrame with columns according to self.var_list
             ts: time step
             n: number of time steps during prediction horizon
+
         Returns:
             DataFrame with results of every variable in self.var_list
+
         """
         results = []
         now = self.env.now
@@ -390,18 +390,14 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         return df
 
     def cleanup_results(self):
-        """
-        removes the existing result files
-        """
+        """Remove the existing result files."""
         results_file = self.config.results_file
         if not results_file:
             return
         os.remove(results_file)
 
     def calc_and_send_offer(self):
-        """
-        Calculate the flexibility KPIs for current predictions, send the flex offer and set the outputs, write and save the results.
-        """
+        """Calculate the flexibility KPIs for current predictions, send the flex offer and set the outputs, write and save the results."""
         # Calculate the flexibility KPIs for current predictions
         self.data.calculate(enable_energy_costs_correction=self.config.correct_costs.enable_energy_costs_correction, calculate_flex_cost=self.config.calculate_costs.calculate_flex_costs)
 
@@ -440,9 +436,9 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             neg_diff_profile: pd.Series, neg_price: float,
             timestamp: float = None
     ):
-        """
-        Send a flex offer as an agent Variable. The first offer is dismissed,
-        since the different MPCs need one time step to fully initialize.
+        """Send a flex offer as an agent Variable.
+
+        The first offer is dismissed, since the different MPCs need one time step to fully initialize.
 
         Args:
             name: name of the agent variable
@@ -452,6 +448,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             neg_diff_profile: power profile for the negative difference (neg-base) in flexibility event time grid
             neg_price: price for negative flexibility
             timestamp: the time offer was generated
+
         """
         if self.offer_count > 0:
             var = self._variables_dict[name]
@@ -479,20 +476,21 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         self.data.stored_energy_profile_flex_pos = None
 
     def check_power_end_deviation(self, tol: float):
-        """
-        calculates the deviation of the final value of the power profiles and warn the user if it exceeds the tolerance
-        """
+        """Calculate the deviation of the final value of the power profiles and warn the user if it exceeds the tolerance."""
         logger = logging.getLogger(__name__)
         dev_pos = np.mean(self.data.power_profile_flex_pos.values[-4:] - self.data.power_profile_base.values[-4:])
         dev_neg = np.mean(self.data.power_profile_flex_neg.values[-4:] - self.data.power_profile_base.values[-4:])
         if abs(dev_pos) > tol:
-            logger.warning(f"There is an average deviation of {dev_pos:.6f} kW between the final values of power profiles of positive shadow MPC and the baseline. Correction of energy costs might be necessary.")
+            logger.warning(f"There is an average deviation of {dev_pos:.6f} kW between the final values of "
+                           f"power profiles of positive shadow MPC and the baseline. "
+                           f"Correction of energy costs might be necessary.")
             self.set(kpis_pos.power_flex_within_boundary.get_kpi_identifier(), False)
         else:
             self.set(kpis_pos.power_flex_within_boundary.get_kpi_identifier(), True)
         if abs(dev_neg) > tol:
-            logger.warning(f"There is an average deviation of {dev_pos:.6f} kW between the final values of power profiles of negative shadow MPC and the baseline. Correction of energy costs might be necessary.")
+            logger.warning(f"There is an average deviation of {dev_pos:.6f} kW between the final values of "
+                           f"power profiles of negative shadow MPC and the baseline. "
+                           f"Correction of energy costs might be necessary.")
             self.set(kpis_neg.power_flex_within_boundary.get_kpi_identifier(), False)
         else:
             self.set(kpis_neg.power_flex_within_boundary.get_kpi_identifier(), True)
-

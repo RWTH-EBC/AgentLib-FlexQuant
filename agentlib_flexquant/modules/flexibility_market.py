@@ -63,9 +63,7 @@ class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
 
 
 class FlexibilityMarketModule(agentlib.BaseModule):
-    """Class to emulate flexibility market. Receives flex offers and accepts these.
-
-    """
+    """Class to emulate flexibility market. Receives flex offers and accepts these."""
     config: FlexibilityMarketModuleConfig
 
     # DataFrame for flex offer. Multiindex: (time_step, time). Columns: pos_price, neg_price, status
@@ -74,14 +72,11 @@ class FlexibilityMarketModule(agentlib.BaseModule):
     abs_flex_event_end: Union[int, float] = 0
 
     def set_random_seed(self, random_seed: int):
-        """set the random seed for reproducability"""
+        """Set the random seed for reproducibility."""
         self.random_generator = np.random.default_rng(seed=random_seed)
 
     def get_results(self) -> Optional[pd.DataFrame]:
-        """
-        Opens results file of flexibilityindicators.py
-        results_file defined in __init__
-        """
+        """Open results file of flexibility_indicators.py."""
         results_file = self.config.results_file
         try:
             results = pd.read_csv(results_file, header=[0], index_col=[0, 1])
@@ -112,7 +107,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         self.cooldown_ticker = 0
 
     def write_results(self, offer: FlexOffer):
-        """ Save the flex offer results depending on the config """
+        """Save the flex offer results depending on the config."""
         if self.flex_offer_df is None:
             self.flex_offer_df = pd.DataFrame()
         df = offer.as_dataframe()
@@ -126,18 +121,17 @@ class FlexibilityMarketModule(agentlib.BaseModule):
             self.flex_offer_df.to_csv(self.config.results_file)
 
     def random_flexibility_callback(self, inp: AgentVariable, name: str):
-        """
-        When a flexibility offer is sent this function is called. 
-        
-            The offer is accepted randomly. The factor self.offer_acceptance_rate determines the
-                random factor for offer acceptance. self.pos_neg_rate is the random factor for
-                the direction of the flexibility. A higher rate means that more positive offers will be accepted.
-            
-            Constraints:
-                cooldown: during $cooldown steps after a flexibility event no offer is accepted
-                minimum_average_flex: min amount of flexibility to be accepted, to account for the model error
-        """
+        """When a flexibility offer is sent, this function is called.
 
+        The offer is accepted randomly. The factor self.offer_acceptance_rate determines the random factor for offer acceptance.
+        self.pos_neg_rate is the random factor for the direction of the flexibility.
+        A higher rate means that more positive offers will be accepted.
+            
+        Constraints:
+            cooldown: during $cooldown steps after a flexibility event no offer is accepted
+            minimum_average_flex: min amount of flexibility to be accepted, to account for the model error
+
+        """
         offer = inp.value
         # check if there is a flexibility provision and the cooldown is finished
         if not self.get("in_provision").value and self.cooldown_ticker == 0:
@@ -168,9 +162,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         self.write_results(offer)
 
     def single_flexibility_callback(self, inp: AgentVariable, name: str):
-        """Callback to activate a single, predefined flexibility offer.
-
-        """
+        """Callback to activate a single, predefined flexibility offer."""
         offer = inp.value
         profile = None
         t_sample = offer.base_power_profile.index[1]-offer.base_power_profile.index[0]
@@ -196,15 +188,15 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         self.write_results(offer)
 
     def custom_flexibility_callback(self, inp: AgentVariable, name: str):
-        """Placeholder for a custom flexibility callback"""
+        """Placeholder for a custom flexibility callback."""
         pass
 
     def dummy_callback(self, inp: AgentVariable, name: str):
-        """Dummy function, that is included, when market type is not specified"""
+        """Dummy function that is included, when market type is not specified."""
         self.logger.warning("No market type provided. No market interaction.")
 
     def cleanup_results(self):
-        """remove the results if already exist"""
+        """Remove the results if they already exist."""
         results_file = self.config.results_file
         if not results_file:
             return

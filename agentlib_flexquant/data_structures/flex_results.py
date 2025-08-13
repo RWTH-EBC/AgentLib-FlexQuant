@@ -19,24 +19,28 @@ from agentlib_flexquant.modules.flexibility_market import FlexibilityMarketModul
 
 
 def load_indicator(file_path: Union[str, FilePath]) -> pd.DataFrame:
-    """
-    Load the flexibility indicator results from the given file path
+    """Load the flexibility indicator results from the given file path.
+
     Args:
         file_path: the file path of the indicator results file
+
     Returns:
-        df: DataFrame containing the indicator results
+        DataFrame containing the indicator results
+
     """
     df = pd.read_csv(file_path, header=0, index_col=[0, 1])
     return df
 
 
 def load_market(file_path: Union[str, FilePath]) -> pd.DataFrame:
-    """
-    Load the market results from the given file path
+    """Load the market results from the given file path.
+
     Args:
         file_path: the file path of the market results file
+
     Returns:
-        df: DataFrame containing the market results
+        DataFrame containing the market results
+
     """
     df = pd.read_csv(file_path, header=0, index_col=[0, 1])
     return df
@@ -108,12 +112,16 @@ class Results:
         # Convert the time in the dataframes to the desired timescale
         self.convert_timescale_of_dataframe_index(to_timescale=to_timescale)
 
-    def _load_flex_config(self, flex_config, custom_base_path):
-        """
-        Load the flex config and optionally override the base directory path.
+    def _load_flex_config(self, flex_config: Optional[Union[str, FilePath, dict]], custom_base_path: Optional[Union[str, FilePath]]):
+        """Load the flex config and optionally override the base directory path.
+
         If a custom base path is provided, it overwrites the "flex_base_directory_path"
         in the given config. This is useful when the generated flex files are saved
         to a custom directory instead of the default (current working directory).
+
+        Args:
+            flex_config: The config for flexibility quantification.
+            custom_base_path: The custom directory for saving the generated flex files defined by user.
 
         """
         if custom_base_path is not None:
@@ -126,9 +134,7 @@ class Results:
             config=flex_config, config_type=FlexQuantConfig)
 
     def _get_config_filenames(self):
-        """
-        Get filenames of configs to load agents and modules.
-        """
+        """Get filenames of configs to load agents and modules."""
         self.config_filename_baseline = BaselineMPCData.model_validate(
             self.generator_config.baseline_config_generator_data
         ).name_of_created_file
@@ -151,9 +157,7 @@ class Results:
             self.config_filename_market = market_config.name_of_created_file
 
     def _load_agent_module_configs(self):
-        """
-        Load agent and module configs.
-        """
+        """Load agent and module configs."""
         for file_path in Path(self.generator_config.flex_files_directory).rglob("*.json"):
             if file_path.name in self.config_filename_baseline:
                 self.baseline_agent_config = load_config.load_config(
@@ -204,9 +208,10 @@ class Results:
                 )
 
     def _load_simulator_config(self, simulator_agent_config):
-        """
-        Load simulator agent and module config separately.
+        """Load simulator agent and module config separately.
+
         Separate loading is required to skip pydantic validation for specific field(s).
+
         """
         # check config type: with results path adaptation -> dict; without -> str/Path
         if isinstance(simulator_agent_config, (str, Path)):
@@ -231,9 +236,7 @@ class Results:
     def _load_results(
         self, results: Union[str, Path, dict]
     ) -> dict[str, dict[str, pd.DataFrame]]:
-        """
-        Load dict with results for mpc, indicator, market and sim from specified results path.
-        """
+        """Load dict with results for mpc, indicator, market and sim from specified results path."""
         # load results
         if results is None:
             res_path = self.generator_config.results_directory
@@ -293,10 +296,7 @@ class Results:
         if self.simulator_agent_config:
             res[self.simulator_agent_config.id] = {
                 self.simulator_module_config.module_id: load_sim(
-                    Path(
-                        res_path.parent.parent,
-                        Path(self.simulator_module_config.result_filename),
-                    )
+                        Path(self.simulator_module_config.result_filename)
                 )
             }
         if self.generator_config.market_config:
@@ -310,10 +310,8 @@ class Results:
             }
         return res, res_path
 
-    def _load_results_dataframes(self, results_dict):
-        """
-        Load results dataframes for mpc, indicator, market and sim.
-        """
+    def _load_results_dataframes(self, results_dict: dict):
+        """Load results dataframes for mpc, indicator, market and sim."""
         if self.simulator_agent_config:
             self.df_simulation = results_dict[self.simulator_agent_config.id][
                 self.simulator_module_config.module_id
@@ -338,9 +336,7 @@ class Results:
             self.df_market = None
 
     def _load_stats_dataframes(self, results_path):
-        """
-        Load dataframes for mpc stats.
-        """
+        """Load dataframes for mpc stats."""
         self.df_baseline_stats = load_mpc_stats(
             Path(
                 results_path,
@@ -367,10 +363,11 @@ class Results:
         )
 
     def convert_timescale_of_dataframe_index(self, to_timescale: TimeConversionTypes):
-        """
-        Convert the time in the dataframes to the desired timescale
+        """Convert the time in the dataframes to the desired timescale
+
         Args:
-            timescale: The timescale to convert the data to
+            to_timescale: The timescale to convert the data to
+
         """
         for df in ([
             self.df_baseline,
@@ -390,11 +387,12 @@ class Results:
         self.current_timescale_of_data = to_timescale
 
     def get_intersection_mpcs_sim(self) -> dict[str, dict[str, str]]:
-        """
-        Get the intersection of the MPCs and the simulator variables.
+        """Get the intersection of the MPCs and the simulator variables.
+
         Returns:
              dictionary with the following structure: Key: variable alias (from baseline)
                                                     Value: {module id: variable name}
+
         """
         id_alias_name_dict = {}
 
@@ -430,8 +428,7 @@ class Results:
             config: Dict[str, Any],
             skip_fields: Optional[List[str]] = None
         ) -> BaseModel:
-        """
-        Create a Pydantic model instance while skipping validation for specified fields.
+        """Create a Pydantic model instance while skipping validation for specified fields.
 
         This function allows partial validation of a model's config dictionary by validating
         all fields except those listed in `skip_fields`. Skipped fields are set on the instance
@@ -445,6 +442,7 @@ class Results:
 
         Returns:
             BaseModel: An instance of the model_class with validated and skipped fields assigned.
+
         """
         if skip_fields is None:
             skip_fields = []
@@ -469,9 +467,7 @@ class Results:
         return instance
 
     def __deepcopy__(self, memo: Dict[int, Any]) -> "Results":
-        """
-        Custom deepcopy implementation that handles Pydantic models with bypassed validation.
-        """
+        """Custom deepcopy implementation that handles Pydantic models with bypassed validation."""
         # Create a new instance of the same class
         new_instance = self.__class__.__new__(self.__class__)
         # Add to memo immediately to prevent circular reference issues

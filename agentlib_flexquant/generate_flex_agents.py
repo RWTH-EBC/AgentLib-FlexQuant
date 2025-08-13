@@ -36,7 +36,9 @@ class FlexAgentGenerator:
     neg_flex_mpc_module_config: the config for the negative flexibility mpc for flexibility quantification
     indicator_module_config: the config for the indicator for flexibility quantification
     market_module_config: the config for the market for flexibility quantification
+
     """
+
     orig_mpc_module_config: MPCConfig
     baseline_mpc_module_config: MPCConfig
     pos_flex_mpc_module_config: MPCConfig
@@ -121,11 +123,11 @@ class FlexAgentGenerator:
         self.run_config_validations()
 
     def generate_flex_agents(self) -> list[str]:
-        """Generates the configs and the python module for the flexibility agents.
-        Power variable must be defined in the mpc config.
+        """Generate the configs and the python module for the flexibility agents.
 
         Returns:
             list of the full path for baseline mpc, pos_flex mpc, neg_flex mpc, indicator and market config
+
         """
         # adapt modules to include necessary communication variables
         baseline_mpc_config = self.adapt_mpc_module_config(
@@ -201,16 +203,17 @@ class FlexAgentGenerator:
         module_type: str,
         config_name: str,
     ):
-        """Appends the given module config to the given agent config and dumps the agent config to a
-        json file. The json file is named based on the config_name.
+        """Append the given module config to the given agent config and dumps the agent config to a json file.
+
+        The json file is named based on the config_name.
 
         Args:
             module: The module config to be appended.
             agent: The agent config to be updated.
             module_type: The type of the module
             config_name: The name of the json file for module config (e.g. baseline.json)
-        """
 
+        """
         # if module is not from the baseline, set a new agent id, based on module id
         if module.type is not self.baseline_mpc_module_config.type:
             agent.id = module.module_id
@@ -242,9 +245,7 @@ class FlexAgentGenerator:
             logging.error("Provided agent config does not contain any modules.")
 
     def get_config_file_paths(self) -> List[str]:
-        """Returns a list of paths with the created config files
-
-        """
+        """Return a list of paths with the created config files."""
         paths = [
             os.path.join(
                 self.flex_config.flex_files_directory,
@@ -273,9 +274,7 @@ class FlexAgentGenerator:
         return paths
 
     def _delete_created_files(self):
-        """Function to run at exit if the files are to be deleted
-
-        """
+        """Function to run at exit if the files are to be deleted."""
         to_be_deleted = self.get_config_file_paths()
         to_be_deleted.append(
             os.path.join(
@@ -291,21 +290,22 @@ class FlexAgentGenerator:
     def adapt_mpc_module_config(
         self, module_config: MPCConfig, mpc_dataclass: BaseMPCData
     ) -> MPCConfig:
-        """Adapts the mpc module config for automated flexibility quantification.
+        """Adapt the mpc module config for automated flexibility quantification.
+
         Things adapted among others are:
         - the file name/path of the mpc config file
         - names of the control variables for the shadow mpcs
         - reduce communicated variables of shadow mpcs to outputs
         - add the power variable to the outputs
-        - add the Time variable to the inputs
         - add parameters for the activation and quantification of flexibility
 
         Args:
             module_config: The module config to be adapted
             mpc_dataclass: The dataclass corresponding to the type of the MPC module.
                            It contains all the extra data necessary for flexibility quantification, which will be used to update the module_config.
+
         Returns:
-            module_config: The adapted module config
+            The adapted module config
 
         """
         # allow the module config to be changed
@@ -442,9 +442,7 @@ class FlexAgentGenerator:
     def adapt_indicator_config(
         self, module_config: FlexibilityIndicatorModuleConfig
     ) -> FlexibilityIndicatorModuleConfig:
-        """Adapts the indicator module config for automated flexibility quantification.
-
-        """
+        """Adapt the indicator module config for automated flexibility quantification."""
         # append user-defined price var to indicator module config
         module_config.inputs.append(
             AgentVariable(
@@ -482,9 +480,7 @@ class FlexAgentGenerator:
     def adapt_market_config(
         self, module_config: FlexibilityMarketModuleConfig
     ) -> FlexibilityMarketModuleConfig:
-        """Adapts the market module config for automated flexibility quantification.
-
-        """
+        """Adapt the market module config for automated flexibility quantification."""
         # allow the module config to be changed
         module_config.model_config["frozen"] = False
         for field in module_config.__fields__:
@@ -500,10 +496,7 @@ class FlexAgentGenerator:
         return module_config
 
     def _generate_flex_model_definition(self):
-        """Generates a python module for negative and positive flexibility agents from
-        the Baseline MPC model
-
-        """
+        """Generate a python module for negative and positive flexibility agents from the Baseline MPC model."""
         output_file = os.path.join(
             self.flex_config.flex_files_directory,
             self.flex_config.baseline_config_generator_data.created_flex_mpcs_file,
@@ -574,8 +567,8 @@ class FlexAgentGenerator:
         """Check if all variables in the expression are defined in the config.
 
         Args:
-            config (CasadiModelConfig): casadi model config.
-            expr (str): The expression to check.
+            config: casadi model config.
+            expr: The expression to check.
 
         Raises:
             ValueError: If any variable in the expression is not defined in the config.
@@ -599,8 +592,7 @@ class FlexAgentGenerator:
             raise ValueError(f"Unknown variables in new cost function: {unknown_vars}")
 
     def run_config_validations(self):
-        """
-        Function to validate integrity of user-supplied flex config.
+        """Function to validate integrity of user-supplied flex config.
 
         The following checks are performed:
         1. Ensures the specified power variable exists in the MPC model outputs.
@@ -689,14 +681,14 @@ class FlexAgentGenerator:
                                             f'Baseline MPC module config value will be used.')
                         
     def adapt_sim_results_path(self, simulator_agent_config: Union[str, Path]) -> dict:
-        """ 
-        Optional helper function to adapt file path for simulator results in sim config
+        """Optional helper function to adapt file path for simulator results in sim config,
         so that sim results land in the same results directory as flex results.
+
         Args:
-            simulator_agent_config (Union[str, Path]): Path to the simulator agent config JSON file.
+            simulator_agent_config: Path to the simulator agent config JSON file.
 
         Returns:
-            dict: The updated simulator config with the modified result file path.
+            The updated simulator config dictionary with the modified result file path.
     
         Raises:
             FileNotFoundError: If the specified config file does not exist.

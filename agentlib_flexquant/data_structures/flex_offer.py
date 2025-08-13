@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from typing import Optional
 from agentlib.core.datamodels import _TYPE_MAP
 
+
 class OfferStatus(Enum):
     not_accepted = "Not Accepted"
     accepted_positive = "Accepted Positive"
@@ -12,9 +13,7 @@ class OfferStatus(Enum):
 
 
 class FlexOffer(BaseModel):
-    """Data class for the flexibility offer
-
-    """
+    """Data class for the flexibility offer."""
     base_power_profile: pd.Series = pydantic.Field(
         default=None,
         unit="W",
@@ -55,8 +54,11 @@ class FlexOffer(BaseModel):
         arbitrary_types_allowed = True
 
     def as_dataframe(self) -> pd.DataFrame:
-        """
-        Returns: DataFrame containing the flexibility offer. Scalar values are written on the first timestep
+        """Store the flexibility offer in a pd.DataFrame
+
+        Returns:
+            DataFrame containing the flexibility offer.
+            Scalar values are written on the first timestep.
 
         """
         data = []

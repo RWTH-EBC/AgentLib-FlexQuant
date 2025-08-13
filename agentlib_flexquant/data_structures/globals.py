@@ -27,14 +27,17 @@ SHADOW_MPC_COST_FUNCTION = ("return ca.if_else(self.time < self.prep_time.sym + 
                             "(self.prep_time.sym + self.flex_event_duration.sym + "
                             "self.market_time.sym), obj_flex, obj_std))")
 
+
 def return_baseline_cost_function(power_variable: str, comfort_variable: str) -> str:
-    """
-    returns baseline cost function
+    """Return baseline cost function
+
     Args:
         power_variable: name of the power variable
         comfort_variable: name of the comfort variable
+
     Returns:
-        cost_func: cost function in the baseline mpc, obj_std is to be evaluated according to user definition
+        Cost function in the baseline mpc, obj_std is to be evaluated according to user definition
+
     """
     if comfort_variable:
         cost_func = ("return ca.if_else(self.in_provision.sym, "

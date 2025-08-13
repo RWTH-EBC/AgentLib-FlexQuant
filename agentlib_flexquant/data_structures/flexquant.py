@@ -139,11 +139,11 @@ class FlexQuantConfig(pydantic.BaseModel):
 
     @model_validator(mode="after")
     def check_config_file_extension(self):
-        """
-        Validates that the indicator and market config file paths have a '.json' extension.
+        """Validate that the indicator and market config file paths have a '.json' extension.
     
         Raises:
             ValueError: If either file does not have the expected '.json' extension.
+
         """
         if isinstance(self.indicator_config, Path) and self.indicator_config.suffix != ".json":
             raise ValueError(
@@ -159,13 +159,13 @@ class FlexQuantConfig(pydantic.BaseModel):
     
     @model_validator(mode="after")
     def adapt_paths_and_create_directory(self):
-        """
-        Adjusts and ensures the directory structure for flex file generation and results storage.
+        """Adjust and ensure the directory structure for flex file generation and results storage.
 
         This method:
-        - Updates `flex_files_directory` and `results_directory` paths so they are relative to 
+        - Updates `flex_files_directory` and `results_directory` paths, so they are relative to
         the base flex directory, using only the directory names (ignoring any user-supplied paths).
         - Creates the base, flex files, and results directories if they do not already exist.
+
         """
         # adapt paths and use only names for user supplied data
         self.flex_files_directory = (
