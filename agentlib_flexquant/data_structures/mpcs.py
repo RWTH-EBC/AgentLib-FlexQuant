@@ -1,6 +1,5 @@
 import pydantic
 from pydantic import ConfigDict, model_validator
-from typing import List, Optional
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 import agentlib_flexquant.data_structures.globals as glbs
 import agentlib_flexquant.utils.config_management as cmng
@@ -20,9 +19,9 @@ class BaseMPCData(pydantic.BaseModel):
     # variables
     power_alias: str
     stored_energy_alias: str
-    config_inputs_appendix: List[MPCVariable] = []
-    config_parameters_appendix: List[MPCVariable] = []
-    weights: List[MPCVariable] = pydantic.Field(
+    config_inputs_appendix: list[MPCVariable] = []
+    config_parameters_appendix: list[MPCVariable] = []
+    weights: list[MPCVariable] = pydantic.Field(
         default=[],
         description="Name and value of weights",
     )
@@ -62,14 +61,14 @@ class BaselineMPCData(BaseMPCData):
         default=1,
         description="Weight of soft constraint for discomfort",
     )
-    config_inputs_appendix: List[MPCVariable] = [
+    config_inputs_appendix: list[MPCVariable] = [
         MPCVariable(name="_P_external", value=0, unit="W"),
         MPCVariable(name="in_provision", value=False),
         MPCVariable(name="rel_start", value=0, unit="s"),
         MPCVariable(name="rel_end", value=0, unit="s"),
     ]
-    config_parameters_appendix: List[MPCVariable] = []
-    weights: List[MPCVariable] = pydantic.Field(
+    config_parameters_appendix: list[MPCVariable] = []
+    weights: list[MPCVariable] = pydantic.Field(
         default=[],
         description="Name and value of weights",
     )
@@ -113,15 +112,15 @@ class PFMPCData(BaseMPCData):
         description="Cost function of the PF-MPC",
     )
     # initialize market parameters with dummy values (0)
-    config_parameters_appendix: List[MPCVariable] = [
+    config_parameters_appendix: list[MPCVariable] = [
         MPCVariable(name=glbs.PREP_TIME, value=0, unit="s"),
         MPCVariable(name=glbs.MARKET_TIME, value=0, unit="s"),
         MPCVariable(name=glbs.FLEX_EVENT_DURATION, value=0, unit="s"),
     ]
-    config_inputs_appendix: List[MPCVariable] = [
+    config_inputs_appendix: list[MPCVariable] = [
         MPCVariable(name="in_provision", value=False),
     ]
-    weights: List[MPCVariable] = pydantic.Field(
+    weights: list[MPCVariable] = pydantic.Field(
         default=[],
         description="Name and value of weights",
     )
@@ -146,15 +145,15 @@ class NFMPCData(BaseMPCData):
         description="Cost function of the NF-MPC",
     )
     # initialize market parameters with dummy values (0)
-    config_parameters_appendix: List[MPCVariable] = [
+    config_parameters_appendix: list[MPCVariable] = [
         MPCVariable(name=glbs.PREP_TIME, value=0, unit="s"),
         MPCVariable(name=glbs.MARKET_TIME, value=0, unit="s"),
         MPCVariable(name=glbs.FLEX_EVENT_DURATION, value=0, unit="s"),
     ]
-    config_inputs_appendix: List[MPCVariable] = [
+    config_inputs_appendix: list[MPCVariable] = [
         MPCVariable(name="in_provision", value=False),
     ]
-    weights: List[MPCVariable] = pydantic.Field(
+    weights: list[MPCVariable] = pydantic.Field(
         default=[],
         description="Name and value of weights",
     )

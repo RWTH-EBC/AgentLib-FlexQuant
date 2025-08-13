@@ -1,5 +1,5 @@
 import copy
-from typing import Union, Optional, Dict, Any, List, Type
+from typing import Union, Optional, Dict, Any, Type
 
 import agentlib
 from pydantic import FilePath, BaseModel
@@ -99,7 +99,7 @@ class Results:
         if isinstance(results, Results):
             self.__dict__ = copy.deepcopy(results).__dict__
             return
-        
+
         # Load flex config
         self._load_flex_config(flex_config, generated_flex_files_base_path)
         # Get filenames of configs to load agents and modules
@@ -134,7 +134,7 @@ class Results:
 
         self.generator_config = load_config.load_config(
             config=flex_config, config_type=FlexQuantConfig)
-    
+
     def _get_config_filenames(self):
         """
         Get filenames of configs to load agents and modules.
@@ -149,7 +149,7 @@ class Results:
             self.generator_config.shadow_mpc_config_generator_data.neg_flex
         ).name_of_created_file
         self.config_filename_indicator = self.generator_config.indicator_config.name_of_created_file
-        
+
         if self.generator_config.market_config:
             market_config_raw = self.generator_config.market_config
             if isinstance(market_config_raw, (str, Path)):
@@ -159,7 +159,7 @@ class Results:
             else:
                 market_config = FlexibilityMarketConfig.model_validate(market_config_raw)
             self.config_filename_market = market_config.name_of_created_file
-        
+
     def _load_agent_module_configs(self):
         """
         Load agent and module configs.
@@ -209,7 +209,7 @@ class Results:
                     config=file_path, config_type=AgentConfig
                 )
                 self.market_module_config = cmng.get_module(
-                    config=self.market_agent_config, 
+                    config=self.market_agent_config,
                     module_type=cmng.MARKET_CONFIG_TYPE
                 )
 
@@ -230,11 +230,11 @@ class Results:
         )
         # instantiate and validate sim agent config
         self.simulator_agent_config = AgentConfig.model_validate(sim_config)
-        # instantiate sim module config by skipping validation for result_filename 
+        # instantiate sim module config by skipping validation for result_filename
         # to prevent file deletion
         self.simulator_module_config = self.create_instance_with_skipped_validation(
-            model_class=SimulatorConfig, 
-            config=sim_module_config, 
+            model_class=SimulatorConfig,
+            config=sim_module_config,
             skip_fields=["result_filename"]
         )
 
@@ -253,7 +253,7 @@ class Results:
             res_path = self.generator_config.results_directory
         else:
             raise ValueError("results must be a path or dict")
-        
+
         res = {
             self.baseline_agent_config.id: {
                 self.baseline_module_config.module_id: load_mpc(
@@ -303,10 +303,7 @@ class Results:
         if self.simulator_agent_config:
             res[self.simulator_agent_config.id] = {
                 self.simulator_module_config.module_id: load_sim(
-                    Path(
-                        res_path,
-                        Path(self.simulator_module_config.result_filename).name,
-                    )
+                        Path(self.simulator_module_config.result_filename)
                 )
             }
         if self.generator_config.market_config:
@@ -323,7 +320,7 @@ class Results:
     def _load_results_dataframes(self, results_dict):
         """
         Load results dataframes for mpc, indicator, market and sim.
-        """        
+        """
         if self.simulator_agent_config:
             self.df_simulation = results_dict[self.simulator_agent_config.id][
                 self.simulator_module_config.module_id
@@ -435,22 +432,22 @@ class Results:
         return id_alias_name_dict
 
     def create_instance_with_skipped_validation(
-            self, 
-            model_class: Type[BaseModel], 
-            config: Dict[str, Any], 
-            skip_fields: Optional[List[str]] = None
+            self,
+            model_class: Type[BaseModel],
+            config: Dict[str, Any],
+            skip_fields: Optional[list[str]] = None
         ) -> BaseModel:
         """
         Create a Pydantic model instance while skipping validation for specified fields.
 
-        This function allows partial validation of a model's config dictionary by validating 
-        all fields except those listed in `skip_fields`. Skipped fields are set on the instance 
+        This function allows partial validation of a model's config dictionary by validating
+        all fields except those listed in `skip_fields`. Skipped fields are set on the instance
         after construction without triggering their validators.
 
         Args:
             model_class (Type[BaseModel]): The Pydantic model class to instantiate.
             config (Dict[str, Any]): The input configuration dictionary.
-            skip_fields (Optional[List[str]]): A list of field names to exclude from validation. 
+            skip_fields (Optional[list[str]]): A list of field names to exclude from validation.
                                                 These fields will be manually set after instantiation.
 
         Returns:
@@ -464,7 +461,7 @@ class Results:
         # Create instance with validation for non-skipped fields
         if validated_fields:
             instance = model_class(
-                **validated_fields, 
+                **validated_fields,
                 _agent_id=self.simulator_agent_config.id
             )
         else:
@@ -477,7 +474,7 @@ class Results:
         object.__setattr__(instance, '_bypassed_fields', skip_fields)
         object.__setattr__(instance, '_original_config', config)
         return instance
-    
+
     def __deepcopy__(self, memo: Dict[int, Any]) -> "Results":
         """
         Custom deepcopy implementation that handles Pydantic models with bypassed validation.

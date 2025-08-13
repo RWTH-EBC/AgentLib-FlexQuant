@@ -1,7 +1,6 @@
 import agentlib as al
 import numpy as np
 import pandas as pd
-from typing import List
 
 class PredictorModuleConfig(al.BaseModuleConfig):
     """Module that outputs a prediction of the ambient temp and comfort setpoint
@@ -74,7 +73,7 @@ class PredictorModuleConfig(al.BaseModuleConfig):
         ),
     ]
 
-    shared_variable_fields: List[str] = ["outputs"]
+    shared_variable_fields: list[str] = ["outputs"]
 
 class PredictorModule(al.BaseModule):
     """Module that outputs a prediction of the ambient temp and comfort setpoint

@@ -5,7 +5,7 @@ import logging
 import os
 from copy import deepcopy
 from pathlib import Path
-from typing import List, Union
+from typing import Union
 
 import astor
 import black
@@ -17,7 +17,7 @@ from agentlib.core.module import BaseModuleConfig
 from agentlib.utils import custom_injection, load_config
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from agentlib_mpc.models.casadi_model import CasadiModelConfig
-from agentlib_mpc.modules.mpc_full import BaseMPCConfig
+from agentlib_mpc.modules.mpc_full import MPCConfig
 from pydantic import FilePath
 
 import agentlib_flexquant.data_structures.globals as glbs
@@ -44,10 +44,10 @@ from agentlib_flexquant.modules.flexibility_market import (
 
 
 class FlexAgentGenerator:
-    orig_mpc_module_config: BaseMPCConfig
-    baseline_mpc_module_config: BaseMPCConfig
-    pos_flex_mpc_module_config: BaseMPCConfig
-    neg_flex_mpc_module_config: BaseMPCConfig
+    orig_mpc_module_config: MPCConfig
+    baseline_mpc_module_config: MPCConfig
+    pos_flex_mpc_module_config: MPCConfig
+    neg_flex_mpc_module_config: MPCConfig
     indicator_module_config: FlexibilityIndicatorModuleConfig
     market_module_config: FlexibilityMarketModuleConfig
 
@@ -127,15 +127,7 @@ class FlexAgentGenerator:
 
         self.run_config_validations()
 
-    def generate_flex_agents(
-        self,
-    ) -> [
-        BaseMPCConfig,
-        BaseMPCConfig,
-        BaseMPCConfig,
-        FlexibilityIndicatorModuleConfig,
-        FlexibilityMarketModuleConfig,
-    ]:
+    def generate_flex_agents(self) -> list[str]:
         """Generates the configs and the python module for the flexibility agents.
         Power variable must be defined in the mpc config.
 
@@ -247,7 +239,7 @@ class FlexAgentGenerator:
         else:
             logging.error("Provided agent config does not contain any modules.")
 
-    def get_config_file_paths(self) -> List[str]:
+    def get_config_file_paths(self) -> list[str]:
         """Returns a list of paths with the created config files
 
         """
@@ -295,8 +287,8 @@ class FlexAgentGenerator:
         Path(self.flex_config.flex_files_directory).rmdir()
 
     def adapt_mpc_module_config(
-        self, module_config: BaseMPCConfig, mpc_dataclass: BaseMPCData
-    ) -> BaseMPCConfig:
+        self, module_config: MPCConfig, mpc_dataclass: BaseMPCData
+    ) -> MPCConfig:
         """Adapts the mpc module config for automated flexibility quantification.
         Things adapted among others are:
         - the file name/path of the mpc config file
