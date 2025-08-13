@@ -28,9 +28,9 @@
 
         
         <h2>Score</h2>
-        5.63 / 10
+        5.64 / 10
             
-            (previous score: 5.63 / 10)
+            (previous score: 5.64 / 10)
             
         
 
@@ -110,7 +110,18 @@
             self.logger.error(&#34;Results file %s was not found.&#34;, results_file)
             return None
 
-    def register_callbacks(self):</pre></td>
+    def write_results(self, df: pd.DataFrame, ts: float, n: int) -&gt; pd.DataFrame:
+        &#34;&#34;&#34;
+        Write every data of variables in self.var_list in an DataFrame
+        DataFrame will be updated every time step
+
+        Args:
+            df: DataFrame which is initialised as an empty DataFrame with columns according to self.var_list
+            ts: time step
+            n: number of time steps during prediction horizon
+        Returns:
+            DataFrame with results of every variable in self.var_list
+        &#34;&#34;&#34;</pre></td>
             </tr>
             
             <tr>
@@ -1045,7 +1056,7 @@
             </tr>
             
             <tr>
-                <td>316</td>
+                <td>313</td>
                 <td>33</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -1055,7 +1066,7 @@
             </tr>
             
             <tr>
-                <td>385</td>
+                <td>382</td>
                 <td>12</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1065,7 +1076,7 @@
             </tr>
             
             <tr>
-                <td>421</td>
+                <td>418</td>
                 <td>23</td>
                 <td>refactor</td>
                 <td><code>consider-using-in</code></td>
@@ -1075,7 +1086,7 @@
             </tr>
             
             <tr>
-                <td>454</td>
+                <td>451</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1085,7 +1096,7 @@
             </tr>
             
             <tr>
-                <td>462</td>
+                <td>459</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1095,7 +1106,7 @@
             </tr>
             
             <tr>
-                <td>501</td>
+                <td>498</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-final-newline</code></td>
@@ -1593,26 +1604,6 @@
             <tr>
                 <td>3</td>
                 <td>0</td>
-                <td>convention</td>
-                <td><code>wrong-import-order</code></td>
-                <td>C0411</td>
-                <td></td>
-                <td><pre>standard import &#34;from typing import List, Optional&#34; should be placed before &#34;import pydantic&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>3</td>
-                <td>0</td>
-                <td>warning</td>
-                <td><code>unused-import</code></td>
-                <td>W0611</td>
-                <td></td>
-                <td><pre>Unused Optional imported from typing</pre></td>
-            </tr>
-            
-            <tr>
-                <td>4</td>
-                <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
                 <td>E0401</td>
@@ -1621,7 +1612,7 @@
             </tr>
             
             <tr>
-                <td>9</td>
+                <td>8</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -1631,7 +1622,7 @@
             </tr>
             
             <tr>
-                <td>32</td>
+                <td>31</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -1641,7 +1632,7 @@
             </tr>
             
             <tr>
-                <td>54</td>
+                <td>53</td>
                 <td>21</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -1651,7 +1642,7 @@
             </tr>
             
             <tr>
-                <td>59</td>
+                <td>58</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1661,7 +1652,7 @@
             </tr>
             
             <tr>
-                <td>79</td>
+                <td>78</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -1671,7 +1662,7 @@
             </tr>
             
             <tr>
-                <td>98</td>
+                <td>97</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -1681,7 +1672,7 @@
             </tr>
             
             <tr>
-                <td>131</td>
+                <td>130</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -3253,7 +3244,7 @@
                 <td><code>wrong-import-order</code></td>
                 <td>C0411</td>
                 <td></td>
-                <td><pre>standard import &#34;from typing import List, Optional, Union&#34; should be placed before &#34;import pydantic&#34;</pre></td>
+                <td><pre>standard import &#34;from typing import Optional, Union&#34; should be placed before &#34;import pydantic&#34;</pre></td>
             </tr>
             
             <tr>
@@ -4880,7 +4871,7 @@
             
             <tr>
                 <td>convention</td>
-                <td>269</td>
+                <td>268</td>
             </tr>
             
             <tr>
@@ -4890,7 +4881,7 @@
             
             <tr>
                 <td>warning</td>
-                <td>49</td>
+                <td>48</td>
             </tr>
             
         </table>
@@ -4980,12 +4971,12 @@
             
             <tr>
                 <td>wrong-import-order</td>
-                <td>17</td>
+                <td>16</td>
             </tr>
             
             <tr>
                 <td>unused-import</td>
-                <td>11</td>
+                <td>10</td>
             </tr>
             
             <tr>
@@ -5220,7 +5211,7 @@
             
             <tr>
                 <td>agentlib_flexquant.data_structures.mpcs</td>
-                <td>13</td>
+                <td>11</td>
             </tr>
             
             <tr>
@@ -5325,7 +5316,7 @@
             
             <tr>
                 <td>agentlib_flexquant/data_structures/mpcs.py</td>
-                <td>13</td>
+                <td>11</td>
             </tr>
             
             <tr>
