@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../../../">
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>agentlib_flexquant.utils.parsing &mdash; agentlib_flexquant 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
 
   
-      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -110,16 +110,11 @@
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="create_ast_element">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.create_ast_element">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">create_ast_element</span><span class="p">(</span><span class="n">template_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">:</span>
+<div class="viewcode-block" id="create_ast_element"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.create_ast_element">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">create_ast_element</span><span class="p">(</span><span class="n">template_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">template_string</span><span class="p">)</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span></div>
 
 
-
-<div class="viewcode-block" id="add_input">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_input">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">add_input</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">:</span>
+<div class="viewcode-block" id="add_input"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_input">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">add_input</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">create_ast_element</span><span class="p">(</span>
         <span class="n">INPUT_TEMPLATE</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span>
             <span class="n">class_name</span><span class="o">=</span><span class="n">CASADI_INPUT</span><span class="p">,</span>
@@ -132,10 +127,7 @@
     <span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="add_parameter">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_parameter">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">add_parameter</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">:</span>
+<div class="viewcode-block" id="add_parameter"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_parameter">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">add_parameter</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">create_ast_element</span><span class="p">(</span>
         <span class="n">PARAMETER_TEMPLATE</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span>
             <span class="n">class_name</span><span class="o">=</span><span class="n">CASADI_PARAMETER</span><span class="p">,</span>
@@ -147,10 +139,7 @@
     <span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="add_output">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_output">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">add_output</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">:</span>
+<div class="viewcode-block" id="add_output"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_output">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">add_output</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">create_ast_element</span><span class="p">(</span>
         <span class="n">OUTPUT_TEMPLATE</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span>
             <span class="n">class_name</span><span class="o">=</span><span class="n">CASADI_OUTPUT</span><span class="p">,</span>
@@ -163,10 +152,7 @@
     <span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="SetupSystemModifier">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">SetupSystemModifier</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">NodeTransformer</span><span class="p">):</span>
+<div class="viewcode-block" id="SetupSystemModifier"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">SetupSystemModifier</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">NodeTransformer</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A custom AST transformer for modifying the MPC model file.</span>
 
 <span class="sd">    This class traverses the AST of the input file, identifies the relevant classes and methods,</span>
@@ -197,9 +183,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">modify_config_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modify_config_class_baseline</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">modify_setup_system</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modify_setup_system_baseline</span>
 
-<div class="viewcode-block" id="SetupSystemModifier.visit_Module">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.visit_Module">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">visit_Module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
+<div class="viewcode-block" id="SetupSystemModifier.visit_Module"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.visit_Module">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">visit_Module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Visit a module definition in the AST.</span>
 
 <span class="sd">        Appends or deletes the import statements at the top of the module.</span>
@@ -222,10 +206,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">generic_visit</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">module</span></div>
 
-
-<div class="viewcode-block" id="SetupSystemModifier.visit_ClassDef">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.visit_ClassDef">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">visit_ClassDef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">ClassDef</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">ClassDef</span><span class="p">:</span>
+<div class="viewcode-block" id="SetupSystemModifier.visit_ClassDef"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.visit_ClassDef">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">visit_ClassDef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">ClassDef</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">ClassDef</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Visit a class definition in the AST.</span>
 
 <span class="sd">        This method is called for each class definition in the AST. It identifies the</span>
@@ -265,10 +246,7 @@
 
         <span class="k">return</span> <span class="n">node</span></div>
 
-
-<div class="viewcode-block" id="SetupSystemModifier.get_leftmost_list">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.get_leftmost_list">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_leftmost_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">Tuple</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">BinOp</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">List</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">List</span><span class="p">]:</span>
+<div class="viewcode-block" id="SetupSystemModifier.get_leftmost_list"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.get_leftmost_list">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_leftmost_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">Tuple</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">BinOp</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">List</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">List</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Recursively traverse binary operations to get the leftmost list.</span>
 
@@ -290,10 +268,7 @@
         <span class="c1"># If we get here, we couldn&#39;t find a list</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
-
-<div class="viewcode-block" id="SetupSystemModifier.modify_config_class_shadow">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.modify_config_class_shadow">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">modify_config_class_shadow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">ClassDef</span><span class="p">):</span>
+<div class="viewcode-block" id="SetupSystemModifier.modify_config_class_shadow"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.modify_config_class_shadow">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">modify_config_class_shadow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">ClassDef</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Modify the config class of the shadow mpc.</span>
 
 <span class="sd">        Args:</span>
@@ -347,10 +322,7 @@
                         <span class="p">)</span>
                     <span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="SetupSystemModifier.modify_config_class_baseline">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.modify_config_class_baseline">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">modify_config_class_baseline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">ClassDef</span><span class="p">):</span>
+<div class="viewcode-block" id="SetupSystemModifier.modify_config_class_baseline"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.modify_config_class_baseline">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">modify_config_class_baseline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">ClassDef</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Modify the config class of the baseline mpc.</span>
 
 <span class="sd">        Args:</span>
@@ -443,10 +415,7 @@
                         <span class="n">add_parameter</span><span class="p">(</span><span class="n">parameter</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">parameter</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
                     <span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="SetupSystemModifier.modify_setup_system_shadow">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.modify_setup_system_shadow">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">modify_setup_system_shadow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">FunctionDef</span><span class="p">):</span>
+<div class="viewcode-block" id="SetupSystemModifier.modify_setup_system_shadow"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.modify_setup_system_shadow">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">modify_setup_system_shadow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">FunctionDef</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Modify the setup_system method of the shadow mpc model class.</span>
 
 <span class="sd">        This method changes the return statement of the setup_system method and adds</span>
@@ -546,10 +515,7 @@
                 <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="n">i</span><span class="p">:]</span> <span class="o">=</span> <span class="n">new_body</span>
                 <span class="k">break</span></div>
 
-
-<div class="viewcode-block" id="SetupSystemModifier.modify_setup_system_baseline">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.modify_setup_system_baseline">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">modify_setup_system_baseline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">FunctionDef</span><span class="p">):</span>
+<div class="viewcode-block" id="SetupSystemModifier.modify_setup_system_baseline"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.modify_setup_system_baseline">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">modify_setup_system_baseline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">FunctionDef</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Modify the setup_system method of the baseline mpc model class.</span>
 
 <span class="sd">        This method changes the return statement of the setup_system method and adds</span>
@@ -607,14 +573,10 @@
                 <span class="p">]</span>
                 <span class="c1"># append new variables to end of function</span>
                 <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="n">i</span><span class="p">:]</span> <span class="o">=</span> <span class="n">full_traj_list</span> <span class="o">+</span> <span class="n">new_body</span>
-                <span class="k">break</span></div>
-</div>
+                <span class="k">break</span></div></div>
 
 
-
-<div class="viewcode-block" id="add_import_to_tree">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_import_to_tree">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">add_import_to_tree</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">alias</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tree</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
+<div class="viewcode-block" id="add_import_to_tree"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_import_to_tree">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">add_import_to_tree</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">alias</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tree</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; add import to the module, the statement &#39;import name as alias&#39; will be added&#39;</span>
 <span class="sd">    Args:</span>
 <span class="sd">        name (str): name of the module to be imported</span>
@@ -639,10 +601,7 @@
     <span class="k">return</span> <span class="n">tree</span></div>
 
 
-
-<div class="viewcode-block" id="remove_all_imports_from_tree">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.remove_all_imports_from_tree">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">remove_all_imports_from_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
+<div class="viewcode-block" id="remove_all_imports_from_tree"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.remove_all_imports_from_tree">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">remove_all_imports_from_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
     <span class="c1"># Create a new list to hold nodes that are not imports</span>
     <span class="n">new_body</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">node</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">tree</span><span class="o">.</span><span class="n">body</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Import</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">ImportFrom</span><span class="p">))</span>
@@ -650,7 +609,6 @@
     <span class="c1"># Update the body of the tree to the new list</span>
     <span class="n">tree</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">new_body</span>
     <span class="k">return</span> <span class="n">tree</span></div>
-
 </pre></div>
 
            </div>

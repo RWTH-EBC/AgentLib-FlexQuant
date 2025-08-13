@@ -28,9 +28,9 @@
 
         
         <h2>Score</h2>
-        5.87 / 10
+        5.86 / 10
             
-            (previous score: 5.87 / 10)
+            (previous score: 5.86 / 10)
             
         
 
@@ -110,7 +110,18 @@
             self.logger.error(&#34;Results file %s was not found.&#34;, results_file)
             return None
 
-    def register_callbacks(self):</pre></td>
+    def write_results(self, df: pd.DataFrame, ts: float, n: int) -&gt; pd.DataFrame:
+        &#34;&#34;&#34;
+        Write every data of variables in self.var_list in an DataFrame
+        DataFrame will be updated every time step
+
+        Args:
+            df: DataFrame which is initialised as an empty DataFrame with columns according to self.var_list
+            ts: time step
+            n: number of time steps during prediction horizon
+        Returns:
+            DataFrame with results of every variable in self.var_list
+        &#34;&#34;&#34;</pre></td>
             </tr>
             
             <tr>
@@ -129,6 +140,7 @@
                 f&#34;Expected a &#39;.csv&#39; file.&#34;
             )
         return self
+
 </pre></td>
             </tr>
             
@@ -3919,26 +3931,6 @@
             
             <tr>
                 <td>131</td>
-                <td>59</td>
-                <td>warning</td>
-                <td><code>fixme</code></td>
-                <td>W0511</td>
-                <td></td>
-                <td><pre>TODO: find usage in other branches</pre></td>
-            </tr>
-            
-            <tr>
-                <td>131</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>missing-function-docstring</code></td>
-                <td>C0116</td>
-                <td>subtract_relative_path</td>
-                <td><pre>Missing function or method docstring</pre></td>
-            </tr>
-            
-            <tr>
-                <td>153</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -4709,7 +4701,7 @@
             
             <tr>
                 <td>convention</td>
-                <td>269</td>
+                <td>268</td>
             </tr>
             
             <tr>
@@ -4719,7 +4711,7 @@
             
             <tr>
                 <td>warning</td>
-                <td>38</td>
+                <td>37</td>
             </tr>
             
         </table>
@@ -4834,7 +4826,7 @@
             
             <tr>
                 <td>missing-function-docstring</td>
-                <td>29</td>
+                <td>28</td>
             </tr>
             
             <tr>
@@ -4904,11 +4896,6 @@
             
             <tr>
                 <td>unused-variable</td>
-                <td>1</td>
-            </tr>
-            
-            <tr>
-                <td>fixme</td>
                 <td>1</td>
             </tr>
             
@@ -5019,7 +5006,7 @@
             
             <tr>
                 <td>agentlib_flexquant.utils.config_management</td>
-                <td>15</td>
+                <td>13</td>
             </tr>
             
             <tr>
@@ -5124,7 +5111,7 @@
             
             <tr>
                 <td>agentlib_flexquant/utils/config_management.py</td>
-                <td>15</td>
+                <td>13</td>
             </tr>
             
             <tr>
