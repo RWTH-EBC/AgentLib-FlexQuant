@@ -5,7 +5,7 @@ import logging
 import os
 from copy import deepcopy
 from pathlib import Path
-from typing import List, Union
+from typing import Union
 
 import astor
 import black
@@ -239,7 +239,7 @@ class FlexAgentGenerator:
         else:
             logging.error("Provided agent config does not contain any modules.")
 
-    def get_config_file_paths(self) -> List[str]:
+    def get_config_file_paths(self) -> list[str]:
         """Returns a list of paths with the created config files
 
         """

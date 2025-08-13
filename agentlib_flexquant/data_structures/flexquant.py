@@ -1,6 +1,6 @@
 from enum import Enum
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 import pydantic
 from agentlib.core.agent import AgentConfig
@@ -26,7 +26,7 @@ class ShadowMPCConfigGeneratorConfig(pydantic.BaseModel):
         json_encoders={MPCVariable: lambda v: v.dict()},
         extra='forbid'
     )    
-    weights: List[MPCVariable] = pydantic.Field(
+    weights: list[MPCVariable] = pydantic.Field(
         default=[],
         description="Name and value of weights",
     )

@@ -1,5 +1,5 @@
 import copy
-from typing import Union, Optional, Dict, Any, List, Type
+from typing import Union, Optional, Dict, Any, Type
 
 import agentlib
 from pydantic import FilePath, BaseModel
@@ -435,7 +435,7 @@ class Results:
             self,
             model_class: Type[BaseModel],
             config: Dict[str, Any],
-            skip_fields: Optional[List[str]] = None
+            skip_fields: Optional[list[str]] = None
         ) -> BaseModel:
         """
         Create a Pydantic model instance while skipping validation for specified fields.
@@ -447,7 +447,7 @@ class Results:
         Args:
             model_class (Type[BaseModel]): The Pydantic model class to instantiate.
             config (Dict[str, Any]): The input configuration dictionary.
-            skip_fields (Optional[List[str]]): A list of field names to exclude from validation.
+            skip_fields (Optional[list[str]]): A list of field names to exclude from validation.
                                                 These fields will be manually set after instantiation.
 
         Returns:

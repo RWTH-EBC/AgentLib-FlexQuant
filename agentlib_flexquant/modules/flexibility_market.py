@@ -6,7 +6,7 @@ import pandas as pd
 from pathlib import Path
 from pydantic import model_validator
 from agentlib_flexquant.data_structures.flex_offer import OfferStatus
-from typing import List, Optional, Union
+from typing import Optional, Union
 from agentlib.core.datamodels import AgentVariable
 from agentlib.core.errors import ConfigurationError
 from agentlib_flexquant.data_structures.flex_offer import OfferStatus, FlexOffer
@@ -19,11 +19,11 @@ class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
         extra='forbid'
     )
 
-    inputs: List[AgentVariable] = [
+    inputs: list[AgentVariable] = [
         AgentVariable(name="FlexibilityOffer")
     ]
 
-    outputs: List[AgentVariable] = [
+    outputs: list[AgentVariable] = [
         AgentVariable(
             name="_P_external", alias="_P_external",
             description="External Power IO"
@@ -53,7 +53,7 @@ class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
         default=True
     )
 
-    shared_variable_fields: List[str] = ["outputs"]
+    shared_variable_fields: list[str] = ["outputs"]
 
     @model_validator(mode="after")
     def check_results_file_extension(self):

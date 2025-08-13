@@ -1,5 +1,5 @@
 import ast
-from typing import Union, List, Optional
+from typing import Union, Optional
 from string import Template
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from agentlib_flexquant.data_structures.mpcs import (
@@ -93,8 +93,8 @@ class SetupSystemModifier(ast.NodeTransformer):
     def __init__(
         self,
         mpc_data: BaseMPCData,
-        controls: List[MPCVariable],
-        binary_controls: Optional[List[MPCVariable]],
+        controls: list[MPCVariable],
+        binary_controls: Optional[list[MPCVariable]],
     ):
         self.mpc_data = mpc_data
         self.controls = controls
