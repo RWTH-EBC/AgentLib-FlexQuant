@@ -171,7 +171,7 @@ class Results:
                 )
                 self.baseline_module_config = cmng.get_module(
                     config=self.baseline_agent_config,
-                    module_type=self._get_module_type(self.baseline_agent_config),
+                    module_type=self._get_mpc_module_type(self.baseline_agent_config),
                 )
 
             elif file_path.name in self.config_filename_pos_flex:
@@ -180,7 +180,7 @@ class Results:
                 )
                 self.pos_flex_module_config = cmng.get_module(
                     config=self.pos_flex_agent_config,
-                    module_type=self._get_module_type(self.pos_flex_agent_config),
+                    module_type=self._get_mpc_module_type(self.pos_flex_agent_config),
                 )
 
             elif file_path.name in self.config_filename_neg_flex:
@@ -189,7 +189,7 @@ class Results:
                 )
                 self.neg_flex_module_config = cmng.get_module(
                     config=self.neg_flex_agent_config,
-                    module_type=self._get_module_type(self.neg_flex_agent_config),
+                    module_type=self._get_mpc_module_type(self.neg_flex_agent_config),
                 )
 
             elif file_path.name in self.config_filename_indicator:
@@ -238,7 +238,18 @@ class Results:
             skip_fields=["result_filename"]
         )
 
-    def _get_module_type(self, agent_config: AgentConfig):
+    def _get_mpc_module_type(self, agent_config: AgentConfig) -> str:
+        """Get the mpc module type from agent_config.
+
+        The module type is defined in agentlib_flexquant.
+
+        Args:
+            agent_config: the AgentConfig containing the mpc module
+
+        Returns:
+            The type of the mpc module
+
+        """
         for module in agent_config.modules:
             if module['type'] in [cmng.BASELINEMPC_CONFIG_TYPE, cmng.BASELINEMINLPMPC_CONFIG_TYPE,
                                   cmng.SHADOWMPC_CONFIG_TYPE, cmng.SHADOWMINLPMPC_CONFIG_TYPE]:
