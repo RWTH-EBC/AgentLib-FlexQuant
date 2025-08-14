@@ -1,15 +1,15 @@
-from typing import List
-from pydantic import model_validator, Field
+from typing import Dict
+from pydantic import Field
 from agentlib import AgentVariable
 from agentlib_mpc.modules import mpc_full, minlp_mpc
-from agentlib_mpc.data_structures.mpc_datamodels import Results, MPCVariable
+from agentlib_mpc.data_structures.mpc_datamodels import Results
 from agentlib_flexquant.data_structures.globals import full_trajectory_suffix
 
 
 class FlexibilityBaselineMPCConfig(mpc_full.MPCConfig):
 
     # define an AgentVariable list for the full control trajectory, since use MPCVariable output affects the optimization result
-    full_controls: List[AgentVariable] = Field(default=[])
+    full_controls: list[AgentVariable] = Field(default=[])
 
 
 class FlexibilityBaselineMPC(mpc_full.MPC):

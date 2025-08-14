@@ -211,7 +211,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                             None,
                             control.unit,
                             "full control trajectory output of baseline mpc",
-                            type="pd.Series",
+                            "pd.Series",
                         )
                     )
                 # also include binary controls
@@ -223,7 +223,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                                 None,
                                 control.unit,
                                 "full control trajectory output of baseline mpc",
-                                type="pd.Series",
+                                "pd.Series",
                             )
                         )
                 body.value.elts.append(
