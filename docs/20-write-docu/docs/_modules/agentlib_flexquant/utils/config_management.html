@@ -107,8 +107,9 @@
 
 
 <div class="viewcode-block" id="get_module_type_matching_dict"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.config_management.get_module_type_matching_dict">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_module_type_matching_dict</span><span class="p">(</span><span class="n">dictionary</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates two dictionaries, which map the modules types of the agentlib_mpc modules</span>
-<span class="sd">        to those of the flexquant modules. This is done by using the MODULE_TYPE_DICT</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create two dictionaries, which map the modules types of the agentlib_mpc modules to those of the flexquant modules.</span>
+
+<span class="sd">    This is done by using the MODULE_TYPE_DICT.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Create dictionaries to store keys grouped by values</span>
@@ -145,18 +146,14 @@
 
 
 <div class="viewcode-block" id="get_orig_module_type"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.config_management.get_orig_module_type">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_orig_module_type</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">AgentConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the config type of the original MPC</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the config type of the original MPC.&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">module</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;agentlib_mpc&quot;</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">module</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="get_module"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.config_management.get_module">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_module</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">AgentConfig</span><span class="p">,</span> <span class="n">module_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts a module from a config based on its name</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts a module from a config based on its name.&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">module</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">module_type</span><span class="p">:</span>
             <span class="c1"># deepcopy -&gt; avoid changing the original config, when editing the module</span>
@@ -170,11 +167,8 @@
                                   <span class="sa">f</span><span class="s2">&quot;agentlib and its plug ins.&quot;</span><span class="p">)</span></div>
 
 
-
 <div class="viewcode-block" id="to_dict_and_remove_unnecessary_fields"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.config_management.to_dict_and_remove_unnecessary_fields">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">to_dict_and_remove_unnecessary_fields</span><span class="p">(</span><span class="n">module</span><span class="p">:</span> <span class="n">BaseModuleConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Removes unnecessary fields from the module to keep the created json simple</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove unnecessary fields from the module to keep the created json simple.&quot;&quot;&quot;</span>
     <span class="n">excluded_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;rdf_class&quot;</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;timestamp&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="s2">&quot;unit&quot;</span><span class="p">,</span> <span class="s2">&quot;clip&quot;</span><span class="p">,</span>
                        <span class="s2">&quot;shared&quot;</span><span class="p">,</span> <span class="s2">&quot;interpolation_method&quot;</span><span class="p">,</span> <span class="s2">&quot;allowed_values&quot;</span><span class="p">]</span>
 

@@ -105,6 +105,7 @@
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the variable representing the stored electrical energy in the baseline config&quot;</span>
     <span class="p">)</span></div>
 
+
 <div class="viewcode-block" id="InputsForCalculateFlexCosts"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">InputsForCalculateFlexCosts</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">use_constant_electricity_price</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -296,6 +297,7 @@
             <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div></div>
 
+
 <div class="viewcode-block" id="FlexibilityIndicatorModule"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityIndicatorModule</span><span class="p">(</span><span class="n">agentlib</span><span class="o">.</span><span class="n">BaseModule</span><span class="p">):</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">FlexibilityIndicatorModuleConfig</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">FlexibilityData</span>
@@ -366,7 +368,6 @@
                 <span class="n">electricity_price_series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">const_electricity_price</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">grid</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">grid</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">electricity_price_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">format_predictor_inputs</span><span class="p">(</span><span class="n">electricity_price_series</span><span class="p">)</span>
 
-
             <span class="n">necessary_input_for_calc_flex</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_base</span><span class="p">,</span>
                                              <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_flex_neg</span><span class="p">,</span>
                                              <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_flex_pos</span><span class="p">]</span>
@@ -393,10 +394,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_set_inputs_to_none</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="FlexibilityIndicatorModule.get_results"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.get_results">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_results</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Opens results file of flexibility_indicator.py</span>
-<span class="sd">        results_file defined in __init__</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Open results file of flexibility_indicator.py.&quot;&quot;&quot;</span>
         <span class="n">results_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">results_file</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">results_file</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">index_col</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
@@ -406,16 +404,18 @@
             <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="FlexibilityIndicatorModule.write_results"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.write_results">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">write_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">ts</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Write every data of variables in self.var_list in an DataFrame</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write every data of variables in self.var_list in an DataFrame.</span>
+
 <span class="sd">        DataFrame will be updated every time step</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            df: DataFrame which is initialised as an empty DataFrame with columns according to self.var_list</span>
 <span class="sd">            ts: time step</span>
 <span class="sd">            n: number of time steps during prediction horizon</span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            DataFrame with results of every variable in self.var_list</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">now</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span>
@@ -464,18 +464,14 @@
         <span class="k">return</span> <span class="n">df</span></div>
 
 <div class="viewcode-block" id="FlexibilityIndicatorModule.cleanup_results"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.cleanup_results">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">cleanup_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        removes the existing result files</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove the existing result files.&quot;&quot;&quot;</span>
         <span class="n">results_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">results_file</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">results_file</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">results_file</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlexibilityIndicatorModule.calc_and_send_offer"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.calc_and_send_offer">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">calc_and_send_offer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Calculate the flexibility KPIs for current predictions, send the flex offer and set the outputs, write and save the results.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the flexibility KPIs for current predictions, send the flex offer and set the outputs, write and save the results.&quot;&quot;&quot;</span>
         <span class="c1"># Calculate the flexibility KPIs for current predictions</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">enable_energy_costs_correction</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">enable_energy_costs_correction</span><span class="p">,</span> <span class="n">calculate_flex_cost</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">calculate_flex_costs</span><span class="p">)</span>
 
@@ -514,9 +510,9 @@
             <span class="n">neg_diff_profile</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">neg_price</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
             <span class="n">timestamp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Send a flex offer as an agent Variable. The first offer is dismissed,</span>
-<span class="sd">        since the different MPCs need one time step to fully initialize.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Send a flex offer as an agent Variable.</span>
+
+<span class="sd">        The first offer is dismissed, since the different MPCs need one time step to fully initialize.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            name: name of the agent variable</span>
@@ -526,6 +522,7 @@
 <span class="sd">            neg_diff_profile: power profile for the negative difference (neg-base) in flexibility event time grid</span>
 <span class="sd">            neg_price: price for negative flexibility</span>
 <span class="sd">            timestamp: the time offer was generated</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">offer_count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_variables_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
@@ -553,23 +550,24 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_flex_pos</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="FlexibilityIndicatorModule.check_power_end_deviation"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.check_power_end_deviation">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">check_power_end_deviation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        calculates the deviation of the final value of the power profiles and warn the user if it exceeds the tolerance</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the deviation of the final value of the power profiles and warn the user if it exceeds the tolerance.&quot;&quot;&quot;</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
         <span class="n">dev_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_flex_pos</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_base</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:])</span>
         <span class="n">dev_neg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_flex_neg</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_base</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:])</span>
         <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dev_pos</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">tol</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There is an average deviation of </span><span class="si">{</span><span class="n">dev_pos</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> kW between the final values of power profiles of positive shadow MPC and the baseline. Correction of energy costs might be necessary.&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There is an average deviation of </span><span class="si">{</span><span class="n">dev_pos</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> kW between the final values of &quot;</span>
+                           <span class="sa">f</span><span class="s2">&quot;power profiles of positive shadow MPC and the baseline. &quot;</span>
+                           <span class="sa">f</span><span class="s2">&quot;Correction of energy costs might be necessary.&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">kpis_pos</span><span class="o">.</span><span class="n">power_flex_within_boundary</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="kc">False</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">kpis_pos</span><span class="o">.</span><span class="n">power_flex_within_boundary</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dev_neg</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">tol</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There is an average deviation of </span><span class="si">{</span><span class="n">dev_pos</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> kW between the final values of power profiles of negative shadow MPC and the baseline. Correction of energy costs might be necessary.&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There is an average deviation of </span><span class="si">{</span><span class="n">dev_pos</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> kW between the final values of &quot;</span>
+                           <span class="sa">f</span><span class="s2">&quot;power profiles of negative shadow MPC and the baseline. &quot;</span>
+                           <span class="sa">f</span><span class="s2">&quot;Correction of energy costs might be necessary.&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">kpis_neg</span><span class="o">.</span><span class="n">power_flex_within_boundary</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="kc">False</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">kpis_neg</span><span class="o">.</span><span class="n">power_flex_within_boundary</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="kc">True</span><span class="p">)</span></div></div>
-
 </pre></div>
 
            </div>

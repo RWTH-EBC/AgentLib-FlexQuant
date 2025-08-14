@@ -28,9 +28,9 @@
 
         
         <h2>Score</h2>
-        5.86 / 10
+        5.87 / 10
             
-            (previous score: 5.86 / 10)
+            (previous score: 5.87 / 10)
             
         
 
@@ -100,8 +100,8 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.flexibility_indicator:[325:345]
-==agentlib_flexquant.modules.flexibility_market:[84:93]
+==agentlib_flexquant.modules.flexibility_indicator:[323:345]
+==agentlib_flexquant.modules.flexibility_market:[79:88]
         results_file = self.config.results_file
         try:
             results = pd.read_csv(results_file, header=[0], index_col=[0, 1])
@@ -111,16 +111,18 @@
             return None
 
     def write_results(self, df: pd.DataFrame, ts: float, n: int) -&gt; pd.DataFrame:
-        &#34;&#34;&#34;
-        Write every data of variables in self.var_list in an DataFrame
+        &#34;&#34;&#34;Write every data of variables in self.var_list in an DataFrame.
+
         DataFrame will be updated every time step
 
         Args:
             df: DataFrame which is initialised as an empty DataFrame with columns according to self.var_list
             ts: time step
             n: number of time steps during prediction horizon
+
         Returns:
             DataFrame with results of every variable in self.var_list
+
         &#34;&#34;&#34;</pre></td>
             </tr>
             
@@ -132,7 +134,7 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.flexibility_indicator:[217:224]
+==agentlib_flexquant.modules.flexibility_indicator:[218:226]
 ==agentlib_flexquant.modules.flexibility_market:[56:64]
         if self.results_file and self.results_file.suffix != &#34;.csv&#34;:
             raise ValueError(
@@ -248,7 +250,7 @@
             </tr>
             
             <tr>
-                <td>30</td>
+                <td>29</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
@@ -258,7 +260,7 @@
             </tr>
             
             <tr>
-                <td>30</td>
+                <td>29</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -269,16 +271,16 @@
             
             <tr>
                 <td>33</td>
-                <td>4</td>
+                <td>0</td>
                 <td>convention</td>
-                <td><code>missing-function-docstring</code></td>
-                <td>C0116</td>
-                <td>KPI.get_kpi_identifier</td>
-                <td><pre>Missing function or method docstring</pre></td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (106/100)</pre></td>
             </tr>
             
             <tr>
-                <td>54</td>
+                <td>51</td>
                 <td>8</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -288,7 +290,7 @@
             </tr>
             
             <tr>
-                <td>55</td>
+                <td>52</td>
                 <td>8</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -298,17 +300,17 @@
             </tr>
             
             <tr>
-                <td>82</td>
+                <td>72</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
                 <td>C0301</td>
                 <td></td>
-                <td><pre>Line too long (115/100)</pre></td>
+                <td><pre>Line too long (118/100)</pre></td>
             </tr>
             
             <tr>
-                <td>153</td>
+                <td>144</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -318,7 +320,7 @@
             </tr>
             
             <tr>
-                <td>200</td>
+                <td>191</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
@@ -328,7 +330,7 @@
             </tr>
             
             <tr>
-                <td>205</td>
+                <td>196</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>unused-argument</code></td>
@@ -338,7 +340,7 @@
             </tr>
             
             <tr>
-                <td>219</td>
+                <td>210</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -348,7 +350,7 @@
             </tr>
             
             <tr>
-                <td>226</td>
+                <td>218</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -358,7 +360,7 @@
             </tr>
             
             <tr>
-                <td>237</td>
+                <td>229</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -368,7 +370,7 @@
             </tr>
             
             <tr>
-                <td>242</td>
+                <td>233</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -378,7 +380,7 @@
             </tr>
             
             <tr>
-                <td>250</td>
+                <td>240</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -388,7 +390,7 @@
             </tr>
             
             <tr>
-                <td>271</td>
+                <td>262</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -398,17 +400,27 @@
             </tr>
             
             <tr>
-                <td>306</td>
+                <td>280</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
                 <td>C0301</td>
                 <td></td>
-                <td><pre>Line too long (155/100)</pre></td>
+                <td><pre>Line too long (104/100)</pre></td>
             </tr>
             
             <tr>
-                <td>343</td>
+                <td>291</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (158/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>327</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -418,7 +430,7 @@
             </tr>
             
             <tr>
-                <td>367</td>
+                <td>355</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-many-instance-attributes</code></td>
@@ -428,7 +440,7 @@
             </tr>
             
             <tr>
-                <td>426</td>
+                <td>411</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
@@ -438,7 +450,7 @@
             </tr>
             
             <tr>
-                <td>426</td>
+                <td>411</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -448,7 +460,7 @@
             </tr>
             
             <tr>
-                <td>429</td>
+                <td>414</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
@@ -458,7 +470,7 @@
             </tr>
             
             <tr>
-                <td>433</td>
+                <td>418</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -468,7 +480,7 @@
             </tr>
             
             <tr>
-                <td>506</td>
+                <td>492</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -478,7 +490,7 @@
             </tr>
             
             <tr>
-                <td>507</td>
+                <td>493</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -572,23 +584,13 @@
             </tr>
             
             <tr>
-                <td>8</td>
+                <td>9</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
                 <td>C0115</td>
                 <td>OfferStatus</td>
                 <td><pre>Missing class docstring</pre></td>
-            </tr>
-            
-            <tr>
-                <td>9</td>
-                <td>4</td>
-                <td>convention</td>
-                <td><code>invalid-name</code></td>
-                <td>C0103</td>
-                <td>OfferStatus</td>
-                <td><pre>Class constant name &#34;not_accepted&#34; doesn&#39;t conform to UPPER_CASE naming style</pre></td>
             </tr>
             
             <tr>
@@ -598,7 +600,7 @@
                 <td><code>invalid-name</code></td>
                 <td>C0103</td>
                 <td>OfferStatus</td>
-                <td><pre>Class constant name &#34;accepted_positive&#34; doesn&#39;t conform to UPPER_CASE naming style</pre></td>
+                <td><pre>Class constant name &#34;not_accepted&#34; doesn&#39;t conform to UPPER_CASE naming style</pre></td>
             </tr>
             
             <tr>
@@ -608,11 +610,21 @@
                 <td><code>invalid-name</code></td>
                 <td>C0103</td>
                 <td>OfferStatus</td>
+                <td><pre>Class constant name &#34;accepted_positive&#34; doesn&#39;t conform to UPPER_CASE naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>12</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>OfferStatus</td>
                 <td><pre>Class constant name &#34;accepted_negative&#34; doesn&#39;t conform to UPPER_CASE naming style</pre></td>
             </tr>
             
             <tr>
-                <td>14</td>
+                <td>15</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -622,7 +634,7 @@
             </tr>
             
             <tr>
-                <td>54</td>
+                <td>53</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
@@ -632,7 +644,7 @@
             </tr>
             
             <tr>
-                <td>54</td>
+                <td>53</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -642,17 +654,7 @@
             </tr>
             
             <tr>
-                <td>59</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>line-too-long</code></td>
-                <td>C0301</td>
-                <td></td>
-                <td><pre>Line too long (108/100)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>73</td>
+                <td>75</td>
                 <td>8</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -786,7 +788,7 @@
             </tr>
             
             <tr>
-                <td>29</td>
+                <td>31</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -796,7 +798,7 @@
             </tr>
             
             <tr>
-                <td>41</td>
+                <td>45</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -806,7 +808,7 @@
             </tr>
             
             <tr>
-                <td>45</td>
+                <td>49</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
@@ -816,7 +818,7 @@
             </tr>
             
             <tr>
-                <td>45</td>
+                <td>49</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-many-instance-attributes</code></td>
@@ -826,7 +828,7 @@
             </tr>
             
             <tr>
-                <td>80</td>
+                <td>84</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
@@ -836,7 +838,7 @@
             </tr>
             
             <tr>
-                <td>85</td>
+                <td>89</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -846,7 +848,27 @@
             </tr>
             
             <tr>
-                <td>121</td>
+                <td>115</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (133/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>124</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (103/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>129</td>
                 <td>21</td>
                 <td>warning</td>
                 <td><code>unspecified-encoding</code></td>
@@ -856,7 +878,7 @@
             </tr>
             
             <tr>
-                <td>121</td>
+                <td>129</td>
                 <td>47</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -866,7 +888,7 @@
             </tr>
             
             <tr>
-                <td>147</td>
+                <td>153</td>
                 <td>20</td>
                 <td>warning</td>
                 <td><code>unspecified-encoding</code></td>
@@ -876,7 +898,7 @@
             </tr>
             
             <tr>
-                <td>213</td>
+                <td>218</td>
                 <td>17</td>
                 <td>warning</td>
                 <td><code>unspecified-encoding</code></td>
@@ -886,7 +908,7 @@
             </tr>
             
             <tr>
-                <td>213</td>
+                <td>218</td>
                 <td>54</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -896,7 +918,7 @@
             </tr>
             
             <tr>
-                <td>287</td>
+                <td>290</td>
                 <td>33</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -916,7 +938,7 @@
             </tr>
             
             <tr>
-                <td>375</td>
+                <td>372</td>
                 <td>12</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -926,7 +948,7 @@
             </tr>
             
             <tr>
-                <td>411</td>
+                <td>409</td>
                 <td>23</td>
                 <td>refactor</td>
                 <td><code>consider-using-in</code></td>
@@ -936,7 +958,7 @@
             </tr>
             
             <tr>
-                <td>444</td>
+                <td>441</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -946,23 +968,13 @@
             </tr>
             
             <tr>
-                <td>452</td>
+                <td>450</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
                 <td>C0301</td>
                 <td></td>
                 <td><pre>Line too long (104/100)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>491</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>missing-final-newline</code></td>
-                <td>C0304</td>
-                <td></td>
-                <td><pre>Final newline missing</pre></td>
             </tr>
             
         </table>
@@ -1209,16 +1221,6 @@
                 <td><pre>Trailing whitespace</pre></td>
             </tr>
             
-            <tr>
-                <td>183</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>missing-final-newline</code></td>
-                <td>C0304</td>
-                <td></td>
-                <td><pre>Final newline missing</pre></td>
-            </tr>
-            
         </table>
         
         <h3>Module <code>agentlib_flexquant.data_structures.globals</code> (<code>agentlib_flexquant/data_structures/globals.py</code>)</h3>
@@ -1254,17 +1256,7 @@
             </tr>
             
             <tr>
-                <td>37</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>line-too-long</code></td>
-                <td>C0301</td>
-                <td></td>
-                <td><pre>Line too long (109/100)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>43</td>
+                <td>46</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1274,7 +1266,7 @@
             </tr>
             
             <tr>
-                <td>49</td>
+                <td>52</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1532,7 +1524,7 @@
             </tr>
             
             <tr>
-                <td>32</td>
+                <td>31</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -1542,7 +1534,7 @@
             </tr>
             
             <tr>
-                <td>54</td>
+                <td>52</td>
                 <td>21</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -1552,7 +1544,7 @@
             </tr>
             
             <tr>
-                <td>59</td>
+                <td>57</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1562,7 +1554,7 @@
             </tr>
             
             <tr>
-                <td>79</td>
+                <td>77</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -1572,7 +1564,7 @@
             </tr>
             
             <tr>
-                <td>98</td>
+                <td>96</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -1582,7 +1574,7 @@
             </tr>
             
             <tr>
-                <td>131</td>
+                <td>128</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -1816,7 +1808,7 @@
             </tr>
             
             <tr>
-                <td>128</td>
+                <td>129</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1826,7 +1818,7 @@
             </tr>
             
             <tr>
-                <td>150</td>
+                <td>152</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -1836,7 +1828,7 @@
             </tr>
             
             <tr>
-                <td>162</td>
+                <td>164</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1846,7 +1838,7 @@
             </tr>
             
             <tr>
-                <td>168</td>
+                <td>170</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1856,7 +1848,7 @@
             </tr>
             
             <tr>
-                <td>183</td>
+                <td>185</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -1866,7 +1858,7 @@
             </tr>
             
             <tr>
-                <td>188</td>
+                <td>190</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1876,7 +1868,7 @@
             </tr>
             
             <tr>
-                <td>188</td>
+                <td>190</td>
                 <td>13</td>
                 <td>warning</td>
                 <td><code>unspecified-encoding</code></td>
@@ -1886,7 +1878,7 @@
             </tr>
             
             <tr>
-                <td>188</td>
+                <td>190</td>
                 <td>107</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1896,7 +1888,7 @@
             </tr>
             
             <tr>
-                <td>194</td>
+                <td>196</td>
                 <td>28</td>
                 <td>warning</td>
                 <td><code>unnecessary-lambda</code></td>
@@ -1906,7 +1898,17 @@
             </tr>
             
             <tr>
-                <td>236</td>
+                <td>206</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (110/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>239</td>
                 <td>17</td>
                 <td>warning</td>
                 <td><code>unspecified-encoding</code></td>
@@ -1916,7 +1918,7 @@
             </tr>
             
             <tr>
-                <td>238</td>
+                <td>241</td>
                 <td>17</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1926,7 +1928,7 @@
             </tr>
             
             <tr>
-                <td>291</td>
+                <td>290</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-branches</code></td>
@@ -1936,7 +1938,7 @@
             </tr>
             
             <tr>
-                <td>306</td>
+                <td>305</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1956,7 +1958,7 @@
             </tr>
             
             <tr>
-                <td>492</td>
+                <td>488</td>
                 <td>16</td>
                 <td>convention</td>
                 <td><code>unnecessary-dunder-call</code></td>
@@ -1966,7 +1968,7 @@
             </tr>
             
             <tr>
-                <td>502</td>
+                <td>498</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-locals</code></td>
@@ -1976,87 +1978,7 @@
             </tr>
             
             <tr>
-                <td>526</td>
-                <td>13</td>
-                <td>warning</td>
-                <td><code>unspecified-encoding</code></td>
-                <td>W1514</td>
-                <td>FlexAgentGenerator._generate_flex_model_definition</td>
-                <td><pre>Using open without explicitly specifying an encoding</pre></td>
-            </tr>
-            
-            <tr>
-                <td>526</td>
-                <td>47</td>
-                <td>convention</td>
-                <td><code>invalid-name</code></td>
-                <td>C0103</td>
-                <td>FlexAgentGenerator._generate_flex_model_definition</td>
-                <td><pre>Variable name &#34;f&#34; doesn&#39;t conform to snake_case naming style</pre></td>
-            </tr>
-            
-            <tr>
-                <td>534</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>line-too-long</code></td>
-                <td>C0301</td>
-                <td></td>
-                <td><pre>Line too long (149/100)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>539</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>line-too-long</code></td>
-                <td>C0301</td>
-                <td></td>
-                <td><pre>Line too long (149/100)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>544</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>line-too-long</code></td>
-                <td>C0301</td>
-                <td></td>
-                <td><pre>Line too long (149/100)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>570</td>
-                <td>13</td>
-                <td>warning</td>
-                <td><code>unspecified-encoding</code></td>
-                <td>W1514</td>
-                <td>FlexAgentGenerator._generate_flex_model_definition</td>
-                <td><pre>Using open without explicitly specifying an encoding</pre></td>
-            </tr>
-            
-            <tr>
-                <td>570</td>
-                <td>39</td>
-                <td>convention</td>
-                <td><code>invalid-name</code></td>
-                <td>C0103</td>
-                <td>FlexAgentGenerator._generate_flex_model_definition</td>
-                <td><pre>Variable name &#34;f&#34; doesn&#39;t conform to snake_case naming style</pre></td>
-            </tr>
-            
-            <tr>
-                <td>601</td>
-                <td>4</td>
-                <td>refactor</td>
-                <td><code>too-many-branches</code></td>
-                <td>R0912</td>
-                <td>FlexAgentGenerator.run_config_validations</td>
-                <td><pre>Too many branches (17/12)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>608</td>
+                <td>499</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2066,7 +1988,97 @@
             </tr>
             
             <tr>
-                <td>609</td>
+                <td>519</td>
+                <td>13</td>
+                <td>warning</td>
+                <td><code>unspecified-encoding</code></td>
+                <td>W1514</td>
+                <td>FlexAgentGenerator._generate_flex_model_definition</td>
+                <td><pre>Using open without explicitly specifying an encoding</pre></td>
+            </tr>
+            
+            <tr>
+                <td>519</td>
+                <td>47</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>FlexAgentGenerator._generate_flex_model_definition</td>
+                <td><pre>Variable name &#34;f&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>527</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (149/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>532</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (149/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>537</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (149/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>563</td>
+                <td>13</td>
+                <td>warning</td>
+                <td><code>unspecified-encoding</code></td>
+                <td>W1514</td>
+                <td>FlexAgentGenerator._generate_flex_model_definition</td>
+                <td><pre>Using open without explicitly specifying an encoding</pre></td>
+            </tr>
+            
+            <tr>
+                <td>563</td>
+                <td>39</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>FlexAgentGenerator._generate_flex_model_definition</td>
+                <td><pre>Variable name &#34;f&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>594</td>
+                <td>4</td>
+                <td>refactor</td>
+                <td><code>too-many-branches</code></td>
+                <td>R0912</td>
+                <td>FlexAgentGenerator.run_config_validations</td>
+                <td><pre>Too many branches (17/12)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>600</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (112/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>601</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2076,7 +2088,7 @@
             </tr>
             
             <tr>
-                <td>610</td>
+                <td>602</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2086,7 +2098,7 @@
             </tr>
             
             <tr>
-                <td>613</td>
+                <td>605</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2096,7 +2108,7 @@
             </tr>
             
             <tr>
-                <td>622</td>
+                <td>614</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2106,7 +2118,7 @@
             </tr>
             
             <tr>
-                <td>624</td>
+                <td>616</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2116,7 +2128,7 @@
             </tr>
             
             <tr>
-                <td>627</td>
+                <td>619</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2126,7 +2138,7 @@
             </tr>
             
             <tr>
-                <td>628</td>
+                <td>620</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2136,7 +2148,7 @@
             </tr>
             
             <tr>
-                <td>635</td>
+                <td>627</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2146,7 +2158,7 @@
             </tr>
             
             <tr>
-                <td>637</td>
+                <td>629</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2156,7 +2168,7 @@
             </tr>
             
             <tr>
-                <td>644</td>
+                <td>636</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2166,7 +2178,7 @@
             </tr>
             
             <tr>
-                <td>645</td>
+                <td>637</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2176,7 +2188,7 @@
             </tr>
             
             <tr>
-                <td>647</td>
+                <td>639</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2186,7 +2198,7 @@
             </tr>
             
             <tr>
-                <td>649</td>
+                <td>641</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2196,7 +2208,7 @@
             </tr>
             
             <tr>
-                <td>650</td>
+                <td>642</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2206,7 +2218,7 @@
             </tr>
             
             <tr>
-                <td>650</td>
+                <td>642</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>logging-fstring-interpolation</code></td>
@@ -2216,7 +2228,7 @@
             </tr>
             
             <tr>
-                <td>652</td>
+                <td>644</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2226,7 +2238,7 @@
             </tr>
             
             <tr>
-                <td>653</td>
+                <td>645</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2236,7 +2248,7 @@
             </tr>
             
             <tr>
-                <td>654</td>
+                <td>646</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2246,7 +2258,7 @@
             </tr>
             
             <tr>
-                <td>668</td>
+                <td>660</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2256,7 +2268,7 @@
             </tr>
             
             <tr>
-                <td>668</td>
+                <td>660</td>
                 <td>37</td>
                 <td>warning</td>
                 <td><code>f-string-without-interpolation</code></td>
@@ -2266,7 +2278,7 @@
             </tr>
             
             <tr>
-                <td>672</td>
+                <td>664</td>
                 <td>41</td>
                 <td>warning</td>
                 <td><code>f-string-without-interpolation</code></td>
@@ -2276,7 +2288,7 @@
             </tr>
             
             <tr>
-                <td>673</td>
+                <td>665</td>
                 <td>59</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2286,7 +2298,7 @@
             </tr>
             
             <tr>
-                <td>676</td>
+                <td>668</td>
                 <td>104</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2296,7 +2308,7 @@
             </tr>
             
             <tr>
-                <td>676</td>
+                <td>668</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2306,7 +2318,7 @@
             </tr>
             
             <tr>
-                <td>677</td>
+                <td>669</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2316,7 +2328,7 @@
             </tr>
             
             <tr>
-                <td>683</td>
+                <td>675</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2326,7 +2338,7 @@
             </tr>
             
             <tr>
-                <td>683</td>
+                <td>675</td>
                 <td>24</td>
                 <td>warning</td>
                 <td><code>logging-fstring-interpolation</code></td>
@@ -2336,7 +2348,7 @@
             </tr>
             
             <tr>
-                <td>688</td>
+                <td>680</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2346,7 +2358,7 @@
             </tr>
             
             <tr>
-                <td>688</td>
+                <td>680</td>
                 <td>24</td>
                 <td>warning</td>
                 <td><code>logging-fstring-interpolation</code></td>
@@ -2356,7 +2368,7 @@
             </tr>
             
             <tr>
-                <td>690</td>
+                <td>682</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2366,7 +2378,7 @@
             </tr>
             
             <tr>
-                <td>706</td>
+                <td>698</td>
                 <td>13</td>
                 <td>warning</td>
                 <td><code>unspecified-encoding</code></td>
@@ -2376,7 +2388,7 @@
             </tr>
             
             <tr>
-                <td>706</td>
+                <td>698</td>
                 <td>50</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2386,7 +2398,7 @@
             </tr>
             
             <tr>
-                <td>715</td>
+                <td>707</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2614,7 +2626,7 @@
             </tr>
             
             <tr>
-                <td>34</td>
+                <td>35</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
@@ -2624,7 +2636,7 @@
             </tr>
             
             <tr>
-                <td>34</td>
+                <td>35</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -2634,7 +2646,7 @@
             </tr>
             
             <tr>
-                <td>49</td>
+                <td>50</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -2644,7 +2656,7 @@
             </tr>
             
             <tr>
-                <td>49</td>
+                <td>50</td>
                 <td>4</td>
                 <td>error</td>
                 <td><code>no-self-argument</code></td>
@@ -2654,7 +2666,7 @@
             </tr>
             
             <tr>
-                <td>51</td>
+                <td>52</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2664,7 +2676,7 @@
             </tr>
             
             <tr>
-                <td>51</td>
+                <td>52</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>broad-exception-raised</code></td>
@@ -2674,7 +2686,7 @@
             </tr>
             
             <tr>
-                <td>52</td>
+                <td>53</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2684,7 +2696,7 @@
             </tr>
             
             <tr>
-                <td>53</td>
+                <td>54</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2694,7 +2706,7 @@
             </tr>
             
             <tr>
-                <td>62</td>
+                <td>63</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
@@ -2704,7 +2716,7 @@
             </tr>
             
             <tr>
-                <td>62</td>
+                <td>63</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -2714,7 +2726,7 @@
             </tr>
             
             <tr>
-                <td>130</td>
+                <td>131</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2724,7 +2736,7 @@
             </tr>
             
             <tr>
-                <td>134</td>
+                <td>135</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2734,7 +2746,7 @@
             </tr>
             
             <tr>
-                <td>200</td>
+                <td>201</td>
                 <td>30</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2744,7 +2756,7 @@
             </tr>
             
             <tr>
-                <td>215</td>
+                <td>216</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2754,7 +2766,7 @@
             </tr>
             
             <tr>
-                <td>217</td>
+                <td>218</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -2764,7 +2776,7 @@
             </tr>
             
             <tr>
-                <td>225</td>
+                <td>227</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
@@ -2774,7 +2786,7 @@
             </tr>
             
             <tr>
-                <td>246</td>
+                <td>248</td>
                 <td>8</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2784,7 +2796,7 @@
             </tr>
             
             <tr>
-                <td>248</td>
+                <td>250</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -2794,7 +2806,7 @@
             </tr>
             
             <tr>
-                <td>258</td>
+                <td>260</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -2804,7 +2816,7 @@
             </tr>
             
             <tr>
-                <td>261</td>
+                <td>263</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -2814,7 +2826,7 @@
             </tr>
             
             <tr>
-                <td>261</td>
+                <td>263</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-branches</code></td>
@@ -2824,7 +2836,7 @@
             </tr>
             
             <tr>
-                <td>283</td>
+                <td>285</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2834,7 +2846,7 @@
             </tr>
             
             <tr>
-                <td>286</td>
+                <td>288</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2844,7 +2856,7 @@
             </tr>
             
             <tr>
-                <td>288</td>
+                <td>290</td>
                 <td>16</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2854,7 +2866,7 @@
             </tr>
             
             <tr>
-                <td>289</td>
+                <td>291</td>
                 <td>16</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2864,7 +2876,7 @@
             </tr>
             
             <tr>
-                <td>292</td>
+                <td>294</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2874,7 +2886,7 @@
             </tr>
             
             <tr>
-                <td>293</td>
+                <td>295</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2884,7 +2896,7 @@
             </tr>
             
             <tr>
-                <td>313</td>
+                <td>314</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2894,7 +2906,7 @@
             </tr>
             
             <tr>
-                <td>334</td>
+                <td>332</td>
                 <td>28</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2904,7 +2916,7 @@
             </tr>
             
             <tr>
-                <td>334</td>
+                <td>332</td>
                 <td>46</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2914,7 +2926,7 @@
             </tr>
             
             <tr>
-                <td>334</td>
+                <td>332</td>
                 <td>57</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2924,7 +2936,7 @@
             </tr>
             
             <tr>
-                <td>334</td>
+                <td>332</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-branches</code></td>
@@ -2934,7 +2946,7 @@
             </tr>
             
             <tr>
-                <td>340</td>
+                <td>338</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2944,17 +2956,17 @@
             </tr>
             
             <tr>
-                <td>403</td>
+                <td>400</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
                 <td>C0301</td>
                 <td></td>
-                <td><pre>Line too long (132/100)</pre></td>
+                <td><pre>Line too long (138/100)</pre></td>
             </tr>
             
             <tr>
-                <td>406</td>
+                <td>402</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2964,7 +2976,7 @@
             </tr>
             
             <tr>
-                <td>420</td>
+                <td>416</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2974,7 +2986,7 @@
             </tr>
             
             <tr>
-                <td>436</td>
+                <td>432</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
@@ -2984,7 +2996,17 @@
             </tr>
             
             <tr>
-                <td>450</td>
+                <td>441</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (102/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>446</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2994,7 +3016,7 @@
             </tr>
             
             <tr>
-                <td>452</td>
+                <td>448</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3004,27 +3026,17 @@
             </tr>
             
             <tr>
-                <td>483</td>
+                <td>479</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
                 <td>C0301</td>
                 <td></td>
-                <td><pre>Line too long (119/100)</pre></td>
+                <td><pre>Line too long (125/100)</pre></td>
             </tr>
             
             <tr>
-                <td>486</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>line-too-long</code></td>
-                <td>C0301</td>
-                <td></td>
-                <td><pre>Line too long (114/100)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>487</td>
+                <td>481</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3034,17 +3046,27 @@
             </tr>
             
             <tr>
-                <td>489</td>
+                <td>482</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
                 <td>C0301</td>
                 <td></td>
-                <td><pre>Line too long (211/100)</pre></td>
+                <td><pre>Line too long (114/100)</pre></td>
             </tr>
             
             <tr>
-                <td>489</td>
+                <td>484</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (108/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>484</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>logging-fstring-interpolation</code></td>
@@ -3054,33 +3076,23 @@
             </tr>
             
             <tr>
-                <td>494</td>
+                <td>491</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
                 <td>C0301</td>
                 <td></td>
-                <td><pre>Line too long (211/100)</pre></td>
+                <td><pre>Line too long (108/100)</pre></td>
             </tr>
             
             <tr>
-                <td>494</td>
+                <td>491</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>logging-fstring-interpolation</code></td>
                 <td>W1203</td>
                 <td>FlexibilityIndicatorModule.check_power_end_deviation</td>
                 <td><pre>Use lazy % formatting in logging functions</pre></td>
-            </tr>
-            
-            <tr>
-                <td>498</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>trailing-newlines</code></td>
-                <td>C0305</td>
-                <td></td>
-                <td><pre>Trailing newlines</pre></td>
             </tr>
             
         </table>
@@ -3218,7 +3230,7 @@
             </tr>
             
             <tr>
-                <td>73</td>
+                <td>71</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3228,7 +3240,7 @@
             </tr>
             
             <tr>
-                <td>78</td>
+                <td>76</td>
                 <td>8</td>
                 <td>warning</td>
                 <td><code>attribute-defined-outside-init</code></td>
@@ -3238,7 +3250,7 @@
             </tr>
             
             <tr>
-                <td>93</td>
+                <td>88</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -3248,7 +3260,7 @@
             </tr>
             
             <tr>
-                <td>112</td>
+                <td>107</td>
                 <td>8</td>
                 <td>warning</td>
                 <td><code>attribute-defined-outside-init</code></td>
@@ -3258,7 +3270,7 @@
             </tr>
             
             <tr>
-                <td>118</td>
+                <td>113</td>
                 <td>8</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -3268,7 +3280,7 @@
             </tr>
             
             <tr>
-                <td>128</td>
+                <td>123</td>
                 <td>62</td>
                 <td>warning</td>
                 <td><code>unused-argument</code></td>
@@ -3278,37 +3290,17 @@
             </tr>
             
             <tr>
-                <td>134</td>
+                <td>126</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
                 <td>C0301</td>
                 <td></td>
-                <td><pre>Line too long (113/100)</pre></td>
+                <td><pre>Line too long (128/100)</pre></td>
             </tr>
             
             <tr>
-                <td>138</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>line-too-long</code></td>
-                <td>C0301</td>
-                <td></td>
-                <td><pre>Line too long (110/100)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>144</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>line-too-long</code></td>
-                <td>C0301</td>
-                <td></td>
-                <td><pre>Line too long (103/100)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>149</td>
+                <td>132</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3318,7 +3310,27 @@
             </tr>
             
             <tr>
-                <td>153</td>
+                <td>138</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (103/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>143</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (106/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>147</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3328,7 +3340,7 @@
             </tr>
             
             <tr>
-                <td>163</td>
+                <td>157</td>
                 <td>20</td>
                 <td>warning</td>
                 <td><code>attribute-defined-outside-init</code></td>
@@ -3338,7 +3350,7 @@
             </tr>
             
             <tr>
-                <td>170</td>
+                <td>164</td>
                 <td>62</td>
                 <td>warning</td>
                 <td><code>unused-argument</code></td>
@@ -3348,7 +3360,7 @@
             </tr>
             
             <tr>
-                <td>178</td>
+                <td>170</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3358,7 +3370,7 @@
             </tr>
             
             <tr>
-                <td>179</td>
+                <td>171</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3368,7 +3380,7 @@
             </tr>
             
             <tr>
-                <td>181</td>
+                <td>173</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3378,7 +3390,7 @@
             </tr>
             
             <tr>
-                <td>200</td>
+                <td>192</td>
                 <td>8</td>
                 <td>warning</td>
                 <td><code>unnecessary-pass</code></td>
@@ -3388,7 +3400,7 @@
             </tr>
             
             <tr>
-                <td>202</td>
+                <td>194</td>
                 <td>29</td>
                 <td>warning</td>
                 <td><code>unused-argument</code></td>
@@ -3398,7 +3410,7 @@
             </tr>
             
             <tr>
-                <td>202</td>
+                <td>194</td>
                 <td>49</td>
                 <td>warning</td>
                 <td><code>unused-argument</code></td>
@@ -3408,7 +3420,7 @@
             </tr>
             
             <tr>
-                <td>213</td>
+                <td>205</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -3492,7 +3504,7 @@
             </tr>
             
             <tr>
-                <td>56</td>
+                <td>57</td>
                 <td>12</td>
                 <td>convention</td>
                 <td><code>consider-using-dict-items</code></td>
@@ -3502,7 +3514,7 @@
             </tr>
             
             <tr>
-                <td>56</td>
+                <td>57</td>
                 <td>16</td>
                 <td>refactor</td>
                 <td><code>redefined-argument-from-local</code></td>
@@ -3512,7 +3524,7 @@
             </tr>
             
             <tr>
-                <td>56</td>
+                <td>57</td>
                 <td>24</td>
                 <td>convention</td>
                 <td><code>consider-iterating-dictionary</code></td>
@@ -3522,7 +3534,7 @@
             </tr>
             
             <tr>
-                <td>59</td>
+                <td>60</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -3532,7 +3544,7 @@
             </tr>
             
             <tr>
-                <td>64</td>
+                <td>65</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
@@ -3542,7 +3554,7 @@
             </tr>
             
             <tr>
-                <td>73</td>
+                <td>74</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -3552,7 +3564,7 @@
             </tr>
             
             <tr>
-                <td>83</td>
+                <td>84</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3562,7 +3574,7 @@
             </tr>
             
             <tr>
-                <td>112</td>
+                <td>114</td>
                 <td>12</td>
                 <td>convention</td>
                 <td><code>consider-using-dict-items</code></td>
@@ -3572,7 +3584,7 @@
             </tr>
             
             <tr>
-                <td>112</td>
+                <td>114</td>
                 <td>16</td>
                 <td>refactor</td>
                 <td><code>redefined-argument-from-local</code></td>
@@ -3582,7 +3594,7 @@
             </tr>
             
             <tr>
-                <td>112</td>
+                <td>114</td>
                 <td>24</td>
                 <td>convention</td>
                 <td><code>consider-iterating-dictionary</code></td>
@@ -3592,7 +3604,7 @@
             </tr>
             
             <tr>
-                <td>115</td>
+                <td>117</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -3860,7 +3872,17 @@
             </tr>
             
             <tr>
-                <td>42</td>
+                <td>36</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (122/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>43</td>
                 <td>11</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -3870,7 +3892,7 @@
             </tr>
             
             <tr>
-                <td>55</td>
+                <td>56</td>
                 <td>8</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -3880,7 +3902,7 @@
             </tr>
             
             <tr>
-                <td>73</td>
+                <td>74</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>inconsistent-return-statements</code></td>
@@ -3890,7 +3912,7 @@
             </tr>
             
             <tr>
-                <td>94</td>
+                <td>91</td>
                 <td>4</td>
                 <td>warning</td>
                 <td><code>useless-else-on-loop</code></td>
@@ -3900,7 +3922,7 @@
             </tr>
             
             <tr>
-                <td>118</td>
+                <td>112</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3910,7 +3932,7 @@
             </tr>
             
             <tr>
-                <td>122</td>
+                <td>116</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3920,7 +3942,7 @@
             </tr>
             
             <tr>
-                <td>124</td>
+                <td>118</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -3930,7 +3952,7 @@
             </tr>
             
             <tr>
-                <td>131</td>
+                <td>125</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -3994,7 +4016,7 @@
             </tr>
             
             <tr>
-                <td>28</td>
+                <td>31</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -4004,17 +4026,17 @@
             </tr>
             
             <tr>
-                <td>33</td>
+                <td>36</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
                 <td>C0301</td>
                 <td></td>
-                <td><pre>Line too long (103/100)</pre></td>
+                <td><pre>Line too long (101/100)</pre></td>
             </tr>
             
             <tr>
-                <td>34</td>
+                <td>37</td>
                 <td>32</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -4024,7 +4046,7 @@
             </tr>
             
             <tr>
-                <td>58</td>
+                <td>61</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -4034,7 +4056,7 @@
             </tr>
             
             <tr>
-                <td>61</td>
+                <td>64</td>
                 <td>40</td>
                 <td>warning</td>
                 <td><code>unnecessary-lambda</code></td>
@@ -4044,7 +4066,7 @@
             </tr>
             
             <tr>
-                <td>61</td>
+                <td>64</td>
                 <td>50</td>
                 <td>warning</td>
                 <td><code>eval-used</code></td>
@@ -4054,7 +4076,7 @@
             </tr>
             
             <tr>
-                <td>68</td>
+                <td>71</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -4064,7 +4086,7 @@
             </tr>
             
             <tr>
-                <td>68</td>
+                <td>71</td>
                 <td>31</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -4074,7 +4096,7 @@
             </tr>
             
             <tr>
-                <td>80</td>
+                <td>85</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -4218,7 +4240,7 @@
             </tr>
             
             <tr>
-                <td>23</td>
+                <td>22</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -4228,7 +4250,7 @@
             </tr>
             
             <tr>
-                <td>24</td>
+                <td>23</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -4248,7 +4270,7 @@
             </tr>
             
             <tr>
-                <td>62</td>
+                <td>59</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
@@ -4258,7 +4280,7 @@
             </tr>
             
             <tr>
-                <td>86</td>
+                <td>83</td>
                 <td>8</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -4268,7 +4290,7 @@
             </tr>
             
             <tr>
-                <td>123</td>
+                <td>120</td>
                 <td>12</td>
                 <td>refactor</td>
                 <td><code>unnecessary-comprehension</code></td>
@@ -4278,7 +4300,7 @@
             </tr>
             
             <tr>
-                <td>123</td>
+                <td>120</td>
                 <td>28</td>
                 <td>convention</td>
                 <td><code>consider-iterating-dictionary</code></td>
@@ -4288,7 +4310,7 @@
             </tr>
             
             <tr>
-                <td>132</td>
+                <td>129</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-statements</code></td>
@@ -4298,7 +4320,7 @@
             </tr>
             
             <tr>
-                <td>223</td>
+                <td>226</td>
                 <td>34</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -4308,7 +4330,7 @@
             </tr>
             
             <tr>
-                <td>346</td>
+                <td>351</td>
                 <td>8</td>
                 <td>refactor</td>
                 <td><code>inconsistent-return-statements</code></td>
@@ -4318,7 +4340,7 @@
             </tr>
             
             <tr>
-                <td>446</td>
+                <td>460</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -4328,7 +4350,7 @@
             </tr>
             
             <tr>
-                <td>486</td>
+                <td>501</td>
                 <td>8</td>
                 <td>refactor</td>
                 <td><code>inconsistent-return-statements</code></td>
@@ -4338,7 +4360,7 @@
             </tr>
             
             <tr>
-                <td>511</td>
+                <td>524</td>
                 <td>8</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
@@ -4348,7 +4370,7 @@
             </tr>
             
             <tr>
-                <td>525</td>
+                <td>537</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -4358,7 +4380,7 @@
             </tr>
             
             <tr>
-                <td>541</td>
+                <td>555</td>
                 <td>29</td>
                 <td>convention</td>
                 <td><code>consider-iterating-dictionary</code></td>
@@ -4368,7 +4390,7 @@
             </tr>
             
             <tr>
-                <td>559</td>
+                <td>573</td>
                 <td>16</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -4378,7 +4400,7 @@
             </tr>
             
             <tr>
-                <td>586</td>
+                <td>600</td>
                 <td>23</td>
                 <td>refactor</td>
                 <td><code>use-dict-literal</code></td>
@@ -4388,7 +4410,7 @@
             </tr>
             
             <tr>
-                <td>676</td>
+                <td>690</td>
                 <td>41</td>
                 <td>warning</td>
                 <td><code>f-string-without-interpolation</code></td>
@@ -4442,17 +4464,7 @@
             </tr>
             
             <tr>
-                <td>39</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>missing-function-docstring</code></td>
-                <td>C0116</td>
-                <td>create_ast_element</td>
-                <td><pre>Missing function or method docstring</pre></td>
-            </tr>
-            
-            <tr>
-                <td>43</td>
+                <td>52</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -4462,17 +4474,7 @@
             </tr>
             
             <tr>
-                <td>43</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>missing-function-docstring</code></td>
-                <td>C0116</td>
-                <td>add_input</td>
-                <td><pre>Missing function or method docstring</pre></td>
-            </tr>
-            
-            <tr>
-                <td>43</td>
+                <td>52</td>
                 <td>84</td>
                 <td>warning</td>
                 <td><code>redefined-builtin</code></td>
@@ -4482,17 +4484,7 @@
             </tr>
             
             <tr>
-                <td>56</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>missing-function-docstring</code></td>
-                <td>C0116</td>
-                <td>add_parameter</td>
-                <td><pre>Missing function or method docstring</pre></td>
-            </tr>
-            
-            <tr>
-                <td>68</td>
+                <td>102</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -4502,17 +4494,7 @@
             </tr>
             
             <tr>
-                <td>68</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>missing-function-docstring</code></td>
-                <td>C0116</td>
-                <td>add_output</td>
-                <td><pre>Missing function or method docstring</pre></td>
-            </tr>
-            
-            <tr>
-                <td>68</td>
+                <td>102</td>
                 <td>37</td>
                 <td>warning</td>
                 <td><code>redefined-builtin</code></td>
@@ -4522,7 +4504,7 @@
             </tr>
             
             <tr>
-                <td>112</td>
+                <td>156</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -4532,7 +4514,7 @@
             </tr>
             
             <tr>
-                <td>135</td>
+                <td>179</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -4542,7 +4524,7 @@
             </tr>
             
             <tr>
-                <td>185</td>
+                <td>229</td>
                 <td>8</td>
                 <td>refactor</td>
                 <td><code>no-else-return</code></td>
@@ -4552,7 +4534,7 @@
             </tr>
             
             <tr>
-                <td>265</td>
+                <td>309</td>
                 <td>21</td>
                 <td>refactor</td>
                 <td><code>consider-merging-isinstance</code></td>
@@ -4562,7 +4544,7 @@
             </tr>
             
             <tr>
-                <td>297</td>
+                <td>341</td>
                 <td>21</td>
                 <td>refactor</td>
                 <td><code>consider-merging-isinstance</code></td>
@@ -4572,7 +4554,7 @@
             </tr>
             
             <tr>
-                <td>362</td>
+                <td>406</td>
                 <td>24</td>
                 <td>warning</td>
                 <td><code>unused-variable</code></td>
@@ -4582,83 +4564,13 @@
             </tr>
             
             <tr>
-                <td>367</td>
+                <td>411</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
                 <td>C0301</td>
                 <td></td>
                 <td><pre>Line too long (103/100)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>368</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>line-too-long</code></td>
-                <td>C0301</td>
-                <td></td>
-                <td><pre>Line too long (108/100)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>375</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>line-too-long</code></td>
-                <td>C0301</td>
-                <td></td>
-                <td><pre>Line too long (103/100)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>376</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>line-too-long</code></td>
-                <td>C0301</td>
-                <td></td>
-                <td><pre>Line too long (108/100)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>396</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>line-too-long</code></td>
-                <td>C0301</td>
-                <td></td>
-                <td><pre>Line too long (107/100)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>397</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>line-too-long</code></td>
-                <td>C0301</td>
-                <td></td>
-                <td><pre>Line too long (112/100)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>404</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>line-too-long</code></td>
-                <td>C0301</td>
-                <td></td>
-                <td><pre>Line too long (107/100)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>405</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>line-too-long</code></td>
-                <td>C0301</td>
-                <td></td>
-                <td><pre>Line too long (112/100)</pre></td>
             </tr>
             
             <tr>
@@ -4668,11 +4580,81 @@
                 <td><code>line-too-long</code></td>
                 <td>C0301</td>
                 <td></td>
+                <td><pre>Line too long (108/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>419</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (103/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>420</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (108/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>440</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (107/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>441</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (112/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>448</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (107/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>449</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (112/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>456</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
                 <td><pre>Line too long (104/100)</pre></td>
             </tr>
             
             <tr>
-                <td>530</td>
+                <td>579</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -4701,7 +4683,7 @@
             
             <tr>
                 <td>convention</td>
-                <td>268</td>
+                <td>266</td>
             </tr>
             
             <tr>
@@ -4731,7 +4713,7 @@
             
             <tr>
                 <td>line-too-long</td>
-                <td>117</td>
+                <td>123</td>
             </tr>
             
             <tr>
@@ -4826,7 +4808,7 @@
             
             <tr>
                 <td>missing-function-docstring</td>
-                <td>28</td>
+                <td>23</td>
             </tr>
             
             <tr>
@@ -4857,11 +4839,6 @@
             <tr>
                 <td>attribute-defined-outside-init</td>
                 <td>3</td>
-            </tr>
-            
-            <tr>
-                <td>trailing-newlines</td>
-                <td>2</td>
             </tr>
             
             <tr>
@@ -4940,12 +4917,12 @@
             </tr>
             
             <tr>
-                <td>missing-final-newline</td>
-                <td>2</td>
+                <td>consider-using-in</td>
+                <td>1</td>
             </tr>
             
             <tr>
-                <td>consider-using-in</td>
+                <td>trailing-newlines</td>
                 <td>1</td>
             </tr>
             
@@ -4971,7 +4948,7 @@
             
             <tr>
                 <td>agentlib_flexquant.generate_flex_agents</td>
-                <td>79</td>
+                <td>81</td>
             </tr>
             
             <tr>
@@ -5001,12 +4978,12 @@
             
             <tr>
                 <td>agentlib_flexquant.utils.parsing</td>
-                <td>27</td>
+                <td>23</td>
             </tr>
             
             <tr>
                 <td>agentlib_flexquant.utils.config_management</td>
-                <td>13</td>
+                <td>14</td>
             </tr>
             
             <tr>
@@ -5026,7 +5003,7 @@
             
             <tr>
                 <td>agentlib_flexquant.data_structures.flex_kpis</td>
-                <td>31</td>
+                <td>32</td>
             </tr>
             
             <tr>
@@ -5036,22 +5013,22 @@
             
             <tr>
                 <td>agentlib_flexquant.data_structures.flex_offer</td>
-                <td>16</td>
+                <td>15</td>
             </tr>
             
             <tr>
                 <td>agentlib_flexquant.data_structures.flex_results</td>
-                <td>29</td>
+                <td>30</td>
             </tr>
             
             <tr>
                 <td>agentlib_flexquant.data_structures.flexquant</td>
-                <td>24</td>
+                <td>23</td>
             </tr>
             
             <tr>
                 <td>agentlib_flexquant.data_structures.globals</td>
-                <td>5</td>
+                <td>4</td>
             </tr>
             
             <tr>
@@ -5076,7 +5053,7 @@
             
             <tr>
                 <td>agentlib_flexquant/generate_flex_agents.py</td>
-                <td>79</td>
+                <td>81</td>
             </tr>
             
             <tr>
@@ -5106,12 +5083,12 @@
             
             <tr>
                 <td>agentlib_flexquant/utils/parsing.py</td>
-                <td>27</td>
+                <td>23</td>
             </tr>
             
             <tr>
                 <td>agentlib_flexquant/utils/config_management.py</td>
-                <td>13</td>
+                <td>14</td>
             </tr>
             
             <tr>
@@ -5131,7 +5108,7 @@
             
             <tr>
                 <td>agentlib_flexquant/data_structures/flex_kpis.py</td>
-                <td>31</td>
+                <td>32</td>
             </tr>
             
             <tr>
@@ -5141,22 +5118,22 @@
             
             <tr>
                 <td>agentlib_flexquant/data_structures/flex_offer.py</td>
-                <td>16</td>
+                <td>15</td>
             </tr>
             
             <tr>
                 <td>agentlib_flexquant/data_structures/flex_results.py</td>
-                <td>29</td>
+                <td>30</td>
             </tr>
             
             <tr>
                 <td>agentlib_flexquant/data_structures/flexquant.py</td>
-                <td>24</td>
+                <td>23</td>
             </tr>
             
             <tr>
                 <td>agentlib_flexquant/data_structures/globals.py</td>
-                <td>5</td>
+                <td>4</td>
             </tr>
             
             <tr>

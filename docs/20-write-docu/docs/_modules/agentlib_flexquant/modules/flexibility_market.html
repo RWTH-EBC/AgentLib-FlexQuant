@@ -137,9 +137,7 @@
 
 
 <div class="viewcode-block" id="FlexibilityMarketModule"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityMarketModule</span><span class="p">(</span><span class="n">agentlib</span><span class="o">.</span><span class="n">BaseModule</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class to emulate flexibility market. Receives flex offers and accepts these.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class to emulate flexibility market. Receives flex offers and accepts these.&quot;&quot;&quot;</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">FlexibilityMarketModuleConfig</span>
 
     <span class="c1"># DataFrame for flex offer. Multiindex: (time_step, time). Columns: pos_price, neg_price, status</span>
@@ -148,14 +146,11 @@
     <span class="n">abs_flex_event_end</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 
 <div class="viewcode-block" id="FlexibilityMarketModule.set_random_seed"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.set_random_seed">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_random_seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random_seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;set the random seed for reproducability&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the random seed for reproducibility.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">random_generator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">random_seed</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlexibilityMarketModule.get_results"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.get_results">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_results</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Opens results file of flexibilityindicators.py</span>
-<span class="sd">        results_file defined in __init__</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Open results file of flexibility_indicators.py.&quot;&quot;&quot;</span>
         <span class="n">results_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">results_file</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">results_file</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">index_col</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
@@ -186,7 +181,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">cooldown_ticker</span> <span class="o">=</span> <span class="mi">0</span></div>
 
 <div class="viewcode-block" id="FlexibilityMarketModule.write_results"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.write_results">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">write_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offer</span><span class="p">:</span> <span class="n">FlexOffer</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Save the flex offer results depending on the config &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save the flex offer results depending on the config.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_offer_df</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">flex_offer_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">offer</span><span class="o">.</span><span class="n">as_dataframe</span><span class="p">()</span>
@@ -200,18 +195,17 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">flex_offer_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">results_file</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlexibilityMarketModule.random_flexibility_callback"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.random_flexibility_callback">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">random_flexibility_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp</span><span class="p">:</span> <span class="n">AgentVariable</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        When a flexibility offer is sent this function is called. </span>
-<span class="sd">        </span>
-<span class="sd">            The offer is accepted randomly. The factor self.offer_acceptance_rate determines the</span>
-<span class="sd">                random factor for offer acceptance. self.pos_neg_rate is the random factor for</span>
-<span class="sd">                the direction of the flexibility. A higher rate means that more positive offers will be accepted.</span>
-<span class="sd">            </span>
-<span class="sd">            Constraints:</span>
-<span class="sd">                cooldown: during $cooldown steps after a flexibility event no offer is accepted</span>
-<span class="sd">                minimum_average_flex: min amount of flexibility to be accepted, to account for the model error</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;When a flexibility offer is sent, this function is called.</span>
 
+<span class="sd">        The offer is accepted randomly. The factor self.offer_acceptance_rate determines the random factor for offer acceptance.</span>
+<span class="sd">        self.pos_neg_rate is the random factor for the direction of the flexibility.</span>
+<span class="sd">        A higher rate means that more positive offers will be accepted.</span>
+<span class="sd">            </span>
+<span class="sd">        Constraints:</span>
+<span class="sd">            cooldown: during $cooldown steps after a flexibility event no offer is accepted</span>
+<span class="sd">            minimum_average_flex: min amount of flexibility to be accepted, to account for the model error</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">offer</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">value</span>
         <span class="c1"># check if there is a flexibility provision and the cooldown is finished</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;in_provision&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">cooldown_ticker</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -242,9 +236,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">write_results</span><span class="p">(</span><span class="n">offer</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlexibilityMarketModule.single_flexibility_callback"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.single_flexibility_callback">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">single_flexibility_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp</span><span class="p">:</span> <span class="n">AgentVariable</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Callback to activate a single, predefined flexibility offer.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Callback to activate a single, predefined flexibility offer.&quot;&quot;&quot;</span>
         <span class="n">offer</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">value</span>
         <span class="n">profile</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">t_sample</span> <span class="o">=</span> <span class="n">offer</span><span class="o">.</span><span class="n">base_power_profile</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">offer</span><span class="o">.</span><span class="n">base_power_profile</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -270,15 +262,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">write_results</span><span class="p">(</span><span class="n">offer</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlexibilityMarketModule.custom_flexibility_callback"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.custom_flexibility_callback">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">custom_flexibility_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp</span><span class="p">:</span> <span class="n">AgentVariable</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Placeholder for a custom flexibility callback&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Placeholder for a custom flexibility callback.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="FlexibilityMarketModule.dummy_callback"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.dummy_callback">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">dummy_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp</span><span class="p">:</span> <span class="n">AgentVariable</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Dummy function, that is included, when market type is not specified&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Dummy function that is included, when market type is not specified.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No market type provided. No market interaction.&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlexibilityMarketModule.cleanup_results"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.cleanup_results">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">cleanup_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;remove the results if already exist&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove the results if they already exist.&quot;&quot;&quot;</span>
         <span class="n">results_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">results_file</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">results_file</span><span class="p">:</span>
             <span class="k">return</span>

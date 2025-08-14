@@ -104,8 +104,9 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">register_callbacks</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="FlexibilityShadowMPC.calc_flex_callback"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPC.calc_flex_callback">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">calc_flex_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp</span><span class="p">:</span> <span class="n">AgentVariable</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;set the control trajectories before calculating the flexibility offer.</span>
-<span class="sd">        self.model should account for flexibility in its cost function</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the control trajectories before calculating the flexibility offer.</span>
+
+<span class="sd">        self.model should account for flexibility in its cost function.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># during provision dont calculate flex</span>
@@ -160,7 +161,8 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">register_callbacks</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="FlexibilityShadowMINLPMPC.calc_flex_callback"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPC.calc_flex_callback">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">calc_flex_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp</span><span class="p">:</span> <span class="n">AgentVariable</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;set the control trajectories before calculating the flexibility offer.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the control trajectories before calculating the flexibility offer.</span>
+
 <span class="sd">        self.model should account for flexibility in its cost function</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>

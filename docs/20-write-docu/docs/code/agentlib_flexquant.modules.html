@@ -144,13 +144,13 @@ each time before the optimal control problem is solved.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.check_power_end_deviation">
 <span class="sig-name descname"><span class="pre">check_power_end_deviation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#FlexibilityIndicatorModule.check_power_end_deviation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.check_power_end_deviation" title="Permalink to this definition"></a></dt>
-<dd><p>calculates the deviation of the final value of the power profiles and warn the user if it exceeds the tolerance</p>
+<dd><p>Calculate the deviation of the final value of the power profiles and warn the user if it exceeds the tolerance.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.cleanup_results">
 <span class="sig-name descname"><span class="pre">cleanup_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#FlexibilityIndicatorModule.cleanup_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.cleanup_results" title="Permalink to this definition"></a></dt>
-<dd><p>removes the existing result files</p>
+<dd><p>Remove the existing result files.</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -161,8 +161,7 @@ each time before the optimal control problem is solved.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.get_results">
 <span class="sig-name descname"><span class="pre">get_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#FlexibilityIndicatorModule.get_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.get_results" title="Permalink to this definition"></a></dt>
-<dd><p>Opens results file of flexibility_indicator.py
-results_file defined in __init__</p>
+<dd><p>Open results file of flexibility_indicator.py.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -180,8 +179,8 @@ with the other processes of the agent and the whole MAS.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.send_flex_offer">
 <span class="sig-name descname"><span class="pre">send_flex_offer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_power_profile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_diff_profile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_price</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neg_diff_profile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neg_price</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#FlexibilityIndicatorModule.send_flex_offer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.send_flex_offer" title="Permalink to this definition"></a></dt>
-<dd><p>Send a flex offer as an agent Variable. The first offer is dismissed,
-since the different MPCs need one time step to fully initialize.</p>
+<dd><p>Send a flex offer as an agent Variable.</p>
+<p>The first offer is dismissed, since the different MPCs need one time step to fully initialize.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -200,8 +199,8 @@ since the different MPCs need one time step to fully initialize.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.write_results">
 <span class="sig-name descname"><span class="pre">write_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#FlexibilityIndicatorModule.write_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.write_results" title="Permalink to this definition"></a></dt>
-<dd><p>Write every data of variables in self.var_list in an DataFrame
-DataFrame will be updated every time step</p>
+<dd><p>Write every data of variables in self.var_list in an DataFrame.</p>
+<p>DataFrame will be updated every time step</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -511,19 +510,19 @@ DataFrame will be updated every time step</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.cleanup_results">
 <span class="sig-name descname"><span class="pre">cleanup_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_market.html#FlexibilityMarketModule.cleanup_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.cleanup_results" title="Permalink to this definition"></a></dt>
-<dd><p>remove the results if already exist</p>
+<dd><p>Remove the results if they already exist.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.custom_flexibility_callback">
 <span class="sig-name descname"><span class="pre">custom_flexibility_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AgentVariable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_market.html#FlexibilityMarketModule.custom_flexibility_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.custom_flexibility_callback" title="Permalink to this definition"></a></dt>
-<dd><p>Placeholder for a custom flexibility callback</p>
+<dd><p>Placeholder for a custom flexibility callback.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.dummy_callback">
 <span class="sig-name descname"><span class="pre">dummy_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AgentVariable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_market.html#FlexibilityMarketModule.dummy_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.dummy_callback" title="Permalink to this definition"></a></dt>
-<dd><p>Dummy function, that is included, when market type is not specified</p>
+<dd><p>Dummy function that is included, when market type is not specified.</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -534,8 +533,7 @@ DataFrame will be updated every time step</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.get_results">
 <span class="sig-name descname"><span class="pre">get_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_market.html#FlexibilityMarketModule.get_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.get_results" title="Permalink to this definition"></a></dt>
-<dd><p>Opens results file of flexibilityindicators.py
-results_file defined in __init__</p>
+<dd><p>Open results file of flexibility_indicators.py.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -548,17 +546,15 @@ with the other processes of the agent and the whole MAS.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.random_flexibility_callback">
 <span class="sig-name descname"><span class="pre">random_flexibility_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AgentVariable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_market.html#FlexibilityMarketModule.random_flexibility_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.random_flexibility_callback" title="Permalink to this definition"></a></dt>
-<dd><p>When a flexibility offer is sent this function is called.</p>
-<blockquote>
-<div><dl class="simple">
-<dt>The offer is accepted randomly. The factor self.offer_acceptance_rate determines the</dt><dd><p>random factor for offer acceptance. self.pos_neg_rate is the random factor for
-the direction of the flexibility. A higher rate means that more positive offers will be accepted.</p>
-</dd>
+<dd><p>When a flexibility offer is sent, this function is called.</p>
+<p>The offer is accepted randomly. The factor self.offer_acceptance_rate determines the random factor for offer acceptance.
+self.pos_neg_rate is the random factor for the direction of the flexibility.
+A higher rate means that more positive offers will be accepted.</p>
+<dl class="simple">
 <dt>Constraints:</dt><dd><p>cooldown: during $cooldown steps after a flexibility event no offer is accepted
 minimum_average_flex: min amount of flexibility to be accepted, to account for the model error</p>
 </dd>
 </dl>
-</div></blockquote>
 </dd></dl>
 
 <dl class="py method">
@@ -569,7 +565,7 @@ minimum_average_flex: min amount of flexibility to be accepted, to account for t
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.set_random_seed">
 <span class="sig-name descname"><span class="pre">set_random_seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">random_seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_market.html#FlexibilityMarketModule.set_random_seed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.set_random_seed" title="Permalink to this definition"></a></dt>
-<dd><p>set the random seed for reproducability</p>
+<dd><p>Set the random seed for reproducibility.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -581,7 +577,7 @@ minimum_average_flex: min amount of flexibility to be accepted, to account for t
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.write_results">
 <span class="sig-name descname"><span class="pre">write_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">offer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.FlexOffer" title="agentlib_flexquant.data_structures.flex_offer.FlexOffer"><span class="pre">FlexOffer</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_market.html#FlexibilityMarketModule.write_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.write_results" title="Permalink to this definition"></a></dt>
-<dd><p>Save the flex offer results depending on the config</p>
+<dd><p>Save the flex offer results depending on the config.</p>
 </dd></dl>
 
 </dd></dl>
@@ -722,8 +718,8 @@ minimum_average_flex: min amount of flexibility to be accepted, to account for t
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPC.calc_flex_callback">
 <span class="sig-name descname"><span class="pre">calc_flex_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AgentVariable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/shadow_mpc.html#FlexibilityShadowMINLPMPC.calc_flex_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPC.calc_flex_callback" title="Permalink to this definition"></a></dt>
-<dd><p>set the control trajectories before calculating the flexibility offer.
-self.model should account for flexibility in its cost function</p>
+<dd><p>Set the control trajectories before calculating the flexibility offer.</p>
+<p>self.model should account for flexibility in its cost function</p>
 </dd></dl>
 
 <dl class="py method">
@@ -749,8 +745,8 @@ cannot be changed without recreating the optimization problem.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPC.calc_flex_callback">
 <span class="sig-name descname"><span class="pre">calc_flex_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AgentVariable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/shadow_mpc.html#FlexibilityShadowMPC.calc_flex_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPC.calc_flex_callback" title="Permalink to this definition"></a></dt>
-<dd><p>set the control trajectories before calculating the flexibility offer.
-self.model should account for flexibility in its cost function</p>
+<dd><p>Set the control trajectories before calculating the flexibility offer.</p>
+<p>self.model should account for flexibility in its cost function.</p>
 </dd></dl>
 
 <dl class="py method">
