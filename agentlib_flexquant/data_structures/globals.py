@@ -21,13 +21,11 @@ STORED_ENERGY_ALIAS_BASE = "_E_stored_base"
 STORED_ENERGY_ALIAS_NEG = "_E_stored_neg"
 STORED_ENERGY_ALIAS_POS = "_E_stored_pos"
 
-SHADOW_MPC_COST_FUNCTION = ("return ca.if_else(self.time < self.prep_time.sym + "
-                            "self.market_time.sym, obj_std, ca.if_else(self.time < "
-                            "(self.prep_time.sym + self.flex_event_duration.sym + "
-                            "self.market_time.sym), obj_flex, obj_std))")
+SHADOW_MPC_COST_FUNCTION = ("return ca.if_else(self.time < self.market_time.sym + self.prep_time.sym, obj_std, "
+                                   "ca.if_else(self.time < self.market_time.sym + self.prep_time.sym + self.flex_event_duration.sym, obj_flex, obj_std))")
 
 full_trajectory_suffix: str = "_full"
-full_trajectory_prefix: str = "_"
+shadow_suffix: str = "_shadow"
 
 
 def return_baseline_cost_function(power_variable, comfort_variable):

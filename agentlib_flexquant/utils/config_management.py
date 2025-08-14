@@ -24,30 +24,36 @@ all_module_types.pop("agentlib_mpc.set_point_generator")
 all_module_types.pop("clonemap")
 
 MODULE_TYPE_DICT = {name: inspect.get_annotations(class_type.import_class())["config"] for name, class_type in all_module_types.items()}
+MODULE_NAME_DICT = all_module_types
 
 MPC_CONFIG_TYPE: str = "agentlib_mpc.mpc"
 BASELINEMPC_CONFIG_TYPE: str = "agentlib_flexquant.baseline_mpc"
 SHADOWMPC_CONFIG_TYPE: str = "agentlib_flexquant.shadow_mpc"
+BASELINEMINLPMPC_CONFIG_TYPE: str = "agentlib_flexquant.baseline_minlp_mpc"
+SHADOWMINLPMPC_CONFIG_TYPE: str = "agentlib_flexquant.shadow_minlp_mpc"
 INDICATOR_CONFIG_TYPE: str = "agentlib_flexquant.flexibility_indicator"
 MARKET_CONFIG_TYPE: str = "agentlib_flexquant.flexibility_market"
 SIMULATOR_CONFIG_TYPE: str = "simulator"
 
 
 def get_module_type_matching_dict(dictionary: dict):
-    """Creates two dictionaries, which map the modules types of the agentlib_mpc modules
-        to those of the flexquant modules. This is done by using the MODULE_TYPE_DICT
+    """Create two dictionaries, which map the modules types of the agentlib_mpc modules
+        to those of the flexquant modules. This is done by using the MODULE_NAME_DICT
 
     """
     # Create dictionaries to store keys grouped by values
     value_to_keys = {}
     for k, v in dictionary.items():
-        if k.startswith(('agentlib_mpc.', 'agentlib_flexquant.')):
+        if k.startswith('agentlib_mpc.'):
             if v not in value_to_keys:
                 value_to_keys[v] = {'agentlib': [], 'flex': []}
-            if k.startswith('agentlib_mpc.'):
-                value_to_keys[v]['agentlib'].append(k)
-            else:
-                value_to_keys[v]['flex'].append(k)
+            value_to_keys[v]['agentlib'].append(k)
+        if k.startswith('agentlib_flexquant.'):
+            # find the parent class of the module in the flexquant in agentlib_mpc
+            for vv in value_to_keys:
+                if vv.import_class() is v.import_class().__bases__[0]:
+                    value_to_keys[vv]['flex'].append(k)
+                    break
 
     # Create result dictionaries
     baseline_matches = {}
@@ -68,7 +74,7 @@ def get_module_type_matching_dict(dictionary: dict):
 
 
 BASELINE_MODULE_TYPE_DICT, SHADOW_MODULE_TYPE_DICT = (
-    get_module_type_matching_dict(MODULE_TYPE_DICT))
+    get_module_type_matching_dict(MODULE_NAME_DICT))
 
 
 def get_orig_module_type(config: AgentConfig):
@@ -97,11 +103,15 @@ def get_module(config: AgentConfig, module_type: str) -> T:
                                   f"agentlib and its plug ins.")
 
 
+def get_flex_mpc_module_config(agent_config: AgentConfig, module_config: BaseModuleConfig, module_type: str):
+    """Get a flexquant module config from an original agentlib module config."""
+    config_dict = module_config.model_dump()
+    config_dict['type'] = module_type
+    return MODULE_TYPE_DICT[module_type](**config_dict, _agent_id=agent_config.id)
+
 
 def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig):
-    """Removes unnecessary fields from the module to keep the created json simple
-
-    """
+    """Remove unnecessary fields from the module to keep the created json simple."""
     excluded_fields = ["rdf_class", "source", "type", "timestamp", "description", "unit", "clip",
                        "shared", "interpolation_method", "allowed_values"]
 
@@ -113,7 +123,7 @@ def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig):
             delete_list.append("ub")
         return delete_list
 
-    parent_dict = module.dict(exclude_defaults=True)
+    parent_dict = module.model_dump(exclude_defaults=True)
     # update every variable with a dict excluding the defined fields
     if "parameters" in parent_dict:
         parent_dict["parameters"] = [parameter.dict(exclude=check_bounds(parameter)) for parameter in module.parameters]
@@ -123,8 +133,13 @@ def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig):
         parent_dict["outputs"] = [output.dict(exclude=check_bounds(output)) for output in module.outputs]
     if "controls" in parent_dict:
         parent_dict["controls"] = [control.dict(exclude=check_bounds(control)) for control in module.controls]
+    if "binary_controls" in parent_dict:
+        parent_dict["binary_controls"] = [binary_control.dict(exclude=check_bounds(binary_control)) for binary_control in module.binary_controls]
     if "states" in parent_dict:
         parent_dict["states"] = [state.dict(exclude=check_bounds(state)) for state in module.states]
+    if "full_controls" in parent_dict:
+        parent_dict["full_controls"] = [full_control.dict(exclude=(lambda ex: ex.remove('shared') or ex)(check_bounds(full_control)))
+                                        for full_control in module.full_controls]
 
     return parent_dict
 

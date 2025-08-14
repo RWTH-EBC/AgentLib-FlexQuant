@@ -42,7 +42,6 @@ from agentlib_flexquant.modules.flexibility_market import (
     FlexibilityMarketModuleConfig
 )   
 
-
 class FlexAgentGenerator:
     orig_mpc_module_config: BaseMPCConfig
     baseline_mpc_module_config: BaseMPCConfig
@@ -89,6 +88,9 @@ class FlexAgentGenerator:
             config=self.baseline_mpc_agent_config,
             module_type=cmng.get_orig_module_type(self.orig_mpc_agent_config),
         )
+        # convert agentlib_mpc’s ModuleConfig to flexquant’s ModuleConfig to include additional fields not present in the original
+        self.baseline_mpc_module_config = cmng.get_flex_mpc_module_config(agent_config=self.baseline_mpc_agent_config, module_config=self.baseline_mpc_module_config,
+                                                                          module_type=self.flex_config.baseline_config_generator_data.module_types[self.baseline_mpc_module_config.type])
         # pos module
         self.pos_flex_mpc_module_config = cmng.get_module(
             config=self.pos_flex_mpc_agent_config,
@@ -160,7 +162,7 @@ class FlexAgentGenerator:
             market_module_config = self.adapt_market_config(
                 module_config=self.market_module_config
             )
-    
+
         # dump jsons of the agents including the adapted module configs
         self.append_module_and_dump_agent(
             module=baseline_mpc_config,
@@ -193,7 +195,7 @@ class FlexAgentGenerator:
                     module_type=cmng.MARKET_CONFIG_TYPE,
                     config_name=self.market_config.name_of_created_file,
                 )
-        
+
         # generate python files for the shadow mpcs
         self._generate_flex_model_definition()
 
@@ -352,53 +354,41 @@ class FlexAgentGenerator:
                 self.flex_config.market_time
             )
 
-        # add the control signal of the baseline to outputs (used during market time)
-        # and as inputs for the shadow mpcs
+        # add the full control trajectory output from the baseline as input for the shadow mpcs
         if type(mpc_dataclass) is not BaselineMPCData:
             for control in module_config.controls:
                 module_config.inputs.append(
                     MPCVariable(
-                        name=glbs.full_trajectory_prefix
-                        + control.name
-                        + glbs.full_trajectory_suffix,
-                        value=control.value,
+                        name=control.name + glbs.full_trajectory_suffix,
+                        value=None,
+                        type='pd.Series'
                     )
                 )
+                # change the alias of control variable in shadow mpc to prevent it from triggering the wrong callback
+                control.alias = control.name + glbs.shadow_suffix
             # also include binary controls
             if hasattr(module_config, "binary_controls"):
                 for control in module_config.binary_controls:
                     module_config.inputs.append(
                         MPCVariable(
-                            name=glbs.full_trajectory_prefix
-                            + control.name
-                            + glbs.full_trajectory_suffix,
-                            value=control.value,
+                            name=control.name + glbs.full_trajectory_suffix,
+                            value=None,
+                            type='pd.Series'
                         )
                     )
-
             # only communicate outputs for the shadow mpcs
             module_config.shared_variable_fields = ["outputs"]
         else:
+            # add full_controls trajectory as AgentVariable to the config of Baseline mpc
             for control in module_config.controls:
-                module_config.outputs.append(
-                    MPCVariable(
-                        name=glbs.full_trajectory_prefix
-                        + control.name
-                        + glbs.full_trajectory_suffix,
-                        value=control.value,
-                    )
-                )
-            # also include binary controls
+                module_config.full_controls.append(AgentVariable(name=control.name + glbs.full_trajectory_suffix,
+                                                                 alias=control.name + glbs.full_trajectory_suffix,
+                                                                 shared=True))
             if hasattr(module_config, "binary_controls"):
-                for control in module_config.binary_controls:
-                    module_config.outputs.append(
-                        MPCVariable(
-                            name=glbs.full_trajectory_prefix
-                            + control.name
-                            + glbs.full_trajectory_suffix,
-                            value=control.value,
-                        )
-                    )
+                for binary_controls in module_config.binary_controls:
+                    module_config.full_controls.append(AgentVariable(name=binary_controls.name + glbs.full_trajectory_suffix,
+                                                                     alias=binary_controls.name + glbs.full_trajectory_suffix,
+                                                                     shared=True))
         module_config.set_outputs = True
         # add outputs for the power variables, for easier handling create a lookup dict
         output_dict = {output.name: output for output in module_config.outputs}
@@ -620,7 +610,7 @@ class FlexAgentGenerator:
             raise ConfigurationError(
                 f"Given power variable {self.flex_config.baseline_config_generator_data.power_variable} is not defined as output in baseline mpc config."
             )
-       
+
         # check if the comfort variable exists in the mpc slack variables
         if self.flex_config.baseline_config_generator_data.comfort_variable:
             file_path = self.baseline_mpc_module_config.optimization_backend["model"]["type"]["file"]
@@ -633,7 +623,7 @@ class FlexAgentGenerator:
                 raise ConfigurationError(
                     f"Given comfort variable {self.flex_config.baseline_config_generator_data.comfort_variable} is not defined as state in baseline mpc config."
                 )
-            
+
         # check if the energy storage variable exists in the mpc config
         if self.indicator_module_config.correct_costs.enable_energy_costs_correction:
             if self.indicator_module_config.correct_costs.stored_energy_variable not in [
@@ -643,7 +633,7 @@ class FlexAgentGenerator:
                     f"The stored energy variable {self.indicator_module_config.correct_costs.stored_energy_variable} is not defined in baseline mpc config. "
                     f"It must be defined in the base MPC model and config as output if the correction of costs is enabled."
                 )
-            
+
         # raise warning if unsupported collocation method is used and change to supported method
         if self.baseline_mpc_module_config.optimization_backend["discretization_options"]["collocation_method"] != "legendre":
             self.logger.warning(f'Collocation method {self.baseline_mpc_module_config.optimization_backend["discretization_options"]["collocation_method"]} is not supported. '
@@ -667,12 +657,12 @@ class FlexAgentGenerator:
             raise ConfigurationError(f'Market time + prep time + flex event duration can not exceed the prediction horizon.')
         # market time val check
         if self.flex_config.market_config:
-            if flex_times["market_time"] != mpc_times["time_step"]:
-                raise ConfigurationError(f'Market time must be equal to the time step.')
-        # check for divisibility of flex_times by time_step 
+            if flex_times["market_time"] % mpc_times["time_step"] != 0:
+                raise ConfigurationError(f'Market time must be divisible by the time step.')
+        # check for divisibility of flex_times by time_step
         for name, value in flex_times.items():
             if value % mpc_times["time_step"] != 0:
-                raise ConfigurationError(f'{name} is not a multiple of the time step. Please redefine.')        
+                raise ConfigurationError(f'{name} is not a multiple of the time step. Please redefine.')
         # raise warning if parameter value in flex indicator module config differs from value in flex config/ baseline mpc module config
         for parameter in self.indicator_module_config.parameters:
             if parameter.value is not None:
@@ -686,9 +676,9 @@ class FlexAgentGenerator:
                     if parameter.value != mpc_value:
                         self.logger.warning(f'Value mismatch for {parameter.name} in baseline MPC module config (field) and indicator module config (parameter). '
                                             f'Baseline MPC module config value will be used.')
-                        
+
     def adapt_sim_results_path(self, simulator_agent_config: Union[str, Path]) -> dict:
-        """ 
+        """
         Optional helper function to adapt file path for simulator results in sim config
         so that sim results land in the same results directory as flex results.
         Args:
@@ -696,10 +686,9 @@ class FlexAgentGenerator:
 
         Returns:
             dict: The updated simulator config with the modified result file path.
-    
+
         Raises:
             FileNotFoundError: If the specified config file does not exist.
-
         """
         # open config and extract sim module
         with open(simulator_agent_config, "r") as f:
