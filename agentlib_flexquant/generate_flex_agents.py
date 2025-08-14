@@ -88,7 +88,7 @@ class FlexAgentGenerator:
             config=self.baseline_mpc_agent_config,
             module_type=cmng.get_orig_module_type(self.orig_mpc_agent_config),
         )
-        # convert to flexquant Module Config
+        # convert agentlib_mpc’s ModuleConfig to flexquant’s ModuleConfig to include additional fields not present in the original
         self.baseline_mpc_module_config = cmng.get_flex_mpc_module_config(agent_config=self.baseline_mpc_agent_config, module_config=self.baseline_mpc_module_config,
                                                                           module_type=self.flex_config.baseline_config_generator_data.module_types[self.baseline_mpc_module_config.type])
         # pos module
@@ -354,7 +354,7 @@ class FlexAgentGenerator:
                 self.flex_config.market_time
             )
 
-        # add the control signal of the baseline as inputs for the shadow mpcs
+        # add the full control trajectory output from the baseline as input for the shadow mpcs
         if type(mpc_dataclass) is not BaselineMPCData:
             for control in module_config.controls:
                 module_config.inputs.append(
@@ -364,6 +364,7 @@ class FlexAgentGenerator:
                         type='pd.Series'
                     )
                 )
+                # change the alias of control variable in shadow mpc to prevent it from triggering the wrong callback
                 control.alias = control.name + glbs.shadow_suffix
             # also include binary controls
             if hasattr(module_config, "binary_controls"):
@@ -372,13 +373,13 @@ class FlexAgentGenerator:
                         MPCVariable(
                             name=control.name + glbs.full_trajectory_suffix,
                             value=None,
-                            type = 'pd.Series'
+                            type='pd.Series'
                         )
                     )
-
             # only communicate outputs for the shadow mpcs
             module_config.shared_variable_fields = ["outputs"]
         else:
+            # add full_controls trajectory as AgentVariable to the config of Baseline mpc
             for control in module_config.controls:
                 module_config.full_controls.append(AgentVariable(name=control.name + glbs.full_trajectory_suffix,
                                                                  alias=control.name + glbs.full_trajectory_suffix,

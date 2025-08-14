@@ -8,7 +8,7 @@ from agentlib_flexquant.data_structures.globals import full_trajectory_suffix
 
 class FlexibilityBaselineMPCConfig(mpc_full.MPCConfig):
 
-    # define an Agentvariable list for the full control trajectory, since use MPCVariable output affects the optimization result
+    # define an AgentVariable list for the full control trajectory, since use MPCVariable output affects the optimization result
     full_controls: List[AgentVariable] = Field(default=[])
 
 
@@ -25,7 +25,6 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
             self._variables_dict[full_control.name] = full_control
             # fill the mapping dictionary
             self._controls_name_mapping[full_control.name] = full_control.name.replace(full_trajectory_suffix, "")
-
 
     def pre_computation_hook(self):
         if self.get("in_provision").value:
@@ -49,8 +48,8 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
 
 class FlexibilityBaselineMINLPMPCConfig(minlp_mpc.MINLPMPCConfig):
 
-    # define an Agentvariable list for the full control trajectory, since use MPCVariable output affects the optimization result
-    full_controls: List[AgentVariable] = Field(default=[])
+    # define an AgentVariable list for the full control trajectory, since use MPCVariable output affects the optimization result
+    full_controls: list[AgentVariable] = Field(default=[])
 
 
 class FlexibilityBaselineMINLPMPC(minlp_mpc.MINLPMPC):

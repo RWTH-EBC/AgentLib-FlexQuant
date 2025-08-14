@@ -37,7 +37,7 @@ SIMULATOR_CONFIG_TYPE: str = "simulator"
 
 
 def get_module_type_matching_dict(dictionary: dict):
-    """ Creates two dictionaries, which map the modules types of the agentlib_mpc modules
+    """Create two dictionaries, which map the modules types of the agentlib_mpc modules
         to those of the flexquant modules. This is done by using the MODULE_NAME_DICT
 
     """
@@ -103,20 +103,15 @@ def get_module(config: AgentConfig, module_type: str) -> T:
                                   f"agentlib and its plug ins.")
 
 
-
 def get_flex_mpc_module_config(agent_config: AgentConfig, module_config: BaseModuleConfig, module_type: str):
-    """
-    gets a flexquant module config from an original agentlib module config
-    """
+    """Get a flexquant module config from an original agentlib module config."""
     config_dict = module_config.model_dump()
     config_dict['type'] = module_type
     return MODULE_TYPE_DICT[module_type](**config_dict, _agent_id=agent_config.id)
 
 
 def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig):
-    """Removes unnecessary fields from the module to keep the created json simple
-
-    """
+    """Remove unnecessary fields from the module to keep the created json simple."""
     excluded_fields = ["rdf_class", "source", "type", "timestamp", "description", "unit", "clip",
                        "shared", "interpolation_method", "allowed_values"]
 

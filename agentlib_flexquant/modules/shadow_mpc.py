@@ -47,7 +47,7 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         vals.index += self.env.time
         # update value in the mapping dictionary
         self._full_controls[name].value = vals
-        # update the Agentvariable
+        # update the AgentVariable
         self.set(name, vals)
         # make sure all controls are set
         if all(x.value is not None for x in self._full_controls.values()):
@@ -103,7 +103,7 @@ class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
         vals.index += self.env.time
         # update value in the mapping dictionary
         self._full_controls[name].value = vals
-        # update the Agentvariable
+        # update the AgentVariable
         self.set(name, vals)
         # update the value of the variable in the model if we want to limit the binary control in the market time during optimization
         # self.model.set(name, vals)
