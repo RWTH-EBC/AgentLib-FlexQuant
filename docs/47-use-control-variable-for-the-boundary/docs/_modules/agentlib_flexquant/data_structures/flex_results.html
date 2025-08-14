@@ -383,10 +383,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulator_agent_config</span><span class="p">:</span>
             <span class="n">res</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">simulator_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">simulator_module_config</span><span class="o">.</span><span class="n">module_id</span><span class="p">:</span> <span class="n">load_sim</span><span class="p">(</span>
-                    <span class="n">Path</span><span class="p">(</span>
-                        <span class="n">res_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span>
-                        <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simulator_module_config</span><span class="o">.</span><span class="n">result_filename</span><span class="p">),</span>
-                    <span class="p">)</span>
+                        <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simulator_module_config</span><span class="o">.</span><span class="n">result_filename</span><span class="p">)</span>
                 <span class="p">)</span>
             <span class="p">}</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">generator_config</span><span class="o">.</span><span class="n">market_config</span><span class="p">:</span>

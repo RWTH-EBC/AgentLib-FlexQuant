@@ -447,16 +447,16 @@ agentlib_flexquant/data_structures/flex_results.py:236:40: C0303: Trailing white
 agentlib_flexquant/data_structures/flex_results.py:237:37: C0303: Trailing whitespace (trailing-whitespace)
 agentlib_flexquant/data_structures/flex_results.py:262:0: C0303: Trailing whitespace (trailing-whitespace)
 agentlib_flexquant/data_structures/flex_results.py:303:33: C0303: Trailing whitespace (trailing-whitespace)
-agentlib_flexquant/data_structures/flex_results.py:322:33: C0303: Trailing whitespace (trailing-whitespace)
-agentlib_flexquant/data_structures/flex_results.py:332:11: C0303: Trailing whitespace (trailing-whitespace)
-agentlib_flexquant/data_structures/flex_results.py:444:17: C0303: Trailing whitespace (trailing-whitespace)
-agentlib_flexquant/data_structures/flex_results.py:445:41: C0303: Trailing whitespace (trailing-whitespace)
-agentlib_flexquant/data_structures/flex_results.py:446:35: C0303: Trailing whitespace (trailing-whitespace)
-agentlib_flexquant/data_structures/flex_results.py:460:0: C0301: Line too long (102/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_results.py:468:0: C0301: Line too long (104/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_results.py:473:35: C0303: Trailing whitespace (trailing-whitespace)
-agentlib_flexquant/data_structures/flex_results.py:486:0: C0303: Trailing whitespace (trailing-whitespace)
-agentlib_flexquant/data_structures/flex_results.py:507:0: C0304: Final newline missing (missing-final-newline)
+agentlib_flexquant/data_structures/flex_results.py:319:33: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/data_structures/flex_results.py:329:11: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/data_structures/flex_results.py:441:17: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/data_structures/flex_results.py:442:41: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/data_structures/flex_results.py:443:35: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/data_structures/flex_results.py:457:0: C0301: Line too long (102/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_results.py:465:0: C0301: Line too long (104/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_results.py:470:35: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/data_structures/flex_results.py:483:0: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/data_structures/flex_results.py:504:0: C0304: Final newline missing (missing-final-newline)
 agentlib_flexquant/data_structures/flex_results.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 agentlib_flexquant/data_structures/flex_results.py:4:0: E0401: Unable to import 'agentlib' (import-error)
 agentlib_flexquant/data_structures/flex_results.py:5:0: E0401: Unable to import 'pydantic' (import-error)
@@ -479,8 +479,8 @@ agentlib_flexquant/data_structures/flex_results.py:157:20: W1514: Using open wit
 agentlib_flexquant/data_structures/flex_results.py:223:17: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
 agentlib_flexquant/data_structures/flex_results.py:223:54: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
 agentlib_flexquant/data_structures/flex_results.py:241:4: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
-agentlib_flexquant/data_structures/flex_results.py:391:12: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/data_structures/flex_results.py:427:23: R1714: Consider merging these comparisons with 'in' by using 'alias in (var.alias, var.name)'. Use a set instead if elements are hashable. (consider-using-in)
+agentlib_flexquant/data_structures/flex_results.py:388:12: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/data_structures/flex_results.py:424:23: R1714: Consider merging these comparisons with 'in' by using 'alias in (var.alias, var.name)'. Use a set instead if elements are hashable. (consider-using-in)
 agentlib_flexquant/data_structures/flex_results.py:6:0: C0411: standard import "from pathlib import Path" should be placed before "import agentlib" (wrong-import-order)
 agentlib_flexquant/data_structures/flex_results.py:7:0: C0411: standard import "import json" should be placed before "import agentlib" (wrong-import-order)
 agentlib_flexquant/data_structures/flex_results.py:8:0: C0411: standard import "import os" should be placed before "import agentlib" (wrong-import-order)
@@ -533,7 +533,18 @@ agentlib_flexquant/data_structures/__init__.py:1:0: R0801: Similar lines in 2 fi
             self.logger.error("Results file %s was not found.", results_file)
             return None
 
-    def register_callbacks(self): (duplicate-code)
+    def write_results(self, df, ts, n):
+        """
+        Write every data of variables in self.var_list in an DataFrame
+        DataFrame will be updated every time step
+
+        Args:
+            df: DataFrame which is initialised as an empty DataFrame with columns according to self.var_list
+            ts: time step
+            n: number of time steps during prediction horizon
+        Returns:
+            DataFrame with results of every variable in self.var_list
+        """ (duplicate-code)
 agentlib_flexquant/data_structures/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.flexibility_indicator:[223:230]
 ==agentlib_flexquant.modules.flexibility_market:[60:68]
@@ -543,7 +554,6 @@ agentlib_flexquant/data_structures/__init__.py:1:0: R0801: Similar lines in 2 fi
                 f"Expected a '.csv' file."
             )
         return self
-
  (duplicate-code)
 agentlib_flexquant/data_structures/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.data_structures.flexquant:[105:111]
@@ -553,8 +563,7 @@ agentlib_flexquant/data_structures/__init__.py:1:0: R0801: Similar lines in 2 fi
         ge=0,
         unit="s",
         description="Time for market interaction",
-    )
- (duplicate-code)
+    ) (duplicate-code)
 
 -----------------------------------
 Your code has been rated at 5.33/10
