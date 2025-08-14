@@ -1,0 +1,433 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>agentlib_flexquant.utils package &mdash; agentlib_flexquant 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
+
+  
+      <script src="../_static/jquery.js"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+      <script src="../_static/doctools.js"></script>
+      <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="agentlib_flexquant.optimization_backends package" href="agentlib_flexquant.optimization_backends.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            agentlib_flexquant
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html">agentlib_flexquant</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="agentlib_flexquant.html">agentlib_flexquant package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="agentlib_flexquant.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.html#module-agentlib_flexquant.generate_flex_agents">agentlib_flexquant.generate_flex_agents module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">agentlib_flexquant</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="modules.html">agentlib_flexquant</a></li>
+          <li class="breadcrumb-item"><a href="agentlib_flexquant.html">agentlib_flexquant package</a></li>
+      <li class="breadcrumb-item active">agentlib_flexquant.utils package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/code/agentlib_flexquant.utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-agentlib_flexquant.utils">
+<span id="agentlib-flexquant-utils-package"></span><h1>agentlib_flexquant.utils package<a class="headerlink" href="#module-agentlib_flexquant.utils" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-agentlib_flexquant.utils.config_management">
+<span id="agentlib-flexquant-utils-config-management-module"></span><h2>agentlib_flexquant.utils.config_management module<a class="headerlink" href="#module-agentlib_flexquant.utils.config_management" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.config_management.get_class_from_file">
+<span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.utils.config_management.</span></span><span class="sig-name descname"><span class="pre">get_class_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/config_management.html#get_class_from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.config_management.get_class_from_file" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.config_management.get_flex_mpc_module_config">
+<span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.utils.config_management.</span></span><span class="sig-name descname"><span class="pre">get_flex_mpc_module_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AgentConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseModuleConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/config_management.html#get_flex_mpc_module_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.config_management.get_flex_mpc_module_config" title="Permalink to this definition"></a></dt>
+<dd><p>gets a flexquant module config from an original agentlib module config</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.config_management.get_module">
+<span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.utils.config_management.</span></span><span class="sig-name descname"><span class="pre">get_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AgentConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">T</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/config_management.html#get_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.config_management.get_module" title="Permalink to this definition"></a></dt>
+<dd><p>Extracts a module from a config based on its name</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.config_management.get_module_type_matching_dict">
+<span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.utils.config_management.</span></span><span class="sig-name descname"><span class="pre">get_module_type_matching_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dictionary</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/config_management.html#get_module_type_matching_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.config_management.get_module_type_matching_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Creates two dictionaries, which map the modules types of the agentlib_mpc modules
+to those of the flexquant modules. This is done by using the MODULE_NAME_DICT</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.config_management.get_orig_module_type">
+<span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.utils.config_management.</span></span><span class="sig-name descname"><span class="pre">get_orig_module_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AgentConfig</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/config_management.html#get_orig_module_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.config_management.get_orig_module_type" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the config type of the original MPC</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.config_management.subtract_relative_path">
+<span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.utils.config_management.</span></span><span class="sig-name descname"><span class="pre">subtract_relative_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">absolute_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relative_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/config_management.html#subtract_relative_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.config_management.subtract_relative_path" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.config_management.to_dict_and_remove_unnecessary_fields">
+<span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.utils.config_management.</span></span><span class="sig-name descname"><span class="pre">to_dict_and_remove_unnecessary_fields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseModuleConfig</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/config_management.html#to_dict_and_remove_unnecessary_fields"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.config_management.to_dict_and_remove_unnecessary_fields" title="Permalink to this definition"></a></dt>
+<dd><p>Removes unnecessary fields from the module to keep the created json simple</p>
+</dd></dl>
+
+</section>
+<section id="module-agentlib_flexquant.utils.data_handling">
+<span id="agentlib-flexquant-utils-data-handling-module"></span><h2>agentlib_flexquant.utils.data_handling module<a class="headerlink" href="#module-agentlib_flexquant.utils.data_handling" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.data_handling.convert_timescale_of_index">
+<span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.utils.data_handling.</span></span><span class="sig-name descname"><span class="pre">convert_timescale_of_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_unit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'seconds'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'minutes'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'hours'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'days'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_unit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">{'seconds':</span> <span class="pre">1,</span> <span class="pre">'minutes':</span> <span class="pre">60,</span> <span class="pre">'hours':</span> <span class="pre">3600,</span> <span class="pre">'days':</span> <span class="pre">86400}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/data_handling.html#convert_timescale_of_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.data_handling.convert_timescale_of_index" title="Permalink to this definition"></a></dt>
+<dd><p>Convert the timescale of a dataframe index (from seconds) to the given time unit</p>
+<p>Keyword arguments:
+results – The dictionary of the results with the dataframes
+time_unit – The time unit to convert the index to</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.data_handling.fill_nans">
+<span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.utils.data_handling.</span></span><span class="sig-name descname"><span class="pre">fill_nans</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'mean'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'interpolate'</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/data_handling.html#fill_nans"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.data_handling.fill_nans" title="Permalink to this definition"></a></dt>
+<dd><p>Fill NaN values in the series with the given method.</p>
+<p>Implemented methods:
+- mean: fill NaN values with the mean of the following values.
+- interpolate: interpolate missing values.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.data_handling.strip_multi_index">
+<span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.utils.data_handling.</span></span><span class="sig-name descname"><span class="pre">strip_multi_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/data_handling.html#strip_multi_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.data_handling.strip_multi_index" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-agentlib_flexquant.utils.interactive">
+<span id="agentlib-flexquant-utils-interactive-module"></span><h2>agentlib_flexquant.utils.interactive module<a class="headerlink" href="#module-agentlib_flexquant.utils.interactive" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.interactive.CustomBound">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.utils.interactive.</span></span><span class="sig-name descname"><span class="pre">CustomBound</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">for_variable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lb_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ub_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/interactive.html#CustomBound"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.interactive.CustomBound" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Dataclass to let the user define custom bounds for the mpc variables</p>
+<p>var_name – The name of the variable to plot the bounds into
+lower bound – The lower bound of the variable as the name of the lower bound variable in the MPC
+upper bound – The upper bound of the variable as the name of the upper bound variable in the MPC</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.interactive.CustomBound.for_variable">
+<span class="sig-name descname"><span class="pre">for_variable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#agentlib_flexquant.utils.interactive.CustomBound.for_variable" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.interactive.CustomBound.lower_bound">
+<span class="sig-name descname"><span class="pre">lower_bound</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#agentlib_flexquant.utils.interactive.CustomBound.lower_bound" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.interactive.CustomBound.upper_bound">
+<span class="sig-name descname"><span class="pre">upper_bound</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#agentlib_flexquant.utils.interactive.CustomBound.upper_bound" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.interactive.Dashboard">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.utils.interactive.</span></span><span class="sig-name descname"><span class="pre">Dashboard</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flex_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig"><span class="pre">FlexQuantConfig</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulator_agent_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">AgentConfig</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generated_flex_files_base_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_timescale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'seconds'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'minutes'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'hours'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'days'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'hours'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/interactive.html#Dashboard"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.interactive.Dashboard" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results" title="agentlib_flexquant.data_structures.flex_results.Results"><code class="xref py py-class docutils literal notranslate"><span class="pre">Results</span></code></a></p>
+<p>Class for the dashboard of flexquant</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.interactive.Dashboard.MPC_ITERATIONS">
+<span class="sig-name descname"><span class="pre">MPC_ITERATIONS</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'iter_count'</span></em><a class="headerlink" href="#agentlib_flexquant.utils.interactive.Dashboard.MPC_ITERATIONS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.interactive.Dashboard.bounds_key">
+<span class="sig-name descname"><span class="pre">bounds_key</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'bounds'</span></em><a class="headerlink" href="#agentlib_flexquant.utils.interactive.Dashboard.bounds_key" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.interactive.Dashboard.characteristic_times_accepted_key">
+<span class="sig-name descname"><span class="pre">characteristic_times_accepted_key</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'characteristic_times_accepted'</span></em><a class="headerlink" href="#agentlib_flexquant.utils.interactive.Dashboard.characteristic_times_accepted_key" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.interactive.Dashboard.characteristic_times_current_key">
+<span class="sig-name descname"><span class="pre">characteristic_times_current_key</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'characteristic_times_current'</span></em><a class="headerlink" href="#agentlib_flexquant.utils.interactive.Dashboard.characteristic_times_current_key" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.interactive.Dashboard.custom_bounds">
+<span class="sig-name descname"><span class="pre">custom_bounds</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#agentlib_flexquant.utils.interactive.CustomBound" title="agentlib_flexquant.utils.interactive.CustomBound"><span class="pre">agentlib_flexquant.utils.interactive.CustomBound</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#agentlib_flexquant.utils.interactive.Dashboard.custom_bounds" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.interactive.Dashboard.label_negative">
+<span class="sig-name descname"><span class="pre">label_negative</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'negative'</span></em><a class="headerlink" href="#agentlib_flexquant.utils.interactive.Dashboard.label_negative" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.interactive.Dashboard.label_positive">
+<span class="sig-name descname"><span class="pre">label_positive</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'positive'</span></em><a class="headerlink" href="#agentlib_flexquant.utils.interactive.Dashboard.label_positive" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.interactive.Dashboard.show">
+<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">custom_bounds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#agentlib_flexquant.utils.interactive.CustomBound" title="agentlib_flexquant.utils.interactive.CustomBound"><span class="pre">CustomBound</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#agentlib_flexquant.utils.interactive.CustomBound" title="agentlib_flexquant.utils.interactive.CustomBound"><span class="pre">agentlib_flexquant.utils.interactive.CustomBound</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/interactive.html#Dashboard.show"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.interactive.Dashboard.show" title="Permalink to this definition"></a></dt>
+<dd><p>Shows the dashboard in a web browser containing:
+– Statistics of the MPCs solver
+– The states, controls, and the power variable of the MPCs and the simulator
+– KPIs of the flexibility quantification
+– Markings of the characteristic flexibility times</p>
+<p>Optional arguments to show the comfort bounds:
+– temperature_var_name: The name of the temperature variable in the MPC to plot the comfort bounds into
+– ub_comfort_var_name: The name of the upper comfort bound variable in the MPC
+– lb_comfort_var_name: The name of the lower comfort bound variable in the MPC</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-agentlib_flexquant.utils.parsing">
+<span id="agentlib-flexquant-utils-parsing-module"></span><h2>agentlib_flexquant.utils.parsing module<a class="headerlink" href="#module-agentlib_flexquant.utils.parsing" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.parsing.SetupSystemModifier">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.utils.parsing.</span></span><span class="sig-name descname"><span class="pre">SetupSystemModifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mpc_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaseMPCData" title="agentlib_flexquant.data_structures.mpcs.BaseMPCData"><span class="pre">BaseMPCData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">controls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">MPCVariable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">binary_controls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">MPCVariable</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/parsing.html#SetupSystemModifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.parsing.SetupSystemModifier" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">NodeTransformer</span></code></p>
+<p>A custom AST transformer for modifying the MPC model file.</p>
+<p>This class traverses the AST of the input file, identifies the relevant classes and methods,
+and performs the necessary modifications.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.parsing.SetupSystemModifier.mpc_data">
+<span class="sig-name descname"><span class="pre">mpc_data</span></span><a class="headerlink" href="#agentlib_flexquant.utils.parsing.SetupSystemModifier.mpc_data" title="Permalink to this definition"></a></dt>
+<dd><p>The new return expression to be used in the setup_system method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.parsing.SetupSystemModifier.get_leftmost_list">
+<span class="sig-name descname"><span class="pre">get_leftmost_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/parsing.html#SetupSystemModifier.get_leftmost_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.parsing.SetupSystemModifier.get_leftmost_list" title="Permalink to this definition"></a></dt>
+<dd><p>Recursively traverse binary operations to get the leftmost list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>node</strong> – An AST node (could be a BinOp or directly a List)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The leftmost List node found</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.parsing.SetupSystemModifier.modify_config_class_baseline">
+<span class="sig-name descname"><span class="pre">modify_config_class_baseline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/parsing.html#SetupSystemModifier.modify_config_class_baseline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.parsing.SetupSystemModifier.modify_config_class_baseline" title="Permalink to this definition"></a></dt>
+<dd><p>Modify the config class of the baseline mpc.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>node</strong> (<em>ast.ClassDef</em>) – The class definition node of the config.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.parsing.SetupSystemModifier.modify_config_class_shadow">
+<span class="sig-name descname"><span class="pre">modify_config_class_shadow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/parsing.html#SetupSystemModifier.modify_config_class_shadow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.parsing.SetupSystemModifier.modify_config_class_shadow" title="Permalink to this definition"></a></dt>
+<dd><p>Modify the config class of the shadow mpc.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>node</strong> (<em>ast.ClassDef</em>) – The class definition node of the config.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.parsing.SetupSystemModifier.modify_setup_system_baseline">
+<span class="sig-name descname"><span class="pre">modify_setup_system_baseline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/parsing.html#SetupSystemModifier.modify_setup_system_baseline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.parsing.SetupSystemModifier.modify_setup_system_baseline" title="Permalink to this definition"></a></dt>
+<dd><p>Modify the setup_system method of the baseline mpc model class.</p>
+<p>This method changes the return statement of the setup_system method and adds
+all necessary new lines of code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>node</strong> (<em>ast.FunctionDef</em>) – The function definition node of setup_system.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.parsing.SetupSystemModifier.modify_setup_system_shadow">
+<span class="sig-name descname"><span class="pre">modify_setup_system_shadow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/parsing.html#SetupSystemModifier.modify_setup_system_shadow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.parsing.SetupSystemModifier.modify_setup_system_shadow" title="Permalink to this definition"></a></dt>
+<dd><p>Modify the setup_system method of the shadow mpc model class.</p>
+<p>This method changes the return statement of the setup_system method and adds
+all necessary new lines of code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>node</strong> (<em>ast.FunctionDef</em>) – The function definition node of setup_system.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.parsing.SetupSystemModifier.visit_ClassDef">
+<span class="sig-name descname"><span class="pre">visit_ClassDef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/parsing.html#SetupSystemModifier.visit_ClassDef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.parsing.SetupSystemModifier.visit_ClassDef" title="Permalink to this definition"></a></dt>
+<dd><p>Visit a class definition in the AST.</p>
+<p>This method is called for each class definition in the AST. It identifies the
+BaselineMPCModelConfig and BaselineMPCModel classes and performs the necessary actions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>node</strong> (<em>ast.ClassDef</em>) – The class definition node in the AST.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The possibly modified class definition node.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ast.ClassDef</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.parsing.SetupSystemModifier.visit_Module">
+<span class="sig-name descname"><span class="pre">visit_Module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/parsing.html#SetupSystemModifier.visit_Module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.parsing.SetupSystemModifier.visit_Module" title="Permalink to this definition"></a></dt>
+<dd><p>Visit a module definition in the AST.</p>
+<p>Appends or deletes the import statements at the top of the module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>module</strong> (<em>ast.Module</em>) – The module definition node in the AST.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The possibly modified module definition node.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ast.Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.parsing.add_import_to_tree">
+<span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.utils.parsing.</span></span><span class="sig-name descname"><span class="pre">add_import_to_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alias</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/parsing.html#add_import_to_tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.parsing.add_import_to_tree" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.parsing.add_input">
+<span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.utils.parsing.</span></span><span class="sig-name descname"><span class="pre">add_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/parsing.html#add_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.parsing.add_input" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.parsing.add_output">
+<span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.utils.parsing.</span></span><span class="sig-name descname"><span class="pre">add_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/parsing.html#add_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.parsing.add_output" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.parsing.add_parameter">
+<span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.utils.parsing.</span></span><span class="sig-name descname"><span class="pre">add_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/parsing.html#add_parameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.parsing.add_parameter" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.parsing.create_ast_element">
+<span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.utils.parsing.</span></span><span class="sig-name descname"><span class="pre">create_ast_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template_string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/parsing.html#create_ast_element"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.parsing.create_ast_element" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.parsing.remove_all_imports_from_tree">
+<span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.utils.parsing.</span></span><span class="sig-name descname"><span class="pre">remove_all_imports_from_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/parsing.html#remove_all_imports_from_tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.parsing.remove_all_imports_from_tree" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="agentlib_flexquant.optimization_backends.html" class="btn btn-neutral float-left" title="agentlib_flexquant.optimization_backends package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Felix Stegemerten.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

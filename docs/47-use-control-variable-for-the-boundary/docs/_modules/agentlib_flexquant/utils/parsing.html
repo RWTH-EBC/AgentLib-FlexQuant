@@ -1,0 +1,554 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>agentlib_flexquant.utils.parsing &mdash; agentlib_flexquant 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
+
+  
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            agentlib_flexquant
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">agentlib_flexquant</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">agentlib_flexquant.utils.parsing</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for agentlib_flexquant.utils.parsing</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.mpcs</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BaseMPCData</span><span class="p">,</span>
+    <span class="n">PFMPCData</span><span class="p">,</span>
+    <span class="n">NFMPCData</span><span class="p">,</span>
+    <span class="n">BaselineMPCData</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SHADOW_MPC_COST_FUNCTION</span><span class="p">,</span>
+    <span class="n">return_baseline_cost_function</span><span class="p">,</span>
+    <span class="n">full_trajectory_suffix</span><span class="p">,</span>
+    <span class="n">PROFILE_DEVIATION_WEIGHT</span><span class="p">,</span>
+    <span class="n">MARKET_TIME</span><span class="p">,</span>
+    <span class="n">PREP_TIME</span><span class="p">,</span>
+    <span class="n">FLEX_EVENT_DURATION</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.data_structures.mpc_datamodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPCVariable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">string</span><span class="w"> </span><span class="kn">import</span> <span class="n">Template</span>
+
+<span class="c1"># Constants</span>
+<span class="n">CASADI_INPUT</span> <span class="o">=</span> <span class="s2">&quot;CasadiInput&quot;</span>
+<span class="n">CASADI_PARAMETER</span> <span class="o">=</span> <span class="s2">&quot;CasadiParameter&quot;</span>
+<span class="n">CASADI_OUTPUT</span> <span class="o">=</span> <span class="s2">&quot;CasadiOutput&quot;</span>
+
+<span class="c1"># String templates</span>
+<span class="n">INPUT_TEMPLATE</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span>
+    <span class="s2">&quot;$class_name(name=&#39;$name&#39;, value=$value, unit=&#39;$unit&#39;, type=&#39;$type&#39;, description=&#39;$description&#39;)&quot;</span>
+<span class="p">)</span>
+<span class="n">PARAMETER_TEMPLATE</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span>
+    <span class="s2">&quot;$class_name(name=&#39;$name&#39;, value=$value, unit=&#39;$unit&#39;, description=&#39;$description&#39;)&quot;</span>
+<span class="p">)</span>
+<span class="n">OUTPUT_TEMPLATE</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span>
+    <span class="s2">&quot;$class_name(name=&#39;$name&#39;, unit=&#39;$unit&#39;, type=&#39;$type&#39;, value=$value, description=&#39;$description&#39;)&quot;</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="create_ast_element"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.create_ast_element">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">create_ast_element</span><span class="p">(</span><span class="n">template_string</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">template_string</span><span class="p">)</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="add_input"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_input">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">add_input</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">create_ast_element</span><span class="p">(</span>
+        <span class="n">INPUT_TEMPLATE</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span>
+            <span class="n">class_name</span><span class="o">=</span><span class="n">CASADI_INPUT</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="add_parameter"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_parameter">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">add_parameter</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">create_ast_element</span><span class="p">(</span>
+        <span class="n">PARAMETER_TEMPLATE</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span>
+            <span class="n">class_name</span><span class="o">=</span><span class="n">CASADI_PARAMETER</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="add_output"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_output">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">add_output</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">create_ast_element</span><span class="p">(</span>
+        <span class="n">OUTPUT_TEMPLATE</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span>
+            <span class="n">class_name</span><span class="o">=</span><span class="n">CASADI_OUTPUT</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SetupSystemModifier"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">SetupSystemModifier</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">NodeTransformer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A custom AST transformer for modifying the MPC model file.</span>
+
+<span class="sd">    This class traverses the AST of the input file, identifies the relevant classes and methods,</span>
+<span class="sd">    and performs the necessary modifications.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        mpc_data (str): The new return expression to be used in the setup_system method.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">mpc_data</span><span class="p">:</span> <span class="n">BaseMPCData</span><span class="p">,</span>
+        <span class="n">controls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MPCVariable</span><span class="p">],</span>
+        <span class="n">binary_controls</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">MPCVariable</span><span class="p">]],</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mpc_data</span> <span class="o">=</span> <span class="n">mpc_data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controls</span> <span class="o">=</span> <span class="n">controls</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">binary_controls</span> <span class="o">=</span> <span class="n">binary_controls</span>
+        <span class="c1"># create object for ast parsing for both, the config and the model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_obj</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">expr</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_obj</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">expr</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># select modification of setup_system based on mpc type</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mpc_data</span><span class="p">,</span> <span class="p">(</span><span class="n">PFMPCData</span><span class="p">,</span> <span class="n">NFMPCData</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">modify_config_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modify_config_class_shadow</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">modify_setup_system</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modify_setup_system_shadow</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mpc_data</span><span class="p">,</span> <span class="n">BaselineMPCData</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">modify_config_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modify_config_class_baseline</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">modify_setup_system</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modify_setup_system_baseline</span>
+
+<div class="viewcode-block" id="SetupSystemModifier.visit_Module"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.visit_Module">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">visit_Module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Visit a module definition in the AST.</span>
+
+<span class="sd">        Appends or deletes the import statements at the top of the module.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            module (ast.Module): The module definition node in the AST.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ast.Module: The possibly modified module definition node.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># append imports for baseline</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mpc_data</span><span class="p">,</span> <span class="n">BaselineMPCData</span><span class="p">):</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="n">add_import_to_tree</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;pandas&quot;</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;pd&quot;</span><span class="p">,</span> <span class="n">tree</span><span class="o">=</span><span class="n">module</span><span class="p">)</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="n">add_import_to_tree</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;casadi&quot;</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;ca&quot;</span><span class="p">,</span> <span class="n">tree</span><span class="o">=</span><span class="n">module</span><span class="p">)</span>
+        <span class="c1"># delete imports for shadow MPCs</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mpc_data</span><span class="p">,</span> <span class="p">(</span><span class="n">NFMPCData</span><span class="p">,</span> <span class="n">PFMPCData</span><span class="p">)):</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="n">remove_all_imports_from_tree</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+        <span class="c1"># trigger the next visit method (ClassDef)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generic_visit</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">module</span></div>
+
+<div class="viewcode-block" id="SetupSystemModifier.visit_ClassDef"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.visit_ClassDef">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">visit_ClassDef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Visit a class definition in the AST.</span>
+
+<span class="sd">        This method is called for each class definition in the AST. It identifies the</span>
+<span class="sd">        BaselineMPCModelConfig and BaselineMPCModel classes and performs the necessary actions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            node (ast.ClassDef): The class definition node in the AST.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ast.ClassDef: The possibly modified class definition node.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">bases</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span> <span class="ow">and</span> <span class="n">base</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s2">&quot;CasadiModelConfig&quot;</span><span class="p">:</span>
+                <span class="c1"># get ast object and trigger modification</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">config_obj</span> <span class="o">=</span> <span class="n">node</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">modify_config_class</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+                <span class="c1"># change class name</span>
+                <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpc_data</span><span class="o">.</span><span class="n">class_name</span> <span class="o">+</span> <span class="s2">&quot;Config&quot;</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span> <span class="ow">and</span> <span class="n">base</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s2">&quot;CasadiModel&quot;</span><span class="p">:</span>
+                <span class="c1"># get ast object and trigger modification</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model_obj</span> <span class="o">=</span> <span class="n">node</span>
+                <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">FunctionDef</span><span class="p">)</span>
+                        <span class="ow">and</span> <span class="n">item</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;setup_system&quot;</span>
+                    <span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">modify_setup_system</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+                    <span class="c1"># change config value</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">AnnAssign</span><span class="p">)</span> <span class="ow">and</span> <span class="n">item</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s2">&quot;config&quot;</span><span class="p">:</span>
+                        <span class="n">item</span><span class="o">.</span><span class="n">annotation</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mpc_data</span><span class="o">.</span><span class="n">class_name</span> <span class="o">+</span> <span class="s2">&quot;Config&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+                        <span class="p">)</span>
+
+                <span class="c1"># change class name</span>
+                <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpc_data</span><span class="o">.</span><span class="n">class_name</span>
+
+        <span class="k">return</span> <span class="n">node</span></div>
+
+<div class="viewcode-block" id="SetupSystemModifier.get_leftmost_list"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.get_leftmost_list">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_leftmost_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Recursively traverse binary operations to get the leftmost list.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            node: An AST node (could be a BinOp or directly a List)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The leftmost List node found</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">List</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">node</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">BinOp</span><span class="p">):</span>
+            <span class="c1"># If it&#39;s a binary operation, recurse to the left</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_leftmost_list</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Tuple</span><span class="p">):</span>
+            <span class="c1"># If it&#39;s a tuple with elements, check the first element</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">elts</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">elts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_leftmost_list</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">elts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="c1"># If we get here, we couldn&#39;t find a list</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="SetupSystemModifier.modify_config_class_shadow"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.modify_config_class_shadow">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">modify_config_class_shadow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Modify the config class of the shadow mpc.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            node (ast.ClassDef): The class definition node of the config.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># loop over config object and modify fields</span>
+        <span class="k">for</span> <span class="n">body</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
+            <span class="c1"># add the time and full baseline control trajectory as inputs</span>
+            <span class="k">if</span> <span class="n">body</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s2">&quot;inputs&quot;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">control</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">controls</span><span class="p">:</span>
+                    <span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">elts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">add_input</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">control</span><span class="o">.</span><span class="n">name</span><span class="si">}{</span><span class="n">full_trajectory_suffix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="kc">None</span><span class="p">,</span>
+                            <span class="n">control</span><span class="o">.</span><span class="n">unit</span><span class="p">,</span>
+                            <span class="s2">&quot;full control trajectory output of baseline mpc&quot;</span><span class="p">,</span>
+                            <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;pd.Series&quot;</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="c1"># also include binary controls</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">binary_controls</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">control</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">binary_controls</span><span class="p">:</span>
+                        <span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">elts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                            <span class="n">add_input</span><span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">control</span><span class="o">.</span><span class="n">name</span><span class="si">}{</span><span class="n">full_trajectory_suffix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                                <span class="kc">None</span><span class="p">,</span>
+                                <span class="n">control</span><span class="o">.</span><span class="n">unit</span><span class="p">,</span>
+                                <span class="s2">&quot;full control trajectory output of baseline mpc&quot;</span><span class="p">,</span>
+                                <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;pd.Series&quot;</span><span class="p">,</span>
+                            <span class="p">)</span>
+                        <span class="p">)</span>
+                <span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">elts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">add_input</span><span class="p">(</span><span class="s2">&quot;in_provision&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;provision flag&quot;</span><span class="p">,</span> <span class="s2">&quot;bool&quot;</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="c1"># add the flex variables and the weights</span>
+            <span class="k">if</span> <span class="n">body</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s2">&quot;parameters&quot;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">param_name</span> <span class="ow">in</span> <span class="p">[</span><span class="n">PREP_TIME</span><span class="p">,</span> <span class="n">FLEX_EVENT_DURATION</span><span class="p">,</span> <span class="n">MARKET_TIME</span><span class="p">]:</span>
+                    <span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">elts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">add_parameter</span><span class="p">(</span><span class="n">param_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="s2">&quot;time to switch objective&quot;</span><span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="k">for</span> <span class="n">weight</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpc_data</span><span class="o">.</span><span class="n">weights</span><span class="p">:</span>
+                    <span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">elts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">add_parameter</span><span class="p">(</span>
+                            <span class="n">weight</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                            <span class="n">weight</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                            <span class="s2">&quot;-&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;Weight for P in objective function&quot;</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="SetupSystemModifier.modify_config_class_baseline"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.modify_config_class_baseline">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">modify_config_class_baseline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Modify the config class of the baseline mpc.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            node (ast.ClassDef): The class definition node of the config.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># loop over config object and modify fields</span>
+        <span class="k">for</span> <span class="n">body</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
+            <span class="c1"># add the fullcontrol trajectories to the baseline config class</span>
+            <span class="k">if</span> <span class="n">body</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s2">&quot;outputs&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">List</span><span class="p">):</span>
+                    <span class="c1"># Simple list case</span>
+                    <span class="n">value_list</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">value</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">BinOp</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Tuple</span><span class="p">):</span>
+                    <span class="c1"># Complex case with concatenated lists or tuple</span>
+                    <span class="n">value_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_leftmost_list</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+            <span class="c1"># add the flexibility inputs</span>
+            <span class="k">if</span> <span class="n">body</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s2">&quot;inputs&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">List</span><span class="p">):</span>
+                    <span class="c1"># Simple list case</span>
+                    <span class="n">value_list</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">value</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">BinOp</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Tuple</span><span class="p">):</span>
+                    <span class="c1"># Complex case with concatenated lists or tuple</span>
+                    <span class="n">value_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_leftmost_list</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                <span class="n">value_list</span><span class="o">.</span><span class="n">elts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">add_input</span><span class="p">(</span>
+                        <span class="s2">&quot;_P_external&quot;</span><span class="p">,</span>
+                        <span class="mi">0</span><span class="p">,</span>
+                        <span class="s2">&quot;W&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;External power profile to be provided&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;pd.Series&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">value_list</span><span class="o">.</span><span class="n">elts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">add_input</span><span class="p">(</span>
+                        <span class="s2">&quot;in_provision&quot;</span><span class="p">,</span>
+                        <span class="kc">False</span><span class="p">,</span>
+                        <span class="s2">&quot;-&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;Flag signaling if the flexibility is in provision&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;bool&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">value_list</span><span class="o">.</span><span class="n">elts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">add_input</span><span class="p">(</span>
+                        <span class="s2">&quot;rel_start&quot;</span><span class="p">,</span>
+                        <span class="mi">0</span><span class="p">,</span>
+                        <span class="s2">&quot;s&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;relative start time of the flexibility event&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">value_list</span><span class="o">.</span><span class="n">elts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">add_input</span><span class="p">(</span>
+                        <span class="s2">&quot;rel_end&quot;</span><span class="p">,</span>
+                        <span class="mi">0</span><span class="p">,</span>
+                        <span class="s2">&quot;s&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;relative end time of the flexibility event&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+
+            <span class="c1"># add the flex variables and the weights</span>
+            <span class="k">if</span> <span class="n">body</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s2">&quot;parameters&quot;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpc_data</span><span class="o">.</span><span class="n">config_parameters_appendix</span><span class="p">:</span>
+                    <span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">elts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">add_parameter</span><span class="p">(</span><span class="n">parameter</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">parameter</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+                    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="SetupSystemModifier.modify_setup_system_shadow"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.modify_setup_system_shadow">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">modify_setup_system_shadow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Modify the setup_system method of the shadow mpc model class.</span>
+
+<span class="sd">        This method changes the return statement of the setup_system method and adds</span>
+<span class="sd">        all necessary new lines of code.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            node (ast.FunctionDef): The function definition node of setup_system.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># constraint the control trajectories for t &lt; market_time</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">targets</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ast</span><span class="o">.</span><span class="n">Attribute</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="n">item</span><span class="o">.</span><span class="n">targets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">attr</span> <span class="o">==</span> <span class="s2">&quot;constraints&quot;</span>
+            <span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">List</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">control</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">controls</span><span class="p">):</span>
+                        <span class="c1"># insert control boundaries at beginning of function</span>
+                        <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span>
+                            <span class="mi">0</span><span class="p">,</span>
+                            <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">control</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_upper = ca.if_else(self.time &lt; self.market_time.sym, &quot;</span>
+                                <span class="sa">f</span><span class="s2">&quot;self.</span><span class="si">{</span><span class="n">control</span><span class="o">.</span><span class="n">name</span><span class="si">}{</span><span class="n">full_trajectory_suffix</span><span class="si">}</span><span class="s2">.sym, &quot;</span>
+                                <span class="sa">f</span><span class="s2">&quot;self.</span><span class="si">{</span><span class="n">control</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.ub)&quot;</span>
+                            <span class="p">)</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                        <span class="p">)</span>
+                        <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span>
+                            <span class="mi">0</span><span class="p">,</span>
+                            <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">control</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_lower = ca.if_else(self.time &lt; self.market_time.sym, &quot;</span>
+                                <span class="sa">f</span><span class="s2">&quot;self.</span><span class="si">{</span><span class="n">control</span><span class="o">.</span><span class="n">name</span><span class="si">}{</span><span class="n">full_trajectory_suffix</span><span class="si">}</span><span class="s2">.sym, &quot;</span>
+                                <span class="sa">f</span><span class="s2">&quot;self.</span><span class="si">{</span><span class="n">control</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.lb)&quot;</span>
+                            <span class="p">)</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                        <span class="p">)</span>
+                        <span class="c1"># append to constraints</span>
+                        <span class="n">new_element</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">control</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_lower, self.</span><span class="si">{</span><span class="n">control</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">control</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_upper)&quot;</span>
+                            <span class="p">)</span>
+                            <span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="o">.</span><span class="n">value</span>
+                        <span class="p">)</span>
+                        <span class="n">item</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">elts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_element</span><span class="p">)</span>
+                    <span class="k">break</span>
+        <span class="c1"># loop through setup_system function to find return statement</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">stmt</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stmt</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Return</span><span class="p">):</span>
+                <span class="c1"># store current return statement</span>
+                <span class="n">original_return</span> <span class="o">=</span> <span class="n">stmt</span><span class="o">.</span><span class="n">value</span>
+                <span class="n">new_body</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="c1"># create new standard objective variable</span>
+                    <span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">(</span>
+                        <span class="n">targets</span><span class="o">=</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;obj_std&quot;</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Store</span><span class="p">())],</span>
+                        <span class="n">value</span><span class="o">=</span><span class="n">original_return</span><span class="p">,</span>
+                    <span class="p">),</span>
+                    <span class="c1"># create flex objective variable</span>
+                    <span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">(</span>
+                        <span class="n">targets</span><span class="o">=</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;obj_flex&quot;</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Store</span><span class="p">())],</span>
+                        <span class="n">value</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">mpc_data</span><span class="o">.</span><span class="n">flex_cost_function</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;eval&quot;</span>
+                        <span class="p">)</span><span class="o">.</span><span class="n">body</span><span class="p">,</span>
+                    <span class="p">),</span>
+                    <span class="c1"># overwrite return statement with custom function</span>
+                    <span class="n">ast</span><span class="o">.</span><span class="n">Return</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">SHADOW_MPC_COST_FUNCTION</span><span class="p">)</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">),</span>
+                <span class="p">]</span>
+                <span class="c1"># append new variables to end of function</span>
+                <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="n">i</span><span class="p">:]</span> <span class="o">=</span> <span class="n">new_body</span>
+                <span class="k">break</span></div>
+
+<div class="viewcode-block" id="SetupSystemModifier.modify_setup_system_baseline"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.modify_setup_system_baseline">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">modify_setup_system_baseline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Modify the setup_system method of the baseline mpc model class.</span>
+
+<span class="sd">        This method changes the return statement of the setup_system method and adds</span>
+<span class="sd">        all necessary new lines of code.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            node (ast.FunctionDef): The function definition node of setup_system.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># loop through setup_system function to find return statement</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">stmt</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stmt</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Return</span><span class="p">):</span>
+                <span class="c1"># store current return statement</span>
+                <span class="n">original_return</span> <span class="o">=</span> <span class="n">stmt</span><span class="o">.</span><span class="n">value</span>
+                <span class="n">new_body</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="c1"># create new standard objective variable</span>
+                    <span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">(</span>
+                        <span class="n">targets</span><span class="o">=</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;obj_std&quot;</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Store</span><span class="p">())],</span>
+                        <span class="n">value</span><span class="o">=</span><span class="n">original_return</span><span class="p">,</span>
+                    <span class="p">),</span>
+                    <span class="c1"># overwrite return statement with custom function</span>
+                    <span class="n">ast</span><span class="o">.</span><span class="n">Return</span><span class="p">(</span>
+                        <span class="n">value</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span>
+                            <span class="n">return_baseline_cost_function</span><span class="p">(</span>
+                                <span class="n">power_variable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mpc_data</span><span class="o">.</span><span class="n">power_variable</span><span class="p">,</span>
+                                <span class="n">comfort_variable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mpc_data</span><span class="o">.</span><span class="n">comfort_variable</span>
+                            <span class="p">)</span>
+                        <span class="p">)</span>
+                        <span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="o">.</span><span class="n">value</span>
+                    <span class="p">),</span>
+                <span class="p">]</span>
+                <span class="k">break</span></div></div>
+
+
+<div class="viewcode-block" id="add_import_to_tree"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_import_to_tree">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">add_import_to_tree</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">alias</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tree</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="n">import_statement</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">Import</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">asname</span><span class="o">=</span><span class="n">alias</span><span class="p">)])</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">tree</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Import</span><span class="p">):</span>
+            <span class="n">already_imported_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">alias</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">names</span><span class="p">]</span>
+            <span class="n">already_imported_alias</span> <span class="o">=</span> <span class="p">[</span><span class="n">alias</span><span class="o">.</span><span class="n">asname</span> <span class="k">for</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">names</span><span class="p">]</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">already_imported_names</span>
+                <span class="ow">and</span> <span class="n">alias</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">already_imported_alias</span>
+            <span class="p">):</span>
+                <span class="n">tree</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">import_statement</span><span class="p">)</span>
+            <span class="k">break</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">tree</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">import_statement</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tree</span></div>
+
+
+<div class="viewcode-block" id="remove_all_imports_from_tree"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.remove_all_imports_from_tree">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">remove_all_imports_from_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="c1"># Create a new list to hold nodes that are not imports</span>
+    <span class="n">new_body</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">node</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">tree</span><span class="o">.</span><span class="n">body</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Import</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">ImportFrom</span><span class="p">))</span>
+    <span class="p">]</span>
+    <span class="c1"># Update the body of the tree to the new list</span>
+    <span class="n">tree</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">new_body</span>
+    <span class="k">return</span> <span class="n">tree</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Felix Stegemerten.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
