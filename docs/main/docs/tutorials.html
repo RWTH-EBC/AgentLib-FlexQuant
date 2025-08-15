@@ -1,22 +1,22 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="./">
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tutorial &mdash; agentlib_flexquant 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="_static/autodoc_pydantic.css" />
 
   
-      <script src="_static/jquery.js?v=5d32c60e"></script>
-      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=01f34227"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/jquery.js"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+      <script src="_static/doctools.js"></script>
+      <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -92,27 +92,27 @@
            <div itemprop="articleBody">
              
   <section id="tutorial">
-<h1>Tutorial<a class="headerlink" href="#tutorial" title="Link to this heading"></a></h1>
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this heading"></a></h1>
 <p>This section provides tutorials to help you get started with FlexQuant. This package automates the generation of agents for flexibility quantification and follows the same structure as the <a class="reference external" href="https://github.com/RWTH-EBC/AgentLib-MPC/tree/main/agentlib_mpc">Agentlib-MPC</a>. For better understanding, it is recommended to refer to the <a class="reference external" href="https://rwth-ebc.github.io/AgentLib-MPC/main/docs/index.html">Agentlib-MPC documentation</a>.
 This section begins with the framework’s structure, followed by the application. For more details, please refer to the <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0378778825002300">published paper</a>.</p>
 <section id="the-framework">
-<h2>The framework<a class="headerlink" href="#the-framework" title="Link to this heading"></a></h2>
+<h2>The framework<a class="headerlink" href="#the-framework" title="Permalink to this heading"></a></h2>
 <p><img alt="Framework and data flow of the seven agents in FlexQuant" src="https://raw.githubusercontent.com/RWTH-EBC/AgentLib-FlexQuant/main/docs/images/FlexQuantFramework.jpg" />
 <em>Framework and data flow of the seven agents in FlexQuant</em></p>
 <p>In total, the framework consists of seven agents: Predictor Agent, BES Agent, three MPC Agents, an Indicator Agent and a market agent. The data exchange between these agents is illustrated with the arrows in the image above. The black boxes are a standard MPC setup created with <a class="reference external" href="https://github.com/RWTH-EBC/AgentLib">AgentLib</a> and <a class="reference external" href="https://github.com/RWTH-EBC/AgentLib-MPC/tree/main/agentlib_mpc">Agentlib-MPC</a>. They serve as input for flexquant, the resulting output of which is represented with the grey boxes. For the normal use case without flexibility quantification, only the agents and communications in black are active. The ones in grey are generated while quantifying the flexibility. Detailed descriptions for each agent and their interactions can be found in this <a class="reference internal" href="#the-agents">section</a>.</p>
 <section id="the-agents">
-<h3>The Agents<a class="headerlink" href="#the-agents" title="Link to this heading"></a></h3>
+<h3>The Agents<a class="headerlink" href="#the-agents" title="Permalink to this heading"></a></h3>
 <section id="predictor-agent">
-<h4>Predictor Agent<a class="headerlink" href="#predictor-agent" title="Link to this heading"></a></h4>
+<h4>Predictor Agent<a class="headerlink" href="#predictor-agent" title="Permalink to this heading"></a></h4>
 <p>The Predictor Agent provides a prediction trajectory of the boundary
 conditions for the given use case to the MPC Agents. This includes factors such as weather conditions, electricity tariffs, comfort boundaries, and occupancy schedules. The data can either be historical or retrieved via API services to support real-time operation.</p>
 </section>
 <section id="bes-agent">
-<h4>BES Agent<a class="headerlink" href="#bes-agent" title="Link to this heading"></a></h4>
+<h4>BES Agent<a class="headerlink" href="#bes-agent" title="Permalink to this heading"></a></h4>
 <p>The BES Agent simulates the energy system to be controlled. It can either use the same model as the MPC or a higher-fidelity one. In the latter case, the BES model does not need to be Python-based; for example, a Modelica model or even a real-world BES can be utilized. The BES Agent receives control signals from the MPC, applies them to the system, and subsequently sends the resulting measurements back to the MPC.</p>
 </section>
 <section id="mpc-agents">
-<h4>MPC Agents<a class="headerlink" href="#mpc-agents" title="Link to this heading"></a></h4>
+<h4>MPC Agents<a class="headerlink" href="#mpc-agents" title="Permalink to this heading"></a></h4>
 <p>The key components of the FlexQuant framework are the three MPCs: the <strong>baseline MPC</strong>, which controls the BES and two <strong>shadow MPCs</strong> for the calculation of the available flexibility.</p>
 <p>The <strong>Baseline MPC</strong> is responsible for optimizing the operation of the BES with the objective of minimizing operational costs over the prediction horizon. While used for flexibility quantification, it is slightly modified to include the extra function of delivering the accepted flex offer.</p>
 <p>The <strong>Shadow MPCs</strong> are designed to assess the maximum possible flexibility of electricity usage over a user-defined flexibility event duration. They are termed “shadow” because they do not directly control the BES but only support the evaluation of system flexibility. Two Shadow MPCs are employed: The Negative Shadow MPC calculates the control trajectory that maximizes BES power consumption, leading to a negative power contribution to the market (i.e., higher grid consumption).
@@ -128,18 +128,18 @@ The Positive Shadow MPC does the opposite. The prediction horizon of the Shadow 
 <p>where T is the temperature of the components in the system and η could be e.g. the COP of a heat pump.</p>
 </section>
 <section id="indicator-agent">
-<h4>Indicator Agent<a class="headerlink" href="#indicator-agent" title="Link to this heading"></a></h4>
+<h4>Indicator Agent<a class="headerlink" href="#indicator-agent" title="Permalink to this heading"></a></h4>
 <p>The Indicator Agent utilizes the power consumption predictions of the
 three MPCs to calculate key performance indicators for quantifying available flexibility offers. They could be the total energy, the peak power, the average power or the cost etc.</p>
 </section>
 <section id="market-agent">
-<h4>Market Agent<a class="headerlink" href="#market-agent" title="Link to this heading"></a></h4>
+<h4>Market Agent<a class="headerlink" href="#market-agent" title="Permalink to this heading"></a></h4>
 <p>Once the Market Agent decides to accept a flexibility offer, it sends the accepted flexibility trajectory back to the baseline MPC, which must deliver it in the corresponding time interval t<sub>FE</sub>.</p>
 </section>
 </section>
 </section>
 <section id="application">
-<h2>Application<a class="headerlink" href="#application" title="Link to this heading"></a></h2>
+<h2>Application<a class="headerlink" href="#application" title="Permalink to this heading"></a></h2>
 <p>This section demonstrates how to use the FlexQuant package.</p>
 <p>In general, a use case has the two following types of files:</p>
 <ul class="simple">
@@ -150,7 +150,7 @@ three MPCs to calculate key performance indicators for quantifying available fle
 <p><code class="docutils literal notranslate"><span class="pre">FlexAgentGenerator(flex_config,</span> <span class="pre">mpc_agent_config).generate_flex_agents()</span></code></p>
 <p>Below is a brief breakdown of how this method works.</p>
 <section id="breakdown">
-<h3>Breakdown<a class="headerlink" href="#breakdown" title="Link to this heading"></a></h3>
+<h3>Breakdown<a class="headerlink" href="#breakdown" title="Permalink to this heading"></a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">__init__(flex_config,</span> <span class="pre">mpc_agent_config)</span></code> initializes each field of the class with default value.</p>
 <ol class="arabic simple">

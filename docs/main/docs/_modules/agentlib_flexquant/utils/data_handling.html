@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../../../">
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>agentlib_flexquant.utils.data_handling &mdash; agentlib_flexquant 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
 
   
-      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -72,8 +72,8 @@
            <div itemprop="articleBody">
              
   <h1>Source code for agentlib_flexquant.utils.data_handling</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">TimeConversionTypes</span><span class="p">,</span> <span class="n">TIME_CONVERSION</span>
 
 
@@ -82,15 +82,18 @@
 <span class="n">FillNansMethods</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="n">MEAN</span><span class="p">,</span> <span class="n">INTERPOLATE</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="fill_nans">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.data_handling.fill_nans">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">fill_nans</span><span class="p">(</span><span class="n">series</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="n">FillNansMethods</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Fill NaN values in the series with the given method.</span>
+<div class="viewcode-block" id="fill_nans"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.data_handling.fill_nans">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">fill_nans</span><span class="p">(</span><span class="n">series</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="n">FillNansMethods</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill NaN values in the series with the given method.</span>
 
-<span class="sd">    Implemented methods:</span>
-<span class="sd">    - mean: fill NaN values with the mean of the following values.</span>
-<span class="sd">    - interpolate: interpolate missing values.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        series: the series to be filled</span>
+<span class="sd">        method: the method to be applied, there are two predefined</span>
+<span class="sd">                - mean: fill NaN values with the mean of the following values.</span>
+<span class="sd">                - interpolate: interpolate missing values.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A pd.Series with nan filled.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="n">MEAN</span><span class="p">:</span>
         <span class="n">series</span> <span class="o">=</span> <span class="n">_set_mean_values</span><span class="p">(</span><span class="n">series</span><span class="o">=</span><span class="n">series</span><span class="p">)</span>
@@ -103,9 +106,8 @@
     <span class="k">return</span> <span class="n">series</span></div>
 
 
-
 <span class="k">def</span><span class="w"> </span><span class="nf">_set_mean_values</span><span class="p">(</span><span class="n">series</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Fills intervals including the nan with the mean of the following values. &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill intervals including the nan with the mean of the following values before the next nan.&quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_intervals_for_mean</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Interval</span><span class="p">]:</span>
         <span class="n">intervals</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">start</span> <span class="o">=</span> <span class="kc">None</span>
@@ -130,9 +132,7 @@
     <span class="k">return</span> <span class="n">series</span>
 
 
-<div class="viewcode-block" id="strip_multi_index">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.data_handling.strip_multi_index">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">strip_multi_index</span><span class="p">(</span><span class="n">series</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+<div class="viewcode-block" id="strip_multi_index"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.data_handling.strip_multi_index">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">strip_multi_index</span><span class="p">(</span><span class="n">series</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
     <span class="c1"># Convert the index (communicated as string) into a MultiIndex</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">series</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">series</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">eval</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
@@ -142,15 +142,16 @@
     <span class="k">return</span> <span class="n">series</span></div>
 
 
+<div class="viewcode-block" id="convert_timescale_of_index"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.data_handling.convert_timescale_of_index">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">convert_timescale_of_index</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">from_unit</span><span class="p">:</span> <span class="n">TimeConversionTypes</span><span class="p">,</span> <span class="n">to_unit</span><span class="p">:</span> <span class="n">TIME_CONVERSION</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert the timescale of a dataframe index (from seconds) to the given time unit.</span>
 
-<div class="viewcode-block" id="convert_timescale_of_index">
-<a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.data_handling.convert_timescale_of_index">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">convert_timescale_of_index</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">from_unit</span><span class="p">:</span> <span class="n">TimeConversionTypes</span><span class="p">,</span> <span class="n">to_unit</span><span class="p">:</span> <span class="n">TIME_CONVERSION</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Convert the timescale of a dataframe index (from seconds) to the given time unit</span>
+<span class="sd">    Args:</span>
+<span class="sd">        from_unit: the time unit of the original index</span>
+<span class="sd">        to_unit: the time unit to convert the index to</span>
 
-<span class="sd">    Keyword arguments:</span>
-<span class="sd">    results -- The dictionary of the results with the dataframes</span>
-<span class="sd">    time_unit -- The time unit to convert the index to</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        A DataFrame with the converted index</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">time_conversion_factor</span> <span class="o">=</span> <span class="n">TIME_CONVERSION</span><span class="p">[</span><span class="n">from_unit</span><span class="p">]</span> <span class="o">/</span> <span class="n">TIME_CONVERSION</span><span class="p">[</span><span class="n">to_unit</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="p">):</span>
@@ -160,7 +161,6 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">*</span> <span class="n">time_conversion_factor</span>
     <span class="k">return</span> <span class="n">df</span></div>
-
 </pre></div>
 
            </div>
