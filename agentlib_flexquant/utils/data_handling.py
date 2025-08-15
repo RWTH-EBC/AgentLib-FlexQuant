@@ -1,5 +1,5 @@
-from typing import Literal
 import pandas as pd
+from typing import Literal
 from agentlib_mpc.utils import TimeConversionTypes, TIME_CONVERSION
 
 
@@ -9,12 +9,17 @@ FillNansMethods = Literal[MEAN, INTERPOLATE]
 
 
 def fill_nans(series: pd.Series, method: FillNansMethods) -> pd.Series:
-    """
-    Fill NaN values in the series with the given method.
+    """Fill NaN values in the series with the given method.
 
-    Implemented methods:
-    - mean: fill NaN values with the mean of the following values.
-    - interpolate: interpolate missing values.
+    Args:
+        series: the series to be filled
+        method: the method to be applied, there are two predefined
+                - mean: fill NaN values with the mean of the following values.
+                - interpolate: interpolate missing values.
+
+    Returns:
+        A pd.Series with nan filled.
+
     """
     if method == MEAN:
         series = _set_mean_values(series=series)
@@ -28,7 +33,7 @@ def fill_nans(series: pd.Series, method: FillNansMethods) -> pd.Series:
 
 
 def _set_mean_values(series: pd.Series) -> pd.Series:
-    """ Fills intervals including the nan with the mean of the following values. """
+    """Fill intervals including the nan with the mean of the following values before the next nan."""
     def _get_intervals_for_mean(s: pd.Series) -> list[pd.Interval]:
         intervals = []
         start = None
@@ -64,11 +69,15 @@ def strip_multi_index(series: pd.Series) -> pd.Series:
 
 
 def convert_timescale_of_index(df: pd.DataFrame, from_unit: TimeConversionTypes, to_unit: TIME_CONVERSION) -> pd.DataFrame:
-    """ Convert the timescale of a dataframe index (from seconds) to the given time unit
+    """Convert the timescale of a dataframe index (from seconds) to the given time unit.
 
-    Keyword arguments:
-    results -- The dictionary of the results with the dataframes
-    time_unit -- The time unit to convert the index to
+    Args:
+        from_unit: the time unit of the original index
+        to_unit: the time unit to convert the index to
+
+    Returns:
+        A DataFrame with the converted index
+
     """
     time_conversion_factor = TIME_CONVERSION[from_unit] / TIME_CONVERSION[to_unit]
     if isinstance(df.index, pd.MultiIndex):

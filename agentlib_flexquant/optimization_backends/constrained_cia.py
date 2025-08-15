@@ -1,18 +1,10 @@
-from agentlib_mpc.optimization_backends.casadi_.minlp_cia import CasADiCIABackend
-from agentlib_mpc.optimization_backends.casadi_.core.casadi_backend import (
-    CasadiBackendConfig,
-)
-from agentlib_mpc.data_structures.mpc_datamodels import DiscretizationOptions
 import pydantic
-from pydantic import ConfigDict
-from typing import Optional
-from pathlib import Path
+import numpy as np
 from agentlib.core.errors import OptionalDependencyError
+from agentlib_mpc.optimization_backends.casadi_.minlp_cia import CasADiCIABackend
+from agentlib_mpc.optimization_backends.casadi_.core.casadi_backend import CasadiBackendConfig
 from agentlib_mpc.data_structures.mpc_datamodels import MINLPVariableReference
-from agentlib_flexquant.data_structures.globals import (
-    full_trajectory_prefix,
-    full_trajectory_suffix,
-)
+from agentlib_flexquant.data_structures.globals import full_trajectory_prefix, full_trajectory_suffix
 
 try:
     import pycombina
@@ -44,13 +36,10 @@ class ConstrainedCasADiCIABackend(CasADiCIABackend):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def do_pycombina(self, b_rel):
-        # N = self.discretization.options.prediction_horizon
-        # dt = self.discretization.options.time_step
-        # time_end = N * dt
+    def do_pycombina(self, b_rel: np.array) -> np.array:
+
         grid = self.discretization.grid(self.system.binary_controls).copy()
         grid.append(grid[-1] + self.config.discretization_options.time_step)
-        # grid = np.linspace(0, time_end, N + 1)
 
         binapprox = pycombina.BinApprox(
             t=grid,
@@ -87,9 +76,6 @@ class ConstrainedCasADiCIABackend(CasADiCIABackend):
                             (last_idx, idx), [value, 1 - value]
                         )
                         last_idx = idx
-
-        # binapprox.set_n_max_switches([3, 1, 0])
-        # binapprox.set_min_up_times([3600, 1800, 0])
 
         bnb = pycombina.CombinaBnB(binapprox)
         bnb.solve(
