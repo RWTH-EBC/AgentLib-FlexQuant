@@ -1,0 +1,893 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>agentlib_flexquant.utils.interactive &mdash; agentlib_flexquant 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
+
+  
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            agentlib_flexquant
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">agentlib_flexquant</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">agentlib_flexquant.utils.interactive</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for agentlib_flexquant.utils.interactive</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_args</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">FilePath</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">webbrowser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dash</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dash</span><span class="p">,</span> <span class="n">html</span><span class="p">,</span> <span class="n">dcc</span><span class="p">,</span> <span class="n">callback</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">Input</span><span class="p">,</span> <span class="n">ctx</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plotly</span><span class="w"> </span><span class="kn">import</span> <span class="n">graph_objects</span> <span class="k">as</span> <span class="n">go</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.core.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentConfig</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">TimeConversionTypes</span><span class="p">,</span> <span class="n">TIME_CONVERSION</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.utils.analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">mpc_at_time_step</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.utils.plotting.interactive</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_port</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">glbs</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.flex_results</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">flex_results</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.flexquant</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlexQuantConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.flex_kpis</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlexibilityKPIs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.flex_offer</span><span class="w"> </span><span class="kn">import</span> <span class="n">OfferStatus</span>
+
+
+<div class="viewcode-block" id="CustomBound"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.CustomBound">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">CustomBound</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Dataclass to let the user define custom bounds for the mpc variables</span>
+
+<span class="sd">    var_name -- The name of the variable to plot the bounds into</span>
+<span class="sd">    lower bound -- The lower bound of the variable as the name of the lower bound variable in the MPC</span>
+<span class="sd">    upper bound -- The upper bound of the variable as the name of the upper bound variable in the MPC</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">for_variable</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">lower_bound</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">upper_bound</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">for_variable</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">lb_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">ub_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">for_variable</span> <span class="o">=</span> <span class="n">for_variable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lower_bound</span> <span class="o">=</span> <span class="n">lb_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">upper_bound</span> <span class="o">=</span> <span class="n">ub_name</span></div>
+
+
+<div class="viewcode-block" id="Dashboard"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.Dashboard">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Dashboard</span><span class="p">(</span><span class="n">flex_results</span><span class="o">.</span><span class="n">Results</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for the dashboard of flexquant</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Constants for plotting variables</span>
+    <span class="n">MPC_ITERATIONS</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;iter_count&quot;</span>
+
+    <span class="c1"># Label for the positive and negative flexibilities</span>
+    <span class="n">label_positive</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;positive&quot;</span>
+    <span class="n">label_negative</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;negative&quot;</span>
+
+    <span class="c1"># Keys for line properties</span>
+    <span class="n">bounds_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bounds&quot;</span>
+    <span class="n">characteristic_times_current_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;characteristic_times_current&quot;</span>
+    <span class="n">characteristic_times_accepted_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;characteristic_times_accepted&quot;</span>
+
+    <span class="c1"># Custom settings</span>
+    <span class="n">custom_bounds</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">CustomBound</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">flex_config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FilePath</span><span class="p">,</span> <span class="n">FlexQuantConfig</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">simulator_agent_config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FilePath</span><span class="p">,</span> <span class="n">AgentConfig</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">generated_flex_files_base_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FilePath</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">results</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FilePath</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">to_timescale</span><span class="p">:</span> <span class="n">TimeConversionTypes</span> <span class="o">=</span> <span class="s2">&quot;hours&quot;</span><span class="p">,</span>
+        <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">flex_config</span><span class="o">=</span><span class="n">flex_config</span><span class="p">,</span>
+            <span class="n">simulator_agent_config</span><span class="o">=</span><span class="n">simulator_agent_config</span><span class="p">,</span>
+            <span class="n">generated_flex_files_base_path</span><span class="o">=</span><span class="n">generated_flex_files_base_path</span><span class="p">,</span>
+            <span class="n">results</span><span class="o">=</span><span class="n">results</span><span class="p">,</span>
+            <span class="n">to_timescale</span><span class="o">=</span><span class="n">to_timescale</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_timescale_input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_timescale_of_data</span>
+        <span class="c1"># remove FMU from dataclass to enable pickling/multiprocessing of Dashboard</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simulator_module_config</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">simulator_module_config</span><span class="o">.</span><span class="n">model_config</span><span class="p">[</span><span class="s2">&quot;frozen&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="nb">delattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simulator_module_config</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Define line properties</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LINE_PROPERTIES</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">simulator_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;black&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">baseline_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;black&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neg_flex_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pos_flex_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bounds_key</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;grey&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">characteristic_times_current_key</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;grey&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;dash&quot;</span><span class="p">:</span> <span class="s2">&quot;dash&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">characteristic_times_accepted_key</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;yellow&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+
+        <span class="c1"># KPIS</span>
+        <span class="n">kpis_pos</span> <span class="o">=</span> <span class="n">FlexibilityKPIs</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="s2">&quot;positive&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kpi_names_pos</span> <span class="o">=</span> <span class="n">kpis_pos</span><span class="o">.</span><span class="n">get_name_dict</span><span class="p">()</span>
+        <span class="n">kpis_neg</span> <span class="o">=</span> <span class="n">FlexibilityKPIs</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="s2">&quot;negative&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kpi_names_neg</span> <span class="o">=</span> <span class="n">kpis_neg</span><span class="o">.</span><span class="n">get_name_dict</span><span class="p">()</span>
+
+        <span class="c1"># Get variables for plotting</span>
+        <span class="c1"># MPC stats</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plotting_variables</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">MPC_ITERATIONS</span><span class="p">]</span>
+        <span class="c1"># MPC and sim variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intersection_mpcs_sim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_intersection_mpcs_sim</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plotting_variables</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">intersection_mpcs_sim</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+        <span class="p">)</span>
+        <span class="c1"># Flexibility kpis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plotting_variables</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kpis_pos</span><span class="o">.</span><span class="n">energy_flex</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plotting_variables</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kpis_pos</span><span class="o">.</span><span class="n">costs</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="c1"># for kpi in kpis_pos.get_kpi_dict(direction_name=False).values():</span>
+        <span class="c1">#     if not isinstance(kpi.value, pd.Series):</span>
+        <span class="c1">#         self.plotting_variables.append(kpi.name)</span>
+
+<div class="viewcode-block" id="Dashboard.show"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.Dashboard.show">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">custom_bounds</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">CustomBound</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">CustomBound</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Shows the dashboard in a web browser containing:</span>
+<span class="sd">        -- Statistics of the MPCs solver</span>
+<span class="sd">        -- The states, controls, and the power variable of the MPCs and the simulator</span>
+<span class="sd">        -- KPIs of the flexibility quantification</span>
+<span class="sd">        -- Markings of the characteristic flexibility times</span>
+
+<span class="sd">        Optional arguments to show the comfort bounds:</span>
+<span class="sd">        -- temperature_var_name: The name of the temperature variable in the MPC to plot the comfort bounds into</span>
+<span class="sd">        -- ub_comfort_var_name: The name of the upper comfort bound variable in the MPC</span>
+<span class="sd">        -- lb_comfort_var_name: The name of the lower comfort bound variable in the MPC</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">custom_bounds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">custom_bounds</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">custom_bounds</span><span class="p">,</span> <span class="n">CustomBound</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">custom_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="n">custom_bounds</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">custom_bounds</span> <span class="o">=</span> <span class="n">custom_bounds</span>
+
+        <span class="c1"># Plotting functions</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">plot_mpc_stats</span><span class="p">(</span><span class="n">fig</span><span class="p">:</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">variable</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
+                <span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">baseline_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                    <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">df_baseline_stats</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                    <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">df_baseline_stats</span><span class="p">[</span><span class="n">variable</span><span class="p">],</span>
+                    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;markers&quot;</span><span class="p">,</span>
+                    <span class="n">line</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PROPERTIES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">baseline_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
+                <span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_flex_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                    <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">df_pos_flex_stats</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                    <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">df_pos_flex_stats</span><span class="p">[</span><span class="n">variable</span><span class="p">],</span>
+                    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;markers&quot;</span><span class="p">,</span>
+                    <span class="n">line</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PROPERTIES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_flex_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
+                <span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">neg_flex_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                    <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">df_neg_flex_stats</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                    <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">df_neg_flex_stats</span><span class="p">[</span><span class="n">variable</span><span class="p">],</span>
+                    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;markers&quot;</span><span class="p">,</span>
+                    <span class="n">line</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PROPERTIES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">neg_flex_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">fig</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">plot_one_mpc_variable</span><span class="p">(</span>
+            <span class="n">fig</span><span class="p">:</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">variable</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">time_step</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+            <span class="c1"># Get the mpc data for the plot</span>
+            <span class="n">series_neg</span> <span class="o">=</span> <span class="n">mpc_at_time_step</span><span class="p">(</span>
+                <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">df_neg_flex</span><span class="p">,</span>
+                <span class="n">time_step</span><span class="o">=</span><span class="n">time_step</span><span class="p">,</span>
+                <span class="n">variable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">intersection_mpcs_sim</span><span class="p">[</span><span class="n">variable</span><span class="p">][</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">neg_flex_module_config</span><span class="o">.</span><span class="n">module_id</span>
+                <span class="p">],</span>
+                <span class="n">index_offset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">series_pos</span> <span class="o">=</span> <span class="n">mpc_at_time_step</span><span class="p">(</span>
+                <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">df_pos_flex</span><span class="p">,</span>
+                <span class="n">time_step</span><span class="o">=</span><span class="n">time_step</span><span class="p">,</span>
+                <span class="n">variable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">intersection_mpcs_sim</span><span class="p">[</span><span class="n">variable</span><span class="p">][</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pos_flex_module_config</span><span class="o">.</span><span class="n">module_id</span>
+                <span class="p">],</span>
+                <span class="n">index_offset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">series_bas</span> <span class="o">=</span> <span class="n">mpc_at_time_step</span><span class="p">(</span>
+                <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">df_baseline</span><span class="p">,</span>
+                <span class="n">time_step</span><span class="o">=</span><span class="n">time_step</span><span class="p">,</span>
+                <span class="n">variable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">intersection_mpcs_sim</span><span class="p">[</span><span class="n">variable</span><span class="p">][</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">baseline_module_config</span><span class="o">.</span><span class="n">module_id</span>
+                <span class="p">],</span>
+                <span class="n">index_offset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">_add_step_to_data</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+                <span class="n">s_concat</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">periods</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">s_concat</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">index</span> <span class="o">-</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">s</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">s_concat</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">s</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">s</span>
+
+            <span class="c1"># Manage nans</span>
+            <span class="k">for</span> <span class="n">series</span> <span class="ow">in</span> <span class="p">[</span><span class="n">series_neg</span><span class="p">,</span> <span class="n">series_pos</span><span class="p">,</span> <span class="n">series_bas</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">variable</span> <span class="ow">in</span> <span class="p">[</span>
+                    <span class="n">control</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">control</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseline_module_config</span><span class="o">.</span><span class="n">controls</span>
+                <span class="p">]:</span>
+                    <span class="n">series</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">series</span> <span class="o">=</span> <span class="n">_add_step_to_data</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">series</span><span class="p">)</span>
+                <span class="n">series</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="c1"># Plot the data</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">df_sim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_simulation</span><span class="p">[</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">intersection_mpcs_sim</span><span class="p">[</span><span class="n">variable</span><span class="p">][</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">simulator_module_config</span><span class="o">.</span><span class="n">module_id</span>
+                    <span class="p">]</span>
+                <span class="p">]</span>
+                <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
+                    <span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simulator_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                        <span class="n">x</span><span class="o">=</span><span class="n">df_sim</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                        <span class="n">y</span><span class="o">=</span><span class="n">df_sim</span><span class="p">,</span>
+                        <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;lines&quot;</span><span class="p">,</span>
+                        <span class="n">line</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PROPERTIES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">simulator_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
+                        <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">pass</span>  <span class="c1"># E.g. when the simulator variable name was not found from the intersection</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
+                <span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">baseline_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                    <span class="n">x</span><span class="o">=</span><span class="n">series_bas</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                    <span class="n">y</span><span class="o">=</span><span class="n">series_bas</span><span class="p">,</span>
+                    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;lines&quot;</span><span class="p">,</span>
+                    <span class="n">line</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PROPERTIES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">baseline_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+                    <span class="o">|</span> <span class="p">{</span><span class="s2">&quot;dash&quot;</span><span class="p">:</span> <span class="s2">&quot;dash&quot;</span><span class="p">},</span>
+                    <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
+                <span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">neg_flex_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                    <span class="n">x</span><span class="o">=</span><span class="n">series_neg</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                    <span class="n">y</span><span class="o">=</span><span class="n">series_neg</span><span class="p">,</span>
+                    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;lines&quot;</span><span class="p">,</span>
+                    <span class="n">line</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PROPERTIES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">neg_flex_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+                    <span class="o">|</span> <span class="p">{</span><span class="s2">&quot;dash&quot;</span><span class="p">:</span> <span class="s2">&quot;dash&quot;</span><span class="p">},</span>
+                    <span class="n">zorder</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
+                <span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_flex_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                    <span class="n">x</span><span class="o">=</span><span class="n">series_pos</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                    <span class="n">y</span><span class="o">=</span><span class="n">series_pos</span><span class="p">,</span>
+                    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;lines&quot;</span><span class="p">,</span>
+                    <span class="n">line</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PROPERTIES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_flex_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+                    <span class="o">|</span> <span class="p">{</span><span class="s2">&quot;dash&quot;</span><span class="p">:</span> <span class="s2">&quot;dash&quot;</span><span class="p">},</span>
+                    <span class="n">zorder</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Get the data for the bounds</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">_get_mpc_series</span><span class="p">(</span><span class="n">var_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">var_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_baseline</span><span class="p">[(</span><span class="n">var_type</span><span class="p">,</span> <span class="n">var_name</span><span class="p">)]</span><span class="o">.</span><span class="n">xs</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">_get_bound</span><span class="p">(</span><span class="n">var_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_baseline</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get_level_values</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">bound</span> <span class="o">=</span> <span class="n">_get_mpc_series</span><span class="p">(</span><span class="n">var_type</span><span class="o">=</span><span class="s2">&quot;variable&quot;</span><span class="p">,</span> <span class="n">var_name</span><span class="o">=</span><span class="n">var_name</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                        <span class="n">bound</span> <span class="o">=</span> <span class="n">_get_mpc_series</span><span class="p">(</span><span class="n">var_type</span><span class="o">=</span><span class="s2">&quot;parameter&quot;</span><span class="p">,</span> <span class="n">var_name</span><span class="o">=</span><span class="n">var_name</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">bound</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="n">bound</span>
+
+            <span class="n">df_lb</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">df_ub</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">for</span> <span class="n">custom_bound</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_bounds</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">variable</span> <span class="o">==</span> <span class="n">custom_bound</span><span class="o">.</span><span class="n">for_variable</span><span class="p">:</span>
+                    <span class="n">df_lb</span> <span class="o">=</span> <span class="n">_get_bound</span><span class="p">(</span><span class="n">custom_bound</span><span class="o">.</span><span class="n">lower_bound</span><span class="p">)</span>
+                    <span class="n">df_ub</span> <span class="o">=</span> <span class="n">_get_bound</span><span class="p">(</span><span class="n">custom_bound</span><span class="o">.</span><span class="n">upper_bound</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">variable</span> <span class="ow">in</span> <span class="p">[</span>
+                <span class="n">control</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">control</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseline_module_config</span><span class="o">.</span><span class="n">controls</span>
+            <span class="p">]:</span>
+                <span class="n">df_lb</span> <span class="o">=</span> <span class="n">_get_mpc_series</span><span class="p">(</span><span class="n">var_type</span><span class="o">=</span><span class="s2">&quot;lower&quot;</span><span class="p">,</span> <span class="n">var_name</span><span class="o">=</span><span class="n">variable</span><span class="p">)</span>
+                <span class="n">df_ub</span> <span class="o">=</span> <span class="n">_get_mpc_series</span><span class="p">(</span><span class="n">var_type</span><span class="o">=</span><span class="s2">&quot;upper&quot;</span><span class="p">,</span> <span class="n">var_name</span><span class="o">=</span><span class="n">variable</span><span class="p">)</span>
+
+            <span class="c1"># Plot bounds</span>
+            <span class="k">if</span> <span class="n">df_lb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
+                    <span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+                        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Lower bound&quot;</span><span class="p">,</span>
+                        <span class="n">x</span><span class="o">=</span><span class="n">df_lb</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                        <span class="n">y</span><span class="o">=</span><span class="n">df_lb</span><span class="p">,</span>
+                        <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;lines&quot;</span><span class="p">,</span>
+                        <span class="n">line</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PROPERTIES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">bounds_key</span><span class="p">],</span>
+                        <span class="n">zorder</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">df_ub</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
+                    <span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+                        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Upper bound&quot;</span><span class="p">,</span>
+                        <span class="n">x</span><span class="o">=</span><span class="n">df_ub</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                        <span class="n">y</span><span class="o">=</span><span class="n">df_ub</span><span class="p">,</span>
+                        <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;lines&quot;</span><span class="p">,</span>
+                        <span class="n">line</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PROPERTIES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">bounds_key</span><span class="p">],</span>
+                        <span class="n">zorder</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">fig</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">plot_flexibility_kpi</span><span class="p">(</span><span class="n">fig</span><span class="p">:</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">variable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+            <span class="n">df_ind</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_indicator</span><span class="o">.</span><span class="n">xs</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="c1"># if the variable only has NaN, don&#39;t plot</span>
+            <span class="k">if</span> <span class="n">df_ind</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">kpi_names_pos</span><span class="p">[</span><span class="n">variable</span><span class="p">]]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+                <span class="k">return</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
+                <span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">label_positive</span><span class="p">,</span>
+                    <span class="n">x</span><span class="o">=</span><span class="n">df_ind</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                    <span class="n">y</span><span class="o">=</span><span class="n">df_ind</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">kpi_names_pos</span><span class="p">[</span><span class="n">variable</span><span class="p">]],</span>
+                    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;lines+markers&quot;</span><span class="p">,</span>
+                    <span class="n">line</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PROPERTIES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_flex_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
+                <span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">label_negative</span><span class="p">,</span>
+                    <span class="n">x</span><span class="o">=</span><span class="n">df_ind</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                    <span class="n">y</span><span class="o">=</span><span class="n">df_ind</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">kpi_names_neg</span><span class="p">[</span><span class="n">variable</span><span class="p">]],</span>
+                    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;lines+markers&quot;</span><span class="p">,</span>
+                    <span class="n">line</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PROPERTIES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">neg_flex_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">fig</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">plot_market_results</span><span class="p">(</span><span class="n">fig</span><span class="p">:</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">variable</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+            <span class="n">df_flex_market_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_market</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">variable</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_market</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
+                    <span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+                        <span class="n">x</span><span class="o">=</span><span class="n">df_flex_market_index</span><span class="p">,</span>
+                        <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">df_market</span><span class="p">[</span><span class="n">variable</span><span class="p">],</span>
+                        <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;lines+markers&quot;</span><span class="p">,</span>
+                        <span class="n">line</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PROPERTIES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_flex_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pos_var</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;pos_</span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">neg_var</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;neg_</span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
+                    <span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">label_positive</span><span class="p">,</span>
+                        <span class="n">x</span><span class="o">=</span><span class="n">df_flex_market_index</span><span class="p">,</span>
+                        <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">df_market</span><span class="p">[</span><span class="n">pos_var</span><span class="p">],</span>
+                        <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;lines+markers&quot;</span><span class="p">,</span>
+                        <span class="n">line</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PROPERTIES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_flex_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
+                    <span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">label_negative</span><span class="p">,</span>
+                        <span class="n">x</span><span class="o">=</span><span class="n">df_flex_market_index</span><span class="p">,</span>
+                        <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">df_market</span><span class="p">[</span><span class="n">neg_var</span><span class="p">],</span>
+                        <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;lines+markers&quot;</span><span class="p">,</span>
+                        <span class="n">line</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PROPERTIES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">neg_flex_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">return</span> <span class="n">fig</span>
+
+        <span class="c1"># Marking times</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">get_characteristic_times</span><span class="p">(</span><span class="n">at_time_step</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+            <span class="n">df_characteristic_times</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_indicator</span><span class="o">.</span><span class="n">xs</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">)</span>
+            <span class="n">rel_market_time</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">df_characteristic_times</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">at_time_step</span><span class="p">,</span> <span class="n">glbs</span><span class="o">.</span><span class="n">MARKET_TIME</span><span class="p">]</span>
+                <span class="o">/</span> <span class="n">TIME_CONVERSION</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_timescale_of_data</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="n">rel_prep_time</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">df_characteristic_times</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">at_time_step</span><span class="p">,</span> <span class="n">glbs</span><span class="o">.</span><span class="n">PREP_TIME</span><span class="p">]</span>
+                <span class="o">/</span> <span class="n">TIME_CONVERSION</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_timescale_of_data</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="n">flex_event_duration</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">df_characteristic_times</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">at_time_step</span><span class="p">,</span> <span class="n">glbs</span><span class="o">.</span><span class="n">FLEX_EVENT_DURATION</span><span class="p">]</span>
+                <span class="o">/</span> <span class="n">TIME_CONVERSION</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_timescale_of_data</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">rel_market_time</span><span class="p">,</span> <span class="n">rel_prep_time</span><span class="p">,</span> <span class="n">flex_event_duration</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">mark_time</span><span class="p">(</span>
+            <span class="n">fig</span><span class="p">:</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">at_time_step</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">line_prop</span><span class="p">:</span> <span class="nb">dict</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">add_vline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">at_time_step</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="n">line_prop</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;below&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">fig</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">mark_characteristic_times</span><span class="p">(</span>
+            <span class="n">fig</span><span class="p">:</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">offer_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">line_prop</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Add markers of the characteristic times to the plot for a time step</span>
+
+<span class="sd">            Keyword arguments:</span>
+<span class="sd">            fig -- The figure to plot the results into</span>
+<span class="sd">            time_step -- When to show the markers</span>
+<span class="sd">            line_prop -- The graphic properties of the lines as in plotly</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">line_prop</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">line_prop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">LINE_PROPERTIES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">characteristic_times_current_key</span><span class="p">]</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">rel_market_time</span><span class="p">,</span> <span class="n">rel_prep_time</span><span class="p">,</span> <span class="n">flex_event_duration</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">get_characteristic_times</span><span class="p">(</span><span class="n">offer_time</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">mark_time</span><span class="p">(</span><span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">at_time_step</span><span class="o">=</span><span class="n">offer_time</span><span class="p">,</span> <span class="n">line_prop</span><span class="o">=</span><span class="n">line_prop</span><span class="p">)</span>
+                <span class="n">mark_time</span><span class="p">(</span>
+                    <span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span>
+                    <span class="n">at_time_step</span><span class="o">=</span><span class="n">offer_time</span> <span class="o">+</span> <span class="n">rel_market_time</span><span class="p">,</span>
+                    <span class="n">line_prop</span><span class="o">=</span><span class="n">line_prop</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">mark_time</span><span class="p">(</span>
+                    <span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span>
+                    <span class="n">at_time_step</span><span class="o">=</span><span class="n">offer_time</span> <span class="o">+</span> <span class="n">rel_prep_time</span> <span class="o">+</span> <span class="n">rel_market_time</span><span class="p">,</span>
+                    <span class="n">line_prop</span><span class="o">=</span><span class="n">line_prop</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">mark_time</span><span class="p">(</span>
+                    <span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span>
+                    <span class="n">at_time_step</span><span class="o">=</span><span class="n">offer_time</span>
+                    <span class="o">+</span> <span class="n">rel_prep_time</span>
+                    <span class="o">+</span> <span class="n">rel_market_time</span>
+                    <span class="o">+</span> <span class="n">flex_event_duration</span><span class="p">,</span>
+                    <span class="n">line_prop</span><span class="o">=</span><span class="n">line_prop</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">pass</span>  <span class="c1"># No data of characteristic times available, e.g. if offer accepted</span>
+            <span class="k">return</span> <span class="n">fig</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">mark_characteristic_times_of_accepted_offers</span><span class="p">(</span><span class="n">fig</span><span class="p">:</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Add markers of the characteristic times for accepted offers to the plot</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_market</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df_market</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span>
+                    <span class="n">OfferStatus</span><span class="o">.</span><span class="n">accepted_negative</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="n">OfferStatus</span><span class="o">.</span><span class="n">accepted_positive</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                <span class="p">]</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">()):</span>
+                    <span class="n">df_accepted_offers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_market</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span>
+                        <span class="n">pat</span><span class="o">=</span><span class="s2">&quot;OfferStatus.accepted&quot;</span>
+                    <span class="p">)</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">df_accepted_offers</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_list</span><span class="p">():</span>
+                        <span class="k">if</span> <span class="n">df_accepted_offers</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                            <span class="n">fig</span> <span class="o">=</span> <span class="n">mark_characteristic_times</span><span class="p">(</span>
+                                <span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span>
+                                <span class="n">offer_time</span><span class="o">=</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                <span class="n">line_prop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">LINE_PROPERTIES</span><span class="p">[</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">characteristic_times_accepted_key</span>
+                                <span class="p">],</span>
+                            <span class="p">)</span>
+                    <span class="k">return</span> <span class="n">fig</span>
+
+        <span class="c1"># Master plotting function</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">create_plot</span><span class="p">(</span>
+            <span class="n">variable</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="n">at_time_step</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+            <span class="n">show_accepted_characteristic_times</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="n">show_current_characteristic_times</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="n">zoom_to_offer_window</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">zoom_to_prediction_interval</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Create a plot for one variable</span>
+
+<span class="sd">            Keyword arguments:</span>
+<span class="sd">            variable -- The variable to plot</span>
+<span class="sd">            time_step -- The time_step to show the mpc predictions and the characteristic times</span>
+<span class="sd">            show_current_characteristic_times -- Whether to show the characteristic times</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="c1"># Create the figure</span>
+            <span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">()</span>
+            <span class="n">mark_time</span><span class="p">(</span><span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">at_time_step</span><span class="o">=</span><span class="n">at_time_step</span><span class="p">,</span> <span class="n">line_prop</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;green&quot;</span><span class="p">})</span>
+            <span class="k">if</span> <span class="n">show_accepted_characteristic_times</span><span class="p">:</span>
+                <span class="n">mark_characteristic_times_of_accepted_offers</span><span class="p">(</span><span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+
+            <span class="c1"># Plot variable</span>
+            <span class="k">if</span> <span class="n">variable</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_baseline_stats</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="n">plot_mpc_stats</span><span class="p">(</span><span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">variable</span><span class="o">=</span><span class="n">variable</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">variable</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">intersection_mpcs_sim</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">plot_one_mpc_variable</span><span class="p">(</span>
+                    <span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">variable</span><span class="o">=</span><span class="n">variable</span><span class="p">,</span> <span class="n">time_step</span><span class="o">=</span><span class="n">at_time_step</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">show_current_characteristic_times</span><span class="p">:</span>
+                    <span class="n">mark_characteristic_times</span><span class="p">(</span><span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">offer_time</span><span class="o">=</span><span class="n">at_time_step</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">any</span><span class="p">(</span><span class="n">variable</span> <span class="ow">in</span> <span class="n">label</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_indicator</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+                <span class="n">plot_flexibility_kpi</span><span class="p">(</span><span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">variable</span><span class="o">=</span><span class="n">variable</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">any</span><span class="p">(</span><span class="n">variable</span> <span class="ow">in</span> <span class="n">label</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_market</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+                <span class="n">plot_market_results</span><span class="p">(</span><span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">variable</span><span class="o">=</span><span class="n">variable</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No plotting function found for variable </span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Set layout</span>
+            <span class="k">if</span> <span class="n">zoom_to_offer_window</span><span class="p">:</span>
+                <span class="n">rel_market_time</span><span class="p">,</span> <span class="n">rel_prep_time</span><span class="p">,</span> <span class="n">flex_event_duration</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">get_characteristic_times</span><span class="p">(</span><span class="n">at_time_step</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">ts</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">baseline_module_config</span><span class="o">.</span><span class="n">time_step</span>
+                    <span class="o">/</span> <span class="n">TIME_CONVERSION</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_timescale_of_data</span><span class="p">]</span>
+                <span class="p">)</span>
+
+                <span class="n">xlim_left</span> <span class="o">=</span> <span class="n">at_time_step</span>
+                <span class="n">xlim_right</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">at_time_step</span>
+                    <span class="o">+</span> <span class="n">rel_market_time</span>
+                    <span class="o">+</span> <span class="n">rel_prep_time</span>
+                    <span class="o">+</span> <span class="n">flex_event_duration</span>
+                    <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">ts</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">zoom_to_prediction_interval</span><span class="p">:</span>
+                <span class="n">xlim_left</span> <span class="o">=</span> <span class="n">at_time_step</span>
+                <span class="n">xlim_right</span> <span class="o">=</span> <span class="n">at_time_step</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_baseline</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">xlim_left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_simulation</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">xlim_right</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">df_simulation</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_baseline</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="p">)</span>
+
+            <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+                <span class="n">yaxis_title</span><span class="o">=</span><span class="n">variable</span><span class="p">,</span>
+                <span class="n">xaxis_title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Time in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">current_timescale_of_data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">xaxis_range</span><span class="o">=</span><span class="p">[</span><span class="n">xlim_left</span><span class="p">,</span> <span class="n">xlim_right</span><span class="p">],</span>
+                <span class="n">height</span><span class="o">=</span><span class="mi">350</span><span class="p">,</span>
+                <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">20</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">update_xaxes</span><span class="p">(</span>
+                <span class="n">dtick</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">baseline_module_config</span><span class="o">.</span><span class="n">prediction_horizon</span> <span class="o">/</span> <span class="mi">6</span><span class="p">)</span>
+                <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseline_module_config</span><span class="o">.</span><span class="n">time_step</span>
+                <span class="o">/</span> <span class="n">TIME_CONVERSION</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_timescale_of_data</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">update_yaxes</span><span class="p">(</span><span class="n">tickformat</span><span class="o">=</span><span class="s2">&quot;~r&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">fig</span>
+
+        <span class="c1"># Create the app</span>
+        <span class="n">app</span> <span class="o">=</span> <span class="n">Dash</span><span class="p">(</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot;_flexibility&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Flexibility Results&quot;</span><span class="p">)</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">html</span><span class="o">.</span><span class="n">H1</span><span class="p">(</span><span class="s2">&quot;Results&quot;</span><span class="p">),</span>
+            <span class="n">html</span><span class="o">.</span><span class="n">H3</span><span class="p">(</span><span class="s2">&quot;Settings&quot;</span><span class="p">),</span>
+            <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+                <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">Code</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">option</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">setting</span><span class="si">}</span><span class="s2">, &quot;</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">option</span><span class="p">,</span> <span class="n">setting</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseline_module_config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span>
+                        <span class="s2">&quot;discretization_options&quot;</span>
+                    <span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="p">]</span>
+            <span class="p">),</span>
+            <span class="c1"># Options</span>
+            <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+                <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">H3</span><span class="p">(</span><span class="s2">&quot;Options&quot;</span><span class="p">),</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+                        <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+                            <span class="n">dcc</span><span class="o">.</span><span class="n">Checklist</span><span class="p">(</span>
+                                <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;accepted_characteristic_times&quot;</span><span class="p">,</span>
+                                <span class="n">options</span><span class="o">=</span><span class="p">[</span>
+                                    <span class="p">{</span>
+                                        <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;Show characteristic times (accepted)&quot;</span><span class="p">,</span>
+                                        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                                    <span class="p">}</span>
+                                <span class="p">],</span>
+                                <span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="kc">True</span><span class="p">],</span>
+                                <span class="n">style</span><span class="o">=</span><span class="p">{</span>
+                                    <span class="s2">&quot;display&quot;</span><span class="p">:</span> <span class="s2">&quot;inline-block&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;padding-right&quot;</span><span class="p">:</span> <span class="s2">&quot;10px&quot;</span><span class="p">,</span>
+                                <span class="p">},</span>
+                            <span class="p">),</span>
+                            <span class="n">dcc</span><span class="o">.</span><span class="n">Checklist</span><span class="p">(</span>
+                                <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;current_characteristic_times&quot;</span><span class="p">,</span>
+                                <span class="n">options</span><span class="o">=</span><span class="p">[</span>
+                                    <span class="p">{</span>
+                                        <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;Show characteristic times (current)&quot;</span><span class="p">,</span>
+                                        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                                    <span class="p">}</span>
+                                <span class="p">],</span>
+                                <span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="kc">True</span><span class="p">],</span>
+                                <span class="n">style</span><span class="o">=</span><span class="p">{</span>
+                                    <span class="s2">&quot;display&quot;</span><span class="p">:</span> <span class="s2">&quot;inline-block&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;padding-right&quot;</span><span class="p">:</span> <span class="s2">&quot;10px&quot;</span><span class="p">,</span>
+                                <span class="p">},</span>
+                            <span class="p">),</span>
+                        <span class="p">],</span>
+                    <span class="p">),</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+                        <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+                            <span class="n">dcc</span><span class="o">.</span><span class="n">Checklist</span><span class="p">(</span>
+                                <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;zoom_to_offer_window&quot;</span><span class="p">,</span>
+                                <span class="n">options</span><span class="o">=</span><span class="p">[</span>
+                                    <span class="p">{</span>
+                                        <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;Zoom to flexibility offer window&quot;</span><span class="p">,</span>
+                                        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                                    <span class="p">}</span>
+                                <span class="p">],</span>
+                                <span class="n">style</span><span class="o">=</span><span class="p">{</span>
+                                    <span class="s2">&quot;display&quot;</span><span class="p">:</span> <span class="s2">&quot;inline-block&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;padding-right&quot;</span><span class="p">:</span> <span class="s2">&quot;10px&quot;</span><span class="p">,</span>
+                                <span class="p">},</span>
+                            <span class="p">),</span>
+                            <span class="n">dcc</span><span class="o">.</span><span class="n">Checklist</span><span class="p">(</span>
+                                <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;zoom_to_prediction_interval&quot;</span><span class="p">,</span>
+                                <span class="n">options</span><span class="o">=</span><span class="p">[</span>
+                                    <span class="p">{</span>
+                                        <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;Zoom to mpc prediction interval&quot;</span><span class="p">,</span>
+                                        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                                    <span class="p">}</span>
+                                <span class="p">],</span>
+                                <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;display&quot;</span><span class="p">:</span> <span class="s2">&quot;inline-block&quot;</span><span class="p">},</span>
+                            <span class="p">),</span>
+                        <span class="p">],</span>
+                    <span class="p">),</span>
+                    <span class="c1"># Time input</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+                        <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+                            <span class="n">html</span><span class="o">.</span><span class="n">H3</span><span class="p">(</span>
+                                <span class="n">children</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Time:&quot;</span><span class="p">,</span>
+                                <span class="n">style</span><span class="o">=</span><span class="p">{</span>
+                                    <span class="s2">&quot;display&quot;</span><span class="p">:</span> <span class="s2">&quot;inline-block&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;padding-right&quot;</span><span class="p">:</span> <span class="s2">&quot;10px&quot;</span><span class="p">,</span>
+                                <span class="p">},</span>
+                            <span class="p">),</span>
+                            <span class="n">dcc</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span>
+                                <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;time_typing&quot;</span><span class="p">,</span>
+                                <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;number&quot;</span><span class="p">,</span>
+                                <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                <span class="nb">max</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># will be updated in the callback</span>
+                                <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;display&quot;</span><span class="p">:</span> <span class="s2">&quot;inline-block&quot;</span><span class="p">},</span>
+                            <span class="p">),</span>
+                            <span class="n">dcc</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                                <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;time_unit&quot;</span><span class="p">,</span>
+                                <span class="n">options</span><span class="o">=</span><span class="n">get_args</span><span class="p">(</span><span class="n">TimeConversionTypes</span><span class="p">),</span>
+                                <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">current_timescale_input</span><span class="p">,</span>
+                                <span class="n">style</span><span class="o">=</span><span class="p">{</span>
+                                    <span class="s2">&quot;display&quot;</span><span class="p">:</span> <span class="s2">&quot;inline-block&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;verticalAlign&quot;</span><span class="p">:</span> <span class="s2">&quot;middle&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;padding-left&quot;</span><span class="p">:</span> <span class="s2">&quot;10px&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="s2">&quot;100px&quot;</span><span class="p">,</span>
+                                <span class="p">},</span>
+                            <span class="p">),</span>
+                        <span class="p">],</span>
+                    <span class="p">),</span>
+                    <span class="n">dcc</span><span class="o">.</span><span class="n">Slider</span><span class="p">(</span>
+                        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;time_slider&quot;</span><span class="p">,</span>
+                        <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                        <span class="nb">max</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># will be updated in the callback</span>
+                        <span class="n">tooltip</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;placement&quot;</span><span class="p">:</span> <span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="s2">&quot;always_visible&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+                        <span class="n">marks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">updatemode</span><span class="o">=</span><span class="s2">&quot;drag&quot;</span><span class="p">,</span>
+                    <span class="p">),</span>
+                <span class="p">],</span>
+                <span class="n">style</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="s2">&quot;88%&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;padding-left&quot;</span><span class="p">:</span> <span class="s2">&quot;0%&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;padding-right&quot;</span><span class="p">:</span> <span class="s2">&quot;12%&quot;</span><span class="p">,</span>
+                    <span class="c1"># Make the options sticky to the top of the page</span>
+                    <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="s2">&quot;sticky&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;top&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;overflow-y&quot;</span><span class="p">:</span> <span class="s2">&quot;visible&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;z-index&quot;</span><span class="p">:</span> <span class="s2">&quot;100&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;background-color&quot;</span><span class="p">:</span> <span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">),</span>
+            <span class="c1"># Container for the graphs, will be updated in the callback</span>
+            <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;graphs_container_variables&quot;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[]),</span>
+        <span class="p">]</span>
+
+        <span class="c1"># Callbacks</span>
+        <span class="c1"># Update the time value or the time unit</span>
+        <span class="nd">@callback</span><span class="p">(</span>
+            <span class="n">Output</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="s2">&quot;time_slider&quot;</span><span class="p">,</span> <span class="n">component_property</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">),</span>
+            <span class="n">Output</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="s2">&quot;time_slider&quot;</span><span class="p">,</span> <span class="n">component_property</span><span class="o">=</span><span class="s2">&quot;min&quot;</span><span class="p">),</span>
+            <span class="n">Output</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="s2">&quot;time_slider&quot;</span><span class="p">,</span> <span class="n">component_property</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">),</span>
+            <span class="n">Output</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="s2">&quot;time_slider&quot;</span><span class="p">,</span> <span class="n">component_property</span><span class="o">=</span><span class="s2">&quot;step&quot;</span><span class="p">),</span>
+            <span class="n">Output</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="s2">&quot;time_typing&quot;</span><span class="p">,</span> <span class="n">component_property</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">),</span>
+            <span class="n">Output</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="s2">&quot;time_typing&quot;</span><span class="p">,</span> <span class="n">component_property</span><span class="o">=</span><span class="s2">&quot;min&quot;</span><span class="p">),</span>
+            <span class="n">Output</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="s2">&quot;time_typing&quot;</span><span class="p">,</span> <span class="n">component_property</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">),</span>
+            <span class="n">Output</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="s2">&quot;time_typing&quot;</span><span class="p">,</span> <span class="n">component_property</span><span class="o">=</span><span class="s2">&quot;step&quot;</span><span class="p">),</span>
+            <span class="n">Input</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="s2">&quot;time_typing&quot;</span><span class="p">,</span> <span class="n">component_property</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">),</span>
+            <span class="n">Input</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="s2">&quot;time_slider&quot;</span><span class="p">,</span> <span class="n">component_property</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">),</span>
+            <span class="n">Input</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="s2">&quot;time_unit&quot;</span><span class="p">,</span> <span class="n">component_property</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">update_time_index_of_input</span><span class="p">(</span>
+            <span class="n">time_typing</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">time_slider</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">time_unit</span><span class="p">:</span> <span class="n">TimeConversionTypes</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+            <span class="c1"># get trigger id</span>
+            <span class="n">trigger_id</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">triggered</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;prop_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="c1"># Get the value for the sliders</span>
+            <span class="k">if</span> <span class="n">trigger_id</span> <span class="o">==</span> <span class="s2">&quot;time_slider&quot;</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">time_slider</span>
+            <span class="k">elif</span> <span class="n">trigger_id</span> <span class="o">==</span> <span class="s2">&quot;time_unit&quot;</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">time_typing</span>
+                    <span class="o">*</span> <span class="n">TIME_CONVERSION</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_timescale_input</span><span class="p">]</span>
+                    <span class="o">/</span> <span class="n">TIME_CONVERSION</span><span class="p">[</span><span class="n">time_unit</span><span class="p">]</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">time_typing</span>
+
+            <span class="c1"># Convert the index to the given time unit if necessary</span>
+            <span class="k">if</span> <span class="n">trigger_id</span> <span class="o">==</span> <span class="s2">&quot;time_unit&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">convert_timescale_of_dataframe_index</span><span class="p">(</span><span class="n">to_timescale</span><span class="o">=</span><span class="n">time_unit</span><span class="p">)</span>
+
+            <span class="c1"># Get the index for the slider types</span>
+            <span class="n">times</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_baseline</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get_level_values</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+            <span class="n">minimum</span> <span class="o">=</span> <span class="n">times</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">maximum</span> <span class="o">=</span> <span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">step</span> <span class="o">=</span> <span class="n">times</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">times</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_timescale_input</span> <span class="o">=</span> <span class="n">time_unit</span>
+
+            <span class="k">return</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">minimum</span><span class="p">,</span> <span class="n">maximum</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">minimum</span><span class="p">,</span> <span class="n">maximum</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
+
+        <span class="c1"># Update the graphs</span>
+        <span class="nd">@callback</span><span class="p">(</span>
+            <span class="n">Output</span><span class="p">(</span>
+                <span class="n">component_id</span><span class="o">=</span><span class="s2">&quot;graphs_container_variables&quot;</span><span class="p">,</span> <span class="n">component_property</span><span class="o">=</span><span class="s2">&quot;children&quot;</span>
+            <span class="p">),</span>
+            <span class="n">Input</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="s2">&quot;time_typing&quot;</span><span class="p">,</span> <span class="n">component_property</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">),</span>
+            <span class="n">Input</span><span class="p">(</span>
+                <span class="n">component_id</span><span class="o">=</span><span class="s2">&quot;accepted_characteristic_times&quot;</span><span class="p">,</span> <span class="n">component_property</span><span class="o">=</span><span class="s2">&quot;value&quot;</span>
+            <span class="p">),</span>
+            <span class="n">Input</span><span class="p">(</span>
+                <span class="n">component_id</span><span class="o">=</span><span class="s2">&quot;current_characteristic_times&quot;</span><span class="p">,</span> <span class="n">component_property</span><span class="o">=</span><span class="s2">&quot;value&quot;</span>
+            <span class="p">),</span>
+            <span class="n">Input</span><span class="p">(</span><span class="n">component_id</span><span class="o">=</span><span class="s2">&quot;zoom_to_offer_window&quot;</span><span class="p">,</span> <span class="n">component_property</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">),</span>
+            <span class="n">Input</span><span class="p">(</span>
+                <span class="n">component_id</span><span class="o">=</span><span class="s2">&quot;zoom_to_prediction_interval&quot;</span><span class="p">,</span> <span class="n">component_property</span><span class="o">=</span><span class="s2">&quot;value&quot;</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">update_graph</span><span class="p">(</span>
+            <span class="n">at_time_step</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+            <span class="n">show_accepted_characteristic_times</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+            <span class="n">show_current_characteristic_times</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+            <span class="n">zoom_to_offer_window</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+            <span class="n">zoom_to_prediction_interval</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Update all graphs based on the options and slider values&quot;&quot;&quot;</span>
+            <span class="n">figs</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plotting_variables</span><span class="p">:</span>
+                <span class="n">fig</span> <span class="o">=</span> <span class="n">create_plot</span><span class="p">(</span>
+                    <span class="n">variable</span><span class="o">=</span><span class="n">variable</span><span class="p">,</span>
+                    <span class="n">at_time_step</span><span class="o">=</span><span class="n">at_time_step</span><span class="p">,</span>
+                    <span class="n">show_accepted_characteristic_times</span><span class="o">=</span><span class="n">show_accepted_characteristic_times</span><span class="p">,</span>
+                    <span class="n">show_current_characteristic_times</span><span class="o">=</span><span class="n">show_current_characteristic_times</span><span class="p">,</span>
+                    <span class="n">zoom_to_offer_window</span><span class="o">=</span><span class="n">zoom_to_offer_window</span><span class="p">,</span>
+                    <span class="n">zoom_to_prediction_interval</span><span class="o">=</span><span class="n">zoom_to_prediction_interval</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">figs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dcc</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;graph_</span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">figs</span>
+
+        <span class="c1"># Run the app</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">:</span>
+            <span class="n">port</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">port</span> <span class="o">=</span> <span class="n">get_port</span><span class="p">()</span>
+        <span class="n">webbrowser</span><span class="o">.</span><span class="n">open_new_tab</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;http://localhost:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Felix Stegemerten.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
