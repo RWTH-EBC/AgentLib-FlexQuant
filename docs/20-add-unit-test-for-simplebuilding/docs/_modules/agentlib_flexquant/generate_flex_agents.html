@@ -1,0 +1,812 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>agentlib_flexquant.generate_flex_agents &mdash; agentlib_flexquant 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
+
+  
+      <script src="../../_static/jquery.js"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+      <script src="../../_static/doctools.js"></script>
+      <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            agentlib_flexquant
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">agentlib_flexquant</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">agentlib_flexquant.generate_flex_agents</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for agentlib_flexquant.generate_flex_agents</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">atexit</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">astor</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">black</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">FilePath</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.core.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.core.datamodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentVariable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigurationError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.core.module</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModuleConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">custom_injection</span><span class="p">,</span> <span class="n">load_config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.data_structures.mpc_datamodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPCVariable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.models.casadi_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">CasadiModelConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.modules.mpc_full</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPCConfig</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">glbs</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">agentlib_flexquant.utils.config_management</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cmng</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.utils.parsing</span><span class="w"> </span><span class="kn">import</span> <span class="n">SetupSystemModifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.flexquant</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlexibilityIndicatorConfig</span><span class="p">,</span> <span class="n">FlexibilityMarketConfig</span><span class="p">,</span> <span class="n">FlexQuantConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.mpcs</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaselineMPCData</span><span class="p">,</span> <span class="n">BaseMPCData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.modules.flexibility_indicator</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlexibilityIndicatorModuleConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.modules.flexibility_market</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlexibilityMarketModuleConfig</span>
+
+
+<div class="viewcode-block" id="FlexAgentGenerator"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexAgentGenerator</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for generating the flex agents</span>
+
+<span class="sd">    orig_mpc_module_config: the config for the original mpc, which has nothing to do with the flexibility quantification</span>
+<span class="sd">    baseline_mpc_module_config: the config for the baseline mpc for flexibility quantification</span>
+<span class="sd">    pos_flex_mpc_module_config: the config for the positive flexibility mpc for flexibility quantification</span>
+<span class="sd">    neg_flex_mpc_module_config: the config for the negative flexibility mpc for flexibility quantification</span>
+<span class="sd">    indicator_module_config: the config for the indicator for flexibility quantification</span>
+<span class="sd">    market_module_config: the config for the market for flexibility quantification</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">orig_mpc_module_config</span><span class="p">:</span> <span class="n">MPCConfig</span>
+    <span class="n">baseline_mpc_module_config</span><span class="p">:</span> <span class="n">MPCConfig</span>
+    <span class="n">pos_flex_mpc_module_config</span><span class="p">:</span> <span class="n">MPCConfig</span>
+    <span class="n">neg_flex_mpc_module_config</span><span class="p">:</span> <span class="n">MPCConfig</span>
+    <span class="n">indicator_module_config</span><span class="p">:</span> <span class="n">FlexibilityIndicatorModuleConfig</span>
+    <span class="n">market_module_config</span><span class="p">:</span> <span class="n">FlexibilityMarketModuleConfig</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">flex_config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FilePath</span><span class="p">,</span> <span class="n">FlexQuantConfig</span><span class="p">],</span>
+        <span class="n">mpc_agent_config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FilePath</span><span class="p">,</span> <span class="n">AgentConfig</span><span class="p">],</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">flex_config</span><span class="p">,</span> <span class="nb">str</span> <span class="ow">or</span> <span class="n">FilePath</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flex_config_file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">flex_config</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># provide default name for json</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flex_config_file_name</span> <span class="o">=</span> <span class="s2">&quot;flex_config.json&quot;</span>
+        <span class="c1"># load configs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span> <span class="o">=</span> <span class="n">load_config</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span>
+            <span class="n">flex_config</span><span class="p">,</span> <span class="n">config_type</span><span class="o">=</span><span class="n">FlexQuantConfig</span>
+        <span class="p">)</span>
+
+        <span class="c1"># original mpc agent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">orig_mpc_agent_config</span> <span class="o">=</span> <span class="n">load_config</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span>
+            <span class="n">mpc_agent_config</span><span class="p">,</span> <span class="n">config_type</span><span class="o">=</span><span class="n">AgentConfig</span>
+        <span class="p">)</span>
+        <span class="c1"># baseline agent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_agent_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">orig_mpc_agent_config</span><span class="o">.</span><span class="n">__deepcopy__</span><span class="p">()</span>
+        <span class="c1"># pos agent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos_flex_mpc_agent_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">orig_mpc_agent_config</span><span class="o">.</span><span class="n">__deepcopy__</span><span class="p">()</span>
+        <span class="c1"># neg agent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neg_flex_mpc_agent_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">orig_mpc_agent_config</span><span class="o">.</span><span class="n">__deepcopy__</span><span class="p">()</span>
+
+        <span class="c1"># original mpc module</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">orig_mpc_module_config</span> <span class="o">=</span> <span class="n">cmng</span><span class="o">.</span><span class="n">get_module</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">orig_mpc_agent_config</span><span class="p">,</span>
+            <span class="n">module_type</span><span class="o">=</span><span class="n">cmng</span><span class="o">.</span><span class="n">get_orig_module_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">orig_mpc_agent_config</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="c1"># baseline module</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span> <span class="o">=</span> <span class="n">cmng</span><span class="o">.</span><span class="n">get_module</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_agent_config</span><span class="p">,</span>
+            <span class="n">module_type</span><span class="o">=</span><span class="n">cmng</span><span class="o">.</span><span class="n">get_orig_module_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">orig_mpc_agent_config</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="c1"># pos module</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos_flex_mpc_module_config</span> <span class="o">=</span> <span class="n">cmng</span><span class="o">.</span><span class="n">get_module</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_flex_mpc_agent_config</span><span class="p">,</span>
+            <span class="n">module_type</span><span class="o">=</span><span class="n">cmng</span><span class="o">.</span><span class="n">get_orig_module_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">orig_mpc_agent_config</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="c1"># neg module</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neg_flex_mpc_module_config</span> <span class="o">=</span> <span class="n">cmng</span><span class="o">.</span><span class="n">get_module</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">neg_flex_mpc_agent_config</span><span class="p">,</span>
+            <span class="n">module_type</span><span class="o">=</span><span class="n">cmng</span><span class="o">.</span><span class="n">get_orig_module_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">orig_mpc_agent_config</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="c1"># load indicator config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">indicator_config</span> <span class="o">=</span> <span class="n">load_config</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">indicator_config</span><span class="p">,</span> <span class="n">config_type</span><span class="o">=</span><span class="n">FlexibilityIndicatorConfig</span>
+        <span class="p">)</span>
+        <span class="c1"># load indicator module config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">indicator_agent_config</span> <span class="o">=</span> <span class="n">load_config</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">indicator_config</span><span class="o">.</span><span class="n">agent_config</span><span class="p">,</span> <span class="n">config_type</span><span class="o">=</span><span class="n">AgentConfig</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">indicator_module_config</span> <span class="o">=</span> <span class="n">cmng</span><span class="o">.</span><span class="n">get_module</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">indicator_agent_config</span><span class="p">,</span> <span class="n">module_type</span><span class="o">=</span><span class="n">cmng</span><span class="o">.</span><span class="n">INDICATOR_CONFIG_TYPE</span>
+        <span class="p">)</span>
+        <span class="c1"># load market config</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">market_config</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">market_config</span> <span class="o">=</span> <span class="n">load_config</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">market_config</span><span class="p">,</span> <span class="n">config_type</span><span class="o">=</span><span class="n">FlexibilityMarketConfig</span>
+            <span class="p">)</span>
+            <span class="c1"># load market module config</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">market_agent_config</span> <span class="o">=</span> <span class="n">load_config</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">market_config</span><span class="o">.</span><span class="n">agent_config</span><span class="p">,</span> <span class="n">config_type</span><span class="o">=</span><span class="n">AgentConfig</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">market_module_config</span> <span class="o">=</span> <span class="n">cmng</span><span class="o">.</span><span class="n">get_module</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">market_agent_config</span><span class="p">,</span> <span class="n">module_type</span><span class="o">=</span><span class="n">cmng</span><span class="o">.</span><span class="n">MARKET_CONFIG_TYPE</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">market_time</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_config_validations</span><span class="p">()</span>
+
+<div class="viewcode-block" id="FlexAgentGenerator.generate_flex_agents"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.generate_flex_agents">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">generate_flex_agents</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate the configs and the python module for the flexibility agents.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list of the full path for baseline mpc, pos_flex mpc, neg_flex mpc, indicator and market config</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># adapt modules to include necessary communication variables</span>
+        <span class="n">baseline_mpc_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adapt_mpc_module_config</span><span class="p">(</span>
+            <span class="n">module_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="p">,</span>
+            <span class="n">mpc_dataclass</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">baseline_config_generator_data</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">pf_mpc_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adapt_mpc_module_config</span><span class="p">(</span>
+            <span class="n">module_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_flex_mpc_module_config</span><span class="p">,</span>
+            <span class="n">mpc_dataclass</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">pos_flex</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">nf_mpc_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adapt_mpc_module_config</span><span class="p">(</span>
+            <span class="n">module_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">neg_flex_mpc_module_config</span><span class="p">,</span>
+            <span class="n">mpc_dataclass</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">neg_flex</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">indicator_module_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adapt_indicator_config</span><span class="p">(</span>
+            <span class="n">module_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">indicator_module_config</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">market_config</span><span class="p">:</span>
+            <span class="n">market_module_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adapt_market_config</span><span class="p">(</span>
+                <span class="n">module_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">market_module_config</span>
+            <span class="p">)</span>
+    
+        <span class="c1"># dump jsons of the agents including the adapted module configs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">append_module_and_dump_agent</span><span class="p">(</span>
+            <span class="n">module</span><span class="o">=</span><span class="n">baseline_mpc_config</span><span class="p">,</span>
+            <span class="n">agent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_agent_config</span><span class="p">,</span>
+            <span class="n">module_type</span><span class="o">=</span><span class="n">cmng</span><span class="o">.</span><span class="n">get_orig_module_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">orig_mpc_agent_config</span><span class="p">),</span>
+            <span class="n">config_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">baseline_config_generator_data</span><span class="o">.</span><span class="n">name_of_created_file</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">append_module_and_dump_agent</span><span class="p">(</span>
+            <span class="n">module</span><span class="o">=</span><span class="n">pf_mpc_config</span><span class="p">,</span>
+            <span class="n">agent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_flex_mpc_agent_config</span><span class="p">,</span>
+            <span class="n">module_type</span><span class="o">=</span><span class="n">cmng</span><span class="o">.</span><span class="n">get_orig_module_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">orig_mpc_agent_config</span><span class="p">),</span>
+            <span class="n">config_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">pos_flex</span><span class="o">.</span><span class="n">name_of_created_file</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">append_module_and_dump_agent</span><span class="p">(</span>
+            <span class="n">module</span><span class="o">=</span><span class="n">nf_mpc_config</span><span class="p">,</span>
+            <span class="n">agent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">neg_flex_mpc_agent_config</span><span class="p">,</span>
+            <span class="n">module_type</span><span class="o">=</span><span class="n">cmng</span><span class="o">.</span><span class="n">get_orig_module_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">orig_mpc_agent_config</span><span class="p">),</span>
+            <span class="n">config_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">neg_flex</span><span class="o">.</span><span class="n">name_of_created_file</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">append_module_and_dump_agent</span><span class="p">(</span>
+            <span class="n">module</span><span class="o">=</span><span class="n">indicator_module_config</span><span class="p">,</span>
+            <span class="n">agent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">indicator_agent_config</span><span class="p">,</span>
+            <span class="n">module_type</span><span class="o">=</span><span class="n">cmng</span><span class="o">.</span><span class="n">INDICATOR_CONFIG_TYPE</span><span class="p">,</span>
+            <span class="n">config_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">indicator_config</span><span class="o">.</span><span class="n">name_of_created_file</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">market_config</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">append_module_and_dump_agent</span><span class="p">(</span>
+                    <span class="n">module</span><span class="o">=</span><span class="n">market_module_config</span><span class="p">,</span>
+                    <span class="n">agent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">market_agent_config</span><span class="p">,</span>
+                    <span class="n">module_type</span><span class="o">=</span><span class="n">cmng</span><span class="o">.</span><span class="n">MARKET_CONFIG_TYPE</span><span class="p">,</span>
+                    <span class="n">config_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">market_config</span><span class="o">.</span><span class="n">name_of_created_file</span><span class="p">,</span>
+                <span class="p">)</span>
+        
+        <span class="c1"># generate python files for the shadow mpcs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_generate_flex_model_definition</span><span class="p">()</span>
+
+        <span class="c1"># save flex config to created flex files</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">flex_files_directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config_file_name</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">config_json</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">exclude_defaults</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">config_json</span><span class="p">)</span>
+
+        <span class="c1"># register the exit function if the corresponding flag is set</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">delete_files</span><span class="p">:</span>
+            <span class="n">atexit</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delete_created_files</span><span class="p">())</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_config_file_paths</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="FlexAgentGenerator.append_module_and_dump_agent"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.append_module_and_dump_agent">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">append_module_and_dump_agent</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">module</span><span class="p">:</span> <span class="n">BaseModuleConfig</span><span class="p">,</span>
+        <span class="n">agent</span><span class="p">:</span> <span class="n">AgentConfig</span><span class="p">,</span>
+        <span class="n">module_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">config_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Append the given module config to the given agent config and dumps the agent config to a json file.</span>
+
+<span class="sd">        The json file is named based on the config_name.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            module: The module config to be appended.</span>
+<span class="sd">            agent: The agent config to be updated.</span>
+<span class="sd">            module_type: The type of the module</span>
+<span class="sd">            config_name: The name of the json file for module config (e.g. baseline.json)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># if module is not from the baseline, set a new agent id, based on module id</span>
+        <span class="k">if</span> <span class="n">module</span><span class="o">.</span><span class="n">type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">module_id</span>
+        <span class="c1"># get the module as a dict without default values</span>
+        <span class="n">module_dict</span> <span class="o">=</span> <span class="n">cmng</span><span class="o">.</span><span class="n">to_dict_and_remove_unnecessary_fields</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="n">module</span><span class="p">)</span>
+        <span class="c1"># write given module to agent config</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">agent_module</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">modules</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">cmng</span><span class="o">.</span><span class="n">MODULE_TYPE_DICT</span><span class="p">[</span><span class="n">module_type</span><span class="p">]</span>
+                <span class="ow">is</span> <span class="n">cmng</span><span class="o">.</span><span class="n">MODULE_TYPE_DICT</span><span class="p">[</span><span class="n">agent_module</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]]</span>
+            <span class="p">):</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">module_dict</span>
+
+        <span class="c1"># dump agent config</span>
+        <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">overwrite_files</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">Path</span><span class="p">(</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">flex_files_directory</span><span class="p">,</span> <span class="n">config_name</span><span class="p">)</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">flex_files_directory</span><span class="p">,</span> <span class="n">config_name</span><span class="p">),</span> <span class="s2">&quot;w+&quot;</span>
+            <span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">module_json</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">exclude_defaults</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">module_json</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Provided agent config does not contain any modules.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FlexAgentGenerator.get_config_file_paths"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.get_config_file_paths">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_config_file_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a list of paths with the created config files.&quot;&quot;&quot;</span>
+        <span class="n">paths</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">flex_files_directory</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">baseline_config_generator_data</span><span class="o">.</span><span class="n">name_of_created_file</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">flex_files_directory</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">pos_flex</span><span class="o">.</span><span class="n">name_of_created_file</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">flex_files_directory</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">neg_flex</span><span class="o">.</span><span class="n">name_of_created_file</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">flex_files_directory</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">indicator_config</span><span class="o">.</span><span class="n">name_of_created_file</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">market_config</span><span class="p">:</span>
+            <span class="n">paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">flex_files_directory</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">market_config</span><span class="o">.</span><span class="n">name_of_created_file</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">paths</span></div>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_delete_created_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Function to run at exit if the files are to be deleted.&quot;&quot;&quot;</span>
+        <span class="n">to_be_deleted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_config_file_paths</span><span class="p">()</span>
+        <span class="n">to_be_deleted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">flex_files_directory</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">flex_config_file_name</span><span class="p">,</span>
+            <span class="p">))</span>
+        <span class="c1"># delete files</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">to_be_deleted</span><span class="p">:</span>
+            <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+        <span class="c1"># also delete folder</span>
+        <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">flex_files_directory</span><span class="p">)</span><span class="o">.</span><span class="n">rmdir</span><span class="p">()</span>
+
+<div class="viewcode-block" id="FlexAgentGenerator.adapt_mpc_module_config"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_mpc_module_config">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">adapt_mpc_module_config</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">module_config</span><span class="p">:</span> <span class="n">MPCConfig</span><span class="p">,</span> <span class="n">mpc_dataclass</span><span class="p">:</span> <span class="n">BaseMPCData</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MPCConfig</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adapt the mpc module config for automated flexibility quantification.</span>
+
+<span class="sd">        Things adapted among others are:</span>
+<span class="sd">        - the file name/path of the mpc config file</span>
+<span class="sd">        - names of the control variables for the shadow mpcs</span>
+<span class="sd">        - reduce communicated variables of shadow mpcs to outputs</span>
+<span class="sd">        - add the power variable to the outputs</span>
+<span class="sd">        - add parameters for the activation and quantification of flexibility</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            module_config: The module config to be adapted</span>
+<span class="sd">            mpc_dataclass: The dataclass corresponding to the type of the MPC module.</span>
+<span class="sd">                           It contains all the extra data necessary for flexibility quantification, which will be used to update the module_config.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The adapted module config</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># allow the module config to be changed</span>
+        <span class="n">module_config</span><span class="o">.</span><span class="n">model_config</span><span class="p">[</span><span class="s2">&quot;frozen&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="n">module_config</span><span class="o">.</span><span class="n">module_id</span> <span class="o">=</span> <span class="n">mpc_dataclass</span><span class="o">.</span><span class="n">module_id</span>
+
+        <span class="c1"># append the new weights as parameter to the MPC or update its value</span>
+        <span class="n">parameter_dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">parameter</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">parameter</span> <span class="k">for</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="n">module_config</span><span class="o">.</span><span class="n">parameters</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="n">weight</span> <span class="ow">in</span> <span class="n">mpc_dataclass</span><span class="o">.</span><span class="n">weights</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">weight</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">parameter_dict</span><span class="p">:</span>
+                <span class="n">parameter_dict</span><span class="p">[</span><span class="n">weight</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">weight</span><span class="o">.</span><span class="n">value</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">module_config</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span>
+
+        <span class="c1"># set new MPC type</span>
+        <span class="n">module_config</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">mpc_dataclass</span><span class="o">.</span><span class="n">module_types</span><span class="p">[</span>
+            <span class="n">cmng</span><span class="o">.</span><span class="n">get_orig_module_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">orig_mpc_agent_config</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="c1"># set new id (needed for plotting)</span>
+        <span class="n">module_config</span><span class="o">.</span><span class="n">module_id</span> <span class="o">=</span> <span class="n">mpc_dataclass</span><span class="o">.</span><span class="n">module_id</span>
+        <span class="c1"># update optimization backend to use the created mpc files and classes</span>
+        <span class="n">module_config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">flex_files_directory</span><span class="p">,</span>
+                <span class="n">mpc_dataclass</span><span class="o">.</span><span class="n">created_flex_mpcs_file</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="s2">&quot;class_name&quot;</span><span class="p">:</span> <span class="n">mpc_dataclass</span><span class="o">.</span><span class="n">class_name</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="c1"># extract filename from results file and update it with suffix and parent directory</span>
+        <span class="n">result_filename</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
+            <span class="n">module_config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;results_file&quot;</span><span class="p">]</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.csv&quot;</span><span class="p">,</span> <span class="n">mpc_dataclass</span><span class="o">.</span><span class="n">results_suffix</span><span class="p">)</span>
+        <span class="n">full_path</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">results_directory</span>
+            <span class="o">/</span> <span class="n">result_filename</span>
+        <span class="p">)</span>
+        <span class="n">module_config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;results_file&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">full_path</span><span class="p">)</span>
+        <span class="c1"># change cia backend to custom backend of flexquant</span>
+        <span class="k">if</span> <span class="n">module_config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;casadi_cia&quot;</span><span class="p">:</span>
+            <span class="n">module_config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;casadi_cia_cons&quot;</span>
+            <span class="n">module_config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;market_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">market_time</span>
+            <span class="p">)</span>
+
+        <span class="c1"># add the control signal of the baseline to outputs (used during market time)</span>
+        <span class="c1"># and as inputs for the shadow mpcs</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">mpc_dataclass</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">BaselineMPCData</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">control</span> <span class="ow">in</span> <span class="n">module_config</span><span class="o">.</span><span class="n">controls</span><span class="p">:</span>
+                <span class="n">module_config</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">MPCVariable</span><span class="p">(</span>
+                        <span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">full_trajectory_prefix</span>
+                        <span class="o">+</span> <span class="n">control</span><span class="o">.</span><span class="n">name</span>
+                        <span class="o">+</span> <span class="n">glbs</span><span class="o">.</span><span class="n">full_trajectory_suffix</span><span class="p">,</span>
+                        <span class="n">value</span><span class="o">=</span><span class="n">control</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="c1"># also include binary controls</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module_config</span><span class="p">,</span> <span class="s2">&quot;binary_controls&quot;</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">control</span> <span class="ow">in</span> <span class="n">module_config</span><span class="o">.</span><span class="n">binary_controls</span><span class="p">:</span>
+                    <span class="n">module_config</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">MPCVariable</span><span class="p">(</span>
+                            <span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">full_trajectory_prefix</span>
+                            <span class="o">+</span> <span class="n">control</span><span class="o">.</span><span class="n">name</span>
+                            <span class="o">+</span> <span class="n">glbs</span><span class="o">.</span><span class="n">full_trajectory_suffix</span><span class="p">,</span>
+                            <span class="n">value</span><span class="o">=</span><span class="n">control</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+
+            <span class="c1"># only communicate outputs for the shadow mpcs</span>
+            <span class="n">module_config</span><span class="o">.</span><span class="n">shared_variable_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;outputs&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">control</span> <span class="ow">in</span> <span class="n">module_config</span><span class="o">.</span><span class="n">controls</span><span class="p">:</span>
+                <span class="n">module_config</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">MPCVariable</span><span class="p">(</span>
+                        <span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">full_trajectory_prefix</span>
+                        <span class="o">+</span> <span class="n">control</span><span class="o">.</span><span class="n">name</span>
+                        <span class="o">+</span> <span class="n">glbs</span><span class="o">.</span><span class="n">full_trajectory_suffix</span><span class="p">,</span>
+                        <span class="n">value</span><span class="o">=</span><span class="n">control</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="c1"># also include binary controls</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module_config</span><span class="p">,</span> <span class="s2">&quot;binary_controls&quot;</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">control</span> <span class="ow">in</span> <span class="n">module_config</span><span class="o">.</span><span class="n">binary_controls</span><span class="p">:</span>
+                    <span class="n">module_config</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">MPCVariable</span><span class="p">(</span>
+                            <span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">full_trajectory_prefix</span>
+                            <span class="o">+</span> <span class="n">control</span><span class="o">.</span><span class="n">name</span>
+                            <span class="o">+</span> <span class="n">glbs</span><span class="o">.</span><span class="n">full_trajectory_suffix</span><span class="p">,</span>
+                            <span class="n">value</span><span class="o">=</span><span class="n">control</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+        <span class="n">module_config</span><span class="o">.</span><span class="n">set_outputs</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># add outputs for the power variables, for easier handling create a lookup dict</span>
+        <span class="n">output_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">output</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">output</span> <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">module_config</span><span class="o">.</span><span class="n">outputs</span><span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">baseline_config_generator_data</span><span class="o">.</span><span class="n">power_variable</span>
+            <span class="ow">in</span> <span class="n">output_dict</span>
+        <span class="p">):</span>
+            <span class="n">output_dict</span><span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">baseline_config_generator_data</span><span class="o">.</span><span class="n">power_variable</span>
+            <span class="p">]</span><span class="o">.</span><span class="n">alias</span> <span class="o">=</span> <span class="n">mpc_dataclass</span><span class="o">.</span><span class="n">power_alias</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">module_config</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">MPCVariable</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">baseline_config_generator_data</span><span class="o">.</span><span class="n">power_variable</span><span class="p">,</span>
+                    <span class="n">alias</span><span class="o">=</span><span class="n">mpc_dataclass</span><span class="o">.</span><span class="n">power_alias</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="c1"># add or change alias for stored energy variable</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">indicator_module_config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">enable_energy_costs_correction</span><span class="p">:</span>
+            <span class="n">output_dict</span><span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">indicator_module_config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">stored_energy_variable</span>
+            <span class="p">]</span><span class="o">.</span><span class="n">alias</span> <span class="o">=</span> <span class="n">mpc_dataclass</span><span class="o">.</span><span class="n">stored_energy_alias</span>
+
+        <span class="c1"># add extra inputs needed for activation of flex</span>
+        <span class="n">module_config</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">mpc_dataclass</span><span class="o">.</span><span class="n">config_inputs_appendix</span><span class="p">)</span>
+        <span class="c1"># CONFIG_PARAMETERS_APPENDIX only includes dummy values</span>
+        <span class="c1"># overwrite dummy values with values from flex config and append it to module config</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">mpc_dataclass</span><span class="o">.</span><span class="n">config_parameters_appendix</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">model_fields</span><span class="p">:</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">baseline_config_generator_data</span><span class="o">.</span><span class="n">model_fields</span><span class="p">:</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">baseline_config_generator_data</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">module_config</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">mpc_dataclass</span><span class="o">.</span><span class="n">config_parameters_appendix</span><span class="p">)</span>
+
+        <span class="c1"># freeze the config again</span>
+        <span class="n">module_config</span><span class="o">.</span><span class="n">model_config</span><span class="p">[</span><span class="s2">&quot;frozen&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="n">module_config</span></div>
+
+<div class="viewcode-block" id="FlexAgentGenerator.adapt_indicator_config"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_indicator_config">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">adapt_indicator_config</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">module_config</span><span class="p">:</span> <span class="n">FlexibilityIndicatorModuleConfig</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FlexibilityIndicatorModuleConfig</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adapt the indicator module config for automated flexibility quantification.&quot;&quot;&quot;</span>
+        <span class="c1"># append user-defined price var to indicator module config</span>
+        <span class="n">module_config</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">AgentVariable</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">module_config</span><span class="o">.</span><span class="n">price_variable</span><span class="p">,</span>
+                <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;ct/kWh&quot;</span><span class="p">,</span>
+                <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;pd.Series&quot;</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;electricity price&quot;</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="c1"># allow the module config to be changed</span>
+        <span class="n">module_config</span><span class="o">.</span><span class="n">model_config</span><span class="p">[</span><span class="s2">&quot;frozen&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="n">module_config</span><span class="o">.</span><span class="n">parameters</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">parameter</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">PREP_TIME</span><span class="p">:</span>
+                <span class="n">parameter</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">prep_time</span>
+            <span class="k">if</span> <span class="n">parameter</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">MARKET_TIME</span><span class="p">:</span>
+                <span class="n">parameter</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">market_time</span>
+            <span class="k">if</span> <span class="n">parameter</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">FLEX_EVENT_DURATION</span><span class="p">:</span>
+                <span class="n">parameter</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">flex_event_duration</span>
+            <span class="k">if</span> <span class="n">parameter</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;time_step&quot;</span><span class="p">:</span>
+                <span class="n">parameter</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">time_step</span>
+            <span class="k">if</span> <span class="n">parameter</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;prediction_horizon&quot;</span><span class="p">:</span>
+                <span class="n">parameter</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">prediction_horizon</span>
+
+        <span class="c1"># set power unit</span>
+        <span class="n">module_config</span><span class="o">.</span><span class="n">power_unit</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">baseline_config_generator_data</span><span class="o">.</span><span class="n">power_unit</span>
+        <span class="p">)</span>
+        <span class="n">module_config</span><span class="o">.</span><span class="n">results_file</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">results_directory</span>
+            <span class="o">/</span> <span class="n">module_config</span><span class="o">.</span><span class="n">results_file</span><span class="o">.</span><span class="n">name</span>
+        <span class="p">)</span>
+        <span class="n">module_config</span><span class="o">.</span><span class="n">model_config</span><span class="p">[</span><span class="s2">&quot;frozen&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">module_config</span></div>
+
+<div class="viewcode-block" id="FlexAgentGenerator.adapt_market_config"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_market_config">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">adapt_market_config</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">module_config</span><span class="p">:</span> <span class="n">FlexibilityMarketModuleConfig</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FlexibilityMarketModuleConfig</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adapt the market module config for automated flexibility quantification.&quot;&quot;&quot;</span>
+        <span class="c1"># allow the module config to be changed</span>
+        <span class="n">module_config</span><span class="o">.</span><span class="n">model_config</span><span class="p">[</span><span class="s2">&quot;frozen&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">module_config</span><span class="o">.</span><span class="n">__fields__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">market_module_config</span><span class="o">.</span><span class="n">__fields__</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">module_config</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span>
+                    <span class="n">field</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">market_module_config</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
+                <span class="p">)</span>
+        <span class="n">module_config</span><span class="o">.</span><span class="n">results_file</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">results_directory</span>
+            <span class="o">/</span> <span class="n">module_config</span><span class="o">.</span><span class="n">results_file</span><span class="o">.</span><span class="n">name</span>
+        <span class="p">)</span>
+        <span class="n">module_config</span><span class="o">.</span><span class="n">model_config</span><span class="p">[</span><span class="s2">&quot;frozen&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">module_config</span></div>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_flex_model_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate a python module for negative and positive flexibility agents from the Baseline MPC model.&quot;&quot;&quot;</span>
+        <span class="n">output_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">flex_files_directory</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">baseline_config_generator_data</span><span class="o">.</span><span class="n">created_flex_mpcs_file</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">opt_backend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">orig_mpc_module_config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
+
+        <span class="c1"># Extract the config class of the casadi model to check cost functions</span>
+        <span class="n">config_class</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">get_annotations</span><span class="p">(</span><span class="n">custom_injection</span><span class="p">(</span><span class="n">opt_backend</span><span class="p">))[</span><span class="s2">&quot;config&quot;</span><span class="p">]</span>
+        <span class="n">config_instance</span> <span class="o">=</span> <span class="n">config_class</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_variables_in_casadi_config</span><span class="p">(</span>
+            <span class="n">config_instance</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">neg_flex</span><span class="o">.</span><span class="n">flex_cost_function</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_variables_in_casadi_config</span><span class="p">(</span>
+            <span class="n">config_instance</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">pos_flex</span><span class="o">.</span><span class="n">flex_cost_function</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># parse mpc python file</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">opt_backend</span><span class="p">[</span><span class="s2">&quot;file&quot;</span><span class="p">],</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">source</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+
+        <span class="c1"># create modifiers for python file</span>
+        <span class="n">modifier_base</span> <span class="o">=</span> <span class="n">SetupSystemModifier</span><span class="p">(</span>
+            <span class="n">mpc_data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">baseline_config_generator_data</span><span class="p">,</span>
+            <span class="n">controls</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">controls</span><span class="p">,</span>
+            <span class="n">binary_controls</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">binary_controls</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="p">,</span> <span class="s2">&quot;binary_controls&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">modifier_pos</span> <span class="o">=</span> <span class="n">SetupSystemModifier</span><span class="p">(</span>
+            <span class="n">mpc_data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">pos_flex</span><span class="p">,</span>
+            <span class="n">controls</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_flex_mpc_module_config</span><span class="o">.</span><span class="n">controls</span><span class="p">,</span>
+            <span class="n">binary_controls</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_flex_mpc_module_config</span><span class="o">.</span><span class="n">binary_controls</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_flex_mpc_module_config</span><span class="p">,</span> <span class="s2">&quot;binary_controls&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">modifier_neg</span> <span class="o">=</span> <span class="n">SetupSystemModifier</span><span class="p">(</span>
+            <span class="n">mpc_data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">neg_flex</span><span class="p">,</span>
+            <span class="n">controls</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">neg_flex_mpc_module_config</span><span class="o">.</span><span class="n">controls</span><span class="p">,</span>
+            <span class="n">binary_controls</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">neg_flex_mpc_module_config</span><span class="o">.</span><span class="n">binary_controls</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neg_flex_mpc_module_config</span><span class="p">,</span> <span class="s2">&quot;binary_controls&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="c1"># run the modification</span>
+        <span class="n">modified_tree_base</span> <span class="o">=</span> <span class="n">modifier_base</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">tree</span><span class="p">))</span>
+        <span class="n">modified_tree_pos</span> <span class="o">=</span> <span class="n">modifier_pos</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">tree</span><span class="p">))</span>
+        <span class="n">modified_tree_neg</span> <span class="o">=</span> <span class="n">modifier_neg</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">tree</span><span class="p">))</span>
+        <span class="c1"># combine modifications to one file</span>
+        <span class="n">modified_tree</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="p">[],</span> <span class="n">type_ignores</span><span class="o">=</span><span class="p">[])</span>
+        <span class="n">modified_tree</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+            <span class="n">modified_tree_base</span><span class="o">.</span><span class="n">body</span> <span class="o">+</span> <span class="n">modified_tree_pos</span><span class="o">.</span><span class="n">body</span> <span class="o">+</span> <span class="n">modified_tree_neg</span><span class="o">.</span><span class="n">body</span>
+        <span class="p">)</span>
+        <span class="n">modified_source</span> <span class="o">=</span> <span class="n">astor</span><span class="o">.</span><span class="n">to_source</span><span class="p">(</span><span class="n">modified_tree</span><span class="p">)</span>
+        <span class="c1"># Use black to format the generated code</span>
+        <span class="n">formatted_code</span> <span class="o">=</span> <span class="n">black</span><span class="o">.</span><span class="n">format_str</span><span class="p">(</span><span class="n">modified_source</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">black</span><span class="o">.</span><span class="n">FileMode</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">overwrite_files</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">Path</span><span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">flex_files_directory</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">baseline_config_generator_data</span><span class="o">.</span><span class="n">created_flex_mpcs_file</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">formatted_code</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FlexAgentGenerator.check_variables_in_casadi_config"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.check_variables_in_casadi_config">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">check_variables_in_casadi_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">CasadiModelConfig</span><span class="p">,</span> <span class="n">expr</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if all variables in the expression are defined in the config.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            config: casadi model config.</span>
+<span class="sd">            expr: The expression to check.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If any variable in the expression is not defined in the config.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">variables_in_config</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_variable_names</span><span class="p">())</span>
+        <span class="n">variables_in_cost_function</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expr</span><span class="p">)))</span>
+        <span class="n">variables_in_cost_function</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">node</span><span class="o">.</span><span class="n">attr</span>
+            <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">variables_in_cost_function</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Attribute</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="n">variables_newly_created</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
+            <span class="n">weight</span><span class="o">.</span><span class="n">name</span>
+            <span class="k">for</span> <span class="n">weight</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">weights</span>
+        <span class="p">)</span>
+        <span class="n">unknown_vars</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">variables_in_cost_function</span> <span class="o">-</span> <span class="n">variables_in_config</span> <span class="o">-</span> <span class="n">variables_newly_created</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">unknown_vars</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown variables in new cost function: </span><span class="si">{</span><span class="n">unknown_vars</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FlexAgentGenerator.run_config_validations"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.run_config_validations">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">run_config_validations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Function to validate integrity of user-supplied flex config.</span>
+
+<span class="sd">        The following checks are performed:</span>
+<span class="sd">        1. Ensures the specified power variable exists in the MPC model outputs.</span>
+<span class="sd">        2. Ensures the specified comfort variable exists in the MPC model states.</span>
+<span class="sd">        3. Validates that the stored energy variable exists in MPC outputs if energy cost correction is enabled.</span>
+<span class="sd">        4. Verifies the supported collocation method is used; otherwise, switches to &#39;legendre&#39; and raises a warning.</span>
+<span class="sd">        5. Ensures that the sum of prep time, market time, and flex event duration does not exceed the prediction horizon.</span>
+<span class="sd">        6. Ensures market time equals the MPC model time step if market config is present.</span>
+<span class="sd">        7. Ensures that all flex time values are multiples of the MPC model time step.</span>
+<span class="sd">        8. Checks for mismatches between time-related parameters in the flex/MPC and indicator configs and issues warnings</span>
+<span class="sd">        when discrepancies exist, using the flex/MPC config values as the source of truth.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># check if the power variable exists in the mpc config</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">baseline_config_generator_data</span><span class="o">.</span><span class="n">power_variable</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">outputs</span>
+        <span class="p">]:</span>
+            <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Given power variable </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">baseline_config_generator_data</span><span class="o">.</span><span class="n">power_variable</span><span class="si">}</span><span class="s2"> is not defined as output in baseline mpc config.&quot;</span>
+            <span class="p">)</span>
+       
+        <span class="c1"># check if the comfort variable exists in the mpc slack variables</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">baseline_config_generator_data</span><span class="o">.</span><span class="n">comfort_variable</span><span class="p">:</span>
+            <span class="n">file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">][</span><span class="s2">&quot;file&quot;</span><span class="p">]</span>
+            <span class="n">class_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">][</span><span class="s2">&quot;class_name&quot;</span><span class="p">]</span>
+            <span class="c1"># Get the class</span>
+            <span class="n">dynamic_class</span> <span class="o">=</span> <span class="n">cmng</span><span class="o">.</span><span class="n">get_class_from_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">class_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">baseline_config_generator_data</span><span class="o">.</span><span class="n">comfort_variable</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span>
+                <span class="n">state</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">dynamic_class</span><span class="p">()</span><span class="o">.</span><span class="n">states</span>
+            <span class="p">]:</span>
+                <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Given comfort variable </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">baseline_config_generator_data</span><span class="o">.</span><span class="n">comfort_variable</span><span class="si">}</span><span class="s2"> is not defined as state in baseline mpc config.&quot;</span>
+                <span class="p">)</span>
+            
+        <span class="c1"># check if the energy storage variable exists in the mpc config</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">indicator_module_config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">enable_energy_costs_correction</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">indicator_module_config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">stored_energy_variable</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span>
+                <span class="n">output</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">outputs</span>
+            <span class="p">]:</span>
+                <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;The stored energy variable </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">indicator_module_config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">stored_energy_variable</span><span class="si">}</span><span class="s2"> is not defined in baseline mpc config. &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;It must be defined in the base MPC model and config as output if the correction of costs is enabled.&quot;</span>
+                <span class="p">)</span>
+            
+        <span class="c1"># raise warning if unsupported collocation method is used and change to supported method</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;discretization_options&quot;</span><span class="p">][</span><span class="s2">&quot;collocation_method&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;legendre&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Collocation method </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;discretization_options&quot;</span><span class="p">][</span><span class="s2">&quot;collocation_method&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1"> is not supported. &#39;</span>
+                                <span class="sa">f</span><span class="s1">&#39;Switching to method legendre.&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;discretization_options&quot;</span><span class="p">][</span><span class="s2">&quot;collocation_method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;legendre&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pos_flex_mpc_module_config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;discretization_options&quot;</span><span class="p">][</span><span class="s2">&quot;collocation_method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;legendre&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neg_flex_mpc_module_config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;discretization_options&quot;</span><span class="p">][</span><span class="s2">&quot;collocation_method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;legendre&quot;</span>
+
+        <span class="c1">#time data validations</span>
+        <span class="n">flex_times</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">glbs</span><span class="o">.</span><span class="n">PREP_TIME</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">prep_time</span><span class="p">,</span>
+            <span class="n">glbs</span><span class="o">.</span><span class="n">MARKET_TIME</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">market_time</span><span class="p">,</span>
+            <span class="n">glbs</span><span class="o">.</span><span class="n">FLEX_EVENT_DURATION</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">flex_event_duration</span>
+        <span class="p">}</span>
+        <span class="n">mpc_times</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">glbs</span><span class="o">.</span><span class="n">TIME_STEP</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">time_step</span><span class="p">,</span>
+            <span class="n">glbs</span><span class="o">.</span><span class="n">PREDICTION_HORIZON</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">prediction_horizon</span>
+        <span class="p">}</span>
+        <span class="c1"># total time length check (prep+market+flex_event)</span>
+        <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">flex_times</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">&gt;</span> <span class="n">mpc_times</span><span class="p">[</span><span class="s2">&quot;time_step&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">mpc_times</span><span class="p">[</span><span class="s2">&quot;prediction_horizon&quot;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Market time + prep time + flex event duration can not exceed the prediction horizon.&#39;</span><span class="p">)</span>
+        <span class="c1"># market time val check</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">market_config</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">flex_times</span><span class="p">[</span><span class="s2">&quot;market_time&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">mpc_times</span><span class="p">[</span><span class="s2">&quot;time_step&quot;</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Market time must be equal to the time step.&#39;</span><span class="p">)</span>
+        <span class="c1"># check for divisibility of flex_times by time_step </span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">flex_times</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="o">%</span> <span class="n">mpc_times</span><span class="p">[</span><span class="s2">&quot;time_step&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> is not a multiple of the time step. Please redefine.&#39;</span><span class="p">)</span>        
+        <span class="c1"># raise warning if parameter value in flex indicator module config differs from value in flex config/ baseline mpc module config</span>
+        <span class="k">for</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">indicator_module_config</span><span class="o">.</span><span class="n">parameters</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">parameter</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">parameter</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">flex_times</span><span class="p">:</span>
+                    <span class="n">flex_value</span> <span class="o">=</span> <span class="n">flex_times</span><span class="p">[</span><span class="n">parameter</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">parameter</span><span class="o">.</span><span class="n">value</span> <span class="o">!=</span> <span class="n">flex_value</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Value mismatch for </span><span class="si">{</span><span class="n">parameter</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> in flex config (field) and indicator module config (parameter). &#39;</span>
+                                            <span class="sa">f</span><span class="s1">&#39;Flex config value will be used.&#39;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">parameter</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">mpc_times</span><span class="p">:</span>
+                    <span class="n">mpc_value</span> <span class="o">=</span> <span class="n">mpc_times</span><span class="p">[</span><span class="n">parameter</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">parameter</span><span class="o">.</span><span class="n">value</span> <span class="o">!=</span> <span class="n">mpc_value</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Value mismatch for </span><span class="si">{</span><span class="n">parameter</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> in baseline MPC module config (field) and indicator module config (parameter). &#39;</span>
+                                            <span class="sa">f</span><span class="s1">&#39;Baseline MPC module config value will be used.&#39;</span><span class="p">)</span></div>
+                        
+<div class="viewcode-block" id="FlexAgentGenerator.adapt_sim_results_path"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_sim_results_path">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">adapt_sim_results_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">simulator_agent_config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Optional helper function to adapt file path for simulator results in sim config,</span>
+<span class="sd">        so that sim results land in the same results directory as flex results.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            simulator_agent_config: Path to the simulator agent config JSON file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The updated simulator config dictionary with the modified result file path.</span>
+<span class="sd">    </span>
+<span class="sd">        Raises:</span>
+<span class="sd">            FileNotFoundError: If the specified config file does not exist.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># open config and extract sim module</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">simulator_agent_config</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">sim_config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">sim_module_config</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">module</span> <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">sim_config</span><span class="p">[</span><span class="s2">&quot;modules&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">module</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;simulator&quot;</span><span class="p">),</span>
+            <span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="c1"># convert filename string to path and extract the name</span>
+        <span class="n">sim_file_name</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">sim_module_config</span><span class="p">[</span><span class="s2">&quot;result_filename&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">name</span>
+        <span class="c1"># set results path so that sim results lands in same directory as flex result CSVs</span>
+        <span class="n">sim_module_config</span><span class="p">[</span><span class="s2">&quot;result_filename&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">results_directory</span> <span class="o">/</span> <span class="n">sim_file_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">sim_config</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Felix Stegemerten.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
