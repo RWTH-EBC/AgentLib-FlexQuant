@@ -43,8 +43,9 @@ class FlexibilityShadowMPC(mpc_full.MPC):
 
         # get the value of the input and reformat index
         vals = strip_multi_index(inp.value)
-        # the MPC Predictions starts at t=env.now not t=0
-        vals.index += self.env.time
+        # add time shift env.now to the mpc prediction index if it starts at t=0
+        if vals.index[0] == 0:
+            vals.index += self.env.time
         # update value in the mapping dictionary
         self._full_controls[name].value = vals
         # update the AgentVariable
@@ -99,8 +100,9 @@ class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
 
         # get the value of the input and reformat index
         vals = strip_multi_index(inp.value)
-        # the MPC Predictions starts at t=env.now not t=0
-        vals.index += self.env.time
+        # add time shift env.now to the mpc prediction index if it starts at t=0
+        if vals.index[0] == 0:
+            vals.index += self.env.time
         # update value in the mapping dictionary
         self._full_controls[name].value = vals
         # update the AgentVariable
