@@ -381,6 +381,8 @@ class FlexAgentGenerator:
                             type='pd.Series'
                         )
                     )
+                    # change the alias of control variable in shadow mpc to prevent it from triggering the wrong callback
+                    control.alias = control.name + glbs.shadow_suffix
             # only communicate outputs for the shadow mpcs
             module_config.shared_variable_fields = ["outputs"]
         else:
