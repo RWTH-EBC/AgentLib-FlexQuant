@@ -171,7 +171,7 @@ class Results:
                 )
                 self.baseline_module_config = cmng.get_module(
                     config=self.baseline_agent_config,
-                    module_type=self._get_mpc_module_type(self.baseline_agent_config),
+                    module_type=self._get_flexquant_mpc_module_type(self.baseline_agent_config),
                 )
 
             elif file_path.name in self.config_filename_pos_flex:
@@ -180,7 +180,7 @@ class Results:
                 )
                 self.pos_flex_module_config = cmng.get_module(
                     config=self.pos_flex_agent_config,
-                    module_type=self._get_mpc_module_type(self.pos_flex_agent_config),
+                    module_type=self._get_flexquant_mpc_module_type(self.pos_flex_agent_config),
                 )
 
             elif file_path.name in self.config_filename_neg_flex:
@@ -189,7 +189,7 @@ class Results:
                 )
                 self.neg_flex_module_config = cmng.get_module(
                     config=self.neg_flex_agent_config,
-                    module_type=self._get_mpc_module_type(self.neg_flex_agent_config),
+                    module_type=self._get_flexquant_mpc_module_type(self.neg_flex_agent_config),
                 )
 
             elif file_path.name in self.config_filename_indicator:
@@ -238,7 +238,7 @@ class Results:
             skip_fields=["result_filename"]
         )
 
-    def _get_mpc_module_type(self, agent_config: AgentConfig) -> str:
+    def _get_flexquant_mpc_module_type(self, agent_config: AgentConfig) -> str:
         """Get the mpc module type from agent_config.
 
         The module type is defined in agentlib_flexquant.
