@@ -163,8 +163,13 @@
             <span class="n">module_type</span><span class="o">=</span><span class="n">cmng</span><span class="o">.</span><span class="n">get_orig_module_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">orig_mpc_agent_config</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="c1"># convert agentlib_mpc’s ModuleConfig to flexquant’s ModuleConfig to include additional fields not present in the original</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span> <span class="o">=</span> <span class="n">cmng</span><span class="o">.</span><span class="n">get_flex_mpc_module_config</span><span class="p">(</span><span class="n">agent_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_agent_config</span><span class="p">,</span> <span class="n">module_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="p">,</span>
-                                                                          <span class="n">module_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">baseline_config_generator_data</span><span class="o">.</span><span class="n">module_types</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">type</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span> <span class="o">=</span> <span class="n">cmng</span><span class="o">.</span><span class="n">get_flex_mpc_module_config</span><span class="p">(</span>
+            <span class="n">agent_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_agent_config</span><span class="p">,</span>
+            <span class="n">module_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="p">,</span>
+            <span class="n">module_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">baseline_config_generator_data</span><span class="o">.</span><span class="n">module_types</span><span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">type</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
         <span class="c1"># pos module</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pos_flex_mpc_module_config</span> <span class="o">=</span> <span class="n">cmng</span><span class="o">.</span><span class="n">get_module</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_flex_mpc_agent_config</span><span class="p">,</span>
@@ -450,6 +455,8 @@
                             <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;pd.Series&#39;</span>
                         <span class="p">)</span>
                     <span class="p">)</span>
+                    <span class="c1"># change the alias of control variable in shadow mpc to prevent it from triggering the wrong callback</span>
+                    <span class="n">control</span><span class="o">.</span><span class="n">alias</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="n">glbs</span><span class="o">.</span><span class="n">shadow_suffix</span>
             <span class="c1"># only communicate outputs for the shadow mpcs</span>
             <span class="n">module_config</span><span class="o">.</span><span class="n">shared_variable_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;outputs&quot;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>

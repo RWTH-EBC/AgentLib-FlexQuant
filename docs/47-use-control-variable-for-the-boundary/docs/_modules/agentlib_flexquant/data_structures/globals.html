@@ -95,8 +95,16 @@
 <span class="n">STORED_ENERGY_ALIAS_NEG</span> <span class="o">=</span> <span class="s2">&quot;_E_stored_neg&quot;</span>
 <span class="n">STORED_ENERGY_ALIAS_POS</span> <span class="o">=</span> <span class="s2">&quot;_E_stored_pos&quot;</span>
 
-<span class="n">SHADOW_MPC_COST_FUNCTION</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;return ca.if_else(self.time &lt; self.market_time.sym + self.prep_time.sym, obj_std, &quot;</span>
-                                   <span class="s2">&quot;ca.if_else(self.time &lt; self.market_time.sym + self.prep_time.sym + self.flex_event_duration.sym, obj_flex, obj_std))&quot;</span><span class="p">)</span>
+<span class="n">SHADOW_MPC_COST_FUNCTION</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;return ca.if_else(&quot;</span>
+                                    <span class="s2">&quot;self.time &lt; self.market_time.sym&quot;</span>
+                                                <span class="s2">&quot; + self.prep_time.sym, &quot;</span>
+                                    <span class="s2">&quot;obj_std, &quot;</span>
+                                    <span class="s2">&quot;ca.if_else(&quot;</span>
+                                    <span class="s2">&quot;self.time &lt; self.market_time.sym&quot;</span>
+                                                <span class="s2">&quot; + self.prep_time.sym&quot;</span>
+                                                <span class="s2">&quot; + self.flex_event_duration.sym, &quot;</span>
+                                    <span class="s2">&quot;obj_flex, &quot;</span>
+                                    <span class="s2">&quot;obj_std))&quot;</span><span class="p">)</span>
 
 <span class="n">full_trajectory_suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_full&quot;</span>
 <span class="n">shadow_suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_shadow&quot;</span>

@@ -117,8 +117,9 @@
 
         <span class="c1"># get the value of the input and reformat index</span>
         <span class="n">vals</span> <span class="o">=</span> <span class="n">strip_multi_index</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-        <span class="c1"># the MPC Predictions starts at t=env.now not t=0</span>
-        <span class="n">vals</span><span class="o">.</span><span class="n">index</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span>
+        <span class="c1"># add time shift env.now to the mpc prediction index if it starts at t=0</span>
+        <span class="k">if</span> <span class="n">vals</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">vals</span><span class="o">.</span><span class="n">index</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span>
         <span class="c1"># update value in the mapping dictionary</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_full_controls</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span>
         <span class="c1"># update the AgentVariable</span>
@@ -173,8 +174,9 @@
 
         <span class="c1"># get the value of the input and reformat index</span>
         <span class="n">vals</span> <span class="o">=</span> <span class="n">strip_multi_index</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-        <span class="c1"># the MPC Predictions starts at t=env.now not t=0</span>
-        <span class="n">vals</span><span class="o">.</span><span class="n">index</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span>
+        <span class="c1"># add time shift env.now to the mpc prediction index if it starts at t=0</span>
+        <span class="k">if</span> <span class="n">vals</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">vals</span><span class="o">.</span><span class="n">index</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span>
         <span class="c1"># update value in the mapping dictionary</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_full_controls</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span>
         <span class="c1"># update the AgentVariable</span>
