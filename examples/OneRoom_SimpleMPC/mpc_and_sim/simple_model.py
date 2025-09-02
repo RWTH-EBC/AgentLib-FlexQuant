@@ -6,12 +6,11 @@ from agentlib_mpc.models.casadi_model import (
     CasadiOutput,
     CasadiModelConfig,
 )
-from typing import List
 from math import inf
 
 
 class BaselineMPCModelConfig(CasadiModelConfig):
-    inputs: List[CasadiInput] = [
+    inputs: list[CasadiInput] = [
         # controls
         CasadiInput(
             name="mDot", value=0.0225, unit="kg/s", description="Air mass flow into zone"
@@ -39,7 +38,7 @@ class BaselineMPCModelConfig(CasadiModelConfig):
 
     ]
 
-    states: List[CasadiState] = [
+    states: list[CasadiState] = [
         # differential
         CasadiState(
             name="T", value=293.15, unit="K", description="Temperature of zone"
@@ -55,7 +54,7 @@ class BaselineMPCModelConfig(CasadiModelConfig):
         
     ]
 
-    parameters: List[CasadiParameter] = [
+    parameters: list[CasadiParameter] = [
         CasadiParameter(
             name="cp",
             value=1000,
@@ -79,7 +78,7 @@ class BaselineMPCModelConfig(CasadiModelConfig):
         ),
 
     ]
-    outputs: List[CasadiOutput] = [
+    outputs: list[CasadiOutput] = [
         CasadiOutput(name="T_out", unit="K", description="Temperature of zone"),
         CasadiOutput(name="E_out", unit="kWh", description="Stored energy in the zone w.r.t. 0K"),
         CasadiOutput(
@@ -104,7 +103,7 @@ class BaselineMPCModel(CasadiModel):
         self.T_out.alg = self.T  # math operation to get the symbolic variable
         self.E_out.alg = - self.T * self.C / (3600*1000)  # stored electrical energy in kWh
 
-        # Constraints: List[(lower bound, function, upper bound)]
+        # Constraints: list[(lower bound, function, upper bound)]
         self.constraints = [
             # soft constraints
             (self.T_lower, self.T + self.T_slack, inf),

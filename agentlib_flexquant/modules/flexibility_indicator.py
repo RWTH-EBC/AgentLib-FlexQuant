@@ -3,7 +3,7 @@ import os
 import numpy as np
 import pandas as pd
 from pathlib import Path
-from typing import List, Optional
+from typing import Optional
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 import agentlib
 import agentlib_flexquant.data_structures.globals as glbs
@@ -66,7 +66,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         extra='forbid'
     )
 
-    inputs: List[agentlib.AgentVariable] = [
+    inputs: list[agentlib.AgentVariable] = [
         agentlib.AgentVariable(name=glbs.POWER_ALIAS_BASE, unit="W", type="pd.Series",
                                description="The power input to the system"),
         agentlib.AgentVariable(name=glbs.POWER_ALIAS_NEG, unit="W", type="pd.Series",
@@ -81,7 +81,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
                                description="Energy stored in the system w.r.t. 0K")
     ]
 
-    outputs: List[agentlib.AgentVariable] = [
+    outputs: list[agentlib.AgentVariable] = [
         # Flexibility offer
         agentlib.AgentVariable(name=glbs.FlexibilityOffer, type="FlexOffer"),
 
@@ -180,7 +180,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         )
     ]
 
-    parameters: List[agentlib.AgentVariable] = [
+    parameters: list[agentlib.AgentVariable] = [
         agentlib.AgentVariable(name=glbs.PREP_TIME, unit="s",
                                description="Preparation time"),
         agentlib.AgentVariable(name=glbs.MARKET_TIME, unit="s",
@@ -209,7 +209,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         default="kW",
         description="Unit of the power variable"
     )
-    shared_variable_fields: List[str] = ["outputs"]
+    shared_variable_fields: list[str] = ["outputs"]
 
     correct_costs: InputsForCorrectFlexCosts = InputsForCorrectFlexCosts()
     calculate_costs: InputsForCalculateFlexCosts = InputsForCalculateFlexCosts()

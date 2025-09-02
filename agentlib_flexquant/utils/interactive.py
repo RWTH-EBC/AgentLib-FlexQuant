@@ -144,6 +144,7 @@ class Dashboard(flex_results.Results):
         else:
             self.custom_bounds = custom_bounds
 
+
         # Plotting functions
         def plot_mpc_stats(fig: go.Figure, variable: str) -> go.Figure:
             """ plot the statics of the baseline and shadow mpcs.

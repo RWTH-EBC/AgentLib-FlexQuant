@@ -20,7 +20,7 @@ class ShadowMPCConfigGeneratorConfig(pydantic.BaseModel):
         json_encoders={MPCVariable: lambda v: v.dict()},
         extra='forbid'
     )    
-    weights: List[MPCVariable] = pydantic.Field(
+    weights: list[MPCVariable] = pydantic.Field(
         default=[],
         description="Name and value of weights",
     )

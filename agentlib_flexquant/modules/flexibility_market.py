@@ -16,11 +16,11 @@ class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
         extra='forbid'
     )
 
-    inputs: List[AgentVariable] = [
+    inputs: list[AgentVariable] = [
         AgentVariable(name="FlexibilityOffer")
     ]
 
-    outputs: List[AgentVariable] = [
+    outputs: list[AgentVariable] = [
         AgentVariable(
             name="_P_external", alias="_P_external",
             description="External Power IO"
@@ -50,7 +50,7 @@ class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
         default=True
     )
 
-    shared_variable_fields: List[str] = ["outputs"]
+    shared_variable_fields: list[str] = ["outputs"]
 
     @model_validator(mode="after")
     def check_results_file_extension(self):
