@@ -89,8 +89,13 @@ class FlexAgentGenerator:
             module_type=cmng.get_orig_module_type(self.orig_mpc_agent_config),
         )
         # convert agentlib_mpc’s ModuleConfig to flexquant’s ModuleConfig to include additional fields not present in the original
-        self.baseline_mpc_module_config = cmng.get_flex_mpc_module_config(agent_config=self.baseline_mpc_agent_config, module_config=self.baseline_mpc_module_config,
-                                                                          module_type=self.flex_config.baseline_config_generator_data.module_types[self.baseline_mpc_module_config.type])
+        self.baseline_mpc_module_config = cmng.get_flex_mpc_module_config(
+            agent_config=self.baseline_mpc_agent_config,
+            module_config=self.baseline_mpc_module_config,
+            module_type=self.flex_config.baseline_config_generator_data.module_types[
+                self.baseline_mpc_module_config.type
+            ]
+        )
         # pos module
         self.pos_flex_mpc_module_config = cmng.get_module(
             config=self.pos_flex_mpc_agent_config,
