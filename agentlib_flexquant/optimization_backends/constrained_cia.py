@@ -4,10 +4,7 @@ from agentlib.core.errors import OptionalDependencyError
 from agentlib_mpc.optimization_backends.casadi_.minlp_cia import CasADiCIABackend
 from agentlib_mpc.optimization_backends.casadi_.core.casadi_backend import CasadiBackendConfig
 from agentlib_mpc.data_structures.mpc_datamodels import MINLPVariableReference
-from agentlib_flexquant.data_structures.globals import (
-    full_trajectory_prefix,
-    full_trajectory_suffix,
-)
+from agentlib_flexquant.data_structures.globals import full_trajectory_prefix, full_trajectory_suffix
 
 try:
     import pycombina

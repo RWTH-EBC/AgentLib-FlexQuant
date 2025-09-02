@@ -7,7 +7,6 @@ import agentlib_flexquant.utils.config_management as cmng
 
 class BaseMPCData(pydantic.BaseModel):
     """Base class containing necessary data for the code creation of the different mpcs"""
-
     # files and paths
     created_flex_mpcs_file: str = "flex_agents.py"
     name_of_created_file: str
@@ -30,7 +29,6 @@ class BaseMPCData(pydantic.BaseModel):
 
 class BaselineMPCData(BaseMPCData):
     """Data class for Baseline MPC"""
-
     # files and paths
     results_suffix: str = "_base.csv"
     name_of_created_file: str = "baseline.json"
@@ -96,7 +94,6 @@ class BaselineMPCData(BaseMPCData):
 
 class PFMPCData(BaseMPCData):
     """Data class for PF-MPC"""
-
     # files and paths
     results_suffix: str = "_pos_flex.csv"
     name_of_created_file: str = "pos_flex.json"
@@ -129,7 +126,6 @@ class PFMPCData(BaseMPCData):
 
 class NFMPCData(BaseMPCData):
     """Data class for PF-MPC"""
-
     # files and paths
     results_suffix: str = "_neg_flex.csv"
     name_of_created_file: str = "neg_flex.json"
