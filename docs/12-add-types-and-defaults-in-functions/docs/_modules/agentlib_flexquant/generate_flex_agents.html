@@ -77,13 +77,13 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
-
 <span class="kn">import</span><span class="w"> </span><span class="nn">astor</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">black</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">FilePath</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.core.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentConfig</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.core.datamodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentVariable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigurationError</span>
@@ -92,32 +92,27 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.data_structures.mpc_datamodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPCVariable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.models.casadi_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">CasadiModelConfig</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.modules.mpc_full</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPCConfig</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">FilePath</span>
-
 <span class="kn">import</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">glbs</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">agentlib_flexquant.utils.config_management</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cmng</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.utils.parsing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">SetupSystemModifier</span><span class="p">,</span> 
-    <span class="n">add_import_to_tree</span>
-<span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.flexquant</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">FlexibilityIndicatorConfig</span><span class="p">,</span> 
-    <span class="n">FlexibilityMarketConfig</span><span class="p">,</span> 
-    <span class="n">FlexQuantConfig</span>
-<span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.mpcs</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">BaselineMPCData</span><span class="p">,</span>
-    <span class="n">BaseMPCData</span>
-<span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.modules.flexibility_indicator</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">FlexibilityIndicatorModuleConfig</span>
-<span class="p">)</span>    
-<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.modules.flexibility_market</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">FlexibilityMarketModuleConfig</span>
-<span class="p">)</span>   
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.utils.parsing</span><span class="w"> </span><span class="kn">import</span> <span class="n">SetupSystemModifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.flexquant</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlexibilityIndicatorConfig</span><span class="p">,</span> <span class="n">FlexibilityMarketConfig</span><span class="p">,</span> <span class="n">FlexQuantConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.mpcs</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaselineMPCData</span><span class="p">,</span> <span class="n">BaseMPCData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.modules.flexibility_indicator</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlexibilityIndicatorModuleConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.modules.flexibility_market</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlexibilityMarketModuleConfig</span>
 
 
 <div class="viewcode-block" id="FlexAgentGenerator"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexAgentGenerator</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for generating the flex agents</span>
+
+<span class="sd">    orig_mpc_module_config: the config for the original mpc, which has nothing to do with the flexibility quantification</span>
+<span class="sd">    baseline_mpc_module_config: the config for the baseline mpc for flexibility quantification</span>
+<span class="sd">    pos_flex_mpc_module_config: the config for the positive flexibility mpc for flexibility quantification</span>
+<span class="sd">    neg_flex_mpc_module_config: the config for the negative flexibility mpc for flexibility quantification</span>
+<span class="sd">    indicator_module_config: the config for the indicator for flexibility quantification</span>
+<span class="sd">    market_module_config: the config for the market for flexibility quantification</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">orig_mpc_module_config</span><span class="p">:</span> <span class="n">MPCConfig</span>
     <span class="n">baseline_mpc_module_config</span><span class="p">:</span> <span class="n">MPCConfig</span>
     <span class="n">pos_flex_mpc_module_config</span><span class="p">:</span> <span class="n">MPCConfig</span>
@@ -202,8 +197,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">run_config_validations</span><span class="p">()</span>
 
 <div class="viewcode-block" id="FlexAgentGenerator.generate_flex_agents"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.generate_flex_agents">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">generate_flex_agents</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates the configs and the python module for the flexibility agents.</span>
-<span class="sd">        Power variable must be defined in the mpc config.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate the configs and the python module for the flexibility agents.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list of the full path for baseline mpc, pos_flex mpc, neg_flex mpc, indicator and market config</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># adapt modules to include necessary communication variables</span>
@@ -280,9 +277,17 @@
         <span class="n">module_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">config_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Appends the given module config to the given agent config and dumps the agent config to a</span>
-<span class="sd">        json file. The json file is named based on the config_name.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Append the given module config to the given agent config and dumps the agent config to a json file.</span>
 
+<span class="sd">        The json file is named based on the config_name.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            module: The module config to be appended.</span>
+<span class="sd">            agent: The agent config to be updated.</span>
+<span class="sd">            module_type: The type of the module</span>
+<span class="sd">            config_name: The name of the json file for module config (e.g. baseline.json)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># if module is not from the baseline, set a new agent id, based on module id</span>
         <span class="k">if</span> <span class="n">module</span><span class="o">.</span><span class="n">type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
             <span class="n">agent</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">module_id</span>
@@ -314,9 +319,7 @@
             <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Provided agent config does not contain any modules.&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlexAgentGenerator.get_config_file_paths"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.get_config_file_paths">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_config_file_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a list of paths with the created config files</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a list of paths with the created config files.&quot;&quot;&quot;</span>
         <span class="n">paths</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">flex_files_directory</span><span class="p">,</span>
@@ -345,9 +348,7 @@
         <span class="k">return</span> <span class="n">paths</span></div>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_delete_created_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Function to run at exit if the files are to be deleted</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Function to run at exit if the files are to be deleted.&quot;&quot;&quot;</span>
         <span class="n">to_be_deleted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_config_file_paths</span><span class="p">()</span>
         <span class="n">to_be_deleted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
@@ -363,14 +364,22 @@
 <div class="viewcode-block" id="FlexAgentGenerator.adapt_mpc_module_config"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_mpc_module_config">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">adapt_mpc_module_config</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">module_config</span><span class="p">:</span> <span class="n">MPCConfig</span><span class="p">,</span> <span class="n">mpc_dataclass</span><span class="p">:</span> <span class="n">BaseMPCData</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MPCConfig</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adapts the mpc module config for automated flexibility quantification.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adapt the mpc module config for automated flexibility quantification.</span>
+
 <span class="sd">        Things adapted among others are:</span>
 <span class="sd">        - the file name/path of the mpc config file</span>
 <span class="sd">        - names of the control variables for the shadow mpcs</span>
 <span class="sd">        - reduce communicated variables of shadow mpcs to outputs</span>
 <span class="sd">        - add the power variable to the outputs</span>
-<span class="sd">        - add the Time variable to the inputs</span>
 <span class="sd">        - add parameters for the activation and quantification of flexibility</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            module_config: The module config to be adapted</span>
+<span class="sd">            mpc_dataclass: The dataclass corresponding to the type of the MPC module.</span>
+<span class="sd">                           It contains all the extra data necessary for flexibility quantification, which will be used to update the module_config.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The adapted module config</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># allow the module config to be changed</span>
@@ -507,9 +516,7 @@
 <div class="viewcode-block" id="FlexAgentGenerator.adapt_indicator_config"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_indicator_config">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">adapt_indicator_config</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">module_config</span><span class="p">:</span> <span class="n">FlexibilityIndicatorModuleConfig</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FlexibilityIndicatorModuleConfig</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adapts the indicator module config for automated flexibility quantification.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adapt the indicator module config for automated flexibility quantification.&quot;&quot;&quot;</span>
         <span class="c1"># append user-defined price var to indicator module config</span>
         <span class="n">module_config</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="n">AgentVariable</span><span class="p">(</span>
@@ -547,9 +554,7 @@
 <div class="viewcode-block" id="FlexAgentGenerator.adapt_market_config"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_market_config">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">adapt_market_config</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">module_config</span><span class="p">:</span> <span class="n">FlexibilityMarketModuleConfig</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FlexibilityMarketModuleConfig</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adapts the market module config for automated flexibility quantification.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adapt the market module config for automated flexibility quantification.&quot;&quot;&quot;</span>
         <span class="c1"># allow the module config to be changed</span>
         <span class="n">module_config</span><span class="o">.</span><span class="n">model_config</span><span class="p">[</span><span class="s2">&quot;frozen&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">module_config</span><span class="o">.</span><span class="n">__fields__</span><span class="p">:</span>
@@ -565,10 +570,7 @@
         <span class="k">return</span> <span class="n">module_config</span></div>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_generate_flex_model_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates a python module for negative and positive flexibility agents from</span>
-<span class="sd">        the Baseline MPC model</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate a python module for negative and positive flexibility agents from the Baseline MPC model.&quot;&quot;&quot;</span>
         <span class="n">output_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">flex_files_directory</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">baseline_config_generator_data</span><span class="o">.</span><span class="n">created_flex_mpcs_file</span><span class="p">,</span>
@@ -639,8 +641,8 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if all variables in the expression are defined in the config.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            config (CasadiModelConfig): casadi model config.</span>
-<span class="sd">            expr (str): The expression to check.</span>
+<span class="sd">            config: casadi model config.</span>
+<span class="sd">            expr: The expression to check.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If any variable in the expression is not defined in the config.</span>
@@ -664,8 +666,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown variables in new cost function: </span><span class="si">{</span><span class="n">unknown_vars</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlexAgentGenerator.run_config_validations"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.run_config_validations">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">run_config_validations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Function to validate integrity of user-supplied flex config.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Function to validate integrity of user-supplied flex config.</span>
 
 <span class="sd">        The following checks are performed:</span>
 <span class="sd">        1. Ensures the specified power variable exists in the MPC model outputs.</span>
@@ -754,14 +755,14 @@
                                             <span class="sa">f</span><span class="s1">&#39;Baseline MPC module config value will be used.&#39;</span><span class="p">)</span></div>
                         
 <div class="viewcode-block" id="FlexAgentGenerator.adapt_sim_results_path"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_sim_results_path">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">adapt_sim_results_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">simulator_agent_config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; </span>
-<span class="sd">        Optional helper function to adapt file path for simulator results in sim config</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Optional helper function to adapt file path for simulator results in sim config,</span>
 <span class="sd">        so that sim results land in the same results directory as flex results.</span>
+
 <span class="sd">        Args:</span>
-<span class="sd">            simulator_agent_config (Union[str, Path]): Path to the simulator agent config JSON file.</span>
+<span class="sd">            simulator_agent_config: Path to the simulator agent config JSON file.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            dict: The updated simulator config with the modified result file path.</span>
+<span class="sd">            The updated simulator config dictionary with the modified result file path.</span>
 <span class="sd">    </span>
 <span class="sd">        Raises:</span>
 <span class="sd">            FileNotFoundError: If the specified config file does not exist.</span>

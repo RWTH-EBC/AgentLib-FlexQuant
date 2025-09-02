@@ -211,8 +211,11 @@
 <span class="sig-name descname"><span class="pre">calculate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enable_energy_costs_correction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calculate_flex_cost</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flex_kpis.html#FlexibilityData.calculate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData.calculate" title="Permalink to this definition"></a></dt>
 <dd><p>Calculate the KPIs for the positive and negative flexibility.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>positive KPIs, negative KPIs</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>enable_energy_costs_correction</strong> – whether the energy costs should be corrected</p></li>
+<li><p><strong>calculate_flex_cost</strong> – whether the cost of the flexibility should be calculated</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -357,8 +360,22 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs.calculate">
 <span class="sig-name descname"><span class="pre">calculate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">power_profile_base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power_profile_shadow</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">electricity_price_series</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpc_time_grid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flex_offer_time_grid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stored_energy_base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stored_energy_shadow</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_energy_costs_correction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calculate_flex_cost</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flex_kpis.html#FlexibilityKPIs.calculate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs.calculate" title="Permalink to this definition"></a></dt>
-<dd><p>Calculate the KPIs based on the power and electricity input profiles.
-Time grids needed for indexing of the power flexibility profiles.</p>
+<dd><p>Calculate the KPIs based on the power and electricity price input profiles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>power_profile_base</strong> – power profile from baseline mpc</p></li>
+<li><p><strong>power_profile_shadow</strong> – power profile from shadow mpc</p></li>
+<li><p><strong>electricity_price_series</strong> – time series of electricity prices</p></li>
+<li><p><strong>mpc_time_grid</strong> – time grid over the MPC horizon with intervals of time_step</p></li>
+<li><p><strong>flex_offer_time_grid</strong> – time grid over which the flexibility offer is calculated, for indexing of the power flexibility profiles</p></li>
+<li><p><strong>stored_energy_base</strong> – time series of stored energy from baseline mpc</p></li>
+<li><p><strong>stored_energy_shadow</strong> – time series of stored energy from shadow mpc</p></li>
+<li><p><strong>enable_energy_costs_correction</strong> – whether the energy costs should be corrected</p></li>
+<li><p><strong>calculate_flex_cost</strong> – whether the cost of the flexibility should be calculated</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -367,7 +384,10 @@ Time grids needed for indexing of the power flexibility profiles.</p>
 <dd><p>Get the KPIs as a dictionary with names or identifier as keys.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>identifier</strong> – If True, the keys are the identifiers of the KPIs, otherwise the name of the kpi.</p>
+<dd class="field-odd"><p><strong>identifier</strong> – If True, the keys are the identifiers of the KPIs, otherwise the name of the KPI.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary mapping desired KPI keys to KPI.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -375,7 +395,8 @@ Time grids needed for indexing of the power flexibility profiles.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs.get_name_dict">
 <span class="sig-name descname"><span class="pre">get_name_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flex_kpis.html#FlexibilityKPIs.get_name_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs.get_name_dict" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Get KPIs mapping.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Dictionary of the kpis with names as keys and the identifiers as values.</p>
 </dd>
@@ -442,7 +463,8 @@ Time grids needed for indexing of the power flexibility profiles.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flex_kpis.KPI.get_kpi_identifier">
 <span class="sig-name descname"><span class="pre">get_kpi_identifier</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flex_kpis.html#KPI.get_kpi_identifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flex_kpis.KPI.get_kpi_identifier" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get the identifier of the KPI composed of the direction of the flexibility and the KPI name.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -450,6 +472,7 @@ Time grids needed for indexing of the power flexibility profiles.</p>
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flex_kpis.KPISeries">
 <em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.data_structures.flex_kpis.</span></span><span class="sig-name descname"><span class="pre">KPISeries</span></span><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flex_kpis.html#KPISeries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flex_kpis.KPISeries" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#agentlib_flexquant.data_structures.flex_kpis.KPI" title="agentlib_flexquant.data_structures.flex_kpis.KPI"><code class="xref py py-class docutils literal notranslate"><span class="pre">KPI</span></code></a></p>
+<p>Class defining extra attributes of the indicator KPISeries in addition to KPI.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -478,24 +501,34 @@ Time grids needed for indexing of the power flexibility profiles.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flex_kpis.KPISeries.avg">
 <span class="sig-name descname"><span class="pre">avg</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flex_kpis.html#KPISeries.avg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flex_kpis.KPISeries.avg" title="Permalink to this definition"></a></dt>
-<dd><p>Calculate the average value of the KPI over time.</p>
+<dd><p>Calculate the average value of the KPISeries over time.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flex_kpis.KPISeries.integrate">
 <span class="sig-name descname"><span class="pre">integrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_unit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'seconds'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'minutes'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'hours'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'days'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'seconds'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flex_kpis.html#KPISeries.integrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flex_kpis.KPISeries.integrate" title="Permalink to this definition"></a></dt>
-<dd><p>Integrate the value of the KPI over time by summing up the product of values and the time difference.</p>
+<dd><p>Integrate the value of the KPISeries over time by summing up the product of values and the time difference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>time_unit</strong> – The time unit the integrated value should have</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The integrated value of the KPISeries</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flex_kpis.KPISeries.max">
 <span class="sig-name descname"><span class="pre">max</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flex_kpis.html#KPISeries.max"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flex_kpis.KPISeries.max" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get the maximum of a KPISeries.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flex_kpis.KPISeries.min">
 <span class="sig-name descname"><span class="pre">min</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flex_kpis.html#KPISeries.min"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flex_kpis.KPISeries.min" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get the minimum of a KPISeries.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -506,7 +539,7 @@ Time grids needed for indexing of the power flexibility profiles.</p>
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flex_offer.FlexOffer">
 <em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.data_structures.flex_offer.</span></span><span class="sig-name descname"><span class="pre">FlexOffer</span></span><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flex_offer.html#FlexOffer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flex_offer.FlexOffer" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
-<p>Data class for the flexibility offer</p>
+<p>Data class for the flexibility offer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -574,7 +607,13 @@ Time grids needed for indexing of the power flexibility profiles.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flex_offer.FlexOffer.as_dataframe">
 <span class="sig-name descname"><span class="pre">as_dataframe</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flex_offer.html#FlexOffer.as_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flex_offer.FlexOffer.as_dataframe" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the offer as a dataframe. Scalar values are written on the first timestep</p>
+<dd><p>Store the flexibility offer in a pd.DataFrame</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataFrame containing the flexibility offer.
+Scalar values are written on the first timestep.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -621,8 +660,11 @@ Time grids needed for indexing of the power flexibility profiles.</p>
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flex_results.Results.convert_timescale_of_dataframe_index">
 <span class="sig-name descname"><span class="pre">convert_timescale_of_dataframe_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">to_timescale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'seconds'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'minutes'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'hours'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'days'</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flex_results.html#Results.convert_timescale_of_dataframe_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flex_results.Results.convert_timescale_of_dataframe_index" title="Permalink to this definition"></a></dt>
 <dd><p>Convert the time in the dataframes to the desired timescale</p>
-<p>Keyword arguments:
-timescale – The timescale to convert the data to</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>to_timescale</strong> – The timescale to convert the data to</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -635,9 +677,9 @@ after construction without triggering their validators.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>model_class</strong> (<em>Type</em><em>[</em><em>BaseModel</em><em>]</em>) – The Pydantic model class to instantiate.</p></li>
-<li><p><strong>config</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – The input configuration dictionary.</p></li>
-<li><p><strong>skip_fields</strong> (<em>Optional</em><em>[</em><em>list</em><em>[</em><em>str</em><em>]</em><em>]</em>) – A list of field names to exclude from validation.
+<li><p><strong>model_class</strong> – The Pydantic model class to instantiate.</p></li>
+<li><p><strong>config</strong> – The input configuration dictionary.</p></li>
+<li><p><strong>skip_fields</strong> – A list of field names to exclude from validation.
 These fields will be manually set after instantiation.</p></li>
 </ul>
 </dd>
@@ -708,10 +750,19 @@ These fields will be manually set after instantiation.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flex_results.Results.get_intersection_mpcs_sim">
 <span class="sig-name descname"><span class="pre">get_intersection_mpcs_sim</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flex_results.html#Results.get_intersection_mpcs_sim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flex_results.Results.get_intersection_mpcs_sim" title="Permalink to this definition"></a></dt>
-<dd><p>Get the intersection of the MPCs and the simulator variables.
-returns a dictionary with the following structure:
-Key: variable alias (from baseline)
-Value: {module id: variable name}</p>
+<dd><p>Get the intersection of the MPCs and the simulator variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Key: variable alias (from baseline)</dt><dd><p>Value: {module id: variable name}</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dictionary with the following structure</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
@@ -769,13 +820,29 @@ Value: {module id: variable name}</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flex_results.load_indicator">
 <span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.data_structures.flex_results.</span></span><span class="sig-name descname"><span class="pre">load_indicator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flex_results.html#load_indicator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flex_results.load_indicator" title="Permalink to this definition"></a></dt>
-<dd><p>Load the flexibility indicator results from the given file path</p>
+<dd><p>Load the flexibility indicator results from the given file path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> – the file path of the indicator results file</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>DataFrame containing the indicator results</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flex_results.load_market">
 <span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.data_structures.flex_results.</span></span><span class="sig-name descname"><span class="pre">load_market</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flex_results.html#load_market"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flex_results.load_market" title="Permalink to this definition"></a></dt>
-<dd><p>Load the market results from the given file path</p>
+<dd><p>Load the market results from the given file path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> – the file path of the market results file</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>DataFrame containing the market results</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -1002,9 +1069,9 @@ Value: {module id: variable name}</p>
 <dl class="py method pydantic_validator">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory">
 <em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">adapt_paths_and_create_directory</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flexquant.html#FlexQuantConfig.adapt_paths_and_create_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory" title="Permalink to this definition"></a></dt>
-<dd><p>Adjusts and ensures the directory structure for flex file generation and results storage.</p>
+<dd><p>Adjust and ensure the directory structure for flex file generation and results storage.</p>
 <p>This method:
-- Updates <cite>flex_files_directory</cite> and <cite>results_directory</cite> paths so they are relative to
+- Updates <cite>flex_files_directory</cite> and <cite>results_directory</cite> paths, so they are relative to
 the base flex directory, using only the directory names (ignoring any user-supplied paths).
 - Creates the base, flex files, and results directories if they do not already exist.</p>
 </dd></dl>
@@ -1012,7 +1079,7 @@ the base flex directory, using only the directory names (ignoring any user-suppl
 <dl class="py method pydantic_validator">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension">
 <em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_config_file_extension</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flexquant.html#FlexQuantConfig.check_config_file_extension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension" title="Permalink to this definition"></a></dt>
-<dd><p>Validates that the indicator and market config file paths have a ‘.json’ extension.</p>
+<dd><p>Validate that the indicator and market config file paths have a ‘.json’ extension.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>ValueError</strong> – If either file does not have the expected ‘.json’ extension.</p>
@@ -1030,7 +1097,7 @@ the base flex directory, using only the directory names (ignoring any user-suppl
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘pathlib.Path’&gt;: &lt;class ‘str’&gt;, &lt;class ‘agentlib.core.agent.AgentConfig’&gt;: &lt;function FlexibilityIndicatorConfig.&lt;lambda&gt; at 0x7f06c1b396c0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘pathlib.Path’&gt;: &lt;class ‘str’&gt;, &lt;class ‘agentlib.core.agent.AgentConfig’&gt;: &lt;function FlexibilityIndicatorConfig.&lt;lambda&gt; at 0x7fe13cbd6700&gt;}</em></p></li>
 <li><p><strong>extra</strong>: <em>str = forbid</em></p></li>
 </ul>
 </dd>
@@ -1133,7 +1200,7 @@ the base flex directory, using only the directory names (ignoring any user-suppl
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function ShadowMPCConfigGeneratorConfig.&lt;lambda&gt; at 0x7f06c1b393a0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function ShadowMPCConfigGeneratorConfig.&lt;lambda&gt; at 0x7fe13cbd63e0&gt;}</em></p></li>
 <li><p><strong>extra</strong>: <em>str = forbid</em></p></li>
 </ul>
 </dd>
@@ -1203,7 +1270,19 @@ the base flex directory, using only the directory names (ignoring any user-suppl
 <dl class="py function">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.globals.return_baseline_cost_function">
 <span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.data_structures.globals.</span></span><span class="sig-name descname"><span class="pre">return_baseline_cost_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">power_variable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comfort_variable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/globals.html#return_baseline_cost_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.globals.return_baseline_cost_function" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Return baseline cost function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>power_variable</strong> – name of the power variable</p></li>
+<li><p><strong>comfort_variable</strong> – name of the comfort variable</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Cost function in the baseline mpc, obj_std is to be evaluated according to user definition</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 <section id="module-agentlib_flexquant.data_structures.market">
@@ -1434,7 +1513,7 @@ the base flex directory, using only the directory names (ignoring any user-suppl
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function BaseMPCData.&lt;lambda&gt; at 0x7f06c1b382c0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function BaseMPCData.&lt;lambda&gt; at 0x7fe13cbd5300&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -1519,7 +1598,7 @@ the base flex directory, using only the directory names (ignoring any user-suppl
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function BaselineMPCData.&lt;lambda&gt; at 0x7f06c1b38400&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function BaselineMPCData.&lt;lambda&gt; at 0x7fe13cbd5440&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -1748,7 +1827,7 @@ the base flex directory, using only the directory names (ignoring any user-suppl
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function NFMPCData.&lt;lambda&gt; at 0x7f06c1b387c0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function NFMPCData.&lt;lambda&gt; at 0x7fe13cbd5800&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -1834,7 +1913,7 @@ the base flex directory, using only the directory names (ignoring any user-suppl
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function PFMPCData.&lt;lambda&gt; at 0x7f06c1b385e0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function PFMPCData.&lt;lambda&gt; at 0x7fe13cbd5620&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>

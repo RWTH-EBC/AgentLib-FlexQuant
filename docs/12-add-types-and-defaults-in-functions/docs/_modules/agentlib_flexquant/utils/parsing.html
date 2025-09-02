@@ -87,7 +87,6 @@
     <span class="n">return_baseline_cost_function</span><span class="p">,</span>
     <span class="n">full_trajectory_prefix</span><span class="p">,</span>
     <span class="n">full_trajectory_suffix</span><span class="p">,</span>
-    <span class="n">PROFILE_DEVIATION_WEIGHT</span><span class="p">,</span>
     <span class="n">MARKET_TIME</span><span class="p">,</span>
     <span class="n">PREP_TIME</span><span class="p">,</span>
     <span class="n">FLEX_EVENT_DURATION</span>
@@ -112,10 +111,32 @@
 
 
 <div class="viewcode-block" id="create_ast_element"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.create_ast_element">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">create_ast_element</span><span class="p">(</span><span class="n">template_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a template string into an AST call node.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        template_string: A Python code template string to parse.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ast.Call: An abstract syntax tree (AST) call node parsed from the template string.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">template_string</span><span class="p">)</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span></div>
 
 
 <div class="viewcode-block" id="add_input"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_input">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">add_input</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create an AST node for an input definition.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name: The name of the input.</span>
+<span class="sd">        value: The default value for the input. Can be a boolean, string, or integer.</span>
+<span class="sd">        unit: The unit associated with the input value.</span>
+<span class="sd">        description: A human-readable description of the input.</span>
+<span class="sd">        type: The data type of the input (e.g., &quot;float&quot;, &quot;int&quot;, &quot;string&quot;).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ast.Call: An abstract syntax tree (AST) call node representing the input definition.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">create_ast_element</span><span class="p">(</span>
         <span class="n">INPUT_TEMPLATE</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span>
             <span class="n">class_name</span><span class="o">=</span><span class="n">CASADI_INPUT</span><span class="p">,</span>
@@ -129,6 +150,18 @@
 
 
 <div class="viewcode-block" id="add_parameter"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_parameter">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">add_parameter</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create an AST node for a parameter definition.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name: The name of the parameter.</span>
+<span class="sd">            value: The value of the parameter. Can be an integer or float.</span>
+<span class="sd">            unit: The unit associated with the parameter value.</span>
+<span class="sd">            description: A human-readable description of the parameter.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ast.Call: An abstract syntax tree (AST) call node representing the parameter definition.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">create_ast_element</span><span class="p">(</span>
         <span class="n">PARAMETER_TEMPLATE</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span>
             <span class="n">class_name</span><span class="o">=</span><span class="n">CASADI_PARAMETER</span><span class="p">,</span>
@@ -141,6 +174,19 @@
 
 
 <div class="viewcode-block" id="add_output"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_output">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">add_output</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create an AST node for an output definition.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name: The name of the output.</span>
+<span class="sd">        unit: The unit associated with the output value.</span>
+<span class="sd">        type: The data type of the output (e.g., &quot;float&quot;, &quot;string&quot;).</span>
+<span class="sd">        value: The value of the output. Can be a string or float.</span>
+<span class="sd">        description: A human-readable description of the output.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ast.Call: An abstract syntax tree (AST) call node representing the output definition.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">create_ast_element</span><span class="p">(</span>
         <span class="n">OUTPUT_TEMPLATE</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span>
             <span class="n">class_name</span><span class="o">=</span><span class="n">CASADI_OUTPUT</span><span class="p">,</span>
@@ -158,9 +204,6 @@
 
 <span class="sd">    This class traverses the AST of the input file, identifies the relevant classes and methods,</span>
 <span class="sd">    and performs the necessary modifications.</span>
-
-<span class="sd">    Attributes:</span>
-<span class="sd">        mpc_data (str): The new return expression to be used in the setup_system method.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -187,13 +230,13 @@
 <div class="viewcode-block" id="SetupSystemModifier.visit_Module"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.visit_Module">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">visit_Module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Visit a module definition in the AST.</span>
 
-<span class="sd">        Appends or deletes the import statements at the top of the module.</span>
+<span class="sd">        Append or delete the import statements at the top of the module.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            module (ast.Module): The module definition node in the AST.</span>
+<span class="sd">            module: The module definition node in the AST.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            ast.Module: The possibly modified module definition node.</span>
+<span class="sd">            The possibly modified module definition node.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># append imports for baseline</span>
@@ -214,10 +257,10 @@
 <span class="sd">        BaselineMPCModelConfig and BaselineMPCModel classes and performs the necessary actions.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            node (ast.ClassDef): The class definition node in the AST.</span>
+<span class="sd">            node: The class definition node in the AST.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            ast.ClassDef: The possibly modified class definition node.</span>
+<span class="sd">            The possibly modified class definition node.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">bases</span><span class="p">:</span>
@@ -248,14 +291,14 @@
         <span class="k">return</span> <span class="n">node</span></div>
 
 <div class="viewcode-block" id="SetupSystemModifier.get_leftmost_list"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.get_leftmost_list">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_leftmost_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">Tuple</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">BinOp</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">List</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">List</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Recursively traverse binary operations to get the leftmost list.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Recursively traverse binary operations to get the leftmost list.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node: An AST node (could be a BinOp or directly a List)</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The leftmost List node found</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">List</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">node</span>
@@ -273,7 +316,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Modify the config class of the shadow mpc.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            node (ast.ClassDef): The class definition node of the config.</span>
+<span class="sd">            node: The class definition node of the config.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># loop over config object and modify fields</span>
@@ -327,7 +370,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Modify the config class of the baseline mpc.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            node (ast.ClassDef): The class definition node of the config.</span>
+<span class="sd">            node: The class definition node of the config.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># loop over config object and modify fields</span>
@@ -423,7 +466,7 @@
 <span class="sd">        all necessary new lines of code.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            node (ast.FunctionDef): The function definition node of setup_system.</span>
+<span class="sd">            node: The function definition node of setup_system.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># constraint the control trajectories for t &lt; market_time</span>
@@ -523,7 +566,7 @@
 <span class="sd">        all necessary new lines of code.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            node (ast.FunctionDef): The function definition node of setup_system.</span>
+<span class="sd">            node: The function definition node of setup_system.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># set the control trajectories with the respective variables</span>
@@ -578,6 +621,19 @@
 
 
 <div class="viewcode-block" id="add_import_to_tree"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_import_to_tree">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">add_import_to_tree</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">alias</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tree</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add import to the module.</span>
+
+<span class="sd">    The statement &#39;import name as alias&#39; will be added.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name: name of the module to be imported</span>
+<span class="sd">        alias: alias of the module</span>
+<span class="sd">        tree: the tree to be imported</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The tree updated with the import statement</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">import_statement</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">Import</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">asname</span><span class="o">=</span><span class="n">alias</span><span class="p">)])</span>
     <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">tree</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Import</span><span class="p">):</span>

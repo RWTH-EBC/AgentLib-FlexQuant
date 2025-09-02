@@ -72,14 +72,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for agentlib_flexquant.modules.shadow_mpc</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.modules</span><span class="w"> </span><span class="kn">import</span> <span class="n">mpc_full</span><span class="p">,</span> <span class="n">minlp_mpc</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.utils.data_handling</span><span class="w"> </span><span class="kn">import</span> <span class="n">strip_multi_index</span><span class="p">,</span> <span class="n">fill_nans</span><span class="p">,</span> <span class="n">MEAN</span><span class="p">,</span> <span class="n">INTERPOLATE</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">full_trajectory_prefix</span><span class="p">,</span>
-    <span class="n">full_trajectory_suffix</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.core.datamodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentVariable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.modules</span><span class="w"> </span><span class="kn">import</span> <span class="n">mpc_full</span><span class="p">,</span> <span class="n">minlp_mpc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.utils.data_handling</span><span class="w"> </span><span class="kn">import</span> <span class="n">strip_multi_index</span><span class="p">,</span> <span class="n">fill_nans</span><span class="p">,</span> <span class="n">MEAN</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="kn">import</span> <span class="n">full_trajectory_prefix</span><span class="p">,</span> <span class="n">full_trajectory_suffix</span>
 
 
 <div class="viewcode-block" id="FlexibilityShadowMPC"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPC">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityShadowMPC</span><span class="p">(</span><span class="n">mpc_full</span><span class="o">.</span><span class="n">MPC</span><span class="p">):</span>
@@ -107,8 +104,9 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">register_callbacks</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="FlexibilityShadowMPC.calc_flex_callback"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPC.calc_flex_callback">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">calc_flex_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp</span><span class="p">:</span> <span class="n">AgentVariable</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;set the control trajectories before calculating the flexibility offer.</span>
-<span class="sd">        self.model should account for flexibility in its cost function</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the control trajectories before calculating the flexibility offer.</span>
+
+<span class="sd">        self.model should account for flexibility in its cost function.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># during provision dont calculate flex</span>
@@ -163,7 +161,8 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">register_callbacks</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="FlexibilityShadowMINLPMPC.calc_flex_callback"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPC.calc_flex_callback">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">calc_flex_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp</span><span class="p">:</span> <span class="n">AgentVariable</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;set the control trajectories before calculating the flexibility offer.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the control trajectories before calculating the flexibility offer.</span>
+
 <span class="sd">        self.model should account for flexibility in its cost function</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>

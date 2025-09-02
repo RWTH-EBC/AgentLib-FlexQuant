@@ -72,21 +72,15 @@
            <div itemprop="articleBody">
              
   <h1>Source code for agentlib_flexquant.data_structures.flexquant</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pydantic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">pydantic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigDict</span><span class="p">,</span> <span class="n">model_validator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.core.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentConfig</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigurationError</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.data_structures.mpc_datamodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPCVariable</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigDict</span><span class="p">,</span> <span class="n">model_validator</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.mpcs</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">BaselineMPCData</span><span class="p">,</span>
-    <span class="n">NFMPCData</span><span class="p">,</span>
-    <span class="n">PFMPCData</span>
-<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.mpcs</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaselineMPCData</span><span class="p">,</span> <span class="n">NFMPCData</span><span class="p">,</span> <span class="n">PFMPCData</span>
 
 
 <div class="viewcode-block" id="ForcedOffers"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.ForcedOffers">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ForcedOffers</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
@@ -219,11 +213,11 @@
 
 <div class="viewcode-block" id="FlexQuantConfig.check_config_file_extension"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">check_config_file_extension</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Validates that the indicator and market config file paths have a &#39;.json&#39; extension.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate that the indicator and market config file paths have a &#39;.json&#39; extension.</span>
 <span class="sd">    </span>
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If either file does not have the expected &#39;.json&#39; extension.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indicator_config</span><span class="p">,</span> <span class="n">Path</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">indicator_config</span><span class="o">.</span><span class="n">suffix</span> <span class="o">!=</span> <span class="s2">&quot;.json&quot;</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -239,13 +233,13 @@
     
 <div class="viewcode-block" id="FlexQuantConfig.adapt_paths_and_create_directory"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">adapt_paths_and_create_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Adjusts and ensures the directory structure for flex file generation and results storage.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adjust and ensure the directory structure for flex file generation and results storage.</span>
 
 <span class="sd">        This method:</span>
-<span class="sd">        - Updates `flex_files_directory` and `results_directory` paths so they are relative to </span>
+<span class="sd">        - Updates `flex_files_directory` and `results_directory` paths, so they are relative to</span>
 <span class="sd">        the base flex directory, using only the directory names (ignoring any user-supplied paths).</span>
 <span class="sd">        - Creates the base, flex files, and results directories if they do not already exist.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># adapt paths and use only names for user supplied data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">flex_files_directory</span> <span class="o">=</span> <span class="p">(</span>

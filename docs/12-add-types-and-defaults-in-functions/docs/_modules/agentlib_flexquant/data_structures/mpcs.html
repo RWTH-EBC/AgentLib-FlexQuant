@@ -81,7 +81,6 @@
 
 <div class="viewcode-block" id="BaseMPCData"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaseMPCData">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">BaseMPCData</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class containing necessary data for the code creation of the different mpcs&quot;&quot;&quot;</span>
-
     <span class="c1"># files and paths</span>
     <span class="n">created_flex_mpcs_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;flex_agents.py&quot;</span>
     <span class="n">name_of_created_file</span><span class="p">:</span> <span class="nb">str</span>
@@ -104,7 +103,6 @@
 
 <div class="viewcode-block" id="BaselineMPCData"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaselineMPCData">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">BaselineMPCData</span><span class="p">(</span><span class="n">BaseMPCData</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Data class for Baseline MPC&quot;&quot;&quot;</span>
-
     <span class="c1"># files and paths</span>
     <span class="n">results_suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_base.csv&quot;</span>
     <span class="n">name_of_created_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;baseline.json&quot;</span>
@@ -170,7 +168,6 @@
 
 <div class="viewcode-block" id="PFMPCData"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.PFMPCData">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">PFMPCData</span><span class="p">(</span><span class="n">BaseMPCData</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Data class for PF-MPC&quot;&quot;&quot;</span>
-
     <span class="c1"># files and paths</span>
     <span class="n">results_suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_pos_flex.csv&quot;</span>
     <span class="n">name_of_created_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;pos_flex.json&quot;</span>
@@ -203,7 +200,6 @@
 
 <div class="viewcode-block" id="NFMPCData"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.NFMPCData">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">NFMPCData</span><span class="p">(</span><span class="n">BaseMPCData</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Data class for PF-MPC&quot;&quot;&quot;</span>
-
     <span class="c1"># files and paths</span>
     <span class="n">results_suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_neg_flex.csv&quot;</span>
     <span class="n">name_of_created_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;neg_flex.json&quot;</span>
