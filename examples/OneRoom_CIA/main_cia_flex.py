@@ -20,7 +20,7 @@ time_of_activation = 1500
 ENV_CONFIG = {"rt": False, "factor": 0.01, "t_sample": 10}
 
 
-def run_example(until=until):
+def run_example(until=until, with_plots=False):
     results = []
     mpc_config = "mpc_and_sim/simple_cia_mpc.json"
     sim_config = "mpc_and_sim/simple_cia_sim.json"
@@ -40,118 +40,121 @@ def run_example(until=until):
     mas.run(until=until)
     results = mas.get_results(cleanup=False)
 
-    # disturbances
-    fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=1)
-    ax1 = axs[0]
-    # load
-    ax1.set_ylabel("$\dot{Q}_{Room}$ in W")
-    results["SimAgent"]["room"]["load"].plot(ax=ax1)
-    x_ticks = np.arange(0, 3600 * 6 + 1, 3600)
-    x_tick_labels = [int(tick / 3600) for tick in x_ticks]
-    ax1.set_xticks(x_ticks)
-    ax1.set_xticklabels(x_tick_labels)
-    ax1.set_xlabel("Time in hours")
-    for ax in axs:
-        mpcplot.make_grid(ax)
-        ax.set_xlim(0, 3600 * 6)
+    if with_plots:
+        # disturbances
+        fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=1)
+        ax1 = axs[0]
+        # load
+        ax1.set_ylabel("$\dot{Q}_{Room}$ in W")
+        results["SimAgent"]["room"]["load"].plot(ax=ax1)
+        x_ticks = np.arange(0, 3600 * 6 + 1, 3600)
+        x_tick_labels = [int(tick / 3600) for tick in x_ticks]
+        ax1.set_xticks(x_ticks)
+        ax1.set_xticklabels(x_tick_labels)
+        ax1.set_xlabel("Time in hours")
+        for ax in axs:
+            mpcplot.make_grid(ax)
+            ax.set_xlim(0, 3600 * 6)
 
-    # room temp
-    fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=1)
-    ax1 = axs[0]
-    # T out
-    ax1.set_ylabel("$T_{room}$ in K")
-    results["SimAgent"]["room"]["T_upper"].plot(ax=ax1, color="0.5")
-    results["SimAgent"]["room"]["T_out"].plot(ax=ax1, color=mpcplot.EBCColors.dark_grey)
-    mpc_at_time_step(
-        data=results["myMPCAgent"]["Baseline"], time_step=time_of_activation, variable="T"
-    ).plot(ax=ax1, label="base", linestyle="--", color=mpcplot.EBCColors.dark_grey)
-    mpc_at_time_step(
-        data=results["NegFlexMPC"]["NegFlexMPC"], time_step=time_of_activation, variable="T"
-    ).plot(ax=ax1, label="neg", linestyle="--", color=mpcplot.EBCColors.red)
-    mpc_at_time_step(
-        data=results["PosFlexMPC"]["PosFlexMPC"], time_step=time_of_activation, variable="T"
-    ).plot(ax=ax1, label="pos", linestyle="--", color=mpcplot.EBCColors.blue)
+        # room temp
+        fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=1)
+        ax1 = axs[0]
+        # T out
+        ax1.set_ylabel("$T_{room}$ in K")
+        results["SimAgent"]["room"]["T_upper"].plot(ax=ax1, color="0.5")
+        results["SimAgent"]["room"]["T_out"].plot(ax=ax1, color=mpcplot.EBCColors.dark_grey)
+        mpc_at_time_step(
+            data=results["myMPCAgent"]["Baseline"], time_step=time_of_activation, variable="T"
+        ).plot(ax=ax1, label="base", linestyle="--", color=mpcplot.EBCColors.dark_grey)
+        mpc_at_time_step(
+            data=results["NegFlexMPC"]["NegFlexMPC"], time_step=time_of_activation, variable="T"
+        ).plot(ax=ax1, label="neg", linestyle="--", color=mpcplot.EBCColors.red)
+        mpc_at_time_step(
+            data=results["PosFlexMPC"]["PosFlexMPC"], time_step=time_of_activation, variable="T"
+        ).plot(ax=ax1, label="pos", linestyle="--", color=mpcplot.EBCColors.blue)
 
-    ax1.legend()
-    ax1.vlines(time_of_activation, ymin=0, ymax=500, colors="black")
-    ax1.vlines(time_of_activation + 300, ymin=0, ymax=500, colors="black")
-    ax1.vlines(time_of_activation + 600, ymin=0, ymax=500, colors="black")
-    ax1.vlines(time_of_activation + 3000, ymin=0, ymax=500, colors="black")
+        ax1.legend()
+        ax1.vlines(time_of_activation, ymin=0, ymax=500, colors="black")
+        ax1.vlines(time_of_activation + 300, ymin=0, ymax=500, colors="black")
+        ax1.vlines(time_of_activation + 600, ymin=0, ymax=500, colors="black")
+        ax1.vlines(time_of_activation + 3000, ymin=0, ymax=500, colors="black")
 
-    ax1.set_ylim(289, 299)
-    x_ticks = np.arange(0, 3600 * 6 + 1, 3600)
-    x_tick_labels = [int(tick / 3600) for tick in x_ticks]
-    ax1.set_xticks(x_ticks)
-    ax1.set_xticklabels(x_tick_labels)
-    ax1.set_xlabel("Time in hours")
-    for ax in axs:
-        mpcplot.make_grid(ax)
-        ax.set_xlim(0, 3600 * 6)
+        ax1.set_ylim(289, 299)
+        x_ticks = np.arange(0, 3600 * 6 + 1, 3600)
+        x_tick_labels = [int(tick / 3600) for tick in x_ticks]
+        ax1.set_xticks(x_ticks)
+        ax1.set_xticklabels(x_tick_labels)
+        ax1.set_xlabel("Time in hours")
+        for ax in axs:
+            mpcplot.make_grid(ax)
+            ax.set_xlim(0, 3600 * 6)
 
-    # predictions
-    fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=1)
-    ax1 = axs[0]
-    # P_el
-    ax1.set_ylabel("$P_{el}$ in W")
-    results["SimAgent"]["room"]["P_el"].plot(ax=ax1, color=mpcplot.EBCColors.dark_grey)
-    mpc_at_time_step(
-        data=results["NegFlexMPC"]["NegFlexMPC"], time_step=time_of_activation, variable="P_el"
-    ).ffill().plot(
-        ax=ax1,
-        drawstyle="steps-post",
-        label="neg",
-        linestyle="--",
-        color=mpcplot.EBCColors.red,
-    )
-    mpc_at_time_step(
-        data=results["PosFlexMPC"]["PosFlexMPC"], time_step=time_of_activation, variable="P_el"
-    ).ffill().plot(
-        ax=ax1,
-        drawstyle="steps-post",
-        label="pos",
-        linestyle="--",
-        color=mpcplot.EBCColors.blue,
-    )
-    mpc_at_time_step(
-        data=results["myMPCAgent"]["Baseline"], time_step=time_of_activation, variable="P_el"
-    ).ffill().plot(
-        ax=ax1,
-        drawstyle="steps-post",
-        label="base",
-        linestyle="--",
-        color=mpcplot.EBCColors.dark_grey,
-    )
-    ax1.legend()
-    ax1.vlines(time_of_activation, ymin=0, ymax=500, colors="black")
-    ax1.vlines(time_of_activation + 300, ymin=0, ymax=500, colors="black")
-    ax1.vlines(time_of_activation + 600, ymin=0, ymax=500, colors="black")
-    ax1.vlines(time_of_activation + 3000, ymin=0, ymax=500, colors="black")
+        # predictions
+        fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=1)
+        ax1 = axs[0]
+        # P_el
+        ax1.set_ylabel("$P_{el}$ in W")
+        results["SimAgent"]["room"]["P_el"].plot(ax=ax1, color=mpcplot.EBCColors.dark_grey)
+        mpc_at_time_step(
+            data=results["NegFlexMPC"]["NegFlexMPC"], time_step=time_of_activation, variable="P_el"
+        ).ffill().plot(
+            ax=ax1,
+            drawstyle="steps-post",
+            label="neg",
+            linestyle="--",
+            color=mpcplot.EBCColors.red,
+        )
+        mpc_at_time_step(
+            data=results["PosFlexMPC"]["PosFlexMPC"], time_step=time_of_activation, variable="P_el"
+        ).ffill().plot(
+            ax=ax1,
+            drawstyle="steps-post",
+            label="pos",
+            linestyle="--",
+            color=mpcplot.EBCColors.blue,
+        )
+        mpc_at_time_step(
+            data=results["myMPCAgent"]["Baseline"], time_step=time_of_activation, variable="P_el"
+        ).ffill().plot(
+            ax=ax1,
+            drawstyle="steps-post",
+            label="base",
+            linestyle="--",
+            color=mpcplot.EBCColors.dark_grey,
+        )
+        ax1.legend()
+        ax1.vlines(time_of_activation, ymin=0, ymax=500, colors="black")
+        ax1.vlines(time_of_activation + 300, ymin=0, ymax=500, colors="black")
+        ax1.vlines(time_of_activation + 600, ymin=0, ymax=500, colors="black")
+        ax1.vlines(time_of_activation + 3000, ymin=0, ymax=500, colors="black")
 
-    # flexibility
-    # get only the first prediction time of each time step
-    ind_res = results["FlexibilityIndicator"]["FlexibilityIndicator"]
-    energy_flex_neg = ind_res.xs("energyflex_neg", axis=1).droplevel(1).dropna()
-    energy_flex_pos = ind_res.xs("energyflex_pos", axis=1).droplevel(1).dropna()
-    fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=1)
-    ax1 = axs[0]
-    ax1.set_ylabel("$\epsilon$ in kWh")
-    energy_flex_neg.plot(ax=ax1, label="neg", color=mpcplot.EBCColors.red)
-    energy_flex_pos.plot(ax=ax1, label="pos", color=mpcplot.EBCColors.blue)
-    ax1.yaxis.set_major_formatter(FormatStrFormatter("%.4f"))
+        # flexibility
+        # get only the first prediction time of each time step
+        ind_res = results["FlexibilityIndicator"]["FlexibilityIndicator"]
+        energy_flex_neg = ind_res.xs("energyflex_neg", axis=1).droplevel(1).dropna()
+        energy_flex_pos = ind_res.xs("energyflex_pos", axis=1).droplevel(1).dropna()
+        fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=1)
+        ax1 = axs[0]
+        ax1.set_ylabel("$\epsilon$ in kWh")
+        energy_flex_neg.plot(ax=ax1, label="neg", color=mpcplot.EBCColors.red)
+        energy_flex_pos.plot(ax=ax1, label="pos", color=mpcplot.EBCColors.blue)
+        ax1.yaxis.set_major_formatter(FormatStrFormatter("%.4f"))
 
-    ax1.legend()
+        ax1.legend()
 
-    x_ticks = np.arange(0, 3600 * 6 + 1, 3600)
-    x_tick_labels = [int(tick / 3600) for tick in x_ticks]
-    ax1.set_xticks(x_ticks)
-    ax1.set_xticklabels(x_tick_labels)
-    ax1.set_xlabel("Time in hours")
-    for ax in axs:
-        mpcplot.make_grid(ax)
-        ax.set_xlim(0, 3600 * 6)
+        x_ticks = np.arange(0, 3600 * 6 + 1, 3600)
+        x_tick_labels = [int(tick / 3600) for tick in x_ticks]
+        ax1.set_xticks(x_ticks)
+        ax1.set_xticklabels(x_tick_labels)
+        ax1.set_xlabel("Time in hours")
+        for ax in axs:
+            mpcplot.make_grid(ax)
+            ax.set_xlim(0, 3600 * 6)
 
-    plt.show()
+        plt.show()
+
+    return results
 
 
 if __name__ == "__main__":
-    run_example(until)
+    run_example(until, with_plots=True)
