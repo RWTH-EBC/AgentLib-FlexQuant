@@ -13,8 +13,7 @@ sys.path.insert(0, str(root_path))
 
 
 def create_dataframe_summary(df: pd.DataFrame, precision: int = 6) -> dict:
-    """
-    Creates a robust, compact summary of a DataFrame for snapshotting.
+    """Create a robust, compact summary of a DataFrame for snapshotting.
 
     This summary is designed to be insensitive to minor floating-point differences
     while being highly sensitive to meaningful data changes.
@@ -25,6 +24,7 @@ def create_dataframe_summary(df: pd.DataFrame, precision: int = 6) -> dict:
 
     Returns:
         A dictionary containing the summary.
+
     """
     if df is None or df.empty:
         return {"error": "DataFrame is empty or None"}
@@ -56,11 +56,11 @@ def create_dataframe_summary(df: pd.DataFrame, precision: int = 6) -> dict:
 
 def assert_frame_matches_summary_snapshot(snapshot, df: pd.DataFrame,
                                           snapshot_name: str):
-    """
-    Asserts that a DataFrame's summary matches a stored snapshot.
+    """Assert that a DataFrame's summary matches a stored snapshot.
 
     This function creates a summary of the dataframe and uses pytest-snapshot
     to compare it against a stored version.
+
     """
     # Create a summary of the dataframe
     summary = create_dataframe_summary(df)
@@ -71,16 +71,16 @@ def assert_frame_matches_summary_snapshot(snapshot, df: pd.DataFrame,
     # Use snapshot.assert_match on the small, stable JSON string
     snapshot.assert_match(summary_json, snapshot_name)
 
-def run_example_from_path(example_path: Path):
-    """
-    Dynamically imports and runs the 'run_example' function from a script
+def run_example_from_path(example_path: Path, example_file: str):
+    """Dynamically import and run the 'run_example' function from a script
     in the specified directory.
 
     This function robustly handles changing the working directory AND the
     Python import path, ensuring the script can find both its local files
     and its local modules.
+
     """
-    run_script_path = example_path / 'main_one_room_flex.py'
+    run_script_path = example_path / example_file
     if not run_script_path.is_file():
         raise FileNotFoundError(
             f"Could not find the run script at {run_script_path}. "
@@ -118,17 +118,18 @@ def run_example_from_path(example_path: Path):
 
 
 def test_oneroom_simple_mpc(snapshot):
-    """
-    Unit test for the oneroom_simpleMPC example using snapshot testing.
+    """Unit test for the oneroom_simpleMPC example using snapshot testing.
 
     This test runs the example via its own run script and compares the
     full resulting dataframes against stored snapshots.
+
     """
     # Define the path to the example directory
     example_path = root_path / 'examples' / 'OneRoom_SimpleMPC'
+    example_file = 'main_one_room_flex.py'
 
     # Run the example and get the results object
-    res = run_example_from_path(example_path)
+    res = run_example_from_path(example_path, example_file)
 
     # Extract the full resulting dataframes as requested
     df_neg_flex_res = res["NegFlexMPC"]["NegFlexMPC"]
@@ -156,4 +157,47 @@ def test_oneroom_simple_mpc(snapshot):
         snapshot,
         df_indicator_res,
         'oneroom_simpleMPC_indicator_summary.json'
+    )
+
+
+def test_oneroom_cia(snapshot):
+    """Unit test for the OneRoom_CIA example using snapshot testing.
+
+    This test runs the example via its own run script and compares the
+    full resulting dataframes against stored snapshots.
+
+    """
+    # Define the path to the example directory
+    example_path = root_path / 'examples' / 'OneRoom_CIA'
+    example_file = 'main_cia_flex.py'
+
+    # Run the example and get the results object
+    res = run_example_from_path(example_path, example_file)
+
+    # Extract the full resulting dataframes as requested
+    df_neg_flex_res = res["NegFlexMPC"]["NegFlexMPC"]
+    df_pos_flex_res = res["PosFlexMPC"]["PosFlexMPC"]
+    df_baseline_res = res["myMPCAgent"]["Baseline"]
+    df_indicator_res = res["FlexibilityIndicator"]["FlexibilityIndicator"]
+
+    # Assert that a summary of each result DataFrame matches its snapshot
+    assert_frame_matches_summary_snapshot(
+        snapshot,
+        df_neg_flex_res,
+        'oneroom_cia_neg_flex_summary.json'
+    )
+    assert_frame_matches_summary_snapshot(
+        snapshot,
+        df_pos_flex_res,
+        'oneroom_cia_pos_flex_summary.json'
+    )
+    assert_frame_matches_summary_snapshot(
+        snapshot,
+        df_baseline_res,
+        'oneroom_cia_baseline_summary.json'
+    )
+    assert_frame_matches_summary_snapshot(
+        snapshot,
+        df_indicator_res,
+        'oneroom_cia_indicator_summary.json'
     )
