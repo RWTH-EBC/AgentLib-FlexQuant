@@ -26,7 +26,9 @@ all_module_types.pop("agentlib_mpc.set_point_generator")
 # remove clone since not used
 all_module_types.pop("clonemap")
 
+# dictionary mapping the module name to the module config (ModelMetaclass)
 MODULE_TYPE_DICT = {name: inspect.get_annotations(class_type.import_class())["config"] for name, class_type in all_module_types.items()}
+# dictionary mapping the module name to the module (ModuleImport)
 MODULE_NAME_DICT = all_module_types
 
 MPC_CONFIG_TYPE: str = "agentlib_mpc.mpc"
