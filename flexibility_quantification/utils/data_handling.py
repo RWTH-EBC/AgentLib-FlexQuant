@@ -53,10 +53,6 @@ def _set_mean_values(series: pd.Series) -> pd.Series:
     if pd.isna(series.iloc[-1]):
         series = series.iloc[:-1]
 
-    # remove first entry if nan, e.g. with collocation and casadi simulator to fill nan
-    if pd.isna(series.iloc[0]):
-        series.iloc[0] = series.iloc[1]
-
     return series
 
 
