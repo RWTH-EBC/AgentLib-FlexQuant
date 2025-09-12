@@ -1,43 +1,39 @@
 import os
-from pathlib import Path
-from typing import List, Optional, Union
-
-import agentlib
 import numpy as np
 import pandas as pd
-import pydantic
-from agentlib.core.errors import ConfigurationError
-from pydantic import model_validator
-
-from agentlib_flexquant.data_structures.flex_offer import OfferStatus
-from agentlib_flexquant.data_structures.market import (
-    MarketSpecifications
-)
+from pathlib import Path
+from typing import List, Optional, Union
+from pydantic import model_validator, ConfigDict, Field
+import agentlib
+from agentlib.core.datamodels import AgentVariable
+from agentlib_flexquant.data_structures.flex_offer import OfferStatus, FlexOffer
+from agentlib_flexquant.data_structures.market import MarketSpecifications
 
 
 class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
-    # parameters: List[agentlib.AgentVariable] = [
-    # ]
-    model_config = pydantic.ConfigDict(
+
+    model_config = ConfigDict(
         extra='forbid'
     )
-    inputs: List[agentlib.AgentVariable] = [
-        agentlib.AgentVariable(name="FlexibilityOffer")
+
+    inputs: List[AgentVariable] = [
+        AgentVariable(name="FlexibilityOffer")
     ]
-    outputs: List[agentlib.AgentVariable] = [
-        agentlib.AgentVariable(
+
+    outputs: List[AgentVariable] = [
+        AgentVariable(
             name="_P_external", alias="_P_external",
             description="External Power IO"
         ),
-        agentlib.AgentVariable(
+        AgentVariable(
             name="rel_start", alias="rel_start",
             description="relative start time of the flexibility event"
         ),
-        agentlib.AgentVariable(
+        AgentVariable(
             name="rel_end", alias="rel_end",
             description="relative end time of the flexibility event"
         ),
-        agentlib.AgentVariable(
+        AgentVariable(
             name="in_provision", alias="in_provision",
             description="Set if the system is in provision", value=False
         )
@@ -45,11 +41,11 @@ class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
 
     market_specs: MarketSpecifications
 
-    results_file: Optional[Path] = pydantic.Field(
+    results_file: Optional[Path] = Field(
         default=Path("flexibility_market.csv"),
         description="User specified results file name"
     )
-    save_results: Optional[bool] = pydantic.Field(
+    save_results: Optional[bool] = Field(
         validate_default=True, 
         default=True
     )
@@ -67,24 +63,20 @@ class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
 
 
 class FlexibilityMarketModule(agentlib.BaseModule):
-    """Class to emulate flexibility market. Receives flex offers and accepts these.
-
-    """
+    """Class to emulate flexibility market. Receives flex offers and accepts these."""
     config: FlexibilityMarketModuleConfig
 
+    # DataFrame for flex offer. Multiindex: (time_step, time). Columns: pos_price, neg_price, status
+    flex_offer_df: pd.DataFrame = None
+    # absolute end time of a flexibility event (now + relative end time of the flexibility event on the mpc horizon)
+    abs_flex_event_end: Union[int, float] = 0
 
-    df: pd.DataFrame = None
-    end: Union[int, float] = 0
-
-    def set_random_seed(self, random_seed):
-        """set the random seed for reproducability"""
+    def set_random_seed(self, random_seed: int):
+        """Set the random seed for reproducibility."""
         self.random_generator = np.random.default_rng(seed=random_seed)
 
     def get_results(self) -> Optional[pd.DataFrame]:
-        """
-        Opens results file of flexibilityindicators.py
-        results_file defined in __init__
-        """
+        """Open results file of flexibility_indicators.py."""
         results_file = self.config.results_file
         try:
             results = pd.read_csv(results_file, header=[0], index_col=[0, 1])
@@ -111,35 +103,35 @@ class FlexibilityMarketModule(agentlib.BaseModule):
             callback=callback_function
         )
 
-        self.df = None
+        self.flex_offer_df = None
         self.cooldown_ticker = 0
 
-    def write_results(self, offer):
-        if self.df is None:
-            self.df = pd.DataFrame()
+    def write_results(self, offer: FlexOffer):
+        """Save the flex offer results depending on the config."""
+        if self.flex_offer_df is None:
+            self.flex_offer_df = pd.DataFrame()
         df = offer.as_dataframe()
         index_first_level = [self.env.now] * len(df.index)
         multi_index = pd.MultiIndex.from_tuples(zip(index_first_level, df.index))
-        self.df = pd.concat((self.df, df.set_index(multi_index)))
-        indices = pd.MultiIndex.from_tuples(self.df.index, names=["time_step", "time"])
-        self.df.set_index(indices, inplace=True)
+        self.flex_offer_df = pd.concat((self.flex_offer_df, df.set_index(multi_index)))
+        indices = pd.MultiIndex.from_tuples(self.flex_offer_df.index, names=["time_step", "time"])
+        self.flex_offer_df.set_index(indices, inplace=True)
 
         if self.config.save_results:
-            self.df.to_csv(self.config.results_file)
+            self.flex_offer_df.to_csv(self.config.results_file)
 
-    def random_flexibility_callback(self, inp, name):
-        """
-        When a flexibility offer is sent this function is called. 
-        
-            The offer is accepted randomly. The factor self.offer_acceptance_rate determines the
-                random factor for offer acceptance. self.pos_neg_rate is the random factor for
-                the direction of the flexibility. A higher rate means that more positive offers will be accepted.
+    def random_flexibility_callback(self, inp: AgentVariable, name: str):
+        """When a flexibility offer is sent, this function is called.
+
+        The offer is accepted randomly. The factor self.offer_acceptance_rate determines the random factor for offer acceptance.
+        self.pos_neg_rate is the random factor for the direction of the flexibility.
+        A higher rate means that more positive offers will be accepted.
             
-            Constraints:
-                cooldown: during $cooldown steps after a flexibility event no offer is accepted
-                minimum_average_flex: min amount of flexibility to be accepted, to account for the model error
-        """
+        Constraints:
+            cooldown: during $cooldown steps after a flexibility event no offer is accepted
+            minimum_average_flex: min amount of flexibility to be accepted, to account for the model error
 
+        """
         offer = inp.value
         # check if there is a flexibility provision and the cooldown is finished
         if not self.get("in_provision").value and self.cooldown_ticker == 0:
@@ -160,7 +152,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                     profile = profile.dropna()
                     profile.index += self.env.time
                     self.set("_P_external", profile)
-                    self.end = profile.index[-1]
+                    self.abs_flex_event_end = profile.index[-1]
                     self.set("in_provision", True)
                     self.cooldown_ticker = self.config.market_specs.cooldown
 
@@ -169,10 +161,8 @@ class FlexibilityMarketModule(agentlib.BaseModule):
 
         self.write_results(offer)
 
-    def single_flexibility_callback(self, inp, name):
-        """Callback to activate a single, predefined flexibility offer.
-
-        """
+    def single_flexibility_callback(self, inp: AgentVariable, name: str):
+        """Callback to activate a single, predefined flexibility offer."""
         offer = inp.value
         profile = None
         t_sample = offer.base_power_profile.index[1]-offer.base_power_profile.index[0]
@@ -192,20 +182,21 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                 profile = profile.dropna()
                 profile.index += self.env.time
                 self.set("_P_external", profile)
-                self.end = profile.index[-1]
+                self.abs_flex_event_end = profile.index[-1]
                 self.set("in_provision", True)
 
         self.write_results(offer)
 
-    def custom_flexibility_callback(self, inp, name):
-        """Placeholder for a custom flexibility callback"""
+    def custom_flexibility_callback(self, inp: AgentVariable, name: str):
+        """Placeholder for a custom flexibility callback."""
         pass
 
-    def dummy_callback(self, inp, name):
-        """Dummy function, that is included, when market type is not specified"""
+    def dummy_callback(self, inp: AgentVariable, name: str):
+        """Dummy function that is included, when market type is not specified."""
         self.logger.warning("No market type provided. No market interaction.")
 
     def cleanup_results(self):
+        """Remove the results if they already exist."""
         results_file = self.config.results_file
         if not results_file:
             return
@@ -214,6 +205,6 @@ class FlexibilityMarketModule(agentlib.BaseModule):
     def process(self):
         while True:
             # End the provision at the appropriate time
-            if self.end < self.env.time:
+            if self.abs_flex_event_end < self.env.time:
                 self.set("in_provision", False)
             yield self.env.timeout(self.env.config.t_sample)
