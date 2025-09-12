@@ -1,8 +1,18 @@
 import setuptools
 
-# Read requirements.txt
-with open('requirements.txt') as f:
-    requirements = f.read().splitlines()
+requirements = [
+    "setuptools",
+    "agentlib[full]==0.8.7",
+    "agentlib_mpc[fmu, interactive] @ git+https://github.com/RWTH-EBC/AgentLib-MPC.git",
+    "pycombina @ git+https://github.com/adbuerger/pycombina.git",
+    "pathlib",
+    "astor==0.8.1",
+    "black",
+    "pre-commit",
+    "pytest",
+    "pytest-snapshot"
+]
+
 
 setuptools.setup(
     name="flexquant",
