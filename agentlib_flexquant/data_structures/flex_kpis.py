@@ -282,7 +282,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         self.power_flex_full.integration_method = integration_method
         self.power_flex_offer.integration_method = integration_method
 
-    def _calculate_power_flex_stats(self, mpc_time_grid):
+    def _calculate_power_flex_stats(self, mpc_time_grid: np.array):
         """Calculate the characteristic values of the power flexibility for the offer."""
         if self.power_flex_offer.value is None:
             raise ValueError("Power flexibility value is empty.")
@@ -305,12 +305,14 @@ class FlexibilityKPIs(pydantic.BaseModel):
         self.power_flex_offer_avg.value = power_flex_offer_avg
 
     def _get_series_for_integration(self, series: KPISeries, mpc_time_grid: np.ndarray) -> pd.Series:
-        """
-        Returns the KPISeries value sampled on the MPC time grid when the integration method is constant.
+        """Return the KPISeries value sampled on the MPC time grid when the integration method is constant.
+
         Otherwise, the original value is returned.
+
         Args:
             series: the KPISeries to get value from
             mpc_time_grid: the MPC time grid over the horizon
+
         """
         if series.integration_method == CONSTANT:
             return series.value.reindex(mpc_time_grid).dropna()
@@ -332,12 +334,14 @@ class FlexibilityKPIs(pydantic.BaseModel):
         # Set value
         self.energy_flex.value = energy_flex
 
-    def _calculate_costs(self, electricity_price_signal: pd.Series, stored_energy_diff: float):
+    def _calculate_costs(self, electricity_price_signal: pd.Series, stored_energy_diff: float, integration_method: INTEGRATION_METHOD, mpc_time_grid: np.ndarray):
         """Calculate the costs of the flexibility event based on the electricity costs profile, the power flexibility profile and difference of stored energy.
 
         Args:
             electricity_price_signal: time series of the electricity price signal
             stored_energy_diff: the difference of the stored energy between baseline and shadow mpc
+            integration_method: the integration method to be used to integrate KPISeries, e.g. linear, constant
+            mpc_time_grid: the MPC time grid over the horizon
 
         """
 
@@ -520,7 +524,7 @@ class FlexibilityData(pydantic.BaseModel):
                              f"step sizes.")
         return series
 
-    def calculate(self, enable_energy_costs_correction: bool, calculate_flex_cost: bool):
+    def calculate(self, enable_energy_costs_correction: bool, calculate_flex_cost: bool, integration_method: INTEGRATION_METHOD):
         """Calculate the KPIs for the positive and negative flexibility.
 
         Args:
