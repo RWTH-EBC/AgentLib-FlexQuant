@@ -472,7 +472,7 @@ class FlexibilityData(pydantic.BaseModel):
         super().__init__(**data)
         self.switch_time = prep_time + market_time
         self.flex_offer_time_grid = np.arange(self.switch_time, self.switch_time + flex_event_duration + time_step, time_step)
-        self.mpc_time_grid = np.arange(0, prediction_horizon * time_step, time_step)
+        self.mpc_time_grid = np.arange(0, prediction_horizon * time_step + time_step, time_step)
         self._common_time_grid = None  # Initialize common time grid
 
     def unify_inputs(self, series: pd.Series, mpc=True) -> pd.Series:

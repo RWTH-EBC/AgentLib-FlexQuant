@@ -293,7 +293,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 # get the index for the electricity price series
                 n = self.get(glbs.PREDICTION_HORIZON).value
                 ts = self.get(glbs.TIME_STEP).value
-                grid = np.arange(0, n * ts, ts)
+                grid = np.arange(0, n * ts + ts, ts)
                 # fill the electricity_price_series with values
                 self.data.electricity_price_series = pd.Series([self.config.calculate_costs.const_electricity_price for i in grid], index=grid)
 
