@@ -89,7 +89,7 @@ class KPISeries(KPI):
             return np.trapz(self.value.values, self.value.index) / TIME_CONVERSION[time_unit]
         if self.integration_method == CONSTANT:
             # Constant integration: use a step-wise constant approach by holding the value constant over each interval
-            return np.sum(self.value.values[:-1] * np.diff(self.value.index)) / TIME_CONVERSION[time_unit]
+            return np.sum(self.value.values[:-1] * self._get_dt().iloc[:-1]) / TIME_CONVERSION[time_unit]
 
 class FlexibilityKPIs(pydantic.BaseModel):
     """Class defining the indicator KPIs."""
