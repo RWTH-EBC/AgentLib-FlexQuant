@@ -289,8 +289,8 @@ class FlexibilityKPIs(pydantic.BaseModel):
 
         # Calculate characteristic values
         # max and min of power flex offer
-        power_flex_offer_max = self.power_flex_offer.max()
-        power_flex_offer_min = self.power_flex_offer.min()
+        power_flex_offer_max = self.power_flex_offer.value.iloc[:-1].max()
+        power_flex_offer_min = self.power_flex_offer.value.iloc[:-1].min()
         # Average of the power flex offer
         # Get the series for integration before calculating average
         power_flex_offer_integration = self.power_flex_offer.__deepcopy__()
