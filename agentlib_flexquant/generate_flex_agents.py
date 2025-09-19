@@ -244,7 +244,7 @@ class FlexAgentGenerator:
         else:
             logging.error("Provided agent config does not contain any modules.")
 
-    def get_config_file_paths(self) -> List[str]:
+    def get_config_file_paths(self) -> list[str]:
         """Return a list of paths with the created config files."""
         paths = [
             os.path.join(

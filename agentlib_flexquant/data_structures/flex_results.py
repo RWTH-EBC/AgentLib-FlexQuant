@@ -426,7 +426,7 @@ class Results:
             self,
             model_class: Type[BaseModel],
             config: Dict[str, Any],
-            skip_fields: Optional[List[str]] = None
+            skip_fields: Optional[list[str]] = None
         ) -> BaseModel:
         """Create a Pydantic model instance while skipping validation for specified fields.
 
@@ -435,9 +435,9 @@ class Results:
         after construction without triggering their validators.
 
         Args:
-            model_class (Type[BaseModel]): The Pydantic model class to instantiate.
-            config (Dict[str, Any]): The input configuration dictionary.
-            skip_fields (Optional[List[str]]): A list of field names to exclude from validation.
+            model_class: The Pydantic model class to instantiate.
+            config: The input configuration dictionary.
+            skip_fields: A list of field names to exclude from validation.
                                                 These fields will be manually set after instantiation.
 
         Returns:
