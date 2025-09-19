@@ -77,7 +77,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">ConfigDict</span><span class="p">,</span> <span class="n">Field</span><span class="p">,</span> <span class="n">model_validator</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">agentlib</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">glbs</span>
@@ -140,7 +140,7 @@
         <span class="n">extra</span><span class="o">=</span><span class="s1">&#39;forbid&#39;</span>
     <span class="p">)</span>
 
-    <span class="n">inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">inputs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">POWER_ALIAS_BASE</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;W&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;pd.Series&quot;</span><span class="p">,</span>
                                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The power input to the system&quot;</span><span class="p">),</span>
         <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">POWER_ALIAS_NEG</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;W&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;pd.Series&quot;</span><span class="p">,</span>
@@ -155,7 +155,7 @@
                                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Energy stored in the system w.r.t. 0K&quot;</span><span class="p">)</span>
     <span class="p">]</span>
 
-    <span class="n">outputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">outputs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
         <span class="c1"># Flexibility offer</span>
         <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">FlexibilityOffer</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;FlexOffer&quot;</span><span class="p">),</span>
 
@@ -254,7 +254,7 @@
         <span class="p">)</span>
     <span class="p">]</span>
 
-    <span class="n">parameters</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">parameters</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">PREP_TIME</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span>
                                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Preparation time&quot;</span><span class="p">),</span>
         <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">MARKET_TIME</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span>
@@ -283,7 +283,7 @@
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;kW&quot;</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unit of the power variable&quot;</span>
     <span class="p">)</span>
-    <span class="n">shared_variable_fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;outputs&quot;</span><span class="p">]</span>
+    <span class="n">shared_variable_fields</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;outputs&quot;</span><span class="p">]</span>
 
     <span class="n">correct_costs</span><span class="p">:</span> <span class="n">InputsForCorrectFlexCosts</span> <span class="o">=</span> <span class="n">InputsForCorrectFlexCosts</span><span class="p">()</span>
     <span class="n">calculate_costs</span><span class="p">:</span> <span class="n">InputsForCalculateFlexCosts</span> <span class="o">=</span> <span class="n">InputsForCalculateFlexCosts</span><span class="p">()</span>

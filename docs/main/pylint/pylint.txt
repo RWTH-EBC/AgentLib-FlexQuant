@@ -83,11 +83,12 @@ agentlib_flexquant/generate_flex_agents.py:8:0: C0411: standard import "import j
 agentlib_flexquant/generate_flex_agents.py:9:0: C0411: standard import "from copy import deepcopy" should be placed before "import astor" (wrong-import-order)
 agentlib_flexquant/generate_flex_agents.py:10:0: C0411: standard import "from pathlib import Path" should be placed before "import astor" (wrong-import-order)
 agentlib_flexquant/generate_flex_agents.py:11:0: C0411: standard import "from typing import List, Union" should be placed before "import astor" (wrong-import-order)
+agentlib_flexquant/generate_flex_agents.py:11:0: W0611: Unused List imported from typing (unused-import)
 ************* Module agentlib_flexquant.utils.interactive
 agentlib_flexquant/utils/interactive.py:22:0: C0301: Line too long (101/100) (line-too-long)
 agentlib_flexquant/utils/interactive.py:23:0: C0301: Line too long (101/100) (line-too-long)
-agentlib_flexquant/utils/interactive.py:460:0: C0301: Line too long (126/100) (line-too-long)
-agentlib_flexquant/utils/interactive.py:537:0: C0301: Line too long (101/100) (line-too-long)
+agentlib_flexquant/utils/interactive.py:461:0: C0301: Line too long (126/100) (line-too-long)
+agentlib_flexquant/utils/interactive.py:538:0: C0301: Line too long (101/100) (line-too-long)
 agentlib_flexquant/utils/interactive.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 agentlib_flexquant/utils/interactive.py:2:0: E0401: Unable to import 'pandas' (import-error)
 agentlib_flexquant/utils/interactive.py:4:0: E0401: Unable to import 'pydantic' (import-error)
@@ -104,14 +105,14 @@ agentlib_flexquant/utils/interactive.py:42:0: R0902: Too many instance attribute
 agentlib_flexquant/utils/interactive.py:59:4: R0913: Too many arguments (7/5) (too-many-arguments)
 agentlib_flexquant/utils/interactive.py:120:12: R1721: Unnecessary use of a comprehension, use list(self.intersection_mpcs_sim.keys()) instead. (unnecessary-comprehension)
 agentlib_flexquant/utils/interactive.py:120:28: C0201: Consider iterating the dictionary directly instead of calling .keys() (consider-iterating-dictionary)
-agentlib_flexquant/utils/interactive.py:226:34: C0103: Argument name "s" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/utils/interactive.py:351:8: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
-agentlib_flexquant/utils/interactive.py:501:8: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
-agentlib_flexquant/utils/interactive.py:524:8: R0913: Too many arguments (6/5) (too-many-arguments)
-agentlib_flexquant/utils/interactive.py:555:29: C0201: Consider iterating the dictionary directly instead of calling .keys() (consider-iterating-dictionary)
-agentlib_flexquant/utils/interactive.py:573:16: C0103: Variable name "ts" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/utils/interactive.py:600:23: R1735: Consider using '{"t": 20, "b": 20}' instead of a call to 'dict'. (use-dict-literal)
-agentlib_flexquant/utils/interactive.py:690:41: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
+agentlib_flexquant/utils/interactive.py:227:34: C0103: Argument name "s" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/utils/interactive.py:352:8: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+agentlib_flexquant/utils/interactive.py:502:8: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+agentlib_flexquant/utils/interactive.py:525:8: R0913: Too many arguments (6/5) (too-many-arguments)
+agentlib_flexquant/utils/interactive.py:556:29: C0201: Consider iterating the dictionary directly instead of calling .keys() (consider-iterating-dictionary)
+agentlib_flexquant/utils/interactive.py:574:16: C0103: Variable name "ts" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/utils/interactive.py:601:23: R1735: Consider using '{"t": 20, "b": 20}' instead of a call to 'dict'. (use-dict-literal)
+agentlib_flexquant/utils/interactive.py:691:41: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
 agentlib_flexquant/utils/interactive.py:129:4: R0915: Too many statements (135/50) (too-many-statements)
 agentlib_flexquant/utils/interactive.py:3:0: C0411: standard import "from typing import get_args, Union, Optional" should be placed before "import pandas as pd" (wrong-import-order)
 ************* Module agentlib_flexquant.utils.data_handling
@@ -252,7 +253,7 @@ agentlib_flexquant/modules/flexibility_indicator.py:432:4: R0913: Too many argum
 agentlib_flexquant/modules/flexibility_indicator.py:484:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
 agentlib_flexquant/modules/flexibility_indicator.py:491:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
 agentlib_flexquant/modules/flexibility_indicator.py:5:0: C0411: standard import "from pathlib import Path" should be placed before "import numpy as np" (wrong-import-order)
-agentlib_flexquant/modules/flexibility_indicator.py:6:0: C0411: standard import "from typing import List, Optional" should be placed before "import numpy as np" (wrong-import-order)
+agentlib_flexquant/modules/flexibility_indicator.py:6:0: C0411: standard import "from typing import Optional" should be placed before "import numpy as np" (wrong-import-order)
 ************* Module agentlib_flexquant.modules.flexibility_market
 agentlib_flexquant/modules/flexibility_market.py:49:30: C0303: Trailing whitespace (trailing-whitespace)
 agentlib_flexquant/modules/flexibility_market.py:71:0: C0301: Line too long (116/100) (line-too-long)
@@ -286,6 +287,7 @@ agentlib_flexquant/modules/flexibility_market.py:107:8: W0201: Attribute 'cooldo
 agentlib_flexquant/modules/flexibility_market.py:157:20: W0201: Attribute 'cooldown_ticker' defined outside __init__ (attribute-defined-outside-init)
 agentlib_flexquant/modules/flexibility_market.py:4:0: C0411: standard import "from pathlib import Path" should be placed before "import numpy as np" (wrong-import-order)
 agentlib_flexquant/modules/flexibility_market.py:5:0: C0411: standard import "from typing import List, Optional, Union" should be placed before "import numpy as np" (wrong-import-order)
+agentlib_flexquant/modules/flexibility_market.py:5:0: W0611: Unused List imported from typing (unused-import)
 ************* Module agentlib_flexquant.optimization_backends.constrained_cia
 agentlib_flexquant/optimization_backends/constrained_cia.py:7:0: C0301: Line too long (101/100) (line-too-long)
 agentlib_flexquant/optimization_backends/constrained_cia.py:14:29: W1401: Anomalous backslash in string: '\ '. String constant might be missing an r prefix. (anomalous-backslash-in-string)
@@ -341,6 +343,7 @@ agentlib_flexquant/data_structures/flex_results.py:372:12: C0103: Variable name 
 agentlib_flexquant/data_structures/flex_results.py:409:23: R1714: Consider merging these comparisons with 'in' by using 'alias in (var.alias, var.name)'. Use a set instead if elements are hashable. (consider-using-in)
 agentlib_flexquant/data_structures/flex_results.py:4:0: C0411: standard import "from typing import Union, Optional, Dict, Any, List, Type" should be placed before "import pandas as pd" (wrong-import-order)
 agentlib_flexquant/data_structures/flex_results.py:6:0: C0411: standard import "from pathlib import Path" should be placed before "import pandas as pd" (wrong-import-order)
+agentlib_flexquant/data_structures/flex_results.py:4:0: W0611: Unused List imported from typing (unused-import)
 ************* Module agentlib_flexquant.data_structures.flex_offer
 agentlib_flexquant/data_structures/flex_offer.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 agentlib_flexquant/data_structures/flex_offer.py:1:0: E0401: Unable to import 'pydantic' (import-error)
@@ -383,6 +386,7 @@ agentlib_flexquant/data_structures/flexquant.py:59:0: R0903: Too few public meth
 agentlib_flexquant/data_structures/flexquant.py:2:0: C0411: standard import "from enum import Enum" should be placed before "import pydantic" (wrong-import-order)
 agentlib_flexquant/data_structures/flexquant.py:3:0: C0411: standard import "from pathlib import Path" should be placed before "import pydantic" (wrong-import-order)
 agentlib_flexquant/data_structures/flexquant.py:4:0: C0411: standard import "from typing import List, Optional, Union" should be placed before "import pydantic" (wrong-import-order)
+agentlib_flexquant/data_structures/flexquant.py:4:0: W0611: Unused List imported from typing (unused-import)
 ************* Module agentlib_flexquant.data_structures.market
 agentlib_flexquant/data_structures/market.py:31:0: C0301: Line too long (117/100) (line-too-long)
 agentlib_flexquant/data_structures/market.py:1:0: C0114: Missing module docstring (missing-module-docstring)
@@ -433,19 +437,17 @@ agentlib_flexquant/data_structures/flex_kpis.py:414:4: R0913: Too many arguments
 agentlib_flexquant/data_structures/flex_kpis.py:492:4: C0116: Missing function or method docstring (missing-function-docstring)
 agentlib_flexquant/data_structures/flex_kpis.py:4:0: C0411: standard import "from typing import Union, Optional" should be placed before "import pydantic" (wrong-import-order)
 ************* Module agentlib_flexquant.data_structures.mpcs
-agentlib_flexquant/data_structures/mpcs.py:52:21: C0303: Trailing whitespace (trailing-whitespace)
-agentlib_flexquant/data_structures/mpcs.py:57:0: C0301: Line too long (105/100) (line-too-long)
+agentlib_flexquant/data_structures/mpcs.py:51:21: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/data_structures/mpcs.py:56:0: C0301: Line too long (105/100) (line-too-long)
 agentlib_flexquant/data_structures/mpcs.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 agentlib_flexquant/data_structures/mpcs.py:1:0: E0401: Unable to import 'pydantic' (import-error)
 agentlib_flexquant/data_structures/mpcs.py:2:0: E0401: Unable to import 'pydantic' (import-error)
-agentlib_flexquant/data_structures/mpcs.py:4:0: E0401: Unable to import 'agentlib_mpc.data_structures.mpc_datamodels' (import-error)
-agentlib_flexquant/data_structures/mpcs.py:9:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/mpcs.py:77:4: C0116: Missing function or method docstring (missing-function-docstring)
-agentlib_flexquant/data_structures/mpcs.py:31:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/mpcs.py:96:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/mpcs.py:128:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/mpcs.py:3:0: C0411: standard import "from typing import List, Optional" should be placed before "import pydantic" (wrong-import-order)
-agentlib_flexquant/data_structures/mpcs.py:3:0: W0611: Unused Optional imported from typing (unused-import)
+agentlib_flexquant/data_structures/mpcs.py:3:0: E0401: Unable to import 'agentlib_mpc.data_structures.mpc_datamodels' (import-error)
+agentlib_flexquant/data_structures/mpcs.py:8:0: R0903: Too few public methods (0/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/mpcs.py:76:4: C0116: Missing function or method docstring (missing-function-docstring)
+agentlib_flexquant/data_structures/mpcs.py:30:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/mpcs.py:95:0: R0903: Too few public methods (0/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/mpcs.py:127:0: R0903: Too few public methods (0/2) (too-few-public-methods)
 agentlib_flexquant/data_structures/mpcs.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.flexibility_indicator:[323:345]
 ==agentlib_flexquant.modules.flexibility_market:[79:88]
@@ -466,8 +468,7 @@ agentlib_flexquant/data_structures/mpcs.py:1:0: R0801: Similar lines in 2 files
         ge=0,
         unit="s",
         description="Time for market interaction",
-    )
- (duplicate-code)
+    ) (duplicate-code)
 agentlib_flexquant/data_structures/mpcs.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.flexibility_indicator:[218:226]
 ==agentlib_flexquant.modules.flexibility_market:[56:64]
@@ -481,5 +482,5 @@ agentlib_flexquant/data_structures/mpcs.py:1:0: R0801: Similar lines in 2 files
  (duplicate-code)
 
 -----------------------------------
-Your code has been rated at 5.87/10
+Your code has been rated at 5.86/10
 
