@@ -64,14 +64,12 @@ def assert_frame_matches_summary_snapshot(snapshot, df: pd.DataFrame,
     """
     # Create a summary of the dataframe
     summary = create_dataframe_summary(df)
-    print(json.dumps(summary, indent=2, sort_keys=True))
 
-    # # Convert the summary dictionary to a formatted JSON string
-    # summary_json = json.dumps(summary, indent=2, sort_keys=True)
+    # Convert the summary dictionary to a formatted JSON string
+    summary_json = json.dumps(summary, indent=2, sort_keys=True)
 
-    # # Use snapshot.assert_match on the small, stable JSON string
-    # snapshot.assert_match(summary_json, snapshot_name)
-    assert summary == snapshot(name=snapshot_name)
+    # Use snapshot.assert_match on the small, stable JSON string
+    snapshot.assert_match(summary_json, snapshot_name)
 
 def run_example_from_path(example_path: Path):
     """
@@ -119,7 +117,7 @@ def run_example_from_path(example_path: Path):
         sys.path[:] = original_sys_path  # Restore the original sys.path
 
 
-def test_SimpleBuilding(snapshot):
+def test_simplebuilding(snapshot):
     """
     Unit test for the SimpleBuilding example using snapshot testing.
 
@@ -161,4 +159,4 @@ def test_SimpleBuilding(snapshot):
     )
 
 if __name__ == "__main__":
-    pytest.main([__file__, "-vv"])
+    pytest.main([__file__, "-v"])
