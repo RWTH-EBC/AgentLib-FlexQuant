@@ -92,66 +92,6 @@
                 <td><pre>Trailing newlines</pre></td>
             </tr>
             
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.flexibility_indicator:[323:345]
-==agentlib_flexquant.modules.flexibility_market:[79:88]
-        results_file = self.config.results_file
-        try:
-            results = pd.read_csv(results_file, header=[0], index_col=[0, 1])
-            return results
-        except FileNotFoundError:
-            self.logger.error(&#34;Results file %s was not found.&#34;, results_file)
-            return None
-
-    def register_callbacks(self):</pre></td>
-            </tr>
-            
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.flexibility_indicator:[218:226]
-==agentlib_flexquant.modules.flexibility_market:[56:64]
-        if self.results_file and self.results_file.suffix != &#34;.csv&#34;:
-            raise ValueError(
-                f&#34;Invalid file extension for &#39;results_file&#39;: &#39;{self.results_file}&#39;. &#34;
-                f&#34;Expected a &#39;.csv&#39; file.&#34;
-            )
-        return self
-
-</pre></td>
-            </tr>
-            
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
-==agentlib_flexquant.data_structures.flexquant:[99:105]
-==agentlib_flexquant.optimization_backends.constrained_cia:[19:26]
-    market_time: int = pydantic.Field(
-        default=900,
-        ge=0,
-        unit=&#34;s&#34;,
-        description=&#34;Time for market interaction&#34;,
-    )
-</pre></td>
-            </tr>
-            
         </table>
         
         <h3>Module <code>agentlib_flexquant.data_structures.flex_kpis</code> (<code>agentlib_flexquant/data_structures/flex_kpis.py</code>)</h3>
@@ -1458,6 +1398,65 @@
                 <td>E0401</td>
                 <td></td>
                 <td><pre>Unable to import &#39;pydantic&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==agentlib_flexquant.modules.flexibility_indicator:[323:345]
+==agentlib_flexquant.modules.flexibility_market:[79:88]
+        results_file = self.config.results_file
+        try:
+            results = pd.read_csv(results_file, header=[0], index_col=[0, 1])
+            return results
+        except FileNotFoundError:
+            self.logger.error(&#34;Results file %s was not found.&#34;, results_file)
+            return None
+
+    def register_callbacks(self):</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==agentlib_flexquant.data_structures.flexquant:[99:105]
+==agentlib_flexquant.optimization_backends.constrained_cia:[19:26]
+    market_time: int = pydantic.Field(
+        default=900,
+        ge=0,
+        unit=&#34;s&#34;,
+        description=&#34;Time for market interaction&#34;,
+    )</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==agentlib_flexquant.modules.flexibility_indicator:[218:226]
+==agentlib_flexquant.modules.flexibility_market:[56:64]
+        if self.results_file and self.results_file.suffix != &#34;.csv&#34;:
+            raise ValueError(
+                f&#34;Invalid file extension for &#39;results_file&#39;: &#39;{self.results_file}&#39;. &#34;
+                f&#34;Expected a &#39;.csv&#39; file.&#34;
+            )
+        return self
+
+</pre></td>
             </tr>
             
             <tr>
@@ -4769,18 +4768,8 @@
             </tr>
             
             <tr>
-                <td>anomalous-backslash-in-string</td>
+                <td>consider-using-from-import</td>
                 <td>1</td>
-            </tr>
-            
-            <tr>
-                <td>raise-missing-from</td>
-                <td>1</td>
-            </tr>
-            
-            <tr>
-                <td>missing-class-docstring</td>
-                <td>23</td>
             </tr>
             
             <tr>
@@ -4789,7 +4778,32 @@
             </tr>
             
             <tr>
-                <td>useless-parent-delegation</td>
+                <td>too-many-arguments</td>
+                <td>6</td>
+            </tr>
+            
+            <tr>
+                <td>unnecessary-comprehension</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>consider-iterating-dictionary</td>
+                <td>4</td>
+            </tr>
+            
+            <tr>
+                <td>inconsistent-return-statements</td>
+                <td>3</td>
+            </tr>
+            
+            <tr>
+                <td>use-dict-literal</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>too-many-statements</td>
                 <td>1</td>
             </tr>
             
@@ -4799,48 +4813,8 @@
             </tr>
             
             <tr>
-                <td>consider-using-dict-items</td>
-                <td>2</td>
-            </tr>
-            
-            <tr>
-                <td>redefined-argument-from-local</td>
-                <td>2</td>
-            </tr>
-            
-            <tr>
-                <td>consider-iterating-dictionary</td>
-                <td>4</td>
-            </tr>
-            
-            <tr>
-                <td>unused-argument</td>
-                <td>5</td>
-            </tr>
-            
-            <tr>
-                <td>unnecessary-pass</td>
+                <td>eval-used</td>
                 <td>1</td>
-            </tr>
-            
-            <tr>
-                <td>attribute-defined-outside-init</td>
-                <td>3</td>
-            </tr>
-            
-            <tr>
-                <td>no-self-argument</td>
-                <td>1</td>
-            </tr>
-            
-            <tr>
-                <td>broad-exception-raised</td>
-                <td>1</td>
-            </tr>
-            
-            <tr>
-                <td>too-many-arguments</td>
-                <td>6</td>
             </tr>
             
             <tr>
@@ -4864,42 +4838,62 @@
             </tr>
             
             <tr>
-                <td>inconsistent-return-statements</td>
-                <td>3</td>
-            </tr>
-            
-            <tr>
                 <td>useless-else-on-loop</td>
                 <td>1</td>
             </tr>
             
             <tr>
-                <td>eval-used</td>
+                <td>missing-class-docstring</td>
+                <td>23</td>
+            </tr>
+            
+            <tr>
+                <td>consider-using-dict-items</td>
+                <td>2</td>
+            </tr>
+            
+            <tr>
+                <td>redefined-argument-from-local</td>
+                <td>2</td>
+            </tr>
+            
+            <tr>
+                <td>no-self-argument</td>
                 <td>1</td>
             </tr>
             
             <tr>
-                <td>consider-using-from-import</td>
+                <td>broad-exception-raised</td>
                 <td>1</td>
             </tr>
             
             <tr>
-                <td>unnecessary-comprehension</td>
+                <td>unused-argument</td>
+                <td>5</td>
+            </tr>
+            
+            <tr>
+                <td>unnecessary-pass</td>
                 <td>1</td>
             </tr>
             
             <tr>
-                <td>use-dict-literal</td>
+                <td>attribute-defined-outside-init</td>
+                <td>3</td>
+            </tr>
+            
+            <tr>
+                <td>anomalous-backslash-in-string</td>
                 <td>1</td>
             </tr>
             
             <tr>
-                <td>too-many-statements</td>
+                <td>raise-missing-from</td>
                 <td>1</td>
             </tr>
             
             <tr>
-                <td>unused-import</td>
+                <td>useless-parent-delegation</td>
                 <td>1</td>
             </tr>
             
@@ -4910,6 +4904,11 @@
             
             <tr>
                 <td>trailing-newlines</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>unused-import</td>
                 <td>1</td>
             </tr>
             
@@ -4939,28 +4938,13 @@
             </tr>
             
             <tr>
-                <td>agentlib_flexquant.optimization_backends.constrained_cia</td>
-                <td>18</td>
+                <td>agentlib_flexquant.utils.interactive</td>
+                <td>30</td>
             </tr>
             
             <tr>
-                <td>agentlib_flexquant.modules.baseline_mpc</td>
-                <td>8</td>
-            </tr>
-            
-            <tr>
-                <td>agentlib_flexquant.modules.shadow_mpc</td>
-                <td>17</td>
-            </tr>
-            
-            <tr>
-                <td>agentlib_flexquant.modules.flexibility_market</td>
-                <td>32</td>
-            </tr>
-            
-            <tr>
-                <td>agentlib_flexquant.modules.flexibility_indicator</td>
-                <td>58</td>
+                <td>agentlib_flexquant.utils.data_handling</td>
+                <td>13</td>
             </tr>
             
             <tr>
@@ -4974,13 +4958,53 @@
             </tr>
             
             <tr>
-                <td>agentlib_flexquant.utils.data_handling</td>
-                <td>13</td>
+                <td>agentlib_flexquant.modules.shadow_mpc</td>
+                <td>17</td>
             </tr>
             
             <tr>
-                <td>agentlib_flexquant.utils.interactive</td>
+                <td>agentlib_flexquant.modules.baseline_mpc</td>
+                <td>8</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.modules.flexibility_indicator</td>
+                <td>58</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.modules.flexibility_market</td>
+                <td>32</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.optimization_backends.constrained_cia</td>
+                <td>18</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.data_structures.globals</td>
+                <td>4</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.data_structures.flex_results</td>
                 <td>30</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.data_structures.flex_offer</td>
+                <td>15</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.data_structures.__init__</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.data_structures.flexquant</td>
+                <td>23</td>
             </tr>
             
             <tr>
@@ -4995,32 +5019,7 @@
             
             <tr>
                 <td>agentlib_flexquant.data_structures.mpcs</td>
-                <td>13</td>
-            </tr>
-            
-            <tr>
-                <td>agentlib_flexquant.data_structures.flex_offer</td>
-                <td>15</td>
-            </tr>
-            
-            <tr>
-                <td>agentlib_flexquant.data_structures.flex_results</td>
-                <td>30</td>
-            </tr>
-            
-            <tr>
-                <td>agentlib_flexquant.data_structures.flexquant</td>
-                <td>23</td>
-            </tr>
-            
-            <tr>
-                <td>agentlib_flexquant.data_structures.globals</td>
-                <td>4</td>
-            </tr>
-            
-            <tr>
-                <td>agentlib_flexquant.data_structures.__init__</td>
-                <td>4</td>
+                <td>16</td>
             </tr>
             
         </table>
@@ -5044,28 +5043,13 @@
             </tr>
             
             <tr>
-                <td>agentlib_flexquant/optimization_backends/constrained_cia.py</td>
-                <td>18</td>
+                <td>agentlib_flexquant/utils/interactive.py</td>
+                <td>30</td>
             </tr>
             
             <tr>
-                <td>agentlib_flexquant/modules/baseline_mpc.py</td>
-                <td>8</td>
-            </tr>
-            
-            <tr>
-                <td>agentlib_flexquant/modules/shadow_mpc.py</td>
-                <td>17</td>
-            </tr>
-            
-            <tr>
-                <td>agentlib_flexquant/modules/flexibility_market.py</td>
-                <td>32</td>
-            </tr>
-            
-            <tr>
-                <td>agentlib_flexquant/modules/flexibility_indicator.py</td>
-                <td>58</td>
+                <td>agentlib_flexquant/utils/data_handling.py</td>
+                <td>13</td>
             </tr>
             
             <tr>
@@ -5079,13 +5063,53 @@
             </tr>
             
             <tr>
-                <td>agentlib_flexquant/utils/data_handling.py</td>
-                <td>13</td>
+                <td>agentlib_flexquant/modules/shadow_mpc.py</td>
+                <td>17</td>
             </tr>
             
             <tr>
-                <td>agentlib_flexquant/utils/interactive.py</td>
+                <td>agentlib_flexquant/modules/baseline_mpc.py</td>
+                <td>8</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/modules/flexibility_indicator.py</td>
+                <td>58</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/modules/flexibility_market.py</td>
+                <td>32</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/optimization_backends/constrained_cia.py</td>
+                <td>18</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/data_structures/globals.py</td>
+                <td>4</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/data_structures/flex_results.py</td>
                 <td>30</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/data_structures/flex_offer.py</td>
+                <td>15</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/data_structures/__init__.py</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/data_structures/flexquant.py</td>
+                <td>23</td>
             </tr>
             
             <tr>
@@ -5100,32 +5124,7 @@
             
             <tr>
                 <td>agentlib_flexquant/data_structures/mpcs.py</td>
-                <td>13</td>
-            </tr>
-            
-            <tr>
-                <td>agentlib_flexquant/data_structures/flex_offer.py</td>
-                <td>15</td>
-            </tr>
-            
-            <tr>
-                <td>agentlib_flexquant/data_structures/flex_results.py</td>
-                <td>30</td>
-            </tr>
-            
-            <tr>
-                <td>agentlib_flexquant/data_structures/flexquant.py</td>
-                <td>23</td>
-            </tr>
-            
-            <tr>
-                <td>agentlib_flexquant/data_structures/globals.py</td>
-                <td>4</td>
-            </tr>
-            
-            <tr>
-                <td>agentlib_flexquant/data_structures/__init__.py</td>
-                <td>4</td>
+                <td>16</td>
             </tr>
             
         </table>
