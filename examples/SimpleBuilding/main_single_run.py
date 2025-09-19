@@ -29,6 +29,8 @@ def run_example(until=until):
         agent_configs=agent_configs, env=ENV_CONFIG, variable_logging=False
     )
     mas.run(until=until)  
+    results = mas.get_results(cleanup=False)
+    return results
 
 if __name__ == "__main__":
     # Here the simulation is run once, 
