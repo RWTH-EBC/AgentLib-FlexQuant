@@ -181,10 +181,8 @@
             <span class="n">vals</span><span class="o">.</span><span class="n">index</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span>
         <span class="c1"># update value in the mapping dictionary</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_full_controls</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span>
-        <span class="c1"># update the AgentVariable</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">vals</span><span class="p">)</span>
         <span class="c1"># update the value of the variable in the model if we want to limit the binary control in the market time during optimization</span>
-        <span class="c1"># self.model.set(name, vals)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">vals</span><span class="p">)</span>
         <span class="c1"># make sure all controls are set</span>
         <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_full_controls</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">do_step</span><span class="p">()</span>
