@@ -64,7 +64,7 @@ class ConstrainedCasADiCIABackend(CasADiCIABackend):
                     cons = self.model.get_input(
                         bin_con + full_trajectory_suffix
                     ).value
-                    cons = cons[cons.index < self.config.market_time]
+                    cons = cons[cons.index <= self.config.market_time]
                     last_idx = 0
                     for idx, value in cons.items():
                         # constrain ever timestep before market_time with values of baseline
