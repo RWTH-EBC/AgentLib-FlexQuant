@@ -3,10 +3,7 @@
 from agentlib.utils.plugin_import import ModuleImport
 from agentlib_mpc.optimization_backends import BackendImport, backend_types
 
-from .modules import shadow_mpc
-from .modules import baseline_mpc
-from .modules import flexibility_indicator
-from .modules import flexibility_market
+from .modules import baseline_mpc, flexibility_indicator, flexibility_market, shadow_mpc
 
 __version__ = "0.1.0"
 
