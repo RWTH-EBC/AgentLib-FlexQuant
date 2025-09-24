@@ -1,3 +1,11 @@
+"""
+Flexibility indicator module for calculating and distributing energy flexibility offers.
+
+This module processes power and energy profiles from baseline and shadow MPCs to
+calculate flexibility KPIs, validate profile consistency, and generate flexibility
+offers for energy markets. It handles both positive and negative flexibility with
+optional cost calculations and energy storage corrections.
+"""
 import logging
 import os
 from pathlib import Path
@@ -17,6 +25,8 @@ from agentlib_flexquant.data_structures.flex_offer import FlexOffer
 
 
 class InputsForCorrectFlexCosts(BaseModel):
+    """Configuration for flexibility cost correction."""
+
     enable_energy_costs_correction: bool = Field(
         name="enable_energy_costs_correction",
         description=(
@@ -43,6 +53,8 @@ class InputsForCorrectFlexCosts(BaseModel):
 
 
 class InputsForCalculateFlexCosts(BaseModel):
+    """Configuration for flexibility cost calculation with optional constant pricing."""
+
     use_constant_electricity_price: bool = Field(
         default=False, description="Use constant electricity price"
     )
@@ -55,6 +67,8 @@ class InputsForCalculateFlexCosts(BaseModel):
 
     @model_validator(mode="after")
     def validate_constant_price(cls, model):
+        """Validate that a valid constant electricity price is provided
+        when constant pricing is enabled."""
         if model.use_constant_electricity_price and np.isnan(
             model.const_electricity_price
         ):
@@ -76,6 +90,8 @@ kpis_neg = FlexibilityKPIs(direction="negative")
 
 
 class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
+    """Configuration for flexibility indicator module with power/energy inputs,
+    KPI outputs, and cost calculation settings."""
 
     model_config = ConfigDict(extra="forbid")
 
@@ -302,6 +318,7 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
 
     @model_validator(mode="after")
     def check_results_file_extension(self):
+        """Validate that results_file has a .csv extension."""
         if self.results_file and self.results_file.suffix != ".csv":
             raise ValueError(
                 f"Invalid file extension for 'results_file': '{self.results_file}'. "
@@ -311,6 +328,9 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
 
 
 class FlexibilityIndicatorModule(agentlib.BaseModule):
+    """Module for calculating flexibility KPIs and generating flexibility offers
+    from MPC power/energy profiles."""
+
     config: FlexibilityIndicatorModuleConfig
     data: FlexibilityData
 
@@ -344,9 +364,12 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         )
 
     def process(self):
+        """Yield control to the simulation environment and wait for events."""
         yield self.env.event()
 
     def callback(self, inp, name):
+        """Handle incoming data by storing power/energy profiles and triggering
+        flexibility calculations when all required inputs are available."""
         if name == "in_provision":
             self.in_provision = inp.value
             if self.in_provision:
@@ -623,18 +646,20 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         )
         if abs(dev_pos) > tol:
             logger.warning(
-                f"There is an average deviation of {dev_pos:.6f} kW between the final values of "
-                f"power profiles of positive shadow MPC and the baseline. "
-                f"Correction of energy costs might be necessary."
+                "There is an average deviation of %.6f kW between the final values of "
+                "power profiles of positive shadow MPC and the baseline. "
+                "Correction of energy costs might be necessary.",
+                dev_pos,
             )
             self.set(kpis_pos.power_flex_within_boundary.get_kpi_identifier(), False)
         else:
             self.set(kpis_pos.power_flex_within_boundary.get_kpi_identifier(), True)
         if abs(dev_neg) > tol:
             logger.warning(
-                f"There is an average deviation of {dev_pos:.6f} kW between the final values of "
-                f"power profiles of negative shadow MPC and the baseline. "
-                f"Correction of energy costs might be necessary."
+                "There is an average deviation of %.6f kW between the final values of "
+                "power profiles of negative shadow MPC and the baseline. "
+                "Correction of energy costs might be necessary.",
+                dev_neg,
             )
             self.set(kpis_neg.power_flex_within_boundary.get_kpi_identifier(), False)
         else:
