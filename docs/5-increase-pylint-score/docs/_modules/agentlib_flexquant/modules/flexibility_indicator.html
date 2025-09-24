@@ -72,7 +72,15 @@
            <div itemprop="articleBody">
              
   <h1>Source code for agentlib_flexquant.modules.flexibility_indicator</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Flexibility indicator module for calculating and distributing energy flexibility offers.</span>
+
+<span class="sd">This module processes power and energy profiles from baseline and shadow MPCs to</span>
+<span class="sd">calculate flexibility KPIs, validate profile consistency, and generate flexibility</span>
+<span class="sd">offers for energy markets. It handles both positive and negative flexibility with</span>
+<span class="sd">optional cost calculations and energy storage corrections.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
@@ -91,6 +99,8 @@
 
 
 <div class="viewcode-block" id="InputsForCorrectFlexCosts"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">InputsForCorrectFlexCosts</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for flexibility cost correction.&quot;&quot;&quot;</span>
+
     <span class="n">enable_energy_costs_correction</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">name</span><span class="o">=</span><span class="s2">&quot;enable_energy_costs_correction&quot;</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
@@ -117,6 +127,8 @@
 
 
 <div class="viewcode-block" id="InputsForCalculateFlexCosts"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">InputsForCalculateFlexCosts</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for flexibility cost calculation with optional constant pricing.&quot;&quot;&quot;</span>
+
     <span class="n">use_constant_electricity_price</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Use constant electricity price&quot;</span>
     <span class="p">)</span>
@@ -129,6 +141,8 @@
 
 <div class="viewcode-block" id="InputsForCalculateFlexCosts.validate_constant_price"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">validate_constant_price</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate that a valid constant electricity price is provided</span>
+<span class="sd">        when constant pricing is enabled.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">use_constant_electricity_price</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span>
             <span class="n">model</span><span class="o">.</span><span class="n">const_electricity_price</span>
         <span class="p">):</span>
@@ -150,6 +164,8 @@
 
 
 <div class="viewcode-block" id="FlexibilityIndicatorModuleConfig"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityIndicatorModuleConfig</span><span class="p">(</span><span class="n">agentlib</span><span class="o">.</span><span class="n">BaseModuleConfig</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for flexibility indicator module with power/energy inputs,</span>
+<span class="sd">    KPI outputs, and cost calculation settings.&quot;&quot;&quot;</span>
 
     <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span><span class="p">)</span>
 
@@ -376,6 +392,7 @@
 
 <div class="viewcode-block" id="FlexibilityIndicatorModuleConfig.check_results_file_extension"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">check_results_file_extension</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate that results_file has a .csv extension.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">results_file</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="o">.</span><span class="n">suffix</span> <span class="o">!=</span> <span class="s2">&quot;.csv&quot;</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Invalid file extension for &#39;results_file&#39;: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
@@ -385,6 +402,9 @@
 
 
 <div class="viewcode-block" id="FlexibilityIndicatorModule"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityIndicatorModule</span><span class="p">(</span><span class="n">agentlib</span><span class="o">.</span><span class="n">BaseModule</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Module for calculating flexibility KPIs and generating flexibility offers</span>
+<span class="sd">    from MPC power/energy profiles.&quot;&quot;&quot;</span>
+
     <span class="n">config</span><span class="p">:</span> <span class="n">FlexibilityIndicatorModuleConfig</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">FlexibilityData</span>
 
@@ -418,9 +438,12 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlexibilityIndicatorModule.process"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.process">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Yield control to the simulation environment and wait for events.&quot;&quot;&quot;</span>
         <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">event</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="FlexibilityIndicatorModule.callback"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.callback">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle incoming data by storing power/energy profiles and triggering</span>
+<span class="sd">        flexibility calculations when all required inputs are available.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;in_provision&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">in_provision</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">value</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_provision</span><span class="p">:</span>
@@ -697,18 +720,20 @@
         <span class="p">)</span>
         <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dev_pos</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">tol</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;There is an average deviation of </span><span class="si">{</span><span class="n">dev_pos</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> kW between the final values of &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;power profiles of positive shadow MPC and the baseline. &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;Correction of energy costs might be necessary.&quot;</span>
+                <span class="s2">&quot;There is an average deviation of </span><span class="si">%.6f</span><span class="s2"> kW between the final values of &quot;</span>
+                <span class="s2">&quot;power profiles of positive shadow MPC and the baseline. &quot;</span>
+                <span class="s2">&quot;Correction of energy costs might be necessary.&quot;</span><span class="p">,</span>
+                <span class="n">dev_pos</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">kpis_pos</span><span class="o">.</span><span class="n">power_flex_within_boundary</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="kc">False</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">kpis_pos</span><span class="o">.</span><span class="n">power_flex_within_boundary</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dev_neg</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">tol</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;There is an average deviation of </span><span class="si">{</span><span class="n">dev_pos</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> kW between the final values of &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;power profiles of negative shadow MPC and the baseline. &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;Correction of energy costs might be necessary.&quot;</span>
+                <span class="s2">&quot;There is an average deviation of </span><span class="si">%.6f</span><span class="s2"> kW between the final values of &quot;</span>
+                <span class="s2">&quot;power profiles of negative shadow MPC and the baseline. &quot;</span>
+                <span class="s2">&quot;Correction of energy costs might be necessary.&quot;</span><span class="p">,</span>
+                <span class="n">dev_neg</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">kpis_neg</span><span class="o">.</span><span class="n">power_flex_within_boundary</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">(),</span> <span class="kc">False</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
