@@ -474,9 +474,9 @@ class FlexAgentGenerator:
                 parameter.value = self.flex_config.market_time
             if parameter.name == glbs.FLEX_EVENT_DURATION:
                 parameter.value = self.flex_config.flex_event_duration
-            if parameter.name == "time_step":
+            if parameter.name == glbs.TIME_STEP:
                 parameter.value = self.baseline_mpc_module_config.time_step
-            if parameter.name == "prediction_horizon":
+            if parameter.name == glbs.PREDICTION_HORIZON:
                 parameter.value = self.baseline_mpc_module_config.prediction_horizon
         # set power unit
         module_config.power_unit = (
