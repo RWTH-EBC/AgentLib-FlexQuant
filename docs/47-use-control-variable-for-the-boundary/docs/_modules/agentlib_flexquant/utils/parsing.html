@@ -500,7 +500,6 @@
                     <span class="c1"># overwrite return statement with custom function</span>
                     <span class="n">ast</span><span class="o">.</span><span class="n">Return</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">SHADOW_MPC_COST_FUNCTION</span><span class="p">)</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">),</span>
                 <span class="p">]</span>
-                <span class="c1"># append new variables to end of function</span>
                 <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="n">i</span><span class="p">:]</span> <span class="o">=</span> <span class="n">new_body</span>
                 <span class="k">break</span></div>
 
@@ -538,6 +537,7 @@
                         <span class="o">.</span><span class="n">value</span>
                     <span class="p">),</span>
                 <span class="p">]</span>
+                <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="n">i</span><span class="p">:]</span> <span class="o">=</span> <span class="n">new_body</span>
                 <span class="k">break</span></div></div>
 
 
