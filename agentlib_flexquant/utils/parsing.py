@@ -426,7 +426,6 @@ class SetupSystemModifier(ast.NodeTransformer):
                     # overwrite return statement with custom function
                     ast.Return(value=ast.parse(SHADOW_MPC_COST_FUNCTION).body[0].value),
                 ]
-                # append new variables to end of function
                 node.body[i:] = new_body
                 break
 
@@ -464,6 +463,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                         .value
                     ),
                 ]
+                node.body[i:] = new_body
                 break
 
 
