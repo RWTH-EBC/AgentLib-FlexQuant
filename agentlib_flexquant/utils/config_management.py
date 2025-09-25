@@ -124,6 +124,8 @@ def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig) -> dict:
         parent_dict["controls"] = [control.dict(exclude=check_bounds(control)) for control in module.controls]
     if "states" in parent_dict:
         parent_dict["states"] = [state.dict(exclude=check_bounds(state)) for state in module.states]
+    if "mpc_output_time_grid" in parent_dict:
+        parent_dict["mpc_output_time_grid"] = module.mpc_output_time_grid.dict(exclude=(lambda ex: ex.remove('shared') or ex)(check_bounds(module.mpc_output_time_grid)))
 
     return parent_dict
 

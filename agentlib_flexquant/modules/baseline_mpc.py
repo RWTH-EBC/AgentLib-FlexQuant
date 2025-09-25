@@ -4,6 +4,8 @@ import numpy as np
 import pandas as pd
 from typing import Optional
 from pydantic import Field
+import agentlib_flexquant.data_structures.globals as glbs
+from agentlib import AgentVariable
 from agentlib_mpc.modules import mpc_full, minlp_mpc
 
 class FlexibilityBaselineMPCConfig(mpc_full.MPCConfig):
@@ -11,6 +13,8 @@ class FlexibilityBaselineMPCConfig(mpc_full.MPCConfig):
     casadi_sim_time_step: int = Field(default=0, description="Time step for simulation with Casadi simulator. Value is read from FlexQuantConfig")
     power_variable_name: str = Field(default=None, description="Name of the power variable in the baseline mpc model.")
     storage_variable_name: Optional[str] = Field(default=None, description="Name of the storage variable in the baseline mpc model.")
+    mpc_output_time_grid: AgentVariable = Field(default=AgentVariable(name=glbs.MPC_OUTPUT_TIME_GRID, alias=glbs.MPC_OUTPUT_TIME_GRID, shared=True),
+                                                description="Time grid of the model output calculated during mpc optimization")
 
 
 class FlexibilityBaselineMPC(mpc_full.MPC):
@@ -20,6 +24,8 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
         super().__init__(config, agent)
         # initialize flex_results with None
         self.flex_results = None
+        # add power_mpc_time_grid to the variables dictionary, so that the set function can be applied to it
+        self._variables_dict[self.config.mpc_output_time_grid.name] = self.config.mpc_output_time_grid
         # set up necessary components if simulation is enabled
         if self.config.casadi_sim_time_step > 0:
             # generate a separate flex_model for integration to ensure the model used in MPC optimization remains unaffected
@@ -52,7 +58,15 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
         # simulate with the casadi simulator
         self.sim_flex_model(solution)
 
+        # extract solution DataFrama
         df = solution.df
+
+        # send the time grid of mpc output
+        mpc_output_time_grid = df.variable.loc[df.variable[self.var_ref.outputs[0]].notna()].index.to_series()
+        if self.get(glbs.MPC_OUTPUT_TIME_GRID).value is None:
+            self.set(self.config.mpc_output_time_grid.name, mpc_output_time_grid)
+
+        # send the outputs
         if self.flex_results is not None:
             for output in self.var_ref.outputs:
                 if output not in [self.config.power_variable_name, self.config.storage_variable_name]:

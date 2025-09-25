@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import List, Optional, Union
 from pydantic import model_validator, ConfigDict, Field
 import agentlib
+import agentlib_flexquant.data_structures.globals as glbs
 from agentlib.core.datamodels import AgentVariable
 from agentlib_flexquant.data_structures.flex_offer import OfferStatus, FlexOffer
 from agentlib_flexquant.data_structures.market import MarketSpecifications
@@ -17,7 +18,8 @@ class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
     )
 
     inputs: List[AgentVariable] = [
-        AgentVariable(name="FlexibilityOffer")
+        AgentVariable(name="FlexibilityOffer"),
+        AgentVariable(name=glbs.MPC_OUTPUT_TIME_GRID, alias=glbs.MPC_OUTPUT_TIME_GRID)
     ]
 
     outputs: List[AgentVariable] = [
@@ -148,6 +150,10 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                     profile = offer.base_power_profile + offer.neg_diff_profile
                     offer.status = OfferStatus.accepted_negative.value
 
+                # reindex the profile to the mpc output time grid
+                mpc_output_time_grid = self.get(glbs.MPC_OUTPUT_TIME_GRID).value
+                profile = profile.reindex(mpc_output_time_grid)
+
                 if profile is not None:
                     profile = profile.dropna()
                     profile.index += self.env.time
@@ -177,6 +183,10 @@ class FlexibilityMarketModule(agentlib.BaseModule):
             elif np.average(offer.neg_diff_profile) > self.config.market_specs.minimum_average_flex:
                 profile = offer.base_power_profile + offer.neg_diff_profile
                 offer.status = OfferStatus.accepted_negative.value
+
+            # reindex the profile to the mpc output time grid
+            mpc_output_time_grid = self.get(glbs.MPC_OUTPUT_TIME_GRID).value
+            profile = profile.reindex(mpc_output_time_grid)
 
             if profile is not None:
                 profile = profile.dropna()
