@@ -1,12 +1,22 @@
+"""
+Data models for MPC configurations in flexibility quantification.
+
+This module defines Pydantic data models that encapsulate configuration parameters
+for baseline, positive flexibility, and negative flexibility MPC controllers used
+in flexquant. The models handle file paths, module configurations, variable
+mappings, and optimization weights for MPC implementations.
+"""
 import pydantic
-from pydantic import ConfigDict, model_validator
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
+from pydantic import ConfigDict, model_validator
+
 import agentlib_flexquant.data_structures.globals as glbs
 import agentlib_flexquant.utils.config_management as cmng
 
 
 class BaseMPCData(pydantic.BaseModel):
     """Base class containing necessary data for the code creation of the different mpcs"""
+
     # files and paths
     created_flex_mpcs_file: str = "flex_agents.py"
     name_of_created_file: str
@@ -21,14 +31,14 @@ class BaseMPCData(pydantic.BaseModel):
     config_inputs_appendix: list[MPCVariable] = []
     config_parameters_appendix: list[MPCVariable] = []
     weights: list[MPCVariable] = pydantic.Field(
-        default=[],
-        description="Name and value of weights",
+        default=[], description="Name and value of weights",
     )
     model_config = ConfigDict(json_encoders={MPCVariable: lambda v: v.dict()})
 
 
 class BaselineMPCData(BaseMPCData):
     """Data class for Baseline MPC"""
+
     # files and paths
     results_suffix: str = "_base.csv"
     name_of_created_file: str = "baseline.json"
@@ -41,23 +51,25 @@ class BaselineMPCData(BaseMPCData):
     stored_energy_alias: str = glbs.STORED_ENERGY_ALIAS_BASE
     power_variable: str = pydantic.Field(
         default="P_el",
-        description="Name of the variable representing the electrical power in the baseline config",
+        description=(
+            "Name of the variable representing the electrical power in the baseline config"
+        ),
     )
     profile_deviation_weight: float = pydantic.Field(
         default=0,
         description="Weight of soft constraint for deviation from accepted flexible profile",
     )
     power_unit: str = pydantic.Field(
-        default="kW", 
-        description="Unit of the power variable"
+        default="kW", description="Unit of the power variable"
     )
     comfort_variable: str = pydantic.Field(
         default=None,
-        description="Name of the slack variable representing the thermal comfort in the baseline config",
+        description=(
+            "Name of the slack variable representing the thermal comfort in the baseline config"
+        ),
     )
     profile_comfort_weight: float = pydantic.Field(
-        default=1,
-        description="Weight of soft constraint for discomfort",
+        default=1, description="Weight of soft constraint for discomfort",
     )
     config_inputs_appendix: list[MPCVariable] = [
         MPCVariable(name="_P_external", value=0, unit="W"),
@@ -67,33 +79,43 @@ class BaselineMPCData(BaseMPCData):
     ]
     config_parameters_appendix: list[MPCVariable] = []
     weights: list[MPCVariable] = pydantic.Field(
-        default=[],
-        description="Name and value of weights",
+        default=[], description="Name and value of weights",
     )
     model_config = ConfigDict(json_encoders={MPCVariable: lambda v: v.dict()})
 
-    @model_validator(mode='after')
-    def update_config_parameters_appendix(self) -> 'BaselineMPCData':
+    @model_validator(mode="after")
+    def update_config_parameters_appendix(self) -> "BaselineMPCData":
+        """Update the config parameters appendix with profile deviation and comfort weights.
+
+        Adds the profile deviation weight parameter and optionally the profile comfort
+        weight parameter (if comfort_variable is enabled) to the config_parameters_appendix
+        list as MPCVariable instances.
+        """
         self.config_parameters_appendix = [
             MPCVariable(
                 name=glbs.PROFILE_DEVIATION_WEIGHT,
                 value=self.profile_deviation_weight,
                 unit="-",
-                description="Weight of soft constraint for deviation from accepted flexible profile"
+                description=(
+                    "Weight of soft constraint for deviation from accepted flexible profile"
+                ),
             )
         ]
         if self.comfort_variable:
-            self.config_parameters_appendix.append(MPCVariable(
+            self.config_parameters_appendix.append(
+                MPCVariable(
                     name=glbs.PROFILE_COMFORT_WEIGHT,
                     value=self.profile_comfort_weight,
                     unit="-",
-                    description="Weight of soft constraint for discomfort"
-                ))
+                    description="Weight of soft constraint for discomfort",
+                )
+            )
         return self
 
 
 class PFMPCData(BaseMPCData):
     """Data class for PF-MPC"""
+
     # files and paths
     results_suffix: str = "_pos_flex.csv"
     name_of_created_file: str = "pos_flex.json"
@@ -105,8 +127,7 @@ class PFMPCData(BaseMPCData):
     power_alias: str = glbs.POWER_ALIAS_POS
     stored_energy_alias: str = glbs.STORED_ENERGY_ALIAS_POS
     flex_cost_function: str = pydantic.Field(
-        default=None,
-        description="Cost function of the PF-MPC",
+        default=None, description="Cost function of the PF-MPC",
     )
     # initialize market parameters with dummy values (0)
     config_parameters_appendix: list[MPCVariable] = [
@@ -118,14 +139,14 @@ class PFMPCData(BaseMPCData):
         MPCVariable(name="in_provision", value=False),
     ]
     weights: list[MPCVariable] = pydantic.Field(
-        default=[],
-        description="Name and value of weights",
+        default=[], description="Name and value of weights",
     )
     model_config = ConfigDict(json_encoders={MPCVariable: lambda v: v.dict()})
 
 
 class NFMPCData(BaseMPCData):
     """Data class for PF-MPC"""
+
     # files and paths
     results_suffix: str = "_neg_flex.csv"
     name_of_created_file: str = "neg_flex.json"
@@ -137,8 +158,7 @@ class NFMPCData(BaseMPCData):
     power_alias: str = glbs.POWER_ALIAS_NEG
     stored_energy_alias: str = glbs.STORED_ENERGY_ALIAS_NEG
     flex_cost_function: str = pydantic.Field(
-        default=None,
-        description="Cost function of the NF-MPC",
+        default=None, description="Cost function of the NF-MPC",
     )
     # initialize market parameters with dummy values (0)
     config_parameters_appendix: list[MPCVariable] = [
@@ -150,7 +170,6 @@ class NFMPCData(BaseMPCData):
         MPCVariable(name="in_provision", value=False),
     ]
     weights: list[MPCVariable] = pydantic.Field(
-        default=[],
-        description="Name and value of weights",
+        default=[], description="Name and value of weights",
     )
     model_config = ConfigDict(json_encoders={MPCVariable: lambda v: v.dict()})

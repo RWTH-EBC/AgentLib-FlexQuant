@@ -1,11 +1,20 @@
+"""
+Defines shadow MPC and MINLP-MPC for positive/negative flexibility quantification.
+"""
 from typing import Dict, Union
+
 from agentlib.core.datamodels import AgentVariable
-from agentlib_mpc.modules import mpc_full, minlp_mpc
-from agentlib_flexquant.utils.data_handling import strip_multi_index, fill_nans, MEAN
-from agentlib_flexquant.data_structures.globals import full_trajectory_prefix, full_trajectory_suffix
+from agentlib_mpc.modules import minlp_mpc, mpc_full
+
+from agentlib_flexquant.data_structures.globals import (
+    full_trajectory_prefix,
+    full_trajectory_suffix,
+)
+from agentlib_flexquant.utils.data_handling import MEAN, fill_nans, strip_multi_index
 
 
 class FlexibilityShadowMPC(mpc_full.MPC):
+    """Shadow MPC for calculating positive/negative flexibility offers."""
 
     config: mpc_full.MPCConfig
 
@@ -54,8 +63,8 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         # make sure all controls are set
         if all(x.value is not None for x in self._full_controls.values()):
             self.do_step()
-            for name in self._full_controls.keys():
-                self._full_controls[name].value = None
+            for _, control_var in self._full_controls.items():
+                control_var.value = None
 
     def process(self):
         # the shadow mpc should only be run after the results of the baseline are sent
@@ -63,6 +72,7 @@ class FlexibilityShadowMPC(mpc_full.MPC):
 
 
 class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
+    """Shadow MINLP-MPC for calculating positive/negatives flexibility offers."""
 
     config: minlp_mpc.MINLPMPCConfig
 
@@ -81,7 +91,10 @@ class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
         for input_var in self.config.inputs:
             if input_var.name.replace(full_trajectory_prefix, "", 1).replace(
                 full_trajectory_suffix, ""
-            ) in [control_var.name for control_var in self.config.controls + self.config.binary_controls]:
+            ) in [
+                control_var.name
+                for control_var in self.config.controls + self.config.binary_controls
+            ]:
                 self._full_controls[input_var.name] = input_var
 
         super().register_callbacks()
@@ -111,8 +124,8 @@ class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
         # make sure all controls are set
         if all(x.value is not None for x in self._full_controls.values()):
             self.do_step()
-            for name in self._full_controls.keys():
-                self._full_controls[name].value = None
+            for _, control_var in self._full_controls.items():
+                control_var.value = None
 
     def process(self):
         # the shadow mpc should only be run after the results of the baseline are sent
