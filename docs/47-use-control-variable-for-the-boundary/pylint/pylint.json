@@ -3268,15 +3268,15 @@
             "message-id": "W0311"
         },
         {
-            "type": "warning",
+            "type": "convention",
             "module": "agentlib_flexquant.optimization_backends.constrained_cia",
             "obj": "",
             "line": 67,
             "column": 0,
             "path": "agentlib_flexquant/optimization_backends/constrained_cia.py",
-            "symbol": "bad-indentation",
-            "message": "Bad indentation. Found 20 spaces, expected 16",
-            "message-id": "W0311"
+            "symbol": "line-too-long",
+            "message": "Line too long (149/100)",
+            "message-id": "C0301"
         },
         {
             "type": "warning",
@@ -3293,7 +3293,7 @@
             "type": "warning",
             "module": "agentlib_flexquant.optimization_backends.constrained_cia",
             "obj": "",
-            "line": 69,
+            "line": 70,
             "column": 0,
             "path": "agentlib_flexquant/optimization_backends/constrained_cia.py",
             "symbol": "bad-indentation",
@@ -3308,7 +3308,18 @@
             "column": 0,
             "path": "agentlib_flexquant/optimization_backends/constrained_cia.py",
             "symbol": "bad-indentation",
-            "message": "Bad indentation. Found 24 spaces, expected 20",
+            "message": "Bad indentation. Found 20 spaces, expected 16",
+            "message-id": "W0311"
+        },
+        {
+            "type": "warning",
+            "module": "agentlib_flexquant.optimization_backends.constrained_cia",
+            "obj": "",
+            "line": 72,
+            "column": 0,
+            "path": "agentlib_flexquant/optimization_backends/constrained_cia.py",
+            "symbol": "bad-indentation",
+            "message": "Bad indentation. Found 20 spaces, expected 16",
             "message-id": "W0311"
         },
         {
@@ -3316,6 +3327,17 @@
             "module": "agentlib_flexquant.optimization_backends.constrained_cia",
             "obj": "",
             "line": 74,
+            "column": 0,
+            "path": "agentlib_flexquant/optimization_backends/constrained_cia.py",
+            "symbol": "bad-indentation",
+            "message": "Bad indentation. Found 24 spaces, expected 20",
+            "message-id": "W0311"
+        },
+        {
+            "type": "warning",
+            "module": "agentlib_flexquant.optimization_backends.constrained_cia",
+            "obj": "",
+            "line": 77,
             "column": 0,
             "path": "agentlib_flexquant/optimization_backends/constrained_cia.py",
             "symbol": "bad-indentation",
@@ -4980,7 +5002,7 @@
             "column": 0,
             "path": "agentlib_flexquant/modules/__init__.py",
             "symbol": "duplicate-code",
-            "message": "Similar lines in 2 files\n==agentlib_flexquant.data_structures.flexquant:[99:105]\n==agentlib_flexquant.optimization_backends.constrained_cia:[19:26]\n    market_time: int = pydantic.Field(\n        default=900,\n        ge=0,\n        unit=\"s\",\n        description=\"Time for market interaction\",\n    )",
+            "message": "Similar lines in 2 files\n==agentlib_flexquant.data_structures.flexquant:[99:105]\n==agentlib_flexquant.optimization_backends.constrained_cia:[19:26]\n    market_time: int = pydantic.Field(\n        default=900,\n        ge=0,\n        unit=\"s\",\n        description=\"Time for market interaction\",\n    )\n",
             "message-id": "R0801"
         }
     ],
@@ -5137,13 +5159,13 @@
                 "warning": 1
             },
             "agentlib_flexquant.optimization_backends.constrained_cia": {
-                "convention": 5,
+                "convention": 6,
                 "error": 6,
                 "fatal": 0,
                 "info": 0,
                 "refactor": 4,
-                "statement": 40,
-                "warning": 9
+                "statement": 41,
+                "warning": 10
             },
             "agentlib_flexquant.optimization_backends.__init__": {
                 "convention": 0,
@@ -5202,7 +5224,7 @@
         },
         "by_msg": {
             "import-error": 73,
-            "line-too-long": 134,
+            "line-too-long": 135,
             "missing-module-docstring": 16,
             "too-many-instance-attributes": 4,
             "unspecified-encoding": 8,
@@ -5238,7 +5260,7 @@
             "consider-using-in": 1,
             "trailing-newlines": 1,
             "unused-import": 3,
-            "bad-indentation": 6,
+            "bad-indentation": 7,
             "anomalous-backslash-in-string": 1,
             "raise-missing-from": 1,
             "useless-parent-delegation": 1,
@@ -5265,56 +5287,56 @@
             ],
             "agentlib_flexquant.modules.flexibility_indicator": [
                 "agentlib_flexquant.data_structures.flex_results",
-                "agentlib_flexquant",
-                "agentlib_flexquant.generate_flex_agents"
+                "agentlib_flexquant.generate_flex_agents",
+                "agentlib_flexquant"
             ],
             "agentlib_flexquant.modules.flexibility_market": [
                 "agentlib_flexquant.data_structures.flex_results",
-                "agentlib_flexquant",
-                "agentlib_flexquant.generate_flex_agents"
+                "agentlib_flexquant.generate_flex_agents",
+                "agentlib_flexquant"
             ],
             "agentlib_flexquant.data_structures.globals": [
                 "agentlib_flexquant.modules.baseline_mpc",
-                "agentlib_flexquant.utils.parsing",
                 "agentlib_flexquant.generate_flex_agents",
+                "agentlib_flexquant.utils.interactive",
+                "agentlib_flexquant.data_structures.flex_kpis",
+                "agentlib_flexquant.modules.flexibility_indicator",
                 "agentlib_flexquant.modules.shadow_mpc",
                 "agentlib_flexquant.data_structures.market",
-                "agentlib_flexquant.modules.flexibility_indicator",
-                "agentlib_flexquant.optimization_backends.constrained_cia",
-                "agentlib_flexquant.utils.interactive",
                 "agentlib_flexquant.data_structures.mpcs",
-                "agentlib_flexquant.data_structures.flex_kpis"
+                "agentlib_flexquant.utils.parsing",
+                "agentlib_flexquant.optimization_backends.constrained_cia"
             ],
             "agentlib_flexquant.utils.config_management": [
                 "agentlib_flexquant.data_structures.flex_results",
-                "agentlib_flexquant.data_structures.mpcs",
-                "agentlib_flexquant.generate_flex_agents"
+                "agentlib_flexquant.generate_flex_agents",
+                "agentlib_flexquant.data_structures.mpcs"
             ],
             "agentlib_flexquant.utils.parsing": [
                 "agentlib_flexquant.generate_flex_agents"
             ],
             "agentlib_flexquant.data_structures.flexquant": [
-                "agentlib_flexquant.utils.interactive",
+                "agentlib_flexquant.data_structures.flex_results",
                 "agentlib_flexquant.generate_flex_agents",
-                "agentlib_flexquant.data_structures.flex_results"
+                "agentlib_flexquant.utils.interactive"
             ],
             "agentlib_flexquant.data_structures.mpcs": [
                 "agentlib_flexquant.data_structures.flexquant",
-                "agentlib_flexquant.utils.parsing",
+                "agentlib_flexquant.data_structures.flex_results",
                 "agentlib_flexquant.generate_flex_agents",
-                "agentlib_flexquant.data_structures.flex_results"
+                "agentlib_flexquant.utils.parsing"
             ],
             "agentlib_flexquant.data_structures.flex_results": [
                 "agentlib_flexquant.utils.interactive"
             ],
             "agentlib_flexquant.data_structures.flex_kpis": [
-                "agentlib_flexquant.utils.interactive",
-                "agentlib_flexquant.modules.flexibility_indicator"
+                "agentlib_flexquant.modules.flexibility_indicator",
+                "agentlib_flexquant.utils.interactive"
             ],
             "agentlib_flexquant.data_structures.flex_offer": [
-                "agentlib_flexquant.utils.interactive",
                 "agentlib_flexquant.modules.flexibility_indicator",
-                "agentlib_flexquant.modules.flexibility_market"
+                "agentlib_flexquant.modules.flexibility_market",
+                "agentlib_flexquant.utils.interactive"
             ],
             "agentlib_flexquant.utils.data_handling": [
                 "agentlib_flexquant.data_structures.flex_results",
@@ -5341,16 +5363,16 @@
             "method": 22,
             "module": 16
         },
-        "convention": 276,
+        "convention": 277,
         "error": 74,
         "fatal": 0,
         "info": 0,
         "refactor": 58,
-        "statement": 1773,
-        "warning": 45,
+        "statement": 1774,
+        "warning": 46,
         "global_note": 0,
         "nb_duplicated_lines": 19,
-        "percent_duplicated_lines": 0.3871230643846781
+        "percent_duplicated_lines": 0.3868865811443698
     },
     "previous": {
         "bad_names": {
@@ -5505,13 +5527,13 @@
                 "warning": 1
             },
             "agentlib_flexquant.optimization_backends.constrained_cia": {
-                "convention": 5,
+                "convention": 6,
                 "error": 6,
                 "fatal": 0,
                 "info": 0,
                 "refactor": 4,
-                "statement": 40,
-                "warning": 9
+                "statement": 41,
+                "warning": 10
             },
             "agentlib_flexquant.optimization_backends.__init__": {
                 "convention": 0,
@@ -5570,7 +5592,7 @@
         },
         "by_msg": {
             "import-error": 73,
-            "line-too-long": 134,
+            "line-too-long": 135,
             "missing-module-docstring": 16,
             "too-many-instance-attributes": 4,
             "unspecified-encoding": 8,
@@ -5606,7 +5628,7 @@
             "consider-using-in": 1,
             "trailing-newlines": 1,
             "unused-import": 3,
-            "bad-indentation": 6,
+            "bad-indentation": 7,
             "anomalous-backslash-in-string": 1,
             "raise-missing-from": 1,
             "useless-parent-delegation": 1,
@@ -5633,61 +5655,61 @@
             ],
             "agentlib_flexquant.modules.flexibility_indicator": [
                 "agentlib_flexquant.data_structures.flex_results",
-                "agentlib_flexquant",
-                "agentlib_flexquant.generate_flex_agents"
+                "agentlib_flexquant.generate_flex_agents",
+                "agentlib_flexquant"
             ],
             "agentlib_flexquant.modules.flexibility_market": [
                 "agentlib_flexquant.data_structures.flex_results",
-                "agentlib_flexquant",
-                "agentlib_flexquant.generate_flex_agents"
+                "agentlib_flexquant.generate_flex_agents",
+                "agentlib_flexquant"
             ],
             "agentlib_flexquant.data_structures.globals": [
                 "agentlib_flexquant.modules.baseline_mpc",
-                "agentlib_flexquant.utils.parsing",
                 "agentlib_flexquant.generate_flex_agents",
-                "agentlib_flexquant.modules.shadow_mpc",
-                "agentlib_flexquant.data_structures.market",
-                "agentlib_flexquant.modules.flexibility_indicator",
-                "agentlib_flexquant.optimization_backends.constrained_cia",
                 "agentlib_flexquant.utils.interactive",
+                "agentlib_flexquant.modules.shadow_mpc",
+                "agentlib_flexquant.modules.flexibility_indicator",
+                "agentlib_flexquant.data_structures.flex_kpis",
+                "agentlib_flexquant.data_structures.market",
                 "agentlib_flexquant.data_structures.mpcs",
-                "agentlib_flexquant.data_structures.flex_kpis"
+                "agentlib_flexquant.utils.parsing",
+                "agentlib_flexquant.optimization_backends.constrained_cia"
             ],
             "agentlib_flexquant.utils.config_management": [
                 "agentlib_flexquant.data_structures.flex_results",
-                "agentlib_flexquant.data_structures.mpcs",
-                "agentlib_flexquant.generate_flex_agents"
+                "agentlib_flexquant.generate_flex_agents",
+                "agentlib_flexquant.data_structures.mpcs"
             ],
             "agentlib_flexquant.utils.parsing": [
                 "agentlib_flexquant.generate_flex_agents"
             ],
             "agentlib_flexquant.data_structures.flexquant": [
-                "agentlib_flexquant.utils.interactive",
+                "agentlib_flexquant.data_structures.flex_results",
                 "agentlib_flexquant.generate_flex_agents",
-                "agentlib_flexquant.data_structures.flex_results"
+                "agentlib_flexquant.utils.interactive"
             ],
             "agentlib_flexquant.data_structures.mpcs": [
-                "agentlib_flexquant.data_structures.flex_results",
                 "agentlib_flexquant.data_structures.flexquant",
-                "agentlib_flexquant.utils.parsing",
-                "agentlib_flexquant.generate_flex_agents"
+                "agentlib_flexquant.data_structures.flex_results",
+                "agentlib_flexquant.generate_flex_agents",
+                "agentlib_flexquant.utils.parsing"
             ],
             "agentlib_flexquant.data_structures.flex_results": [
                 "agentlib_flexquant.utils.interactive"
             ],
             "agentlib_flexquant.data_structures.flex_kpis": [
-                "agentlib_flexquant.utils.interactive",
-                "agentlib_flexquant.modules.flexibility_indicator"
+                "agentlib_flexquant.modules.flexibility_indicator",
+                "agentlib_flexquant.utils.interactive"
             ],
             "agentlib_flexquant.data_structures.flex_offer": [
-                "agentlib_flexquant.utils.interactive",
                 "agentlib_flexquant.modules.flexibility_indicator",
-                "agentlib_flexquant.modules.flexibility_market"
+                "agentlib_flexquant.modules.flexibility_market",
+                "agentlib_flexquant.utils.interactive"
             ],
             "agentlib_flexquant.utils.data_handling": [
                 "agentlib_flexquant.data_structures.flex_results",
-                "agentlib_flexquant.modules.shadow_mpc",
-                "agentlib_flexquant.data_structures.flex_kpis"
+                "agentlib_flexquant.data_structures.flex_kpis",
+                "agentlib_flexquant.modules.shadow_mpc"
             ],
             "agentlib_flexquant.data_structures.market": [
                 "agentlib_flexquant.modules.flexibility_market"
@@ -5709,15 +5731,15 @@
             "method": 22,
             "module": 16
         },
-        "convention": 276,
+        "convention": 277,
         "error": 74,
         "fatal": 0,
         "info": 0,
         "refactor": 58,
-        "statement": 1773,
-        "warning": 45,
-        "global_note": 5.775521714608009,
+        "statement": 1774,
+        "warning": 46,
+        "global_note": 5.76662908680947,
         "nb_duplicated_lines": 19,
-        "percent_duplicated_lines": 0.3871230643846781
+        "percent_duplicated_lines": 0.3868865811443698
     }
 }

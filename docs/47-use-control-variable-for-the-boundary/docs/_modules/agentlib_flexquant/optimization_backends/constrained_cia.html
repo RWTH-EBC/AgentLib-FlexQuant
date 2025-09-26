@@ -138,6 +138,9 @@
                     <span class="n">cons</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_input</span><span class="p">(</span>
                         <span class="n">bin_con</span> <span class="o">+</span> <span class="n">full_trajectory_suffix</span>
                     <span class="p">)</span><span class="o">.</span><span class="n">value</span>
+                    <span class="c1"># the index of constraints starts at the absolute current environment time, while the market time is relative time on mpc horizon</span>
+                    <span class="n">cons</span><span class="o">.</span><span class="n">index</span> <span class="o">-=</span> <span class="n">cons</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="c1"># get the constraints in the market time</span>
                     <span class="n">cons</span> <span class="o">=</span> <span class="n">cons</span><span class="p">[</span><span class="n">cons</span><span class="o">.</span><span class="n">index</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_time</span><span class="p">]</span>
                     <span class="n">last_idx</span> <span class="o">=</span> <span class="mi">0</span>
                     <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">cons</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
