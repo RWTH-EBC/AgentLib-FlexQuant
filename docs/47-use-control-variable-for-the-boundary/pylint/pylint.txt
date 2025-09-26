@@ -430,21 +430,21 @@ agentlib_flexquant/modules/flexibility_indicator.py:491:12: W1203: Use lazy % fo
 agentlib_flexquant/modules/flexibility_indicator.py:5:0: C0411: standard import "from pathlib import Path" should be placed before "import numpy as np" (wrong-import-order)
 agentlib_flexquant/modules/flexibility_indicator.py:6:0: C0411: standard import "from typing import Optional" should be placed before "import numpy as np" (wrong-import-order)
 ************* Module agentlib_flexquant.modules.shadow_mpc
-agentlib_flexquant/modules/shadow_mpc.py:84:0: C0301: Line too long (120/100) (line-too-long)
-agentlib_flexquant/modules/shadow_mpc.py:110:0: C0301: Line too long (133/100) (line-too-long)
+agentlib_flexquant/modules/shadow_mpc.py:82:0: C0301: Line too long (120/100) (line-too-long)
+agentlib_flexquant/modules/shadow_mpc.py:108:0: C0301: Line too long (133/100) (line-too-long)
 agentlib_flexquant/modules/shadow_mpc.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 agentlib_flexquant/modules/shadow_mpc.py:2:0: E0401: Unable to import 'agentlib.core.datamodels' (import-error)
 agentlib_flexquant/modules/shadow_mpc.py:3:0: E0401: Unable to import 'agentlib_mpc.modules' (import-error)
 agentlib_flexquant/modules/shadow_mpc.py:8:0: C0115: Missing class docstring (missing-class-docstring)
 agentlib_flexquant/modules/shadow_mpc.py:17:4: C0116: Missing function or method docstring (missing-function-docstring)
-agentlib_flexquant/modules/shadow_mpc.py:58:12: C0206: Consider iterating with .items() (consider-using-dict-items)
-agentlib_flexquant/modules/shadow_mpc.py:58:28: C0201: Consider iterating the dictionary directly instead of calling .keys() (consider-iterating-dictionary)
-agentlib_flexquant/modules/shadow_mpc.py:61:4: C0116: Missing function or method docstring (missing-function-docstring)
-agentlib_flexquant/modules/shadow_mpc.py:66:0: C0115: Missing class docstring (missing-class-docstring)
-agentlib_flexquant/modules/shadow_mpc.py:75:4: C0116: Missing function or method docstring (missing-function-docstring)
-agentlib_flexquant/modules/shadow_mpc.py:116:12: C0206: Consider iterating with .items() (consider-using-dict-items)
-agentlib_flexquant/modules/shadow_mpc.py:116:28: C0201: Consider iterating the dictionary directly instead of calling .keys() (consider-iterating-dictionary)
-agentlib_flexquant/modules/shadow_mpc.py:119:4: C0116: Missing function or method docstring (missing-function-docstring)
+agentlib_flexquant/modules/shadow_mpc.py:56:12: C0206: Consider iterating with .items() (consider-using-dict-items)
+agentlib_flexquant/modules/shadow_mpc.py:56:28: C0201: Consider iterating the dictionary directly instead of calling .keys() (consider-iterating-dictionary)
+agentlib_flexquant/modules/shadow_mpc.py:59:4: C0116: Missing function or method docstring (missing-function-docstring)
+agentlib_flexquant/modules/shadow_mpc.py:64:0: C0115: Missing class docstring (missing-class-docstring)
+agentlib_flexquant/modules/shadow_mpc.py:73:4: C0116: Missing function or method docstring (missing-function-docstring)
+agentlib_flexquant/modules/shadow_mpc.py:114:12: C0206: Consider iterating with .items() (consider-using-dict-items)
+agentlib_flexquant/modules/shadow_mpc.py:114:28: C0201: Consider iterating the dictionary directly instead of calling .keys() (consider-iterating-dictionary)
+agentlib_flexquant/modules/shadow_mpc.py:117:4: C0116: Missing function or method docstring (missing-function-docstring)
 agentlib_flexquant/modules/shadow_mpc.py:4:0: W0611: Unused fill_nans imported from agentlib_flexquant.utils.data_handling (unused-import)
 agentlib_flexquant/modules/shadow_mpc.py:4:0: W0611: Unused MEAN imported from agentlib_flexquant.utils.data_handling (unused-import)
 ************* Module agentlib_flexquant.modules.baseline_mpc
@@ -483,7 +483,20 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             self.logger.error("Results file %s was not found.", results_file)
             return None
 
-    def register_callbacks(self): (duplicate-code)
+    def write_results(self, df: pd.DataFrame, ts: float, n: int) -> pd.DataFrame:
+        """Write every data of variables in self.var_list in an DataFrame.
+
+        DataFrame will be updated every time step
+
+        Args:
+            df: DataFrame which is initialised as an empty DataFrame with columns according to self.var_list
+            ts: time step
+            n: number of time steps during prediction horizon
+
+        Returns:
+            DataFrame with results of every variable in self.var_list
+
+        """ (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.flexibility_indicator:[218:226]
 ==agentlib_flexquant.modules.flexibility_market:[56:64]
@@ -503,7 +516,8 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
         ge=0,
         unit="s",
         description="Time for market interaction",
-    ) (duplicate-code)
+    )
+ (duplicate-code)
 
 -----------------------------------
 Your code has been rated at 5.75/10
