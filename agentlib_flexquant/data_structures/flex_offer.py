@@ -1,19 +1,31 @@
-import pydantic
-import pandas as pd
+"""
+Data models for flexibility offers.
+
+This module defines data structures for representing flexibility offers in energy markets,
+including baseline power profiles, positive and negative flexibility pricing, and offer
+status tracking. The FlexOffer class encapsulates all information needed to represent
+a flexibility bid, including power differences from baseline and acceptance status.
+"""
 from enum import Enum
-from pydantic import BaseModel
 from typing import Optional
+
+import pandas as pd
+import pydantic
 from agentlib.core.datamodels import _TYPE_MAP
+from pydantic import BaseModel
 
 
 class OfferStatus(Enum):
-    not_accepted = "Not Accepted"
-    accepted_positive = "Accepted Positive"
-    accepted_negative = "Accepted Negative"
+    """Status of the FlexOffer"""
+
+    NOT_ACCEPTED = "Not Accepted"
+    ACCEPTED_POSITIVE = "Accepted Positive"
+    ACCEPTED_NEGATIVE = "Accepted Negative"
 
 
 class FlexOffer(BaseModel):
     """Data class for the flexibility offer."""
+
     base_power_profile: pd.Series = pydantic.Field(
         default=None,
         unit="W",
@@ -45,12 +57,15 @@ class FlexOffer(BaseModel):
         description="Power profile for the negative difference",
     )
     status: OfferStatus = pydantic.Field(
-        default=OfferStatus.not_accepted.value,
+        default=OfferStatus.NOT_ACCEPTED.value,
         scalar=True,
         description="Status of the FlexOffer",
     )
 
     class Config:
+        """Allow arbitrary (non-Pydantic) types such as pandas.Series or numpy.ndarray
+        in model fields without requiring custom validators."""
+
         arbitrary_types_allowed = True
 
     def as_dataframe(self) -> pd.DataFrame:
