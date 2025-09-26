@@ -351,10 +351,53 @@
             <span class="n">skip_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;result_filename&quot;</span><span class="p">],</span>
         <span class="p">)</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">_resolve_sim_results_path</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">sim_result_filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">results_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resolve simulator results path with fallback strategy.</span>
+
+<span class="sd">        Tries multiple strategies to locate the simulator results file:</span>
+<span class="sd">        1. Use absolute path if file exists there</span>
+<span class="sd">        2. Use relative path as-is from current directory</span>
+<span class="sd">        3. Use filename only and look in results directory</span>
+<span class="sd">        (handles both relative paths and just filenames)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            sim_result_filename: The result filename from simulator config</span>
+<span class="sd">            results_path: The results directory path</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Path object pointing to the simulator results file</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            FileNotFoundError: If file cannot be found using any strategy</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sim_results_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">sim_result_filename</span><span class="p">)</span>
+        <span class="n">results_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">results_path</span><span class="p">)</span>
+
+        <span class="c1"># Strategy 1: If it&#39;s an absolute path and exists, use it</span>
+        <span class="k">if</span> <span class="n">sim_results_path</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">()</span> <span class="ow">and</span> <span class="n">sim_results_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">sim_results_path</span>
+
+        <span class="c1"># Strategy 2: If it&#39;s a relative path, try it as-is from current directory</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">sim_results_path</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">()</span> <span class="ow">and</span> <span class="n">sim_results_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">sim_results_path</span>
+
+        <span class="c1"># Strategy 3: Try in results directory (handles both relative paths and just filenames)</span>
+        <span class="c1"># (fallback for helper function usage)</span>
+        <span class="n">results_dir_path</span> <span class="o">=</span> <span class="n">results_path</span> <span class="o">/</span> <span class="n">sim_results_path</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">if</span> <span class="n">results_dir_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">results_dir_path</span>
+
+        <span class="c1"># If none of the strategies worked, raise an error</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;Could not locate simulator results file.&quot;</span><span class="p">)</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">_load_results</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">results</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load dict with results for mpc, indicator, market and sim from specified results path.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load dict with results for mpc, indicator, market and sim</span>
+<span class="sd">        from specified results path.&quot;&quot;&quot;</span>
         <span class="c1"># load results</span>
         <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">res_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generator_config</span><span class="o">.</span><span class="n">results_directory</span>
@@ -411,9 +454,13 @@
             <span class="p">},</span>
         <span class="p">}</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulator_agent_config</span><span class="p">:</span>
+            <span class="n">resolved_sim_results_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_sim_results_path</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">simulator_module_config</span><span class="o">.</span><span class="n">result_filename</span><span class="p">,</span> <span class="n">res_path</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sim results extracted from: </span><span class="si">{</span><span class="n">resolved_sim_results_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">res</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">simulator_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">simulator_module_config</span><span class="o">.</span><span class="n">module_id</span><span class="p">:</span> <span class="n">load_sim</span><span class="p">(</span>
-                    <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simulator_module_config</span><span class="o">.</span><span class="n">result_filename</span><span class="p">),</span>
+                    <span class="n">resolved_sim_results_path</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="p">}</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">generator_config</span><span class="o">.</span><span class="n">market_config</span><span class="p">:</span>
