@@ -517,7 +517,7 @@
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">model_class</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">],</span>
             <span class="n">config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-            <span class="n">skip_fields</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">skip_fields</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseModel</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a Pydantic model instance while skipping validation for specified fields.</span>
 
@@ -526,9 +526,9 @@
 <span class="sd">        after construction without triggering their validators.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            model_class (Type[BaseModel]): The Pydantic model class to instantiate.</span>
-<span class="sd">            config (Dict[str, Any]): The input configuration dictionary.</span>
-<span class="sd">            skip_fields (Optional[List[str]]): A list of field names to exclude from validation.</span>
+<span class="sd">            model_class: The Pydantic model class to instantiate.</span>
+<span class="sd">            config: The input configuration dictionary.</span>
+<span class="sd">            skip_fields: A list of field names to exclude from validation.</span>
 <span class="sd">                                                These fields will be manually set after instantiation.</span>
 
 <span class="sd">        Returns:</span>
