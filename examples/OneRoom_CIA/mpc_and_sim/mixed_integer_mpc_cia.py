@@ -1,7 +1,6 @@
 import logging
 import os
 from pathlib import Path
-from typing import List
 
 import casadi as ca
 
@@ -26,7 +25,7 @@ COOLING = 1000
 
 
 class MyCasadiModelConfig(CasadiModelConfig):
-    inputs: List[CasadiInput] = [
+    inputs: list[CasadiInput] = [
         # controls
         CasadiInput(
             name="cooling_power",
@@ -58,7 +57,7 @@ class MyCasadiModelConfig(CasadiModelConfig):
         ),
     ]
 
-    states: List[CasadiState] = [
+    states: list[CasadiState] = [
         # differential
         CasadiState(
             name="T", value=293.15, unit="K", description="Temperature of zone"
@@ -73,7 +72,7 @@ class MyCasadiModelConfig(CasadiModelConfig):
         ),
     ]
 
-    parameters: List[CasadiParameter] = [
+    parameters: list[CasadiParameter] = [
         CasadiParameter(
             name="cp",
             value=1000,
@@ -102,7 +101,7 @@ class MyCasadiModelConfig(CasadiModelConfig):
             description="Cooling power cannot modulate below this value",
         ),
     ]
-    outputs: List[CasadiOutput] = [
+    outputs: list[CasadiOutput] = [
         CasadiOutput(name="T_out", unit="K", description="Temperature of zone"),
         CasadiOutput(name="P_el", unit="W", description="Electrical power")
     ]
@@ -120,7 +119,7 @@ class MyCasadiModel(CasadiModel):
         self.T_out.alg = self.T  # math operation to get the symbolic variable
         self.P_el.alg = self.cooling_power  # math operation to get the symbolic variable
 
-        # Constraints: List[(lower bound, function, upper bound)]
+        # Constraints: list[(lower bound, function, upper bound)]
         self.constraints = [
             # bigM reformulation
             (-ca.inf, self.cooling_power - self.cooler_on * COOLING, 0),

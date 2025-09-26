@@ -6,12 +6,11 @@ from agentlib_mpc.models.casadi_model import (
     CasadiOutput,
     CasadiModelConfig,
 )
-from typing import List
 from math import inf
 
 class BaselineMPCModelConfig(CasadiModelConfig):
 
-    inputs: List[CasadiInput] = [
+    inputs: list[CasadiInput] = [
         # controls
         # Power var needs to be declared as an output. Here power var is also a model-input 
         # So two separate var names are used for power var: P_in as input, P_el as output
@@ -44,7 +43,7 @@ class BaselineMPCModelConfig(CasadiModelConfig):
         ),
     ]
 
-    states: List[CasadiState] = [
+    states: list[CasadiState] = [
         # differential
         CasadiState(
             name="T_zone",
@@ -62,7 +61,7 @@ class BaselineMPCModelConfig(CasadiModelConfig):
         ),
     ]
 
-    parameters: List[CasadiParameter] = [
+    parameters: list[CasadiParameter] = [
         CasadiParameter(
             name="C",
             value=10000,
@@ -89,7 +88,7 @@ class BaselineMPCModelConfig(CasadiModelConfig):
         )
     ]
 
-    outputs: List[CasadiOutput] = [
+    outputs: list[CasadiOutput] = [
         CasadiOutput(
             name="P_el",
             unit="W",
@@ -108,7 +107,7 @@ class BaselineMPCModel(CasadiModel):
         #Define ae for outputs
         self.P_el.alg = self.P_in
 
-        # Constraints: List[(lower bound, function, upper bound)]
+        # Constraints: list[(lower bound, function, upper bound)]
         self.constraints = [
             # soft constraints
             (-inf, self.T_zone - self.T_slack, self.T_upper),
