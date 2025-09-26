@@ -49,8 +49,6 @@ class FlexibilityShadowMPC(mpc_full.MPC):
             vals.index += self.env.time
         # update value in the mapping dictionary
         self._full_controls[name].value = vals
-        # update the AgentVariable
-        self.set(name, vals)
         # make sure all controls are set
         if all(x.value is not None for x in self._full_controls.values()):
             self.do_step()
