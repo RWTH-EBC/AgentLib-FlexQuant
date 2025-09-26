@@ -339,10 +339,7 @@ class Results:
         if self.simulator_agent_config:
             res[self.simulator_agent_config.id] = {
                 self.simulator_module_config.module_id: load_sim(
-                    Path(
-                        res_path,
-                        Path(self.simulator_module_config.result_filename).name,
-                    )
+                    Path(self.simulator_module_config.result_filename),
                 )
             }
         if self.generator_config.market_config:
