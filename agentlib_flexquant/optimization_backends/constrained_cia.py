@@ -64,6 +64,9 @@ class ConstrainedCasADiCIABackend(CasADiCIABackend):
                     cons = self.model.get_input(
                         bin_con + full_trajectory_suffix
                     ).value
+                    # the index of constraints starts at the absolute current environment time, while the market time is relative time on mpc horizon
+                    cons.index -= cons.index[0]
+                    # get the constraints in the market time
                     cons = cons[cons.index <= self.config.market_time]
                     last_idx = 0
                     for idx, value in cons.items():
