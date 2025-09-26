@@ -73,28 +73,32 @@
              
   <h1>Source code for agentlib_flexquant.utils.interactive</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">webbrowser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">get_args</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_args</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">FilePath</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dash</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dash</span><span class="p">,</span> <span class="n">html</span><span class="p">,</span> <span class="n">dcc</span><span class="p">,</span> <span class="n">callback</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">Input</span><span class="p">,</span> <span class="n">ctx</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">plotly</span><span class="w"> </span><span class="kn">import</span> <span class="n">graph_objects</span> <span class="k">as</span> <span class="n">go</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.core.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentConfig</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">TimeConversionTypes</span><span class="p">,</span> <span class="n">TIME_CONVERSION</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">TIME_CONVERSION</span><span class="p">,</span> <span class="n">TimeConversionTypes</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.utils.analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">mpc_at_time_step</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.utils.plotting.interactive</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_port</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">glbs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dash</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dash</span><span class="p">,</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">callback</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">dcc</span><span class="p">,</span> <span class="n">html</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plotly</span><span class="w"> </span><span class="kn">import</span> <span class="n">graph_objects</span> <span class="k">as</span> <span class="n">go</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">FilePath</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.flex_results</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">flex_results</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.flexquant</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlexQuantConfig</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">glbs</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.flex_kpis</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlexibilityKPIs</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.flex_offer</span><span class="w"> </span><span class="kn">import</span> <span class="n">OfferStatus</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.flexquant</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlexQuantConfig</span>
 
 
 <div class="viewcode-block" id="CustomBound"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.CustomBound">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">CustomBound</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Dataclass to let the user define custom bounds for the mpc variables.</span>
 
 <span class="sd">    for_variable -- The name of the variable to plot the bounds into</span>
-<span class="sd">    lower bound -- The lower bound of the variable as the name of the lower bound variable in the MPC</span>
-<span class="sd">    upper bound -- The upper bound of the variable as the name of the upper bound variable in the MPC</span>
+<span class="sd">    lower bound -- The lower bound of the variable as the name of the lower bound variable</span>
+<span class="sd">    in the MPC</span>
+<span class="sd">    upper bound -- The upper bound of the variable as the name of the upper bound variable</span>
+<span class="sd">    in the MPC</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -115,6 +119,7 @@
 
 <div class="viewcode-block" id="Dashboard"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.Dashboard">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Dashboard</span><span class="p">(</span><span class="n">flex_results</span><span class="o">.</span><span class="n">Results</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for the dashboard of flexquant&quot;&quot;&quot;</span>
+
     <span class="c1"># Constants for plotting variables</span>
     <span class="n">MPC_ITERATIONS</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;iter_count&quot;</span>
 
@@ -137,7 +142,7 @@
         <span class="n">generated_flex_files_base_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FilePath</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">results</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FilePath</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">to_timescale</span><span class="p">:</span> <span class="n">TimeConversionTypes</span> <span class="o">=</span> <span class="s2">&quot;hours&quot;</span><span class="p">,</span>
-        <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">flex_config</span><span class="o">=</span><span class="n">flex_config</span><span class="p">,</span>
@@ -155,28 +160,13 @@
 
         <span class="c1"># Define line properties</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">LINE_PROPERTIES</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">simulator_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;black&quot;</span><span class="p">,</span>
-            <span class="p">},</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">baseline_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;black&quot;</span><span class="p">,</span>
-            <span class="p">},</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">neg_flex_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span>
-            <span class="p">},</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pos_flex_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span>
-            <span class="p">},</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">bounds_key</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;grey&quot;</span><span class="p">,</span>
-            <span class="p">},</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">characteristic_times_current_key</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;grey&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;dash&quot;</span><span class="p">:</span> <span class="s2">&quot;dash&quot;</span><span class="p">,</span>
-            <span class="p">},</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">characteristic_times_accepted_key</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;yellow&quot;</span><span class="p">,</span>
-            <span class="p">},</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">simulator_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;black&quot;</span><span class="p">,},</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">baseline_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;black&quot;</span><span class="p">,},</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neg_flex_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">,},</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pos_flex_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">,},</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bounds_key</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;grey&quot;</span><span class="p">,},</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">characteristic_times_current_key</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;grey&quot;</span><span class="p">,</span> <span class="s2">&quot;dash&quot;</span><span class="p">:</span> <span class="s2">&quot;dash&quot;</span><span class="p">,},</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">characteristic_times_accepted_key</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;yellow&quot;</span><span class="p">,},</span>
         <span class="p">}</span>
 
         <span class="c1"># KPIS</span>
@@ -259,7 +249,9 @@
             <span class="p">)</span>
             <span class="k">return</span> <span class="n">fig</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">plot_one_mpc_variable</span><span class="p">(</span><span class="n">fig</span><span class="p">:</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">variable</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">time_step</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">plot_one_mpc_variable</span><span class="p">(</span>
+            <span class="n">fig</span><span class="p">:</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">variable</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">time_step</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Plot the mpc series for the specified variable at the specified time step.</span>
 
 <span class="sd">            Args:</span>
@@ -527,11 +519,15 @@
             <span class="p">)</span>
             <span class="k">return</span> <span class="n">rel_market_time</span><span class="p">,</span> <span class="n">rel_prep_time</span><span class="p">,</span> <span class="n">flex_event_duration</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">mark_time</span><span class="p">(</span><span class="n">fig</span><span class="p">:</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">at_time_step</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">line_prop</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">mark_time</span><span class="p">(</span>
+            <span class="n">fig</span><span class="p">:</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">at_time_step</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">line_prop</span><span class="p">:</span> <span class="nb">dict</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
             <span class="n">fig</span><span class="o">.</span><span class="n">add_vline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">at_time_step</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="n">line_prop</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;below&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">fig</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">mark_characteristic_times</span><span class="p">(</span><span class="n">fig</span><span class="p">:</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">offer_time</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">line_prop</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">mark_characteristic_times</span><span class="p">(</span>
+            <span class="n">fig</span><span class="p">:</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">offer_time</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">line_prop</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Add markers of the characteristic times to the plot for a time step.</span>
 
 <span class="sd">            Args:</span>
@@ -546,9 +542,11 @@
             <span class="k">if</span> <span class="n">line_prop</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">line_prop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">LINE_PROPERTIES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">characteristic_times_current_key</span><span class="p">]</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">rel_market_time</span><span class="p">,</span> <span class="n">rel_prep_time</span><span class="p">,</span> <span class="n">flex_event_duration</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="n">get_characteristic_times</span><span class="p">(</span><span class="n">offer_time</span><span class="p">)</span>
-                <span class="p">)</span>
+                <span class="p">(</span>
+                    <span class="n">rel_market_time</span><span class="p">,</span>
+                    <span class="n">rel_prep_time</span><span class="p">,</span>
+                    <span class="n">flex_event_duration</span><span class="p">,</span>
+                <span class="p">)</span> <span class="o">=</span> <span class="n">get_characteristic_times</span><span class="p">(</span><span class="n">offer_time</span><span class="p">)</span>
                 <span class="n">mark_time</span><span class="p">(</span><span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">at_time_step</span><span class="o">=</span><span class="n">offer_time</span><span class="p">,</span> <span class="n">line_prop</span><span class="o">=</span><span class="n">line_prop</span><span class="p">)</span>
                 <span class="n">mark_time</span><span class="p">(</span>
                     <span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span>
@@ -575,11 +573,16 @@
         <span class="k">def</span><span class="w"> </span><span class="nf">mark_characteristic_times_of_accepted_offers</span><span class="p">(</span><span class="n">fig</span><span class="p">:</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Add markers of the characteristic times for accepted offers to the plot.&quot;&quot;&quot;</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_market</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df_market</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span>
-                    <span class="n">OfferStatus</span><span class="o">.</span><span class="n">accepted_negative</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
-                    <span class="n">OfferStatus</span><span class="o">.</span><span class="n">accepted_positive</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
-                <span class="p">]</span>
-                <span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">df_market</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span>
+                    <span class="o">.</span><span class="n">isin</span><span class="p">(</span>
+                        <span class="p">[</span>
+                            <span class="n">OfferStatus</span><span class="o">.</span><span class="n">ACCEPTED_NEGATIVE</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                            <span class="n">OfferStatus</span><span class="o">.</span><span class="n">ACCEPTED_POSITIVE</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                        <span class="p">]</span>
+                    <span class="p">)</span>
+                    <span class="o">.</span><span class="n">any</span><span class="p">()</span>
+                <span class="p">):</span>
                     <span class="n">df_accepted_offers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_market</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span>
                         <span class="n">pat</span><span class="o">=</span><span class="s2">&quot;OfferStatus.accepted&quot;</span>
                     <span class="p">)</span>
@@ -607,9 +610,12 @@
 
 <span class="sd">            Args:</span>
 <span class="sd">                variable: the variable to plot</span>
-<span class="sd">                at_time_step: the time_step to show the mpc predictions and the characteristic times</span>
-<span class="sd">                show_accepted_characteristic_times: whether to show the accepted characteristic times</span>
-<span class="sd">                show_current_characteristic_times: whether to show the current characteristic times</span>
+<span class="sd">                at_time_step: the time_step to show the mpc predictions</span>
+<span class="sd">                and the characteristic times</span>
+<span class="sd">                show_accepted_characteristic_times: whether to show</span>
+<span class="sd">                the accepted characteristic times</span>
+<span class="sd">                show_current_characteristic_times: whether to show</span>
+<span class="sd">                the current characteristic times</span>
 <span class="sd">                zoom_to_offer_window: whether to zoom to offer window</span>
 <span class="sd">                zoom_to_prediction_interval: wether to zoom to prediction interval</span>
 
@@ -641,9 +647,11 @@
 
             <span class="c1"># Set layout</span>
             <span class="k">if</span> <span class="n">zoom_to_offer_window</span><span class="p">:</span>
-                <span class="n">rel_market_time</span><span class="p">,</span> <span class="n">rel_prep_time</span><span class="p">,</span> <span class="n">flex_event_duration</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="n">get_characteristic_times</span><span class="p">(</span><span class="n">at_time_step</span><span class="p">)</span>
-                <span class="p">)</span>
+                <span class="p">(</span>
+                    <span class="n">rel_market_time</span><span class="p">,</span>
+                    <span class="n">rel_prep_time</span><span class="p">,</span>
+                    <span class="n">flex_event_duration</span><span class="p">,</span>
+                <span class="p">)</span> <span class="o">=</span> <span class="n">get_characteristic_times</span><span class="p">(</span><span class="n">at_time_step</span><span class="p">)</span>
                 <span class="n">ts</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">baseline_module_config</span><span class="o">.</span><span class="n">time_step</span>
                     <span class="o">/</span> <span class="n">TIME_CONVERSION</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_timescale_of_data</span><span class="p">]</span>
