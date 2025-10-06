@@ -659,7 +659,7 @@ class FlexAgentGenerator:
         # market time val check
         if self.flex_config.market_config:
             if flex_times["market_time"] % mpc_times["time_step"] != 0:
-                raise ConfigurationError(f'Market time must be divisible by the time step.')
+                raise ConfigurationError(f'Market time must be an integer multiple of the time step.')
         # check for divisibility of flex_times by time_step
         for name, value in flex_times.items():
             if value % mpc_times["time_step"] != 0:

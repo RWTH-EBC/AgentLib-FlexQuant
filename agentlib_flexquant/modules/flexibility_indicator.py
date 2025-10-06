@@ -49,7 +49,7 @@ class InputsForCalculateFlexCosts(BaseModel):
     @model_validator(mode="after")
     def validate_constant_price(cls, model):
         if model.use_constant_electricity_price and np.isnan(model.const_electricity_price):
-            raise Exception(f'Constant electricity price must have a valid value in float if it is to be used for calculation. '
+            raise ValueError(f'Constant electricity price must have a valid value in float if it is to be used for calculation. '
                             f'Received "use_constant_electricity_price": true, "const_electricity_price": {model.const_electricity_price}. '
                             f'Please specify them correctly in "calculate_costs" field in flex config.')
         return model
