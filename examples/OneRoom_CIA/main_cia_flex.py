@@ -63,15 +63,23 @@ def run_example(until=until, with_plots=False):
         # T out
         ax1.set_ylabel("$T_{room}$ in K")
         results["SimAgent"]["room"]["T_upper"].plot(ax=ax1, color="0.5")
-        results["SimAgent"]["room"]["T_out"].plot(ax=ax1, color=mpcplot.EBCColors.dark_grey)
+        results["SimAgent"]["room"]["T_out"].plot(
+            ax=ax1, color=mpcplot.EBCColors.dark_grey
+        )
         mpc_at_time_step(
-            data=results["myMPCAgent"]["Baseline"], time_step=time_of_activation, variable="T"
+            data=results["myMPCAgent"]["Baseline"],
+            time_step=time_of_activation,
+            variable="T",
         ).plot(ax=ax1, label="base", linestyle="--", color=mpcplot.EBCColors.dark_grey)
         mpc_at_time_step(
-            data=results["NegFlexMPC"]["NegFlexMPC"], time_step=time_of_activation, variable="T"
+            data=results["NegFlexMPC"]["NegFlexMPC"],
+            time_step=time_of_activation,
+            variable="T",
         ).plot(ax=ax1, label="neg", linestyle="--", color=mpcplot.EBCColors.red)
         mpc_at_time_step(
-            data=results["PosFlexMPC"]["PosFlexMPC"], time_step=time_of_activation, variable="T"
+            data=results["PosFlexMPC"]["PosFlexMPC"],
+            time_step=time_of_activation,
+            variable="T",
         ).plot(ax=ax1, label="pos", linestyle="--", color=mpcplot.EBCColors.blue)
 
         ax1.legend()
@@ -95,9 +103,13 @@ def run_example(until=until, with_plots=False):
         ax1 = axs[0]
         # P_el
         ax1.set_ylabel("$P_{el}$ in W")
-        results["SimAgent"]["room"]["P_el"].plot(ax=ax1, color=mpcplot.EBCColors.dark_grey)
+        results["SimAgent"]["room"]["P_el"].plot(
+            ax=ax1, color=mpcplot.EBCColors.dark_grey
+        )
         mpc_at_time_step(
-            data=results["NegFlexMPC"]["NegFlexMPC"], time_step=time_of_activation, variable="P_el"
+            data=results["NegFlexMPC"]["NegFlexMPC"],
+            time_step=time_of_activation,
+            variable="P_el",
         ).ffill().plot(
             ax=ax1,
             drawstyle="steps-post",
@@ -106,7 +118,9 @@ def run_example(until=until, with_plots=False):
             color=mpcplot.EBCColors.red,
         )
         mpc_at_time_step(
-            data=results["PosFlexMPC"]["PosFlexMPC"], time_step=time_of_activation, variable="P_el"
+            data=results["PosFlexMPC"]["PosFlexMPC"],
+            time_step=time_of_activation,
+            variable="P_el",
         ).ffill().plot(
             ax=ax1,
             drawstyle="steps-post",
@@ -115,7 +129,9 @@ def run_example(until=until, with_plots=False):
             color=mpcplot.EBCColors.blue,
         )
         mpc_at_time_step(
-            data=results["myMPCAgent"]["Baseline"], time_step=time_of_activation, variable="P_el"
+            data=results["myMPCAgent"]["Baseline"],
+            time_step=time_of_activation,
+            variable="P_el",
         ).ffill().plot(
             ax=ax1,
             drawstyle="steps-post",
@@ -132,8 +148,12 @@ def run_example(until=until, with_plots=False):
         # flexibility
         # get only the first prediction time of each time step
         ind_res = results["FlexibilityIndicator"]["FlexibilityIndicator"]
-        energy_flex_neg = ind_res.xs("negative_energy_flex", axis=1).droplevel(1).dropna()
-        energy_flex_pos = ind_res.xs("positive_energy_flex", axis=1).droplevel(1).dropna()
+        energy_flex_neg = (
+            ind_res.xs("negative_energy_flex", axis=1).droplevel(1).dropna()
+        )
+        energy_flex_pos = (
+            ind_res.xs("positive_energy_flex", axis=1).droplevel(1).dropna()
+        )
         fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=1)
         ax1 = axs[0]
         ax1.set_ylabel("$epsilon$ in kWh")
@@ -156,8 +176,9 @@ def run_example(until=until, with_plots=False):
         Dashboard(
             flex_config="flex_configs/flexibility_agent_config.json",
             simulator_agent_config="mpc_and_sim/simple_cia_sim.json",
-            results=results
+            results=results,
         ).show()
+
 
 if __name__ == "__main__":
     run_example(until, with_plots=True)

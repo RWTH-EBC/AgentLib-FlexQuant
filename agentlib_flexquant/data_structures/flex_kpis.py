@@ -3,6 +3,7 @@ Module for representing and calculating flexibility KPIs. It defines Pydantic mo
 for scalar and time-series KPIs, and provides methods to compute power, energy,
 and cost metrics for positive and negative flexibility scenarios.
 """
+
 from typing import Optional, Union
 
 import numpy as np
@@ -18,13 +19,16 @@ class KPI(pydantic.BaseModel):
     """Class defining attributes of the indicator KPI."""
 
     name: str = pydantic.Field(
-        default=None, description="Name of the flexibility KPI",
+        default=None,
+        description="Name of the flexibility KPI",
     )
     value: Union[float, None] = pydantic.Field(
-        default=None, description="Value of the flexibility KPI",
+        default=None,
+        description="Value of the flexibility KPI",
     )
     unit: str = pydantic.Field(
-        default=None, description="Unit of the flexibility KPI",
+        default=None,
+        description="Unit of the flexibility KPI",
     )
     direction: Union[FlexibilityDirections, None] = pydantic.Field(
         default=None, description="Direction of the shadow mpc / flexibility"
@@ -33,6 +37,7 @@ class KPI(pydantic.BaseModel):
     class Config:
         """Allow arbitrary (non-Pydantic) types such as pandas.Series or numpy.ndarray
         in model fields without requiring custom validators."""
+
         arbitrary_types_allowed = True
 
     def get_kpi_identifier(self):
@@ -46,7 +51,8 @@ class KPISeries(KPI):
     """Class defining extra attributes of the indicator KPISeries in addition to KPI."""
 
     value: Union[pd.Series, None] = pydantic.Field(
-        default=None, description="Value of the flexibility KPI",
+        default=None,
+        description="Value of the flexibility KPI",
     )
     dt: Union[pd.Series, None] = pydantic.Field(
         default=None,
@@ -145,7 +151,8 @@ class FlexibilityKPIs(pydantic.BaseModel):
         description="Costs of flexibility",
     )
     costs: KPI = pydantic.Field(
-        default=KPI(name="costs", unit="ct"), description="Costs of flexibility",
+        default=KPI(name="costs", unit="ct"),
+        description="Costs of flexibility",
     )
     corrected_costs: KPI = pydantic.Field(
         default=KPI(name="corrected_costs", unit="ct"),
@@ -363,10 +370,12 @@ class FlexibilityData(pydantic.BaseModel):
 
     # Time parameters
     mpc_time_grid: np.ndarray = pydantic.Field(
-        default=None, description="Time grid of the mpcs",
+        default=None,
+        description="Time grid of the mpcs",
     )
     flex_offer_time_grid: np.ndarray = pydantic.Field(
-        default=None, description="Time grid of the flexibility offer",
+        default=None,
+        description="Time grid of the flexibility offer",
     )
     switch_time: Optional[float] = pydantic.Field(
         default=None,
@@ -375,16 +384,20 @@ class FlexibilityData(pydantic.BaseModel):
 
     # Profiles
     power_profile_base: pd.Series = pydantic.Field(
-        default=None, description="Base power profile",
+        default=None,
+        description="Base power profile",
     )
     power_profile_flex_neg: pd.Series = pydantic.Field(
-        default=None, description="Power profile of the negative flexibility",
+        default=None,
+        description="Power profile of the negative flexibility",
     )
     power_profile_flex_pos: pd.Series = pydantic.Field(
-        default=None, description="Power profile of the positive flexibility",
+        default=None,
+        description="Power profile of the positive flexibility",
     )
     stored_energy_profile_base: pd.Series = pydantic.Field(
-        default=None, description="Base profile of the stored electrical energy",
+        default=None,
+        description="Base profile of the stored electrical energy",
     )
     stored_energy_profile_flex_neg: pd.Series = pydantic.Field(
         default=None,
@@ -395,7 +408,8 @@ class FlexibilityData(pydantic.BaseModel):
         description="Profile of the stored elctrical energy for positive flexibility",
     )
     electricity_price_series: pd.Series = pydantic.Field(
-        default=None, description="Profile of the electricity price",
+        default=None,
+        description="Profile of the electricity price",
     )
 
     # KPIs
@@ -411,6 +425,7 @@ class FlexibilityData(pydantic.BaseModel):
     class Config:
         """Allow arbitrary (non-Pydantic) types such as pandas.Series or numpy.ndarray
         in model fields without requiring custom validators."""
+
         arbitrary_types_allowed = True
 
     def __init__(

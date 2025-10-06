@@ -1,6 +1,7 @@
 """
 Defines MPC and MINLP-MPC for baseline flexibility quantification.
 """
+
 from agentlib_mpc.modules import minlp_mpc, mpc_full
 from typing import Dict
 from pydantic import Field
@@ -30,7 +31,9 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
             # add full_control to the variables dictionary, so that the set function can be applied to it
             self._variables_dict[full_control.name] = full_control
             # fill the mapping dictionary
-            self._controls_name_mapping[full_control.name] = full_control.name.replace(full_trajectory_suffix, "")
+            self._controls_name_mapping[full_control.name] = full_control.name.replace(
+                full_trajectory_suffix, ""
+            )
 
     def pre_computation_hook(self):
         """Calculate relative start and end times for flexibility provision.
@@ -83,7 +86,9 @@ class FlexibilityBaselineMINLPMPC(minlp_mpc.MINLPMPC):
             # add full_control to the variables dictionary, so that the set function can be applied to it
             self._variables_dict[full_control.name] = full_control
             # fill the mapping dictionary
-            self._controls_name_mapping[full_control.name] = full_control.name.replace(full_trajectory_suffix, "")
+            self._controls_name_mapping[full_control.name] = full_control.name.replace(
+                full_trajectory_suffix, ""
+            )
 
     def pre_computation_hook(self):
         """Calculate relative start and end times for flexibility provision.

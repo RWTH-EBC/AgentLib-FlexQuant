@@ -103,7 +103,7 @@ class MyCasadiModelConfig(CasadiModelConfig):
     ]
     outputs: list[CasadiOutput] = [
         CasadiOutput(name="T_out", unit="K", description="Temperature of zone"),
-        CasadiOutput(name="P_el", unit="W", description="Electrical power")
+        CasadiOutput(name="P_el", unit="W", description="Electrical power"),
     ]
 
 
@@ -117,7 +117,9 @@ class MyCasadiModel(CasadiModel):
 
         # Define ae
         self.T_out.alg = self.T  # math operation to get the symbolic variable
-        self.P_el.alg = self.cooling_power  # math operation to get the symbolic variable
+        self.P_el.alg = (
+            self.cooling_power
+        )  # math operation to get the symbolic variable
 
         # Constraints: list[(lower bound, function, upper bound)]
         self.constraints = [

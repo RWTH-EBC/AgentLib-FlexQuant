@@ -5,6 +5,7 @@ Defines Pydantic models for configuring different market behaviors including
 random acceptance, single offer acceptance, and custom strategies with
 associated parameters and validation.
 """
+
 from typing import Literal, Union
 
 import pydantic

@@ -8,15 +8,15 @@ import os
 import sys
 from pathlib import Path
 
-sys.path.insert(0, os.path.abspath('../../'))
+sys.path.insert(0, os.path.abspath("../../"))
 sys.setrecursionlimit(1500)
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'agentlib_flexquant'
-copyright = '2025, Felix Stegemerten'
-author = 'Felix Stegemerten'
+project = "agentlib_flexquant"
+copyright = "2025, Felix Stegemerten"
+author = "Felix Stegemerten"
 
 # The full version, including alpha/beta/rc tags
 with open(Path(__file__).parents[2].joinpath(project, "__init__.py"), "r") as file:
@@ -52,7 +52,7 @@ extensions = [
     "sphinxcontrib.autodoc_pydantic",
 ]
 
-templates_path = ['_templates']
+templates_path = ["_templates"]
 autodoc_pydantic_model_show_json = False
 autodoc_pydantic_model_show_config = False
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
@@ -66,7 +66,7 @@ myst_enable_extensions = [
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'sphinx_rtd_theme'
+html_theme = "sphinx_rtd_theme"
 # Material theme options (see theme.conf for more information)
 html_theme_options = {
     # If False, expand all TOC entries
@@ -76,4 +76,4 @@ html_theme_options = {
 }
 html_static_path = []
 html_split_index = True
-modindex_common_prefix = ['agentlib_flexquant.']
+modindex_common_prefix = ["agentlib_flexquant."]

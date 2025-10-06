@@ -6,6 +6,7 @@ calculate flexibility KPIs, validate profile consistency, and generate flexibili
 offers for energy markets. It handles both positive and negative flexibility with
 optional cost calculations and energy storage corrections.
 """
+
 import logging
 import os
 from pathlib import Path
@@ -308,7 +309,8 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
     )
     save_results: Optional[bool] = Field(validate_default=True, default=True)
     price_variable: str = Field(
-        default="c_pel", description="Name of the price variable sent by a predictor",
+        default="c_pel",
+        description="Name of the price variable sent by a predictor",
     )
     power_unit: str = Field(default="kW", description="Unit of the power variable")
     shared_variable_fields: list[str] = ["outputs"]
@@ -401,8 +403,8 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             elif name == self.config.price_variable:
                 if not self.config.calculate_costs.use_constant_electricity_price:
                     # price comes from predictor, so no stripping needed
-                    self.data.electricity_price_series = self.data.format_predictor_inputs(
-                        inp.value
+                    self.data.electricity_price_series = (
+                        self.data.format_predictor_inputs(inp.value)
                     )
 
             # set the constant electricity price series if given
@@ -619,7 +621,8 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 timestamp = self.env.time
             var.timestamp = timestamp
             self.agent.data_broker.send_variable(
-                variable=var.copy(update={"source": self.source}), copy=False,
+                variable=var.copy(update={"source": self.source}),
+                copy=False,
             )
         self.offer_count += 1
 

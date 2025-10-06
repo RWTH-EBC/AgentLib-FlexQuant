@@ -2,7 +2,9 @@ import pydantic
 import numpy as np
 from agentlib.core.errors import OptionalDependencyError
 from agentlib_mpc.optimization_backends.casadi_.minlp_cia import CasADiCIABackend
-from agentlib_mpc.optimization_backends.casadi_.core.casadi_backend import CasadiBackendConfig
+from agentlib_mpc.optimization_backends.casadi_.core.casadi_backend import (
+    CasadiBackendConfig,
+)
 from agentlib_mpc.data_structures.mpc_datamodels import MINLPVariableReference
 from agentlib_flexquant.data_structures.globals import full_trajectory_suffix
 
@@ -49,32 +51,24 @@ class ConstrainedCasADiCIABackend(CasADiCIABackend):
         # constrain shadow MPCs to values of baseline for time<market_time
         for bin_con in self.var_ref.binary_controls:
             # check for baseline or shadow MPC
-            if (
-                bin_con + full_trajectory_suffix
-                not in self.model.get_input_names()
-            ):
+            if bin_con + full_trajectory_suffix not in self.model.get_input_names():
                 continue
             # if shadow MPC, get current value send by baseline and constrain pycombina
             elif (
-                    self.model.get_input(
-                        bin_con + full_trajectory_suffix
-                    ).value
-                    is not None
-                ):
-                    cons = self.model.get_input(
-                        bin_con + full_trajectory_suffix
-                    ).value
-                    # the index of constraints starts at the absolute current environment time, while the market time is relative time on mpc horizon
-                    cons.index -= cons.index[0]
-                    # get the constraints in the market time
-                    cons = cons[cons.index <= self.config.market_time]
-                    last_idx = 0
-                    for idx, value in cons.items():
-                        # constrain ever timestep before market_time with values of baseline
-                        binapprox.set_valid_controls_for_interval(
-                            (last_idx, idx), [value, 1 - value]
-                        )
-                        last_idx = idx
+                self.model.get_input(bin_con + full_trajectory_suffix).value is not None
+            ):
+                cons = self.model.get_input(bin_con + full_trajectory_suffix).value
+                # the index of constraints starts at the absolute current environment time, while the market time is relative time on mpc horizon
+                cons.index -= cons.index[0]
+                # get the constraints in the market time
+                cons = cons[cons.index <= self.config.market_time]
+                last_idx = 0
+                for idx, value in cons.items():
+                    # constrain ever timestep before market_time with values of baseline
+                    binapprox.set_valid_controls_for_interval(
+                        (last_idx, idx), [value, 1 - value]
+                    )
+                    last_idx = idx
 
         bnb = pycombina.CombinaBnB(binapprox)
         bnb.solve(

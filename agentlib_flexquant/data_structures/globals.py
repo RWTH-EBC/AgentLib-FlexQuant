@@ -32,6 +32,7 @@ SHADOW_MPC_COST_FUNCTION = (
 full_trajectory_suffix: str = "_full"
 shadow_suffix: str = "_shadow"
 
+
 def return_baseline_cost_function(power_variable: str, comfort_variable: str) -> str:
     """Return baseline cost function
 

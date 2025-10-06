@@ -83,17 +83,17 @@ def add_parameter(
 ) -> ast.Call:
     """Create an AST node for a parameter definition.
 
-        Args:
-            name: The name of the parameter.
-            value: The value of the parameter. Can be an integer or float.
-            unit: The unit associated with the parameter value.
-            description: A human-readable description of the parameter.
+    Args:
+        name: The name of the parameter.
+        value: The value of the parameter. Can be an integer or float.
+        unit: The unit associated with the parameter value.
+        description: A human-readable description of the parameter.
 
-        Returns:
-            ast.Call: An abstract syntax tree (AST) call node
-            representing the parameter definition.
+    Returns:
+        ast.Call: An abstract syntax tree (AST) call node
+        representing the parameter definition.
 
-        """
+    """
     return create_ast_element(
         PARAMETER_TEMPLATE.substitute(
             class_name=CASADI_PARAMETER,
