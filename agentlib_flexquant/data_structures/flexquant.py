@@ -1,43 +1,51 @@
-import pydantic
-from enum import Enum
+"""
+Pydantic data models for FlexQuant configuration and validation.
+"""
+# from enum import Enum
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import Optional, Union
+
+import pydantic
 from pydantic import ConfigDict, model_validator
 from agentlib.core.agent import AgentConfig
 from agentlib.core.errors import ConfigurationError
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
-from agentlib_flexquant.data_structures.mpcs import BaselineMPCData, NFMPCData, PFMPCData
+
+from agentlib_flexquant.data_structures.mpcs import (
+    BaselineMPCData,
+    NFMPCData,
+    PFMPCData,
+)
 
 
-class ForcedOffers(Enum):
-    positive = "positive"
-    negative = "negative"
+# class ForcedOffers(Enum):
+#     positive = "positive"
+#     negative = "negative"
 
 
 class ShadowMPCConfigGeneratorConfig(pydantic.BaseModel):
     """Class defining the options to initialize the shadow mpc config generation."""
+
     model_config = ConfigDict(
-        json_encoders={MPCVariable: lambda v: v.dict()},
-        extra='forbid'
-    )    
+        json_encoders={MPCVariable: lambda v: v.dict()}, extra="forbid"
+    )
     weights: list[MPCVariable] = pydantic.Field(
-        default=[],
-        description="Name and value of weights",
+        default=[], description="Name and value of weights",
     )
-    pos_flex: PFMPCData = pydantic.Field(
-        default=None,
-        description="Data for PF-MPC"
-    )
-    neg_flex: NFMPCData = pydantic.Field(
-        default=None,
-        description="Data for NF-MPC"
-    )
+    pos_flex: PFMPCData = pydantic.Field(default=None, description="Data for PF-MPC")
+    neg_flex: NFMPCData = pydantic.Field(default=None, description="Data for NF-MPC")
+
     @model_validator(mode="after")
     def assign_weights_to_flex(self):
+        """Validate flexibility cost function fields and assign weights to them."""
         if self.pos_flex is None:
-            raise ValueError("Missing required field: 'pos_flex' specifying the pos flex cost function.")
+            raise ValueError(
+                "Missing required field: 'pos_flex' specifying the pos flex cost function."
+            )
         if self.neg_flex is None:
-            raise ValueError("Missing required field: 'neg_flex' specifying the neg flex cost function.")
+            raise ValueError(
+                "Missing required field: 'neg_flex' specifying the neg flex cost function."
+            )
         if self.weights:
             self.pos_flex.weights = self.weights
             self.neg_flex.weights = self.weights
@@ -46,9 +54,8 @@ class ShadowMPCConfigGeneratorConfig(pydantic.BaseModel):
 
 class FlexibilityMarketConfig(pydantic.BaseModel):
     """Class defining the options to initialize the market."""
-    model_config = ConfigDict(
-        extra='forbid'
-    )
+
+    model_config = ConfigDict(extra="forbid")
     agent_config: AgentConfig
     name_of_created_file: str = pydantic.Field(
         default="flexibility_market.json",
@@ -58,22 +65,25 @@ class FlexibilityMarketConfig(pydantic.BaseModel):
 
 class FlexibilityIndicatorConfig(pydantic.BaseModel):
     """Class defining the options for the flexibility indicators."""
+
     model_config = ConfigDict(
-        json_encoders={Path: str, AgentConfig: lambda v: v.model_dump()},
-        extra='forbid'
+        json_encoders={Path: str, AgentConfig: lambda v: v.model_dump()}, extra="forbid"
     )
     agent_config: AgentConfig
     name_of_created_file: str = pydantic.Field(
         default="indicator.json",
         description="Name of the config that is created by the generator",
     )
+
     @model_validator(mode="after")
     def check_file_extension(self):
-        if self.name_of_created_file: 
+        """Validate that name_of_created_file has a .json extension."""
+        if self.name_of_created_file:
             file_path = Path(self.name_of_created_file)
             if file_path.suffix != ".json":
                 raise ConfigurationError(
-                    f"Invalid file extension for name_of_created_file: '{self.name_of_created_file}'. "
+                    f"Invalid file extension for "
+                    f"name_of_created_file: '{self.name_of_created_file}'. "
                     f"Expected a '.json' file."
                 )
         return self
@@ -81,10 +91,8 @@ class FlexibilityIndicatorConfig(pydantic.BaseModel):
 
 class FlexQuantConfig(pydantic.BaseModel):
     """Class defining the options to initialize the FlexQuant generation."""
-    model_config = ConfigDict(
-        json_encoders={Path: str},
-        extra='forbid'
-    )
+
+    model_config = ConfigDict(json_encoders={Path: str}, extra="forbid")
     prep_time: int = pydantic.Field(
         default=1800,
         ge=0,
@@ -92,23 +100,16 @@ class FlexQuantConfig(pydantic.BaseModel):
         description="Preparation time before the flexibility event",
     )
     flex_event_duration: int = pydantic.Field(
-        default=7200,
-        ge=0,
-        unit="s",
-        description="Flexibility event duration",
+        default=7200, ge=0, unit="s", description="Flexibility event duration",
     )
     market_time: int = pydantic.Field(
-        default=900,
-        ge=0,
-        unit="s",
-        description="Time for market interaction",
+        default=900, ge=0, unit="s", description="Time for market interaction",
     )
     indicator_config: Union[FlexibilityIndicatorConfig, Path] = pydantic.Field(
         description="Path to the file or dict of flexibility indicator config",
     )
     market_config: Optional[Union[FlexibilityMarketConfig, Path]] = pydantic.Field(
-        default=None,
-        description="Path to the file or dict of market config",
+        default=None, description="Path to the file or dict of market config",
     )
     baseline_config_generator_data: BaselineMPCData = pydantic.Field(
         description="Baseline generator data config file or dict",
@@ -129,8 +130,7 @@ class FlexQuantConfig(pydantic.BaseModel):
         description="Directory where generated result files (CSVs) should be stored",
     )
     delete_files: bool = pydantic.Field(
-        default=True,
-        description="If generated files should be deleted afterwards",
+        default=True, description="If generated files should be deleted afterwards",
     )
     overwrite_files: bool = pydantic.Field(
         default=False,
@@ -140,23 +140,29 @@ class FlexQuantConfig(pydantic.BaseModel):
     @model_validator(mode="after")
     def check_config_file_extension(self):
         """Validate that the indicator and market config file paths have a '.json' extension.
-    
+
         Raises:
             ValueError: If either file does not have the expected '.json' extension.
 
         """
-        if isinstance(self.indicator_config, Path) and self.indicator_config.suffix != ".json":
+        if (
+            isinstance(self.indicator_config, Path)
+            and self.indicator_config.suffix != ".json"
+        ):
             raise ValueError(
                 f"Invalid file extension for indicator config: '{self.indicator_config}'. "
                 f"Expected a '.json' file."
             )
-        if isinstance(self.market_config, Path) and self.market_config.suffix != ".json":
+        if (
+            isinstance(self.market_config, Path)
+            and self.market_config.suffix != ".json"
+        ):
             raise ValueError(
                 f"Invalid file extension for market config: '{self.market_config}'. "
                 f"Expected a '.json' file."
             )
         return self
-    
+
     @model_validator(mode="after")
     def adapt_paths_and_create_directory(self):
         """Adjust and ensure the directory structure for flex file generation and results storage.
@@ -169,12 +175,10 @@ class FlexQuantConfig(pydantic.BaseModel):
         """
         # adapt paths and use only names for user supplied data
         self.flex_files_directory = (
-            self.flex_base_directory_path
-            / self.flex_files_directory.name
+            self.flex_base_directory_path / self.flex_files_directory.name
         )
         self.results_directory = (
-            self.flex_base_directory_path
-            / self.results_directory.name
+            self.flex_base_directory_path / self.results_directory.name
         )
         # create directories if not already existing
         self.flex_base_directory_path.mkdir(parents=True, exist_ok=True)

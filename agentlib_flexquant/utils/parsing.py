@@ -1,22 +1,24 @@
 import ast
-from typing import Union, Optional
 from string import Template
+from typing import Optional, Union
+
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
-from agentlib_flexquant.data_structures.mpcs import (
-    BaseMPCData,
-    PFMPCData,
-    NFMPCData,
-    BaselineMPCData,
-)
+
 from agentlib_flexquant.data_structures.globals import (
-    SHADOW_MPC_COST_FUNCTION,
-    return_baseline_cost_function,
-    full_trajectory_suffix,
+    FLEX_EVENT_DURATION,
     MARKET_TIME,
     PREP_TIME,
-    FLEX_EVENT_DURATION
+    SHADOW_MPC_COST_FUNCTION,
+    full_trajectory_prefix,
+    full_trajectory_suffix,
+    return_baseline_cost_function,
 )
-
+from agentlib_flexquant.data_structures.mpcs import (
+    BaselineMPCData,
+    BaseMPCData,
+    NFMPCData,
+    PFMPCData,
+)
 
 # Constants
 CASADI_INPUT = "CasadiInput"
@@ -48,7 +50,9 @@ def create_ast_element(template_string: str) -> ast.Call:
     return ast.parse(template_string).body[0].value
 
 
-def add_input(name: str, value: Union[bool, str, int], unit: str, description: str, type: str) -> ast.Call:
+def add_input(
+    name: str, value: Union[bool, str, int], unit: str, description: str, type: str
+) -> ast.Call:
     """Create an AST node for an input definition.
 
     Args:
@@ -74,7 +78,9 @@ def add_input(name: str, value: Union[bool, str, int], unit: str, description: s
     )
 
 
-def add_parameter(name: str, value: Union[int, float], unit: str, description: str) -> ast.Call:
+def add_parameter(
+    name: str, value: Union[int, float], unit: str, description: str
+) -> ast.Call:
     """Create an AST node for a parameter definition.
 
         Args:
@@ -84,7 +90,8 @@ def add_parameter(name: str, value: Union[int, float], unit: str, description: s
             description: A human-readable description of the parameter.
 
         Returns:
-            ast.Call: An abstract syntax tree (AST) call node representing the parameter definition.
+            ast.Call: An abstract syntax tree (AST) call node
+            representing the parameter definition.
 
         """
     return create_ast_element(
@@ -98,7 +105,9 @@ def add_parameter(name: str, value: Union[int, float], unit: str, description: s
     )
 
 
-def add_output(name: str, unit: str, type: str, value: Union[str, float], description: str) -> ast.Call:
+def add_output(
+    name: str, unit: str, type: str, value: Union[str, float], description: str
+) -> ast.Call:
     """Create an AST node for an output definition.
 
     Args:
@@ -215,7 +224,9 @@ class SetupSystemModifier(ast.NodeTransformer):
 
         return node
 
-    def get_leftmost_list(self, node: Union[ast.Tuple, ast.BinOp, ast.List]) -> Optional[ast.List]:
+    def get_leftmost_list(
+        self, node: Union[ast.Tuple, ast.BinOp, ast.List]
+    ) -> Optional[ast.List]:
         """Recursively traverse binary operations to get the leftmost list.
 
         Args:
@@ -303,7 +314,9 @@ class SetupSystemModifier(ast.NodeTransformer):
                 if isinstance(body.value, ast.List):
                     # Simple list case
                     value_list = body.value
-                elif isinstance(body.value, ast.BinOp) or isinstance(body.value, ast.Tuple):
+                elif isinstance(body.value, ast.BinOp) or isinstance(
+                    body.value, ast.Tuple
+                ):
                     # Complex case with concatenated lists or tuple
                     value_list = self.get_leftmost_list(body.value)
 
@@ -312,7 +325,9 @@ class SetupSystemModifier(ast.NodeTransformer):
                 if isinstance(body.value, ast.List):
                     # Simple list case
                     value_list = body.value
-                elif isinstance(body.value, ast.BinOp) or isinstance(body.value, ast.Tuple):
+                elif isinstance(body.value, ast.BinOp) or isinstance(
+                    body.value, ast.Tuple
+                ):
                     # Complex case with concatenated lists or tuple
                     value_list = self.get_leftmost_list(body.value)
                 value_list.elts.append(
@@ -457,7 +472,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                         value=ast.parse(
                             return_baseline_cost_function(
                                 power_variable=self.mpc_data.power_variable,
-                                comfort_variable=self.mpc_data.comfort_variable
+                                comfort_variable=self.mpc_data.comfort_variable,
                             )
                         )
                         .body[0]

@@ -1,54 +1,52 @@
 import os
+from pathlib import Path
+from typing import Optional, Union
+
+import agentlib
 import numpy as np
 import pandas as pd
-from pathlib import Path
-from typing import List, Optional, Union
-from pydantic import model_validator, ConfigDict, Field
-import agentlib
 from agentlib.core.datamodels import AgentVariable
-from agentlib_flexquant.data_structures.flex_offer import OfferStatus, FlexOffer
+from pydantic import ConfigDict, Field, model_validator
+
+from agentlib_flexquant.data_structures.flex_offer import FlexOffer, OfferStatus
 from agentlib_flexquant.data_structures.market import MarketSpecifications
 
 
 class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
 
-    model_config = ConfigDict(
-        extra='forbid'
-    )
+    model_config = ConfigDict(extra="forbid")
 
-    inputs: list[AgentVariable] = [
-        AgentVariable(name="FlexibilityOffer")
-    ]
+    inputs: list[AgentVariable] = [AgentVariable(name="FlexibilityOffer")]
 
     outputs: list[AgentVariable] = [
         AgentVariable(
-            name="_P_external", alias="_P_external",
-            description="External Power IO"
+            name="_P_external", alias="_P_external", description="External Power IO"
         ),
         AgentVariable(
-            name="rel_start", alias="rel_start",
-            description="relative start time of the flexibility event"
+            name="rel_start",
+            alias="rel_start",
+            description="relative start time of the flexibility event",
         ),
         AgentVariable(
-            name="rel_end", alias="rel_end",
-            description="relative end time of the flexibility event"
+            name="rel_end",
+            alias="rel_end",
+            description="relative end time of the flexibility event",
         ),
         AgentVariable(
-            name="in_provision", alias="in_provision",
-            description="Set if the system is in provision", value=False
-        )
+            name="in_provision",
+            alias="in_provision",
+            description="Set if the system is in provision",
+            value=False,
+        ),
     ]
 
     market_specs: MarketSpecifications
 
     results_file: Optional[Path] = Field(
         default=Path("flexibility_market.csv"),
-        description="User specified results file name"
+        description="User specified results file name",
     )
-    save_results: Optional[bool] = Field(
-        validate_default=True, 
-        default=True
-    )
+    save_results: Optional[bool] = Field(validate_default=True, default=True)
 
     shared_variable_fields: list[str] = ["outputs"]
 
@@ -64,11 +62,14 @@ class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
 
 class FlexibilityMarketModule(agentlib.BaseModule):
     """Class to emulate flexibility market. Receives flex offers and accepts these."""
+
     config: FlexibilityMarketModuleConfig
 
-    # DataFrame for flex offer. Multiindex: (time_step, time). Columns: pos_price, neg_price, status
+    # DataFrame for flex offer. Multiindex: (time_step, time).
+    # Columns: pos_price, neg_price, status
     flex_offer_df: pd.DataFrame = None
-    # absolute end time of a flexibility event (now + relative end time of the flexibility event on the mpc horizon)
+    # absolute end time of a flexibility event (now + relative end time of the flexibility
+    # event on the mpc horizon)
     abs_flex_event_end: Union[int, float] = 0
 
     def set_random_seed(self, random_seed: int):
@@ -94,13 +95,16 @@ class FlexibilityMarketModule(agentlib.BaseModule):
             callback_function = self.random_flexibility_callback
             self.set_random_seed(self.config.market_specs.options.random_seed)
         else:
-            self.logger.error("No market type defined. Available market types are single, random "
-                              "and custom. Code will proceed without market interaction.")
+            self.logger.error(
+                "No market type defined. Available market types are single, random "
+                "and custom. Code will proceed without market interaction."
+            )
             callback_function = self.dummy_callback
 
         self.agent.data_broker.register_callback(
-            name="FlexibilityOffer", alias="FlexibilityOffer",
-            callback=callback_function
+            name="FlexibilityOffer",
+            alias="FlexibilityOffer",
+            callback=callback_function,
         )
 
         self.flex_offer_df = None
@@ -114,7 +118,9 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         index_first_level = [self.env.now] * len(df.index)
         multi_index = pd.MultiIndex.from_tuples(zip(index_first_level, df.index))
         self.flex_offer_df = pd.concat((self.flex_offer_df, df.set_index(multi_index)))
-        indices = pd.MultiIndex.from_tuples(self.flex_offer_df.index, names=["time_step", "time"])
+        indices = pd.MultiIndex.from_tuples(
+            self.flex_offer_df.index, names=["time_step", "time"]
+        )
         self.flex_offer_df.set_index(indices, inplace=True)
 
         if self.config.save_results:
@@ -123,30 +129,44 @@ class FlexibilityMarketModule(agentlib.BaseModule):
     def random_flexibility_callback(self, inp: AgentVariable, name: str):
         """When a flexibility offer is sent, this function is called.
 
-        The offer is accepted randomly. The factor self.offer_acceptance_rate determines the random factor for offer acceptance.
+        The offer is accepted randomly. The factor self.offer_acceptance_rate determines
+        the random factor for offer acceptance.
         self.pos_neg_rate is the random factor for the direction of the flexibility.
         A higher rate means that more positive offers will be accepted.
-            
+
         Constraints:
             cooldown: during $cooldown steps after a flexibility event no offer is accepted
-            minimum_average_flex: min amount of flexibility to be accepted, to account for the model error
+            minimum_average_flex: min amount of flexibility to be accepted,
+            to account for the model error
 
         """
         offer = inp.value
         # check if there is a flexibility provision and the cooldown is finished
         if not self.get("in_provision").value and self.cooldown_ticker == 0:
-            if self.random_generator.random() < self.config.market_specs.options.offer_acceptance_rate:
+            if (
+                self.random_generator.random()
+                < self.config.market_specs.options.offer_acceptance_rate
+            ):
                 profile = None
                 # if random value is below pos_neg_rate, positive offer is accepted.
                 # Otherwise, negative offer
-                if self.random_generator.random() < self.config.market_specs.options.pos_neg_rate:
-                    if np.average(offer.pos_diff_profile) > self.config.market_specs.minimum_average_flex:
+                if (
+                    self.random_generator.random()
+                    < self.config.market_specs.options.pos_neg_rate
+                ):
+                    if (
+                        np.average(offer.pos_diff_profile)
+                        > self.config.market_specs.minimum_average_flex
+                    ):
                         profile = offer.base_power_profile - offer.pos_diff_profile
-                        offer.status = OfferStatus.accepted_positive.value
+                        offer.status = OfferStatus.ACCEPTED_POSITIVE.value
 
-                elif np.average(offer.neg_diff_profile) > self.config.market_specs.minimum_average_flex:
+                elif (
+                    np.average(offer.neg_diff_profile)
+                    > self.config.market_specs.minimum_average_flex
+                ):
                     profile = offer.base_power_profile + offer.neg_diff_profile
-                    offer.status = OfferStatus.accepted_negative.value
+                    offer.status = OfferStatus.ACCEPTED_NEGATIVE.value
 
                 if profile is not None:
                     profile = profile.dropna()
@@ -165,18 +185,33 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         """Callback to activate a single, predefined flexibility offer."""
         offer = inp.value
         profile = None
-        t_sample = offer.base_power_profile.index[1]-offer.base_power_profile.index[0]
-        acceptance_time_lower = self.env.config.offset + self.config.market_specs.options.start_time
-        acceptance_time_upper = self.env.config.offset + self.config.market_specs.options.start_time + t_sample
-        if acceptance_time_lower <= self.env.now < acceptance_time_upper and not self.get("in_provision").value:
+        t_sample = offer.base_power_profile.index[1] - offer.base_power_profile.index[0]
+        acceptance_time_lower = (
+            self.env.config.offset + self.config.market_specs.options.start_time
+        )
+        acceptance_time_upper = (
+            self.env.config.offset
+            + self.config.market_specs.options.start_time
+            + t_sample
+        )
+        if (
+            acceptance_time_lower <= self.env.now < acceptance_time_upper
+            and not self.get("in_provision").value
+        ):
             if self.config.market_specs.options.direction == "positive":
-                if np.average(offer.pos_diff_profile) > self.config.market_specs.minimum_average_flex:
+                if (
+                    np.average(offer.pos_diff_profile)
+                    > self.config.market_specs.minimum_average_flex
+                ):
                     profile = offer.base_power_profile - offer.pos_diff_profile
-                    offer.status = OfferStatus.accepted_positive.value
+                    offer.status = OfferStatus.ACCEPTED_POSITIVE.value
 
-            elif np.average(offer.neg_diff_profile) > self.config.market_specs.minimum_average_flex:
+            elif (
+                np.average(offer.neg_diff_profile)
+                > self.config.market_specs.minimum_average_flex
+            ):
                 profile = offer.base_power_profile + offer.neg_diff_profile
-                offer.status = OfferStatus.accepted_negative.value
+                offer.status = OfferStatus.ACCEPTED_NEGATIVE.value
 
             if profile is not None:
                 profile = profile.dropna()
