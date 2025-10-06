@@ -73,24 +73,26 @@
              
   <h1>Source code for agentlib_flexquant.utils.parsing</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">string</span><span class="w"> </span><span class="kn">import</span> <span class="n">Template</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.data_structures.mpc_datamodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPCVariable</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.mpcs</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">BaseMPCData</span><span class="p">,</span>
-    <span class="n">PFMPCData</span><span class="p">,</span>
-    <span class="n">NFMPCData</span><span class="p">,</span>
-    <span class="n">BaselineMPCData</span><span class="p">,</span>
-<span class="p">)</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">SHADOW_MPC_COST_FUNCTION</span><span class="p">,</span>
-    <span class="n">return_baseline_cost_function</span><span class="p">,</span>
-    <span class="n">full_trajectory_suffix</span><span class="p">,</span>
+    <span class="n">FLEX_EVENT_DURATION</span><span class="p">,</span>
     <span class="n">MARKET_TIME</span><span class="p">,</span>
     <span class="n">PREP_TIME</span><span class="p">,</span>
-    <span class="n">FLEX_EVENT_DURATION</span>
+    <span class="n">SHADOW_MPC_COST_FUNCTION</span><span class="p">,</span>
+    <span class="n">full_trajectory_prefix</span><span class="p">,</span>
+    <span class="n">full_trajectory_suffix</span><span class="p">,</span>
+    <span class="n">return_baseline_cost_function</span><span class="p">,</span>
 <span class="p">)</span>
-
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.mpcs</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BaselineMPCData</span><span class="p">,</span>
+    <span class="n">BaseMPCData</span><span class="p">,</span>
+    <span class="n">NFMPCData</span><span class="p">,</span>
+    <span class="n">PFMPCData</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="c1"># Constants</span>
 <span class="n">CASADI_INPUT</span> <span class="o">=</span> <span class="s2">&quot;CasadiInput&quot;</span>
@@ -122,7 +124,9 @@
     <span class="k">return</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">template_string</span><span class="p">)</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span></div>
 
 
-<div class="viewcode-block" id="add_input"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_input">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">add_input</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">:</span>
+<div class="viewcode-block" id="add_input"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_input">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">add_input</span><span class="p">(</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create an AST node for an input definition.</span>
 
 <span class="sd">    Args:</span>
@@ -148,19 +152,22 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="add_parameter"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_parameter">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">add_parameter</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">:</span>
+<div class="viewcode-block" id="add_parameter"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_parameter">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">add_parameter</span><span class="p">(</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create an AST node for a parameter definition.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            name: The name of the parameter.</span>
-<span class="sd">            value: The value of the parameter. Can be an integer or float.</span>
-<span class="sd">            unit: The unit associated with the parameter value.</span>
-<span class="sd">            description: A human-readable description of the parameter.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        name: The name of the parameter.</span>
+<span class="sd">        value: The value of the parameter. Can be an integer or float.</span>
+<span class="sd">        unit: The unit associated with the parameter value.</span>
+<span class="sd">        description: A human-readable description of the parameter.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            ast.Call: An abstract syntax tree (AST) call node representing the parameter definition.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        ast.Call: An abstract syntax tree (AST) call node</span>
+<span class="sd">        representing the parameter definition.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">create_ast_element</span><span class="p">(</span>
         <span class="n">PARAMETER_TEMPLATE</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span>
             <span class="n">class_name</span><span class="o">=</span><span class="n">CASADI_PARAMETER</span><span class="p">,</span>
@@ -172,7 +179,9 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="add_output"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_output">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">add_output</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">:</span>
+<div class="viewcode-block" id="add_output"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_output">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">add_output</span><span class="p">(</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create an AST node for an output definition.</span>
 
 <span class="sd">    Args:</span>
@@ -289,7 +298,9 @@
 
         <span class="k">return</span> <span class="n">node</span></div>
 
-<div class="viewcode-block" id="SetupSystemModifier.get_leftmost_list"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.get_leftmost_list">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_leftmost_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">Tuple</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">BinOp</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">List</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">List</span><span class="p">]:</span>
+<div class="viewcode-block" id="SetupSystemModifier.get_leftmost_list"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.get_leftmost_list">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_leftmost_list</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">Tuple</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">BinOp</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">List</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">List</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Recursively traverse binary operations to get the leftmost list.</span>
 
 <span class="sd">        Args:</span>
@@ -377,7 +388,9 @@
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">List</span><span class="p">):</span>
                     <span class="c1"># Simple list case</span>
                     <span class="n">value_list</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">value</span>
-                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">BinOp</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Tuple</span><span class="p">):</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">BinOp</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span>
+                    <span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Tuple</span>
+                <span class="p">):</span>
                     <span class="c1"># Complex case with concatenated lists or tuple</span>
                     <span class="n">value_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_leftmost_list</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
 
@@ -386,7 +399,9 @@
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">List</span><span class="p">):</span>
                     <span class="c1"># Simple list case</span>
                     <span class="n">value_list</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">value</span>
-                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">BinOp</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Tuple</span><span class="p">):</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">BinOp</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span>
+                    <span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Tuple</span>
+                <span class="p">):</span>
                     <span class="c1"># Complex case with concatenated lists or tuple</span>
                     <span class="n">value_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_leftmost_list</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
                 <span class="n">value_list</span><span class="o">.</span><span class="n">elts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -531,7 +546,7 @@
                         <span class="n">value</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span>
                             <span class="n">return_baseline_cost_function</span><span class="p">(</span>
                                 <span class="n">power_variable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mpc_data</span><span class="o">.</span><span class="n">power_variable</span><span class="p">,</span>
-                                <span class="n">comfort_variable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mpc_data</span><span class="o">.</span><span class="n">comfort_variable</span>
+                                <span class="n">comfort_variable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mpc_data</span><span class="o">.</span><span class="n">comfort_variable</span><span class="p">,</span>
                             <span class="p">)</span>
                         <span class="p">)</span>
                         <span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>

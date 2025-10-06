@@ -72,15 +72,26 @@
            <div itemprop="articleBody">
              
   <h1>Source code for agentlib_flexquant.data_structures.mpcs</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pydantic</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigDict</span><span class="p">,</span> <span class="n">model_validator</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Data models for MPC configurations in flexibility quantification.</span>
+
+<span class="sd">This module defines Pydantic data models that encapsulate configuration parameters</span>
+<span class="sd">for baseline, positive flexibility, and negative flexibility MPC controllers used</span>
+<span class="sd">in flexquant. The models handle file paths, module configurations, variable</span>
+<span class="sd">mappings, and optimization weights for MPC implementations.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pydantic</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.data_structures.mpc_datamodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPCVariable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigDict</span><span class="p">,</span> <span class="n">model_validator</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">glbs</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">agentlib_flexquant.utils.config_management</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cmng</span>
 
 
 <div class="viewcode-block" id="BaseMPCData"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaseMPCData">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">BaseMPCData</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class containing necessary data for the code creation of the different mpcs&quot;&quot;&quot;</span>
+
     <span class="c1"># files and paths</span>
     <span class="n">created_flex_mpcs_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;flex_agents.py&quot;</span>
     <span class="n">name_of_created_file</span><span class="p">:</span> <span class="nb">str</span>
@@ -103,6 +114,7 @@
 
 <div class="viewcode-block" id="BaselineMPCData"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaselineMPCData">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">BaselineMPCData</span><span class="p">(</span><span class="n">BaseMPCData</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Data class for Baseline MPC&quot;&quot;&quot;</span>
+
     <span class="c1"># files and paths</span>
     <span class="n">results_suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_base.csv&quot;</span>
     <span class="n">name_of_created_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;baseline.json&quot;</span>
@@ -115,19 +127,22 @@
     <span class="n">stored_energy_alias</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">glbs</span><span class="o">.</span><span class="n">STORED_ENERGY_ALIAS_BASE</span>
     <span class="n">power_variable</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;P_el&quot;</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the variable representing the electrical power in the baseline config&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Name of the variable representing the electrical power in the baseline config&quot;</span>
+        <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">profile_deviation_weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Weight of soft constraint for deviation from accepted flexible profile&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">power_unit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;kW&quot;</span><span class="p">,</span> 
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unit of the power variable&quot;</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;kW&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unit of the power variable&quot;</span>
     <span class="p">)</span>
     <span class="n">comfort_variable</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the slack variable representing the thermal comfort in the baseline config&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Name of the slack variable representing the thermal comfort in the baseline config&quot;</span>
+        <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">profile_comfort_weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
@@ -146,28 +161,39 @@
     <span class="p">)</span>
     <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">json_encoders</span><span class="o">=</span><span class="p">{</span><span class="n">MPCVariable</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">dict</span><span class="p">()})</span>
 
-<div class="viewcode-block" id="BaselineMPCData.update_config_parameters_appendix"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.update_config_parameters_appendix">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;after&#39;</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">update_config_parameters_appendix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;BaselineMPCData&#39;</span><span class="p">:</span>
+<div class="viewcode-block" id="BaselineMPCData.update_config_parameters_appendix"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.update_config_parameters_appendix">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_config_parameters_appendix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BaselineMPCData&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the config parameters appendix with profile deviation and comfort weights.</span>
+
+<span class="sd">        Adds the profile deviation weight parameter and optionally the profile comfort</span>
+<span class="sd">        weight parameter (if comfort_variable is enabled) to the config_parameters_appendix</span>
+<span class="sd">        list as MPCVariable instances.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config_parameters_appendix</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">MPCVariable</span><span class="p">(</span>
                 <span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">PROFILE_DEVIATION_WEIGHT</span><span class="p">,</span>
                 <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">profile_deviation_weight</span><span class="p">,</span>
                 <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span>
-                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Weight of soft constraint for deviation from accepted flexible profile&quot;</span>
+                <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+                    <span class="s2">&quot;Weight of soft constraint for deviation from accepted flexible profile&quot;</span>
+                <span class="p">),</span>
             <span class="p">)</span>
         <span class="p">]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">comfort_variable</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">config_parameters_appendix</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">MPCVariable</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config_parameters_appendix</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">MPCVariable</span><span class="p">(</span>
                     <span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">PROFILE_COMFORT_WEIGHT</span><span class="p">,</span>
                     <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">profile_comfort_weight</span><span class="p">,</span>
                     <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span>
-                    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Weight of soft constraint for discomfort&quot;</span>
-                <span class="p">))</span>
+                    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Weight of soft constraint for discomfort&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div></div>
 
 
 <div class="viewcode-block" id="PFMPCData"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.PFMPCData">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">PFMPCData</span><span class="p">(</span><span class="n">BaseMPCData</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Data class for PF-MPC&quot;&quot;&quot;</span>
+
     <span class="c1"># files and paths</span>
     <span class="n">results_suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_pos_flex.csv&quot;</span>
     <span class="n">name_of_created_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;pos_flex.json&quot;</span>
@@ -200,6 +226,7 @@
 
 <div class="viewcode-block" id="NFMPCData"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.NFMPCData">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">NFMPCData</span><span class="p">(</span><span class="n">BaseMPCData</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Data class for PF-MPC&quot;&quot;&quot;</span>
+
     <span class="c1"># files and paths</span>
     <span class="n">results_suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_neg_flex.csv&quot;</span>
     <span class="n">name_of_created_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;neg_flex.json&quot;</span>

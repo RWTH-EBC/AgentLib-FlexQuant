@@ -169,9 +169,9 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.OfferStatus"><code class="docutils literal notranslate"><span class="pre">OfferStatus</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.OfferStatus.accepted_negative"><code class="docutils literal notranslate"><span class="pre">OfferStatus.accepted_negative</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.OfferStatus.accepted_positive"><code class="docutils literal notranslate"><span class="pre">OfferStatus.accepted_positive</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.OfferStatus.not_accepted"><code class="docutils literal notranslate"><span class="pre">OfferStatus.not_accepted</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.OfferStatus.ACCEPTED_NEGATIVE"><code class="docutils literal notranslate"><span class="pre">OfferStatus.ACCEPTED_NEGATIVE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.OfferStatus.ACCEPTED_POSITIVE"><code class="docutils literal notranslate"><span class="pre">OfferStatus.ACCEPTED_POSITIVE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.OfferStatus.NOT_ACCEPTED"><code class="docutils literal notranslate"><span class="pre">OfferStatus.NOT_ACCEPTED</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -237,11 +237,6 @@
 <li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketConfig</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.agent_config"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketConfig.agent_config</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.name_of_created_file"><code class="docutils literal notranslate"><span class="pre">FlexibilityMarketConfig.name_of_created_file</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.ForcedOffers"><code class="docutils literal notranslate"><span class="pre">ForcedOffers</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.ForcedOffers.negative"><code class="docutils literal notranslate"><span class="pre">ForcedOffers.negative</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.ForcedOffers.positive"><code class="docutils literal notranslate"><span class="pre">ForcedOffers.positive</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.ShadowMPCConfigGeneratorConfig"><code class="docutils literal notranslate"><span class="pre">ShadowMPCConfigGeneratorConfig</span></code></a><ul>
@@ -554,16 +549,27 @@
 </section>
 <section id="module-agentlib_flexquant.generate_flex_agents">
 <span id="agentlib-flexquant-generate-flex-agents-module"></span><h2>agentlib_flexquant.generate_flex_agents module<a class="headerlink" href="#module-agentlib_flexquant.generate_flex_agents" title="Permalink to this heading"></a></h2>
+<p>Generate agents for flexibility quantification.</p>
+<p>This module provides the FlexAgentGenerator class that creates and configures flexibility agents.
+The agents created include the baseline, positive and negative flexibility agents,
+the flexibility indicator and market agents. The agents are created based on the flex config and
+the MPC config.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="agentlib_flexquant.generate_flex_agents.FlexAgentGenerator">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.generate_flex_agents.</span></span><span class="sig-name descname"><span class="pre">FlexAgentGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flex_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig"><span class="pre">FlexQuantConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpc_agent_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">AgentConfig</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/generate_flex_agents.html#FlexAgentGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class for generating the flex agents</p>
-<p>orig_mpc_module_config: the config for the original mpc, which has nothing to do with the flexibility quantification
-baseline_mpc_module_config: the config for the baseline mpc for flexibility quantification
-pos_flex_mpc_module_config: the config for the positive flexibility mpc for flexibility quantification
-neg_flex_mpc_module_config: the config for the negative flexibility mpc for flexibility quantification
-indicator_module_config: the config for the indicator for flexibility quantification
+<dl class="simple">
+<dt>orig_mpc_module_config: the config for the original mpc,</dt><dd><p>which has nothing to do with the flexibility quantification</p>
+</dd>
+<dt>baseline_mpc_module_config: the config for the baseline mpc</dt><dd><p>for flexibility quantification</p>
+</dd>
+<dt>pos_flex_mpc_module_config: the config for the positive flexibility mpc</dt><dd><p>for flexibility quantification</p>
+</dd>
+<dt>neg_flex_mpc_module_config: the config for the negative flexibility mpc</dt><dd><p>for flexibility quantification</p>
+</dd>
+</dl>
+<p>indicator_module_config: the config for the indicator for flexibility quantification
 market_module_config: the config for the market for flexibility quantification</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_indicator_config">
@@ -592,7 +598,8 @@ market_module_config: the config for the market for flexibility quantification</
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>module_config</strong> – The module config to be adapted</p></li>
 <li><p><strong>mpc_dataclass</strong> – The dataclass corresponding to the type of the MPC module.
-It contains all the extra data necessary for flexibility quantification, which will be used to update the module_config.</p></li>
+It contains all the extra data necessary for flexibility quantification,
+which will be used to update the module_config.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -622,7 +629,8 @@ so that sim results land in the same results directory as flex results.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.append_module_and_dump_agent">
 <span class="sig-name descname"><span class="pre">append_module_and_dump_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseModuleConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AgentConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/generate_flex_agents.html#FlexAgentGenerator.append_module_and_dump_agent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.append_module_and_dump_agent" title="Permalink to this definition"></a></dt>
-<dd><p>Append the given module config to the given agent config and dumps the agent config to a json file.</p>
+<dd><p>Append the given module config to the given agent config and
+dumps the agent config to a json file.</p>
 <p>The json file is named based on the config_name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -664,7 +672,8 @@ so that sim results land in the same results directory as flex results.</p>
 <dd><p>Generate the configs and the python module for the flexibility agents.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list of the full path for baseline mpc, pos_flex mpc, neg_flex mpc, indicator and market config</p>
+<dd class="field-odd"><p>list of the full path for baseline mpc, pos_flex mpc, neg_flex mpc, indicator
+and market config</p>
 </dd>
 </dl>
 </dd></dl>
@@ -707,12 +716,16 @@ so that sim results land in the same results directory as flex results.</p>
 <p>The following checks are performed:
 1. Ensures the specified power variable exists in the MPC model outputs.
 2. Ensures the specified comfort variable exists in the MPC model states.
-3. Validates that the stored energy variable exists in MPC outputs if energy cost correction is enabled.
-4. Verifies the supported collocation method is used; otherwise, switches to ‘legendre’ and raises a warning.
-5. Ensures that the sum of prep time, market time, and flex event duration does not exceed the prediction horizon.
+3. Validates that the stored energy variable exists in MPC outputs if
+energy cost correction is enabled.
+4. Verifies the supported collocation method is used; otherwise,
+switches to ‘legendre’ and raises a warning.
+5. Ensures that the sum of prep time, market time, and flex event duration
+does not exceed the prediction horizon.
 6. Ensures market time equals the MPC model time step if market config is present.
 7. Ensures that all flex time values are multiples of the MPC model time step.
-8. Checks for mismatches between time-related parameters in the flex/MPC and indicator configs and issues warnings
+8. Checks for mismatches between time-related parameters in the flex/MPC and
+indicator configs and issues warnings
 when discrepancies exist, using the flex/MPC config values as the source of truth.</p>
 </dd></dl>
 

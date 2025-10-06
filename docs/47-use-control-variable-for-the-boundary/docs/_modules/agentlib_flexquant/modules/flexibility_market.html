@@ -73,56 +73,54 @@
              
   <h1>Source code for agentlib_flexquant.modules.flexibility_market</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">agentlib</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">model_validator</span><span class="p">,</span> <span class="n">ConfigDict</span><span class="p">,</span> <span class="n">Field</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">agentlib</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.core.datamodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentVariable</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.flex_offer</span><span class="w"> </span><span class="kn">import</span> <span class="n">OfferStatus</span><span class="p">,</span> <span class="n">FlexOffer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigDict</span><span class="p">,</span> <span class="n">Field</span><span class="p">,</span> <span class="n">model_validator</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.flex_offer</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlexOffer</span><span class="p">,</span> <span class="n">OfferStatus</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.market</span><span class="w"> </span><span class="kn">import</span> <span class="n">MarketSpecifications</span>
 
 
 <div class="viewcode-block" id="FlexibilityMarketModuleConfig"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityMarketModuleConfig</span><span class="p">(</span><span class="n">agentlib</span><span class="o">.</span><span class="n">BaseModuleConfig</span><span class="p">):</span>
 
-    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span>
-        <span class="n">extra</span><span class="o">=</span><span class="s1">&#39;forbid&#39;</span>
-    <span class="p">)</span>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span><span class="p">)</span>
 
-    <span class="n">inputs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AgentVariable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">AgentVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;FlexibilityOffer&quot;</span><span class="p">)</span>
-    <span class="p">]</span>
+    <span class="n">inputs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AgentVariable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">AgentVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;FlexibilityOffer&quot;</span><span class="p">)]</span>
 
     <span class="n">outputs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AgentVariable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">AgentVariable</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;_P_external&quot;</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;_P_external&quot;</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;External Power IO&quot;</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;_P_external&quot;</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;_P_external&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;External Power IO&quot;</span>
         <span class="p">),</span>
         <span class="n">AgentVariable</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;rel_start&quot;</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;rel_start&quot;</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;relative start time of the flexibility event&quot;</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;rel_start&quot;</span><span class="p">,</span>
+            <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;rel_start&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;relative start time of the flexibility event&quot;</span><span class="p">,</span>
         <span class="p">),</span>
         <span class="n">AgentVariable</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;rel_end&quot;</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;rel_end&quot;</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;relative end time of the flexibility event&quot;</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;rel_end&quot;</span><span class="p">,</span>
+            <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;rel_end&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;relative end time of the flexibility event&quot;</span><span class="p">,</span>
         <span class="p">),</span>
         <span class="n">AgentVariable</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;in_provision&quot;</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;in_provision&quot;</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Set if the system is in provision&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">False</span>
-        <span class="p">)</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;in_provision&quot;</span><span class="p">,</span>
+            <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;in_provision&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Set if the system is in provision&quot;</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">),</span>
     <span class="p">]</span>
 
     <span class="n">market_specs</span><span class="p">:</span> <span class="n">MarketSpecifications</span>
 
     <span class="n">results_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;flexibility_market.csv&quot;</span><span class="p">),</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;User specified results file name&quot;</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;User specified results file name&quot;</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">save_results</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">validate_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
-        <span class="n">default</span><span class="o">=</span><span class="kc">True</span>
-    <span class="p">)</span>
+    <span class="n">save_results</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">validate_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="n">shared_variable_fields</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;outputs&quot;</span><span class="p">]</span>
 
@@ -138,11 +136,14 @@
 
 <div class="viewcode-block" id="FlexibilityMarketModule"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityMarketModule</span><span class="p">(</span><span class="n">agentlib</span><span class="o">.</span><span class="n">BaseModule</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class to emulate flexibility market. Receives flex offers and accepts these.&quot;&quot;&quot;</span>
+
     <span class="n">config</span><span class="p">:</span> <span class="n">FlexibilityMarketModuleConfig</span>
 
-    <span class="c1"># DataFrame for flex offer. Multiindex: (time_step, time). Columns: pos_price, neg_price, status</span>
+    <span class="c1"># DataFrame for flex offer. Multiindex: (time_step, time).</span>
+    <span class="c1"># Columns: pos_price, neg_price, status</span>
     <span class="n">flex_offer_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="c1"># absolute end time of a flexibility event (now + relative end time of the flexibility event on the mpc horizon)</span>
+    <span class="c1"># absolute end time of a flexibility event (now + relative end time of the flexibility</span>
+    <span class="c1"># event on the mpc horizon)</span>
     <span class="n">abs_flex_event_end</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 
 <div class="viewcode-block" id="FlexibilityMarketModule.set_random_seed"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.set_random_seed">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_random_seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random_seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
@@ -168,13 +169,16 @@
             <span class="n">callback_function</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_flexibility_callback</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_random_seed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">random_seed</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;No market type defined. Available market types are single, random &quot;</span>
-                              <span class="s2">&quot;and custom. Code will proceed without market interaction.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;No market type defined. Available market types are single, random &quot;</span>
+                <span class="s2">&quot;and custom. Code will proceed without market interaction.&quot;</span>
+            <span class="p">)</span>
             <span class="n">callback_function</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dummy_callback</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">data_broker</span><span class="o">.</span><span class="n">register_callback</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;FlexibilityOffer&quot;</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;FlexibilityOffer&quot;</span><span class="p">,</span>
-            <span class="n">callback</span><span class="o">=</span><span class="n">callback_function</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;FlexibilityOffer&quot;</span><span class="p">,</span>
+            <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;FlexibilityOffer&quot;</span><span class="p">,</span>
+            <span class="n">callback</span><span class="o">=</span><span class="n">callback_function</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">flex_offer_df</span> <span class="o">=</span> <span class="kc">None</span>
@@ -188,7 +192,9 @@
         <span class="n">index_first_level</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
         <span class="n">multi_index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_tuples</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">index_first_level</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">flex_offer_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_offer_df</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">multi_index</span><span class="p">)))</span>
-        <span class="n">indices</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_tuples</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_offer_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;time_step&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">])</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_tuples</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flex_offer_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;time_step&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">flex_offer_df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">save_results</span><span class="p">:</span>
@@ -197,30 +203,44 @@
 <div class="viewcode-block" id="FlexibilityMarketModule.random_flexibility_callback"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModule.random_flexibility_callback">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">random_flexibility_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp</span><span class="p">:</span> <span class="n">AgentVariable</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;When a flexibility offer is sent, this function is called.</span>
 
-<span class="sd">        The offer is accepted randomly. The factor self.offer_acceptance_rate determines the random factor for offer acceptance.</span>
+<span class="sd">        The offer is accepted randomly. The factor self.offer_acceptance_rate determines</span>
+<span class="sd">        the random factor for offer acceptance.</span>
 <span class="sd">        self.pos_neg_rate is the random factor for the direction of the flexibility.</span>
 <span class="sd">        A higher rate means that more positive offers will be accepted.</span>
-<span class="sd">            </span>
+
 <span class="sd">        Constraints:</span>
 <span class="sd">            cooldown: during $cooldown steps after a flexibility event no offer is accepted</span>
-<span class="sd">            minimum_average_flex: min amount of flexibility to be accepted, to account for the model error</span>
+<span class="sd">            minimum_average_flex: min amount of flexibility to be accepted,</span>
+<span class="sd">            to account for the model error</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">offer</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">value</span>
         <span class="c1"># check if there is a flexibility provision and the cooldown is finished</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;in_provision&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">cooldown_ticker</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_generator</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">offer_acceptance_rate</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">random_generator</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+                <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">offer_acceptance_rate</span>
+            <span class="p">):</span>
                 <span class="n">profile</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="c1"># if random value is below pos_neg_rate, positive offer is accepted.</span>
                 <span class="c1"># Otherwise, negative offer</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_generator</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">pos_neg_rate</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">offer</span><span class="o">.</span><span class="n">pos_diff_profile</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">minimum_average_flex</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">random_generator</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+                    <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">pos_neg_rate</span>
+                <span class="p">):</span>
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">offer</span><span class="o">.</span><span class="n">pos_diff_profile</span><span class="p">)</span>
+                        <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">minimum_average_flex</span>
+                    <span class="p">):</span>
                         <span class="n">profile</span> <span class="o">=</span> <span class="n">offer</span><span class="o">.</span><span class="n">base_power_profile</span> <span class="o">-</span> <span class="n">offer</span><span class="o">.</span><span class="n">pos_diff_profile</span>
-                        <span class="n">offer</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OfferStatus</span><span class="o">.</span><span class="n">accepted_positive</span><span class="o">.</span><span class="n">value</span>
+                        <span class="n">offer</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OfferStatus</span><span class="o">.</span><span class="n">ACCEPTED_POSITIVE</span><span class="o">.</span><span class="n">value</span>
 
-                <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">offer</span><span class="o">.</span><span class="n">neg_diff_profile</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">minimum_average_flex</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">offer</span><span class="o">.</span><span class="n">neg_diff_profile</span><span class="p">)</span>
+                    <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">minimum_average_flex</span>
+                <span class="p">):</span>
                     <span class="n">profile</span> <span class="o">=</span> <span class="n">offer</span><span class="o">.</span><span class="n">base_power_profile</span> <span class="o">+</span> <span class="n">offer</span><span class="o">.</span><span class="n">neg_diff_profile</span>
-                    <span class="n">offer</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OfferStatus</span><span class="o">.</span><span class="n">accepted_negative</span><span class="o">.</span><span class="n">value</span>
+                    <span class="n">offer</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OfferStatus</span><span class="o">.</span><span class="n">ACCEPTED_NEGATIVE</span><span class="o">.</span><span class="n">value</span>
 
                 <span class="k">if</span> <span class="n">profile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">profile</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
@@ -239,18 +259,33 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Callback to activate a single, predefined flexibility offer.&quot;&quot;&quot;</span>
         <span class="n">offer</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">value</span>
         <span class="n">profile</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">t_sample</span> <span class="o">=</span> <span class="n">offer</span><span class="o">.</span><span class="n">base_power_profile</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">offer</span><span class="o">.</span><span class="n">base_power_profile</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">acceptance_time_lower</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">offset</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">start_time</span>
-        <span class="n">acceptance_time_upper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">offset</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">start_time</span> <span class="o">+</span> <span class="n">t_sample</span>
-        <span class="k">if</span> <span class="n">acceptance_time_lower</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span> <span class="o">&lt;</span> <span class="n">acceptance_time_upper</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;in_provision&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+        <span class="n">t_sample</span> <span class="o">=</span> <span class="n">offer</span><span class="o">.</span><span class="n">base_power_profile</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">offer</span><span class="o">.</span><span class="n">base_power_profile</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">acceptance_time_lower</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">offset</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">start_time</span>
+        <span class="p">)</span>
+        <span class="n">acceptance_time_upper</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">offset</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">start_time</span>
+            <span class="o">+</span> <span class="n">t_sample</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">acceptance_time_lower</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span> <span class="o">&lt;</span> <span class="n">acceptance_time_upper</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;in_provision&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+        <span class="p">):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">direction</span> <span class="o">==</span> <span class="s2">&quot;positive&quot;</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">offer</span><span class="o">.</span><span class="n">pos_diff_profile</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">minimum_average_flex</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">offer</span><span class="o">.</span><span class="n">pos_diff_profile</span><span class="p">)</span>
+                    <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">minimum_average_flex</span>
+                <span class="p">):</span>
                     <span class="n">profile</span> <span class="o">=</span> <span class="n">offer</span><span class="o">.</span><span class="n">base_power_profile</span> <span class="o">-</span> <span class="n">offer</span><span class="o">.</span><span class="n">pos_diff_profile</span>
-                    <span class="n">offer</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OfferStatus</span><span class="o">.</span><span class="n">accepted_positive</span><span class="o">.</span><span class="n">value</span>
+                    <span class="n">offer</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OfferStatus</span><span class="o">.</span><span class="n">ACCEPTED_POSITIVE</span><span class="o">.</span><span class="n">value</span>
 
-            <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">offer</span><span class="o">.</span><span class="n">neg_diff_profile</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">minimum_average_flex</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">offer</span><span class="o">.</span><span class="n">neg_diff_profile</span><span class="p">)</span>
+                <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_specs</span><span class="o">.</span><span class="n">minimum_average_flex</span>
+            <span class="p">):</span>
                 <span class="n">profile</span> <span class="o">=</span> <span class="n">offer</span><span class="o">.</span><span class="n">base_power_profile</span> <span class="o">+</span> <span class="n">offer</span><span class="o">.</span><span class="n">neg_diff_profile</span>
-                <span class="n">offer</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OfferStatus</span><span class="o">.</span><span class="n">accepted_negative</span><span class="o">.</span><span class="n">value</span>
+                <span class="n">offer</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OfferStatus</span><span class="o">.</span><span class="n">ACCEPTED_NEGATIVE</span><span class="o">.</span><span class="n">value</span>
 
             <span class="k">if</span> <span class="n">profile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">profile</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>

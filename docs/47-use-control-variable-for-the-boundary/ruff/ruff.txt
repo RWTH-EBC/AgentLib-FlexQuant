@@ -1,11 +1,9 @@
-agentlib_flexquant/data_structures/flex_results.py:4:48: F401 [*] `typing.List` imported but unused
-agentlib_flexquant/data_structures/flexquant.py:4:20: F401 [*] `typing.List` imported but unused
-agentlib_flexquant/generate_flex_agents.py:11:20: F401 [*] `typing.List` imported but unused
-agentlib_flexquant/generate_flex_agents.py:658:38: F541 [*] f-string without any placeholders
-agentlib_flexquant/generate_flex_agents.py:662:42: F541 [*] f-string without any placeholders
-agentlib_flexquant/modules/flexibility_market.py:5:20: F401 [*] `typing.List` imported but unused
-agentlib_flexquant/modules/shadow_mpc.py:4:71: F401 [*] `agentlib_flexquant.utils.data_handling.fill_nans` imported but unused
-agentlib_flexquant/modules/shadow_mpc.py:4:82: F401 [*] `agentlib_flexquant.utils.data_handling.MEAN` imported but unused
-agentlib_flexquant/utils/interactive.py:691:42: F541 [*] f-string without any placeholders
-Found 9 errors.
-[*] 9 fixable with the `--fix` option.
+agentlib_flexquant/modules/baseline_mpc.py:9:34: F811 Redefinition of unused `mpc_full` from line 5
+agentlib_flexquant/modules/baseline_mpc.py:9:44: F811 Redefinition of unused `minlp_mpc` from line 5
+agentlib_flexquant/modules/shadow_mpc.py:11:5: F401 [*] `agentlib_flexquant.data_structures.globals.full_trajectory_prefix` imported but unused
+agentlib_flexquant/modules/shadow_mpc.py:14:52: F401 [*] `agentlib_flexquant.utils.data_handling.MEAN` imported but unused
+agentlib_flexquant/modules/shadow_mpc.py:14:58: F401 [*] `agentlib_flexquant.utils.data_handling.fill_nans` imported but unused
+agentlib_flexquant/utils/interactive.py:713:42: F541 [*] f-string without any placeholders
+agentlib_flexquant/utils/parsing.py:12:5: F401 [*] `agentlib_flexquant.data_structures.globals.full_trajectory_prefix` imported but unused
+Found 7 errors.
+[*] 5 fixable with the `--fix` option.

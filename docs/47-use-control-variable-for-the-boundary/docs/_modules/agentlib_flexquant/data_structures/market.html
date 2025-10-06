@@ -72,84 +72,112 @@
            <div itemprop="articleBody">
              
   <h1>Source code for agentlib_flexquant.data_structures.market</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pydantic</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Literal</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Market specification data models for flexibility offer acceptance strategies.</span>
+
+<span class="sd">Defines Pydantic models for configuring different market behaviors including</span>
+<span class="sd">random acceptance, single offer acceptance, and custom strategies with</span>
+<span class="sd">associated parameters and validation.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pydantic</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlexibilityDirections</span>
 
 
 <div class="viewcode-block" id="RandomOptions"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.RandomOptions">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">RandomOptions</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration options for random market behavior.&quot;&quot;&quot;</span>
+
     <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;random&quot;</span><span class="p">]</span>
     <span class="n">random_seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;random_seed&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Random seed for reproducing experiments&quot;</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;random_seed&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Random seed for reproducing experiments&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">pos_neg_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;pos_neg_rate&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;pos_neg_rate&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Determines the likelihood positive and the negative flexibility.&quot;</span>
-                    <span class="s2">&quot;A higher rate means that more positive offers will be accepted.&quot;</span><span class="p">,</span>
-        <span class="n">le</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span>
+        <span class="s2">&quot;A higher rate means that more positive offers will be accepted.&quot;</span><span class="p">,</span>
+        <span class="n">le</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">offer_acceptance_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;offer_acceptance_rate&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;offer_acceptance_rate&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Determines the likelihood of an accepted offer&quot;</span><span class="p">,</span>
-        <span class="n">le</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span>
+        <span class="n">le</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SingleOptions"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.SingleOptions">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">SingleOptions</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration options for single offer acceptance market behavior.&quot;&quot;&quot;</span>
+
     <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;single&quot;</span><span class="p">]</span>
-    <span class="n">start_time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;After this time, the first available flex offer&quot;</span>
-                                                   <span class="s2">&quot; is accepted&quot;</span><span class="p">)</span>
-    <span class="n">direction</span><span class="p">:</span> <span class="n">FlexibilityDirections</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;positive&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Direction of the flexibility&quot;</span><span class="p">)</span></div>
+    <span class="n">start_time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;After this time, the first available flex offer&quot;</span> <span class="s2">&quot; is accepted&quot;</span>
+    <span class="p">)</span>
+    <span class="n">direction</span><span class="p">:</span> <span class="n">FlexibilityDirections</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;positive&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Direction of the flexibility&quot;</span>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="CustomOptions"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.CustomOptions">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">CustomOptions</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration options for custom market behavior with flexible parameters.&quot;&quot;&quot;</span>
+
     <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;custom&quot;</span><span class="p">]</span>
 
     <span class="n">model_config</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">ConfigDict</span><span class="p">(</span><span class="n">extra</span><span class="o">=</span><span class="s2">&quot;allow&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="MarketSpecifications"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.MarketSpecifications">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">MarketSpecifications</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of market type&quot;</span>
-    <span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base specification for flexibility market behavior and parameters.&quot;&quot;&quot;</span>
+
+    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of market type&quot;</span><span class="p">)</span>
 
     <span class="n">cooldown</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;cooldown&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;cooldown time (no timesteps) after a provision&quot;</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;cooldown&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;cooldown time (no timesteps) after a provision&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">minimum_average_flex</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;minimum_average_flex&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;minimum_average_flex&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;W&quot;</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;minimum average of an accepted offer&quot;</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;minimum average of an accepted offer&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">options</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">RandomOptions</span><span class="p">,</span> <span class="n">SingleOptions</span><span class="p">,</span> <span class="n">CustomOptions</span><span class="p">]</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="o">...</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Market options, changes depending on &#39;type&#39;&quot;</span><span class="p">,</span>
-        <span class="n">discriminator</span><span class="o">=</span><span class="s1">&#39;type&#39;</span>
+        <span class="n">discriminator</span><span class="o">=</span><span class="s2">&quot;type&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="c1"># Root validator to automatically populate the options.type from the top-level type</span>
-<div class="viewcode-block" id="MarketSpecifications.set_options_type"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.MarketSpecifications.set_options_type">[docs]</a>    <span class="nd">@pydantic</span><span class="o">.</span><span class="n">model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;before&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="MarketSpecifications.set_options_type"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.MarketSpecifications.set_options_type">[docs]</a>    <span class="nd">@pydantic</span><span class="o">.</span><span class="n">model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;before&quot;</span><span class="p">)</span>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_options_type</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-        <span class="n">market_type</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">)</span>
-        <span class="n">options</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;options&#39;</span><span class="p">,</span> <span class="p">{})</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Automatically set the options type field from the top-level market type.&quot;&quot;&quot;</span>
+        <span class="n">market_type</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;options&quot;</span><span class="p">,</span> <span class="p">{})</span>
 
         <span class="c1"># Ensure the options dict contains the correct &#39;type&#39; field</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;type&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
-            <span class="n">options</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">market_type</span>
-            <span class="n">values</span><span class="p">[</span><span class="s1">&#39;options&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">options</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;type&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+            <span class="n">options</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">market_type</span>
+            <span class="n">values</span><span class="p">[</span><span class="s2">&quot;options&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">options</span>
 
         <span class="k">return</span> <span class="n">values</span></div></div>
 
 
 <div class="viewcode-block" id="RandomMarket"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.RandomMarket">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">RandomMarket</span><span class="p">(</span><span class="n">MarketSpecifications</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Market specification for random flexibility offer acceptance behavior.&quot;&quot;&quot;</span>
+
     <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;random&quot;</span></div>
 </pre></div>
 
