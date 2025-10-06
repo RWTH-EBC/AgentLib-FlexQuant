@@ -293,8 +293,8 @@ class Results:
             if module['type'] in [cmng.BASELINEMPC_CONFIG_TYPE, cmng.BASELINEMINLPMPC_CONFIG_TYPE,
                                   cmng.SHADOWMPC_CONFIG_TYPE, cmng.SHADOWMINLPMPC_CONFIG_TYPE]:
                 return module['type']
-            else:
-                raise Exception(f'There is no matching mpc module type in Agentlib_FlexQuant for modules in agent {agent_config.id}.')
+
+        raise ModuleNotFoundError(f'There is no matching mpc module type in Agentlib_FlexQuant for modules in agent {agent_config.id}.')
 
     def _load_results(
         self, results: Union[str, Path, dict]
