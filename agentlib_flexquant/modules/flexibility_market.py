@@ -18,8 +18,7 @@ class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
     )
 
     inputs: List[AgentVariable] = [
-        AgentVariable(name="FlexibilityOffer"),
-        AgentVariable(name=glbs.MPC_OUTPUT_TIME_GRID, alias=glbs.MPC_OUTPUT_TIME_GRID)
+        AgentVariable(name="FlexibilityOffer")
     ]
 
     outputs: List[AgentVariable] = [
@@ -39,6 +38,11 @@ class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
             name="in_provision", alias="in_provision",
             description="Set if the system is in provision", value=False
         )
+    ]
+
+    parameters: List[AgentVariable] = [
+        AgentVariable(name=glbs.COLLOCATION_TIME_GRID, alias=glbs.COLLOCATION_TIME_GRID,
+                      description="Time grid of the mpc model output")
     ]
 
     market_specs: MarketSpecifications
@@ -151,8 +155,8 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                     offer.status = OfferStatus.accepted_negative.value
 
                 # reindex the profile to the mpc output time grid
-                mpc_output_time_grid = self.get(glbs.MPC_OUTPUT_TIME_GRID).value
-                profile = profile.reindex(mpc_output_time_grid)
+                if self.get(glbs.COLLOCATION_TIME_GRID).value:
+                    profile = profile.reindex(self.get(glbs.COLLOCATION_TIME_GRID).value)
 
                 if profile is not None:
                     profile = profile.dropna()
@@ -185,8 +189,8 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                 offer.status = OfferStatus.accepted_negative.value
 
             # reindex the profile to the mpc output time grid
-            mpc_output_time_grid = self.get(glbs.MPC_OUTPUT_TIME_GRID).value
-            profile = profile.reindex(mpc_output_time_grid)
+            if self.get(glbs.COLLOCATION_TIME_GRID).value:
+                profile = profile.reindex(self.get(glbs.COLLOCATION_TIME_GRID).value)
 
             if profile is not None:
                 profile = profile.dropna()

@@ -6,6 +6,7 @@ import os
 import astor
 import black
 import json
+import numpy as np
 from copy import deepcopy
 from pathlib import Path
 from typing import List, Union
@@ -18,6 +19,8 @@ from agentlib.utils import custom_injection, load_config
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from agentlib_mpc.models.casadi_model import CasadiModelConfig
 from agentlib_mpc.modules.mpc_full import MPCConfig
+from agentlib_mpc.optimization_backends.casadi_.basic import DirectCollocation
+from agentlib_mpc.data_structures.casadi_utils import CasadiDiscretizationOptions
 import agentlib_flexquant.data_structures.globals as glbs
 import agentlib_flexquant.utils.config_management as cmng
 from agentlib_flexquant.utils.parsing import SetupSystemModifier
@@ -478,6 +481,9 @@ class FlexAgentGenerator:
                 parameter.value = self.baseline_mpc_module_config.time_step
             if parameter.name == glbs.PREDICTION_HORIZON:
                 parameter.value = self.baseline_mpc_module_config.prediction_horizon
+            if parameter.name == glbs.COLLOCATION_TIME_GRID:
+                discretization_options = self.baseline_mpc_module_config.optimization_backend['discretization_options']
+                parameter.value = self.get_collocation_time_grid(discretization_options=discretization_options)
         # set power unit
         module_config.power_unit = (
             self.flex_config.baseline_config_generator_data.power_unit
@@ -504,8 +510,30 @@ class FlexAgentGenerator:
             self.flex_config.results_directory
             / module_config.results_file.name
         )
+        for parameter in module_config.parameters:
+            if parameter.name == glbs.COLLOCATION_TIME_GRID:
+                discretization_options = self.baseline_mpc_module_config.optimization_backend['discretization_options']
+                parameter.value = self.get_collocation_time_grid(discretization_options=discretization_options)
         module_config.model_config["frozen"] = True
         return module_config
+
+    def get_collocation_time_grid(self, discretization_options: dict):
+        """Get the mpc output collocation grid over the horizon"""
+        # get the mpc time grid configuration
+        time_step = self.baseline_mpc_module_config.time_step
+        prediction_horizon = self.baseline_mpc_module_config.prediction_horizon
+        # get the collocation configuration
+        collocation_method = discretization_options['collocation_method']
+        collocation_order = discretization_options['collocation_order']
+        # get the collocation points
+        options = CasadiDiscretizationOptions(collocation_order=collocation_order, collocation_method=collocation_method)
+        collocation_points = DirectCollocation(options=options)._collocation_polynomial().root
+        # compute the mpc output collocation grid
+        discretization_points = np.arange(0, time_step*prediction_horizon, time_step)
+        collocation_time_grid = (discretization_points[:, None] + collocation_points * time_step).ravel()
+        collocation_time_grid = collocation_time_grid[~np.isin(collocation_time_grid, discretization_points)]
+        collocation_time_grid = collocation_time_grid.tolist()
+        return collocation_time_grid
 
     def _generate_flex_model_definition(self):
         """Generate a python module for negative and positive flexibility agents from the Baseline MPC model."""

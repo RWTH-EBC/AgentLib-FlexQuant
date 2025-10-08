@@ -190,7 +190,9 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         agentlib.AgentVariable(name=glbs.TIME_STEP, unit="s",
                                description="timestep of the mpc solution"),
         agentlib.AgentVariable(name=glbs.PREDICTION_HORIZON, unit="-",
-                               description="prediction horizon of the mpc solution")
+                               description="prediction horizon of the mpc solution"),
+        agentlib.AgentVariable(name=glbs.COLLOCATION_TIME_GRID, alias=glbs.COLLOCATION_TIME_GRID,
+                               description="Time grid of the mpc model output")
     ]
 
     results_file: Optional[Path] = Field(
@@ -371,6 +373,9 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 values = self.data.stored_energy_profile_flex_pos
             elif name == self.config.price_variable:
                 values = self.data.electricity_price_series
+            elif name == glbs.COLLOCATION_TIME_GRID:
+                value = self.get(name).value
+                values = pd.Series(index=value, data=value)
             else:
                 values = self.get(name).value
 
@@ -425,7 +430,8 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         """Calculate the flexibility KPIs for current predictions, send the flex offer and set the outputs, write and save the results."""
         # Calculate the flexibility KPIs for current predictions
         self.data.calculate(enable_energy_costs_correction=self.config.correct_costs.enable_energy_costs_correction,
-                            calculate_flex_cost=self.config.calculate_costs.calculate_flex_costs, integration_method=self.config.integration_method)
+                            calculate_flex_cost=self.config.calculate_costs.calculate_flex_costs, integration_method=self.config.integration_method,
+                            collocation_time_grid=self.get(glbs.COLLOCATION_TIME_GRID).value)
 
         # Send flex offer
         self.send_flex_offer(

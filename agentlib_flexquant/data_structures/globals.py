@@ -23,7 +23,7 @@ STORED_ENERGY_ALIAS_NEG = "_E_stored_neg"
 STORED_ENERGY_ALIAS_POS = "_E_stored_pos"
 full_trajectory_suffix: str = "_full"
 full_trajectory_prefix: str = "_"
-MPC_OUTPUT_TIME_GRID = 'mpc_output_time_grid'
+COLLOCATION_TIME_GRID = 'collocation_time_grid'
 
 # cost function in the shadow mpc. obj_std and obj_flex are to be evaluated according to user definition
 SHADOW_MPC_COST_FUNCTION = ("return ca.if_else(self.time < self.prep_time.sym + "
