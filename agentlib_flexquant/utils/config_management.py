@@ -1,16 +1,16 @@
-import math
-import inspect
-import os
 import importlib.util
+import inspect
+import math
+import os
+from abc import ABCMeta
 from copy import deepcopy
 from typing import TypeVar
-from abc import ABCMeta
-from agentlib.modules import get_all_module_types
+
 from agentlib.core.agent import AgentConfig
 from agentlib.core.module import BaseModuleConfig
+from agentlib.modules import get_all_module_types
 
-
-T = TypeVar('T', bound=BaseModuleConfig)
+T = TypeVar("T", bound=BaseModuleConfig)
 
 all_module_types = get_all_module_types(["agentlib_mpc", "agentlib_flexquant"])
 # remove ML models, since import takes ages
@@ -23,7 +23,10 @@ all_module_types.pop("agentlib_mpc.set_point_generator")
 all_module_types.pop("clonemap")
 
 # dictionary mapping the module name to the module config (ModelMetaclass)
-MODULE_TYPE_DICT = {name: inspect.get_annotations(class_type.import_class())["config"] for name, class_type in all_module_types.items()}
+MODULE_TYPE_DICT = {
+    name: inspect.get_annotations(class_type.import_class())["config"]
+    for name, class_type in all_module_types.items()
+}
 # dictionary mapping the module name to the module (ModuleImport)
 MODULE_NAME_DICT = all_module_types
 
@@ -36,7 +39,8 @@ SIMULATOR_CONFIG_TYPE: str = "simulator"
 
 
 def get_module_type_matching_dict(dictionary: dict) -> (dict, dict):
-    """Create two dictionaries, which map the modules types of the agentlib_mpc modules to those of the flexquant modules.
+    """Create two dictionaries, which map the modules types of the agentlib_mpc modules
+    to those of the flexquant modules.
 
     This is done by using the MODULE_TYPE_DICT.
 
@@ -61,20 +65,21 @@ def get_module_type_matching_dict(dictionary: dict) -> (dict, dict):
 
     for v, keys in value_to_keys.items():
         # Check if we have both agentlib and flexibility keys for this value
-        if keys['agentlib'] and keys['flex']:
+        if keys["agentlib"] and keys["flex"]:
             # Map each agentlib key to corresponding flexibility key
-            for agent_key in keys['agentlib']:
-                for flex_key in keys['flex']:
-                    if 'baseline' in flex_key:
+            for agent_key in keys["agentlib"]:
+                for flex_key in keys["flex"]:
+                    if "baseline" in flex_key:
                         baseline_matches[agent_key] = flex_key
-                    elif 'shadow' in flex_key:
+                    elif "shadow" in flex_key:
                         shadow_matches[agent_key] = flex_key
 
     return baseline_matches, shadow_matches
 
 
-BASELINE_MODULE_TYPE_DICT, SHADOW_MODULE_TYPE_DICT = (
-    get_module_type_matching_dict(MODULE_NAME_DICT))
+BASELINE_MODULE_TYPE_DICT, SHADOW_MODULE_TYPE_DICT = get_module_type_matching_dict(
+    MODULE_NAME_DICT
+)
 
 
 def get_orig_module_type(config: AgentConfig) -> str:
@@ -95,14 +100,25 @@ def get_module(config: AgentConfig, module_type: str) -> T:
             mod = deepcopy(module)
             return MODULE_TYPE_DICT[mod["type"]](**mod, _agent_id=config_id)
     else:
-        raise ModuleNotFoundError(f"Module type {module['type']} not found in "
-                                  f"agentlib and its plug ins.")
+        raise ModuleNotFoundError(
+            f"Module type {module['type']} not found in " f"agentlib and its plug ins."
+        )
 
 
 def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig) -> dict:
     """Remove unnecessary fields from the module to keep the created json simple."""
-    excluded_fields = ["rdf_class", "source", "type", "timestamp", "description", "unit", "clip",
-                       "shared", "interpolation_method", "allowed_values"]
+    excluded_fields = [
+        "rdf_class",
+        "source",
+        "type",
+        "timestamp",
+        "description",
+        "unit",
+        "clip",
+        "shared",
+        "interpolation_method",
+        "allowed_values",
+    ]
 
     def check_bounds(parameter):
         delete_list = excluded_fields.copy()
@@ -115,17 +131,28 @@ def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig) -> dict:
     parent_dict = module.dict(exclude_defaults=True)
     # update every variable with a dict excluding the defined fields
     if "parameters" in parent_dict:
-        parent_dict["parameters"] = [parameter.dict(exclude=check_bounds(parameter)) for parameter in module.parameters]
+        parent_dict["parameters"] = [
+            parameter.dict(exclude=check_bounds(parameter))
+            for parameter in module.parameters
+        ]
     if "inputs" in parent_dict:
-        parent_dict["inputs"] = [input.dict(exclude=check_bounds(input)) for input in module.inputs]
+        parent_dict["inputs"] = [
+            input.dict(exclude=check_bounds(input)) for input in module.inputs
+        ]
     if "outputs" in parent_dict:
-        parent_dict["outputs"] = [output.dict(exclude=check_bounds(output)) for output in module.outputs]
+        parent_dict["outputs"] = [
+            output.dict(exclude=check_bounds(output)) for output in module.outputs
+        ]
     if "controls" in parent_dict:
-        parent_dict["controls"] = [control.dict(exclude=check_bounds(control)) for control in module.controls]
+        parent_dict["controls"] = [
+            control.dict(exclude=check_bounds(control)) for control in module.controls
+        ]
     if "states" in parent_dict:
-        parent_dict["states"] = [state.dict(exclude=check_bounds(state)) for state in module.states]
-    if "mpc_output_time_grid" in parent_dict:
-        parent_dict["mpc_output_time_grid"] = module.mpc_output_time_grid.dict(exclude=(lambda ex: ex.remove('shared') or ex)(check_bounds(module.mpc_output_time_grid)))
+        parent_dict["states"] = [
+            state.dict(exclude=check_bounds(state)) for state in module.states
+        ]
+    if "collocation_time_grid" in parent_dict:
+        parent_dict["collocation_time_grid"] = module.collocation_time_grid.dict(exclude=(lambda ex: ex.remove('shared') or ex)(check_bounds(module.collocation_time_grid)))
 
     return parent_dict
 

@@ -1,26 +1,30 @@
 import webbrowser
+from typing import Optional, Union, get_args
+
 import pandas as pd
-from typing import get_args, Union, Optional
-from pydantic import FilePath
-from dash import Dash, html, dcc, callback, Output, Input, ctx
-from plotly import graph_objects as go
 from agentlib.core.agent import AgentConfig
-from agentlib_mpc.utils import TimeConversionTypes, TIME_CONVERSION
+from agentlib_mpc.utils import TIME_CONVERSION, TimeConversionTypes
 from agentlib_mpc.utils.analysis import mpc_at_time_step
 from agentlib_mpc.utils.plotting.interactive import get_port
-import agentlib_flexquant.data_structures.globals as glbs
+from dash import Dash, Input, Output, callback, ctx, dcc, html
+from plotly import graph_objects as go
+from pydantic import FilePath
+
 import agentlib_flexquant.data_structures.flex_results as flex_results
-from agentlib_flexquant.data_structures.flexquant import FlexQuantConfig
+import agentlib_flexquant.data_structures.globals as glbs
 from agentlib_flexquant.data_structures.flex_kpis import FlexibilityKPIs
 from agentlib_flexquant.data_structures.flex_offer import OfferStatus
+from agentlib_flexquant.data_structures.flexquant import FlexQuantConfig
 
 
 class CustomBound:
     """Dataclass to let the user define custom bounds for the mpc variables.
 
     for_variable -- The name of the variable to plot the bounds into
-    lower bound -- The lower bound of the variable as the name of the lower bound variable in the MPC
-    upper bound -- The upper bound of the variable as the name of the upper bound variable in the MPC
+    lower bound -- The lower bound of the variable as the name of the lower bound variable
+    in the MPC
+    upper bound -- The upper bound of the variable as the name of the upper bound variable
+    in the MPC
 
     """
 
@@ -41,6 +45,7 @@ class CustomBound:
 
 class Dashboard(flex_results.Results):
     """Class for the dashboard of flexquant"""
+
     # Constants for plotting variables
     MPC_ITERATIONS: str = "iter_count"
 
@@ -63,7 +68,7 @@ class Dashboard(flex_results.Results):
         generated_flex_files_base_path: Optional[Union[str, FilePath]] = None,
         results: Union[str, FilePath, dict[str, dict[str, pd.DataFrame]]] = None,
         to_timescale: TimeConversionTypes = "hours",
-        port: int = None
+        port: int = None,
     ):
         super().__init__(
             flex_config=flex_config,
@@ -81,28 +86,13 @@ class Dashboard(flex_results.Results):
 
         # Define line properties
         self.LINE_PROPERTIES: dict = {
-            self.simulator_agent_config.id: {
-                "color": "black",
-            },
-            self.baseline_agent_config.id: {
-                "color": "black",
-            },
-            self.neg_flex_agent_config.id: {
-                "color": "red",
-            },
-            self.pos_flex_agent_config.id: {
-                "color": "blue",
-            },
-            self.bounds_key: {
-                "color": "grey",
-            },
-            self.characteristic_times_current_key: {
-                "color": "grey",
-                "dash": "dash",
-            },
-            self.characteristic_times_accepted_key: {
-                "color": "yellow",
-            },
+            self.simulator_agent_config.id: {"color": "black",},
+            self.baseline_agent_config.id: {"color": "black",},
+            self.neg_flex_agent_config.id: {"color": "red",},
+            self.pos_flex_agent_config.id: {"color": "blue",},
+            self.bounds_key: {"color": "grey",},
+            self.characteristic_times_current_key: {"color": "grey", "dash": "dash",},
+            self.characteristic_times_accepted_key: {"color": "yellow",},
         }
 
         # KPIS
@@ -185,7 +175,9 @@ class Dashboard(flex_results.Results):
             )
             return fig
 
-        def plot_one_mpc_variable(fig: go.Figure, variable: str, time_step: float) -> go.Figure:
+        def plot_one_mpc_variable(
+            fig: go.Figure, variable: str, time_step: float
+        ) -> go.Figure:
             """Plot the mpc series for the specified variable at the specified time step.
 
             Args:
@@ -453,11 +445,15 @@ class Dashboard(flex_results.Results):
             )
             return rel_market_time, rel_prep_time, flex_event_duration
 
-        def mark_time(fig: go.Figure, at_time_step: float, line_prop: dict) -> go.Figure:
+        def mark_time(
+            fig: go.Figure, at_time_step: float, line_prop: dict
+        ) -> go.Figure:
             fig.add_vline(x=at_time_step, line=line_prop, layer="below")
             return fig
 
-        def mark_characteristic_times(fig: go.Figure, offer_time: Union[float, int] = 0, line_prop: dict = None) -> go.Figure:
+        def mark_characteristic_times(
+            fig: go.Figure, offer_time: Union[float, int] = 0, line_prop: dict = None
+        ) -> go.Figure:
             """Add markers of the characteristic times to the plot for a time step.
 
             Args:
@@ -472,9 +468,11 @@ class Dashboard(flex_results.Results):
             if line_prop is None:
                 line_prop = self.LINE_PROPERTIES[self.characteristic_times_current_key]
             try:
-                rel_market_time, rel_prep_time, flex_event_duration = (
-                    get_characteristic_times(offer_time)
-                )
+                (
+                    rel_market_time,
+                    rel_prep_time,
+                    flex_event_duration,
+                ) = get_characteristic_times(offer_time)
                 mark_time(fig=fig, at_time_step=offer_time, line_prop=line_prop)
                 mark_time(
                     fig=fig,
@@ -501,11 +499,16 @@ class Dashboard(flex_results.Results):
         def mark_characteristic_times_of_accepted_offers(fig: go.Figure) -> go.Figure:
             """Add markers of the characteristic times for accepted offers to the plot."""
             if self.df_market is not None:
-                if (self.df_market["status"].isin([
-                    OfferStatus.accepted_negative.value,
-                    OfferStatus.accepted_positive.value,
-                ]
-                ).any()):
+                if (
+                    self.df_market["status"]
+                    .isin(
+                        [
+                            OfferStatus.ACCEPTED_NEGATIVE.value,
+                            OfferStatus.ACCEPTED_POSITIVE.value,
+                        ]
+                    )
+                    .any()
+                ):
                     df_accepted_offers = self.df_market["status"].str.contains(
                         pat="OfferStatus.accepted"
                     )
@@ -533,9 +536,12 @@ class Dashboard(flex_results.Results):
 
             Args:
                 variable: the variable to plot
-                at_time_step: the time_step to show the mpc predictions and the characteristic times
-                show_accepted_characteristic_times: whether to show the accepted characteristic times
-                show_current_characteristic_times: whether to show the current characteristic times
+                at_time_step: the time_step to show the mpc predictions
+                and the characteristic times
+                show_accepted_characteristic_times: whether to show
+                the accepted characteristic times
+                show_current_characteristic_times: whether to show
+                the current characteristic times
                 zoom_to_offer_window: whether to zoom to offer window
                 zoom_to_prediction_interval: wether to zoom to prediction interval
 
@@ -567,9 +573,11 @@ class Dashboard(flex_results.Results):
 
             # Set layout
             if zoom_to_offer_window:
-                rel_market_time, rel_prep_time, flex_event_duration = (
-                    get_characteristic_times(at_time_step)
-                )
+                (
+                    rel_market_time,
+                    rel_prep_time,
+                    flex_event_duration,
+                ) = get_characteristic_times(at_time_step)
                 ts = (
                     self.baseline_module_config.time_step
                     / TIME_CONVERSION[self.current_timescale_of_data]
