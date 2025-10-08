@@ -151,9 +151,6 @@ def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig) -> dict:
         parent_dict["states"] = [
             state.dict(exclude=check_bounds(state)) for state in module.states
         ]
-    if "collocation_time_grid" in parent_dict:
-        parent_dict["collocation_time_grid"] = module.collocation_time_grid.dict(exclude=(lambda ex: ex.remove('shared') or ex)(check_bounds(module.collocation_time_grid)))
-
     return parent_dict
 
 

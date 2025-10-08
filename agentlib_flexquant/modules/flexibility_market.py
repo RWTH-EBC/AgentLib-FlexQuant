@@ -41,7 +41,7 @@ class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
         ),
     ]
 
-    parameters: List[AgentVariable] = [
+    parameters: list[AgentVariable] = [
         AgentVariable(name=glbs.COLLOCATION_TIME_GRID, alias=glbs.COLLOCATION_TIME_GRID,
                       description="Time grid of the mpc model output")
     ]

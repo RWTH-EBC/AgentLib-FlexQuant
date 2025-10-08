@@ -29,7 +29,7 @@ class FlexibilityShadowMPCConfig(mpc_full.MPCConfig):
 
 
 class FlexibilityShadowMPC(mpc_full.MPC):
-"""Shadow MPC for calculating positive/negative flexibility offers."""
+    """Shadow MPC for calculating positive/negative flexibility offers."""
 
     config: FlexibilityShadowMPCConfig
 

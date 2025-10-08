@@ -555,7 +555,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
 
         # Send flex offer
         self.send_flex_offer(
-            name=glbs.FlexibilityOffer,
+            name=glbs.FLEXIBILITY_OFFER,
             base_power_profile=self.data.power_profile_base.iloc[:-1],
             pos_diff_profile=self.data.kpis_pos.power_flex_offer.value.iloc[:-1],
             pos_price=self.data.kpis_pos.costs.value,
