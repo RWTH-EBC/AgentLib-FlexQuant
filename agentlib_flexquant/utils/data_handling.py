@@ -60,6 +60,9 @@ def _set_mean_values(series: pd.Series) -> pd.Series:
             series.index <= interval.right
         )
         series[interval.left] = series[interval_index].mean(skipna=True)
+        # fill the last entry of series with mean value of previous entries
+        if interval.right == series.index[-1]:
+            series[interval.right] = series[interval.left]
 
     # remove last entry if nan, e.g. with collocation
     if pd.isna(series.iloc[-1]):
