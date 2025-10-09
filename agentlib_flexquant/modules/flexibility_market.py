@@ -174,11 +174,10 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                     profile = offer.base_power_profile + offer.neg_diff_profile
                     offer.status = OfferStatus.ACCEPTED_NEGATIVE.value
 
-                # reindex the profile to the mpc output time grid
-                if self.get(glbs.COLLOCATION_TIME_GRID).value:
-                    profile = profile.reindex(self.get(glbs.COLLOCATION_TIME_GRID).value)
-
                 if profile is not None:
+                    # reindex the profile to the mpc output time grid
+                    if self.get(glbs.COLLOCATION_TIME_GRID).value:
+                        profile = profile.reindex(self.get(glbs.COLLOCATION_TIME_GRID).value)
                     profile = profile.dropna()
                     profile.index += self.env.time
                     self.set("_P_external", profile)
@@ -223,11 +222,10 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                 profile = offer.base_power_profile + offer.neg_diff_profile
                 offer.status = OfferStatus.ACCEPTED_NEGATIVE.value
 
-            # reindex the profile to the mpc output time grid
-            if self.get(glbs.COLLOCATION_TIME_GRID).value:
-                profile = profile.reindex(self.get(glbs.COLLOCATION_TIME_GRID).value)
-
             if profile is not None:
+                # reindex the profile to the mpc output time grid
+                if self.get(glbs.COLLOCATION_TIME_GRID).value:
+                    profile = profile.reindex(self.get(glbs.COLLOCATION_TIME_GRID).value)
                 profile = profile.dropna()
                 profile.index += self.env.time
                 self.set("_P_external", profile)
