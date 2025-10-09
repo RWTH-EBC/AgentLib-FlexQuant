@@ -603,7 +603,10 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
         # simulate with the casadi simulator
         self.sim_flex_model(solution)
 
+        # extract solution DataFrama
         df = solution.df
+
+        # send the outputs
         if self.flex_results is not None:
             for output in self.var_ref.outputs:
                 if output not in [self.config.power_variable_name, self.config.storage_variable_name]:
@@ -772,7 +775,10 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
         # set the flex results format same as mpc result while updating Agentvariable
         self.flex_results.index = self.flex_results.index.get_level_values(1)
 
-    def register_callbacks(self): (duplicate-code)
+    def _initialize_flex_results(self, n_simulation_steps, horizon_length, sim_time_step, result_df):
+        '''Initialize the flex results dataframe with the correct dimension and index and fill with existing results from optimization'''
+
+        # create MultiIndex for collocation points (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[140:191]
 ==agentlib_flexquant.modules.shadow_mpc:[169:220]
@@ -926,9 +932,7 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             for output in self.var_ref.outputs:
                 self.flex_results.loc[(
                     self.env.now, current_sim_time + t_sample), output] = self.flex_model.get_output(
-                    output).value
-
- (duplicate-code)
+                    output).value (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[411:427]
 ==agentlib_flexquant.modules.shadow_mpc:[233:250]
@@ -975,13 +979,7 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             except:
                 pass
 
-    def pre_computation_hook(self):
-        """Calculate relative start and end times for flexibility provision.
-
-        When in provision mode, computes the relative timing for flexibility
-        events based on the external power profile timestamps and current
-        environment time.
-        """ (duplicate-code)
+    def register_callbacks(self): (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[31:50]
 ==agentlib_flexquant.modules.shadow_mpc:[42:56]

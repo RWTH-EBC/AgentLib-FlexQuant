@@ -1935,10 +1935,7 @@
         # simulate with the casadi simulator
         self.sim_flex_model(solution)
 
-        # extract solution DataFrama
         df = solution.df
-
-        # send the outputs
         if self.flex_results is not None:
             for output in self.var_ref.outputs:
                 if output not in [self.config.power_variable_name, self.config.storage_variable_name]:
@@ -2116,10 +2113,7 @@
         # set the flex results format same as mpc result while updating Agentvariable
         self.flex_results.index = self.flex_results.index.get_level_values(1)
 
-    def _initialize_flex_results(self, n_simulation_steps, horizon_length, sim_time_step, result_df):
-        &#39;&#39;&#39;Initialize the flex results dataframe with the correct dimension and index and fill with existing results from optimization&#39;&#39;&#39;
-
-        # create MultiIndex for collocation points</pre></td>
+    def register_callbacks(self):</pre></td>
             </tr>
             
             <tr>
@@ -2359,7 +2353,7 @@
             ),
             None,
         )
-        # instantiate and validate sim agent config</pre></td>
+        # convert filename string to path and extract the name</pre></td>
             </tr>
             
             <tr>
@@ -2413,14 +2407,9 @@
             except:
                 pass
 
-
-    def pre_computation_hook(self):
-        &#34;&#34;&#34;Calculate relative start and end times for flexibility provision.
-
-        When in provision mode, computes the relative timing for flexibility
-        events based on the external power profile timestamps and current
-        environment time.
-        &#34;&#34;&#34;</pre></td>
+    def set_output(self, solution):
+        &#34;&#34;&#34;Takes the solution from optimization backend and sends it to AgentVariables.&#34;&#34;&#34;
+        # Output must be defined in the config as &#34;type&#34;=&#34;pd.Series&#34;</pre></td>
             </tr>
             
             <tr>
@@ -2441,7 +2430,21 @@
             self.logger.error(&#34;Results file %s was not found.&#34;, results_file)
             return None
 
-    def register_callbacks(self):</pre></td>
+    def write_results(self, df: pd.DataFrame, ts: float, n: int) -&gt; pd.DataFrame:
+        &#34;&#34;&#34;Write every data of variables in self.var_list in an DataFrame.
+
+        DataFrame will be updated every time step
+
+        Args:
+            df: DataFrame which is initialised as an empty DataFrame with columns
+            according to self.var_list
+            ts: time step
+            n: number of time steps during prediction horizon
+
+        Returns:
+            DataFrame with results of every variable in self.var_list
+
+        &#34;&#34;&#34;</pre></td>
             </tr>
             
             <tr>
