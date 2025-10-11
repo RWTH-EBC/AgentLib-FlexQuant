@@ -674,6 +674,8 @@ class FlexAgentGenerator:
     def run_config_validations(self):
         """Function to validate integrity of user-supplied flex config.
 
+        Since the validation depends on interactions between multiple configurations, it is performed within this function rather than using Pydantic’s built-in validators for individual configurations.
+
         The following checks are performed:
         1. Ensures the specified power variable exists in the MPC model outputs.
         2. Ensures the specified comfort variable exists in the MPC model states.
@@ -737,23 +739,28 @@ class FlexAgentGenerator:
                 )
 
         # raise warning if unsupported collocation method is used and change to supported method
-        collocation_method = self.baseline_mpc_module_config.optimization_backend[
+        if "collocation_method" not in self.baseline_mpc_module_config.optimization_backend[
             "discretization_options"
-        ]["collocation_method"]
-        if collocation_method != "legendre":
-            self.logger.warning(
-                "Collocation method %s is not supported. Switching to method legendre.",
-                collocation_method,
-            )
-            self.baseline_mpc_module_config.optimization_backend[
+        ]:
+            raise ConfigurationError("Please use collocation as discretization method and define the collocation_method in the mpc config")
+        else:
+            collocation_method = self.baseline_mpc_module_config.optimization_backend[
                 "discretization_options"
-            ]["collocation_method"] = "legendre"
-            self.pos_flex_mpc_module_config.optimization_backend[
-                "discretization_options"
-            ]["collocation_method"] = "legendre"
-            self.neg_flex_mpc_module_config.optimization_backend[
-                "discretization_options"
-            ]["collocation_method"] = "legendre"
+            ]["collocation_method"]
+            if collocation_method != "legendre":
+                self.logger.warning(
+                    "Collocation method %s is not supported. Switching to method legendre.",
+                    collocation_method,
+                )
+                self.baseline_mpc_module_config.optimization_backend[
+                    "discretization_options"
+                ]["collocation_method"] = "legendre"
+                self.pos_flex_mpc_module_config.optimization_backend[
+                    "discretization_options"
+                ]["collocation_method"] = "legendre"
+                self.neg_flex_mpc_module_config.optimization_backend[
+                    "discretization_options"
+                ]["collocation_method"] = "legendre"
 
         # time data validations
         flex_times = {
