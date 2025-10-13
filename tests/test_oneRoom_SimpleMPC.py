@@ -72,7 +72,6 @@ def assert_frame_matches_summary_snapshot(snapshot, df: pd.DataFrame,
     # Use snapshot.assert_match on the small, stable JSON string
     snapshot.assert_match(summary_json, snapshot_name)
 
-
 def run_example_from_path(example_path: Path):
     """
     Dynamically imports and runs the 'run_example' function from a script
@@ -117,7 +116,6 @@ def run_example_from_path(example_path: Path):
         # --- TEARDOWN: Always restore original paths to avoid side-effects ---
         os.chdir(original_cwd)
         sys.path[:] = original_sys_path  # Restore the original sys.path
-
 
 def test_oneroom_simple_mpc(snapshot):
     """
