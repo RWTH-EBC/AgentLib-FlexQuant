@@ -54,6 +54,7 @@ def create_dataframe_summary(df: pd.DataFrame, precision: int = 6) -> dict:
     }
     return summary
 
+
 def assert_frame_matches_summary_snapshot(snapshot, df: pd.DataFrame,
                                           snapshot_name: str):
     """
@@ -70,6 +71,7 @@ def assert_frame_matches_summary_snapshot(snapshot, df: pd.DataFrame,
 
     # Use snapshot.assert_match on the small, stable JSON string
     snapshot.assert_match(summary_json, snapshot_name)
+
 
 def run_example_from_path(example_path: Path):
     """
