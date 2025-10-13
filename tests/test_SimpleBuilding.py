@@ -107,6 +107,8 @@ def run_example_from_path(example_path: Path):
             raise AttributeError(
                 "The 'run.py' script must contain a 'run_example' function.")
 
+        run_module.sim_config = "mpc_and_sim/fmu_config_linux.json"
+
         # Execute the function and get the results
         results = run_module.run_example(until=3600)
         return results
