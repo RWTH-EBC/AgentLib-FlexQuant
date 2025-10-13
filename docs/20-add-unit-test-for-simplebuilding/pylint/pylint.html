@@ -28,9 +28,9 @@
 
         
         <h2>Score</h2>
-        7.13 / 10
+        7.15 / 10
             
-            (previous score: 7.13 / 10)
+            (previous score: 7.15 / 10)
             
         
 
@@ -988,7 +988,7 @@
             ),
             None,
         )
-        # instantiate and validate sim agent config</pre></td>
+        # convert filename string to path and extract the name</pre></td>
             </tr>
             
             <tr>
@@ -1009,7 +1009,21 @@
             self.logger.error(&#34;Results file %s was not found.&#34;, results_file)
             return None
 
-    def register_callbacks(self):</pre></td>
+    def write_results(self, df: pd.DataFrame, ts: float, n: int) -&gt; pd.DataFrame:
+        &#34;&#34;&#34;Write every data of variables in self.var_list in an DataFrame.
+
+        DataFrame will be updated every time step
+
+        Args:
+            df: DataFrame which is initialised as an empty DataFrame with columns
+            according to self.var_list
+            ts: time step
+            n: number of time steps during prediction horizon
+
+        Returns:
+            DataFrame with results of every variable in self.var_list
+
+        &#34;&#34;&#34;</pre></td>
             </tr>
             
             <tr>
@@ -1148,16 +1162,6 @@
                 <td>R0903</td>
                 <td>InputsForCalculateFlexCosts</td>
                 <td><pre>Too few public methods (1/2)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>69</td>
-                <td>4</td>
-                <td>error</td>
-                <td><code>no-self-argument</code></td>
-                <td>E0213</td>
-                <td>InputsForCalculateFlexCosts.validate_constant_price</td>
-                <td><pre>Method &#39;validate_constant_price&#39; should have &#34;self&#34; as first argument</pre></td>
             </tr>
             
             <tr>
@@ -2463,7 +2467,7 @@
             
             <tr>
                 <td>error</td>
-                <td>71</td>
+                <td>70</td>
             </tr>
             
             <tr>
@@ -2652,11 +2656,6 @@
             </tr>
             
             <tr>
-                <td>no-self-argument</td>
-                <td>1</td>
-            </tr>
-            
-            <tr>
                 <td>broad-exception-raised</td>
                 <td>1</td>
             </tr>
@@ -2748,7 +2747,7 @@
             
             <tr>
                 <td>agentlib_flexquant.modules.flexibility_indicator</td>
-                <td>19</td>
+                <td>18</td>
             </tr>
             
             <tr>
@@ -2848,7 +2847,7 @@
             
             <tr>
                 <td>agentlib_flexquant/modules/flexibility_indicator.py</td>
-                <td>19</td>
+                <td>18</td>
             </tr>
             
             <tr>
