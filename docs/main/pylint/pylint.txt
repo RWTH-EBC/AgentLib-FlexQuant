@@ -137,7 +137,7 @@ agentlib_flexquant/data_structures/flex_results.py:65:0: R0902: Too many instanc
 agentlib_flexquant/data_structures/flex_results.py:111:4: R0913: Too many arguments (6/5) (too-many-arguments)
 agentlib_flexquant/data_structures/flex_results.py:163:65: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
 agentlib_flexquant/data_structures/flex_results.py:258:72: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/data_structures/flex_results.py:412:12: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/data_structures/flex_results.py:459:12: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
 ************* Module agentlib_flexquant.data_structures.flex_offer
 agentlib_flexquant/data_structures/flex_offer.py:12:0: E0401: Unable to import 'pandas' (import-error)
 agentlib_flexquant/data_structures/flex_offer.py:13:0: E0401: Unable to import 'pydantic' (import-error)
@@ -249,7 +249,21 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             self.logger.error("Results file %s was not found.", results_file)
             return None
 
-    def register_callbacks(self): (duplicate-code)
+    def write_results(self, df: pd.DataFrame, ts: float, n: int) -> pd.DataFrame:
+        """Write every data of variables in self.var_list in an DataFrame.
+
+        DataFrame will be updated every time step
+
+        Args:
+            df: DataFrame which is initialised as an empty DataFrame with columns
+            according to self.var_list
+            ts: time step
+            n: number of time steps during prediction horizon
+
+        Returns:
+            DataFrame with results of every variable in self.var_list
+
+        """ (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.flexibility_indicator:[321:329]
 ==agentlib_flexquant.modules.flexibility_market:[54:62]
@@ -263,5 +277,5 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
  (duplicate-code)
 
 -----------------------------------
-Your code has been rated at 7.13/10
+Your code has been rated at 7.15/10
 

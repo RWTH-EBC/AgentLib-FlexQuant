@@ -1423,7 +1423,7 @@
             "type": "convention",
             "module": "agentlib_flexquant.data_structures.flex_results",
             "obj": "Results.convert_timescale_of_dataframe_index",
-            "line": 412,
+            "line": 459,
             "column": 12,
             "path": "agentlib_flexquant/data_structures/flex_results.py",
             "symbol": "invalid-name",
@@ -2318,7 +2318,7 @@
             "column": 0,
             "path": "agentlib_flexquant/modules/__init__.py",
             "symbol": "duplicate-code",
-            "message": "Similar lines in 2 files\n==agentlib_flexquant.data_structures.flex_results:[261:270]\n==agentlib_flexquant.generate_flex_agents:[780:789]\n        sim_module_config = next(\n            (\n                module\n                for module in sim_config[\"modules\"]\n                if module[\"type\"] == \"simulator\"\n            ),\n            None,\n        )\n        # convert filename string to path and extract the name",
+            "message": "Similar lines in 2 files\n==agentlib_flexquant.data_structures.flex_results:[261:270]\n==agentlib_flexquant.generate_flex_agents:[780:789]\n        sim_module_config = next(\n            (\n                module\n                for module in sim_config[\"modules\"]\n                if module[\"type\"] == \"simulator\"\n            ),\n            None,\n        )\n        # instantiate and validate sim agent config",
             "message-id": "R0801"
         },
         {
@@ -2457,7 +2457,7 @@
                 "fatal": 0,
                 "info": 0,
                 "refactor": 2,
-                "statement": 172,
+                "statement": 185,
                 "warning": 0
             },
             "agentlib_flexquant.data_structures.globals": {
@@ -2609,47 +2609,47 @@
                 "agentlib_flexquant"
             ],
             "agentlib_flexquant.modules.flexibility_indicator": [
-                "agentlib_flexquant.generate_flex_agents",
+                "agentlib_flexquant.data_structures.flex_results",
                 "agentlib_flexquant",
-                "agentlib_flexquant.data_structures.flex_results"
+                "agentlib_flexquant.generate_flex_agents"
             ],
             "agentlib_flexquant.modules.flexibility_market": [
-                "agentlib_flexquant.generate_flex_agents",
+                "agentlib_flexquant.data_structures.flex_results",
                 "agentlib_flexquant",
-                "agentlib_flexquant.data_structures.flex_results"
+                "agentlib_flexquant.generate_flex_agents"
             ],
             "agentlib_flexquant.modules.shadow_mpc": [
                 "agentlib_flexquant"
             ],
             "agentlib_flexquant.data_structures.globals": [
+                "agentlib_flexquant.utils.interactive",
+                "agentlib_flexquant.modules.flexibility_indicator",
+                "agentlib_flexquant.data_structures.flex_kpis",
+                "agentlib_flexquant.data_structures.market",
                 "agentlib_flexquant.generate_flex_agents",
                 "agentlib_flexquant.data_structures.mpcs",
-                "agentlib_flexquant.data_structures.market",
+                "agentlib_flexquant.modules.shadow_mpc",
                 "agentlib_flexquant.utils.parsing",
-                "agentlib_flexquant.modules.flexibility_indicator",
-                "agentlib_flexquant.optimization_backends.constrained_cia",
-                "agentlib_flexquant.data_structures.flex_kpis",
-                "agentlib_flexquant.utils.interactive",
-                "agentlib_flexquant.modules.shadow_mpc"
+                "agentlib_flexquant.optimization_backends.constrained_cia"
             ],
             "agentlib_flexquant.utils.config_management": [
-                "agentlib_flexquant.generate_flex_agents",
                 "agentlib_flexquant.data_structures.mpcs",
-                "agentlib_flexquant.data_structures.flex_results"
+                "agentlib_flexquant.data_structures.flex_results",
+                "agentlib_flexquant.generate_flex_agents"
             ],
             "agentlib_flexquant.utils.parsing": [
                 "agentlib_flexquant.generate_flex_agents"
             ],
             "agentlib_flexquant.data_structures.flexquant": [
-                "agentlib_flexquant.generate_flex_agents",
+                "agentlib_flexquant.data_structures.flex_results",
                 "agentlib_flexquant.utils.interactive",
-                "agentlib_flexquant.data_structures.flex_results"
+                "agentlib_flexquant.generate_flex_agents"
             ],
             "agentlib_flexquant.data_structures.mpcs": [
-                "agentlib_flexquant.generate_flex_agents",
-                "agentlib_flexquant.data_structures.flexquant",
                 "agentlib_flexquant.utils.parsing",
-                "agentlib_flexquant.data_structures.flex_results"
+                "agentlib_flexquant.data_structures.flexquant",
+                "agentlib_flexquant.data_structures.flex_results",
+                "agentlib_flexquant.generate_flex_agents"
             ],
             "agentlib_flexquant.data_structures.flex_results": [
                 "agentlib_flexquant.utils.interactive"
@@ -2660,13 +2660,13 @@
             ],
             "agentlib_flexquant.data_structures.flex_offer": [
                 "agentlib_flexquant.modules.flexibility_market",
-                "agentlib_flexquant.utils.interactive",
-                "agentlib_flexquant.modules.flexibility_indicator"
+                "agentlib_flexquant.modules.flexibility_indicator",
+                "agentlib_flexquant.utils.interactive"
             ],
             "agentlib_flexquant.utils.data_handling": [
                 "agentlib_flexquant.modules.shadow_mpc",
-                "agentlib_flexquant.data_structures.flex_results",
-                "agentlib_flexquant.data_structures.flex_kpis"
+                "agentlib_flexquant.data_structures.flex_kpis",
+                "agentlib_flexquant.data_structures.flex_results"
             ],
             "agentlib_flexquant.data_structures.market": [
                 "agentlib_flexquant.modules.flexibility_market"
@@ -2679,7 +2679,7 @@
         "node_count": {
             "function": 35,
             "klass": 40,
-            "method": 98,
+            "method": 99,
             "module": 22
         },
         "undocumented": {
@@ -2693,11 +2693,11 @@
         "fatal": 0,
         "info": 0,
         "refactor": 55,
-        "statement": 1729,
+        "statement": 1742,
         "warning": 20,
         "global_note": 0,
         "nb_duplicated_lines": 21,
-        "percent_duplicated_lines": 0.387382401770891
+        "percent_duplicated_lines": 0.3840526700804682
     },
     "previous": {
         "bad_names": {
@@ -2812,7 +2812,7 @@
                 "fatal": 0,
                 "info": 0,
                 "refactor": 2,
-                "statement": 172,
+                "statement": 185,
                 "warning": 0
             },
             "agentlib_flexquant.data_structures.globals": {
@@ -2964,46 +2964,46 @@
                 "agentlib_flexquant"
             ],
             "agentlib_flexquant.modules.flexibility_indicator": [
-                "agentlib_flexquant.generate_flex_agents",
                 "agentlib_flexquant",
+                "agentlib_flexquant.generate_flex_agents",
                 "agentlib_flexquant.data_structures.flex_results"
             ],
             "agentlib_flexquant.modules.flexibility_market": [
-                "agentlib_flexquant.generate_flex_agents",
                 "agentlib_flexquant",
+                "agentlib_flexquant.generate_flex_agents",
                 "agentlib_flexquant.data_structures.flex_results"
             ],
             "agentlib_flexquant.modules.shadow_mpc": [
                 "agentlib_flexquant"
             ],
             "agentlib_flexquant.data_structures.globals": [
+                "agentlib_flexquant.utils.interactive",
+                "agentlib_flexquant.modules.flexibility_indicator",
+                "agentlib_flexquant.data_structures.flex_kpis",
+                "agentlib_flexquant.data_structures.market",
                 "agentlib_flexquant.generate_flex_agents",
                 "agentlib_flexquant.data_structures.mpcs",
+                "agentlib_flexquant.modules.shadow_mpc",
                 "agentlib_flexquant.utils.parsing",
-                "agentlib_flexquant.data_structures.market",
-                "agentlib_flexquant.modules.flexibility_indicator",
-                "agentlib_flexquant.optimization_backends.constrained_cia",
-                "agentlib_flexquant.data_structures.flex_kpis",
-                "agentlib_flexquant.utils.interactive",
-                "agentlib_flexquant.modules.shadow_mpc"
+                "agentlib_flexquant.optimization_backends.constrained_cia"
             ],
             "agentlib_flexquant.utils.config_management": [
-                "agentlib_flexquant.generate_flex_agents",
                 "agentlib_flexquant.data_structures.mpcs",
+                "agentlib_flexquant.generate_flex_agents",
                 "agentlib_flexquant.data_structures.flex_results"
             ],
             "agentlib_flexquant.utils.parsing": [
                 "agentlib_flexquant.generate_flex_agents"
             ],
             "agentlib_flexquant.data_structures.flexquant": [
-                "agentlib_flexquant.generate_flex_agents",
                 "agentlib_flexquant.utils.interactive",
+                "agentlib_flexquant.generate_flex_agents",
                 "agentlib_flexquant.data_structures.flex_results"
             ],
             "agentlib_flexquant.data_structures.mpcs": [
-                "agentlib_flexquant.generate_flex_agents",
                 "agentlib_flexquant.data_structures.flexquant",
                 "agentlib_flexquant.data_structures.flex_results",
+                "agentlib_flexquant.generate_flex_agents",
                 "agentlib_flexquant.utils.parsing"
             ],
             "agentlib_flexquant.data_structures.flex_results": [
@@ -3015,13 +3015,13 @@
             ],
             "agentlib_flexquant.data_structures.flex_offer": [
                 "agentlib_flexquant.modules.flexibility_market",
-                "agentlib_flexquant.utils.interactive",
-                "agentlib_flexquant.modules.flexibility_indicator"
+                "agentlib_flexquant.modules.flexibility_indicator",
+                "agentlib_flexquant.utils.interactive"
             ],
             "agentlib_flexquant.utils.data_handling": [
+                "agentlib_flexquant.data_structures.flex_kpis",
                 "agentlib_flexquant.modules.shadow_mpc",
-                "agentlib_flexquant.data_structures.flex_results",
-                "agentlib_flexquant.data_structures.flex_kpis"
+                "agentlib_flexquant.data_structures.flex_results"
             ],
             "agentlib_flexquant.data_structures.market": [
                 "agentlib_flexquant.modules.flexibility_market"
@@ -3034,7 +3034,7 @@
         "node_count": {
             "function": 35,
             "klass": 40,
-            "method": 98,
+            "method": 99,
             "module": 22
         },
         "undocumented": {
@@ -3048,10 +3048,10 @@
         "fatal": 0,
         "info": 0,
         "refactor": 55,
-        "statement": 1729,
+        "statement": 1742,
         "warning": 20,
-        "global_note": 7.125506072874494,
+        "global_note": 7.146957520091848,
         "nb_duplicated_lines": 21,
-        "percent_duplicated_lines": 0.387382401770891
+        "percent_duplicated_lines": 0.3840526700804682
     }
 }
