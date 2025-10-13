@@ -1,8 +1,8 @@
 """Generate agents for flexibility quantification.
 
-This module provides the FlexAgentGenerator class that creates and configures flexibility agents. 
-The agents created include the baseline, positive and negative flexibility agents, 
-the flexibility indicator and market agents. The agents are created based on the flex config and 
+This module provides the FlexAgentGenerator class that creates and configures flexibility agents.
+The agents created include the baseline, positive and negative flexibility agents,
+the flexibility indicator and market agents. The agents are created based on the flex config and
 the MPC config.
 """
 import ast
