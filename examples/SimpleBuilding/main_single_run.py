@@ -6,23 +6,22 @@ from agentlib_flexquant.utils.interactive import Dashboard, CustomBound
 logging.basicConfig(level=logging.WARN)
 until = 3600 * 24 
 
-ENV_CONFIG = {"rt": False, "factor": 0.002, "t_sample": 1} 
+ENV_CONFIG = {"rt": False, "factor": 0.002, "t_sample": 1}
+sim_config = "mpc_and_sim/fmu_config.json"
+mpc_config = "mpc_and_sim/simple_model.json"
+predictor_config = "predictor/predictor_config.json"
+flex_config = "flex_configs/flexibility_agent_config.json"
 
 def run_example(until=until):
-    
-    mpc_config = "mpc_and_sim/simple_model.json"
-    sim_config = "mpc_and_sim/fmu_config.json" 
-    predictor_config = "predictor/predictor_config.json"
-    flex_config = "flex_configs/flexibility_agent_config.json"
 
-    generator =  FlexAgentGenerator(
+    generator = FlexAgentGenerator(
         flex_config=flex_config, mpc_agent_config=mpc_config
     )
 
     config_list = generator.generate_flex_agents()
-    sim_config = generator.adapt_sim_results_path(sim_config)
+    sim_config_new = generator.adapt_sim_results_path(sim_config)
 
-    agent_configs = [sim_config, predictor_config]
+    agent_configs = [sim_config_new, predictor_config]
     agent_configs.extend(config_list)
 
     mas = LocalMASAgency(
