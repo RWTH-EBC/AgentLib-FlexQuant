@@ -55,7 +55,6 @@ def create_dataframe_summary(df: pd.DataFrame, precision: int = 6) -> dict:
     }
     return summary
 
-
 def assert_frame_matches_summary_snapshot(snapshot, df: pd.DataFrame,
                                           snapshot_name: str):
     """
@@ -82,7 +81,7 @@ def run_example_from_path(example_path: Path):
     Python import path, ensuring the script can find both its local files
     and its local modules.
     """
-    run_script_path = example_path / 'main_one_room_flex.py'
+    run_script_path = example_path / 'main_single_run.py'
     if not run_script_path.is_file():
         raise FileNotFoundError(
             f"Could not find the run script at {run_script_path}. "
@@ -112,6 +111,8 @@ def run_example_from_path(example_path: Path):
             raise AttributeError(
                 "The 'run.py' script must contain a 'run_example' function.")
 
+        run_module.sim_config = "mpc_and_sim/fmu_config_linux.json"
+
         # Execute the function and get the results
         results = run_module.run_example(until=3600)
         return results
@@ -121,15 +122,15 @@ def run_example_from_path(example_path: Path):
         os.chdir(original_cwd)
         sys.path[:] = original_sys_path  # Restore the original sys.path
 
-def test_oneroom_simple_mpc(snapshot, module_cleanup):
+def test_simplebuilding(snapshot, module_cleanup):
     """
-    Unit test for the oneroom_simpleMPC example using snapshot testing.
+    Unit test for the SimpleBuilding example using snapshot testing.
 
     This test runs the example via its own run script and compares the
     full resulting dataframes against stored snapshots.
     """
     # Define the path to the example directory
-    example_path = root_path / 'examples' / 'OneRoom_SimpleMPC'
+    example_path = root_path / 'examples' / 'SimpleBuilding'
 
     # Run the example and get the results object
     res = run_example_from_path(example_path)
@@ -144,20 +145,23 @@ def test_oneroom_simple_mpc(snapshot, module_cleanup):
     assert_frame_matches_summary_snapshot(
         snapshot,
         df_neg_flex_res,
-        'oneroom_simpleMPC_neg_flex_summary.json'
+        'SimpleBuilding_neg_flex_summary.json'
     )
     assert_frame_matches_summary_snapshot(
         snapshot,
         df_pos_flex_res,
-        'oneroom_simpleMPC_pos_flex_summary.json'
+        'SimpleBuilding_pos_flex_summary.json'
     )
     assert_frame_matches_summary_snapshot(
         snapshot,
         df_baseline_res,
-        'oneroom_simpleMPC_baseline_summary.json'
+        'SimpleBuilding_baseline_summary.json'
     )
     assert_frame_matches_summary_snapshot(
         snapshot,
         df_indicator_res,
-        'oneroom_simpleMPC_indicator_summary.json'
+        'SimpleBuilding_indicator_summary.json'
     )
+
+if __name__ == "__main__":
+    pytest.main([__file__, "-v"])

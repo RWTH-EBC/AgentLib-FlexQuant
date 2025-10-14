@@ -12,7 +12,6 @@ ENV_CONFIG = {"rt": False, "factor": 0.01, "t_sample": 60}
 
 
 def run_example(until=until, with_plots=False):
-    results = []
     mpc_config = "mpc_and_sim/simple_model.json"
     sim_config = "mpc_and_sim/simple_sim.json"
     predictor_config = "predictor/predictor_config.json"
