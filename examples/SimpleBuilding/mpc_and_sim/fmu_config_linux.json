@@ -10,7 +10,7 @@
             "type": "simulator",
             "model": {
                 "type": "fmu",
-                "path": "mpc_and_sim/simple_building.fmu"
+                "path": "mpc_and_sim/simple_building_linux.fmu"
             },
             "result_causalities": ["input", "output", "local", "parameter"],
             "measurement_uncertainty": 0,
@@ -27,13 +27,12 @@
                 }
             ],
             "outputs": [
-                {
-                    "name": "T_zone"
-                }
             ],
             "states": [
                 {
-                    "name": "roomCapacity.T"
+                    "name": "roomCapacity.T",
+                    "alias": "T_zone",
+                    "shared": true
                 }
             ]
         }
