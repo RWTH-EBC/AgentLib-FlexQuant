@@ -43,7 +43,8 @@ class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
 
     parameters: list[AgentVariable] = [
         AgentVariable(name=glbs.COLLOCATION_TIME_GRID, alias=glbs.COLLOCATION_TIME_GRID,
-                      description="Time grid of the mpc model output")
+                      description="Time grid of the mpc model output"),
+        AgentVariable(name=glbs.TIME_STEP, unit="s", description="Time step of the mpc")
     ]
 
     market_specs: MarketSpecifications
@@ -176,8 +177,15 @@ class FlexibilityMarketModule(agentlib.BaseModule):
 
                 if profile is not None:
                     # reindex the profile to the mpc output time grid
-                    if self.get(glbs.COLLOCATION_TIME_GRID).value:
+                    flex_power_feedback_method = self.config.market_specs.flex_power_feedback_method
+                    if flex_power_feedback_method == glbs.COLLOCATION:
                         profile = profile.reindex(self.get(glbs.COLLOCATION_TIME_GRID).value)
+                    elif flex_power_feedback_method == glbs.CONSTANT:
+                        index_to_keep = ~np.isin(profile.index, self.get(glbs.COLLOCATION_TIME_GRID).value)
+                        profile = profile.get(index_to_keep)
+                        helper_indices = [i - 1 for i in profile.index[1:]]
+                        new_index = sorted(set(profile.index.tolist() + helper_indices))[:-1]
+                        profile = profile.reindex(new_index).ffill()
                     profile = profile.dropna()
                     profile.index += self.env.time
                     self.set("_P_external", profile)
@@ -194,7 +202,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         """Callback to activate a single, predefined flexibility offer."""
         offer = inp.value
         profile = None
-        t_sample = offer.base_power_profile.index[1] - offer.base_power_profile.index[0]
+        t_sample = self.get(glbs.TIME_STEP).value
         acceptance_time_lower = (
             self.env.config.offset + self.config.market_specs.options.start_time
         )
@@ -224,8 +232,15 @@ class FlexibilityMarketModule(agentlib.BaseModule):
 
             if profile is not None:
                 # reindex the profile to the mpc output time grid
-                if self.get(glbs.COLLOCATION_TIME_GRID).value:
+                flex_power_feedback_method = self.config.market_specs.flex_power_feedback_method
+                if flex_power_feedback_method == glbs.COLLOCATION:
                     profile = profile.reindex(self.get(glbs.COLLOCATION_TIME_GRID).value)
+                elif flex_power_feedback_method == glbs.CONSTANT:
+                    index_to_keep = ~np.isin(profile.index, self.get(glbs.COLLOCATION_TIME_GRID).value)
+                    profile = profile.get(index_to_keep)
+                    helper_indices = [i - 1 for i in profile.index[1:]]
+                    new_index = sorted(set(profile.index.tolist() + helper_indices))[:-1]
+                    profile = profile.reindex(new_index).ffill()
                 profile = profile.dropna()
                 profile.index += self.env.time
                 self.set("_P_external", profile)

@@ -13,6 +13,7 @@ PREDICTION_HORIZON = "prediction_horizon"
 FLEXIBILITY_OFFER = "FlexibilityOffer"
 LINEAR = 'linear'
 CONSTANT = 'constant'
+COLLOCATION = 'collocation'
 INTEGRATION_METHOD = Literal[LINEAR, CONSTANT]
 FlexibilityDirections = Literal["positive", "negative"]
 POWER_ALIAS_BASE = "_P_el_base"

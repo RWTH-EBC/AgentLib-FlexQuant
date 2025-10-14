@@ -15,6 +15,7 @@ import agentlib
 import numpy as np
 import pandas as pd
 from pydantic import BaseModel, ConfigDict, Field, model_validator
+from agentlib_flexquant.utils.data_handling import fill_nans, MEAN
 
 import agentlib_flexquant.data_structures.globals as glbs
 from agentlib_flexquant.data_structures.flex_kpis import (
@@ -549,17 +550,34 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         """Calculate the flexibility KPIs for current predictions, send the flex offer
         and set the outputs, write and save the results."""
         # Calculate the flexibility KPIs for current predictions
+        collocation_time_grid = self.get(glbs.COLLOCATION_TIME_GRID).value
         self.data.calculate(enable_energy_costs_correction=self.config.correct_costs.enable_energy_costs_correction,
                             calculate_flex_cost=self.config.calculate_costs.calculate_flex_costs, integration_method=self.config.integration_method,
-                            collocation_time_grid=self.get(glbs.COLLOCATION_TIME_GRID).value)
+                            collocation_time_grid=collocation_time_grid)
+
+        # get the full index during flex enevt including mpc_time_grid index and the collocation index
+        full_index = np.sort(np.concatenate([collocation_time_grid, self.data.mpc_time_grid]))
+        flex_begin = self.get(glbs.MARKET_TIME).value + self.get(glbs.PREP_TIME).value
+        flex_end = flex_begin + self.get(glbs.FLEX_EVENT_DURATION).value
+        full_flex_offer_index = full_index[(full_index >= flex_begin) & (full_index <= flex_end)]
+
+        # reindex the power profiles to not send the simulation points to the market, but only the values on the collocation points and the forward mean of them
+        base_power_profile = self.data.power_profile_base.reindex(collocation_time_grid).reindex(full_flex_offer_index)
+        pos_diff_profile = self.data.kpis_pos.power_flex_offer.value.reindex(collocation_time_grid).reindex(full_flex_offer_index)
+        neg_diff_profile = self.data.kpis_neg.power_flex_offer.value.reindex(collocation_time_grid).reindex(full_flex_offer_index)
+
+        # fill the mpc_time_grid with forward mean
+        base_power_profile = fill_nans(base_power_profile, method=MEAN)
+        pos_diff_profile = fill_nans(pos_diff_profile, method=MEAN)
+        neg_diff_profile = fill_nans(neg_diff_profile, method=MEAN)
 
         # Send flex offer
         self.send_flex_offer(
             name=glbs.FLEXIBILITY_OFFER,
-            base_power_profile=self.data.power_profile_base.iloc[:-1],
-            pos_diff_profile=self.data.kpis_pos.power_flex_offer.value.iloc[:-1],
+            base_power_profile=base_power_profile,
+            pos_diff_profile=pos_diff_profile,
             pos_price=self.data.kpis_pos.costs.value,
-            neg_diff_profile=self.data.kpis_neg.power_flex_offer.value.iloc[:-1],
+            neg_diff_profile=neg_diff_profile,
             neg_price=self.data.kpis_neg.costs.value,
         )
 

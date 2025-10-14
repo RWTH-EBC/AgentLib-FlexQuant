@@ -9,7 +9,7 @@ from typing import Literal, Union
 
 import pydantic
 
-from agentlib_flexquant.data_structures.globals import FlexibilityDirections
+from agentlib_flexquant.data_structures.globals import FlexibilityDirections, COLLOCATION, CONSTANT
 
 
 class RandomOptions(pydantic.BaseModel):
@@ -82,6 +82,12 @@ class MarketSpecifications(pydantic.BaseModel):
         ...,
         description="Market options, changes depending on 'type'",
         discriminator="type",
+    )
+
+    flex_power_feedback_method: Literal[COLLOCATION, CONSTANT] = pydantic.Field(
+        default='collocation',
+        description="Method defining how to send the accepted flexibility power back to baseline mpc so that the system can deliver it."
+                    "Set to constant if the power only depends on control or if system has low inertial. Otherwise, use collocation.",
     )
 
     # Root validator to automatically populate the options.type from the top-level type

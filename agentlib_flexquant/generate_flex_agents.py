@@ -547,6 +547,8 @@ class FlexAgentGenerator:
             if parameter.name == glbs.COLLOCATION_TIME_GRID:
                 discretization_options = self.baseline_mpc_module_config.optimization_backend['discretization_options']
                 parameter.value = self.get_collocation_time_grid(discretization_options=discretization_options)
+            if parameter.name == glbs.TIME_STEP:
+                parameter.value = self.baseline_mpc_module_config.time_step
         module_config.model_config["frozen"] = True
         return module_config
 
