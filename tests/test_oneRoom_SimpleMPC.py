@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 import importlib.util
 import json
+from util import module_cleanup
 
 # Add the project root to the Python path to allow for absolute imports
 # This helps in locating the agentlib_flexquant package if needed
@@ -92,6 +93,8 @@ def run_example_from_path(example_path: Path):
     original_cwd = Path.cwd()
     original_sys_path = sys.path[:]  # Create a copy of the sys.path list
 
+    module_name = f"agentlib_flexquant.tests.examples.{example_path.name}"
+
     try:
         # --- STEP 1: Change CWD for file access (e.g., config.json) ---
         os.chdir(example_path)
@@ -100,8 +103,9 @@ def run_example_from_path(example_path: Path):
         sys.path.insert(0, str(example_path))
 
         # Dynamically import the run_example function from the script
-        spec = importlib.util.spec_from_file_location("run_module", run_script_path)
+        spec = importlib.util.spec_from_file_location(module_name, run_script_path)
         run_module = importlib.util.module_from_spec(spec)
+        sys.modules[module_name] = run_module
         spec.loader.exec_module(run_module)
 
         if not hasattr(run_module, 'run_example'):
@@ -117,7 +121,7 @@ def run_example_from_path(example_path: Path):
         os.chdir(original_cwd)
         sys.path[:] = original_sys_path  # Restore the original sys.path
 
-def test_oneroom_simple_mpc(snapshot):
+def test_oneroom_simple_mpc(snapshot, module_cleanup):
     """
     Unit test for the oneroom_simpleMPC example using snapshot testing.
 
