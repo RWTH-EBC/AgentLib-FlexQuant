@@ -86,28 +86,13 @@ class Dashboard(flex_results.Results):
 
         # Define line properties
         self.LINE_PROPERTIES: dict = {
-            self.simulator_agent_config.id: {
-                "color": "black",
-            },
-            self.baseline_agent_config.id: {
-                "color": "black",
-            },
-            self.neg_flex_agent_config.id: {
-                "color": "red",
-            },
-            self.pos_flex_agent_config.id: {
-                "color": "blue",
-            },
-            self.bounds_key: {
-                "color": "grey",
-            },
-            self.characteristic_times_current_key: {
-                "color": "grey",
-                "dash": "dash",
-            },
-            self.characteristic_times_accepted_key: {
-                "color": "yellow",
-            },
+            self.simulator_agent_config.id: {"color": "black",},
+            self.baseline_agent_config.id: {"color": "black",},
+            self.neg_flex_agent_config.id: {"color": "red",},
+            self.pos_flex_agent_config.id: {"color": "blue",},
+            self.bounds_key: {"color": "grey",},
+            self.characteristic_times_current_key: {"color": "grey", "dash": "dash",},
+            self.characteristic_times_accepted_key: {"color": "yellow",},
         }
 
         # KPIS
@@ -151,7 +136,7 @@ class Dashboard(flex_results.Results):
 
         # Plotting functions
         def plot_mpc_stats(fig: go.Figure, variable: str) -> go.Figure:
-            """plot the statics of the baseline and shadow mpcs.
+            """ plot the statics of the baseline and shadow mpcs.
 
             Args:
                 fig: the figure to be updated
@@ -231,7 +216,7 @@ class Dashboard(flex_results.Results):
             )
 
             def _add_step_to_data(s: pd.Series) -> pd.Series:
-                """shift the index of the series"""
+                """ shift the index of the series """
                 s_concat = s.copy().shift(periods=1)
                 s_concat.index = s.index - 0.01 * (s.index[1] - s.index[0])
                 for ind, val in s_concat.items():

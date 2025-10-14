@@ -8,12 +8,11 @@ from agentlib_mpc.models.casadi_model import (
 )
 from math import inf
 
-
 class BaselineMPCModelConfig(CasadiModelConfig):
 
     inputs: list[CasadiInput] = [
         # controls
-        # Power var needs to be declared as an output. Here power var is also a model-input
+        # Power var needs to be declared as an output. Here power var is also a model-input 
         # So two separate var names are used for power var: P_in as input, P_el as output
         # P_el set to P_in below
         CasadiInput(
@@ -86,7 +85,7 @@ class BaselineMPCModelConfig(CasadiModelConfig):
             value=1,
             unit="-",
             description="Weight for P_el in objective function",
-        ),
+        )
     ]
 
     outputs: list[CasadiOutput] = [
@@ -97,16 +96,15 @@ class BaselineMPCModelConfig(CasadiModelConfig):
         )
     ]
 
-
 class BaselineMPCModel(CasadiModel):
 
     config: BaselineMPCModelConfig
-
+                
     def setup_system(self):
         # Define ode
         self.T_zone.ode = (self.P_in - self.U * (self.T_zone - self.T_amb)) / self.C
 
-        # Define ae for outputs
+        #Define ae for outputs
         self.P_el.alg = self.P_in
 
         # Constraints: list[(lower bound, function, upper bound)]

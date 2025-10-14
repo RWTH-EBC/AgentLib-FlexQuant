@@ -1,7 +1,6 @@
 """
 Defines shadow MPC and MINLP-MPC for positive/negative flexibility quantification.
 """
-
 from typing import Dict, Union
 
 from agentlib.core.datamodels import AgentVariable
@@ -33,9 +32,7 @@ class FlexibilityShadowMPC(mpc_full.MPC):
             )
         for input_var in self.config.inputs:
             adapted_name = input_var.name.replace(full_trajectory_suffix, "")
-            if adapted_name in [
-                control_var.name for control_var in self.config.controls
-            ]:
+            if adapted_name in [control_var.name for control_var in self.config.controls]:
                 self._full_controls[input_var.name] = input_var
 
         super().register_callbacks()

@@ -5,7 +5,6 @@ The agents created include the baseline, positive and negative flexibility agent
 the flexibility indicator and market agents. The agents are created based on the flex config and
 the MPC config.
 """
-
 import ast
 import atexit
 import inspect
@@ -110,7 +109,7 @@ class FlexAgentGenerator:
             module_config=self.baseline_mpc_module_config,
             module_type=self.flex_config.baseline_config_generator_data.module_types[
                 self.baseline_mpc_module_config.type
-            ],
+            ]
         )
         # pos module
         self.pos_flex_mpc_module_config = cmng.get_module(
@@ -315,8 +314,7 @@ class FlexAgentGenerator:
         to_be_deleted = self.get_config_file_paths()
         to_be_deleted.append(
             os.path.join(
-                self.flex_config.flex_files_directory,
-                self.flex_config_file_name,
+                self.flex_config.flex_files_directory, self.flex_config_file_name,
             )
         )
         # delete files
@@ -385,9 +383,9 @@ class FlexAgentGenerator:
         # change cia backend to custom backend of flexquant
         if module_config.optimization_backend["type"] == "casadi_cia":
             module_config.optimization_backend["type"] = "casadi_cia_cons"
-            module_config.optimization_backend["market_time"] = (
-                self.flex_config.market_time
-            )
+            module_config.optimization_backend[
+                "market_time"
+            ] = self.flex_config.market_time
 
         # add the full control trajectory output from the baseline as input for the shadow mpcs
         if not isinstance(mpc_dataclass, BaselineMPCData):
@@ -396,7 +394,7 @@ class FlexAgentGenerator:
                     MPCVariable(
                         name=control.name + glbs.full_trajectory_suffix,
                         value=None,
-                        type="pd.Series",
+                        type='pd.Series'
                     )
                 )
                 # change the alias of control variable in shadow mpc to prevent it from triggering the wrong callback
@@ -408,7 +406,7 @@ class FlexAgentGenerator:
                         MPCVariable(
                             name=control.name + glbs.full_trajectory_suffix,
                             value=None,
-                            type="pd.Series",
+                            type='pd.Series'
                         )
                     )
                     # change the alias of control variable in shadow mpc to prevent it from triggering the wrong callback
@@ -418,22 +416,14 @@ class FlexAgentGenerator:
         else:
             # add full_controls trajectory as AgentVariable to the config of Baseline mpc
             for control in module_config.controls:
-                module_config.full_controls.append(
-                    AgentVariable(
-                        name=control.name + glbs.full_trajectory_suffix,
-                        alias=control.name + glbs.full_trajectory_suffix,
-                        shared=True,
-                    )
-                )
+                module_config.full_controls.append(AgentVariable(name=control.name + glbs.full_trajectory_suffix,
+                                                                 alias=control.name + glbs.full_trajectory_suffix,
+                                                                 shared=True))
             if hasattr(module_config, "binary_controls"):
                 for binary_controls in module_config.binary_controls:
-                    module_config.full_controls.append(
-                        AgentVariable(
-                            name=binary_controls.name + glbs.full_trajectory_suffix,
-                            alias=binary_controls.name + glbs.full_trajectory_suffix,
-                            shared=True,
-                        )
-                    )
+                    module_config.full_controls.append(AgentVariable(name=binary_controls.name + glbs.full_trajectory_suffix,
+                                                                     alias=binary_controls.name + glbs.full_trajectory_suffix,
+                                                                     shared=True))
         module_config.set_outputs = True
         # add outputs for the power variables, for easier handling create a lookup dict
         output_dict = {output.name: output for output in module_config.outputs}
@@ -559,29 +549,23 @@ class FlexAgentGenerator:
         modifier_base = SetupSystemModifier(
             mpc_data=self.flex_config.baseline_config_generator_data,
             controls=self.baseline_mpc_module_config.controls,
-            binary_controls=(
-                self.baseline_mpc_module_config.binary_controls
-                if hasattr(self.baseline_mpc_module_config, "binary_controls")
-                else None
-            ),
+            binary_controls=self.baseline_mpc_module_config.binary_controls
+            if hasattr(self.baseline_mpc_module_config, "binary_controls")
+            else None,
         )
         modifier_pos = SetupSystemModifier(
             mpc_data=self.flex_config.shadow_mpc_config_generator_data.pos_flex,
             controls=self.pos_flex_mpc_module_config.controls,
-            binary_controls=(
-                self.pos_flex_mpc_module_config.binary_controls
-                if hasattr(self.pos_flex_mpc_module_config, "binary_controls")
-                else None
-            ),
+            binary_controls=self.pos_flex_mpc_module_config.binary_controls
+            if hasattr(self.pos_flex_mpc_module_config, "binary_controls")
+            else None,
         )
         modifier_neg = SetupSystemModifier(
             mpc_data=self.flex_config.shadow_mpc_config_generator_data.neg_flex,
             controls=self.neg_flex_mpc_module_config.controls,
-            binary_controls=(
-                self.neg_flex_mpc_module_config.binary_controls
-                if hasattr(self.neg_flex_mpc_module_config, "binary_controls")
-                else None
-            ),
+            binary_controls=self.neg_flex_mpc_module_config.binary_controls
+            if hasattr(self.neg_flex_mpc_module_config, "binary_controls")
+            else None,
         )
         # run the modification
         modified_tree_base = modifier_base.visit(deepcopy(tree))
@@ -744,15 +728,13 @@ class FlexAgentGenerator:
         # market time val check
         if self.flex_config.market_config:
             if flex_times["market_time"] % mpc_times["time_step"] != 0:
-                raise ConfigurationError(
-                    "Market time must be an integer multiple of the time step."
-                )
+                raise ConfigurationError("Market time must be an integer multiple of the time step.")
         # check for divisibility of flex_times by time_step
         for name, value in flex_times.items():
             if value % mpc_times["time_step"] != 0:
                 raise ConfigurationError(
                     f"{name} is not a multiple of the time step. Please redefine."
-                )
+        )
         # raise warning if parameter value in flex indicator module config differs from
         # value in flex config/ baseline mpc module config
         for parameter in self.indicator_module_config.parameters:

@@ -6,7 +6,6 @@ including baseline power profiles, positive and negative flexibility pricing, an
 status tracking. The FlexOffer class encapsulates all information needed to represent
 a flexibility bid, including power differences from baseline and acceptance status.
 """
-
 from enum import Enum
 from typing import Optional
 

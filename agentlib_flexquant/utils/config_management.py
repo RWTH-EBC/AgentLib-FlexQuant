@@ -48,15 +48,15 @@ def get_module_type_matching_dict(dictionary: dict) -> (dict, dict):
     # Create dictionaries to store keys grouped by values
     value_to_keys = {}
     for k, v in dictionary.items():
-        if k.startswith("agentlib_mpc."):
+        if k.startswith('agentlib_mpc.'):
             if v not in value_to_keys:
-                value_to_keys[v] = {"agentlib": [], "flex": []}
-            value_to_keys[v]["agentlib"].append(k)
-        if k.startswith("agentlib_flexquant."):
+                value_to_keys[v] = {'agentlib': [], 'flex': []}
+            value_to_keys[v]['agentlib'].append(k)
+        if k.startswith('agentlib_flexquant.'):
             # find the parent class of the module in the flexquant in agentlib_mpc
             for vv in value_to_keys:
                 if vv.import_class() is v.import_class().__bases__[0]:
-                    value_to_keys[vv]["flex"].append(k)
+                    value_to_keys[vv]['flex'].append(k)
                     break
 
     # Create result dictionaries
@@ -105,16 +105,14 @@ def get_module(config: AgentConfig, module_type: str) -> T:
         )
 
 
-def get_flex_mpc_module_config(
-    agent_config: AgentConfig, module_config: BaseModuleConfig, module_type: str
-):
+def get_flex_mpc_module_config(agent_config: AgentConfig, module_config: BaseModuleConfig, module_type: str):
     """Get a flexquant module config from an original agentlib module config."""
     config_dict = module_config.model_dump()
-    config_dict["type"] = module_type
+    config_dict['type'] = module_type
     return MODULE_TYPE_DICT[module_type](**config_dict, _agent_id=agent_config.id)
 
 
-def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig) -> dict:
+def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig)-> dict:
     """Remove unnecessary fields from the module to keep the created json simple."""
     excluded_fields = [
         "rdf_class",
@@ -158,8 +156,7 @@ def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig) -> dict:
         ]
     if "binary_controls" in parent_dict:
         parent_dict["binary_controls"] = [
-            binary_control.dict(exclude=check_bounds(binary_control))
-            for binary_control in module.binary_controls
+            binary_control.dict(exclude=check_bounds(binary_control)) for binary_control in module.binary_controls
         ]
     if "states" in parent_dict:
         parent_dict["states"] = [
@@ -167,12 +164,8 @@ def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig) -> dict:
         ]
     if "full_controls" in parent_dict:
         parent_dict["full_controls"] = [
-            full_control.dict(
-                exclude=(lambda ex: ex.remove("shared") or ex)(
-                    check_bounds(full_control)
-                )
-            )
-            for full_control in module.full_controls
+            full_control.dict(exclude=(lambda ex: ex.remove('shared') or ex)(check_bounds(full_control)))
+                                        for full_control in module.full_controls
         ]
 
     return parent_dict

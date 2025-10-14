@@ -13,13 +13,13 @@ def plot_results(results_data: dict = None):
         res = Results(
             flex_config="flex_configs/flexibility_agent_config.json",
             simulator_agent_config="mpc_and_sim/simple_sim.json",
-            results="results",
+            results="results"
         )
     else:
         res = Results(
             flex_config="flex_configs/flexibility_agent_config.json",
             simulator_agent_config="mpc_and_sim/simple_sim.json",
-            results=results_data,
+            results=results_data
         )
 
     fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=2)
@@ -47,15 +47,15 @@ def plot_results(results_data: dict = None):
     res.df_simulation["T_upper"].plot(ax=ax1, color="0.5")
     res.df_simulation["T_lower"].plot(ax=ax1, color="0.5")
     res.df_simulation["T_out"].plot(ax=ax1, color=mpcplot.EBCColors.dark_grey)
-    mpc_at_time_step(data=res.df_neg_flex, time_step=9000, variable="T").plot(
-        ax=ax1, label="neg", linestyle="--", color=mpcplot.EBCColors.red
-    )
-    mpc_at_time_step(data=res.df_pos_flex, time_step=9000, variable="T").plot(
-        ax=ax1, label="pos", linestyle="--", color=mpcplot.EBCColors.blue
-    )
-    mpc_at_time_step(data=res.df_baseline, time_step=9900, variable="T").plot(
-        ax=ax1, label="base", linestyle="--", color=mpcplot.EBCColors.dark_grey
-    )
+    mpc_at_time_step(
+        data=res.df_neg_flex, time_step=9000, variable="T"
+    ).plot(ax=ax1, label="neg", linestyle="--", color=mpcplot.EBCColors.red)
+    mpc_at_time_step(
+        data=res.df_pos_flex, time_step=9000, variable="T"
+    ).plot(ax=ax1, label="pos", linestyle="--", color=mpcplot.EBCColors.blue)
+    mpc_at_time_step(
+        data=res.df_baseline, time_step=9900, variable="T"
+    ).plot(ax=ax1, label="base", linestyle="--", color=mpcplot.EBCColors.dark_grey)
 
     ax1.legend()
     ax1.vlines(9000, ymin=0, ymax=500, colors="black")
@@ -162,12 +162,8 @@ def plot_results(results_data: dict = None):
 
     # flexibility
     # get only the first prediction time of each time step
-    energy_flex_neg = (
-        res.df_indicator.xs("negative_energy_flex", axis=1).droplevel(1).dropna()
-    )
-    energy_flex_pos = (
-        res.df_indicator.xs("positive_energy_flex", axis=1).droplevel(1).dropna()
-    )
+    energy_flex_neg = res.df_indicator.xs("negative_energy_flex", axis=1).droplevel(1).dropna()
+    energy_flex_pos = res.df_indicator.xs("positive_energy_flex", axis=1).droplevel(1).dropna()
     fig, axs = mpcplot.make_fig(style=mpcplot.Style(use_tex=False), rows=1)
     ax1 = axs[0]
     ax1.set_ylabel(r"$\epsilon$ in kWh")

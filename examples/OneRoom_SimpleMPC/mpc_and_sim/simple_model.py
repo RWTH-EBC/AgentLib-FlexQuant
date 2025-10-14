@@ -13,10 +13,7 @@ class BaselineMPCModelConfig(CasadiModelConfig):
     inputs: list[CasadiInput] = [
         # controls
         CasadiInput(
-            name="mDot",
-            value=0.0225,
-            unit="kg/s",
-            description="Air mass flow into zone",
+            name="mDot", value=0.0225, unit="kg/s", description="Air mass flow into zone"
         ),
         # disturbances
         CasadiInput(
@@ -38,6 +35,7 @@ class BaselineMPCModelConfig(CasadiModelConfig):
             unit="K",
             description="Upper boundary (soft) for T.",
         ),
+
     ]
 
     states: list[CasadiState] = [
@@ -53,6 +51,7 @@ class BaselineMPCModelConfig(CasadiModelConfig):
             unit="K",
             description="Slack variable of temperature of zone",
         ),
+        
     ]
 
     parameters: list[CasadiParameter] = [
@@ -77,12 +76,11 @@ class BaselineMPCModelConfig(CasadiModelConfig):
             unit="-",
             description="Weight for mDot in objective function",
         ),
+
     ]
     outputs: list[CasadiOutput] = [
         CasadiOutput(name="T_out", unit="K", description="Temperature of zone"),
-        CasadiOutput(
-            name="E_out", unit="kWh", description="Stored energy in the zone w.r.t. 0K"
-        ),
+        CasadiOutput(name="E_out", unit="kWh", description="Stored energy in the zone w.r.t. 0K"),
         CasadiOutput(
             name="P_el",
             unit="W",
@@ -93,7 +91,7 @@ class BaselineMPCModelConfig(CasadiModelConfig):
 
 class BaselineMPCModel(CasadiModel):
     config: BaselineMPCModelConfig
-
+                
     def setup_system(self):
         # Define ode
         self.T.ode = (
@@ -103,23 +101,23 @@ class BaselineMPCModel(CasadiModel):
         # Define ae
         self.P_el.alg = self.cp * self.mDot * (self.T - self.T_in) / 1000
         self.T_out.alg = self.T  # math operation to get the symbolic variable
-        self.E_out.alg = (
-            -self.T * self.C / (3600 * 1000)
-        )  # stored electrical energy in kWh
+        self.E_out.alg = - self.T * self.C / (3600*1000)  # stored electrical energy in kWh
 
         # Constraints: list[(lower bound, function, upper bound)]
         self.constraints = [
             # soft constraints
             (self.T_lower, self.T + self.T_slack, inf),
             (-inf, self.T - self.T_slack, self.T_upper),
-            (0, self.T_slack, inf),
+            (0, self.T_slack, inf)
         ]
 
         # Objective function
         objective = sum(
-            [
-                self.r_mDot * self.mDot,
-                self.s_T * self.T_slack**2,
-            ]
-        )
+                [
+                    self.r_mDot * self.mDot,
+                    self.s_T * self.T_slack**2,
+                ]
+            )
         return objective
+
+

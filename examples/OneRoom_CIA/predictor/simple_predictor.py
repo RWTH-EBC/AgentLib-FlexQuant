@@ -6,17 +6,12 @@ import json
 import csv
 from datetime import datetime
 
-
 class PredictorModuleConfig(al.BaseModuleConfig):
     """Module that outputs a prediction of the heat load at a specified
     interval."""
-
     outputs: al.AgentVariables = [
         al.AgentVariable(
-            name="r_pel",
-            unit="ct/kWh",
-            type="pd.Series",
-            description="Weight for P_el in objective function",
+            name="r_pel", unit="ct/kWh", type="pd.Series", description="Weight for P_el in objective function"
         ),
     ]
     parameters: al.AgentVariables = [
@@ -27,10 +22,10 @@ class PredictorModuleConfig(al.BaseModuleConfig):
             name="prediction_horizon",
             value=8,
             description="Number of sampling points for prediction.",
-        ),
+        )
     ]
 
-    shared_variable_fields: list[str] = ["outputs"]
+    shared_variable_fields:list[str] = ["outputs"]
 
 
 class PredictorModule(al.BaseModule):

@@ -1,7 +1,6 @@
 """
 Pydantic data models for FlexQuant configuration and validation.
 """
-
 # from enum import Enum
 from pathlib import Path
 from typing import Optional, Union
@@ -31,8 +30,7 @@ class ShadowMPCConfigGeneratorConfig(pydantic.BaseModel):
         json_encoders={MPCVariable: lambda v: v.dict()}, extra="forbid"
     )
     weights: list[MPCVariable] = pydantic.Field(
-        default=[],
-        description="Name and value of weights",
+        default=[], description="Name and value of weights",
     )
     pos_flex: PFMPCData = pydantic.Field(default=None, description="Data for PF-MPC")
     neg_flex: NFMPCData = pydantic.Field(default=None, description="Data for NF-MPC")
@@ -102,23 +100,16 @@ class FlexQuantConfig(pydantic.BaseModel):
         description="Preparation time before the flexibility event",
     )
     flex_event_duration: int = pydantic.Field(
-        default=7200,
-        ge=0,
-        unit="s",
-        description="Flexibility event duration",
+        default=7200, ge=0, unit="s", description="Flexibility event duration",
     )
     market_time: int = pydantic.Field(
-        default=900,
-        ge=0,
-        unit="s",
-        description="Time for market interaction",
+        default=900, ge=0, unit="s", description="Time for market interaction",
     )
     indicator_config: Union[FlexibilityIndicatorConfig, Path] = pydantic.Field(
         description="Path to the file or dict of flexibility indicator config",
     )
     market_config: Optional[Union[FlexibilityMarketConfig, Path]] = pydantic.Field(
-        default=None,
-        description="Path to the file or dict of market config",
+        default=None, description="Path to the file or dict of market config",
     )
     baseline_config_generator_data: BaselineMPCData = pydantic.Field(
         description="Baseline generator data config file or dict",
@@ -139,8 +130,7 @@ class FlexQuantConfig(pydantic.BaseModel):
         description="Directory where generated result files (CSVs) should be stored",
     )
     delete_files: bool = pydantic.Field(
-        default=True,
-        description="If generated files should be deleted afterwards",
+        default=True, description="If generated files should be deleted afterwards",
     )
     overwrite_files: bool = pydantic.Field(
         default=False,

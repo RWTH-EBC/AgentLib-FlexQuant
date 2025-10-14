@@ -3,7 +3,6 @@ Module for generating and managing results dataframes for flexibility analysis.
 Results include baseline, positive and negative flexibility data,
 the indicator, market and simulator results/data.
 """
-
 import copy
 import json
 from pathlib import Path
@@ -207,9 +206,7 @@ class Results:
                 )
                 self.baseline_module_config = cmng.get_module(
                     config=self.baseline_agent_config,
-                    module_type=self._get_flexquant_mpc_module_type(
-                        self.baseline_agent_config
-                    ),
+                    module_type=self._get_flexquant_mpc_module_type(self.baseline_agent_config),
                 )
 
             elif file_path.name in self.config_filename_pos_flex:
@@ -218,9 +215,7 @@ class Results:
                 )
                 self.pos_flex_module_config = cmng.get_module(
                     config=self.pos_flex_agent_config,
-                    module_type=self._get_flexquant_mpc_module_type(
-                        self.pos_flex_agent_config
-                    ),
+                    module_type=self._get_flexquant_mpc_module_type(self.pos_flex_agent_config),
                 )
 
             elif file_path.name in self.config_filename_neg_flex:
@@ -229,9 +224,7 @@ class Results:
                 )
                 self.neg_flex_module_config = cmng.get_module(
                     config=self.neg_flex_agent_config,
-                    module_type=self._get_flexquant_mpc_module_type(
-                        self.neg_flex_agent_config
-                    ),
+                    module_type=self._get_flexquant_mpc_module_type(self.neg_flex_agent_config),
                 )
 
             elif file_path.name in self.config_filename_indicator:
@@ -297,17 +290,11 @@ class Results:
 
         """
         for module in agent_config.modules:
-            if module["type"] in [
-                cmng.BASELINEMPC_CONFIG_TYPE,
-                cmng.BASELINEMINLPMPC_CONFIG_TYPE,
-                cmng.SHADOWMPC_CONFIG_TYPE,
-                cmng.SHADOWMINLPMPC_CONFIG_TYPE,
-            ]:
-                return module["type"]
+            if module['type'] in [cmng.BASELINEMPC_CONFIG_TYPE, cmng.BASELINEMINLPMPC_CONFIG_TYPE,
+                                  cmng.SHADOWMPC_CONFIG_TYPE, cmng.SHADOWMINLPMPC_CONFIG_TYPE]:
+                return module['type']
 
-        raise ModuleNotFoundError(
-            f"There is no matching mpc module type in Agentlib_FlexQuant for modules in agent {agent_config.id}."
-        )
+        raise ModuleNotFoundError(f'There is no matching mpc module type in Agentlib_FlexQuant for modules in agent {agent_config.id}.')
 
     def _load_results(
         self, results: Union[str, Path, dict]
@@ -363,8 +350,7 @@ class Results:
             self.indicator_agent_config.id: {
                 self.indicator_module_config.module_id: load_indicator(
                     Path(
-                        res_path,
-                        Path(self.indicator_module_config.results_file).name,
+                        res_path, Path(self.indicator_module_config.results_file).name,
                     )
                 )
             },
@@ -378,10 +364,7 @@ class Results:
         if self.generator_config.market_config:
             res[self.market_agent_config.id] = {
                 self.market_module_config.module_id: load_market(
-                    Path(
-                        res_path,
-                        Path(self.market_module_config.results_file).name,
-                    )
+                    Path(res_path, Path(self.market_module_config.results_file).name,)
                 )
             }
         return res, res_path
