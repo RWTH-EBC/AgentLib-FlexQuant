@@ -42,7 +42,7 @@ def update_configs(flex_config, flex_event_duration):
 def run_example(flex_event_duration, until=until):
     """Runs MAS simulation with specified flex event duration."""
     
-    mpc_config = "mpc_and_sim/simple_model.json"
+    mpc_config = "mpc_and_sim/simple_building.json"
     sim_config = "mpc_and_sim/fmu_config.json" 
     predictor_config = "predictor/predictor_config.json"
     flex_config = "flex_configs/flexibility_agent_config.json"

@@ -1,0 +1,40 @@
+{
+    "id": "SimAgent",
+    "modules": [
+        {
+            "module_id": "Ag2Com", 
+            "type": "local_broadcast"
+        },
+        {
+            "module_id": "SimRoom",
+            "type": "simulator",
+            "model": {
+                "type": "fmu",
+                "path": "mpc_and_sim/simple_building_linux.fmu"
+            },
+            "result_causalities": ["input", "output", "local", "parameter"],
+            "measurement_uncertainty": 0,
+            "t_sample": 5,
+            "update_inputs_on_callback": true,
+            "save_results": true,
+            "result_filename": "sim_building.csv",
+            "overwrite_result_file": true,
+            "inputs": [
+                {
+                    "name": "Q_in", 
+                    "value": 0, 
+                    "alias": "P_in"
+                }
+            ],
+            "outputs": [
+            ],
+            "states": [
+                {
+                    "name": "roomCapacity.T",
+                    "alias": "T_zone",
+                    "shared": true
+                }
+            ]
+        }
+    ]
+}

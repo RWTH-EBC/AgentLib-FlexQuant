@@ -18,7 +18,7 @@ ignore-patterns=
 
 # Python code to execute, usually for sys.path manipulation such as
 # pygtk.require().
-#init-hook=
+init-hook='import sys; import os; sys.path.insert(0, os.getcwd())'
 
 # Use multiple processes to speed up Pylint. Specifying 0 will auto-detect the
 # number of processors available to use.
@@ -142,7 +142,8 @@ disable=print-statement,
         too-few-public-methods,
         no-self-argument,
         no-self-use,
-        fixme
+        fixme,
+        no-member
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -268,6 +269,7 @@ good-names=i,
            df,
            dt,
            id,
+           f,
            _
 
 # Good variable names regexes, separated by a comma. If names match any regex,
