@@ -80,7 +80,6 @@
 <span class="sd">offers for energy markets. It handles both positive and negative flexibility with</span>
 <span class="sd">optional cost calculations and energy storage corrections.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -141,22 +140,22 @@
     <span class="p">)</span>
 
 <div class="viewcode-block" id="InputsForCalculateFlexCosts.validate_constant_price"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">validate_constant_price</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_constant_price</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate that a valid constant electricity price is provided</span>
 <span class="sd">        when constant pricing is enabled.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">use_constant_electricity_price</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">.</span><span class="n">const_electricity_price</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_constant_electricity_price</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">const_electricity_price</span>
         <span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;Constant electricity price must have a valid value in float if it is &quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;to be used for calculation. &quot;</span>
                     <span class="sa">f</span><span class="s1">&#39;Received &quot;use_constant_electricity_price&quot;: true, &#39;</span>
-                    <span class="sa">f</span><span class="s1">&#39;&quot;const_electricity_price&quot;: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">const_electricity_price</span><span class="si">}</span><span class="s1">. &#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;&quot;const_electricity_price&quot;: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">const_electricity_price</span><span class="si">}</span><span class="s1">. &#39;</span>
                     <span class="sa">f</span><span class="s1">&#39;Please specify them correctly in &quot;calculate_costs&quot; field in flex config.&#39;</span>
                 <span class="p">)</span>
             <span class="p">)</span>
-        <span class="k">return</span> <span class="n">model</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span></div></div>
 
 
 <span class="c1"># Pos and neg kpis to get the right names for plotting</span>
@@ -383,8 +382,7 @@
     <span class="p">)</span>
     <span class="n">save_results</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">validate_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">price_variable</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;c_pel&quot;</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the price variable sent by a predictor&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;c_pel&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the price variable sent by a predictor&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">power_unit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;kW&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unit of the power variable&quot;</span><span class="p">)</span>
     <span class="n">shared_variable_fields</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;outputs&quot;</span><span class="p">]</span>
@@ -477,8 +475,8 @@
             <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">price_variable</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">use_constant_electricity_price</span><span class="p">:</span>
                     <span class="c1"># price comes from predictor, so no stripping needed</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">electricity_price_series</span> <span class="o">=</span> <span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">format_predictor_inputs</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">electricity_price_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">format_predictor_inputs</span><span class="p">(</span>
+                        <span class="n">inp</span><span class="o">.</span><span class="n">value</span>
                     <span class="p">)</span>
 
             <span class="c1"># set the constant electricity price series if given</span>
@@ -695,8 +693,7 @@
                 <span class="n">timestamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span>
             <span class="n">var</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">timestamp</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">data_broker</span><span class="o">.</span><span class="n">send_variable</span><span class="p">(</span>
-                <span class="n">variable</span><span class="o">=</span><span class="n">var</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">}),</span>
-                <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">variable</span><span class="o">=</span><span class="n">var</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">}),</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">offer_count</span> <span class="o">+=</span> <span class="mi">1</span></div>
 

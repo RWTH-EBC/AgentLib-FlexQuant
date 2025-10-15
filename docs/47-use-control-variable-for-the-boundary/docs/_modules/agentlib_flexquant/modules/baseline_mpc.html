@@ -75,7 +75,6 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Defines MPC and MINLP-MPC for baseline flexibility quantification.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.modules</span><span class="w"> </span><span class="kn">import</span> <span class="n">minlp_mpc</span><span class="p">,</span> <span class="n">mpc_full</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Field</span>
@@ -105,9 +104,7 @@
             <span class="c1"># add full_control to the variables dictionary, so that the set function can be applied to it</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_variables_dict</span><span class="p">[</span><span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">full_control</span>
             <span class="c1"># fill the mapping dictionary</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_controls_name_mapping</span><span class="p">[</span><span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
-                <span class="n">full_trajectory_suffix</span><span class="p">,</span> <span class="s2">&quot;&quot;</span>
-            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_controls_name_mapping</span><span class="p">[</span><span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">full_trajectory_suffix</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="FlexibilityBaselineMPC.pre_computation_hook"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.pre_computation_hook">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">pre_computation_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate relative start and end times for flexibility provision.</span>
@@ -160,9 +157,7 @@
             <span class="c1"># add full_control to the variables dictionary, so that the set function can be applied to it</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_variables_dict</span><span class="p">[</span><span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">full_control</span>
             <span class="c1"># fill the mapping dictionary</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_controls_name_mapping</span><span class="p">[</span><span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
-                <span class="n">full_trajectory_suffix</span><span class="p">,</span> <span class="s2">&quot;&quot;</span>
-            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_controls_name_mapping</span><span class="p">[</span><span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">full_trajectory_suffix</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="FlexibilityBaselineMINLPMPC.pre_computation_hook"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.pre_computation_hook">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">pre_computation_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate relative start and end times for flexibility provision.</span>

@@ -157,17 +157,17 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create an AST node for a parameter definition.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        name: The name of the parameter.</span>
-<span class="sd">        value: The value of the parameter. Can be an integer or float.</span>
-<span class="sd">        unit: The unit associated with the parameter value.</span>
-<span class="sd">        description: A human-readable description of the parameter.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            name: The name of the parameter.</span>
+<span class="sd">            value: The value of the parameter. Can be an integer or float.</span>
+<span class="sd">            unit: The unit associated with the parameter value.</span>
+<span class="sd">            description: A human-readable description of the parameter.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        ast.Call: An abstract syntax tree (AST) call node</span>
-<span class="sd">        representing the parameter definition.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            ast.Call: An abstract syntax tree (AST) call node</span>
+<span class="sd">            representing the parameter definition.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">create_ast_element</span><span class="p">(</span>
         <span class="n">PARAMETER_TEMPLATE</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span>
             <span class="n">class_name</span><span class="o">=</span><span class="n">CASADI_PARAMETER</span><span class="p">,</span>
