@@ -13,11 +13,13 @@ agentlib_flexquant/generate_flex_agents.py:520:0: C0301: Line too long (119/100)
 agentlib_flexquant/generate_flex_agents.py:521:0: C0301: Line too long (111/100) (line-too-long)
 agentlib_flexquant/generate_flex_agents.py:548:0: C0301: Line too long (119/100) (line-too-long)
 agentlib_flexquant/generate_flex_agents.py:549:0: C0301: Line too long (111/100) (line-too-long)
-agentlib_flexquant/generate_flex_agents.py:562:0: C0301: Line too long (121/100) (line-too-long)
-agentlib_flexquant/generate_flex_agents.py:566:0: C0301: Line too long (105/100) (line-too-long)
-agentlib_flexquant/generate_flex_agents.py:567:0: C0301: Line too long (109/100) (line-too-long)
-agentlib_flexquant/generate_flex_agents.py:784:0: C0301: Line too long (104/100) (line-too-long)
-agentlib_flexquant/generate_flex_agents.py:785:0: C0301: Line too long (136/100) (line-too-long)
+agentlib_flexquant/generate_flex_agents.py:564:0: C0301: Line too long (121/100) (line-too-long)
+agentlib_flexquant/generate_flex_agents.py:568:0: C0301: Line too long (105/100) (line-too-long)
+agentlib_flexquant/generate_flex_agents.py:569:0: C0301: Line too long (109/100) (line-too-long)
+agentlib_flexquant/generate_flex_agents.py:679:0: C0301: Line too long (202/100) (line-too-long)
+agentlib_flexquant/generate_flex_agents.py:747:0: C0301: Line too long (139/100) (line-too-long)
+agentlib_flexquant/generate_flex_agents.py:793:0: C0301: Line too long (104/100) (line-too-long)
+agentlib_flexquant/generate_flex_agents.py:794:0: C0301: Line too long (136/100) (line-too-long)
 agentlib_flexquant/generate_flex_agents.py:18:0: E0401: Unable to import 'astor' (import-error)
 agentlib_flexquant/generate_flex_agents.py:19:0: E0401: Unable to import 'black' (import-error)
 agentlib_flexquant/generate_flex_agents.py:20:0: W0404: Reimport 'json' (imported line 11) (reimported)
@@ -42,13 +44,14 @@ agentlib_flexquant/generate_flex_agents.py:232:28: W0108: Lambda may not be nece
 agentlib_flexquant/generate_flex_agents.py:280:17: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
 agentlib_flexquant/generate_flex_agents.py:329:4: R0912: Too many branches (18/12) (too-many-branches)
 agentlib_flexquant/generate_flex_agents.py:540:16: C2801: Unnecessarily calls dunder method __setattr__. Set attribute directly or use setattr built-in function. (unnecessary-dunder-call)
-agentlib_flexquant/generate_flex_agents.py:563:29: W0212: Access to a protected member _collocation_polynomial of a client class (protected-access)
-agentlib_flexquant/generate_flex_agents.py:571:4: R0914: Too many local variables (17/15) (too-many-locals)
-agentlib_flexquant/generate_flex_agents.py:593:65: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/generate_flex_agents.py:643:57: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/generate_flex_agents.py:780:41: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
-agentlib_flexquant/generate_flex_agents.py:674:4: R0912: Too many branches (17/12) (too-many-branches)
-agentlib_flexquant/generate_flex_agents.py:823:68: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/generate_flex_agents.py:565:29: W0212: Access to a protected member _collocation_polynomial of a client class (protected-access)
+agentlib_flexquant/generate_flex_agents.py:573:4: R0914: Too many local variables (17/15) (too-many-locals)
+agentlib_flexquant/generate_flex_agents.py:595:65: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/generate_flex_agents.py:645:57: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/generate_flex_agents.py:744:8: R1720: Unnecessary "else" after "raise", remove the "else" and de-indent the code inside it (no-else-raise)
+agentlib_flexquant/generate_flex_agents.py:789:41: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
+agentlib_flexquant/generate_flex_agents.py:676:4: R0912: Too many branches (19/12) (too-many-branches)
+agentlib_flexquant/generate_flex_agents.py:832:68: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
 agentlib_flexquant/generate_flex_agents.py:20:0: C0411: standard import "import json" should be placed before "import astor" (wrong-import-order)
 agentlib_flexquant/generate_flex_agents.py:22:0: C0411: standard import "from copy import deepcopy" should be placed before "import astor" (wrong-import-order)
 agentlib_flexquant/generate_flex_agents.py:23:0: C0411: standard import "from pathlib import Path" should be placed before "import astor" (wrong-import-order)
@@ -194,12 +197,14 @@ agentlib_flexquant/data_structures/flex_kpis.py:471:4: R0913: Too many arguments
 agentlib_flexquant/data_structures/flex_kpis.py:497:12: W0127: Assigning the same variable 'series' to itself (self-assigning-variable)
 agentlib_flexquant/data_structures/flex_kpis.py:14:0: W0611: Unused strip_multi_index imported from agentlib_flexquant.utils.data_handling (unused-import)
 ************* Module agentlib_flexquant.data_structures.market
+agentlib_flexquant/data_structures/market.py:89:0: C0301: Line too long (136/100) (line-too-long)
+agentlib_flexquant/data_structures/market.py:90:0: C0301: Line too long (134/100) (line-too-long)
 agentlib_flexquant/data_structures/market.py:10:0: E0401: Unable to import 'pydantic' (import-error)
 agentlib_flexquant/data_structures/market.py:15:0: R0903: Too few public methods (0/2) (too-few-public-methods)
 agentlib_flexquant/data_structures/market.py:43:0: R0903: Too few public methods (0/2) (too-few-public-methods)
 agentlib_flexquant/data_structures/market.py:55:0: R0903: Too few public methods (0/2) (too-few-public-methods)
 agentlib_flexquant/data_structures/market.py:63:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/market.py:103:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/market.py:109:0: R0903: Too few public methods (1/2) (too-few-public-methods)
 ************* Module agentlib_flexquant.data_structures.flex_results
 agentlib_flexquant/data_structures/flex_results.py:11:0: E0401: Unable to import 'pandas' (import-error)
 agentlib_flexquant/data_structures/flex_results.py:12:0: E0401: Unable to import 'pydantic' (import-error)
@@ -215,9 +220,9 @@ agentlib_flexquant/data_structures/flex_results.py:65:0: R0902: Too many instanc
 agentlib_flexquant/data_structures/flex_results.py:111:4: R0913: Too many arguments (6/5) (too-many-arguments)
 agentlib_flexquant/data_structures/flex_results.py:163:65: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
 agentlib_flexquant/data_structures/flex_results.py:258:72: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/data_structures/flex_results.py:416:12: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/data_structures/flex_results.py:463:12: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
 ************* Module agentlib_flexquant.data_structures.globals
-agentlib_flexquant/data_structures/globals.py:16:0: C0103: Class name "INTEGRATION_METHOD" doesn't conform to PascalCase naming style (invalid-name)
+agentlib_flexquant/data_structures/globals.py:17:0: C0103: Class name "INTEGRATION_METHOD" doesn't conform to PascalCase naming style (invalid-name)
 ************* Module agentlib_flexquant.data_structures.flex_offer
 agentlib_flexquant/data_structures/flex_offer.py:12:0: E0401: Unable to import 'pandas' (import-error)
 agentlib_flexquant/data_structures/flex_offer.py:13:0: E0401: Unable to import 'pydantic' (import-error)
@@ -254,6 +259,8 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:36:4: W0246: Useless
 agentlib_flexquant/optimization_backends/constrained_cia.py:39:4: C0116: Missing function or method docstring (missing-function-docstring)
 agentlib_flexquant/optimization_backends/constrained_cia.py:32:0: R0903: Too few public methods (1/2) (too-few-public-methods)
 ************* Module agentlib_flexquant.modules.flexibility_market
+agentlib_flexquant/modules/flexibility_market.py:184:0: C0301: Line too long (107/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_market.py:239:0: C0301: Line too long (103/100) (line-too-long)
 agentlib_flexquant/modules/flexibility_market.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 agentlib_flexquant/modules/flexibility_market.py:5:0: E0401: Unable to import 'agentlib' (import-error)
 agentlib_flexquant/modules/flexibility_market.py:6:0: E0401: Unable to import 'numpy' (import-error)
@@ -261,51 +268,55 @@ agentlib_flexquant/modules/flexibility_market.py:7:0: E0401: Unable to import 'p
 agentlib_flexquant/modules/flexibility_market.py:9:0: E0401: Unable to import 'agentlib.core.datamodels' (import-error)
 agentlib_flexquant/modules/flexibility_market.py:10:0: E0401: Unable to import 'pydantic' (import-error)
 agentlib_flexquant/modules/flexibility_market.py:16:0: C0115: Missing class docstring (missing-class-docstring)
-agentlib_flexquant/modules/flexibility_market.py:60:4: C0116: Missing function or method docstring (missing-function-docstring)
+agentlib_flexquant/modules/flexibility_market.py:61:4: C0116: Missing function or method docstring (missing-function-docstring)
 agentlib_flexquant/modules/flexibility_market.py:16:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-agentlib_flexquant/modules/flexibility_market.py:95:4: C0116: Missing function or method docstring (missing-function-docstring)
-agentlib_flexquant/modules/flexibility_market.py:123:8: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/flexibility_market.py:135:62: W0613: Unused argument 'name' (unused-argument)
-agentlib_flexquant/modules/flexibility_market.py:193:62: W0613: Unused argument 'name' (unused-argument)
-agentlib_flexquant/modules/flexibility_market.py:239:8: W0107: Unnecessary pass statement (unnecessary-pass)
-agentlib_flexquant/modules/flexibility_market.py:241:29: W0613: Unused argument 'inp' (unused-argument)
-agentlib_flexquant/modules/flexibility_market.py:241:49: W0613: Unused argument 'name' (unused-argument)
-agentlib_flexquant/modules/flexibility_market.py:252:4: C0116: Missing function or method docstring (missing-function-docstring)
-agentlib_flexquant/modules/flexibility_market.py:83:8: W0201: Attribute 'random_generator' defined outside __init__ (attribute-defined-outside-init)
-agentlib_flexquant/modules/flexibility_market.py:117:8: W0201: Attribute 'cooldown_ticker' defined outside __init__ (attribute-defined-outside-init)
-agentlib_flexquant/modules/flexibility_market.py:186:20: W0201: Attribute 'cooldown_ticker' defined outside __init__ (attribute-defined-outside-init)
+agentlib_flexquant/modules/flexibility_market.py:96:4: C0116: Missing function or method docstring (missing-function-docstring)
+agentlib_flexquant/modules/flexibility_market.py:124:8: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/modules/flexibility_market.py:136:62: W0613: Unused argument 'name' (unused-argument)
+agentlib_flexquant/modules/flexibility_market.py:201:62: W0613: Unused argument 'name' (unused-argument)
+agentlib_flexquant/modules/flexibility_market.py:254:8: W0107: Unnecessary pass statement (unnecessary-pass)
+agentlib_flexquant/modules/flexibility_market.py:256:29: W0613: Unused argument 'inp' (unused-argument)
+agentlib_flexquant/modules/flexibility_market.py:256:49: W0613: Unused argument 'name' (unused-argument)
+agentlib_flexquant/modules/flexibility_market.py:267:4: C0116: Missing function or method docstring (missing-function-docstring)
+agentlib_flexquant/modules/flexibility_market.py:84:8: W0201: Attribute 'random_generator' defined outside __init__ (attribute-defined-outside-init)
+agentlib_flexquant/modules/flexibility_market.py:118:8: W0201: Attribute 'cooldown_ticker' defined outside __init__ (attribute-defined-outside-init)
+agentlib_flexquant/modules/flexibility_market.py:194:20: W0201: Attribute 'cooldown_ticker' defined outside __init__ (attribute-defined-outside-init)
 agentlib_flexquant/modules/flexibility_market.py:9:0: C0411: third party import "from agentlib.core.datamodels import AgentVariable" should be placed before "import agentlib_flexquant.data_structures.globals as glbs" (wrong-import-order)
 agentlib_flexquant/modules/flexibility_market.py:10:0: C0411: third party import "from pydantic import ConfigDict, Field, model_validator" should be placed before "import agentlib_flexquant.data_structures.globals as glbs" (wrong-import-order)
 ************* Module agentlib_flexquant.modules.flexibility_indicator
-agentlib_flexquant/modules/flexibility_indicator.py:49:0: C0301: Line too long (107/100) (line-too-long)
-agentlib_flexquant/modules/flexibility_indicator.py:395:0: C0301: Line too long (101/100) (line-too-long)
-agentlib_flexquant/modules/flexibility_indicator.py:407:0: C0301: Line too long (143/100) (line-too-long)
-agentlib_flexquant/modules/flexibility_indicator.py:418:0: C0301: Line too long (121/100) (line-too-long)
-agentlib_flexquant/modules/flexibility_indicator.py:419:0: C0301: Line too long (126/100) (line-too-long)
-agentlib_flexquant/modules/flexibility_indicator.py:420:0: C0301: Line too long (138/100) (line-too-long)
-agentlib_flexquant/modules/flexibility_indicator.py:552:0: C0301: Line too long (116/100) (line-too-long)
-agentlib_flexquant/modules/flexibility_indicator.py:553:0: C0301: Line too long (148/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:50:0: C0301: Line too long (107/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:396:0: C0301: Line too long (101/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:408:0: C0301: Line too long (143/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:419:0: C0301: Line too long (121/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:420:0: C0301: Line too long (126/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:421:0: C0301: Line too long (138/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:554:0: C0301: Line too long (116/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:555:0: C0301: Line too long (148/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:558:0: C0301: Line too long (102/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:564:0: C0301: Line too long (160/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:565:0: C0301: Line too long (119/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:566:0: C0301: Line too long (130/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:567:0: C0301: Line too long (130/100) (line-too-long)
 agentlib_flexquant/modules/flexibility_indicator.py:14:0: E0401: Unable to import 'agentlib' (import-error)
 agentlib_flexquant/modules/flexibility_indicator.py:15:0: E0401: Unable to import 'numpy' (import-error)
 agentlib_flexquant/modules/flexibility_indicator.py:16:0: E0401: Unable to import 'pandas' (import-error)
 agentlib_flexquant/modules/flexibility_indicator.py:17:0: E0401: Unable to import 'pydantic' (import-error)
-agentlib_flexquant/modules/flexibility_indicator.py:27:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-agentlib_flexquant/modules/flexibility_indicator.py:67:4: E0213: Method 'validate_constant_price' should have "self" as first argument (no-self-argument)
-agentlib_flexquant/modules/flexibility_indicator.py:73:12: W0719: Raising too general exception: Exception (broad-exception-raised)
-agentlib_flexquant/modules/flexibility_indicator.py:53:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-agentlib_flexquant/modules/flexibility_indicator.py:90:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-agentlib_flexquant/modules/flexibility_indicator.py:355:8: C0103: Attribute name "df" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/flexibility_indicator.py:357:4: C0116: Missing function or method docstring (missing-function-docstring)
-agentlib_flexquant/modules/flexibility_indicator.py:403:16: C0103: Variable name "n" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/flexibility_indicator.py:404:16: C0103: Variable name "ts" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/flexibility_indicator.py:371:4: R0912: Too many branches (17/12) (too-many-branches)
-agentlib_flexquant/modules/flexibility_indicator.py:455:28: C0103: Argument name "df" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/flexibility_indicator.py:455:46: C0103: Argument name "ts" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/flexibility_indicator.py:455:57: C0103: Argument name "n" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/flexibility_indicator.py:455:4: R0914: Too many local variables (18/15) (too-many-locals)
-agentlib_flexquant/modules/flexibility_indicator.py:455:4: R0912: Too many branches (15/12) (too-many-branches)
-agentlib_flexquant/modules/flexibility_indicator.py:513:12: W0612: Unused variable 'i' (unused-variable)
-agentlib_flexquant/modules/flexibility_indicator.py:587:4: R0913: Too many arguments (8/5) (too-many-arguments)
+agentlib_flexquant/modules/flexibility_indicator.py:28:0: R0903: Too few public methods (0/2) (too-few-public-methods)
+agentlib_flexquant/modules/flexibility_indicator.py:74:12: W0719: Raising too general exception: Exception (broad-exception-raised)
+agentlib_flexquant/modules/flexibility_indicator.py:54:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+agentlib_flexquant/modules/flexibility_indicator.py:91:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+agentlib_flexquant/modules/flexibility_indicator.py:356:8: C0103: Attribute name "df" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/modules/flexibility_indicator.py:358:4: C0116: Missing function or method docstring (missing-function-docstring)
+agentlib_flexquant/modules/flexibility_indicator.py:404:16: C0103: Variable name "n" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/modules/flexibility_indicator.py:405:16: C0103: Variable name "ts" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/modules/flexibility_indicator.py:372:4: R0912: Too many branches (17/12) (too-many-branches)
+agentlib_flexquant/modules/flexibility_indicator.py:456:28: C0103: Argument name "df" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/modules/flexibility_indicator.py:456:46: C0103: Argument name "ts" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/modules/flexibility_indicator.py:456:57: C0103: Argument name "n" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/modules/flexibility_indicator.py:456:4: R0914: Too many local variables (18/15) (too-many-locals)
+agentlib_flexquant/modules/flexibility_indicator.py:456:4: R0912: Too many branches (15/12) (too-many-branches)
+agentlib_flexquant/modules/flexibility_indicator.py:514:12: W0612: Unused variable 'i' (unused-variable)
+agentlib_flexquant/modules/flexibility_indicator.py:605:4: R0913: Too many arguments (8/5) (too-many-arguments)
 ************* Module agentlib_flexquant.modules.shadow_mpc
 agentlib_flexquant/modules/shadow_mpc.py:26:0: C0301: Line too long (146/100) (line-too-long)
 agentlib_flexquant/modules/shadow_mpc.py:27:0: C0301: Line too long (117/100) (line-too-long)
@@ -603,10 +614,7 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
         # simulate with the casadi simulator
         self.sim_flex_model(solution)
 
-        # extract solution DataFrama
         df = solution.df
-
-        # send the outputs
         if self.flex_results is not None:
             for output in self.var_ref.outputs:
                 if output not in [self.config.power_variable_name, self.config.storage_variable_name]:
@@ -909,7 +917,6 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
                 self.flex_results.loc[(
                     self.env.now, current_sim_time + t_sample), output] = self.flex_model.get_output(
                     output).value
-
  (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[204:222]
@@ -929,7 +936,9 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             for output in self.var_ref.outputs:
                 self.flex_results.loc[(
                     self.env.now, current_sim_time + t_sample), output] = self.flex_model.get_output(
-                    output).value (duplicate-code)
+                    output).value
+
+ (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[411:427]
 ==agentlib_flexquant.modules.shadow_mpc:[233:250]
@@ -951,7 +960,7 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
                     output).value (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.data_structures.flex_results:[261:270]
-==agentlib_flexquant.generate_flex_agents:[824:833]
+==agentlib_flexquant.generate_flex_agents:[833:842]
         sim_module_config = next(
             (
                 module
@@ -975,7 +984,13 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             except:
                 pass
 
-    def register_callbacks(self): (duplicate-code)
+    def pre_computation_hook(self):
+        """Calculate relative start and end times for flexibility provision.
+
+        When in provision mode, computes the relative timing for flexibility
+        events based on the external power profile timestamps and current
+        environment time.
+        """ (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[31:50]
 ==agentlib_flexquant.modules.shadow_mpc:[42:56]
@@ -990,17 +1005,12 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             except:
                 pass
 
-
-    def pre_computation_hook(self):
-        """Calculate relative start and end times for flexibility provision.
-
-        When in provision mode, computes the relative timing for flexibility
-        events based on the external power profile timestamps and current
-        environment time.
-        """ (duplicate-code)
+    def set_output(self, solution):
+        """Takes the solution from optimization backend and sends it to AgentVariables."""
+        # Output must be defined in the config as "type"="pd.Series" (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
-==agentlib_flexquant.modules.flexibility_indicator:[446:469]
-==agentlib_flexquant.modules.flexibility_market:[86:95]
+==agentlib_flexquant.modules.flexibility_indicator:[447:470]
+==agentlib_flexquant.modules.flexibility_market:[87:96]
         results_file = self.config.results_file
         try:
             results = pd.read_csv(results_file, header=[0], index_col=[0, 1])
@@ -1009,7 +1019,21 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             self.logger.error("Results file %s was not found.", results_file)
             return None
 
-    def register_callbacks(self): (duplicate-code)
+    def write_results(self, df: pd.DataFrame, ts: float, n: int) -> pd.DataFrame:
+        """Write every data of variables in self.var_list in an DataFrame.
+
+        DataFrame will be updated every time step
+
+        Args:
+            df: DataFrame which is initialised as an empty DataFrame with columns
+            according to self.var_list
+            ts: time step
+            n: number of time steps during prediction horizon
+
+        Returns:
+            DataFrame with results of every variable in self.var_list
+
+        """ (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[188:201]
 ==agentlib_flexquant.modules.shadow_mpc:[450:463]
@@ -1027,8 +1051,8 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 
             # Apply control and input values from the appropriate MPC step (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
-==agentlib_flexquant.modules.flexibility_indicator:[322:330]
-==agentlib_flexquant.modules.flexibility_market:[60:68]
+==agentlib_flexquant.modules.flexibility_indicator:[323:331]
+==agentlib_flexquant.modules.flexibility_market:[61:69]
         if self.results_file and self.results_file.suffix != ".csv":
             raise ValueError(
                 f"Invalid file extension for 'results_file': '{self.results_file}'. "
@@ -1039,5 +1063,5 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
  (duplicate-code)
 
 -----------------------------------
-Your code has been rated at 6.50/10
+Your code has been rated at 6.54/10
 
