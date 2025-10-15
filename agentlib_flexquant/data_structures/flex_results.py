@@ -277,10 +277,53 @@ class Results:
             skip_fields=["result_filename"],
         )
 
+    def _resolve_sim_results_path(
+        self, sim_result_filename: str, results_path: Union[str, Path]
+    ) -> Path:
+        """
+        Resolve simulator results path with fallback strategy.
+
+        Tries multiple strategies to locate the simulator results file:
+        1. Use absolute path if file exists there
+        2. Use relative path as-is from current directory
+        3. Use filename only and look in results directory
+        (handles both relative paths and just filenames)
+
+        Args:
+            sim_result_filename: The result filename from simulator config
+            results_path: The results directory path
+
+        Returns:
+            Path object pointing to the simulator results file
+
+        Raises:
+            FileNotFoundError: If file cannot be found using any strategy
+        """
+        sim_results_path = Path(sim_result_filename)
+        results_path = Path(results_path)
+
+        # Strategy 1: If it's an absolute path and exists, use it
+        if sim_results_path.is_absolute() and sim_results_path.exists():
+            return sim_results_path
+
+        # Strategy 2: If it's a relative path, try it as-is from current directory
+        if not sim_results_path.is_absolute() and sim_results_path.exists():
+            return sim_results_path
+
+        # Strategy 3: Try in results directory (handles both relative paths and just filenames)
+        # (fallback for helper function usage)
+        results_dir_path = results_path / sim_results_path.name
+        if results_dir_path.exists():
+            return results_dir_path
+
+        # If none of the strategies worked, raise an error
+        raise FileNotFoundError("Could not locate simulator results file.")
+
     def _load_results(
         self, results: Union[str, Path, dict]
     ) -> dict[str, dict[str, pd.DataFrame]]:
-        """Load dict with results for mpc, indicator, market and sim from specified results path."""
+        """Load dict with results for mpc, indicator, market and sim
+        from specified results path."""
         # load results
         if results is None:
             res_path = self.generator_config.results_directory
@@ -338,9 +381,13 @@ class Results:
             },
         }
         if self.simulator_agent_config:
+            resolved_sim_results_path = self._resolve_sim_results_path(
+                self.simulator_module_config.result_filename, res_path
+            )
+            print(f"Sim results extracted from: {resolved_sim_results_path}")
             res[self.simulator_agent_config.id] = {
                 self.simulator_module_config.module_id: load_sim(
-                    Path(self.simulator_module_config.result_filename),
+                    resolved_sim_results_path,
                 )
             }
         if self.generator_config.market_config:
