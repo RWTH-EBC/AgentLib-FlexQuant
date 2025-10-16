@@ -21,8 +21,7 @@ STORED_ENERGY_ALIAS_POS = "_E_stored_pos"
 full_trajectory_suffix: str = "_full"
 full_trajectory_prefix: str = "_"
 
-# cost function in the shadow mpc. obj_std and obj_flex are to be evaluated
-# according to user definition
+# cost function in the shadow mpc. obj_std and obj_flex are to be evaluated according to user definition
 SHADOW_MPC_COST_FUNCTION = (
     "return ca.if_else(self.time < self.prep_time.sym + "
     "self.market_time.sym, obj_std, ca.if_else(self.time < "
@@ -30,6 +29,8 @@ SHADOW_MPC_COST_FUNCTION = (
     "self.market_time.sym), obj_flex, obj_std))"
 )
 
+full_trajectory_suffix: str = "_full"
+shadow_suffix: str = "_shadow"
 
 def return_baseline_cost_function(power_variable: str, comfort_variable: str) -> str:
     """Return baseline cost function
