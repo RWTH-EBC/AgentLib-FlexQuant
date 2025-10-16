@@ -98,7 +98,7 @@
 <p>Defines MPC and MINLP-MPC for baseline flexibility quantification.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.modules.baseline_mpc.</span></span><span class="sig-name descname"><span class="pre">FlexibilityBaselineMINLPMPC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/baseline_mpc.html#FlexibilityBaselineMINLPMPC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.modules.baseline_mpc.</span></span><span class="sig-name descname"><span class="pre">FlexibilityBaselineMINLPMPC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/baseline_mpc.html#FlexibilityBaselineMINLPMPC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MINLPMPC</span></code></p>
 <p>MINLP-MPC for baseline flexibility quantification with mixed-integer optimization.</p>
 <dl class="py method">
@@ -110,11 +110,61 @@ events based on the external power profile timestamps and current
 environment time.</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.set_actuation">
+<span class="sig-name descname"><span class="pre">set_actuation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solution</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Results</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/baseline_mpc.html#FlexibilityBaselineMINLPMPC.set_actuation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.set_actuation" title="Permalink to this definition"></a></dt>
+<dd><p>Takes the solution from optimization backend and sends the first
+step to AgentVariables.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class pydantic_model">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig">
+<em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.modules.baseline_mpc.</span></span><span class="sig-name descname"><span class="pre">FlexibilityBaselineMINLPMPCConfig</span></span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/baseline_mpc.html#FlexibilityBaselineMINLPMPCConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MINLPMPCConfig</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Config<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arbitrary_types_allowed</strong>: <em>bool = True</em></p></li>
+<li><p><strong>validate_assignment</strong>: <em>bool = True</em></p></li>
+<li><p><strong>extra</strong>: <em>str = forbid</em></p></li>
+<li><p><strong>frozen</strong>: <em>bool = True</em></p></li>
+</ul>
+</dd>
+<dt class="field-even">Fields<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.full_controls" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.full_controls"><code class="xref py py-obj docutils literal notranslate"><span class="pre">full_controls</span> <span class="pre">(list[agentlib.core.datamodels.AgentVariable])</span></code></a></p></li>
+</ul>
+</dd>
+<dt class="field-odd">Validators<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.full_controls">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">full_controls</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">agentlib.core.datamodels.AgentVariable</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.full_controls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.model_post_init">
+<span class="sig-name descname"><span class="pre">model_post_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.model_post_init" title="Permalink to this definition"></a></dt>
+<dd><p>This function is meant to behave like a BaseModel method to initialise private attributes.</p>
+<p>It takes context as an argument since that’s what pydantic-core passes when calling it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – The BaseModel instance.</p></li>
+<li><p><strong>context</strong> – The context.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.modules.baseline_mpc.</span></span><span class="sig-name descname"><span class="pre">FlexibilityBaselineMPC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/baseline_mpc.html#FlexibilityBaselineMPC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.modules.baseline_mpc.</span></span><span class="sig-name descname"><span class="pre">FlexibilityBaselineMPC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/baseline_mpc.html#FlexibilityBaselineMPC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MPC</span></code></p>
 <p>MPC for baseline flexibility quantification.</p>
 <dl class="py method">
@@ -124,6 +174,56 @@ environment time.</p>
 <p>When in provision mode, computes the relative timing for flexibility
 events based on the external power profile timestamps and current
 environment time.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.set_actuation">
+<span class="sig-name descname"><span class="pre">set_actuation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solution</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Results</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/baseline_mpc.html#FlexibilityBaselineMPC.set_actuation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.set_actuation" title="Permalink to this definition"></a></dt>
+<dd><p>Takes the solution from optimization backend and sends the first
+step to AgentVariables.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class pydantic_model">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig">
+<em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.modules.baseline_mpc.</span></span><span class="sig-name descname"><span class="pre">FlexibilityBaselineMPCConfig</span></span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/baseline_mpc.html#FlexibilityBaselineMPCConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MPCConfig</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Config<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arbitrary_types_allowed</strong>: <em>bool = True</em></p></li>
+<li><p><strong>validate_assignment</strong>: <em>bool = True</em></p></li>
+<li><p><strong>extra</strong>: <em>str = forbid</em></p></li>
+<li><p><strong>frozen</strong>: <em>bool = True</em></p></li>
+</ul>
+</dd>
+<dt class="field-even">Fields<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.full_controls" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.full_controls"><code class="xref py py-obj docutils literal notranslate"><span class="pre">full_controls</span> <span class="pre">(list[agentlib.core.datamodels.AgentVariable])</span></code></a></p></li>
+</ul>
+</dd>
+<dt class="field-odd">Validators<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.full_controls">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">full_controls</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">agentlib.core.datamodels.AgentVariable</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.full_controls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.model_post_init">
+<span class="sig-name descname"><span class="pre">model_post_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.model_post_init" title="Permalink to this definition"></a></dt>
+<dd><p>This function is meant to behave like a BaseModel method to initialise private attributes.</p>
+<p>It takes context as an argument since that’s what pydantic-core passes when calling it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – The BaseModel instance.</p></li>
+<li><p><strong>context</strong> – The context.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
