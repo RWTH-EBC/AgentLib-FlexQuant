@@ -1154,7 +1154,7 @@ the base flex directory, using only the directory names (ignoring any user-suppl
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘pathlib.Path’&gt;: &lt;class ‘str’&gt;, &lt;class ‘agentlib.core.agent.AgentConfig’&gt;: &lt;function FlexibilityIndicatorConfig.&lt;lambda&gt; at 0x7f561b5dfd80&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘pathlib.Path’&gt;: &lt;class ‘str’&gt;, &lt;class ‘agentlib.core.agent.AgentConfig’&gt;: &lt;function FlexibilityIndicatorConfig.&lt;lambda&gt; at 0x7f48fb407d80&gt;}</em></p></li>
 <li><p><strong>extra</strong>: <em>str = forbid</em></p></li>
 </ul>
 </dd>
@@ -1242,7 +1242,7 @@ the base flex directory, using only the directory names (ignoring any user-suppl
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function ShadowMPCConfigGeneratorConfig.&lt;lambda&gt; at 0x7f561b5dfb00&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function ShadowMPCConfigGeneratorConfig.&lt;lambda&gt; at 0x7f48fb407b00&gt;}</em></p></li>
 <li><p><strong>extra</strong>: <em>str = forbid</em></p></li>
 </ul>
 </dd>
@@ -1366,8 +1366,8 @@ associated parameters and validation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Fields<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.market.MarketSpecifications.accepted_offer_sample_points" title="agentlib_flexquant.data_structures.market.MarketSpecifications.accepted_offer_sample_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">accepted_offer_sample_points</span> <span class="pre">(Literal['collocation',</span> <span class="pre">'constant'])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.market.MarketSpecifications.cooldown" title="agentlib_flexquant.data_structures.market.MarketSpecifications.cooldown"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cooldown</span> <span class="pre">(int)</span></code></a></p></li>
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.market.MarketSpecifications.flex_power_feedback_method" title="agentlib_flexquant.data_structures.market.MarketSpecifications.flex_power_feedback_method"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flex_power_feedback_method</span> <span class="pre">(Literal['collocation',</span> <span class="pre">'constant'])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.market.MarketSpecifications.minimum_average_flex" title="agentlib_flexquant.data_structures.market.MarketSpecifications.minimum_average_flex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">minimum_average_flex</span> <span class="pre">(float)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.market.MarketSpecifications.options" title="agentlib_flexquant.data_structures.market.MarketSpecifications.options"><code class="xref py py-obj docutils literal notranslate"><span class="pre">options</span> <span class="pre">(agentlib_flexquant.data_structures.market.RandomOptions</span> <span class="pre">|</span> <span class="pre">agentlib_flexquant.data_structures.market.SingleOptions</span> <span class="pre">|</span> <span class="pre">agentlib_flexquant.data_structures.market.CustomOptions)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.market.MarketSpecifications.type" title="agentlib_flexquant.data_structures.market.MarketSpecifications.type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">type</span> <span class="pre">(str)</span></code></a></p></li>
@@ -1380,9 +1380,9 @@ associated parameters and validation.</p>
 </dd>
 </dl>
 <dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.market.MarketSpecifications.cooldown">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cooldown</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.market.MarketSpecifications.cooldown" title="Permalink to this definition"></a></dt>
-<dd><p>cooldown time (no timesteps) after a provision</p>
+<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.market.MarketSpecifications.accepted_offer_sample_points">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accepted_offer_sample_points</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'collocation'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'constant'</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'collocation'</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.market.MarketSpecifications.accepted_offer_sample_points" title="Permalink to this definition"></a></dt>
+<dd><p>Method defining how to send the accepted flexibility power backto the baseline mpc so that the system can deliver it. This is relevant for collocation, as the power profile is only defined at the collocation points. If you choose constant here, the values are averaged and set for the whole time step.Set to constant if the power only depends on control or if system has low inertial. Otherwise, use collocation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1393,9 +1393,9 @@ associated parameters and validation.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.market.MarketSpecifications.flex_power_feedback_method">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">flex_power_feedback_method</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'collocation'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'constant'</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'collocation'</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.market.MarketSpecifications.flex_power_feedback_method" title="Permalink to this definition"></a></dt>
-<dd><p>Method defining how to send the accepted flexibility power back to baseline mpc so that the system can deliver it.Set to constant if the power only depends on control or if system has low inertial. Otherwise, use collocation.</p>
+<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.market.MarketSpecifications.cooldown">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cooldown</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.market.MarketSpecifications.cooldown" title="Permalink to this definition"></a></dt>
+<dd><p>cooldown time (no timesteps) after a provision</p>
 <dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1545,7 +1545,7 @@ associated parameters and validation.</p>
 <dt class="field-odd">Fields<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.market.SingleOptions.direction" title="agentlib_flexquant.data_structures.market.SingleOptions.direction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">direction</span> <span class="pre">(Literal['positive',</span> <span class="pre">'negative'])</span></code></a></p></li>
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.market.SingleOptions.start_time" title="agentlib_flexquant.data_structures.market.SingleOptions.start_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">start_time</span> <span class="pre">(float)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.market.SingleOptions.offer_acceptance_time" title="agentlib_flexquant.data_structures.market.SingleOptions.offer_acceptance_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">offer_acceptance_time</span> <span class="pre">(float)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.market.SingleOptions.type" title="agentlib_flexquant.data_structures.market.SingleOptions.type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">type</span> <span class="pre">(Literal['single'])</span></code></a></p></li>
 </ul>
 </dd>
@@ -1557,8 +1557,8 @@ associated parameters and validation.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.market.SingleOptions.start_time">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.market.SingleOptions.start_time" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.market.SingleOptions.offer_acceptance_time">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">offer_acceptance_time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.market.SingleOptions.offer_acceptance_time" title="Permalink to this definition"></a></dt>
 <dd><p>After this time, the first available flex offer is accepted</p>
 </dd></dl>
 
@@ -1585,7 +1585,7 @@ mappings, and optimization weights for MPC implementations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function BaseMPCData.&lt;lambda&gt; at 0x7f561b5dea20&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function BaseMPCData.&lt;lambda&gt; at 0x7f48fb406a20&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -1670,7 +1670,7 @@ mappings, and optimization weights for MPC implementations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function BaselineMPCData.&lt;lambda&gt; at 0x7f561b5deb60&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function BaselineMPCData.&lt;lambda&gt; at 0x7f48fb406b60&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -1903,7 +1903,7 @@ list as MPCVariable instances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function NFMPCData.&lt;lambda&gt; at 0x7f561b5def20&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function NFMPCData.&lt;lambda&gt; at 0x7f48fb406f20&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -1989,7 +1989,7 @@ list as MPCVariable instances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function PFMPCData.&lt;lambda&gt; at 0x7f561b5dee80&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function PFMPCData.&lt;lambda&gt; at 0x7f48fb406e80&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>

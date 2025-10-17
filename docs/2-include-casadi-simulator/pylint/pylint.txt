@@ -61,204 +61,8 @@ agentlib_flexquant/generate_flex_agents.py:22:0: C0412: Imports from package cop
 agentlib_flexquant/generate_flex_agents.py:23:0: C0412: Imports from package pathlib are not grouped (ungrouped-imports)
 agentlib_flexquant/generate_flex_agents.py:24:0: C0412: Imports from package typing are not grouped (ungrouped-imports)
 agentlib_flexquant/generate_flex_agents.py:24:0: W0611: Unused List imported from typing (unused-import)
-************* Module agentlib_flexquant.utils.interactive
-agentlib_flexquant/utils/interactive.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-agentlib_flexquant/utils/interactive.py:4:0: E0401: Unable to import 'pandas' (import-error)
-agentlib_flexquant/utils/interactive.py:5:0: E0401: Unable to import 'agentlib.core.agent' (import-error)
-agentlib_flexquant/utils/interactive.py:6:0: E0401: Unable to import 'agentlib_mpc.utils' (import-error)
-agentlib_flexquant/utils/interactive.py:7:0: E0401: Unable to import 'agentlib_mpc.utils.analysis' (import-error)
-agentlib_flexquant/utils/interactive.py:8:0: E0401: Unable to import 'agentlib_mpc.utils.plotting.interactive' (import-error)
-agentlib_flexquant/utils/interactive.py:9:0: E0401: Unable to import 'dash' (import-error)
-agentlib_flexquant/utils/interactive.py:10:0: E0401: Unable to import 'plotly' (import-error)
-agentlib_flexquant/utils/interactive.py:11:0: E0401: Unable to import 'pydantic' (import-error)
-agentlib_flexquant/utils/interactive.py:13:0: R0402: Use 'from agentlib_flexquant.data_structures import flex_results' instead (consider-using-from-import)
-agentlib_flexquant/utils/interactive.py:20:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-agentlib_flexquant/utils/interactive.py:88:8: C0103: Attribute name "LINE_PROPERTIES" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/utils/interactive.py:46:0: R0902: Too many instance attributes (8/7) (too-many-instance-attributes)
-agentlib_flexquant/utils/interactive.py:64:4: R0913: Too many arguments (7/5) (too-many-arguments)
-agentlib_flexquant/utils/interactive.py:110:12: R1721: Unnecessary use of a comprehension, use list(self.intersection_mpcs_sim.keys()) instead. (unnecessary-comprehension)
-agentlib_flexquant/utils/interactive.py:110:28: C0201: Consider iterating the dictionary directly instead of calling .keys() (consider-iterating-dictionary)
-agentlib_flexquant/utils/interactive.py:218:34: C0103: Argument name "s" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/utils/interactive.py:343:8: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
-agentlib_flexquant/utils/interactive.py:499:8: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
-agentlib_flexquant/utils/interactive.py:527:8: R0913: Too many arguments (6/5) (too-many-arguments)
-agentlib_flexquant/utils/interactive.py:561:29: C0201: Consider iterating the dictionary directly instead of calling .keys() (consider-iterating-dictionary)
-agentlib_flexquant/utils/interactive.py:581:16: C0103: Variable name "ts" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/utils/interactive.py:608:23: R1735: Consider using '{"t": 20, "b": 20}' instead of a call to 'dict'. (use-dict-literal)
-agentlib_flexquant/utils/interactive.py:698:41: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
-agentlib_flexquant/utils/interactive.py:119:4: R0915: Too many statements (135/50) (too-many-statements)
-************* Module agentlib_flexquant.utils.config_management
-agentlib_flexquant/utils/config_management.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-agentlib_flexquant/utils/config_management.py:9:0: E0401: Unable to import 'agentlib.core.agent' (import-error)
-agentlib_flexquant/utils/config_management.py:10:0: E0401: Unable to import 'agentlib.core.module' (import-error)
-agentlib_flexquant/utils/config_management.py:11:0: E0401: Unable to import 'agentlib.modules' (import-error)
-agentlib_flexquant/utils/config_management.py:50:11: C0103: Variable name "v" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/utils/config_management.py:57:12: C0206: Consider iterating with .items() (consider-using-dict-items)
-agentlib_flexquant/utils/config_management.py:57:16: C0103: Variable name "vv" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/utils/config_management.py:66:8: C0103: Variable name "v" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/utils/config_management.py:85:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
-agentlib_flexquant/utils/config_management.py:102:4: W0120: Else clause on loop without a break statement, remove the else and de-indent all the code inside it (useless-else-on-loop)
-agentlib_flexquant/utils/config_management.py:157:0: C0116: Missing function or method docstring (missing-function-docstring)
-************* Module agentlib_flexquant.utils.parsing
-agentlib_flexquant/utils/parsing.py:36:0: C0301: Line too long (101/100) (line-too-long)
-agentlib_flexquant/utils/parsing.py:425:0: C0301: Line too long (103/100) (line-too-long)
-agentlib_flexquant/utils/parsing.py:426:0: C0301: Line too long (108/100) (line-too-long)
-agentlib_flexquant/utils/parsing.py:433:0: C0301: Line too long (103/100) (line-too-long)
-agentlib_flexquant/utils/parsing.py:434:0: C0301: Line too long (108/100) (line-too-long)
-agentlib_flexquant/utils/parsing.py:454:0: C0301: Line too long (107/100) (line-too-long)
-agentlib_flexquant/utils/parsing.py:455:0: C0301: Line too long (112/100) (line-too-long)
-agentlib_flexquant/utils/parsing.py:462:0: C0301: Line too long (107/100) (line-too-long)
-agentlib_flexquant/utils/parsing.py:463:0: C0301: Line too long (112/100) (line-too-long)
-agentlib_flexquant/utils/parsing.py:470:0: C0301: Line too long (104/100) (line-too-long)
-agentlib_flexquant/utils/parsing.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-agentlib_flexquant/utils/parsing.py:5:0: E0401: Unable to import 'agentlib_mpc.data_structures.mpc_datamodels' (import-error)
-agentlib_flexquant/utils/parsing.py:54:74: W0622: Redefining built-in 'type' (redefined-builtin)
-agentlib_flexquant/utils/parsing.py:109:26: W0622: Redefining built-in 'type' (redefined-builtin)
-agentlib_flexquant/utils/parsing.py:164:4: C0103: Method name "visit_Module" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/utils/parsing.py:187:4: C0103: Method name "visit_ClassDef" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/utils/parsing.py:239:8: R1705: Unnecessary "elif" after "return", remove the leading "el" from "elif" (no-else-return)
-agentlib_flexquant/utils/parsing.py:319:21: R1701: Consider merging these isinstance calls to isinstance(body.value, (ast.BinOp, ast.Tuple)) (consider-merging-isinstance)
-agentlib_flexquant/utils/parsing.py:353:21: R1701: Consider merging these isinstance calls to isinstance(body.value, (ast.BinOp, ast.Tuple)) (consider-merging-isinstance)
-agentlib_flexquant/utils/parsing.py:420:24: W0612: Unused variable 'ind' (unused-variable)
-agentlib_flexquant/utils/parsing.py:593:0: C0116: Missing function or method docstring (missing-function-docstring)
-************* Module agentlib_flexquant.utils.data_handling
-agentlib_flexquant/utils/data_handling.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-agentlib_flexquant/utils/data_handling.py:3:0: E0401: Unable to import 'pandas' (import-error)
-agentlib_flexquant/utils/data_handling.py:4:0: E0401: Unable to import 'agentlib_mpc.utils' (import-error)
-agentlib_flexquant/utils/data_handling.py:42:32: C0103: Argument name "s" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/utils/data_handling.py:74:0: C0116: Missing function or method docstring (missing-function-docstring)
-agentlib_flexquant/utils/data_handling.py:77:40: W0108: Lambda may not be necessary (unnecessary-lambda)
-agentlib_flexquant/utils/data_handling.py:77:50: W0123: Use of eval (eval-used)
-agentlib_flexquant/utils/data_handling.py:85:4: C0103: Argument name "df" doesn't conform to snake_case naming style (invalid-name)
-************* Module agentlib_flexquant.data_structures.flexquant
-agentlib_flexquant/data_structures/flexquant.py:122:0: C0301: Line too long (109/100) (line-too-long)
-agentlib_flexquant/data_structures/flexquant.py:123:0: C0301: Line too long (127/100) (line-too-long)
-agentlib_flexquant/data_structures/flexquant.py:8:0: E0401: Unable to import 'pydantic' (import-error)
-agentlib_flexquant/data_structures/flexquant.py:9:0: E0401: Unable to import 'pydantic' (import-error)
-agentlib_flexquant/data_structures/flexquant.py:10:0: E0401: Unable to import 'agentlib.core.agent' (import-error)
-agentlib_flexquant/data_structures/flexquant.py:11:0: E0401: Unable to import 'agentlib.core.errors' (import-error)
-agentlib_flexquant/data_structures/flexquant.py:12:0: E0401: Unable to import 'agentlib_mpc.data_structures.mpc_datamodels' (import-error)
-agentlib_flexquant/data_structures/flexquant.py:26:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/flexquant.py:55:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/flexquant.py:66:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/flexquant.py:174:4: C0116: Missing function or method docstring (missing-function-docstring)
-agentlib_flexquant/data_structures/flexquant.py:8:0: W0611: Unused import pydantic (unused-import)
-************* Module agentlib_flexquant.data_structures.flex_kpis
-agentlib_flexquant/data_structures/flex_kpis.py:13:0: C0301: Line too long (114/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:63:0: C0301: Line too long (110/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:96:0: C0301: Line too long (127/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:99:0: C0301: Line too long (118/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:100:0: C0301: Line too long (105/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:210:0: C0301: Line too long (107/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:215:0: C0301: Line too long (116/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:216:0: C0301: Line too long (116/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:217:0: C0301: Line too long (114/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:218:0: C0301: Line too long (109/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:229:0: C0301: Line too long (123/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:230:0: C0301: Line too long (146/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:234:0: C0301: Line too long (103/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:267:0: C0301: Line too long (144/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:281:0: C0301: Line too long (101/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:288:0: C0301: Line too long (109/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:294:0: C0301: Line too long (114/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:295:0: C0301: Line too long (151/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:304:0: C0301: Line too long (101/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:305:0: C0301: Line too long (107/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:328:0: C0301: Line too long (188/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:335:0: C0301: Line too long (196/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:336:0: C0301: Line too long (158/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:341:0: C0301: Line too long (111/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:343:0: C0301: Line too long (107/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:358:0: C0301: Line too long (186/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:359:0: C0301: Line too long (117/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:482:0: C0301: Line too long (126/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:518:0: C0301: Line too long (156/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:535:0: C0301: Line too long (163/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:542:0: C0301: Line too long (107/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:8:0: E0401: Unable to import 'numpy' (import-error)
-agentlib_flexquant/data_structures/flex_kpis.py:9:0: E0401: Unable to import 'pandas' (import-error)
-agentlib_flexquant/data_structures/flex_kpis.py:10:0: E0401: Unable to import 'pydantic' (import-error)
-agentlib_flexquant/data_structures/flex_kpis.py:11:0: E0401: Unable to import 'agentlib_mpc.utils' (import-error)
-agentlib_flexquant/data_structures/flex_kpis.py:33:4: R0903: Too few public methods (0/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/flex_kpis.py:17:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/flex_kpis.py:65:8: C0103: Attribute name "dt" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/data_structures/flex_kpis.py:62:8: C0103: Variable name "dt" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/data_structures/flex_kpis.py:84:4: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
-agentlib_flexquant/data_structures/flex_kpis.py:183:4: R0913: Too many arguments (12/5) (too-many-arguments)
-agentlib_flexquant/data_structures/flex_kpis.py:233:4: R0913: Too many arguments (6/5) (too-many-arguments)
-agentlib_flexquant/data_structures/flex_kpis.py:293:39: C2801: Unnecessarily calls dunder method __deepcopy__. Use copy.deepcopy function. (unnecessary-dunder-call)
-agentlib_flexquant/data_structures/flex_kpis.py:314:8: R1705: Unnecessary "else" after "return", remove the "else" and de-indent the code inside it (no-else-return)
-agentlib_flexquant/data_structures/flex_kpis.py:327:39: C2801: Unnecessarily calls dunder method __deepcopy__. Use copy.deepcopy function. (unnecessary-dunder-call)
-agentlib_flexquant/data_structures/flex_kpis.py:335:4: R0913: Too many arguments (6/5) (too-many-arguments)
-agentlib_flexquant/data_structures/flex_kpis.py:357:38: C2801: Unnecessarily calls dunder method __deepcopy__. Use copy.deepcopy function. (unnecessary-dunder-call)
-agentlib_flexquant/data_structures/flex_kpis.py:416:0: R0902: Too many instance attributes (11/7) (too-many-instance-attributes)
-agentlib_flexquant/data_structures/flex_kpis.py:466:4: R0903: Too few public methods (0/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/flex_kpis.py:471:4: R0913: Too many arguments (6/5) (too-many-arguments)
-agentlib_flexquant/data_structures/flex_kpis.py:497:12: W0127: Assigning the same variable 'series' to itself (self-assigning-variable)
-agentlib_flexquant/data_structures/flex_kpis.py:14:0: W0611: Unused strip_multi_index imported from agentlib_flexquant.utils.data_handling (unused-import)
-************* Module agentlib_flexquant.data_structures.market
-agentlib_flexquant/data_structures/market.py:89:0: C0301: Line too long (136/100) (line-too-long)
-agentlib_flexquant/data_structures/market.py:90:0: C0301: Line too long (134/100) (line-too-long)
-agentlib_flexquant/data_structures/market.py:10:0: E0401: Unable to import 'pydantic' (import-error)
-agentlib_flexquant/data_structures/market.py:15:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/market.py:43:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/market.py:55:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/market.py:63:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/market.py:109:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-************* Module agentlib_flexquant.data_structures.flex_results
-agentlib_flexquant/data_structures/flex_results.py:11:0: E0401: Unable to import 'pandas' (import-error)
-agentlib_flexquant/data_structures/flex_results.py:12:0: E0401: Unable to import 'pydantic' (import-error)
-agentlib_flexquant/data_structures/flex_results.py:13:0: E0401: Unable to import 'agentlib.core.agent' (import-error)
-agentlib_flexquant/data_structures/flex_results.py:14:0: E0401: Unable to import 'agentlib.modules.simulation.simulator' (import-error)
-agentlib_flexquant/data_structures/flex_results.py:15:0: E0401: Unable to import 'agentlib.utils' (import-error)
-agentlib_flexquant/data_structures/flex_results.py:16:0: E0401: Unable to import 'agentlib_mpc.modules.mpc' (import-error)
-agentlib_flexquant/data_structures/flex_results.py:17:0: E0401: Unable to import 'agentlib_mpc.utils' (import-error)
-agentlib_flexquant/data_structures/flex_results.py:18:0: E0401: Unable to import 'agentlib_mpc.utils.analysis' (import-error)
-agentlib_flexquant/data_structures/flex_results.py:47:4: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/data_structures/flex_results.py:61:4: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/data_structures/flex_results.py:65:0: R0902: Too many instance attributes (29/7) (too-many-instance-attributes)
-agentlib_flexquant/data_structures/flex_results.py:111:4: R0913: Too many arguments (6/5) (too-many-arguments)
-agentlib_flexquant/data_structures/flex_results.py:163:65: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/data_structures/flex_results.py:258:72: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/data_structures/flex_results.py:463:12: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
-************* Module agentlib_flexquant.data_structures.globals
-agentlib_flexquant/data_structures/globals.py:17:0: C0103: Class name "INTEGRATION_METHOD" doesn't conform to PascalCase naming style (invalid-name)
-************* Module agentlib_flexquant.data_structures.flex_offer
-agentlib_flexquant/data_structures/flex_offer.py:12:0: E0401: Unable to import 'pandas' (import-error)
-agentlib_flexquant/data_structures/flex_offer.py:13:0: E0401: Unable to import 'pydantic' (import-error)
-agentlib_flexquant/data_structures/flex_offer.py:14:0: E0401: Unable to import 'agentlib.core.datamodels' (import-error)
-agentlib_flexquant/data_structures/flex_offer.py:15:0: E0401: Unable to import 'pydantic' (import-error)
-agentlib_flexquant/data_structures/flex_offer.py:65:4: R0903: Too few public methods (0/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/flex_offer.py:90:8: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/data_structures/flex_offer.py:26:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-************* Module agentlib_flexquant.data_structures.mpcs
-agentlib_flexquant/data_structures/mpcs.py:9:0: E0401: Unable to import 'pydantic' (import-error)
-agentlib_flexquant/data_structures/mpcs.py:10:0: E0401: Unable to import 'agentlib_mpc.data_structures.mpc_datamodels' (import-error)
-agentlib_flexquant/data_structures/mpcs.py:11:0: E0401: Unable to import 'pydantic' (import-error)
-agentlib_flexquant/data_structures/mpcs.py:17:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/mpcs.py:39:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/mpcs.py:118:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/mpcs.py:149:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-************* Module agentlib_flexquant.optimization_backends.constrained_cia
-agentlib_flexquant/optimization_backends/constrained_cia.py:7:0: C0301: Line too long (101/100) (line-too-long)
-agentlib_flexquant/optimization_backends/constrained_cia.py:14:29: W1401: Anomalous backslash in string: '\ '. String constant might be missing an r prefix. (anomalous-backslash-in-string)
-agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: E0401: Unable to import 'pydantic' (import-error)
-agentlib_flexquant/optimization_backends/constrained_cia.py:2:0: E0401: Unable to import 'numpy' (import-error)
-agentlib_flexquant/optimization_backends/constrained_cia.py:3:0: E0401: Unable to import 'agentlib.core.errors' (import-error)
-agentlib_flexquant/optimization_backends/constrained_cia.py:4:0: E0401: Unable to import 'agentlib_mpc.optimization_backends.casadi_.minlp_cia' (import-error)
-agentlib_flexquant/optimization_backends/constrained_cia.py:5:0: E0401: Unable to import 'agentlib_mpc.optimization_backends.casadi_.core.casadi_backend' (import-error)
-agentlib_flexquant/optimization_backends/constrained_cia.py:6:0: E0401: Unable to import 'agentlib_mpc.data_structures.mpc_datamodels' (import-error)
-agentlib_flexquant/optimization_backends/constrained_cia.py:12:4: W0707: Consider explicitly re-raising using 'except ImportError as exc' and 'raise OptionalDependencyError(used_object='Pycombina', dependency_install='.\\ after cloning pycombina. Instructions: https://pycombina.readthedocs.io/en/latest/install.html#') from exc' (raise-missing-from)
-agentlib_flexquant/optimization_backends/constrained_cia.py:19:0: C0115: Missing class docstring (missing-class-docstring)
-agentlib_flexquant/optimization_backends/constrained_cia.py:27:4: C0115: Missing class docstring (missing-class-docstring)
-agentlib_flexquant/optimization_backends/constrained_cia.py:27:4: R0903: Too few public methods (0/2) (too-few-public-methods)
-agentlib_flexquant/optimization_backends/constrained_cia.py:19:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-agentlib_flexquant/optimization_backends/constrained_cia.py:32:0: C0115: Missing class docstring (missing-class-docstring)
-agentlib_flexquant/optimization_backends/constrained_cia.py:36:4: W0246: Useless parent or super() delegation in method '__init__' (useless-parent-delegation)
-agentlib_flexquant/optimization_backends/constrained_cia.py:39:4: C0116: Missing function or method docstring (missing-function-docstring)
-agentlib_flexquant/optimization_backends/constrained_cia.py:32:0: R0903: Too few public methods (1/2) (too-few-public-methods)
 ************* Module agentlib_flexquant.modules.flexibility_market
+agentlib_flexquant/modules/flexibility_market.py:180:0: C0301: Line too long (102/100) (line-too-long)
 agentlib_flexquant/modules/flexibility_market.py:184:0: C0301: Line too long (107/100) (line-too-long)
 agentlib_flexquant/modules/flexibility_market.py:239:0: C0301: Line too long (103/100) (line-too-long)
 agentlib_flexquant/modules/flexibility_market.py:1:0: C0114: Missing module docstring (missing-module-docstring)
@@ -283,40 +87,6 @@ agentlib_flexquant/modules/flexibility_market.py:118:8: W0201: Attribute 'cooldo
 agentlib_flexquant/modules/flexibility_market.py:194:20: W0201: Attribute 'cooldown_ticker' defined outside __init__ (attribute-defined-outside-init)
 agentlib_flexquant/modules/flexibility_market.py:9:0: C0411: third party import "from agentlib.core.datamodels import AgentVariable" should be placed before "import agentlib_flexquant.data_structures.globals as glbs" (wrong-import-order)
 agentlib_flexquant/modules/flexibility_market.py:10:0: C0411: third party import "from pydantic import ConfigDict, Field, model_validator" should be placed before "import agentlib_flexquant.data_structures.globals as glbs" (wrong-import-order)
-************* Module agentlib_flexquant.modules.flexibility_indicator
-agentlib_flexquant/modules/flexibility_indicator.py:50:0: C0301: Line too long (107/100) (line-too-long)
-agentlib_flexquant/modules/flexibility_indicator.py:396:0: C0301: Line too long (101/100) (line-too-long)
-agentlib_flexquant/modules/flexibility_indicator.py:408:0: C0301: Line too long (143/100) (line-too-long)
-agentlib_flexquant/modules/flexibility_indicator.py:419:0: C0301: Line too long (121/100) (line-too-long)
-agentlib_flexquant/modules/flexibility_indicator.py:420:0: C0301: Line too long (126/100) (line-too-long)
-agentlib_flexquant/modules/flexibility_indicator.py:421:0: C0301: Line too long (138/100) (line-too-long)
-agentlib_flexquant/modules/flexibility_indicator.py:554:0: C0301: Line too long (116/100) (line-too-long)
-agentlib_flexquant/modules/flexibility_indicator.py:555:0: C0301: Line too long (148/100) (line-too-long)
-agentlib_flexquant/modules/flexibility_indicator.py:558:0: C0301: Line too long (102/100) (line-too-long)
-agentlib_flexquant/modules/flexibility_indicator.py:564:0: C0301: Line too long (160/100) (line-too-long)
-agentlib_flexquant/modules/flexibility_indicator.py:565:0: C0301: Line too long (119/100) (line-too-long)
-agentlib_flexquant/modules/flexibility_indicator.py:566:0: C0301: Line too long (130/100) (line-too-long)
-agentlib_flexquant/modules/flexibility_indicator.py:567:0: C0301: Line too long (130/100) (line-too-long)
-agentlib_flexquant/modules/flexibility_indicator.py:14:0: E0401: Unable to import 'agentlib' (import-error)
-agentlib_flexquant/modules/flexibility_indicator.py:15:0: E0401: Unable to import 'numpy' (import-error)
-agentlib_flexquant/modules/flexibility_indicator.py:16:0: E0401: Unable to import 'pandas' (import-error)
-agentlib_flexquant/modules/flexibility_indicator.py:17:0: E0401: Unable to import 'pydantic' (import-error)
-agentlib_flexquant/modules/flexibility_indicator.py:28:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-agentlib_flexquant/modules/flexibility_indicator.py:74:12: W0719: Raising too general exception: Exception (broad-exception-raised)
-agentlib_flexquant/modules/flexibility_indicator.py:54:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-agentlib_flexquant/modules/flexibility_indicator.py:91:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-agentlib_flexquant/modules/flexibility_indicator.py:356:8: C0103: Attribute name "df" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/flexibility_indicator.py:358:4: C0116: Missing function or method docstring (missing-function-docstring)
-agentlib_flexquant/modules/flexibility_indicator.py:404:16: C0103: Variable name "n" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/flexibility_indicator.py:405:16: C0103: Variable name "ts" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/flexibility_indicator.py:372:4: R0912: Too many branches (17/12) (too-many-branches)
-agentlib_flexquant/modules/flexibility_indicator.py:456:28: C0103: Argument name "df" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/flexibility_indicator.py:456:46: C0103: Argument name "ts" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/flexibility_indicator.py:456:57: C0103: Argument name "n" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/flexibility_indicator.py:456:4: R0914: Too many local variables (18/15) (too-many-locals)
-agentlib_flexquant/modules/flexibility_indicator.py:456:4: R0912: Too many branches (15/12) (too-many-branches)
-agentlib_flexquant/modules/flexibility_indicator.py:514:12: W0612: Unused variable 'i' (unused-variable)
-agentlib_flexquant/modules/flexibility_indicator.py:605:4: R0913: Too many arguments (8/5) (too-many-arguments)
 ************* Module agentlib_flexquant.modules.shadow_mpc
 agentlib_flexquant/modules/shadow_mpc.py:26:0: C0301: Line too long (146/100) (line-too-long)
 agentlib_flexquant/modules/shadow_mpc.py:27:0: C0301: Line too long (117/100) (line-too-long)
@@ -384,40 +154,33 @@ agentlib_flexquant/modules/shadow_mpc.py:12:0: W0611: Unused Iterable imported f
 agentlib_flexquant/modules/shadow_mpc.py:16:0: W0611: Unused STORED_ENERGY_ALIAS_NEG imported from agentlib_flexquant.data_structures.globals (unused-import)
 agentlib_flexquant/modules/shadow_mpc.py:16:0: W0611: Unused STORED_ENERGY_ALIAS_POS imported from agentlib_flexquant.data_structures.globals (unused-import)
 ************* Module agentlib_flexquant.modules.baseline_mpc
-agentlib_flexquant/modules/baseline_mpc.py:17:0: C0301: Line too long (146/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:18:0: C0301: Line too long (119/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:19:0: C0301: Line too long (133/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:33:0: C0301: Line too long (124/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:36:0: C0301: Line too long (107/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:82:0: C0301: Line too long (102/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:115:0: C0301: Line too long (103/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:122:0: C0301: Line too long (109/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:137:0: C0301: Line too long (101/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:138:0: C0301: Line too long (137/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:148:0: C0301: Line too long (116/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:156:0: C0301: Line too long (124/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:184:0: C0301: Line too long (111/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:202:0: C0301: Line too long (104/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:205:0: C0301: Line too long (102/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:219:0: C0301: Line too long (101/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:225:0: C0301: Line too long (146/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:226:0: C0301: Line too long (119/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:227:0: C0301: Line too long (133/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:241:0: C0301: Line too long (124/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:244:0: C0301: Line too long (107/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:286:0: C0301: Line too long (102/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:319:0: C0301: Line too long (103/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:326:0: C0301: Line too long (109/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:341:0: C0301: Line too long (101/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:342:0: C0301: Line too long (137/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:352:0: C0301: Line too long (116/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:360:0: C0301: Line too long (124/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:388:0: C0301: Line too long (111/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:392:0: C0301: Line too long (109/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:406:0: C0301: Line too long (127/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:409:0: C0301: Line too long (148/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:412:0: C0301: Line too long (102/100) (line-too-long)
-agentlib_flexquant/modules/baseline_mpc.py:426:0: C0301: Line too long (101/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:85:0: C0301: Line too long (102/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:119:0: C0301: Line too long (103/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:126:0: C0301: Line too long (109/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:155:0: C0301: Line too long (116/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:163:0: C0301: Line too long (124/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:191:0: C0301: Line too long (111/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:209:0: C0301: Line too long (104/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:212:0: C0301: Line too long (102/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:226:0: C0301: Line too long (101/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:232:0: C0301: Line too long (146/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:233:0: C0301: Line too long (119/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:234:0: C0301: Line too long (133/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:248:0: C0301: Line too long (124/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:251:0: C0301: Line too long (107/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:293:0: C0301: Line too long (102/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:326:0: C0301: Line too long (103/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:333:0: C0301: Line too long (109/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:348:0: C0301: Line too long (101/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:349:0: C0301: Line too long (137/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:359:0: C0301: Line too long (116/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:367:0: C0301: Line too long (124/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:395:0: C0301: Line too long (111/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:399:0: C0301: Line too long (109/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:413:0: C0301: Line too long (127/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:416:0: C0301: Line too long (148/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:419:0: C0301: Line too long (102/100) (line-too-long)
+agentlib_flexquant/modules/baseline_mpc.py:433:0: C0301: Line too long (101/100) (line-too-long)
 agentlib_flexquant/modules/baseline_mpc.py:4:0: E0401: Unable to import 'agentlib_mpc.modules' (import-error)
 agentlib_flexquant/modules/baseline_mpc.py:7:0: E0401: Unable to import 'numpy' (import-error)
 agentlib_flexquant/modules/baseline_mpc.py:8:0: E0401: Unable to import 'pandas' (import-error)
@@ -428,18 +191,18 @@ agentlib_flexquant/modules/baseline_mpc.py:13:0: W0404: Reimport 'mpc_full' (imp
 agentlib_flexquant/modules/baseline_mpc.py:13:0: W0404: Reimport 'minlp_mpc' (imported line 4) (reimported)
 agentlib_flexquant/modules/baseline_mpc.py:15:0: C0115: Missing class docstring (missing-class-docstring)
 agentlib_flexquant/modules/baseline_mpc.py:15:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-agentlib_flexquant/modules/baseline_mpc.py:40:12: W0702: No exception type(s) specified (bare-except)
-agentlib_flexquant/modules/baseline_mpc.py:77:8: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/baseline_mpc.py:184:4: R0913: Too many arguments (6/5) (too-many-arguments)
-agentlib_flexquant/modules/baseline_mpc.py:184:4: R0914: Too many local variables (18/15) (too-many-locals)
-agentlib_flexquant/modules/baseline_mpc.py:184:65: W0613: Unused argument 'mpc_time_step' (unused-argument)
-agentlib_flexquant/modules/baseline_mpc.py:223:0: C0115: Missing class docstring (missing-class-docstring)
-agentlib_flexquant/modules/baseline_mpc.py:223:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-agentlib_flexquant/modules/baseline_mpc.py:248:12: W0702: No exception type(s) specified (bare-except)
-agentlib_flexquant/modules/baseline_mpc.py:283:8: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/baseline_mpc.py:388:4: R0913: Too many arguments (6/5) (too-many-arguments)
-agentlib_flexquant/modules/baseline_mpc.py:388:4: R0914: Too many local variables (19/15) (too-many-locals)
-agentlib_flexquant/modules/baseline_mpc.py:388:65: W0613: Unused argument 'mpc_time_step' (unused-argument)
+agentlib_flexquant/modules/baseline_mpc.py:50:12: W0702: No exception type(s) specified (bare-except)
+agentlib_flexquant/modules/baseline_mpc.py:80:8: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/modules/baseline_mpc.py:191:4: R0913: Too many arguments (6/5) (too-many-arguments)
+agentlib_flexquant/modules/baseline_mpc.py:191:4: R0914: Too many local variables (18/15) (too-many-locals)
+agentlib_flexquant/modules/baseline_mpc.py:191:65: W0613: Unused argument 'mpc_time_step' (unused-argument)
+agentlib_flexquant/modules/baseline_mpc.py:230:0: C0115: Missing class docstring (missing-class-docstring)
+agentlib_flexquant/modules/baseline_mpc.py:230:0: R0903: Too few public methods (0/2) (too-few-public-methods)
+agentlib_flexquant/modules/baseline_mpc.py:255:12: W0702: No exception type(s) specified (bare-except)
+agentlib_flexquant/modules/baseline_mpc.py:290:8: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/modules/baseline_mpc.py:395:4: R0913: Too many arguments (6/5) (too-many-arguments)
+agentlib_flexquant/modules/baseline_mpc.py:395:4: R0914: Too many local variables (19/15) (too-many-locals)
+agentlib_flexquant/modules/baseline_mpc.py:395:65: W0613: Unused argument 'mpc_time_step' (unused-argument)
 agentlib_flexquant/modules/baseline_mpc.py:5:0: C0411: standard import "import os" should be placed before "from agentlib_mpc.modules import minlp_mpc, mpc_full" (wrong-import-order)
 agentlib_flexquant/modules/baseline_mpc.py:6:0: C0411: standard import "import math" should be placed before "from agentlib_mpc.modules import minlp_mpc, mpc_full" (wrong-import-order)
 agentlib_flexquant/modules/baseline_mpc.py:9:0: C0411: standard import "from typing import Optional" should be placed before "from agentlib_mpc.modules import minlp_mpc, mpc_full" (wrong-import-order)
@@ -448,9 +211,237 @@ agentlib_flexquant/modules/baseline_mpc.py:13:0: C0411: third party import "from
 agentlib_flexquant/modules/baseline_mpc.py:13:0: C0412: Imports from package agentlib_mpc are not grouped (ungrouped-imports)
 agentlib_flexquant/modules/baseline_mpc.py:11:0: W0611: Unused agentlib_flexquant.data_structures.globals imported as glbs (unused-import)
 agentlib_flexquant/modules/baseline_mpc.py:12:0: W0611: Unused AgentVariable imported from agentlib (unused-import)
-************* Module agentlib_flexquant.modules.__init__
-agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[275:427]
+************* Module agentlib_flexquant.modules.flexibility_indicator
+agentlib_flexquant/modules/flexibility_indicator.py:50:0: C0301: Line too long (107/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:396:0: C0301: Line too long (101/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:408:0: C0301: Line too long (143/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:419:0: C0301: Line too long (121/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:420:0: C0301: Line too long (126/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:421:0: C0301: Line too long (138/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:554:0: C0301: Line too long (116/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:555:0: C0301: Line too long (148/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:558:0: C0301: Line too long (102/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:564:0: C0301: Line too long (160/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:565:0: C0301: Line too long (119/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:566:0: C0301: Line too long (130/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:567:0: C0301: Line too long (130/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:14:0: E0401: Unable to import 'agentlib' (import-error)
+agentlib_flexquant/modules/flexibility_indicator.py:15:0: E0401: Unable to import 'numpy' (import-error)
+agentlib_flexquant/modules/flexibility_indicator.py:16:0: E0401: Unable to import 'pandas' (import-error)
+agentlib_flexquant/modules/flexibility_indicator.py:17:0: E0401: Unable to import 'pydantic' (import-error)
+agentlib_flexquant/modules/flexibility_indicator.py:28:0: R0903: Too few public methods (0/2) (too-few-public-methods)
+agentlib_flexquant/modules/flexibility_indicator.py:74:12: W0719: Raising too general exception: Exception (broad-exception-raised)
+agentlib_flexquant/modules/flexibility_indicator.py:54:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+agentlib_flexquant/modules/flexibility_indicator.py:91:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+agentlib_flexquant/modules/flexibility_indicator.py:356:8: C0103: Attribute name "df" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/modules/flexibility_indicator.py:358:4: C0116: Missing function or method docstring (missing-function-docstring)
+agentlib_flexquant/modules/flexibility_indicator.py:404:16: C0103: Variable name "n" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/modules/flexibility_indicator.py:405:16: C0103: Variable name "ts" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/modules/flexibility_indicator.py:372:4: R0912: Too many branches (17/12) (too-many-branches)
+agentlib_flexquant/modules/flexibility_indicator.py:456:28: C0103: Argument name "df" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/modules/flexibility_indicator.py:456:46: C0103: Argument name "ts" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/modules/flexibility_indicator.py:456:57: C0103: Argument name "n" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/modules/flexibility_indicator.py:456:4: R0914: Too many local variables (18/15) (too-many-locals)
+agentlib_flexquant/modules/flexibility_indicator.py:456:4: R0912: Too many branches (15/12) (too-many-branches)
+agentlib_flexquant/modules/flexibility_indicator.py:514:12: W0612: Unused variable 'i' (unused-variable)
+agentlib_flexquant/modules/flexibility_indicator.py:605:4: R0913: Too many arguments (8/5) (too-many-arguments)
+************* Module agentlib_flexquant.utils.data_handling
+agentlib_flexquant/utils/data_handling.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+agentlib_flexquant/utils/data_handling.py:3:0: E0401: Unable to import 'pandas' (import-error)
+agentlib_flexquant/utils/data_handling.py:4:0: E0401: Unable to import 'agentlib_mpc.utils' (import-error)
+agentlib_flexquant/utils/data_handling.py:42:32: C0103: Argument name "s" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/utils/data_handling.py:74:0: C0116: Missing function or method docstring (missing-function-docstring)
+agentlib_flexquant/utils/data_handling.py:77:40: W0108: Lambda may not be necessary (unnecessary-lambda)
+agentlib_flexquant/utils/data_handling.py:77:50: W0123: Use of eval (eval-used)
+agentlib_flexquant/utils/data_handling.py:85:4: C0103: Argument name "df" doesn't conform to snake_case naming style (invalid-name)
+************* Module agentlib_flexquant.utils.interactive
+agentlib_flexquant/utils/interactive.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+agentlib_flexquant/utils/interactive.py:4:0: E0401: Unable to import 'pandas' (import-error)
+agentlib_flexquant/utils/interactive.py:5:0: E0401: Unable to import 'agentlib.core.agent' (import-error)
+agentlib_flexquant/utils/interactive.py:6:0: E0401: Unable to import 'agentlib_mpc.utils' (import-error)
+agentlib_flexquant/utils/interactive.py:7:0: E0401: Unable to import 'agentlib_mpc.utils.analysis' (import-error)
+agentlib_flexquant/utils/interactive.py:8:0: E0401: Unable to import 'agentlib_mpc.utils.plotting.interactive' (import-error)
+agentlib_flexquant/utils/interactive.py:9:0: E0401: Unable to import 'dash' (import-error)
+agentlib_flexquant/utils/interactive.py:10:0: E0401: Unable to import 'plotly' (import-error)
+agentlib_flexquant/utils/interactive.py:11:0: E0401: Unable to import 'pydantic' (import-error)
+agentlib_flexquant/utils/interactive.py:13:0: R0402: Use 'from agentlib_flexquant.data_structures import flex_results' instead (consider-using-from-import)
+agentlib_flexquant/utils/interactive.py:20:0: R0903: Too few public methods (0/2) (too-few-public-methods)
+agentlib_flexquant/utils/interactive.py:88:8: C0103: Attribute name "LINE_PROPERTIES" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/utils/interactive.py:46:0: R0902: Too many instance attributes (8/7) (too-many-instance-attributes)
+agentlib_flexquant/utils/interactive.py:64:4: R0913: Too many arguments (7/5) (too-many-arguments)
+agentlib_flexquant/utils/interactive.py:110:12: R1721: Unnecessary use of a comprehension, use list(self.intersection_mpcs_sim.keys()) instead. (unnecessary-comprehension)
+agentlib_flexquant/utils/interactive.py:110:28: C0201: Consider iterating the dictionary directly instead of calling .keys() (consider-iterating-dictionary)
+agentlib_flexquant/utils/interactive.py:218:34: C0103: Argument name "s" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/utils/interactive.py:343:8: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+agentlib_flexquant/utils/interactive.py:499:8: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+agentlib_flexquant/utils/interactive.py:527:8: R0913: Too many arguments (6/5) (too-many-arguments)
+agentlib_flexquant/utils/interactive.py:561:29: C0201: Consider iterating the dictionary directly instead of calling .keys() (consider-iterating-dictionary)
+agentlib_flexquant/utils/interactive.py:581:16: C0103: Variable name "ts" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/utils/interactive.py:608:23: R1735: Consider using '{"t": 20, "b": 20}' instead of a call to 'dict'. (use-dict-literal)
+agentlib_flexquant/utils/interactive.py:698:41: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
+agentlib_flexquant/utils/interactive.py:119:4: R0915: Too many statements (135/50) (too-many-statements)
+************* Module agentlib_flexquant.utils.config_management
+agentlib_flexquant/utils/config_management.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+agentlib_flexquant/utils/config_management.py:9:0: E0401: Unable to import 'agentlib.core.agent' (import-error)
+agentlib_flexquant/utils/config_management.py:10:0: E0401: Unable to import 'agentlib.core.module' (import-error)
+agentlib_flexquant/utils/config_management.py:11:0: E0401: Unable to import 'agentlib.modules' (import-error)
+agentlib_flexquant/utils/config_management.py:50:11: C0103: Variable name "v" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/utils/config_management.py:57:12: C0206: Consider iterating with .items() (consider-using-dict-items)
+agentlib_flexquant/utils/config_management.py:57:16: C0103: Variable name "vv" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/utils/config_management.py:66:8: C0103: Variable name "v" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/utils/config_management.py:85:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+agentlib_flexquant/utils/config_management.py:102:4: W0120: Else clause on loop without a break statement, remove the else and de-indent all the code inside it (useless-else-on-loop)
+agentlib_flexquant/utils/config_management.py:157:0: C0116: Missing function or method docstring (missing-function-docstring)
+************* Module agentlib_flexquant.utils.parsing
+agentlib_flexquant/utils/parsing.py:36:0: C0301: Line too long (101/100) (line-too-long)
+agentlib_flexquant/utils/parsing.py:425:0: C0301: Line too long (103/100) (line-too-long)
+agentlib_flexquant/utils/parsing.py:426:0: C0301: Line too long (108/100) (line-too-long)
+agentlib_flexquant/utils/parsing.py:433:0: C0301: Line too long (103/100) (line-too-long)
+agentlib_flexquant/utils/parsing.py:434:0: C0301: Line too long (108/100) (line-too-long)
+agentlib_flexquant/utils/parsing.py:454:0: C0301: Line too long (107/100) (line-too-long)
+agentlib_flexquant/utils/parsing.py:455:0: C0301: Line too long (112/100) (line-too-long)
+agentlib_flexquant/utils/parsing.py:462:0: C0301: Line too long (107/100) (line-too-long)
+agentlib_flexquant/utils/parsing.py:463:0: C0301: Line too long (112/100) (line-too-long)
+agentlib_flexquant/utils/parsing.py:470:0: C0301: Line too long (104/100) (line-too-long)
+agentlib_flexquant/utils/parsing.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+agentlib_flexquant/utils/parsing.py:5:0: E0401: Unable to import 'agentlib_mpc.data_structures.mpc_datamodels' (import-error)
+agentlib_flexquant/utils/parsing.py:54:74: W0622: Redefining built-in 'type' (redefined-builtin)
+agentlib_flexquant/utils/parsing.py:109:26: W0622: Redefining built-in 'type' (redefined-builtin)
+agentlib_flexquant/utils/parsing.py:164:4: C0103: Method name "visit_Module" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/utils/parsing.py:187:4: C0103: Method name "visit_ClassDef" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/utils/parsing.py:239:8: R1705: Unnecessary "elif" after "return", remove the leading "el" from "elif" (no-else-return)
+agentlib_flexquant/utils/parsing.py:319:21: R1701: Consider merging these isinstance calls to isinstance(body.value, (ast.BinOp, ast.Tuple)) (consider-merging-isinstance)
+agentlib_flexquant/utils/parsing.py:353:21: R1701: Consider merging these isinstance calls to isinstance(body.value, (ast.BinOp, ast.Tuple)) (consider-merging-isinstance)
+agentlib_flexquant/utils/parsing.py:420:24: W0612: Unused variable 'ind' (unused-variable)
+agentlib_flexquant/utils/parsing.py:593:0: C0116: Missing function or method docstring (missing-function-docstring)
+************* Module agentlib_flexquant.data_structures.flex_offer
+agentlib_flexquant/data_structures/flex_offer.py:12:0: E0401: Unable to import 'pandas' (import-error)
+agentlib_flexquant/data_structures/flex_offer.py:13:0: E0401: Unable to import 'pydantic' (import-error)
+agentlib_flexquant/data_structures/flex_offer.py:14:0: E0401: Unable to import 'agentlib.core.datamodels' (import-error)
+agentlib_flexquant/data_structures/flex_offer.py:15:0: E0401: Unable to import 'pydantic' (import-error)
+agentlib_flexquant/data_structures/flex_offer.py:65:4: R0903: Too few public methods (0/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/flex_offer.py:90:8: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/data_structures/flex_offer.py:26:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+************* Module agentlib_flexquant.data_structures.flex_results
+agentlib_flexquant/data_structures/flex_results.py:11:0: E0401: Unable to import 'pandas' (import-error)
+agentlib_flexquant/data_structures/flex_results.py:12:0: E0401: Unable to import 'pydantic' (import-error)
+agentlib_flexquant/data_structures/flex_results.py:13:0: E0401: Unable to import 'agentlib.core.agent' (import-error)
+agentlib_flexquant/data_structures/flex_results.py:14:0: E0401: Unable to import 'agentlib.modules.simulation.simulator' (import-error)
+agentlib_flexquant/data_structures/flex_results.py:15:0: E0401: Unable to import 'agentlib.utils' (import-error)
+agentlib_flexquant/data_structures/flex_results.py:16:0: E0401: Unable to import 'agentlib_mpc.modules.mpc' (import-error)
+agentlib_flexquant/data_structures/flex_results.py:17:0: E0401: Unable to import 'agentlib_mpc.utils' (import-error)
+agentlib_flexquant/data_structures/flex_results.py:18:0: E0401: Unable to import 'agentlib_mpc.utils.analysis' (import-error)
+agentlib_flexquant/data_structures/flex_results.py:47:4: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/data_structures/flex_results.py:61:4: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/data_structures/flex_results.py:65:0: R0902: Too many instance attributes (29/7) (too-many-instance-attributes)
+agentlib_flexquant/data_structures/flex_results.py:111:4: R0913: Too many arguments (6/5) (too-many-arguments)
+agentlib_flexquant/data_structures/flex_results.py:163:65: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/data_structures/flex_results.py:258:72: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/data_structures/flex_results.py:463:12: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
+************* Module agentlib_flexquant.data_structures.globals
+agentlib_flexquant/data_structures/globals.py:17:0: C0103: Class name "INTEGRATION_METHOD" doesn't conform to PascalCase naming style (invalid-name)
+************* Module agentlib_flexquant.data_structures.market
+agentlib_flexquant/data_structures/market.py:10:0: E0401: Unable to import 'pydantic' (import-error)
+agentlib_flexquant/data_structures/market.py:15:0: R0903: Too few public methods (0/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/market.py:43:0: R0903: Too few public methods (0/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/market.py:55:0: R0903: Too few public methods (0/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/market.py:63:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/market.py:114:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+************* Module agentlib_flexquant.data_structures.mpcs
+agentlib_flexquant/data_structures/mpcs.py:9:0: E0401: Unable to import 'pydantic' (import-error)
+agentlib_flexquant/data_structures/mpcs.py:10:0: E0401: Unable to import 'agentlib_mpc.data_structures.mpc_datamodels' (import-error)
+agentlib_flexquant/data_structures/mpcs.py:11:0: E0401: Unable to import 'pydantic' (import-error)
+agentlib_flexquant/data_structures/mpcs.py:17:0: R0903: Too few public methods (0/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/mpcs.py:39:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/mpcs.py:118:0: R0903: Too few public methods (0/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/mpcs.py:149:0: R0903: Too few public methods (0/2) (too-few-public-methods)
+************* Module agentlib_flexquant.data_structures.flex_kpis
+agentlib_flexquant/data_structures/flex_kpis.py:13:0: C0301: Line too long (114/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:63:0: C0301: Line too long (110/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:96:0: C0301: Line too long (127/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:99:0: C0301: Line too long (118/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:100:0: C0301: Line too long (105/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:210:0: C0301: Line too long (107/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:215:0: C0301: Line too long (116/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:216:0: C0301: Line too long (116/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:217:0: C0301: Line too long (114/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:218:0: C0301: Line too long (109/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:229:0: C0301: Line too long (123/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:230:0: C0301: Line too long (146/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:234:0: C0301: Line too long (103/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:267:0: C0301: Line too long (144/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:281:0: C0301: Line too long (101/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:288:0: C0301: Line too long (109/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:294:0: C0301: Line too long (114/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:295:0: C0301: Line too long (151/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:304:0: C0301: Line too long (101/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:305:0: C0301: Line too long (107/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:328:0: C0301: Line too long (188/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:335:0: C0301: Line too long (196/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:336:0: C0301: Line too long (158/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:341:0: C0301: Line too long (111/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:343:0: C0301: Line too long (107/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:358:0: C0301: Line too long (186/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:359:0: C0301: Line too long (117/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:482:0: C0301: Line too long (126/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:518:0: C0301: Line too long (156/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:535:0: C0301: Line too long (163/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:542:0: C0301: Line too long (107/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:8:0: E0401: Unable to import 'numpy' (import-error)
+agentlib_flexquant/data_structures/flex_kpis.py:9:0: E0401: Unable to import 'pandas' (import-error)
+agentlib_flexquant/data_structures/flex_kpis.py:10:0: E0401: Unable to import 'pydantic' (import-error)
+agentlib_flexquant/data_structures/flex_kpis.py:11:0: E0401: Unable to import 'agentlib_mpc.utils' (import-error)
+agentlib_flexquant/data_structures/flex_kpis.py:33:4: R0903: Too few public methods (0/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/flex_kpis.py:17:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/flex_kpis.py:65:8: C0103: Attribute name "dt" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/data_structures/flex_kpis.py:62:8: C0103: Variable name "dt" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/data_structures/flex_kpis.py:84:4: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+agentlib_flexquant/data_structures/flex_kpis.py:183:4: R0913: Too many arguments (12/5) (too-many-arguments)
+agentlib_flexquant/data_structures/flex_kpis.py:233:4: R0913: Too many arguments (6/5) (too-many-arguments)
+agentlib_flexquant/data_structures/flex_kpis.py:293:39: C2801: Unnecessarily calls dunder method __deepcopy__. Use copy.deepcopy function. (unnecessary-dunder-call)
+agentlib_flexquant/data_structures/flex_kpis.py:314:8: R1705: Unnecessary "else" after "return", remove the "else" and de-indent the code inside it (no-else-return)
+agentlib_flexquant/data_structures/flex_kpis.py:327:39: C2801: Unnecessarily calls dunder method __deepcopy__. Use copy.deepcopy function. (unnecessary-dunder-call)
+agentlib_flexquant/data_structures/flex_kpis.py:335:4: R0913: Too many arguments (6/5) (too-many-arguments)
+agentlib_flexquant/data_structures/flex_kpis.py:357:38: C2801: Unnecessarily calls dunder method __deepcopy__. Use copy.deepcopy function. (unnecessary-dunder-call)
+agentlib_flexquant/data_structures/flex_kpis.py:416:0: R0902: Too many instance attributes (11/7) (too-many-instance-attributes)
+agentlib_flexquant/data_structures/flex_kpis.py:466:4: R0903: Too few public methods (0/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/flex_kpis.py:471:4: R0913: Too many arguments (6/5) (too-many-arguments)
+agentlib_flexquant/data_structures/flex_kpis.py:497:12: W0127: Assigning the same variable 'series' to itself (self-assigning-variable)
+agentlib_flexquant/data_structures/flex_kpis.py:14:0: W0611: Unused strip_multi_index imported from agentlib_flexquant.utils.data_handling (unused-import)
+************* Module agentlib_flexquant.data_structures.flexquant
+agentlib_flexquant/data_structures/flexquant.py:122:0: C0301: Line too long (109/100) (line-too-long)
+agentlib_flexquant/data_structures/flexquant.py:123:0: C0301: Line too long (127/100) (line-too-long)
+agentlib_flexquant/data_structures/flexquant.py:8:0: E0401: Unable to import 'pydantic' (import-error)
+agentlib_flexquant/data_structures/flexquant.py:9:0: E0401: Unable to import 'pydantic' (import-error)
+agentlib_flexquant/data_structures/flexquant.py:10:0: E0401: Unable to import 'agentlib.core.agent' (import-error)
+agentlib_flexquant/data_structures/flexquant.py:11:0: E0401: Unable to import 'agentlib.core.errors' (import-error)
+agentlib_flexquant/data_structures/flexquant.py:12:0: E0401: Unable to import 'agentlib_mpc.data_structures.mpc_datamodels' (import-error)
+agentlib_flexquant/data_structures/flexquant.py:26:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/flexquant.py:55:0: R0903: Too few public methods (0/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/flexquant.py:66:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/flexquant.py:174:4: C0116: Missing function or method docstring (missing-function-docstring)
+agentlib_flexquant/data_structures/flexquant.py:8:0: W0611: Unused import pydantic (unused-import)
+************* Module agentlib_flexquant.optimization_backends.constrained_cia
+agentlib_flexquant/optimization_backends/constrained_cia.py:7:0: C0301: Line too long (101/100) (line-too-long)
+agentlib_flexquant/optimization_backends/constrained_cia.py:14:29: W1401: Anomalous backslash in string: '\ '. String constant might be missing an r prefix. (anomalous-backslash-in-string)
+agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: E0401: Unable to import 'pydantic' (import-error)
+agentlib_flexquant/optimization_backends/constrained_cia.py:2:0: E0401: Unable to import 'numpy' (import-error)
+agentlib_flexquant/optimization_backends/constrained_cia.py:3:0: E0401: Unable to import 'agentlib.core.errors' (import-error)
+agentlib_flexquant/optimization_backends/constrained_cia.py:4:0: E0401: Unable to import 'agentlib_mpc.optimization_backends.casadi_.minlp_cia' (import-error)
+agentlib_flexquant/optimization_backends/constrained_cia.py:5:0: E0401: Unable to import 'agentlib_mpc.optimization_backends.casadi_.core.casadi_backend' (import-error)
+agentlib_flexquant/optimization_backends/constrained_cia.py:6:0: E0401: Unable to import 'agentlib_mpc.data_structures.mpc_datamodels' (import-error)
+agentlib_flexquant/optimization_backends/constrained_cia.py:12:4: W0707: Consider explicitly re-raising using 'except ImportError as exc' and 'raise OptionalDependencyError(used_object='Pycombina', dependency_install='.\\ after cloning pycombina. Instructions: https://pycombina.readthedocs.io/en/latest/install.html#') from exc' (raise-missing-from)
+agentlib_flexquant/optimization_backends/constrained_cia.py:19:0: C0115: Missing class docstring (missing-class-docstring)
+agentlib_flexquant/optimization_backends/constrained_cia.py:27:4: C0115: Missing class docstring (missing-class-docstring)
+agentlib_flexquant/optimization_backends/constrained_cia.py:27:4: R0903: Too few public methods (0/2) (too-few-public-methods)
+agentlib_flexquant/optimization_backends/constrained_cia.py:19:0: R0903: Too few public methods (0/2) (too-few-public-methods)
+agentlib_flexquant/optimization_backends/constrained_cia.py:32:0: C0115: Missing class docstring (missing-class-docstring)
+agentlib_flexquant/optimization_backends/constrained_cia.py:36:4: W0246: Useless parent or super() delegation in method '__init__' (useless-parent-delegation)
+agentlib_flexquant/optimization_backends/constrained_cia.py:39:4: C0116: Missing function or method docstring (missing-function-docstring)
+agentlib_flexquant/optimization_backends/constrained_cia.py:32:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
+==agentlib_flexquant.modules.baseline_mpc:[282:434]
 ==agentlib_flexquant.modules.shadow_mpc:[333:485]
         if not self.config.set_outputs:
             return
@@ -604,8 +595,8 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
                 self.flex_results.loc[(
                     self.env.now, current_sim_time + t_sample), output] = self.flex_model.get_output(
                     output).value (duplicate-code)
-agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[68:187]
+agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
+==agentlib_flexquant.modules.baseline_mpc:[71:194]
 ==agentlib_flexquant.modules.shadow_mpc:[333:449]
         if not self.config.set_outputs:
             return
@@ -723,8 +714,8 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
         '''simulate with flex model over the prediction horizon'''
 
         # get control and input values from the mpc optimization result (duplicate-code)
-agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[79:140]
+agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
+==agentlib_flexquant.modules.baseline_mpc:[82:147]
 ==agentlib_flexquant.modules.shadow_mpc:[61:119]
         if self.flex_results is not None:
             for output in self.var_ref.outputs:
@@ -784,8 +775,8 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
         self.flex_results.index = self.flex_results.index.get_level_values(1)
 
     def register_callbacks(self): (duplicate-code)
-agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[140:191]
+agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
+==agentlib_flexquant.modules.baseline_mpc:[147:198]
 ==agentlib_flexquant.modules.shadow_mpc:[169:220]
         index_coll = pd.MultiIndex.from_arrays(
             [[self.env.now] * len(result_df.index), result_df.index],
@@ -838,8 +829,8 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
         input_values = result_df.parameter[self.var_ref.inputs].dropna()
 
         # Get the simulation time step index (duplicate-code)
-agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[344:391]
+agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
+==agentlib_flexquant.modules.baseline_mpc:[351:398]
 ==agentlib_flexquant.modules.shadow_mpc:[169:216]
         index_coll = pd.MultiIndex.from_arrays(
             [[self.env.now] * len(result_df.index), result_df.index],
@@ -888,8 +879,8 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
         '''simulate with flex model over the prediction horizon'''
 
         # get control and input values from the mpc optimization result (duplicate-code)
-agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[194:222]
+agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
+==agentlib_flexquant.modules.baseline_mpc:[201:229]
 ==agentlib_flexquant.modules.shadow_mpc:[223:250]
         control_values_full = control_values.copy().reindex(sim_time_index, method='ffill')
         input_values_full = input_values.copy().reindex(sim_time_index, method='nearest')
@@ -918,8 +909,8 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
                     self.env.now, current_sim_time + t_sample), output] = self.flex_model.get_output(
                     output).value
  (duplicate-code)
-agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[204:222]
+agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
+==agentlib_flexquant.modules.baseline_mpc:[211:229]
 ==agentlib_flexquant.modules.shadow_mpc:[469:485]
             for input_var, value in zip(self.var_ref.inputs, input_values_full.loc[current_sim_time]):
                 self.flex_model.set(input_var, value)
@@ -936,9 +927,11 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             for output in self.var_ref.outputs:
                 self.flex_results.loc[(
                     self.env.now, current_sim_time + t_sample), output] = self.flex_model.get_output(
-                    output).value (duplicate-code)
-agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[411:427]
+                    output).value
+
+ (duplicate-code)
+agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
+==agentlib_flexquant.modules.baseline_mpc:[418:434]
 ==agentlib_flexquant.modules.shadow_mpc:[233:250]
             for input_var, value in zip(self.var_ref.inputs, input_values_full.loc[current_sim_time]):
                 self.flex_model.set(input_var, value)
@@ -956,7 +949,7 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
                 self.flex_results.loc[(
                     self.env.now, current_sim_time + t_sample), output] = self.flex_model.get_output(
                     output).value (duplicate-code)
-agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
+agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.data_structures.flex_results:[261:270]
 ==agentlib_flexquant.generate_flex_agents:[833:842]
         sim_module_config = next(
@@ -967,24 +960,9 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             ),
             None,
         )
-        # instantiate and validate sim agent config (duplicate-code)
-agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[239:257]
-==agentlib_flexquant.modules.shadow_mpc:[269:281]
-        if self.config.casadi_sim_time_step > 0:
-            # generate a separate flex_model for integration to ensure the model used in MPC optimization remains unaffected
-            self.flex_model = type(self.model)(dt=self.config.casadi_sim_time_step)
-            # generate the filename for the simulation results
-            self.res_file_flex = self.config.optimization_backend['results_file'].replace('mpc', 'mpc_sim')
-            # clear the casadi simulator result at the first time step if already exists
-            try:
-                os.remove(self.res_file_flex)
-            except:
-                pass
-
-    def register_callbacks(self): (duplicate-code)
-agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[31:50]
+        # convert filename string to path and extract the name (duplicate-code)
+agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
+==agentlib_flexquant.modules.baseline_mpc:[246:264]
 ==agentlib_flexquant.modules.shadow_mpc:[42:56]
         if self.config.casadi_sim_time_step > 0:
             # generate a separate flex_model for integration to ensure the model used in MPC optimization remains unaffected
@@ -997,15 +975,10 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             except:
                 pass
 
-
-    def pre_computation_hook(self):
-        """Calculate relative start and end times for flexibility provision.
-
-        When in provision mode, computes the relative timing for flexibility
-        events based on the external power profile timestamps and current
-        environment time.
-        """ (duplicate-code)
-agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
+    def set_output(self, solution):
+        """Takes the solution from optimization backend and sends it to AgentVariables."""
+        # Output must be defined in the config as "type"="pd.Series" (duplicate-code)
+agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.flexibility_indicator:[447:470]
 ==agentlib_flexquant.modules.flexibility_market:[87:96]
         results_file = self.config.results_file
@@ -1017,8 +990,8 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             return None
 
     def register_callbacks(self): (duplicate-code)
-agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[188:201]
+agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
+==agentlib_flexquant.modules.baseline_mpc:[195:208]
 ==agentlib_flexquant.modules.shadow_mpc:[450:463]
         input_values = result_df.parameter[self.var_ref.inputs].dropna()
 
@@ -1033,7 +1006,7 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             current_sim_time = i * sim_time_step
 
             # Apply control and input values from the appropriate MPC step (duplicate-code)
-agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
+agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.flexibility_indicator:[323:331]
 ==agentlib_flexquant.modules.flexibility_market:[61:69]
         if self.results_file and self.results_file.suffix != ".csv":
@@ -1046,5 +1019,5 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
  (duplicate-code)
 
 -----------------------------------
-Your code has been rated at 6.54/10
+Your code has been rated at 6.58/10
 
