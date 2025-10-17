@@ -6,13 +6,18 @@ import os
 import math
 import numpy as np
 import pandas as pd
-from typing import Optional
+from typing import Optional, Dict
 from pydantic import Field
 import agentlib_flexquant.data_structures.globals as glbs
 from agentlib import AgentVariable
 from agentlib_mpc.modules import mpc_full, minlp_mpc
+from agentlib_mpc.data_structures.mpc_datamodels import Results
+from agentlib_flexquant.data_structures.globals import full_trajectory_suffix
 
 class FlexibilityBaselineMPCConfig(mpc_full.MPCConfig):
+
+    # define an AgentVariable list for the full control trajectory, since use MPCVariable output affects the optimization result
+    full_controls: list[AgentVariable] = Field(default=[])
 
     casadi_sim_time_step: int = Field(default=0, description="Time step for simulation with Casadi simulator. Value is read from FlexQuantConfig")
     power_variable_name: str = Field(default=None, description="Name of the power variable in the baseline mpc model.")
@@ -25,7 +30,16 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
     config: FlexibilityBaselineMPCConfig
 
     def __init__(self, config, agent):
-        super().__init__(config, agent)
+        super().__init__(config, agent) #TODO: *args, **kwargs
+        # initialize a control mapping dictionary which maps the full control names to the control names
+        self._controls_name_mapping: Dict[str, str] = {}
+
+        for full_control in self.config.full_controls:
+            # add full_control to the variables dictionary, so that the set function can be applied to it
+            self._variables_dict[full_control.name] = full_control
+            # fill the mapping dictionary
+            self._controls_name_mapping[full_control.name] = full_control.name.replace(full_trajectory_suffix, "")
+
         # initialize flex_results with None
         self.flex_results = None
         # set up necessary components if simulation is enabled
@@ -62,6 +76,14 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
                 "rel_end",
                 self.get("_P_external").value.index[-1] - self.env.time + timestep,
             )
+
+    def set_actuation(self, solution: Results):
+        super().set_actuation(solution)
+        for full_control in self.config.full_controls:
+            # get the corresponding control name
+            control = self._controls_name_mapping[full_control.name]
+            # set value to full_control
+            self.set(full_control.name, solution.df.variable[control].ffill())
 
     def set_output(self, solution):
         """Takes the solution from optimization backend and sends it to AgentVariables."""
@@ -222,6 +244,9 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
 
 class FlexibilityBaselineMINLPMPCConfig(minlp_mpc.MINLPMPCConfig):
 
+    # define an AgentVariable list for the full control trajectory, since use MPCVariable output affects the optimization result
+    full_controls: list[AgentVariable] = Field(default=[])
+
     casadi_sim_time_step: int = Field(default=0, description="Time step for simulation with Casadi simulator. Value is read from FlexQuantConfig")
     power_variable_name: str = Field(default=None, description="Name of the power variable in the baseline mpc model.")
     storage_variable_name: Optional[str] = Field(default=None, description="Name of the storage variable in the baseline mpc model.")
@@ -233,7 +258,16 @@ class FlexibilityBaselineMINLPMPC(minlp_mpc.MINLPMPC):
     config: FlexibilityBaselineMINLPMPCConfig
 
     def __init__(self, config, agent):
-        super().__init__(config, agent)
+        super().__init__(config, agent) #TODO: *args, **kwargs
+        # initialize a control mapping dictionary which maps the full control names to the control names
+        self._controls_name_mapping: Dict[str, str] = {}
+
+        for full_control in self.config.full_controls:
+            # add full_control to the variables dictionary, so that the set function can be applied to it
+            self._variables_dict[full_control.name] = full_control
+            # fill the mapping dictionary
+            self._controls_name_mapping[full_control.name] = full_control.name.replace(full_trajectory_suffix, "")
+
         # initialize flex_results with None
         self.flex_results = None
         # set up necessary components if simulation is enabled
@@ -269,6 +303,14 @@ class FlexibilityBaselineMINLPMPC(minlp_mpc.MINLPMPC):
                 "rel_end",
                 self.get("_P_external").value.index[-1] - self.env.time + timestep,
             )
+
+    def set_actuation(self, solution: Results):
+        super().set_actuation(solution)
+        for full_control in self.config.full_controls:
+            # get the corresponding control name
+            control = self._controls_name_mapping[full_control.name]
+            # set value to full_control
+            self.set(full_control.name, solution.df.variable[control].ffill())
 
     def set_output(self, solution):
         """Takes the solution from optimization backend and sends it to AgentVariables."""

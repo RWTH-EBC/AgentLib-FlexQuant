@@ -33,6 +33,8 @@ MODULE_NAME_DICT = all_module_types
 MPC_CONFIG_TYPE: str = "agentlib_mpc.mpc"
 BASELINEMPC_CONFIG_TYPE: str = "agentlib_flexquant.baseline_mpc"
 SHADOWMPC_CONFIG_TYPE: str = "agentlib_flexquant.shadow_mpc"
+BASELINEMINLPMPC_CONFIG_TYPE: str = "agentlib_flexquant.baseline_minlp_mpc"
+SHADOWMINLPMPC_CONFIG_TYPE: str = "agentlib_flexquant.shadow_minlp_mpc"
 INDICATOR_CONFIG_TYPE: str = "agentlib_flexquant.flexibility_indicator"
 MARKET_CONFIG_TYPE: str = "agentlib_flexquant.flexibility_market"
 SIMULATOR_CONFIG_TYPE: str = "simulator"
@@ -42,7 +44,7 @@ def get_module_type_matching_dict(dictionary: dict) -> (dict, dict):
     """Create two dictionaries, which map the modules types of the agentlib_mpc modules
     to those of the flexquant modules.
 
-    This is done by using the MODULE_TYPE_DICT.
+    This is done by using the MODULE_NAME_DICT.
 
     """
     # Create dictionaries to store keys grouped by values
@@ -105,7 +107,14 @@ def get_module(config: AgentConfig, module_type: str) -> T:
         )
 
 
-def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig) -> dict:
+def get_flex_mpc_module_config(agent_config: AgentConfig, module_config: BaseModuleConfig, module_type: str):
+    """Get a flexquant module config from an original agentlib module config."""
+    config_dict = module_config.model_dump()
+    config_dict['type'] = module_type
+    return MODULE_TYPE_DICT[module_type](**config_dict, _agent_id=agent_config.id)
+
+
+def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig)-> dict:
     """Remove unnecessary fields from the module to keep the created json simple."""
     excluded_fields = [
         "rdf_class",
@@ -128,7 +137,7 @@ def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig) -> dict:
             delete_list.append("ub")
         return delete_list
 
-    parent_dict = module.dict(exclude_defaults=True)
+    parent_dict = module.model_dump(exclude_defaults=True)
     # update every variable with a dict excluding the defined fields
     if "parameters" in parent_dict:
         parent_dict["parameters"] = [
@@ -147,10 +156,20 @@ def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig) -> dict:
         parent_dict["controls"] = [
             control.dict(exclude=check_bounds(control)) for control in module.controls
         ]
+    if "binary_controls" in parent_dict:
+        parent_dict["binary_controls"] = [
+            binary_control.dict(exclude=check_bounds(binary_control)) for binary_control in module.binary_controls
+        ]
     if "states" in parent_dict:
         parent_dict["states"] = [
             state.dict(exclude=check_bounds(state)) for state in module.states
         ]
+    if "full_controls" in parent_dict:
+        parent_dict["full_controls"] = [
+            full_control.dict(exclude=(lambda ex: ex.remove('shared') or ex)(check_bounds(full_control)))
+                                        for full_control in module.full_controls
+        ]
+
     return parent_dict
 
 

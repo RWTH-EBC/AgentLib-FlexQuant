@@ -12,7 +12,7 @@ from typing import Dict, Union, Optional
 from collections.abc import Iterable
 from agentlib.core.datamodels import AgentVariable
 from agentlib_mpc.modules import mpc_full, minlp_mpc
-from agentlib_flexquant.utils.data_handling import fill_nans, MEAN
+from agentlib_flexquant.utils.data_handling import fill_nans, MEAN, strip_multi_index
 from agentlib_flexquant.data_structures.globals import (
     full_trajectory_prefix,
     full_trajectory_suffix,
@@ -119,14 +119,13 @@ class FlexibilityShadowMPC(mpc_full.MPC):
     def register_callbacks(self):
         for control_var in self.config.controls:
             self.agent.data_broker.register_callback(
-                name=f"{full_trajectory_prefix}{control_var.name}{full_trajectory_suffix}",
-                alias=f"{full_trajectory_prefix}{control_var.name}{full_trajectory_suffix}",
+                name=f"{control_var.name+full_trajectory_suffix}",
+                alias=f"{control_var.name+full_trajectory_suffix}",
                 callback=self.calc_flex_callback,
             )
         for input_var in self.config.inputs:
-            if input_var.name.replace(full_trajectory_prefix, "", 1).replace(
-                full_trajectory_suffix, ""
-            ) in [control_var.name for control_var in self.config.controls]:
+            adapted_name = input_var.name.replace(full_trajectory_suffix, "")
+            if adapted_name in [control_var.name for control_var in self.config.controls]:
                 self._full_controls[input_var.name] = input_var
 
         super().register_callbacks()
@@ -145,14 +144,15 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         if self.agent.config.id == inp.source.agent_id:
             return
 
-        vals = inp.value
+        # get the value of the input
+        vals = strip_multi_index(inp.value) #TODO: check if it works
         if vals.isna().any():
             vals = fill_nans(series=vals, method=MEAN)
-
-        # the MPC Predictions starts at t=env.now not t=0
-        vals.index += self.env.time
+        # add time shift env.now to the mpc prediction index if it starts at t=0
+        if vals.index[0] == 0:
+            vals.index += self.env.time
+        # update value in the mapping dictionary
         self._full_controls[name].value = vals
-        self.set(name, vals)
         # make sure all controls are set
         if all(x.value is not None for x in self._full_controls.values()):
             self.do_step()
@@ -281,14 +281,13 @@ class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
     def register_callbacks(self):
         for control_var in self.config.controls + self.config.binary_controls:
             self.agent.data_broker.register_callback(
-                name=f"{full_trajectory_prefix}{control_var.name}{full_trajectory_suffix}",
-                alias=f"{full_trajectory_prefix}{control_var.name}{full_trajectory_suffix}",
+                name=f"{control_var.name}{full_trajectory_suffix}",
+                alias=f"{control_var.name}{full_trajectory_suffix}",
                 callback=self.calc_flex_callback,
             )
         for input_var in self.config.inputs:
-            if input_var.name.replace(full_trajectory_prefix, "", 1).replace(
-                full_trajectory_suffix, ""
-            ) in [
+            adapted_name = input_var.name.replace(full_trajectory_suffix, "")
+            if adapted_name in [
                 control_var.name
                 for control_var in self.config.controls + self.config.binary_controls
             ]:
@@ -310,14 +309,17 @@ class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
         if self.agent.config.id == inp.source.agent_id:
             return
 
-        vals = inp.value
-        if vals.isna().any():
-            vals = fill_nans(vals, method=MEAN)
-
-        # the MPC Predictions starts at t=env.now not t=0
-        vals.index += self.env.time
+            # get the value of the input
+            vals = strip_multi_index(inp.value) #TODO: check if it works
+            if vals.isna().any():
+                vals = fill_nans(series=vals, method=MEAN)
+            # add time shift env.now to the mpc prediction index if it starts at t=0
+            if vals.index[0] == 0:
+                vals.index += self.env.time
+        # update value in the mapping dictionary
         self._full_controls[name].value = vals
-        self.set(name, vals)
+        # update the value of the variable in the model if we want to limit the binary control in the market time during optimization
+        self.model.set(name, vals)
         # make sure all controls are set
         if all(x.value is not None for x in self._full_controls.values()):
             self.do_step()
