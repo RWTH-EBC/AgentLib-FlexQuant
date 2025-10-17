@@ -72,7 +72,7 @@ class InputsForCalculateFlexCosts(BaseModel):
         if self.use_constant_electricity_price and np.isnan(
             self.const_electricity_price
         ):
-            raise Exception(
+            raise ValueError(
                 (
                     f"Constant electricity price must have a valid value in float if it is "
                     f"to be used for calculation. "

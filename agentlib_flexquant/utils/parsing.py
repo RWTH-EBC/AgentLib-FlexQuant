@@ -27,7 +27,7 @@ CASADI_OUTPUT = "CasadiOutput"
 
 # String templates
 INPUT_TEMPLATE = Template(
-    "$class_name(name='$name', value=$value, unit='$unit', description='$description')"
+    "$class_name(name='$name', value=$value, unit='$unit', type='$type', description='$description')"
 )
 PARAMETER_TEMPLATE = Template(
     "$class_name(name='$name', value=$value, unit='$unit', description='$description')"
@@ -257,17 +257,16 @@ class SetupSystemModifier(ast.NodeTransformer):
         """
         # loop over config object and modify fields
         for body in node.body:
-            # add the time and full control trajectory inputs
+            # add the time and full baseline control trajectory as inputs
             if body.target.id == "inputs":
                 for control in self.controls:
                     body.value.elts.append(
                         add_input(
-                            f"{full_trajectory_prefix}{control.name}"
-                            f"{full_trajectory_suffix}",
-                            "pd.Series([0])",
-                            "W",
+                            f"{control.name}{full_trajectory_suffix}",
+                            None,
+                            control.unit,
+                            "full control trajectory output of baseline mpc",
                             "pd.Series",
-                            "full control output",
                         )
                     )
                 # also include binary controls
@@ -275,11 +274,10 @@ class SetupSystemModifier(ast.NodeTransformer):
                     for control in self.binary_controls:
                         body.value.elts.append(
                             add_input(
-                                f"{full_trajectory_prefix}{control.name}"
-                                f"{full_trajectory_suffix}",
-                                "pd.Series([0])",
-                                "W",
-                                "full control output",
+                                f"{control.name}{full_trajectory_suffix}",
+                                None,
+                                control.unit,
+                                "full control trajectory output of baseline mpc",
                                 "pd.Series",
                             )
                         )
@@ -321,30 +319,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                 ):
                     # Complex case with concatenated lists or tuple
                     value_list = self.get_leftmost_list(body.value)
-                for control in self.controls:
-                    value_list.elts.append(
-                        add_output(
-                            f"{full_trajectory_prefix}{control.name}"
-                            f"{full_trajectory_suffix}",
-                            "W",
-                            "pd.Series",
-                            "pd.Series([0])",
-                            "full control output",
-                        )
-                    )
-                # also include binary controls
-                if self.binary_controls:
-                    for control in self.binary_controls:
-                        body.value.elts.append(
-                            add_output(
-                                f"{full_trajectory_prefix}{control.name}"
-                                f"{full_trajectory_suffix}",
-                                "W",
-                                "pd.Series",
-                                "pd.Series([0])",
-                                "full control output",
-                            )
-                        )
+
             # add the flexibility inputs
             if body.target.id == "inputs":
                 if isinstance(body.value, ast.List):
@@ -423,7 +398,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                             0,
                             ast.parse(
                                 f"{control.name}_upper = ca.if_else(self.time < self.market_time.sym, "
-                                f"self.{full_trajectory_prefix}{control.name}{full_trajectory_suffix}.sym, "
+                                f"self.{control.name}{full_trajectory_suffix}.sym, "
                                 f"self.{control.name}.ub)"
                             ).body[0],
                         )
@@ -431,7 +406,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                             0,
                             ast.parse(
                                 f"{control.name}_lower = ca.if_else(self.time < self.market_time.sym, "
-                                f"self.{full_trajectory_prefix}{control.name}{full_trajectory_suffix}.sym, "
+                                f"self.{control.name}{full_trajectory_suffix}.sym, "
                                 f"self.{control.name}.lb)"
                             ).body[0],
                         )
@@ -444,35 +419,6 @@ class SetupSystemModifier(ast.NodeTransformer):
                             .value
                         )
                         item.value.elts.append(new_element)
-                    # also include binary controls
-                    if self.binary_controls:
-                        for ind, control in enumerate(self.binary_controls):
-                            # insert control boundaries at beginning of function
-                            node.body.insert(
-                                0,
-                                ast.parse(
-                                    f"{control.name}_upper = ca.if_else(self.time < self.market_time.sym, "
-                                    f"self.{full_trajectory_prefix}{control.name}{full_trajectory_suffix}.sym, "
-                                    f"self.{control.name}.ub)"
-                                ).body[0],
-                            )
-                            node.body.insert(
-                                0,
-                                ast.parse(
-                                    f"{control.name}_lower = ca.if_else(self.time < self.market_time.sym, "
-                                    f"self.{full_trajectory_prefix}{control.name}{full_trajectory_suffix}.sym, "
-                                    f"self.{control.name}.lb)"
-                                ).body[0],
-                            )
-                            # append to constraints
-                            new_element = (
-                                ast.parse(
-                                    f"({control.name}_lower, self.{control.name}, {control.name}_upper)"
-                                )
-                                .body[0]
-                                .value
-                            )
-                            item.value.elts.append(new_element)
                     break
         # loop through setup_system function to find return statement
         for i, stmt in enumerate(node.body):
@@ -509,29 +455,7 @@ class SetupSystemModifier(ast.NodeTransformer):
             node: The function definition node of setup_system.
 
         """
-        # set the control trajectories with the respective variables
-        if self.binary_controls:
-            controls_list = self.controls + self.binary_controls
-        else:
-            controls_list = self.controls
-        full_traj_list = [
-            ast.Assign(
-                targets=[
-                    ast.Attribute(
-                        value=ast.Name(id="self", ctx=ast.Load()),
-                        attr=f"{full_trajectory_prefix}{control.name}"
-                        f"{full_trajectory_suffix}.alg",
-                        ctx=ast.Store(),
-                    )
-                ],
-                value=ast.Attribute(
-                    value=ast.Name(id="self", ctx=ast.Load()),
-                    attr=control.name,
-                    ctx=ast.Load(),
-                ),
-            )
-            for control in controls_list
-        ]
+
         # loop through setup_system function to find return statement
         for i, stmt in enumerate(node.body):
             if isinstance(stmt, ast.Return):
@@ -556,7 +480,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                     ),
                 ]
                 # append new variables to end of function
-                node.body[i:] = full_traj_list + new_body
+                node.body[i:] = new_body
                 break
 
 
