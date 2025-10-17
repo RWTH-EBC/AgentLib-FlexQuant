@@ -44,8 +44,8 @@ class SingleOptions(pydantic.BaseModel):
     """Configuration options for single offer acceptance market behavior."""
 
     type: Literal["single"]
-    start_time: float = pydantic.Field(
-        description="After this time, the first available flex offer" " is accepted"
+    offer_acceptance_time: float = pydantic.Field(
+        description="After this time, the first available flex offer is accepted"
     )
     direction: FlexibilityDirections = pydantic.Field(
         default="positive", description="Direction of the flexibility"
@@ -84,10 +84,15 @@ class MarketSpecifications(pydantic.BaseModel):
         discriminator="type",
     )
 
-    flex_power_feedback_method: Literal[COLLOCATION, CONSTANT] = pydantic.Field(
+    accepted_offer_sample_points: Literal[COLLOCATION, CONSTANT] = pydantic.Field(
         default='collocation',
-        description="Method defining how to send the accepted flexibility power back to baseline mpc so that the system can deliver it."
-                    "Set to constant if the power only depends on control or if system has low inertial. Otherwise, use collocation.",
+        description="Method defining how to send the accepted flexibility power back"
+                    "to the baseline mpc so that the system can deliver it. "
+                    "This is relevant for collocation, as the power profile is only "
+                    "defined at the collocation points. If you choose constant here, "
+                    "the values are averaged and set for the whole time step."
+                    "Set to constant if the power only depends on control or if "
+                    "system has low inertial. Otherwise, use collocation.",
     )
 
     # Root validator to automatically populate the options.type from the top-level type

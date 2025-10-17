@@ -177,7 +177,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
 
                 if profile is not None:
                     # reindex the profile to the mpc output time grid
-                    flex_power_feedback_method = self.config.market_specs.flex_power_feedback_method
+                    flex_power_feedback_method = self.config.market_specs.accepted_offer_sample_points
                     if flex_power_feedback_method == glbs.COLLOCATION:
                         profile = profile.reindex(self.get(glbs.COLLOCATION_TIME_GRID).value)
                     elif flex_power_feedback_method == glbs.CONSTANT:
@@ -204,11 +204,11 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         profile = None
         t_sample = self.get(glbs.TIME_STEP).value
         acceptance_time_lower = (
-            self.env.config.offset + self.config.market_specs.options.start_time
+            self.env.config.offset + self.config.market_specs.options.offer_acceptance_time
         )
         acceptance_time_upper = (
             self.env.config.offset
-            + self.config.market_specs.options.start_time
+            + self.config.market_specs.options.offer_acceptance_time
             + t_sample
         )
         if (
@@ -232,7 +232,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
 
             if profile is not None:
                 # reindex the profile to the mpc output time grid
-                flex_power_feedback_method = self.config.market_specs.flex_power_feedback_method
+                flex_power_feedback_method = self.config.market_specs.accepted_offer_sample_points
                 if flex_power_feedback_method == glbs.COLLOCATION:
                     profile = profile.reindex(self.get(glbs.COLLOCATION_TIME_GRID).value)
                 elif flex_power_feedback_method == glbs.CONSTANT:
@@ -267,6 +267,6 @@ class FlexibilityMarketModule(agentlib.BaseModule):
     def process(self):
         while True:
             # End the provision at the appropriate time
-            if self.abs_flex_event_end < self.env.time:
+            if self.abs_flex_event_end <= self.env.time:
                 self.set("in_provision", False)
             yield self.env.timeout(self.env.config.t_sample)

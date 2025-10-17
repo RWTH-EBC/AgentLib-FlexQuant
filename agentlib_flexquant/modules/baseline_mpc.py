@@ -14,9 +14,17 @@ from agentlib_mpc.modules import mpc_full, minlp_mpc
 
 class FlexibilityBaselineMPCConfig(mpc_full.MPCConfig):
 
-    casadi_sim_time_step: int = Field(default=0, description="Time step for simulation with Casadi simulator. Value is read from FlexQuantConfig")
-    power_variable_name: str = Field(default=None, description="Name of the power variable in the baseline mpc model.")
-    storage_variable_name: Optional[str] = Field(default=None, description="Name of the storage variable in the baseline mpc model.")
+    casadi_sim_time_step: int = Field(default=0,
+                                      description="Time step for simulation with Casadi"
+                                                  "simulator. Value is read from "
+                                                  "FlexQuantConfig")
+    power_variable_name: str = Field(default=None,
+                                     description="Name of the power variable in the "
+                                                 "baseline mpc model.")
+    storage_variable_name: Optional[str] = Field(default=None,
+                                                 description="Name of the storage v"
+                                                             "ariable in the baseline "
+                                                             "mpc model.")
 
 
 class FlexibilityBaselineMPC(mpc_full.MPC):
@@ -30,16 +38,17 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
         self.flex_results = None
         # set up necessary components if simulation is enabled
         if self.config.casadi_sim_time_step > 0:
-            # generate a separate flex_model for integration to ensure the model used in MPC optimization remains unaffected
+            # generate a separate flex_model for integration to ensure
+            # the model used in MPC optimization remains unaffected
             self.flex_model = type(self.model)(dt=self.config.casadi_sim_time_step)
             # generate the filename for the simulation results
-            self.res_file_flex = self.config.optimization_backend['results_file'].replace('mpc', 'mpc_sim')
+            self.res_file_flex = (self.config.optimization_backend['results_file']
+                                  .replace('mpc', 'mpc_sim'))
             # clear the casadi simulator result at the first time step if already exists
             try:
                 os.remove(self.res_file_flex)
             except:
                 pass
-
 
     def pre_computation_hook(self):
         """Calculate relative start and end times for flexibility provision.
@@ -49,22 +58,16 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
         environment time.
         """
         if self.get("in_provision").value:
-            timestep = (
-                self.get("_P_external").value.index[1]
-                - self.get("_P_external").value.index[0]
-            )
-            self.set(
-                "rel_start", self.get("_P_external").value.index[0] - self.env.time
-            )
+            self.set("rel_start",
+                     self.get("_P_external").value.index[0] - self.env.time)
             # the provision profile gives a value for the start of a time step.
             # For the end of the flex interval add time step!
-            self.set(
-                "rel_end",
-                self.get("_P_external").value.index[-1] - self.env.time + timestep,
-            )
+            self.set("rel_end",
+                     self.get("_P_external").value.index[-1] - self.env.time)
 
     def set_output(self, solution):
-        """Takes the solution from optimization backend and sends it to AgentVariables."""
+        """Takes the solution from optimization backend and sends it to AgentVariables.
+        """
         # Output must be defined in the config as "type"="pd.Series"
         if not self.config.set_outputs:
             return
@@ -94,7 +97,8 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
                 self.set(output, series)
 
     def sim_flex_model(self, solution):
-        '''simulate the flex model over the preditcion horizon and save results'''
+        '''simulate the flex model over the preditcion horizon and save results
+        '''
 
         # return if sim_time_step is not a positive integer and system is in provision
         if not (self.config.casadi_sim_time_step > 0 and not self.get("in_provision").value):
@@ -134,8 +138,11 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
         # set the flex results format same as mpc result while updating Agentvariable
         self.flex_results.index = self.flex_results.index.get_level_values(1)
 
-    def _initialize_flex_results(self, n_simulation_steps, horizon_length, sim_time_step, result_df):
-        '''Initialize the flex results dataframe with the correct dimension and index and fill with existing results from optimization'''
+    def _initialize_flex_results(self, n_simulation_steps, horizon_length,
+                                 sim_time_step, result_df):
+        '''Initialize the flex results dataframe with the correct dimension and index
+        and fill with existing results from optimization
+        '''
 
         # create MultiIndex for collocation points
         index_coll = pd.MultiIndex.from_arrays(
