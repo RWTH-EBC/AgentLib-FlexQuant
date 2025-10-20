@@ -80,13 +80,18 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">glbs</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentVariable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.modules</span><span class="w"> </span><span class="kn">import</span> <span class="n">mpc_full</span><span class="p">,</span> <span class="n">minlp_mpc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.data_structures.mpc_datamodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">Results</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="kn">import</span> <span class="n">full_trajectory_suffix</span>
 
 <div class="viewcode-block" id="FlexibilityBaselineMPCConfig"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityBaselineMPCConfig</span><span class="p">(</span><span class="n">mpc_full</span><span class="o">.</span><span class="n">MPCConfig</span><span class="p">):</span>
+    <span class="c1"># define an AgentVariable list for the full control trajectory, since use MPCVariable output affects the optimization result</span>
+    <span class="n">full_controls</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AgentVariable</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="p">[])</span>
 
     <span class="n">casadi_sim_time_step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
                                       <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Time step for simulation with Casadi&quot;</span>
@@ -108,6 +113,15 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">agent</span><span class="p">)</span>
+        <span class="c1"># initialize a control mapping dictionary which maps the full control names to the control names</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_controls_name_mapping</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">full_control</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">full_controls</span><span class="p">:</span>
+            <span class="c1"># add full_control to the variables dictionary, so that the set function can be applied to it</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_variables_dict</span><span class="p">[</span><span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">full_control</span>
+            <span class="c1"># fill the mapping dictionary</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_controls_name_mapping</span><span class="p">[</span><span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">full_trajectory_suffix</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
         <span class="c1"># initialize flex_results with None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1"># set up necessary components if simulation is enabled</span>
@@ -138,6 +152,14 @@
             <span class="c1"># For the end of the flex interval add time step!</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;rel_end&quot;</span><span class="p">,</span>
                      <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;_P_external&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FlexibilityBaselineMPC.set_actuation"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.set_actuation">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_actuation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solution</span><span class="p">:</span> <span class="n">Results</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_actuation</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">full_control</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">full_controls</span><span class="p">:</span>
+            <span class="c1"># get the corresponding control name</span>
+            <span class="n">control</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_controls_name_mapping</span><span class="p">[</span><span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+            <span class="c1"># set value to full_control</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">solution</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">variable</span><span class="p">[</span><span class="n">control</span><span class="p">]</span><span class="o">.</span><span class="n">ffill</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="FlexibilityBaselineMPC.set_output"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.set_output">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solution</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Takes the solution from optimization backend and sends it to AgentVariables.</span>
@@ -284,10 +306,13 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">control</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">input_var</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">input_values_full</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">current_sim_time</span><span class="p">]):</span>
+                <span class="c1"># change the type of iterable input, since casadi model can&#39;t deal with iterable</span>
+                <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">input_var</span><span class="p">)</span><span class="o">.</span><span class="n">type</span><span class="p">),</span> <span class="n">Iterable</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">input_var</span><span class="p">)</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">input_var</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
             <span class="c1"># do integration</span>
-            <span class="c1"># reduce the simultion time step so that the total horizon time will not be exceeded</span>
+            <span class="c1"># reduce the simulation time step so that the total horizon time will not be exceeded</span>
             <span class="k">if</span> <span class="n">current_sim_time</span> <span class="o">+</span> <span class="n">sim_time_step</span> <span class="o">&lt;=</span> <span class="n">total_horizon_time</span><span class="p">:</span>
                 <span class="n">t_sample</span> <span class="o">=</span> <span class="n">sim_time_step</span>
             <span class="k">else</span><span class="p">:</span>
@@ -303,6 +328,9 @@
 
 <div class="viewcode-block" id="FlexibilityBaselineMINLPMPCConfig"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityBaselineMINLPMPCConfig</span><span class="p">(</span><span class="n">minlp_mpc</span><span class="o">.</span><span class="n">MINLPMPCConfig</span><span class="p">):</span>
 
+    <span class="c1"># define an AgentVariable list for the full control trajectory, since use MPCVariable output affects the optimization result</span>
+    <span class="n">full_controls</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AgentVariable</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="p">[])</span>
+
     <span class="n">casadi_sim_time_step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Time step for simulation with Casadi simulator. Value is read from FlexQuantConfig&quot;</span><span class="p">)</span>
     <span class="n">power_variable_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the power variable in the baseline mpc model.&quot;</span><span class="p">)</span>
     <span class="n">storage_variable_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the storage variable in the baseline mpc model.&quot;</span><span class="p">)</span></div>
@@ -315,6 +343,15 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">agent</span><span class="p">)</span>
+        <span class="c1"># initialize a control mapping dictionary which maps the full control names to the control names</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_controls_name_mapping</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">full_control</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">full_controls</span><span class="p">:</span>
+            <span class="c1"># add full_control to the variables dictionary, so that the set function can be applied to it</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_variables_dict</span><span class="p">[</span><span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">full_control</span>
+            <span class="c1"># fill the mapping dictionary</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_controls_name_mapping</span><span class="p">[</span><span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">full_trajectory_suffix</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
         <span class="c1"># initialize flex_results with None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1"># set up necessary components if simulation is enabled</span>
@@ -350,6 +387,14 @@
                 <span class="s2">&quot;rel_end&quot;</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;_P_external&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span> <span class="o">+</span> <span class="n">timestep</span><span class="p">,</span>
             <span class="p">)</span></div>
+
+<div class="viewcode-block" id="FlexibilityBaselineMINLPMPC.set_actuation"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.set_actuation">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_actuation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solution</span><span class="p">:</span> <span class="n">Results</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_actuation</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">full_control</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">full_controls</span><span class="p">:</span>
+            <span class="c1"># get the corresponding control name</span>
+            <span class="n">control</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_controls_name_mapping</span><span class="p">[</span><span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+            <span class="c1"># set value to full_control</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">solution</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">variable</span><span class="p">[</span><span class="n">control</span><span class="p">]</span><span class="o">.</span><span class="n">ffill</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="FlexibilityBaselineMINLPMPC.set_output"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.set_output">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solution</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Takes the solution from optimization backend and sends it to AgentVariables.&quot;&quot;&quot;</span>
@@ -491,10 +536,13 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">binary_control</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">input_var</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">input_values_full</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">current_sim_time</span><span class="p">]):</span>
+                <span class="c1"># change the type of iterable input, since casadi model can&#39;t deal with iterable</span>
+                <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">input_var</span><span class="p">)</span><span class="o">.</span><span class="n">type</span><span class="p">),</span> <span class="n">Iterable</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">input_var</span><span class="p">)</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">input_var</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
             <span class="c1"># do integration</span>
-            <span class="c1"># reduce the simultion time step so that the total horizon time will not be exceeded</span>
+            <span class="c1"># reduce the simulation time step so that the total horizon time will not be exceeded</span>
             <span class="k">if</span> <span class="n">current_sim_time</span> <span class="o">+</span> <span class="n">sim_time_step</span> <span class="o">&lt;=</span> <span class="n">total_horizon_time</span><span class="p">:</span>
                 <span class="n">t_sample</span> <span class="o">=</span> <span class="n">sim_time_step</span>
             <span class="k">else</span><span class="p">:</span>

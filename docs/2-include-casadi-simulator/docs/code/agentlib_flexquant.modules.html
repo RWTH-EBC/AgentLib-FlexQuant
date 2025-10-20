@@ -111,6 +111,13 @@ environment time.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.set_actuation">
+<span class="sig-name descname"><span class="pre">set_actuation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solution</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Results</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/baseline_mpc.html#FlexibilityBaselineMINLPMPC.set_actuation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.set_actuation" title="Permalink to this definition"></a></dt>
+<dd><p>Takes the solution from optimization backend and sends the first
+step to AgentVariables.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.set_output">
 <span class="sig-name descname"><span class="pre">set_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solution</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/baseline_mpc.html#FlexibilityBaselineMINLPMPC.set_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.set_output" title="Permalink to this definition"></a></dt>
 <dd><p>Takes the solution from optimization backend and sends it to AgentVariables.</p>
@@ -140,6 +147,7 @@ environment time.</p>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.casadi_sim_time_step" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.casadi_sim_time_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">casadi_sim_time_step</span> <span class="pre">(int)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.full_controls" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.full_controls"><code class="xref py py-obj docutils literal notranslate"><span class="pre">full_controls</span> <span class="pre">(list[agentlib.core.datamodels.AgentVariable])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.power_variable_name" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.power_variable_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">power_variable_name</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.storage_variable_name" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.storage_variable_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">storage_variable_name</span> <span class="pre">(str</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
 </ul>
@@ -152,6 +160,11 @@ environment time.</p>
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">casadi_sim_time_step</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.casadi_sim_time_step" title="Permalink to this definition"></a></dt>
 <dd><p>Time step for simulation with Casadi simulator. Value is read from FlexQuantConfig</p>
 </dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.full_controls">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">full_controls</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">agentlib.core.datamodels.AgentVariable</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.full_controls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.power_variable_name">
@@ -197,6 +210,13 @@ environment time.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.set_actuation">
+<span class="sig-name descname"><span class="pre">set_actuation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solution</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Results</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/baseline_mpc.html#FlexibilityBaselineMPC.set_actuation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.set_actuation" title="Permalink to this definition"></a></dt>
+<dd><p>Takes the solution from optimization backend and sends the first
+step to AgentVariables.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.set_output">
 <span class="sig-name descname"><span class="pre">set_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solution</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/baseline_mpc.html#FlexibilityBaselineMPC.set_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.set_output" title="Permalink to this definition"></a></dt>
 <dd><p>Takes the solution from optimization backend and sends it to AgentVariables.</p>
@@ -226,6 +246,7 @@ environment time.</p>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.casadi_sim_time_step" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.casadi_sim_time_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">casadi_sim_time_step</span> <span class="pre">(int)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.full_controls" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.full_controls"><code class="xref py py-obj docutils literal notranslate"><span class="pre">full_controls</span> <span class="pre">(list[agentlib.core.datamodels.AgentVariable])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.power_variable_name" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.power_variable_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">power_variable_name</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.storage_variable_name" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.storage_variable_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">storage_variable_name</span> <span class="pre">(str</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
 </ul>
@@ -238,6 +259,11 @@ environment time.</p>
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">casadi_sim_time_step</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.casadi_sim_time_step" title="Permalink to this definition"></a></dt>
 <dd><p>Time step for simulation with Casadisimulator. Value is read from FlexQuantConfig</p>
 </dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.full_controls">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">full_controls</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">agentlib.core.datamodels.AgentVariable</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.full_controls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.power_variable_name">
