@@ -938,7 +938,13 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
             except:
                 pass
 
-    def register_callbacks(self): (duplicate-code)
+    def pre_computation_hook(self):
+        """Calculate relative start and end times for flexibility provision.
+
+        When in provision mode, computes the relative timing for flexibility
+        events based on the external power profile timestamps and current
+        environment time.
+        """ (duplicate-code)
 agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[60:81]
 ==agentlib_flexquant.modules.shadow_mpc:[50:67]
@@ -1004,21 +1010,7 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
             self.logger.error("Results file %s was not found.", results_file)
             return None
 
-    def write_results(self, df: pd.DataFrame, ts: float, n: int) -> pd.DataFrame:
-        """Write every data of variables in self.var_list in an DataFrame.
-
-        DataFrame will be updated every time step
-
-        Args:
-            df: DataFrame which is initialised as an empty DataFrame with columns
-            according to self.var_list
-            ts: time step
-            n: number of time steps during prediction horizon
-
-        Returns:
-            DataFrame with results of every variable in self.var_list
-
-        """ (duplicate-code)
+    def register_callbacks(self): (duplicate-code)
 agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[282:288]
 ==agentlib_flexquant.modules.shadow_mpc:[25:31]
