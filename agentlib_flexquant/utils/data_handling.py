@@ -48,15 +48,21 @@ def _set_mean_values(series: pd.Series) -> pd.Series:
                     start = index
                 else:
                     end = index
-                    intervals.append(pd.Interval(left=start, right=end, closed="left"))
+                    intervals.append(pd.Interval(left=start, right=end, closed="both"))
                     start = end
+            elif index == s.index[-1]:
+                end = index
+                intervals.append(pd.Interval(left=start, right=end, closed="both"))
         return intervals
 
     for interval in _get_intervals_for_mean(series):
         interval_index = (interval.left <= series.index) & (
-            series.index < interval.right
+            series.index <= interval.right
         )
         series[interval.left] = series[interval_index].mean(skipna=True)
+        # fill the last entry of series with mean value of previous entries
+        if interval.right == series.index[-1]:
+            series[interval.right] = series[interval.left]
 
     # remove last entry if nan, e.g. with collocation
     if pd.isna(series.iloc[-1]):
@@ -70,8 +76,8 @@ def strip_multi_index(series: pd.Series) -> pd.Series:
     if isinstance(series.index[0], str):
         series.index = series.index.map(lambda x: eval(x))
         series.index = pd.MultiIndex.from_tuples(series.index)
-        # vals is multicolumn so get rid of first value (start time of predictions)
-        series.index = series.index.get_level_values(1).astype(float)
+    # vals is multicolumn so get rid of first value (start time of predictions)
+    series.index = series.index.get_level_values(1).astype(float)
     return series
 
 

@@ -294,7 +294,8 @@ class Results:
                                   cmng.SHADOWMPC_CONFIG_TYPE, cmng.SHADOWMINLPMPC_CONFIG_TYPE]:
                 return module['type']
 
-        raise ModuleNotFoundError(f'There is no matching mpc module type in Agentlib_FlexQuant for modules in agent {agent_config.id}.')
+        raise ModuleNotFoundError(f'There is no matching mpc module type in Agentlib_FlexQuant for '
+                                  f'modules in agent {agent_config.id}.')
 
     def _resolve_sim_results_path(
         self, sim_result_filename: str, results_path: Union[str, Path]
@@ -393,7 +394,8 @@ class Results:
             self.indicator_agent_config.id: {
                 self.indicator_module_config.module_id: load_indicator(
                     Path(
-                        res_path, Path(self.indicator_module_config.results_file).name,
+                        res_path,
+                        Path(self.indicator_module_config.results_file).name,
                     )
                 )
             },
@@ -411,7 +413,10 @@ class Results:
         if self.generator_config.market_config:
             res[self.market_agent_config.id] = {
                 self.market_module_config.module_id: load_market(
-                    Path(res_path, Path(self.market_module_config.results_file).name,)
+                    Path(
+                        res_path,
+                        Path(self.market_module_config.results_file).name,
+                    )
                 )
             }
         return res, res_path
