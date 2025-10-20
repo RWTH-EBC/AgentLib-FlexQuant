@@ -12,7 +12,7 @@ class PredictorModuleConfig(al.BaseModuleConfig):
     outputs: al.AgentVariables = [
         al.AgentVariable(
             name="r_pel", unit="ct/kWh", type="pd.Series", description="Weight for P_el in objective function"
-        ),
+        )
     ]
     parameters: al.AgentVariables = [
         al.AgentVariable(

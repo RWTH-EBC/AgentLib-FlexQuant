@@ -77,7 +77,9 @@ class BaselineMPCData(BaseMPCData):
         MPCVariable(name="rel_start", value=0, unit="s"),
         MPCVariable(name="rel_end", value=0, unit="s"),
     ]
+
     config_parameters_appendix: list[MPCVariable] = []
+
     weights: list[MPCVariable] = pydantic.Field(
         default=[], description="Name and value of weights",
     )
@@ -133,7 +135,7 @@ class PFMPCData(BaseMPCData):
     config_parameters_appendix: list[MPCVariable] = [
         MPCVariable(name=glbs.PREP_TIME, value=0, unit="s"),
         MPCVariable(name=glbs.MARKET_TIME, value=0, unit="s"),
-        MPCVariable(name=glbs.FLEX_EVENT_DURATION, value=0, unit="s"),
+        MPCVariable(name=glbs.FLEX_EVENT_DURATION, value=0, unit="s")
     ]
     config_inputs_appendix: list[MPCVariable] = [
         MPCVariable(name="in_provision", value=False),
@@ -164,7 +166,7 @@ class NFMPCData(BaseMPCData):
     config_parameters_appendix: list[MPCVariable] = [
         MPCVariable(name=glbs.PREP_TIME, value=0, unit="s"),
         MPCVariable(name=glbs.MARKET_TIME, value=0, unit="s"),
-        MPCVariable(name=glbs.FLEX_EVENT_DURATION, value=0, unit="s"),
+        MPCVariable(name=glbs.FLEX_EVENT_DURATION, value=0, unit="s")
     ]
     config_inputs_appendix: list[MPCVariable] = [
         MPCVariable(name="in_provision", value=False),
