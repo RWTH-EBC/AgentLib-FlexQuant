@@ -67,10 +67,10 @@ def assert_frame_matches_summary_snapshot(snapshot, df: pd.DataFrame,
     summary = create_dataframe_summary(df)
 
     # Round all numbers in the summary to handle cross-platform differences
-    rounded_summary = round_floats_in_structure(summary, precision=4)
+    rounded_summary = round_floats_in_structure(summary, precision=5)
 
     # Convert the summary dictionary to a formatted JSON string
-    summary_json = json.dumps(summary, indent=2, sort_keys=True)
+    summary_json = json.dumps(rounded_summary, indent=2, sort_keys=True)
 
     # Use snapshot.assert_match on the small, stable JSON string
     snapshot.assert_match(summary_json, snapshot_name)
