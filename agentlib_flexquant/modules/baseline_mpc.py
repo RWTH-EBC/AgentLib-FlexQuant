@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 from typing import Optional, Dict
 from pydantic import Field
+from collections.abc import Iterable
 import agentlib_flexquant.data_structures.globals as glbs
 from agentlib import AgentVariable
 from agentlib_mpc.modules import mpc_full, minlp_mpc
@@ -15,7 +16,6 @@ from agentlib_mpc.data_structures.mpc_datamodels import Results
 from agentlib_flexquant.data_structures.globals import full_trajectory_suffix
 
 class FlexibilityBaselineMPCConfig(mpc_full.MPCConfig):
-
     # define an AgentVariable list for the full control trajectory, since use MPCVariable output affects the optimization result
     full_controls: list[AgentVariable] = Field(default=[])
 
@@ -38,7 +38,7 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
     config: FlexibilityBaselineMPCConfig
 
     def __init__(self, config, agent):
-        super().__init__(config, agent) #TODO: *args, **kwargs
+        super().__init__(config, agent)
         # initialize a control mapping dictionary which maps the full control names to the control names
         self._controls_name_mapping: Dict[str, str] = {}
 
@@ -232,10 +232,13 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
                 self.flex_model.set(control, value)
 
             for input_var, value in zip(self.var_ref.inputs, input_values_full.loc[current_sim_time]):
+                # change the type of iterable input, since casadi model can't deal with iterable
+                if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
+                    self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simultion time step so that the total horizon time will not be exceeded
+            # reduce the simulation time step so that the total horizon time will not be exceeded
             if current_sim_time + sim_time_step <= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -265,7 +268,7 @@ class FlexibilityBaselineMINLPMPC(minlp_mpc.MINLPMPC):
     config: FlexibilityBaselineMINLPMPCConfig
 
     def __init__(self, config, agent):
-        super().__init__(config, agent) #TODO: *args, **kwargs
+        super().__init__(config, agent)
         # initialize a control mapping dictionary which maps the full control names to the control names
         self._controls_name_mapping: Dict[str, str] = {}
 
@@ -459,10 +462,13 @@ class FlexibilityBaselineMINLPMPC(minlp_mpc.MINLPMPC):
                 self.flex_model.set(binary_control, value)
 
             for input_var, value in zip(self.var_ref.inputs, input_values_full.loc[current_sim_time]):
+                # change the type of iterable input, since casadi model can't deal with iterable
+                if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
+                    self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simultion time step so that the total horizon time will not be exceeded
+            # reduce the simulation time step so that the total horizon time will not be exceeded
             if current_sim_time + sim_time_step <= total_horizon_time:
                 t_sample = sim_time_step
             else:

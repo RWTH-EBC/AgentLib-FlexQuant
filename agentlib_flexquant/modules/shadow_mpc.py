@@ -12,7 +12,7 @@ from typing import Dict, Union, Optional
 from collections.abc import Iterable
 from agentlib.core.datamodels import AgentVariable
 from agentlib_mpc.modules import mpc_full, minlp_mpc
-from agentlib_flexquant.utils.data_handling import fill_nans, MEAN, strip_multi_index
+from agentlib_flexquant.utils.data_handling import fill_nans, MEAN
 from agentlib_flexquant.data_structures.globals import (
     full_trajectory_prefix,
     full_trajectory_suffix,
@@ -145,7 +145,7 @@ class FlexibilityShadowMPC(mpc_full.MPC):
             return
 
         # get the value of the input
-        vals = strip_multi_index(inp.value) #TODO: check if it works
+        vals = inp.value
         if vals.isna().any():
             vals = fill_nans(series=vals, method=MEAN)
         # add time shift env.now to the mpc prediction index if it starts at t=0
@@ -232,10 +232,13 @@ class FlexibilityShadowMPC(mpc_full.MPC):
                 self.flex_model.set(control, value)
 
             for input_var, value in zip(self.var_ref.inputs, input_values_full.loc[current_sim_time]):
+                # change the type of iterable input, since casadi model can't deal with iterable
+                if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
+                    self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simultion time step so that the total horizon time will not be exceeded
+            # reduce the simulation time step so that the total horizon time will not be exceeded
             if current_sim_time + sim_time_step <= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -309,13 +312,13 @@ class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
         if self.agent.config.id == inp.source.agent_id:
             return
 
-            # get the value of the input
-            vals = strip_multi_index(inp.value) #TODO: check if it works
-            if vals.isna().any():
-                vals = fill_nans(series=vals, method=MEAN)
-            # add time shift env.now to the mpc prediction index if it starts at t=0
-            if vals.index[0] == 0:
-                vals.index += self.env.time
+        # get the value of the input
+        vals = inp.value
+        if vals.isna().any():
+            vals = fill_nans(series=vals, method=MEAN)
+        # add time shift env.now to the mpc prediction index if it starts at t=0
+        if vals.index[0] == 0:
+            vals.index += self.env.time
         # update value in the mapping dictionary
         self._full_controls[name].value = vals
         # update the value of the variable in the model if we want to limit the binary control in the market time during optimization
@@ -470,10 +473,13 @@ class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
                 self.flex_model.set(binary_control, value)
 
             for input_var, value in zip(self.var_ref.inputs, input_values_full.loc[current_sim_time]):
+                # change the type of iterable input, since casadi model can't deal with iterable
+                if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
+                    self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simultion time step so that the total horizon time will not be exceeded
+            # reduce the simulation time step so that the total horizon time will not be exceeded
             if current_sim_time + sim_time_step <= total_horizon_time:
                 t_sample = sim_time_step
             else:
