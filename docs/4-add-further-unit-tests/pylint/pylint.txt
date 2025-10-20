@@ -515,7 +515,10 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
         # simulate with the casadi simulator
         self.sim_flex_model(solution)
 
+        # extract solution DataFrama
         df = solution.df
+
+        # send the outputs
         if self.flex_results is not None:
             for output in self.var_ref.outputs:
                 if output not in [
@@ -583,8 +586,9 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
     def _initialize_flex_results(
         self, n_simulation_steps, horizon_length, sim_time_step, result_df
     ):
-        """Initialize the flex results dataframe with the correct dimension and index and fill with
-         existing results from optimization"""
+        """Initialize the flex results dataframe with the correct dimension and index
+        and fill with existing results from optimization
+        """
 
         # create MultiIndex for collocation points
         index_coll = pd.MultiIndex.from_arrays(
@@ -918,33 +922,13 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value
-
- (duplicate-code)
+                ] = self.flex_model.get_output(output).value (duplicate-code)
 agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[318:339]
 ==agentlib_flexquant.modules.shadow_mpc:[312:327]
         if self.config.casadi_sim_time_step > 0:
             # generate a separate flex_model for integration to ensure the model used in MPC
             # optimization remains unaffected
-            self.flex_model = type(self.model)(dt=self.config.casadi_sim_time_step)
-            # generate the filename for the simulation results
-            self.res_file_flex = self.config.optimization_backend["results_file"].replace(
-                "mpc", "mpc_sim"
-            )
-            # clear the casadi simulator result at the first time step if already exists
-            try:
-                os.remove(self.res_file_flex)
-            except:
-                pass
-
-    def register_callbacks(self): (duplicate-code)
-agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[60:81]
-==agentlib_flexquant.modules.shadow_mpc:[50:67]
-        if self.config.casadi_sim_time_step > 0:
-            # generate a separate flex_model for integration to ensure
-            # the model used in MPC optimization remains unaffected
             self.flex_model = type(self.model)(dt=self.config.casadi_sim_time_step)
             # generate the filename for the simulation results
             self.res_file_flex = self.config.optimization_backend["results_file"].replace(
@@ -963,6 +947,26 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
         events based on the external power profile timestamps and current
         environment time.
         """ (duplicate-code)
+agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
+==agentlib_flexquant.modules.baseline_mpc:[60:81]
+==agentlib_flexquant.modules.shadow_mpc:[50:67]
+        if self.config.casadi_sim_time_step > 0:
+            # generate a separate flex_model for integration to ensure the model used in MPC
+            # optimization remains unaffected
+            self.flex_model = type(self.model)(dt=self.config.casadi_sim_time_step)
+            # generate the filename for the simulation results
+            self.res_file_flex = self.config.optimization_backend["results_file"].replace(
+                "mpc", "mpc_sim"
+            )
+            # clear the casadi simulator result at the first time step if already exists
+            try:
+                os.remove(self.res_file_flex)
+            except:
+                pass
+
+    def set_output(self, solution):
+        """Takes the solution from optimization backend and sends it to AgentVariables."""
+        # Output must be defined in the config as "type"="pd.Series" (duplicate-code)
 agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[235:249]
 ==agentlib_flexquant.modules.shadow_mpc:[517:531]
@@ -1008,21 +1012,7 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
             self.logger.error("Results file %s was not found.", results_file)
             return None
 
-    def write_results(self, df: pd.DataFrame, ts: float, n: int) -> pd.DataFrame:
-        """Write every data of variables in self.var_list in an DataFrame.
-
-        DataFrame will be updated every time step
-
-        Args:
-            df: DataFrame which is initialised as an empty DataFrame with columns
-            according to self.var_list
-            ts: time step
-            n: number of time steps during prediction horizon
-
-        Returns:
-            DataFrame with results of every variable in self.var_list
-
-        """ (duplicate-code)
+    def register_callbacks(self): (duplicate-code)
 agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[282:288]
 ==agentlib_flexquant.modules.shadow_mpc:[25:31]
