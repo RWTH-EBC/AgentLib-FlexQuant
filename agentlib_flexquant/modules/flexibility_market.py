@@ -181,7 +181,8 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                     if flex_power_feedback_method == glbs.COLLOCATION:
                         profile = profile.reindex(self.get(glbs.COLLOCATION_TIME_GRID).value)
                     elif flex_power_feedback_method == glbs.CONSTANT:
-                        index_to_keep = ~np.isin(profile.index, self.get(glbs.COLLOCATION_TIME_GRID).value)
+                        index_to_keep = ~np.isin(profile.index,
+                                                 self.get(glbs.COLLOCATION_TIME_GRID).value)
                         profile = profile.get(index_to_keep)
                         helper_indices = [i - 1 for i in profile.index[1:]]
                         new_index = sorted(set(profile.index.tolist() + helper_indices))[:-1]
@@ -236,7 +237,8 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                 if flex_power_feedback_method == glbs.COLLOCATION:
                     profile = profile.reindex(self.get(glbs.COLLOCATION_TIME_GRID).value)
                 elif flex_power_feedback_method == glbs.CONSTANT:
-                    index_to_keep = ~np.isin(profile.index, self.get(glbs.COLLOCATION_TIME_GRID).value)
+                    index_to_keep = ~np.isin(profile.index,
+                                             self.get(glbs.COLLOCATION_TIME_GRID).value)
                     profile = profile.get(index_to_keep)
                     helper_indices = [i - 1 for i in profile.index[1:]]
                     new_index = sorted(set(profile.index.tolist() + helper_indices))[:-1]

@@ -27,13 +27,15 @@ CASADI_OUTPUT = "CasadiOutput"
 
 # String templates
 INPUT_TEMPLATE = Template(
-    "$class_name(name='$name', value=$value, unit='$unit', type='$type', description='$description')"
+    "$class_name(name='$name', value=$value, unit='$unit', type='$type', "
+    "description='$description')"
 )
 PARAMETER_TEMPLATE = Template(
     "$class_name(name='$name', value=$value, unit='$unit', description='$description')"
 )
 OUTPUT_TEMPLATE = Template(
-    "$class_name(name='$name', unit='$unit', type='$type', value=$value, description='$description')"
+    "$class_name(name='$name', unit='$unit', type='$type', value=$value, "
+    "description='$description')"
 )
 
 
@@ -397,7 +399,8 @@ class SetupSystemModifier(ast.NodeTransformer):
                         node.body.insert(
                             0,
                             ast.parse(
-                                f"{control.name}_upper = ca.if_else(self.time < self.market_time.sym, "
+                                f"{control.name}_upper = ca.if_else(self.time < "
+                                f"self.market_time.sym, "
                                 f"self.{control.name}{full_trajectory_suffix}.sym, "
                                 f"self.{control.name}.ub)"
                             ).body[0],
@@ -405,7 +408,8 @@ class SetupSystemModifier(ast.NodeTransformer):
                         node.body.insert(
                             0,
                             ast.parse(
-                                f"{control.name}_lower = ca.if_else(self.time < self.market_time.sym, "
+                                f"{control.name}_lower = ca.if_else(self.time < "
+                                f"self.market_time.sym, "
                                 f"self.{control.name}{full_trajectory_suffix}.sym, "
                                 f"self.{control.name}.lb)"
                             ).body[0],

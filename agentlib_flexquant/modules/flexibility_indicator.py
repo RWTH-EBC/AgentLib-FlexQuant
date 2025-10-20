@@ -47,7 +47,8 @@ class InputsForCorrectFlexCosts(BaseModel):
     stored_energy_variable: Optional[str] = Field(
         name="stored_energy_variable",
         default=None,
-        description="Name of the variable representing the stored electrical energy in the baseline config"
+        description="Name of the variable representing the stored electrical energy in the "
+                    "baseline config"
     )
 
 
@@ -393,7 +394,8 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             elif name == self.config.price_variable:
                 if not self.config.calculate_costs.use_constant_electricity_price:
                     # price comes from predictor
-                    self.data.electricity_price_series = self.data.unify_inputs(inp.value, mpc=False)
+                    self.data.electricity_price_series = self.data.unify_inputs(inp.value,
+                                                                                mpc=False)
 
             # set the constant electricity price series if given
             if (
@@ -405,7 +407,8 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 ts = self.get(glbs.TIME_STEP).value
                 grid = np.arange(0, n * ts + ts, ts)
                 # fill the electricity_price_series with values
-                self.data.electricity_price_series = pd.Series([self.config.calculate_costs.const_electricity_price for i in grid], index=grid)
+                self.data.electricity_price_series = pd.Series(
+                    [self.config.calculate_costs.const_electricity_price for i in grid], index=grid)
 
             necessary_input_for_calc_flex = [
                 self.data.power_profile_base,
@@ -416,9 +419,12 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             if self.config.calculate_costs.calculate_flex_costs:
                 necessary_input_for_calc_flex.append(self.data.electricity_price_series)
 
-            if all(var is not None for var in necessary_input_for_calc_flex) and len(necessary_input_for_calc_flex) == 4:
-                # align the index of price variable to the index of inputs from mpc; electricity price signal is usually steps
-                necessary_input_for_calc_flex[-1] = self.data.electricity_price_series.reindex(self.data.power_profile_base.index).ffill()
+            if (all(var is not None for var in necessary_input_for_calc_flex) and
+                    len(necessary_input_for_calc_flex) == 4):
+                # align the index of price variable to the index of inputs from mpc;
+                # electricity price signal is usually steps
+                necessary_input_for_calc_flex[-1] = self.data.electricity_price_series.reindex(
+                    self.data.power_profile_base.index).ffill()
 
             if self.config.correct_costs.enable_energy_costs_correction:
                 necessary_input_for_calc_flex.extend(
@@ -551,20 +557,27 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         and set the outputs, write and save the results."""
         # Calculate the flexibility KPIs for current predictions
         collocation_time_grid = self.get(glbs.COLLOCATION_TIME_GRID).value
-        self.data.calculate(enable_energy_costs_correction=self.config.correct_costs.enable_energy_costs_correction,
-                            calculate_flex_cost=self.config.calculate_costs.calculate_flex_costs, integration_method=self.config.integration_method,
-                            collocation_time_grid=collocation_time_grid)
+        self.data.calculate(
+            enable_energy_costs_correction=self.config.correct_costs.enable_energy_costs_correction,
+            calculate_flex_cost=self.config.calculate_costs.calculate_flex_costs,
+            integration_method=self.config.integration_method,
+            collocation_time_grid=collocation_time_grid)
 
-        # get the full index during flex enevt including mpc_time_grid index and the collocation index
+        # get the full index during flex enevt including mpc_time_grid index and the
+        # collocation index
         full_index = np.sort(np.concatenate([collocation_time_grid, self.data.mpc_time_grid]))
         flex_begin = self.get(glbs.MARKET_TIME).value + self.get(glbs.PREP_TIME).value
         flex_end = flex_begin + self.get(glbs.FLEX_EVENT_DURATION).value
         full_flex_offer_index = full_index[(full_index >= flex_begin) & (full_index <= flex_end)]
 
-        # reindex the power profiles to not send the simulation points to the market, but only the values on the collocation points and the forward mean of them
-        base_power_profile = self.data.power_profile_base.reindex(collocation_time_grid).reindex(full_flex_offer_index)
-        pos_diff_profile = self.data.kpis_pos.power_flex_offer.value.reindex(collocation_time_grid).reindex(full_flex_offer_index)
-        neg_diff_profile = self.data.kpis_neg.power_flex_offer.value.reindex(collocation_time_grid).reindex(full_flex_offer_index)
+        # reindex the power profiles to not send the simulation points to the market, but only
+        # the values on the collocation points and the forward mean of them
+        base_power_profile = self.data.power_profile_base.reindex(
+            collocation_time_grid).reindex(full_flex_offer_index)
+        pos_diff_profile = self.data.kpis_pos.power_flex_offer.value.reindex(
+            collocation_time_grid).reindex(full_flex_offer_index)
+        neg_diff_profile = self.data.kpis_neg.power_flex_offer.value.reindex(
+            collocation_time_grid).reindex(full_flex_offer_index)
 
         # fill the mpc_time_grid with forward mean
         base_power_profile = fill_nans(base_power_profile, method=MEAN)

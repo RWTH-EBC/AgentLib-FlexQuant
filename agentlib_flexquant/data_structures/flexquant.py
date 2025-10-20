@@ -119,8 +119,10 @@ class FlexQuantConfig(BaseModel):
     )
     casadi_sim_time_step: int = Field(
         default=0,
-        description="Simulate over the prediction horizon with a defined resolution using Casadi simulator. "
-                    "Only use it when the power depends on the states. Don't use it when power itself is the control variable."
+        description="Simulate over the prediction horizon with a defined resolution using Casadi "
+                    "simulator. "
+                    "Only use it when the power depends on the states. Don't use it when power "
+                    "itself is the control variable."
                     "Set to 0 to skip simulation",
     )
     flex_base_directory_path: Optional[Path] = Field(

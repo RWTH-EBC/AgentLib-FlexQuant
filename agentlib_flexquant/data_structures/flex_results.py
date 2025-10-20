@@ -294,7 +294,8 @@ class Results:
                                   cmng.SHADOWMPC_CONFIG_TYPE, cmng.SHADOWMINLPMPC_CONFIG_TYPE]:
                 return module['type']
 
-        raise ModuleNotFoundError(f'There is no matching mpc module type in Agentlib_FlexQuant for modules in agent {agent_config.id}.')
+        raise ModuleNotFoundError(f'There is no matching mpc module type in Agentlib_FlexQuant for '
+                                  f'modules in agent {agent_config.id}.')
 
     def _resolve_sim_results_path(
         self, sim_result_filename: str, results_path: Union[str, Path]

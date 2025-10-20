@@ -85,9 +85,7 @@ class FlexAgentGenerator:
             # provide default name for json
             self.flex_config_file_name = "flex_config.json"
         # load configs
-        self.flex_config = load_config.load_config(
-            flex_config, config_type=FlexQuantConfig
-        )
+        self.flex_config = load_config.load_config(flex_config, config_type=FlexQuantConfig)
 
         # original mpc agent
         self.orig_mpc_agent_config = load_config.load_config(
@@ -110,13 +108,14 @@ class FlexAgentGenerator:
             config=self.baseline_mpc_agent_config,
             module_type=cmng.get_orig_module_type(self.orig_mpc_agent_config),
         )
-        # convert agentlib_mpc’s ModuleConfig to flexquant’s ModuleConfig to include additional fields not present in the original
+        # convert agentlib_mpc’s ModuleConfig to flexquant’s ModuleConfig to include additional
+        # fields not present in the original
         self.baseline_mpc_module_config = cmng.get_flex_mpc_module_config(
             agent_config=self.baseline_mpc_agent_config,
             module_config=self.baseline_mpc_module_config,
             module_type=self.flex_config.baseline_config_generator_data.module_types[
                 self.baseline_mpc_module_config.type
-            ]
+            ],
         )
         # pos module
         self.pos_flex_mpc_module_config = cmng.get_module(
@@ -168,25 +167,23 @@ class FlexAgentGenerator:
         baseline_mpc_config = self.adapt_mpc_module_config(
             module_config=self.baseline_mpc_module_config,
             mpc_dataclass=self.flex_config.baseline_config_generator_data,
-            agent_id=self.baseline_mpc_agent_config.id
+            agent_id=self.baseline_mpc_agent_config.id,
         )
         pf_mpc_config = self.adapt_mpc_module_config(
             module_config=self.pos_flex_mpc_module_config,
             mpc_dataclass=self.flex_config.shadow_mpc_config_generator_data.pos_flex,
-            agent_id=self.pos_flex_mpc_agent_config.id
+            agent_id=self.pos_flex_mpc_agent_config.id,
         )
         nf_mpc_config = self.adapt_mpc_module_config(
             module_config=self.neg_flex_mpc_module_config,
             mpc_dataclass=self.flex_config.shadow_mpc_config_generator_data.neg_flex,
-            agent_id=self.neg_flex_mpc_agent_config.id
+            agent_id=self.neg_flex_mpc_agent_config.id,
         )
         indicator_module_config = self.adapt_indicator_config(
             module_config=self.indicator_module_config
         )
         if self.flex_config.market_config:
-            market_module_config = self.adapt_market_config(
-                module_config=self.market_module_config
-            )
+            market_module_config = self.adapt_market_config(module_config=self.market_module_config)
 
         # dump jsons of the agents including the adapted module configs
         self.append_module_and_dump_agent(
@@ -215,19 +212,17 @@ class FlexAgentGenerator:
         )
         if self.flex_config.market_config:
             self.append_module_and_dump_agent(
-                    module=market_module_config,
-                    agent=self.market_agent_config,
-                    module_type=cmng.MARKET_CONFIG_TYPE,
-                    config_name=self.market_config.name_of_created_file,
-                )
+                module=market_module_config,
+                agent=self.market_agent_config,
+                module_type=cmng.MARKET_CONFIG_TYPE,
+                config_name=self.market_config.name_of_created_file,
+            )
         # generate python files for the shadow mpcs
         self._generate_flex_model_definition()
 
         # save flex config to created flex files
         with open(
-            os.path.join(
-                self.flex_config.flex_files_directory, self.flex_config_file_name
-            ),
+            os.path.join(self.flex_config.flex_files_directory, self.flex_config_file_name),
             "w",
             encoding="utf-8",
         ) as f:
@@ -265,19 +260,14 @@ class FlexAgentGenerator:
         module_dict = cmng.to_dict_and_remove_unnecessary_fields(module=module)
         # write given module to agent config
         for i, agent_module in enumerate(agent.modules):
-            if (
-                cmng.MODULE_TYPE_DICT[module_type]
-                is cmng.MODULE_TYPE_DICT[agent_module["type"]]
-            ):
+            if cmng.MODULE_TYPE_DICT[module_type] is cmng.MODULE_TYPE_DICT[agent_module["type"]]:
                 agent.modules[i] = module_dict
 
         # dump agent config
         if agent.modules:
             if self.flex_config.overwrite_files:
                 try:
-                    Path(
-                        os.path.join(self.flex_config.flex_files_directory, config_name)
-                    ).unlink()
+                    Path(os.path.join(self.flex_config.flex_files_directory, config_name)).unlink()
                 except OSError:
                     pass
             with open(
@@ -324,7 +314,8 @@ class FlexAgentGenerator:
         to_be_deleted = self.get_config_file_paths()
         to_be_deleted.append(
             os.path.join(
-                self.flex_config.flex_files_directory, self.flex_config_file_name,
+                self.flex_config.flex_files_directory,
+                self.flex_config_file_name,
             )
         )
         # delete files
@@ -364,12 +355,19 @@ class FlexAgentGenerator:
             cmng.get_orig_module_type(self.orig_mpc_agent_config)
         ]
 
-        # set the MPC config type from the MPCConfig in agentlib_mpc to the corresponding one in flexquant and add additional fields
+        # set the MPC config type from the MPCConfig in agentlib_mpc to the corresponding one in
+        # flexquant and add additional fields
         module_config_flex_dict = module_config.model_dump()
-        module_config_flex_dict['casadi_sim_time_step'] = self.flex_config.casadi_sim_time_step
-        module_config_flex_dict['power_variable_name'] = self.flex_config.baseline_config_generator_data.power_variable
-        module_config_flex_dict['storage_variable_name'] = self.indicator_module_config.correct_costs.stored_energy_variable
-        module_config_flex = cmng.MODULE_TYPE_DICT[module_config.type](**module_config_flex_dict, _agent_id=agent_id)
+        module_config_flex_dict["casadi_sim_time_step"] = self.flex_config.casadi_sim_time_step
+        module_config_flex_dict[
+            "power_variable_name"
+        ] = self.flex_config.baseline_config_generator_data.power_variable
+        module_config_flex_dict[
+            "storage_variable_name"
+        ] = self.indicator_module_config.correct_costs.stored_energy_variable
+        module_config_flex = cmng.MODULE_TYPE_DICT[module_config.type](
+            **module_config_flex_dict, _agent_id=agent_id
+        )
 
         # allow the module config to be changed
         module_config_flex.model_config["frozen"] = False
@@ -377,9 +375,7 @@ class FlexAgentGenerator:
         module_config_flex.module_id = mpc_dataclass.module_id
 
         # append the new weights as parameter to the MPC or update its value
-        parameter_dict = {
-            parameter.name: parameter for parameter in module_config_flex.parameters
-        }
+        parameter_dict = {parameter.name: parameter for parameter in module_config_flex.parameters}
         for weight in mpc_dataclass.weights:
             if weight.name in parameter_dict:
                 parameter_dict[weight.name].value = weight.value
@@ -400,17 +396,12 @@ class FlexAgentGenerator:
         result_filename = Path(
             module_config_flex.optimization_backend["results_file"]
         ).name.replace(".csv", mpc_dataclass.results_suffix)
-        full_path = (
-            self.flex_config.results_directory
-            / result_filename
-        )
+        full_path = self.flex_config.results_directory / result_filename
         module_config_flex.optimization_backend["results_file"] = str(full_path)
         # change cia backend to custom backend of flexquant
         if module_config_flex.optimization_backend["type"] == "casadi_cia":
             module_config_flex.optimization_backend["type"] = "casadi_cia_cons"
-            module_config_flex.optimization_backend["market_time"] = (
-                self.flex_config.market_time
-            )
+            module_config_flex.optimization_backend["market_time"] = self.flex_config.market_time
 
         # add the full control trajectory output from the baseline as input for the shadow mpcs
         if not isinstance(mpc_dataclass, BaselineMPCData):
@@ -419,10 +410,11 @@ class FlexAgentGenerator:
                     MPCVariable(
                         name=control.name + glbs.full_trajectory_suffix,
                         value=None,
-                        type='pd.Series'
+                        type="pd.Series",
                     )
                 )
-                # change the alias of control variable in shadow mpc to prevent it from triggering the wrong callback
+                # change the alias of control variable in shadow mpc to prevent it from triggering
+                # the wrong callback
                 control.alias = control.name + glbs.shadow_suffix
             # also include binary controls
             if hasattr(module_config_flex, "binary_controls"):
@@ -431,31 +423,37 @@ class FlexAgentGenerator:
                         MPCVariable(
                             name=control.name + glbs.full_trajectory_suffix,
                             value=None,
-                            type='pd.Series'
+                            type="pd.Series",
                         )
                     )
-                    # change the alias of control variable in shadow mpc to prevent it from triggering the wrong callback
+                    # change the alias of control variable in shadow mpc to prevent it from
+                    # triggering the wrong callback
                     control.alias = control.name + glbs.shadow_suffix
             # only communicate outputs for the shadow mpcs
             module_config_flex.shared_variable_fields = ["outputs"]
         else:
             # add full_controls trajectory as AgentVariable to the config of Baseline mpc
             for control in module_config_flex.controls:
-                module_config_flex.full_controls.append(AgentVariable(name=control.name + glbs.full_trajectory_suffix,
-                                                                 alias=control.name + glbs.full_trajectory_suffix,
-                                                                 shared=True))
+                module_config_flex.full_controls.append(
+                    AgentVariable(
+                        name=control.name + glbs.full_trajectory_suffix,
+                        alias=control.name + glbs.full_trajectory_suffix,
+                        shared=True,
+                    )
+                )
             if hasattr(module_config_flex, "binary_controls"):
                 for binary_controls in module_config_flex.binary_controls:
-                    module_config_flex.full_controls.append(AgentVariable(name=binary_controls.name + glbs.full_trajectory_suffix,
-                                                                     alias=binary_controls.name + glbs.full_trajectory_suffix,
-                                                                     shared=True))
+                    module_config_flex.full_controls.append(
+                        AgentVariable(
+                            name=binary_controls.name + glbs.full_trajectory_suffix,
+                            alias=binary_controls.name + glbs.full_trajectory_suffix,
+                            shared=True,
+                        )
+                    )
         module_config_flex.set_outputs = True
         # add outputs for the power variables, for easier handling create a lookup dict
         output_dict = {output.name: output for output in module_config_flex.outputs}
-        if (
-            self.flex_config.baseline_config_generator_data.power_variable
-            in output_dict
-        ):
+        if self.flex_config.baseline_config_generator_data.power_variable in output_dict:
             output_dict[
                 self.flex_config.baseline_config_generator_data.power_variable
             ].alias = mpc_dataclass.power_alias
@@ -515,12 +513,14 @@ class FlexAgentGenerator:
             if parameter.name == glbs.PREDICTION_HORIZON:
                 parameter.value = self.baseline_mpc_module_config.prediction_horizon
             if parameter.name == glbs.COLLOCATION_TIME_GRID:
-                discretization_options = self.baseline_mpc_module_config.optimization_backend['discretization_options']
-                parameter.value = self.get_collocation_time_grid(discretization_options=discretization_options)
+                discretization_options = self.baseline_mpc_module_config.optimization_backend[
+                    "discretization_options"
+                ]
+                parameter.value = self.get_collocation_time_grid(
+                    discretization_options=discretization_options
+                )
         # set power unit
-        module_config.power_unit = (
-            self.flex_config.baseline_config_generator_data.power_unit
-        )
+        module_config.power_unit = self.flex_config.baseline_config_generator_data.power_unit
         module_config.results_file = (
             self.flex_config.results_directory / module_config.results_file.name
         )
@@ -535,16 +535,18 @@ class FlexAgentGenerator:
         module_config.model_config["frozen"] = False
         for field in module_config.__fields__:
             if field in self.market_module_config.__fields__.keys():
-                module_config.__setattr__(
-                    field, getattr(self.market_module_config, field)
-                )
+                module_config.__setattr__(field, getattr(self.market_module_config, field))
         module_config.results_file = (
             self.flex_config.results_directory / module_config.results_file.name
         )
         for parameter in module_config.parameters:
             if parameter.name == glbs.COLLOCATION_TIME_GRID:
-                discretization_options = self.baseline_mpc_module_config.optimization_backend['discretization_options']
-                parameter.value = self.get_collocation_time_grid(discretization_options=discretization_options)
+                discretization_options = self.baseline_mpc_module_config.optimization_backend[
+                    "discretization_options"
+                ]
+                parameter.value = self.get_collocation_time_grid(
+                    discretization_options=discretization_options
+                )
             if parameter.name == glbs.TIME_STEP:
                 parameter.value = self.baseline_mpc_module_config.time_step
         module_config.model_config["frozen"] = True
@@ -556,15 +558,21 @@ class FlexAgentGenerator:
         time_step = self.baseline_mpc_module_config.time_step
         prediction_horizon = self.baseline_mpc_module_config.prediction_horizon
         # get the collocation configuration
-        collocation_method = discretization_options['collocation_method']
-        collocation_order = discretization_options['collocation_order']
+        collocation_method = discretization_options["collocation_method"]
+        collocation_order = discretization_options["collocation_order"]
         # get the collocation points
-        options = CasadiDiscretizationOptions(collocation_order=collocation_order, collocation_method=collocation_method)
+        options = CasadiDiscretizationOptions(
+            collocation_order=collocation_order, collocation_method=collocation_method
+        )
         collocation_points = DirectCollocation(options=options)._collocation_polynomial().root
         # compute the mpc output collocation grid
-        discretization_points = np.arange(0, time_step*prediction_horizon, time_step)
-        collocation_time_grid = (discretization_points[:, None] + collocation_points * time_step).ravel()
-        collocation_time_grid = collocation_time_grid[~np.isin(collocation_time_grid, discretization_points)]
+        discretization_points = np.arange(0, time_step * prediction_horizon, time_step)
+        collocation_time_grid = (
+            discretization_points[:, None] + collocation_points * time_step
+        ).ravel()
+        collocation_time_grid = collocation_time_grid[
+            ~np.isin(collocation_time_grid, discretization_points)
+        ]
         collocation_time_grid = collocation_time_grid.tolist()
         return collocation_time_grid
 
@@ -657,24 +665,21 @@ class FlexAgentGenerator:
         variables_in_config = set(config.get_variable_names())
         variables_in_cost_function = set(ast.walk(ast.parse(expr)))
         variables_in_cost_function = {
-            node.attr
-            for node in variables_in_cost_function
-            if isinstance(node, ast.Attribute)
+            node.attr for node in variables_in_cost_function if isinstance(node, ast.Attribute)
         }
         variables_newly_created = set(
-            weight.name
-            for weight in self.flex_config.shadow_mpc_config_generator_data.weights
+            weight.name for weight in self.flex_config.shadow_mpc_config_generator_data.weights
         )
-        unknown_vars = (
-            variables_in_cost_function - variables_in_config - variables_newly_created
-        )
+        unknown_vars = variables_in_cost_function - variables_in_config - variables_newly_created
         if unknown_vars:
             raise ValueError(f"Unknown variables in new cost function: {unknown_vars}")
 
     def run_config_validations(self):
         """Function to validate integrity of user-supplied flex config.
 
-        Since the validation depends on interactions between multiple configurations, it is performed within this function rather than using Pydantic’s built-in validators for individual configurations.
+        Since the validation depends on interactions between multiple configurations, it is
+        performed within this function rather than using Pydantic’s built-in validators for
+        individual configurations.
 
         The following checks are performed:
         1. Ensures the specified power variable exists in the MPC model outputs.
@@ -694,9 +699,7 @@ class FlexAgentGenerator:
         """
         # check if the power variable exists in the mpc config
         power_var = self.flex_config.baseline_config_generator_data.power_variable
-        if power_var not in [
-            output.name for output in self.baseline_mpc_module_config.outputs
-        ]:
+        if power_var not in [output.name for output in self.baseline_mpc_module_config.outputs]:
             raise ConfigurationError(
                 f"Given power variable {power_var} is not defined "
                 f"as output in baseline mpc config."
@@ -704,18 +707,17 @@ class FlexAgentGenerator:
 
         # check if the comfort variable exists in the mpc slack variables
         if self.flex_config.baseline_config_generator_data.comfort_variable:
-            file_path = self.baseline_mpc_module_config.optimization_backend["model"][
-                "type"
-            ]["file"]
-            class_name = self.baseline_mpc_module_config.optimization_backend["model"][
-                "type"
-            ]["class_name"]
+            file_path = self.baseline_mpc_module_config.optimization_backend["model"]["type"][
+                "file"
+            ]
+            class_name = self.baseline_mpc_module_config.optimization_backend["model"]["type"][
+                "class_name"
+            ]
             # Get the class
             dynamic_class = cmng.get_class_from_file(file_path, class_name)
-            if (
-                self.flex_config.baseline_config_generator_data.comfort_variable
-                not in [state.name for state in dynamic_class().states]
-            ):
+            if self.flex_config.baseline_config_generator_data.comfort_variable not in [
+                state.name for state in dynamic_class().states
+            ]:
                 raise ConfigurationError(
                     f"Given comfort variable "
                     f"{self.flex_config.baseline_config_generator_data.comfort_variable} "
@@ -724,12 +726,9 @@ class FlexAgentGenerator:
 
         # check if the energy storage variable exists in the mpc config
         if self.indicator_module_config.correct_costs.enable_energy_costs_correction:
-            if (
-                self.indicator_module_config.correct_costs.stored_energy_variable
-                not in [
-                    output.name for output in self.baseline_mpc_module_config.outputs
-                ]
-            ):
+            if self.indicator_module_config.correct_costs.stored_energy_variable not in [
+                output.name for output in self.baseline_mpc_module_config.outputs
+            ]:
                 raise ConfigurationError(
                     f"The stored energy variable "
                     f"{self.indicator_module_config.correct_costs.stored_energy_variable} "
@@ -739,10 +738,14 @@ class FlexAgentGenerator:
                 )
 
         # raise warning if unsupported collocation method is used and change to supported method
-        if "collocation_method" not in self.baseline_mpc_module_config.optimization_backend[
-            "discretization_options"
-        ]:
-            raise ConfigurationError("Please use collocation as discretization method and define the collocation_method in the mpc config")
+        if (
+            "collocation_method"
+            not in self.baseline_mpc_module_config.optimization_backend["discretization_options"]
+        ):
+            raise ConfigurationError(
+                "Please use collocation as discretization method and define the collocation_method "
+                "in the mpc config"
+            )
         else:
             collocation_method = self.baseline_mpc_module_config.optimization_backend[
                 "discretization_options"
@@ -752,15 +755,15 @@ class FlexAgentGenerator:
                     "Collocation method %s is not supported. Switching to method legendre.",
                     collocation_method,
                 )
-                self.baseline_mpc_module_config.optimization_backend[
-                    "discretization_options"
-                ]["collocation_method"] = "legendre"
-                self.pos_flex_mpc_module_config.optimization_backend[
-                    "discretization_options"
-                ]["collocation_method"] = "legendre"
-                self.neg_flex_mpc_module_config.optimization_backend[
-                    "discretization_options"
-                ]["collocation_method"] = "legendre"
+                self.baseline_mpc_module_config.optimization_backend["discretization_options"][
+                    "collocation_method"
+                ] = "legendre"
+                self.pos_flex_mpc_module_config.optimization_backend["discretization_options"][
+                    "collocation_method"
+                ] = "legendre"
+                self.neg_flex_mpc_module_config.optimization_backend["discretization_options"][
+                    "collocation_method"
+                ] = "legendre"
 
         # time data validations
         flex_times = {
@@ -773,10 +776,7 @@ class FlexAgentGenerator:
             glbs.PREDICTION_HORIZON: self.baseline_mpc_module_config.prediction_horizon,
         }
         # total time length check (prep+market+flex_event)
-        if (
-            sum(flex_times.values())
-            > mpc_times["time_step"] * mpc_times["prediction_horizon"]
-        ):
+        if sum(flex_times.values()) > mpc_times["time_step"] * mpc_times["prediction_horizon"]:
             raise ConfigurationError(
                 "Market time + prep time + flex event duration "
                 "can not exceed the prediction horizon."
@@ -784,13 +784,15 @@ class FlexAgentGenerator:
         # market time val check
         if self.flex_config.market_config:
             if flex_times["market_time"] % mpc_times["time_step"] != 0:
-                raise ConfigurationError("Market time must be an integer multiple of the time step.")
+                raise ConfigurationError(
+                    "Market time must be an integer multiple of the time step."
+                )
         # check for divisibility of flex_times by time_step
         for name, value in flex_times.items():
             if value % mpc_times["time_step"] != 0:
                 raise ConfigurationError(
                     f"{name} is not a multiple of the time step. Please redefine."
-        )
+                )
         # raise warning if parameter value in flex indicator module config differs from
         # value in flex config/ baseline mpc module config
         for parameter in self.indicator_module_config.parameters:
@@ -833,11 +835,7 @@ class FlexAgentGenerator:
         with open(simulator_agent_config, "r", encoding="utf-8") as f:
             sim_config = json.load(f)
         sim_module_config = next(
-            (
-                module
-                for module in sim_config["modules"]
-                if module["type"] == "simulator"
-            ),
+            (module for module in sim_config["modules"] if module["type"] == "simulator"),
             None,
         )
         # convert filename string to path and extract the name
