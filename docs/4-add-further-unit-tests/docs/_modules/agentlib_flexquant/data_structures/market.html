@@ -83,7 +83,7 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pydantic</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlexibilityDirections</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlexibilityDirections</span><span class="p">,</span> <span class="n">COLLOCATION</span><span class="p">,</span> <span class="n">CONSTANT</span>
 
 
 <div class="viewcode-block" id="RandomOptions"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.market.RandomOptions">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">RandomOptions</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -118,8 +118,8 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration options for single offer acceptance market behavior.&quot;&quot;&quot;</span>
 
     <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;single&quot;</span><span class="p">]</span>
-    <span class="n">start_time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;After this time, the first available flex offer&quot;</span> <span class="s2">&quot; is accepted&quot;</span>
+    <span class="n">offer_acceptance_time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;After this time, the first available flex offer is accepted&quot;</span>
     <span class="p">)</span>
     <span class="n">direction</span><span class="p">:</span> <span class="n">FlexibilityDirections</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;positive&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Direction of the flexibility&quot;</span>
@@ -156,6 +156,17 @@
         <span class="o">...</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Market options, changes depending on &#39;type&#39;&quot;</span><span class="p">,</span>
         <span class="n">discriminator</span><span class="o">=</span><span class="s2">&quot;type&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">accepted_offer_sample_points</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="n">COLLOCATION</span><span class="p">,</span> <span class="n">CONSTANT</span><span class="p">]</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;collocation&#39;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Method defining how to send the accepted flexibility power back&quot;</span>
+                    <span class="s2">&quot;to the baseline mpc so that the system can deliver it. &quot;</span>
+                    <span class="s2">&quot;This is relevant for collocation, as the power profile is only &quot;</span>
+                    <span class="s2">&quot;defined at the collocation points. If you choose constant here, &quot;</span>
+                    <span class="s2">&quot;the values are averaged and set for the whole time step.&quot;</span>
+                    <span class="s2">&quot;Set to constant if the power only depends on control or if &quot;</span>
+                    <span class="s2">&quot;system has low inertial. Otherwise, use collocation.&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="c1"># Root validator to automatically populate the options.type from the top-level type</span>
