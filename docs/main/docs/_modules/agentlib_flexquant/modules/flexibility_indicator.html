@@ -89,6 +89,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">ConfigDict</span><span class="p">,</span> <span class="n">Field</span><span class="p">,</span> <span class="n">model_validator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.utils.data_handling</span><span class="w"> </span><span class="kn">import</span> <span class="n">fill_nans</span><span class="p">,</span> <span class="n">MEAN</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">glbs</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.flex_kpis</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -117,12 +118,11 @@
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Absolute tolerance in kW within which no warning is thrown&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">stored_energy_variable</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+    <span class="n">stored_energy_variable</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">name</span><span class="o">=</span><span class="s2">&quot;stored_energy_variable&quot;</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;E_stored&quot;</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Name of the variable representing the stored electrical energy in the baseline config&quot;</span>
-        <span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the variable representing the stored electrical energy in the &quot;</span>
+                    <span class="s2">&quot;baseline config&quot;</span>
     <span class="p">)</span></div>
 
 
@@ -355,36 +355,39 @@
     <span class="p">]</span>
 
     <span class="n">parameters</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">PREP_TIME</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Preparation time&quot;</span>
-        <span class="p">),</span>
-        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">MARKET_TIME</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Market time&quot;</span>
-        <span class="p">),</span>
-        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">FLEX_EVENT_DURATION</span><span class="p">,</span>
-            <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;time to switch objective&quot;</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">TIME_STEP</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;timestep of the mpc solution&quot;</span>
-        <span class="p">),</span>
-        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">PREDICTION_HORIZON</span><span class="p">,</span>
-            <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;prediction horizon of the mpc solution&quot;</span><span class="p">,</span>
-        <span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">PREP_TIME</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span>
+                               <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Preparation time&quot;</span><span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">MARKET_TIME</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span>
+                               <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Market time&quot;</span><span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">FLEX_EVENT_DURATION</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span>
+                               <span class="n">description</span><span class="o">=</span><span class="s2">&quot;time to switch objective&quot;</span><span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">TIME_STEP</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span>
+                               <span class="n">description</span><span class="o">=</span><span class="s2">&quot;timestep of the mpc solution&quot;</span><span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">PREDICTION_HORIZON</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span>
+                               <span class="n">description</span><span class="o">=</span><span class="s2">&quot;prediction horizon of the mpc solution&quot;</span><span class="p">),</span>
+        <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">COLLOCATION_TIME_GRID</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">COLLOCATION_TIME_GRID</span><span class="p">,</span>
+                               <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Time grid of the mpc model output&quot;</span><span class="p">)</span>
     <span class="p">]</span>
 
     <span class="n">results_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;flexibility_indicator.csv&quot;</span><span class="p">),</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;User specified results file name&quot;</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">save_results</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">validate_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">save_results</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">validate_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
     <span class="n">price_variable</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;c_pel&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the price variable sent by a predictor&quot;</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">power_unit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;kW&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unit of the power variable&quot;</span><span class="p">)</span>
+    <span class="n">power_unit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;kW&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unit of the power variable&quot;</span>
+    <span class="p">)</span>
+    <span class="n">integration_method</span><span class="p">:</span> <span class="n">glbs</span><span class="o">.</span><span class="n">INTEGRATION_METHOD</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">LINEAR</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Method set to integrate series variable&quot;</span>
+    <span class="p">)</span>
     <span class="n">shared_variable_fields</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;outputs&quot;</span><span class="p">]</span>
 
     <span class="n">correct_costs</span><span class="p">:</span> <span class="n">InputsForCorrectFlexCosts</span> <span class="o">=</span> <span class="n">InputsForCorrectFlexCosts</span><span class="p">()</span>
@@ -451,33 +454,22 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_provision</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">POWER_ALIAS_BASE</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">format_mpc_inputs</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">unify_inputs</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">POWER_ALIAS_NEG</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_flex_neg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">format_mpc_inputs</span><span class="p">(</span>
-                    <span class="n">inp</span><span class="o">.</span><span class="n">value</span>
-                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_flex_neg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">unify_inputs</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">POWER_ALIAS_POS</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_flex_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">format_mpc_inputs</span><span class="p">(</span>
-                    <span class="n">inp</span><span class="o">.</span><span class="n">value</span>
-                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_flex_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">unify_inputs</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">STORED_ENERGY_ALIAS_BASE</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">format_mpc_inputs</span><span class="p">(</span>
-                    <span class="n">inp</span><span class="o">.</span><span class="n">value</span>
-                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">unify_inputs</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">STORED_ENERGY_ALIAS_NEG</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_flex_neg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">format_mpc_inputs</span><span class="p">(</span>
-                    <span class="n">inp</span><span class="o">.</span><span class="n">value</span>
-                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_flex_neg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">unify_inputs</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">STORED_ENERGY_ALIAS_POS</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_flex_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">format_mpc_inputs</span><span class="p">(</span>
-                    <span class="n">inp</span><span class="o">.</span><span class="n">value</span>
-                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_flex_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">unify_inputs</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">price_variable</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">use_constant_electricity_price</span><span class="p">:</span>
-                    <span class="c1"># price comes from predictor, so no stripping needed</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">electricity_price_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">format_predictor_inputs</span><span class="p">(</span>
-                        <span class="n">inp</span><span class="o">.</span><span class="n">value</span>
-                    <span class="p">)</span>
+                    <span class="c1"># price comes from predictor</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">electricity_price_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">unify_inputs</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                                                                                <span class="n">mpc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
             <span class="c1"># set the constant electricity price series if given</span>
             <span class="k">if</span> <span class="p">(</span>
@@ -487,15 +479,10 @@
                 <span class="c1"># get the index for the electricity price series</span>
                 <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">PREDICTION_HORIZON</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
                 <span class="n">ts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">TIME_STEP</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
-                <span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">*</span> <span class="n">ts</span><span class="p">,</span> <span class="n">ts</span><span class="p">)</span>
+                <span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">*</span> <span class="n">ts</span> <span class="o">+</span> <span class="n">ts</span><span class="p">,</span> <span class="n">ts</span><span class="p">)</span>
                 <span class="c1"># fill the electricity_price_series with values</span>
-                <span class="n">electricity_price_series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
-                    <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">const_electricity_price</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">grid</span><span class="p">],</span>
-                    <span class="n">index</span><span class="o">=</span><span class="n">grid</span><span class="p">,</span>
-                <span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">electricity_price_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">format_predictor_inputs</span><span class="p">(</span>
-                    <span class="n">electricity_price_series</span>
-                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">electricity_price_series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+                    <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">const_electricity_price</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">grid</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">grid</span><span class="p">)</span>
 
             <span class="n">necessary_input_for_calc_flex</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_base</span><span class="p">,</span>
@@ -505,6 +492,13 @@
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">calculate_flex_costs</span><span class="p">:</span>
                 <span class="n">necessary_input_for_calc_flex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">electricity_price_series</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="nb">all</span><span class="p">(</span><span class="n">var</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">necessary_input_for_calc_flex</span><span class="p">)</span> <span class="ow">and</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="n">necessary_input_for_calc_flex</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">):</span>
+                <span class="c1"># align the index of price variable to the index of inputs from mpc;</span>
+                <span class="c1"># electricity price signal is usually steps</span>
+                <span class="n">necessary_input_for_calc_flex</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">electricity_price_series</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_base</span><span class="o">.</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">enable_energy_costs_correction</span><span class="p">:</span>
                 <span class="n">necessary_input_for_calc_flex</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
@@ -556,8 +550,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">now</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span>
+
+        <span class="c1"># First, collect all series and their indices</span>
+        <span class="n">all_series</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_list</span><span class="p">:</span>
-            <span class="c1"># Use the power variables averaged for each timestep, not the collocation values</span>
+            <span class="c1"># Get the appropriate values based on name</span>
             <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">POWER_ALIAS_BASE</span><span class="p">:</span>
                 <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_base</span>
             <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">POWER_ALIAS_NEG</span><span class="p">:</span>
@@ -572,14 +569,32 @@
                 <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_flex_pos</span>
             <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">price_variable</span><span class="p">:</span>
                 <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">electricity_price_series</span>
+            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">COLLOCATION_TIME_GRID</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
 
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
-                <span class="n">traj</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">*</span> <span class="n">ts</span><span class="p">,</span> <span class="n">ts</span><span class="p">))</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">traj</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">*</span> <span class="n">ts</span><span class="p">,</span> <span class="n">ts</span><span class="p">))</span>
-            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">traj</span><span class="p">)</span>
+            <span class="c1"># Convert to Series if not already</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+
+            <span class="n">all_series</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">name</span><span class="p">,</span> <span class="n">values</span><span class="p">))</span>
+
+        <span class="c1"># Create the standard grid for reference</span>
+        <span class="n">standard_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">*</span> <span class="n">ts</span><span class="p">,</span> <span class="n">ts</span><span class="p">)</span>
+
+        <span class="c1"># Find the union of all indices to create a comprehensive grid</span>
+        <span class="n">all_indices</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">standard_grid</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">series</span> <span class="ow">in</span> <span class="n">all_series</span><span class="p">:</span>
+            <span class="n">all_indices</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">series</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+        <span class="n">combined_index</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">all_indices</span><span class="p">)</span>
+
+        <span class="c1"># Reindex all series to the combined grid</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">series</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">all_series</span><span class="p">):</span>
+            <span class="c1"># Reindex to the comprehensive grid</span>
+            <span class="n">reindexed</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">combined_index</span><span class="p">)</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reindexed</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">now</span> <span class="o">%</span> <span class="n">ts</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">now</span><span class="p">)</span>
@@ -615,20 +630,41 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the flexibility KPIs for current predictions, send the flex offer</span>
 <span class="sd">        and set the outputs, write and save the results.&quot;&quot;&quot;</span>
         <span class="c1"># Calculate the flexibility KPIs for current predictions</span>
+        <span class="n">collocation_time_grid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">COLLOCATION_TIME_GRID</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span>
-            <span class="n">enable_energy_costs_correction</span><span class="o">=</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">enable_energy_costs_correction</span>
-            <span class="p">),</span>
+            <span class="n">enable_energy_costs_correction</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">enable_energy_costs_correction</span><span class="p">,</span>
             <span class="n">calculate_flex_cost</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">calculate_flex_costs</span><span class="p">,</span>
-        <span class="p">)</span>
+            <span class="n">integration_method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">integration_method</span><span class="p">,</span>
+            <span class="n">collocation_time_grid</span><span class="o">=</span><span class="n">collocation_time_grid</span><span class="p">)</span>
+
+        <span class="c1"># get the full index during flex enevt including mpc_time_grid index and the</span>
+        <span class="c1"># collocation index</span>
+        <span class="n">full_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">collocation_time_grid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">mpc_time_grid</span><span class="p">]))</span>
+        <span class="n">flex_begin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">MARKET_TIME</span><span class="p">)</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">PREP_TIME</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">flex_end</span> <span class="o">=</span> <span class="n">flex_begin</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">FLEX_EVENT_DURATION</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">full_flex_offer_index</span> <span class="o">=</span> <span class="n">full_index</span><span class="p">[(</span><span class="n">full_index</span> <span class="o">&gt;=</span> <span class="n">flex_begin</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">full_index</span> <span class="o">&lt;=</span> <span class="n">flex_end</span><span class="p">)]</span>
+
+        <span class="c1"># reindex the power profiles to not send the simulation points to the market, but only</span>
+        <span class="c1"># the values on the collocation points and the forward mean of them</span>
+        <span class="n">base_power_profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_base</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span>
+            <span class="n">collocation_time_grid</span><span class="p">)</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">full_flex_offer_index</span><span class="p">)</span>
+        <span class="n">pos_diff_profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">kpis_pos</span><span class="o">.</span><span class="n">power_flex_offer</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span>
+            <span class="n">collocation_time_grid</span><span class="p">)</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">full_flex_offer_index</span><span class="p">)</span>
+        <span class="n">neg_diff_profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">kpis_neg</span><span class="o">.</span><span class="n">power_flex_offer</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span>
+            <span class="n">collocation_time_grid</span><span class="p">)</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">full_flex_offer_index</span><span class="p">)</span>
+
+        <span class="c1"># fill the mpc_time_grid with forward mean</span>
+        <span class="n">base_power_profile</span> <span class="o">=</span> <span class="n">fill_nans</span><span class="p">(</span><span class="n">base_power_profile</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">MEAN</span><span class="p">)</span>
+        <span class="n">pos_diff_profile</span> <span class="o">=</span> <span class="n">fill_nans</span><span class="p">(</span><span class="n">pos_diff_profile</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">MEAN</span><span class="p">)</span>
+        <span class="n">neg_diff_profile</span> <span class="o">=</span> <span class="n">fill_nans</span><span class="p">(</span><span class="n">neg_diff_profile</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">MEAN</span><span class="p">)</span>
 
         <span class="c1"># Send flex offer</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">send_flex_offer</span><span class="p">(</span>
             <span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">FLEXIBILITY_OFFER</span><span class="p">,</span>
-            <span class="n">base_power_profile</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_base</span><span class="p">,</span>
-            <span class="n">pos_diff_profile</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">kpis_pos</span><span class="o">.</span><span class="n">power_flex_offer</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">base_power_profile</span><span class="o">=</span><span class="n">base_power_profile</span><span class="p">,</span>
+            <span class="n">pos_diff_profile</span><span class="o">=</span><span class="n">pos_diff_profile</span><span class="p">,</span>
             <span class="n">pos_price</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">kpis_pos</span><span class="o">.</span><span class="n">costs</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
-            <span class="n">neg_diff_profile</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">kpis_neg</span><span class="o">.</span><span class="n">power_flex_offer</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">neg_diff_profile</span><span class="o">=</span><span class="n">neg_diff_profile</span><span class="p">,</span>
             <span class="n">neg_price</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">kpis_neg</span><span class="o">.</span><span class="n">costs</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
         <span class="p">)</span>
 
