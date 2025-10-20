@@ -98,9 +98,11 @@
 <span class="n">STORED_ENERGY_ALIAS_POS</span> <span class="o">=</span> <span class="s2">&quot;_E_stored_pos&quot;</span>
 <span class="n">full_trajectory_suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_full&quot;</span>
 <span class="n">full_trajectory_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span>
+<span class="n">shadow_suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_shadow&quot;</span>
 <span class="n">COLLOCATION_TIME_GRID</span> <span class="o">=</span> <span class="s1">&#39;collocation_time_grid&#39;</span>
 
-<span class="c1"># cost function in the shadow mpc. obj_std and obj_flex are to be evaluated according to user definition</span>
+<span class="c1"># cost function in the shadow mpc. obj_std and obj_flex are to be evaluated according</span>
+<span class="c1"># to user definition</span>
 <span class="n">SHADOW_MPC_COST_FUNCTION</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;return ca.if_else(self.time &lt; self.prep_time.sym + &quot;</span>
     <span class="s2">&quot;self.market_time.sym, obj_std, ca.if_else(self.time &lt; &quot;</span>
@@ -108,8 +110,6 @@
     <span class="s2">&quot;self.market_time.sym), obj_flex, obj_std))&quot;</span>
 <span class="p">)</span>
 
-<span class="n">full_trajectory_suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_full&quot;</span>
-<span class="n">shadow_suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_shadow&quot;</span>
 
 <div class="viewcode-block" id="return_baseline_cost_function"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.globals.return_baseline_cost_function">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">return_baseline_cost_function</span><span class="p">(</span><span class="n">power_variable</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">comfort_variable</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return baseline cost function</span>
@@ -119,7 +119,8 @@
 <span class="sd">        comfort_variable: name of the comfort variable</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Cost function in the baseline mpc, obj_std is to be evaluated according to user definition</span>
+<span class="sd">        Cost function in the baseline mpc, obj_std is to be evaluated according to</span>
+<span class="sd">        user definition</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">comfort_variable</span><span class="p">:</span>
@@ -127,7 +128,8 @@
             <span class="s2">&quot;return ca.if_else(self.in_provision.sym, &quot;</span>
             <span class="s2">&quot;ca.if_else(self.time &lt; self.rel_start.sym, obj_std, &quot;</span>
             <span class="s2">&quot;ca.if_else(self.time &gt;= self.rel_end.sym, obj_std, &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;sum([self.profile_deviation_weight*(self.</span><span class="si">{</span><span class="n">power_variable</span><span class="si">}</span><span class="s2"> - self._P_external)**2, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;sum([self.profile_deviation_weight*(self.</span><span class="si">{</span><span class="n">power_variable</span><span class="si">}</span><span class="s2"> - &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;self._P_external)**2, &quot;</span>
             <span class="sa">f</span><span class="s2">&quot;self.</span><span class="si">{</span><span class="n">comfort_variable</span><span class="si">}</span><span class="s2">**2 * self.profile_comfort_weight]))),obj_std)&quot;</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>

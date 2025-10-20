@@ -91,15 +91,23 @@
     <span class="n">full_trajectory_prefix</span><span class="p">,</span>
     <span class="n">full_trajectory_suffix</span><span class="p">,</span>
     <span class="n">STORED_ENERGY_ALIAS_NEG</span><span class="p">,</span>
-    <span class="n">STORED_ENERGY_ALIAS_POS</span>
+    <span class="n">STORED_ENERGY_ALIAS_POS</span><span class="p">,</span>
 <span class="p">)</span>
 
 
 <div class="viewcode-block" id="FlexibilityShadowMPCConfig"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityShadowMPCConfig</span><span class="p">(</span><span class="n">mpc_full</span><span class="o">.</span><span class="n">MPCConfig</span><span class="p">):</span>
 
-    <span class="n">casadi_sim_time_step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Time step for simulation with Casadi simulator. Value is read from FlexQuantConfig&quot;</span><span class="p">)</span>
-    <span class="n">power_variable_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the power variable in the shadow mpc model.&quot;</span><span class="p">)</span>
-    <span class="n">storage_variable_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the storage variable in the shadow mpc model.&quot;</span><span class="p">)</span></div>
+    <span class="n">casadi_sim_time_step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Time step for simulation with Casadi simulator. Value is read from &quot;</span>
+                    <span class="s2">&quot;FlexQuantConfig&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">power_variable_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the power variable in the shadow mpc model.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">storage_variable_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the storage variable in the shadow mpc model.&quot;</span>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="FlexibilityShadowMPC"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPC">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityShadowMPC</span><span class="p">(</span><span class="n">mpc_full</span><span class="o">.</span><span class="n">MPC</span><span class="p">):</span>
@@ -115,10 +123,13 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="c1"># set up necessary components if simulation is enabled</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">casadi_sim_time_step</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="c1"># generate a separate flex_model for integration to ensure the model used in MPC optimization remains unaffected</span>
+            <span class="c1"># generate a separate flex_model for integration to ensure the model used in MPC</span>
+            <span class="c1"># optimization remains unaffected</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)(</span><span class="n">dt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">casadi_sim_time_step</span><span class="p">)</span>
             <span class="c1"># generate the filename for the simulation results</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">res_file_flex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s1">&#39;results_file&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;mpc&#39;</span><span class="p">,</span> <span class="s1">&#39;mpc_sim&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">res_file_flex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;results_file&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="s2">&quot;mpc&quot;</span><span class="p">,</span> <span class="s2">&quot;mpc_sim&quot;</span>
+            <span class="p">)</span>
             <span class="c1"># clear the casadi simulator result at the first time step if already exists</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">res_file_flex</span><span class="p">)</span>
@@ -135,7 +146,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">sim_flex_model</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">output</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">power_variable_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage_variable_name</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">output</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">power_variable_name</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage_variable_name</span><span class="p">,</span>
+                <span class="p">]:</span>
                     <span class="n">series</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">variable</span><span class="p">[</span><span class="n">output</span><span class="p">]</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">series</span><span class="p">)</span>
             <span class="c1"># send the power and storage variable value from simulation results</span>
@@ -150,7 +164,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">series</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlexibilityShadowMPC.sim_flex_model"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPC.sim_flex_model">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">sim_flex_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solution</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&#39;&#39;&#39;simulate the flex model over the preditcion horizon and save results&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;simulate the flex model over the preditcion horizon and save results&quot;&quot;&quot;</span>
 
         <span class="c1"># return if sim_time_step is not a positive integer and system is in provision</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">casadi_sim_time_step</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;in_provision&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">):</span>
@@ -168,14 +182,18 @@
         <span class="n">result_df</span> <span class="o">=</span> <span class="n">solution</span><span class="o">.</span><span class="n">df</span>
 
         <span class="c1"># initialize the flex sim results Dataframe</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_flex_results</span><span class="p">(</span><span class="n">n_simulation_steps</span><span class="p">,</span> <span class="n">total_horizon_time</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">result_df</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_flex_results</span><span class="p">(</span>
+            <span class="n">n_simulation_steps</span><span class="p">,</span> <span class="n">total_horizon_time</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">result_df</span>
+        <span class="p">)</span>
 
         <span class="c1"># Update model parameters and initial states</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_model_parameters</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_initial_states</span><span class="p">(</span><span class="n">result_df</span><span class="p">)</span>
 
         <span class="c1"># Run simulation</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_run_simulation</span><span class="p">(</span><span class="n">n_simulation_steps</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">mpc_time_step</span><span class="p">,</span> <span class="n">result_df</span><span class="p">,</span> <span class="n">total_horizon_time</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_run_simulation</span><span class="p">(</span>
+            <span class="n">n_simulation_steps</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">mpc_time_step</span><span class="p">,</span> <span class="n">result_df</span><span class="p">,</span> <span class="n">total_horizon_time</span>
+        <span class="p">)</span>
 
         <span class="c1"># set index of flex results to the same as mpc result</span>
         <span class="n">store_results_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -185,7 +203,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">res_file_flex</span><span class="p">):</span>
             <span class="n">store_results_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">res_file_flex</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">store_results_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">res_file_flex</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">store_results_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">res_file_flex</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="c1"># set the flex results format same as mpc result while updating Agentvariable</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get_level_values</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
@@ -237,26 +255,33 @@
         <span class="c1"># the shadow mpc should only be run after the results of the baseline are sent</span>
         <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">event</span><span class="p">()</span></div>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_flex_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_simulation_steps</span><span class="p">,</span> <span class="n">horizon_length</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">result_df</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&#39;&#39;&#39;Initialize the flex results dataframe with the correct dimension and index and fill with existing results from optimization&#39;&#39;&#39;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_flex_results</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">n_simulation_steps</span><span class="p">,</span> <span class="n">horizon_length</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">result_df</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the flex results dataframe with the correct dimension and index and fill with</span>
+<span class="sd">        existing results from optimization&quot;&quot;&quot;</span>
 
         <span class="c1"># create MultiIndex for collocation points</span>
         <span class="n">index_coll</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">(</span>
             <span class="p">[[</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">result_df</span><span class="o">.</span><span class="n">index</span><span class="p">),</span> <span class="n">result_df</span><span class="o">.</span><span class="n">index</span><span class="p">],</span>
-            <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;time_step&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">]</span>
+            <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;time_step&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">]</span>
             <span class="c1"># Match the names with multi_index but note they&#39;re reversed</span>
         <span class="p">)</span>
         <span class="c1"># create Multiindex for full simulation sample times</span>
         <span class="n">index_full_sample</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_tuples</span><span class="p">(</span>
-            <span class="nb">zip</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_simulation_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">horizon_length</span> <span class="o">+</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">)),</span>
-            <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;time_step&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">])</span>
+            <span class="nb">zip</span><span class="p">(</span>
+                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_simulation_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">horizon_length</span> <span class="o">+</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">),</span>
+            <span class="p">),</span>
+            <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;time_step&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
         <span class="c1"># merge indexes</span>
         <span class="n">new_index</span> <span class="o">=</span> <span class="n">index_coll</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">index_full_sample</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span>
         <span class="c1"># initialize the flex results with correct dimension</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">new_index</span><span class="p">,</span>
-                                         <span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">outputs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">new_index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">outputs</span><span class="p">)</span>
 
-        <span class="c1"># Get the optimization outputs and create a series for fixed optimization outputs with the correct MultiIndex format</span>
+        <span class="c1"># Get the optimization outputs and create a series for fixed optimization outputs with the</span>
+        <span class="c1"># correct MultiIndex format</span>
         <span class="n">opti_outputs</span> <span class="o">=</span> <span class="n">result_df</span><span class="o">.</span><span class="n">variable</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">power_variable_name</span><span class="p">]</span>
         <span class="n">fixed_opti_output</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
             <span class="n">opti_outputs</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
@@ -268,15 +293,15 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">power_variable_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fixed_opti_output</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_update_model_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&#39;&#39;&#39;update the value of module parameters with value from config,</span>
-<span class="sd">           since creating a model just reads the value in the model class but not the config</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;update the value of module parameters with value from config,</span>
+<span class="sd">        since creating a model just reads the value in the model class but not the config</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">parameters</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_update_initial_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result_df</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&#39;&#39;&#39;set the initial value of states&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;set the initial value of states&quot;&quot;&quot;</span>
 
         <span class="c1"># get state values from the mpc optimization result</span>
         <span class="n">state_values</span> <span class="o">=</span> <span class="n">result_df</span><span class="o">.</span><span class="n">variable</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">states</span><span class="p">]</span>
@@ -284,8 +309,10 @@
         <span class="k">for</span> <span class="n">state</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">states</span><span class="p">,</span> <span class="n">state_values</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_run_simulation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_simulation_steps</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">mpc_time_step</span><span class="p">,</span> <span class="n">result_df</span><span class="p">,</span> <span class="n">total_horizon_time</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&#39;&#39;&#39;simulate with flex model over the prediction horizon&#39;&#39;&#39;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_run_simulation</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">n_simulation_steps</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">mpc_time_step</span><span class="p">,</span> <span class="n">result_df</span><span class="p">,</span> <span class="n">total_horizon_time</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;simulate with flex model over the prediction horizon&quot;&quot;&quot;</span>
 
         <span class="c1"># get control and input values from the mpc optimization result</span>
         <span class="n">control_values</span> <span class="o">=</span> <span class="n">result_df</span><span class="o">.</span><span class="n">variable</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">controls</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
@@ -295,17 +322,21 @@
         <span class="n">sim_time_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">n_simulation_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">)</span>
 
         <span class="c1"># Reindex the controls and inputs to sim_time_index</span>
-        <span class="n">control_values_full</span> <span class="o">=</span> <span class="n">control_values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">sim_time_index</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;ffill&#39;</span><span class="p">)</span>
-        <span class="n">input_values_full</span> <span class="o">=</span> <span class="n">input_values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">sim_time_index</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">)</span>
+        <span class="n">control_values_full</span> <span class="o">=</span> <span class="n">control_values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">sim_time_index</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;ffill&quot;</span><span class="p">)</span>
+        <span class="n">input_values_full</span> <span class="o">=</span> <span class="n">input_values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">sim_time_index</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_simulation_steps</span><span class="p">):</span>
             <span class="n">current_sim_time</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">sim_time_step</span>
 
             <span class="c1"># Apply control and input values from the appropriate MPC step</span>
-            <span class="k">for</span> <span class="n">control</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">controls</span><span class="p">,</span> <span class="n">control_values_full</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">current_sim_time</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">control</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">controls</span><span class="p">,</span> <span class="n">control_values_full</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">current_sim_time</span><span class="p">]</span>
+            <span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">control</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">input_var</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">input_values_full</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">current_sim_time</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">input_var</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">input_values_full</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">current_sim_time</span><span class="p">]</span>
+            <span class="p">):</span>
                 <span class="c1"># change the type of iterable input, since casadi model can&#39;t deal with iterable</span>
                 <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">input_var</span><span class="p">)</span><span class="o">.</span><span class="n">type</span><span class="p">),</span> <span class="n">Iterable</span><span class="p">):</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">input_var</span><span class="p">)</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
@@ -321,15 +352,24 @@
 
             <span class="c1"># save output</span>
             <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span> <span class="n">current_sim_time</span> <span class="o">+</span> <span class="n">t_sample</span><span class="p">),</span> <span class="n">output</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">get_output</span><span class="p">(</span>
-                    <span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="n">value</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span> <span class="n">current_sim_time</span> <span class="o">+</span> <span class="n">t_sample</span><span class="p">),</span> <span class="n">output</span>
+                <span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">get_output</span><span class="p">(</span><span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="n">value</span></div>
+
 
 <div class="viewcode-block" id="FlexibilityShadowMINLPMPCConfig"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityShadowMINLPMPCConfig</span><span class="p">(</span><span class="n">minlp_mpc</span><span class="o">.</span><span class="n">MINLPMPCConfig</span><span class="p">):</span>
 
-    <span class="n">casadi_sim_time_step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Time step for simulation with Casadi simulator. Value is read from FlexQuantConfig&quot;</span><span class="p">)</span>
-    <span class="n">power_variable_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the power variable in the shadow mpc model.&quot;</span><span class="p">)</span>
-    <span class="n">storage_variable_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the storage variable in the shadow mpc model.&quot;</span><span class="p">)</span></div>
+    <span class="n">casadi_sim_time_step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Time step for simulation with Casadi simulator. Value is read from &quot;</span>
+                    <span class="s2">&quot;FlexQuantConfig&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">power_variable_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the power variable in the shadow mpc model.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">storage_variable_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the storage variable in the shadow mpc model.&quot;</span>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="FlexibilityShadowMINLPMPC"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPC">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityShadowMINLPMPC</span><span class="p">(</span><span class="n">minlp_mpc</span><span class="o">.</span><span class="n">MINLPMPC</span><span class="p">):</span>
@@ -345,10 +385,13 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="c1"># set up necessary components if simulation is enabled</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">casadi_sim_time_step</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="c1"># generate a separate flex_model for integration to ensure the model used in MPC optimization remains unaffected</span>
+            <span class="c1"># generate a separate flex_model for integration to ensure the model used in MPC</span>
+            <span class="c1"># optimization remains unaffected</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)(</span><span class="n">dt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">casadi_sim_time_step</span><span class="p">)</span>
             <span class="c1"># generate the filename for the simulation results</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">res_file_flex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s1">&#39;results_file&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;mpc&#39;</span><span class="p">,</span> <span class="s1">&#39;mpc_sim&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">res_file_flex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;results_file&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="s2">&quot;mpc&quot;</span><span class="p">,</span> <span class="s2">&quot;mpc_sim&quot;</span>
+            <span class="p">)</span>
             <span class="c1"># clear the casadi simulator result at the first time step if already exists</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">res_file_flex</span><span class="p">)</span>
@@ -395,7 +438,8 @@
             <span class="n">vals</span><span class="o">.</span><span class="n">index</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span>
         <span class="c1"># update value in the mapping dictionary</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_full_controls</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span>
-        <span class="c1"># update the value of the variable in the model if we want to limit the binary control in the market time during optimization</span>
+        <span class="c1"># update the value of the variable in the model if we want to limit the binary control in</span>
+        <span class="c1"># the market time during optimization</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">vals</span><span class="p">)</span>
         <span class="c1"># make sure all controls are set</span>
         <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_full_controls</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
@@ -420,7 +464,10 @@
         <span class="n">df</span> <span class="o">=</span> <span class="n">solution</span><span class="o">.</span><span class="n">df</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">output</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">power_variable_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage_variable_name</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">output</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">power_variable_name</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage_variable_name</span><span class="p">,</span>
+                <span class="p">]:</span>
                     <span class="n">series</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">variable</span><span class="p">[</span><span class="n">output</span><span class="p">]</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">series</span><span class="p">)</span>
             <span class="c1"># send the power and storage variable value from simulation results</span>
@@ -435,7 +482,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">series</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlexibilityShadowMINLPMPC.sim_flex_model"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPC.sim_flex_model">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">sim_flex_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solution</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&#39;&#39;&#39;simulate the flex model over the preditcion horizon and save results&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;simulate the flex model over the preditcion horizon and save results&quot;&quot;&quot;</span>
 
         <span class="c1"># return if sim_time_step is not a positive integer and system is in provision</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">casadi_sim_time_step</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;in_provision&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">):</span>
@@ -453,14 +500,18 @@
         <span class="n">result_df</span> <span class="o">=</span> <span class="n">solution</span><span class="o">.</span><span class="n">df</span>
 
         <span class="c1"># initialize the flex sim results Dataframe</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_flex_results</span><span class="p">(</span><span class="n">n_simulation_steps</span><span class="p">,</span> <span class="n">total_horizon_time</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">result_df</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_flex_results</span><span class="p">(</span>
+            <span class="n">n_simulation_steps</span><span class="p">,</span> <span class="n">total_horizon_time</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">result_df</span>
+        <span class="p">)</span>
 
         <span class="c1"># Update model parameters and initial states</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_model_parameters</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_initial_states</span><span class="p">(</span><span class="n">result_df</span><span class="p">)</span>
 
         <span class="c1"># Run simulation</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_run_simulation</span><span class="p">(</span><span class="n">n_simulation_steps</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">mpc_time_step</span><span class="p">,</span> <span class="n">result_df</span><span class="p">,</span> <span class="n">total_horizon_time</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_run_simulation</span><span class="p">(</span>
+            <span class="n">n_simulation_steps</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">mpc_time_step</span><span class="p">,</span> <span class="n">result_df</span><span class="p">,</span> <span class="n">total_horizon_time</span>
+        <span class="p">)</span>
 
         <span class="c1"># set index of flex results to the same as mpc result</span>
         <span class="n">store_results_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -470,31 +521,38 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">res_file_flex</span><span class="p">):</span>
             <span class="n">store_results_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">res_file_flex</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">store_results_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">res_file_flex</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">store_results_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">res_file_flex</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="c1"># set the flex results format same as mpc result while updating Agentvariable</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get_level_values</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_flex_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_simulation_steps</span><span class="p">,</span> <span class="n">horizon_length</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">result_df</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&#39;&#39;&#39;Initialize the flex results dataframe with the correct dimension and index and fill with existing results from optimization&#39;&#39;&#39;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_flex_results</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">n_simulation_steps</span><span class="p">,</span> <span class="n">horizon_length</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">result_df</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the flex results dataframe with the correct dimension and index and fill with</span>
+<span class="sd">         existing results from optimization&quot;&quot;&quot;</span>
 
         <span class="c1"># create MultiIndex for collocation points</span>
         <span class="n">index_coll</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">(</span>
             <span class="p">[[</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">result_df</span><span class="o">.</span><span class="n">index</span><span class="p">),</span> <span class="n">result_df</span><span class="o">.</span><span class="n">index</span><span class="p">],</span>
-            <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;time_step&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">]</span>
+            <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;time_step&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">]</span>
             <span class="c1"># Match the names with multi_index but note they&#39;re reversed</span>
         <span class="p">)</span>
         <span class="c1"># create Multiindex for full simulation sample times</span>
         <span class="n">index_full_sample</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_tuples</span><span class="p">(</span>
-            <span class="nb">zip</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_simulation_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">horizon_length</span> <span class="o">+</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">)),</span>
-            <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;time_step&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">])</span>
+            <span class="nb">zip</span><span class="p">(</span>
+                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_simulation_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">horizon_length</span> <span class="o">+</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">),</span>
+            <span class="p">),</span>
+            <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;time_step&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
         <span class="c1"># merge indexes</span>
         <span class="n">new_index</span> <span class="o">=</span> <span class="n">index_coll</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">index_full_sample</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span>
         <span class="c1"># initialize the flex results with correct dimension</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">new_index</span><span class="p">,</span>
-                                         <span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">outputs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">new_index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">outputs</span><span class="p">)</span>
 
-        <span class="c1"># Get the optimization outputs and create a series for fixed optimization outputs with the correct MultiIndex format</span>
+        <span class="c1"># Get the optimization outputs and create a series for fixed optimization outputs with the</span>
+        <span class="c1"># correct MultiIndex format</span>
         <span class="n">opti_outputs</span> <span class="o">=</span> <span class="n">result_df</span><span class="o">.</span><span class="n">variable</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">power_variable_name</span><span class="p">]</span>
         <span class="n">fixed_opti_output</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
             <span class="n">opti_outputs</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
@@ -506,15 +564,15 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">power_variable_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fixed_opti_output</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_update_model_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&#39;&#39;&#39;update the value of module parameters with value from config,</span>
-<span class="sd">           since creating a model just reads the value in the model class but not the config</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;update the value of module parameters with value from config,</span>
+<span class="sd">        since creating a model just reads the value in the model class but not the config</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">parameters</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_update_initial_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result_df</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&#39;&#39;&#39;set the initial value of states&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;set the initial value of states&quot;&quot;&quot;</span>
 
         <span class="c1"># get state values from the mpc optimization result</span>
         <span class="n">state_values</span> <span class="o">=</span> <span class="n">result_df</span><span class="o">.</span><span class="n">variable</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">states</span><span class="p">]</span>
@@ -522,31 +580,43 @@
         <span class="k">for</span> <span class="n">state</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">states</span><span class="p">,</span> <span class="n">state_values</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_run_simulation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_simulation_steps</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">mpc_time_step</span><span class="p">,</span> <span class="n">result_df</span><span class="p">,</span> <span class="n">total_horizon_time</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&#39;&#39;&#39;simulate with flex model over the prediction horizon&#39;&#39;&#39;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_run_simulation</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">n_simulation_steps</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">mpc_time_step</span><span class="p">,</span> <span class="n">result_df</span><span class="p">,</span> <span class="n">total_horizon_time</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;simulate with flex model over the prediction horizon&quot;&quot;&quot;</span>
 
         <span class="c1"># get control and input values from the mpc optimization result</span>
-        <span class="n">control_values</span> <span class="o">=</span> <span class="n">result_df</span><span class="o">.</span><span class="n">variable</span><span class="p">[[</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">controls</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">binary_controls</span><span class="p">]]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+        <span class="n">control_values</span> <span class="o">=</span> <span class="n">result_df</span><span class="o">.</span><span class="n">variable</span><span class="p">[</span>
+            <span class="p">[</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">controls</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">binary_controls</span><span class="p">]</span>
+        <span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
         <span class="n">input_values</span> <span class="o">=</span> <span class="n">result_df</span><span class="o">.</span><span class="n">parameter</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">inputs</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
 
         <span class="c1"># Get the simulation time step index</span>
-        <span class="n">sim_time_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">n_simulation_steps</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">sim_time_step</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">)</span>
+        <span class="n">sim_time_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">n_simulation_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">)</span>
 
         <span class="c1"># Reindex the controls and inputs to sim_time_index</span>
-        <span class="n">control_values_full</span> <span class="o">=</span> <span class="n">control_values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">sim_time_index</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;ffill&#39;</span><span class="p">)</span>
-        <span class="n">input_values_full</span> <span class="o">=</span> <span class="n">input_values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">sim_time_index</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">)</span>
+        <span class="n">control_values_full</span> <span class="o">=</span> <span class="n">control_values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">sim_time_index</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;ffill&quot;</span><span class="p">)</span>
+        <span class="n">input_values_full</span> <span class="o">=</span> <span class="n">input_values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">sim_time_index</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_simulation_steps</span><span class="p">):</span>
             <span class="n">current_sim_time</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">sim_time_step</span>
 
             <span class="c1"># Apply control and input values from the appropriate MPC step</span>
-            <span class="k">for</span> <span class="n">control</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">controls</span><span class="p">,</span> <span class="n">control_values_full</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">current_sim_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">controls</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">control</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">controls</span><span class="p">,</span>
+                <span class="n">control_values_full</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">current_sim_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">controls</span><span class="p">],</span>
+            <span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">control</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">binary_control</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">binary_controls</span><span class="p">,</span> <span class="n">control_values_full</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">current_sim_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">binary_controls</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">binary_control</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">binary_controls</span><span class="p">,</span>
+                <span class="n">control_values_full</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">current_sim_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">binary_controls</span><span class="p">],</span>
+            <span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">binary_control</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">input_var</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">input_values_full</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">current_sim_time</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">input_var</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">input_values_full</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">current_sim_time</span><span class="p">]</span>
+            <span class="p">):</span>
                 <span class="c1"># change the type of iterable input, since casadi model can&#39;t deal with iterable</span>
                 <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">input_var</span><span class="p">)</span><span class="o">.</span><span class="n">type</span><span class="p">),</span> <span class="n">Iterable</span><span class="p">):</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">input_var</span><span class="p">)</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
@@ -562,9 +632,9 @@
 
             <span class="c1"># save output</span>
             <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span> <span class="n">current_sim_time</span> <span class="o">+</span> <span class="n">t_sample</span><span class="p">),</span> <span class="n">output</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">get_output</span><span class="p">(</span>
-                    <span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="n">value</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">now</span><span class="p">,</span> <span class="n">current_sim_time</span> <span class="o">+</span> <span class="n">t_sample</span><span class="p">),</span> <span class="n">output</span>
+                <span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">get_output</span><span class="p">(</span><span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="n">value</span></div>
 </pre></div>
 
            </div>

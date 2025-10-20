@@ -221,7 +221,7 @@ in model fields without requiring custom validators.</p>
 <li><p><strong>enable_energy_costs_correction</strong> – whether the energy costs should be corrected</p></li>
 <li><p><strong>calculate_flex_cost</strong> – whether the cost of the flexibility should be calculated</p></li>
 <li><p><strong>integration_method</strong> – method used for integration of KPISeries e.g. linear, constant</p></li>
-<li><p><strong>collocation_time_grid</strong> – Time grid of the mpc model output with discretization method collocation</p></li>
+<li><p><strong>collocation_time_grid</strong> – Time grid of the mpc output with collocation discretization</p></li>
 </ul>
 </dd>
 </dl>
@@ -375,7 +375,7 @@ This should be called between different flexibility calculations.</p>
 <li><p><strong>enable_energy_costs_correction</strong> – whether the energy costs should be corrected</p></li>
 <li><p><strong>calculate_flex_cost</strong> – whether the cost of the flexibility should be calculated</p></li>
 <li><p><strong>integration_method</strong> – method used for integration of KPISeries e.g. linear, constant</p></li>
-<li><p><strong>collocation_time_grid</strong> – Time grid of the mpc model output with discretization method collocation</p></li>
+<li><p><strong>collocation_time_grid</strong> – Time grid of the mpc output with collocation discretization</p></li>
 </ul>
 </dd>
 </dl>
@@ -1154,7 +1154,7 @@ the base flex directory, using only the directory names (ignoring any user-suppl
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘pathlib.Path’&gt;: &lt;class ‘str’&gt;, &lt;class ‘agentlib.core.agent.AgentConfig’&gt;: &lt;function FlexibilityIndicatorConfig.&lt;lambda&gt; at 0x7fc2653ac2c0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘pathlib.Path’&gt;: &lt;class ‘str’&gt;, &lt;class ‘agentlib.core.agent.AgentConfig’&gt;: &lt;function FlexibilityIndicatorConfig.&lt;lambda&gt; at 0x7fb6594682c0&gt;}</em></p></li>
 <li><p><strong>extra</strong>: <em>str = forbid</em></p></li>
 </ul>
 </dd>
@@ -1242,7 +1242,7 @@ the base flex directory, using only the directory names (ignoring any user-suppl
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function ShadowMPCConfigGeneratorConfig.&lt;lambda&gt; at 0x7fc26534ff60&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function ShadowMPCConfigGeneratorConfig.&lt;lambda&gt; at 0x7fb65941bf60&gt;}</em></p></li>
 <li><p><strong>extra</strong>: <em>str = forbid</em></p></li>
 </ul>
 </dd>
@@ -1322,7 +1322,8 @@ the base flex directory, using only the directory names (ignoring any user-suppl
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Cost function in the baseline mpc, obj_std is to be evaluated according to user definition</p>
+<dd class="field-even"><p>Cost function in the baseline mpc, obj_std is to be evaluated according to
+user definition</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1585,7 +1586,7 @@ mappings, and optimization weights for MPC implementations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function BaseMPCData.&lt;lambda&gt; at 0x7fc26534ee80&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function BaseMPCData.&lt;lambda&gt; at 0x7fb65941ae80&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -1670,7 +1671,7 @@ mappings, and optimization weights for MPC implementations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function BaselineMPCData.&lt;lambda&gt; at 0x7fc26534efc0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function BaselineMPCData.&lt;lambda&gt; at 0x7fb65941afc0&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -1903,7 +1904,7 @@ list as MPCVariable instances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function NFMPCData.&lt;lambda&gt; at 0x7fc26534f380&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function NFMPCData.&lt;lambda&gt; at 0x7fb65941b380&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -1989,7 +1990,7 @@ list as MPCVariable instances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function PFMPCData.&lt;lambda&gt; at 0x7fc26534f1a0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function PFMPCData.&lt;lambda&gt; at 0x7fb65941b1a0&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>

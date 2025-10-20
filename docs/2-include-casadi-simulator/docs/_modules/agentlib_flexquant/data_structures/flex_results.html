@@ -368,7 +368,8 @@
                                   <span class="n">cmng</span><span class="o">.</span><span class="n">SHADOWMPC_CONFIG_TYPE</span><span class="p">,</span> <span class="n">cmng</span><span class="o">.</span><span class="n">SHADOWMINLPMPC_CONFIG_TYPE</span><span class="p">]:</span>
                 <span class="k">return</span> <span class="n">module</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span>
 
-        <span class="k">raise</span> <span class="ne">ModuleNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;There is no matching mpc module type in Agentlib_FlexQuant for modules in agent </span><span class="si">{</span><span class="n">agent_config</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ModuleNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;There is no matching mpc module type in Agentlib_FlexQuant for &#39;</span>
+                                  <span class="sa">f</span><span class="s1">&#39;modules in agent </span><span class="si">{</span><span class="n">agent_config</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_resolve_sim_results_path</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">sim_result_filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">results_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]</span>

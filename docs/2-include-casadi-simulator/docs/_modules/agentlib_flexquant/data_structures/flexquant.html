@@ -193,8 +193,10 @@
     <span class="p">)</span>
     <span class="n">casadi_sim_time_step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Simulate over the prediction horizon with a defined resolution using Casadi simulator. &quot;</span>
-                    <span class="s2">&quot;Only use it when the power depends on the states. Don&#39;t use it when power itself is the control variable.&quot;</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Simulate over the prediction horizon with a defined resolution using Casadi &quot;</span>
+                    <span class="s2">&quot;simulator. &quot;</span>
+                    <span class="s2">&quot;Only use it when the power depends on the states. Don&#39;t use it when power &quot;</span>
+                    <span class="s2">&quot;itself is the control variable.&quot;</span>
                     <span class="s2">&quot;Set to 0 to skip simulation&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">flex_base_directory_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
