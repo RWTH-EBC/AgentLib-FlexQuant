@@ -4064,10 +4064,7 @@
         # simulate with the casadi simulator
         self.sim_flex_model(solution)
 
-        # extract solution DataFrama
         df = solution.df
-
-        # send the outputs
         if self.flex_results is not None:
             for output in self.var_ref.outputs:
                 if output not in [self.config.power_variable_name, self.config.storage_variable_name]:
@@ -4085,8 +4082,7 @@
                 self.set(output, series)
 
     def sim_flex_model(self, solution):
-        &#39;&#39;&#39;simulate the flex model over the preditcion horizon and save results
-        &#39;&#39;&#39;
+        &#39;&#39;&#39;simulate the flex model over the preditcion horizon and save results&#39;&#39;&#39;
 
         # return if sim_time_step is not a positive integer and system is in provision
         if not (self.config.casadi_sim_time_step &gt; 0 and not self.get(&#34;in_provision&#34;).value):
@@ -4126,11 +4122,8 @@
         # set the flex results format same as mpc result while updating Agentvariable
         self.flex_results.index = self.flex_results.index.get_level_values(1)
 
-    def _initialize_flex_results(self, n_simulation_steps, horizon_length,
-                                 sim_time_step, result_df):
-        &#39;&#39;&#39;Initialize the flex results dataframe with the correct dimension and index
-        and fill with existing results from optimization
-        &#39;&#39;&#39;
+    def _initialize_flex_results(self, n_simulation_steps, horizon_length, sim_time_step, result_df):
+        &#39;&#39;&#39;Initialize the flex results dataframe with the correct dimension and index and fill with existing results from optimization&#39;&#39;&#39;
 
         # create MultiIndex for collocation points
         index_coll = pd.MultiIndex.from_arrays(
@@ -4209,8 +4202,7 @@
                 self.set(output, series)
 
     def sim_flex_model(self, solution):
-        &#39;&#39;&#39;simulate the flex model over the preditcion horizon and save results
-        &#39;&#39;&#39;
+        &#39;&#39;&#39;simulate the flex model over the preditcion horizon and save results&#39;&#39;&#39;
 
         # return if sim_time_step is not a positive integer and system is in provision
         if not (self.config.casadi_sim_time_step &gt; 0 and not self.get(&#34;in_provision&#34;).value):
@@ -4250,13 +4242,7 @@
         # set the flex results format same as mpc result while updating Agentvariable
         self.flex_results.index = self.flex_results.index.get_level_values(1)
 
-    def _initialize_flex_results(self, n_simulation_steps, horizon_length,
-                                 sim_time_step, result_df):
-        &#39;&#39;&#39;Initialize the flex results dataframe with the correct dimension and index
-        and fill with existing results from optimization
-        &#39;&#39;&#39;
-
-        # create MultiIndex for collocation points</pre></td>
+    def register_callbacks(self):</pre></td>
             </tr>
             
             <tr>
@@ -4451,7 +4437,9 @@
             for output in self.var_ref.outputs:
                 self.flex_results.loc[(
                     self.env.now, current_sim_time + t_sample), output] = self.flex_model.get_output(
-                    output).value</pre></td>
+                    output).value
+
+</pre></td>
             </tr>
             
             <tr>
@@ -4482,7 +4470,8 @@
             for output in self.var_ref.outputs:
                 self.flex_results.loc[(
                     self.env.now, current_sim_time + t_sample), output] = self.flex_model.get_output(
-                    output).value</pre></td>
+                    output).value
+</pre></td>
             </tr>
             
             <tr>
@@ -4503,7 +4492,7 @@
             ),
             None,
         )
-        # convert filename string to path and extract the name</pre></td>
+        # instantiate and validate sim agent config</pre></td>
             </tr>
             
             <tr>
@@ -4527,9 +4516,13 @@
             except:
                 pass
 
-    def set_output(self, solution):
-        &#34;&#34;&#34;Takes the solution from optimization backend and sends it to AgentVariables.&#34;&#34;&#34;
-        # Output must be defined in the config as &#34;type&#34;=&#34;pd.Series&#34;</pre></td>
+    def pre_computation_hook(self):
+        &#34;&#34;&#34;Calculate relative start and end times for flexibility provision.
+
+        When in provision mode, computes the relative timing for flexibility
+        events based on the external power profile timestamps and current
+        environment time.
+        &#34;&#34;&#34;</pre></td>
             </tr>
             
             <tr>

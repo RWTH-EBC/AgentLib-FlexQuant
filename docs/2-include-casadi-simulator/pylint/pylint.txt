@@ -950,7 +950,6 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
                 self.flex_results.loc[(
                     self.env.now, current_sim_time + t_sample), output] = self.flex_model.get_output(
                     output).value
-
  (duplicate-code)
 agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[233:254]
@@ -973,9 +972,7 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
             for output in self.var_ref.outputs:
                 self.flex_results.loc[(
                     self.env.now, current_sim_time + t_sample), output] = self.flex_model.get_output(
-                    output).value
-
- (duplicate-code)
+                    output).value (duplicate-code)
 agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[463:482]
 ==agentlib_flexquant.modules.shadow_mpc:[233:253]
@@ -1010,7 +1007,7 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
             ),
             None,
         )
-        # convert filename string to path and extract the name (duplicate-code)
+        # instantiate and validate sim agent config (duplicate-code)
 agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[283:301]
 ==agentlib_flexquant.modules.shadow_mpc:[42:56]
@@ -1043,7 +1040,21 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
             self.logger.error("Results file %s was not found.", results_file)
             return None
 
-    def register_callbacks(self): (duplicate-code)
+    def write_results(self, df: pd.DataFrame, ts: float, n: int) -> pd.DataFrame:
+        """Write every data of variables in self.var_list in an DataFrame.
+
+        DataFrame will be updated every time step
+
+        Args:
+            df: DataFrame which is initialised as an empty DataFrame with columns
+            according to self.var_list
+            ts: time step
+            n: number of time steps during prediction horizon
+
+        Returns:
+            DataFrame with results of every variable in self.var_list
+
+        """ (duplicate-code)
 agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[217:230]
 ==agentlib_flexquant.modules.shadow_mpc:[455:468]
