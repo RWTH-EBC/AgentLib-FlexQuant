@@ -3407,7 +3407,7 @@
             "column": 0,
             "path": "agentlib_flexquant/optimization_backends/constrained_cia.py",
             "symbol": "duplicate-code",
-            "message": "Similar lines in 2 files\n==agentlib_flexquant.modules.baseline_mpc:[441:494]\n==agentlib_flexquant.modules.shadow_mpc:[190:243]\n        index_coll = pd.MultiIndex.from_arrays(\n            [[self.env.now] * len(result_df.index), result_df.index],\n            names=[\"time_step\", \"time\"]\n            # Match the names with multi_index but note they're reversed\n        )\n        # create Multiindex for full simulation sample times\n        index_full_sample = pd.MultiIndex.from_tuples(\n            zip(\n                [self.env.now] * (n_simulation_steps + 1),\n                range(0, horizon_length + sim_time_step, sim_time_step),\n            ),\n            names=[\"time_step\", \"time\"],\n        )\n        # merge indexes\n        new_index = index_coll.union(index_full_sample).sort_values()\n        # initialize the flex results with correct dimension\n        self.flex_results = pd.DataFrame(np.nan, index=new_index, columns=self.var_ref.outputs)\n\n        # Get the optimization outputs and create a series for fixed optimization outputs with the\n        # correct MultiIndex format\n        opti_outputs = result_df.variable[self.config.power_variable_name]\n        fixed_opti_output = pd.Series(\n            opti_outputs.values,\n            index=index_coll,\n        )\n        # fill the output value at the time step where it already exists in optimization output\n        for idx in fixed_opti_output.index:\n            if idx in self.flex_results.index:\n                self.flex_results.loc[idx, self.config.power_variable_name] = fixed_opti_output[idx]\n\n    def _update_model_parameters(self):\n        \"\"\"update the value of module parameters with value from config,\n        since creating a model just reads the value in the model class but not the config\n        \"\"\"\n\n        for par in self.config.parameters:\n            self.flex_model.set(par.name, par.value)\n\n    def _update_initial_states(self, result_df):\n        \"\"\"set the initial value of states\"\"\"\n\n        # get state values from the mpc optimization result\n        state_values = result_df.variable[self.var_ref.states]\n        # update state values with last measurement\n        for state, value in zip(self.var_ref.states, state_values.iloc[0]):\n            self.flex_model.set(state, value)\n\n    def _run_simulation(\n        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time\n    ):\n        \"\"\"simulate with flex model over the prediction horizon\"\"\"\n\n        # get control and input values from the mpc optimization result",
+            "message": "Similar lines in 2 files\n==agentlib_flexquant.modules.baseline_mpc:[441:494]\n==agentlib_flexquant.modules.shadow_mpc:[190:243]\n        index_coll = pd.MultiIndex.from_arrays(\n            [[self.env.now] * len(result_df.index), result_df.index],\n            names=[\"time_step\", \"time\"]\n            # Match the names with multi_index but note they're reversed\n        )\n        # create Multiindex for full simulation sample times\n        index_full_sample = pd.MultiIndex.from_tuples(\n            zip(\n                [self.env.now] * (n_simulation_steps + 1),\n                range(0, horizon_length + sim_time_step, sim_time_step),\n            ),\n            names=[\"time_step\", \"time\"],\n        )\n        # merge indexes\n        new_index = index_coll.union(index_full_sample).sort_values()\n        # initialize the flex results with correct dimension\n        self.flex_results = pd.DataFrame(np.nan, index=new_index, columns=self.var_ref.outputs)\n\n        # Get the optimization outputs and create a series for fixed optimization outputs with\n        # the correct MultiIndex format\n        opti_outputs = result_df.variable[self.config.power_variable_name]\n        fixed_opti_output = pd.Series(\n            opti_outputs.values,\n            index=index_coll,\n        )\n        # fill the output value at the time step where it already exists in optimization output\n        for idx in fixed_opti_output.index:\n            if idx in self.flex_results.index:\n                self.flex_results.loc[idx, self.config.power_variable_name] = fixed_opti_output[idx]\n\n    def _update_model_parameters(self):\n        \"\"\"update the value of module parameters with value from config,\n        since creating a model just reads the value in the model class but not the config\n        \"\"\"\n\n        for par in self.config.parameters:\n            self.flex_model.set(par.name, par.value)\n\n    def _update_initial_states(self, result_df):\n        \"\"\"set the initial value of states\"\"\"\n\n        # get state values from the mpc optimization result\n        state_values = result_df.variable[self.var_ref.states]\n        # update state values with last measurement\n        for state, value in zip(self.var_ref.states, state_values.iloc[0]):\n            self.flex_model.set(state, value)\n\n    def _run_simulation(\n        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time\n    ):\n        \"\"\"simulate with flex model over the prediction horizon\"\"\"\n\n        # get control and input values from the mpc optimization result",
             "message-id": "R0801"
         },
         {
@@ -3429,7 +3429,7 @@
             "column": 0,
             "path": "agentlib_flexquant/optimization_backends/constrained_cia.py",
             "symbol": "duplicate-code",
-            "message": "Similar lines in 2 files\n==agentlib_flexquant.modules.baseline_mpc:[522:543]\n==agentlib_flexquant.modules.shadow_mpc:[262:285]\n            for input_var, value in zip(\n                self.var_ref.inputs, input_values_full.loc[current_sim_time]\n            ):\n                # change the type of iterable input, since casadi model can't deal with iterable\n                if issubclass(eval(self.flex_model.get(input_var).type), Iterable):\n                    self.flex_model.get(input_var).type = type(value).__name__\n                self.flex_model.set(input_var, value)\n\n            # do integration\n            # reduce the simulation time step so that the total horizon time will not be exceeded\n            if current_sim_time + sim_time_step <= total_horizon_time:\n                t_sample = sim_time_step\n            else:\n                t_sample = total_horizon_time - current_sim_time\n            self.flex_model.do_step(t_start=0, t_sample=t_sample)\n\n            # save output\n            for output in self.var_ref.outputs:\n                self.flex_results.loc[\n                    (self.env.now, current_sim_time + t_sample), output\n                ] = self.flex_model.get_output(output).value\n\n",
+            "message": "Similar lines in 2 files\n==agentlib_flexquant.modules.baseline_mpc:[522:543]\n==agentlib_flexquant.modules.shadow_mpc:[262:285]\n            for input_var, value in zip(\n                self.var_ref.inputs, input_values_full.loc[current_sim_time]\n            ):\n                # change the type of iterable input, since casadi model can't deal with iterable\n                if issubclass(eval(self.flex_model.get(input_var).type), Iterable):\n                    self.flex_model.get(input_var).type = type(value).__name__\n                self.flex_model.set(input_var, value)\n\n            # do integration\n            # reduce the simulation time step so that the total horizon time will not be exceeded\n            if current_sim_time + sim_time_step <= total_horizon_time:\n                t_sample = sim_time_step\n            else:\n                t_sample = total_horizon_time - current_sim_time\n            self.flex_model.do_step(t_start=0, t_sample=t_sample)\n\n            # save output\n            for output in self.var_ref.outputs:\n                self.flex_results.loc[\n                    (self.env.now, current_sim_time + t_sample), output\n                ] = self.flex_model.get_output(output).value",
             "message-id": "R0801"
         },
         {
@@ -3451,7 +3451,7 @@
             "column": 0,
             "path": "agentlib_flexquant/optimization_backends/constrained_cia.py",
             "symbol": "duplicate-code",
-            "message": "Similar lines in 2 files\n==agentlib_flexquant.modules.baseline_mpc:[60:81]\n==agentlib_flexquant.modules.shadow_mpc:[50:67]\n        if self.config.casadi_sim_time_step > 0:\n            # generate a separate flex_model for integration to ensure the model used in MPC\n            # optimization remains unaffected\n            self.flex_model = type(self.model)(dt=self.config.casadi_sim_time_step)\n            # generate the filename for the simulation results\n            self.res_file_flex = self.config.optimization_backend[\"results_file\"].replace(\n                \"mpc\", \"mpc_sim\"\n            )\n            # clear the casadi simulator result at the first time step if already exists\n            try:\n                os.remove(self.res_file_flex)\n            except:\n                pass\n\n    def set_output(self, solution):\n        \"\"\"Takes the solution from optimization backend and sends it to AgentVariables.\"\"\"\n        # Output must be defined in the config as \"type\"=\"pd.Series\"",
+            "message": "Similar lines in 2 files\n==agentlib_flexquant.modules.baseline_mpc:[60:81]\n==agentlib_flexquant.modules.shadow_mpc:[50:67]\n        if self.config.casadi_sim_time_step > 0:\n            # generate a separate flex_model for integration to ensure\n            # the model used in MPC optimization remains unaffected\n            self.flex_model = type(self.model)(dt=self.config.casadi_sim_time_step)\n            # generate the filename for the simulation results\n            self.res_file_flex = self.config.optimization_backend[\"results_file\"].replace(\n                \"mpc\", \"mpc_sim\"\n            )\n            # clear the casadi simulator result at the first time step if already exists\n            try:\n                os.remove(self.res_file_flex)\n            except:\n                pass\n\n    def pre_computation_hook(self):\n        \"\"\"Calculate relative start and end times for flexibility provision.\n\n        When in provision mode, computes the relative timing for flexibility\n        events based on the external power profile timestamps and current\n        environment time.\n        \"\"\"",
             "message-id": "R0801"
         },
         {
@@ -3785,67 +3785,67 @@
                 "agentlib_flexquant"
             ],
             "agentlib_flexquant.modules.flexibility_indicator": [
-                "agentlib_flexquant.data_structures.flex_results",
                 "agentlib_flexquant.generate_flex_agents",
-                "agentlib_flexquant"
+                "agentlib_flexquant",
+                "agentlib_flexquant.data_structures.flex_results"
             ],
             "agentlib_flexquant.modules.flexibility_market": [
-                "agentlib_flexquant.data_structures.flex_results",
                 "agentlib_flexquant.generate_flex_agents",
-                "agentlib_flexquant"
+                "agentlib_flexquant",
+                "agentlib_flexquant.data_structures.flex_results"
             ],
             "agentlib_flexquant.modules.shadow_mpc": [
                 "agentlib_flexquant"
             ],
             "agentlib_flexquant.data_structures.globals": [
-                "agentlib_flexquant.modules.flexibility_market",
-                "agentlib_flexquant.generate_flex_agents",
-                "agentlib_flexquant.data_structures.market",
-                "agentlib_flexquant.data_structures.flex_kpis",
-                "agentlib_flexquant.data_structures.mpcs",
                 "agentlib_flexquant.modules.baseline_mpc",
                 "agentlib_flexquant.modules.shadow_mpc",
-                "agentlib_flexquant.utils.interactive",
+                "agentlib_flexquant.data_structures.flex_kpis",
+                "agentlib_flexquant.modules.flexibility_market",
+                "agentlib_flexquant.data_structures.market",
+                "agentlib_flexquant.data_structures.mpcs",
                 "agentlib_flexquant.utils.parsing",
-                "agentlib_flexquant.modules.flexibility_indicator",
-                "agentlib_flexquant.optimization_backends.constrained_cia"
+                "agentlib_flexquant.generate_flex_agents",
+                "agentlib_flexquant.utils.interactive",
+                "agentlib_flexquant.optimization_backends.constrained_cia",
+                "agentlib_flexquant.modules.flexibility_indicator"
             ],
             "agentlib_flexquant.utils.config_management": [
-                "agentlib_flexquant.data_structures.flex_results",
+                "agentlib_flexquant.data_structures.mpcs",
                 "agentlib_flexquant.generate_flex_agents",
-                "agentlib_flexquant.data_structures.mpcs"
+                "agentlib_flexquant.data_structures.flex_results"
             ],
             "agentlib_flexquant.utils.parsing": [
                 "agentlib_flexquant.generate_flex_agents"
             ],
             "agentlib_flexquant.data_structures.flexquant": [
-                "agentlib_flexquant.data_structures.flex_results",
+                "agentlib_flexquant.generate_flex_agents",
                 "agentlib_flexquant.utils.interactive",
-                "agentlib_flexquant.generate_flex_agents"
+                "agentlib_flexquant.data_structures.flex_results"
             ],
             "agentlib_flexquant.data_structures.mpcs": [
-                "agentlib_flexquant.data_structures.flex_results",
                 "agentlib_flexquant.utils.parsing",
                 "agentlib_flexquant.generate_flex_agents",
-                "agentlib_flexquant.data_structures.flexquant"
+                "agentlib_flexquant.data_structures.flexquant",
+                "agentlib_flexquant.data_structures.flex_results"
             ],
             "agentlib_flexquant.data_structures.flex_offer": [
-                "agentlib_flexquant.utils.interactive",
+                "agentlib_flexquant.modules.flexibility_indicator",
                 "agentlib_flexquant.modules.flexibility_market",
-                "agentlib_flexquant.modules.flexibility_indicator"
+                "agentlib_flexquant.utils.interactive"
             ],
             "agentlib_flexquant.data_structures.market": [
                 "agentlib_flexquant.modules.flexibility_market"
             ],
             "agentlib_flexquant.utils.data_handling": [
-                "agentlib_flexquant.data_structures.flex_results",
+                "agentlib_flexquant.modules.shadow_mpc",
                 "agentlib_flexquant.modules.flexibility_indicator",
-                "agentlib_flexquant.data_structures.flex_kpis",
-                "agentlib_flexquant.modules.shadow_mpc"
+                "agentlib_flexquant.data_structures.flex_results",
+                "agentlib_flexquant.data_structures.flex_kpis"
             ],
             "agentlib_flexquant.data_structures.flex_kpis": [
-                "agentlib_flexquant.utils.interactive",
-                "agentlib_flexquant.modules.flexibility_indicator"
+                "agentlib_flexquant.modules.flexibility_indicator",
+                "agentlib_flexquant.utils.interactive"
             ],
             "agentlib_flexquant.data_structures.flex_results": [
                 "agentlib_flexquant.utils.interactive"
@@ -4154,66 +4154,66 @@
             ],
             "agentlib_flexquant.modules.flexibility_indicator": [
                 "agentlib_flexquant.data_structures.flex_results",
-                "agentlib_flexquant.generate_flex_agents",
-                "agentlib_flexquant"
+                "agentlib_flexquant",
+                "agentlib_flexquant.generate_flex_agents"
             ],
             "agentlib_flexquant.modules.flexibility_market": [
                 "agentlib_flexquant.data_structures.flex_results",
-                "agentlib_flexquant.generate_flex_agents",
-                "agentlib_flexquant"
+                "agentlib_flexquant",
+                "agentlib_flexquant.generate_flex_agents"
             ],
             "agentlib_flexquant.modules.shadow_mpc": [
                 "agentlib_flexquant"
             ],
             "agentlib_flexquant.data_structures.globals": [
-                "agentlib_flexquant.modules.flexibility_market",
-                "agentlib_flexquant.generate_flex_agents",
-                "agentlib_flexquant.data_structures.market",
-                "agentlib_flexquant.data_structures.flex_kpis",
-                "agentlib_flexquant.data_structures.mpcs",
-                "agentlib_flexquant.modules.shadow_mpc",
                 "agentlib_flexquant.modules.baseline_mpc",
-                "agentlib_flexquant.utils.interactive",
+                "agentlib_flexquant.modules.shadow_mpc",
+                "agentlib_flexquant.data_structures.flex_kpis",
+                "agentlib_flexquant.modules.flexibility_market",
+                "agentlib_flexquant.data_structures.market",
+                "agentlib_flexquant.data_structures.mpcs",
                 "agentlib_flexquant.utils.parsing",
-                "agentlib_flexquant.modules.flexibility_indicator",
-                "agentlib_flexquant.optimization_backends.constrained_cia"
+                "agentlib_flexquant.generate_flex_agents",
+                "agentlib_flexquant.utils.interactive",
+                "agentlib_flexquant.optimization_backends.constrained_cia",
+                "agentlib_flexquant.modules.flexibility_indicator"
             ],
             "agentlib_flexquant.utils.config_management": [
+                "agentlib_flexquant.data_structures.mpcs",
                 "agentlib_flexquant.data_structures.flex_results",
-                "agentlib_flexquant.generate_flex_agents",
-                "agentlib_flexquant.data_structures.mpcs"
+                "agentlib_flexquant.generate_flex_agents"
             ],
             "agentlib_flexquant.utils.parsing": [
                 "agentlib_flexquant.generate_flex_agents"
             ],
             "agentlib_flexquant.data_structures.flexquant": [
                 "agentlib_flexquant.data_structures.flex_results",
-                "agentlib_flexquant.utils.interactive",
-                "agentlib_flexquant.generate_flex_agents"
+                "agentlib_flexquant.generate_flex_agents",
+                "agentlib_flexquant.utils.interactive"
             ],
             "agentlib_flexquant.data_structures.mpcs": [
-                "agentlib_flexquant.data_structures.flex_results",
                 "agentlib_flexquant.utils.parsing",
-                "agentlib_flexquant.generate_flex_agents",
-                "agentlib_flexquant.data_structures.flexquant"
+                "agentlib_flexquant.data_structures.flex_results",
+                "agentlib_flexquant.data_structures.flexquant",
+                "agentlib_flexquant.generate_flex_agents"
             ],
             "agentlib_flexquant.data_structures.flex_offer": [
-                "agentlib_flexquant.utils.interactive",
+                "agentlib_flexquant.modules.flexibility_indicator",
                 "agentlib_flexquant.modules.flexibility_market",
-                "agentlib_flexquant.modules.flexibility_indicator"
+                "agentlib_flexquant.utils.interactive"
             ],
             "agentlib_flexquant.data_structures.market": [
                 "agentlib_flexquant.modules.flexibility_market"
             ],
             "agentlib_flexquant.utils.data_handling": [
-                "agentlib_flexquant.data_structures.flex_results",
+                "agentlib_flexquant.modules.shadow_mpc",
                 "agentlib_flexquant.modules.flexibility_indicator",
                 "agentlib_flexquant.data_structures.flex_kpis",
-                "agentlib_flexquant.modules.shadow_mpc"
+                "agentlib_flexquant.data_structures.flex_results"
             ],
             "agentlib_flexquant.data_structures.flex_kpis": [
-                "agentlib_flexquant.utils.interactive",
-                "agentlib_flexquant.modules.flexibility_indicator"
+                "agentlib_flexquant.modules.flexibility_indicator",
+                "agentlib_flexquant.utils.interactive"
             ],
             "agentlib_flexquant.data_structures.flex_results": [
                 "agentlib_flexquant.utils.interactive"
