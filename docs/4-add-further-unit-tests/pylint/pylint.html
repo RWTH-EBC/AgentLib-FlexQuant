@@ -2988,7 +2988,14 @@
         # set the flex results format same as mpc result while updating Agentvariable
         self.flex_results.index = self.flex_results.index.get_level_values(1)
 
-    def register_callbacks(self):</pre></td>
+    def _initialize_flex_results(
+        self, n_simulation_steps, horizon_length, sim_time_step, result_df
+    ):
+        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension and index
+        and fill with existing results from optimization
+        &#34;&#34;&#34;
+
+        # create MultiIndex for collocation points</pre></td>
             </tr>
             
             <tr>
@@ -3160,8 +3167,8 @@
 ==agentlib_flexquant.modules.baseline_mpc:[60:81]
 ==agentlib_flexquant.modules.shadow_mpc:[50:67]
         if self.config.casadi_sim_time_step &gt; 0:
-            # generate a separate flex_model for integration to ensure
-            # the model used in MPC optimization remains unaffected
+            # generate a separate flex_model for integration to ensure the model used in MPC
+            # optimization remains unaffected
             self.flex_model = type(self.model)(dt=self.config.casadi_sim_time_step)
             # generate the filename for the simulation results
             self.res_file_flex = self.config.optimization_backend[&#34;results_file&#34;].replace(
@@ -3173,13 +3180,9 @@
             except:
                 pass
 
-    def pre_computation_hook(self):
-        &#34;&#34;&#34;Calculate relative start and end times for flexibility provision.
-
-        When in provision mode, computes the relative timing for flexibility
-        events based on the external power profile timestamps and current
-        environment time.
-        &#34;&#34;&#34;</pre></td>
+    def set_output(self, solution):
+        &#34;&#34;&#34;Takes the solution from optimization backend and sends it to AgentVariables.&#34;&#34;&#34;
+        # Output must be defined in the config as &#34;type&#34;=&#34;pd.Series&#34;</pre></td>
             </tr>
             
             <tr>
