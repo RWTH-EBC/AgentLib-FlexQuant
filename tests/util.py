@@ -25,3 +25,17 @@ def module_cleanup():
         # and could have been removed when the parent was removed.
         if module_name in sys.modules:
             del sys.modules[module_name]
+
+
+def round_floats_in_structure(obj, precision: int):
+    """
+    Recursively traverses a data structure and rounds any float values.
+    Handles nested dictionaries and lists.
+    """
+    if isinstance(obj, float):
+        return round(obj, precision)
+    if isinstance(obj, dict):
+        return {k: round_floats_in_structure(v, precision) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [round_floats_in_structure(elem, precision) for elem in obj]
+    return obj

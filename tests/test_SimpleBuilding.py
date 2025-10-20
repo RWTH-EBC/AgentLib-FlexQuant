@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 import importlib.util
 import json
-from util import module_cleanup
+from util import module_cleanup, round_floats_in_structure
 
 # Add the project root to the Python path to allow for absolute imports
 # This helps in locating the agentlib_flexquant package if needed
@@ -65,6 +65,9 @@ def assert_frame_matches_summary_snapshot(snapshot, df: pd.DataFrame,
     """
     # Create a summary of the dataframe
     summary = create_dataframe_summary(df)
+
+    # Round all numbers in the summary to handle cross-platform differences
+    rounded_summary = round_floats_in_structure(summary, precision=4)
 
     # Convert the summary dictionary to a formatted JSON string
     summary_json = json.dumps(summary, indent=2, sort_keys=True)
