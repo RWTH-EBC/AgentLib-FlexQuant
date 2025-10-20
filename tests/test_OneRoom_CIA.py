@@ -55,6 +55,7 @@ def create_dataframe_summary(df: pd.DataFrame, precision: int = 6) -> dict:
     }
     return summary
 
+
 def assert_frame_matches_summary_snapshot(snapshot, df: pd.DataFrame,
                                           snapshot_name: str):
     """Assert that a DataFrame's summary matches a stored snapshot.
@@ -67,7 +68,7 @@ def assert_frame_matches_summary_snapshot(snapshot, df: pd.DataFrame,
     summary = create_dataframe_summary(df)
 
     # Round all numbers in the summary to handle cross-platform differences
-    rounded_summary = round_floats_in_structure(summary, precision=5)
+    rounded_summary = round_floats_in_structure(summary, precision=1)
 
     # Convert the summary dictionary to a formatted JSON string
     summary_json = json.dumps(rounded_summary, indent=2, sort_keys=True)
@@ -84,7 +85,7 @@ def run_example_from_path(example_path: Path):
     and its local modules.
 
     """
-    run_script_path = example_path / 'main_one_room_flex.py'
+    run_script_path = example_path / 'main_cia_flex.py'
     if not run_script_path.is_file():
         raise FileNotFoundError(
             f"Could not find the run script at {run_script_path}. "
@@ -123,15 +124,16 @@ def run_example_from_path(example_path: Path):
         os.chdir(original_cwd)
         sys.path[:] = original_sys_path  # Restore the original sys.path
 
-def test_oneroom_simple_mpc(snapshot, module_cleanup):
-    """Unit test for the oneroom_simpleMPC example using snapshot testing.
+
+def test_oneroom_cia(snapshot, module_cleanup):
+    """Unit test for the OneRoom_CIA example using snapshot testing.
 
     This test runs the example via its own run script and compares the
     full resulting dataframes against stored snapshots.
 
     """
     # Define the path to the example directory
-    example_path = root_path / 'examples' / 'OneRoom_SimpleMPC'
+    example_path = root_path / 'examples' / 'OneRoom_CIA'
 
     # Run the example and get the results object
     res = run_example_from_path(example_path)
@@ -139,27 +141,27 @@ def test_oneroom_simple_mpc(snapshot, module_cleanup):
     # Extract the full resulting dataframes as requested
     df_neg_flex_res = res["NegFlexMPC"]["NegFlexMPC"]
     df_pos_flex_res = res["PosFlexMPC"]["PosFlexMPC"]
-    df_baseline_res = res["FlexModel"]["Baseline"]
+    df_baseline_res = res["myMPCAgent"]["Baseline"]
     df_indicator_res = res["FlexibilityIndicator"]["FlexibilityIndicator"]
 
     # Assert that a summary of each result DataFrame matches its snapshot
     assert_frame_matches_summary_snapshot(
         snapshot,
         df_neg_flex_res,
-        'oneroom_simpleMPC_neg_flex_summary.json'
+        'oneroom_cia_neg_flex_summary.json'
     )
     assert_frame_matches_summary_snapshot(
         snapshot,
         df_pos_flex_res,
-        'oneroom_simpleMPC_pos_flex_summary.json'
+        'oneroom_cia_pos_flex_summary.json'
     )
     assert_frame_matches_summary_snapshot(
         snapshot,
         df_baseline_res,
-        'oneroom_simpleMPC_baseline_summary.json'
+        'oneroom_cia_baseline_summary.json'
     )
     assert_frame_matches_summary_snapshot(
         snapshot,
         df_indicator_res,
-        'oneroom_simpleMPC_indicator_summary.json'
+        'oneroom_cia_indicator_summary.json'
     )

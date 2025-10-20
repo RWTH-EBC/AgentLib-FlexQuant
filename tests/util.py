@@ -33,6 +33,9 @@ def round_floats_in_structure(obj, precision: int):
     Handles nested dictionaries and lists.
     """
     if isinstance(obj, float):
+        # set the value to 0.0 if it is either 0.0 or -0.0
+        if obj == 0:
+            obj = 0.0
         return round(obj, precision)
     if isinstance(obj, dict):
         return {k: round_floats_in_structure(v, precision) for k, v in obj.items()}
