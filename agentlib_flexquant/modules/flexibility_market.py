@@ -253,7 +253,39 @@ class FlexibilityMarketModule(agentlib.BaseModule):
 
     def custom_flexibility_callback(self, inp: AgentVariable, name: str):
         """Placeholder for a custom flexibility callback."""
-        pass
+        offer = inp.value
+        profile = None
+        t_sample = self.get(glbs.TIME_STEP).value
+
+        if ((offer.status == OfferStatus.ACCEPTED_POSITIVE.value or
+             offer.status == OfferStatus.ACCEPTED_NEGATIVE.value) and
+                not self.get("in_provision").value):
+            if offer.status == OfferStatus.ACCEPTED_POSITIVE.value:
+                profile = offer.base_power_profile - offer.pos_diff_profile
+            else:
+                profile = offer.base_power_profile + offer.neg_diff_profile
+
+            if profile is not None:
+                # reindex the profile to the mpc output time grid
+                flex_power_feedback_method = self.config.market_specs.accepted_offer_sample_points
+                if flex_power_feedback_method == glbs.COLLOCATION:
+                    profile = profile.reindex(
+                        self.get(glbs.COLLOCATION_TIME_GRID).value)
+                elif flex_power_feedback_method == glbs.CONSTANT:
+                    index_to_keep = ~np.isin(profile.index,
+                                             self.get(glbs.COLLOCATION_TIME_GRID).value)
+                    profile = profile.get(index_to_keep)
+                    helper_indices = [i - 1 for i in profile.index[1:]]
+                    new_index = sorted(set(profile.index.tolist() + helper_indices))[
+                                :-1]
+                    profile = profile.reindex(new_index).ffill()
+                profile = profile.dropna()
+                profile.index += self.env.time
+                self.set("_P_external", profile)
+                self.abs_flex_event_end = profile.index[-1]
+                self.set("in_provision", True)
+
+        self.write_results(offer)
 
     def dummy_callback(self, inp: AgentVariable, name: str):
         """Dummy function that is included, when market type is not specified."""

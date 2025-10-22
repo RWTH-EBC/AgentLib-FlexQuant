@@ -565,19 +565,16 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
 
         # get the full index during flex enevt including mpc_time_grid index and the
         # collocation index
-        full_index = np.sort(np.concatenate([collocation_time_grid, self.data.mpc_time_grid]))
-        flex_begin = self.get(glbs.MARKET_TIME).value + self.get(glbs.PREP_TIME).value
-        flex_end = flex_begin + self.get(glbs.FLEX_EVENT_DURATION).value
-        full_flex_offer_index = full_index[(full_index >= flex_begin) & (full_index <= flex_end)]
+        # full_index = np.sort(np.concatenate([collocation_time_grid, self.data.mpc_time_grid]))
+        # flex_begin = self.get(glbs.MARKET_TIME).value + self.get(glbs.PREP_TIME).value
+        # flex_end = flex_begin + self.get(glbs.FLEX_EVENT_DURATION).value
+        # full_flex_offer_index = full_index[(full_index >= flex_begin) & (full_index <= flex_end)]
 
         # reindex the power profiles to not send the simulation points to the market, but only
         # the values on the collocation points and the forward mean of them
-        base_power_profile = self.data.power_profile_base.reindex(
-            collocation_time_grid).reindex(full_flex_offer_index)
-        pos_diff_profile = self.data.kpis_pos.power_flex_offer.value.reindex(
-            collocation_time_grid).reindex(full_flex_offer_index)
-        neg_diff_profile = self.data.kpis_neg.power_flex_offer.value.reindex(
-            collocation_time_grid).reindex(full_flex_offer_index)
+        base_power_profile = self.data.power_profile_base
+        pos_diff_profile = self.data.power_profile_base - self.data.power_profile_flex_pos
+        neg_diff_profile = self.data.power_profile_flex_neg - self.data.power_profile_base
 
         # fill the mpc_time_grid with forward mean
         base_power_profile = fill_nans(base_power_profile, method=MEAN)
