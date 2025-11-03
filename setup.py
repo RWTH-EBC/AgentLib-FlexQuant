@@ -3,7 +3,7 @@ import setuptools
 requirements = [
     "setuptools",
     "agentlib[full]==0.8.7",
-    "agentlib_mpc[fmu, interactive] @ git+https://github.com/RWTH-EBC/AgentLib-MPC.git",
+    "agentlib_mpc[fmu, interactive] @ git+https://github.com/RWTH-EBC/AgentLib-MPC.git@356fa23bb612667f176e3c14bd4e9330127e35e7",
     "pycombina @ git+https://github.com/adbuerger/pycombina.git",
     "pathlib",
     "astor==0.8.1",
