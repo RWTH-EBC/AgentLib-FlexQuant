@@ -1,27 +1,10 @@
 agentlib_flexquant/data_structures/flex_kpis.py:19:69: F401 [*] `agentlib_flexquant.utils.data_handling.strip_multi_index` imported but unused
 agentlib_flexquant/data_structures/flexquant.py:8:8: F401 [*] `pydantic` imported but unused
-agentlib_flexquant/data_structures/mpcs.py:15:54: F811 Redefinition of unused `cmng` from line 12
-agentlib_flexquant/data_structures/mpcs.py:132:25: F821 Undefined name `Optional`
-agentlib_flexquant/data_structures/mpcs.py:132:34: F821 Undefined name `Union`
-agentlib_flexquant/data_structures/mpcs.py:163:25: F821 Undefined name `Optional`
-agentlib_flexquant/data_structures/mpcs.py:163:34: F821 Undefined name `Union`
-agentlib_flexquant/generate_flex_agents.py:20:8: F811 Redefinition of unused `json` from line 11
-agentlib_flexquant/generate_flex_agents.py:22:18: F811 Redefinition of unused `deepcopy` from line 14
-agentlib_flexquant/generate_flex_agents.py:23:21: F811 Redefinition of unused `Path` from line 15
-agentlib_flexquant/generate_flex_agents.py:24:20: F401 [*] `typing.List` imported but unused
-agentlib_flexquant/generate_flex_agents.py:24:26: F811 Redefinition of unused `Union` from line 16
-agentlib_flexquant/modules/baseline_mpc.py:12:54: F401 [*] `agentlib_flexquant.data_structures.globals` imported but unused
-agentlib_flexquant/modules/baseline_mpc.py:14:34: F811 Redefinition of unused `mpc_full` from line 4
-agentlib_flexquant/modules/baseline_mpc.py:14:44: F811 Redefinition of unused `minlp_mpc` from line 4
-agentlib_flexquant/modules/baseline_mpc.py:72:13: E722 Do not use bare `except`
-agentlib_flexquant/modules/baseline_mpc.py:330:13: E722 Do not use bare `except`
-agentlib_flexquant/modules/shadow_mpc.py:11:20: F811 Redefinition of unused `Dict` from line 4
-agentlib_flexquant/modules/shadow_mpc.py:11:26: F811 Redefinition of unused `Union` from line 4
-agentlib_flexquant/modules/shadow_mpc.py:17:5: F401 [*] `agentlib_flexquant.data_structures.globals.full_trajectory_prefix` imported but unused
-agentlib_flexquant/modules/shadow_mpc.py:19:5: F401 [*] `agentlib_flexquant.data_structures.globals.STORED_ENERGY_ALIAS_NEG` imported but unused
-agentlib_flexquant/modules/shadow_mpc.py:20:5: F401 [*] `agentlib_flexquant.data_structures.globals.STORED_ENERGY_ALIAS_POS` imported but unused
-agentlib_flexquant/modules/shadow_mpc.py:62:13: E722 Do not use bare `except`
-agentlib_flexquant/modules/shadow_mpc.py:324:13: E722 Do not use bare `except`
+agentlib_flexquant/generate_flex_agents.py:20:20: F401 [*] `typing.List` imported but unused
+agentlib_flexquant/modules/baseline_mpc.py:71:13: E722 Do not use bare `except`
+agentlib_flexquant/modules/baseline_mpc.py:329:13: E722 Do not use bare `except`
+agentlib_flexquant/modules/shadow_mpc.py:57:13: E722 Do not use bare `except`
+agentlib_flexquant/modules/shadow_mpc.py:319:13: E722 Do not use bare `except`
 agentlib_flexquant/utils/interactive.py:698:42: F541 [*] f-string without any placeholders
-Found 25 errors.
-[*] 8 fixable with the `--fix` option.
+Found 8 errors.
+[*] 4 fixable with the `--fix` option.
