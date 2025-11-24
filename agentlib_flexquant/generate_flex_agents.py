@@ -30,7 +30,7 @@ from agentlib.core.module import BaseModuleConfig
 from agentlib.utils import custom_injection, load_config
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from agentlib_mpc.models.casadi_model import CasadiModelConfig
-from agentlib_mpc.modules.mpc_full import MPCConfig
+from agentlib_mpc.modules.mpc.mpc_full import MPCConfig
 
 from agentlib_mpc.optimization_backends.casadi_.basic import DirectCollocation
 from agentlib_mpc.data_structures.casadi_utils import CasadiDiscretizationOptions
@@ -365,6 +365,7 @@ class FlexAgentGenerator:
         module_config_flex_dict[
             "storage_variable_name"
         ] = self.indicator_module_config.correct_costs.stored_energy_variable
+        del module_config_flex_dict['r_del_u']
         module_config_flex = cmng.MODULE_TYPE_DICT[module_config.type](
             **module_config_flex_dict, _agent_id=agent_id
         )
@@ -663,6 +664,13 @@ class FlexAgentGenerator:
 
         """
         variables_in_config = set(config.get_variable_names())
+
+        if isinstance(expr, list):
+            # Join all lines into a single string for parsing
+            expr = "\n".join(expr)
+        else:
+            expr = expr
+
         variables_in_cost_function = set(ast.walk(ast.parse(expr)))
         variables_in_cost_function = {
             node.attr for node in variables_in_cost_function if isinstance(node, ast.Attribute)
@@ -670,7 +678,8 @@ class FlexAgentGenerator:
         variables_newly_created = set(
             weight.name for weight in self.flex_config.shadow_mpc_config_generator_data.weights
         )
-        unknown_vars = variables_in_cost_function - variables_in_config - variables_newly_created
+        objective_functions = {"create_sub_objective", "create_change_penalty", "create_combined_objective", "create_conditional_objective"}
+        unknown_vars = variables_in_cost_function - variables_in_config - variables_newly_created - objective_functions
         if unknown_vars:
             raise ValueError(f"Unknown variables in new cost function: {unknown_vars}")
 

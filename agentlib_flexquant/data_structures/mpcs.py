@@ -7,6 +7,7 @@ in flexquant. The models handle file paths, module configurations, variable
 mappings, and optimization weights for MPC implementations.
 """
 import pydantic
+from typing import Optional, Union
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from pydantic import ConfigDict, model_validator
 
@@ -128,7 +129,7 @@ class PFMPCData(BaseMPCData):
     # variables
     power_alias: str = glbs.POWER_ALIAS_POS
     stored_energy_alias: str = glbs.STORED_ENERGY_ALIAS_POS
-    flex_cost_function: str = pydantic.Field(
+    flex_cost_function: Optional[Union[list[str], str]] = pydantic.Field(
         default=None, description="Cost function of the PF-MPC",
     )
     # initialize market parameters with dummy values (0)
@@ -159,7 +160,7 @@ class NFMPCData(BaseMPCData):
     # variables
     power_alias: str = glbs.POWER_ALIAS_NEG
     stored_energy_alias: str = glbs.STORED_ENERGY_ALIAS_NEG
-    flex_cost_function: str = pydantic.Field(
+    flex_cost_function: Optional[Union[list[str], str]] = pydantic.Field(
         default=None, description="Cost function of the NF-MPC",
     )
     # initialize market parameters with dummy values (0)

@@ -311,24 +311,13 @@ class SetupSystemModifier(ast.NodeTransformer):
         """
         # loop over config object and modify fields
         for body in node.body:
-            # add the fullcontrol trajectories to the baseline config class
-            if body.target.id == "outputs":
-                if isinstance(body.value, ast.List):
-                    # Simple list case
-                    value_list = body.value
-                elif isinstance(body.value, ast.BinOp) or isinstance(
-                    body.value, ast.Tuple
-                ):
-                    # Complex case with concatenated lists or tuple
-                    value_list = self.get_leftmost_list(body.value)
-
             # add the flexibility inputs
             if body.target.id == "inputs":
                 if isinstance(body.value, ast.List):
                     # Simple list case
                     value_list = body.value
                 elif isinstance(body.value, ast.BinOp) or isinstance(
-                    body.value, ast.Tuple
+                        body.value, ast.Tuple
                 ):
                     # Complex case with concatenated lists or tuple
                     value_list = self.get_leftmost_list(body.value)
@@ -389,9 +378,9 @@ class SetupSystemModifier(ast.NodeTransformer):
         # constraint the control trajectories for t < market_time
         for i, item in enumerate(node.body):
             if (
-                isinstance(item, ast.Assign)
-                and isinstance(item.targets[0], ast.Attribute)
-                and item.targets[0].attr == "constraints"
+                    isinstance(item, ast.Assign)
+                    and isinstance(item.targets[0], ast.Attribute)
+                    and item.targets[0].attr == "constraints"
             ):
                 if isinstance(item.value, ast.List):
                     for ind, control in enumerate(self.controls):
@@ -424,29 +413,51 @@ class SetupSystemModifier(ast.NodeTransformer):
                         )
                         item.value.elts.append(new_element)
                     break
-        # loop through setup_system function to find return statement
+
         for i, stmt in enumerate(node.body):
             if isinstance(stmt, ast.Return):
                 # store current return statement
                 original_return = stmt.value
-                new_body = [
-                    # create new standard objective variable
-                    ast.Assign(
-                        targets=[ast.Name(id="obj_std", ctx=ast.Store())],
-                        value=original_return,
-                    ),
-                    # create flex objective variable
-                    ast.Assign(
-                        targets=[ast.Name(id="obj_flex", ctx=ast.Store())],
-                        value=ast.parse(
-                            self.mpc_data.flex_cost_function, mode="eval"
-                        ).body,
-                    ),
-                    # overwrite return statement with custom function
-                    ast.Return(value=ast.parse(SHADOW_MPC_COST_FUNCTION).body[0].value),
-                ]
-                # append new variables to end of function
-                node.body[i:] = new_body
+
+                # Create standard objective statement
+                std_obj_assign = ast.Assign(
+                    targets=[ast.Name(id="obj_std", ctx=ast.Store())],
+                    value=original_return
+                )
+
+                # Create market time condition
+                market_time_condition = ast.parse(
+                    "market_time_condition = ca.logic_and("
+                    "self.time >= (self.prep_time.sym + self.market_time.sym), "
+                    "self.time < (self.prep_time.sym + self.flex_event_duration.sym + self.market_time.sym))"
+                ).body[0]
+
+                # Parse and execute flex objective code lines
+                flex_obj_statements = []
+                if isinstance(self.mpc_data.flex_cost_function, list):
+                    for line in self.mpc_data.flex_cost_function:
+                        try:
+                            parsed_stmt = ast.parse(line).body
+                            flex_obj_statements.extend(parsed_stmt)
+                        except SyntaxError as e:
+                            print(f"Could not parse flex cost function line: {line}, error: {e}")
+                else:
+                    try:
+                        flex_obj_statements = ast.parse(self.mpc_data.flex_cost_function).body
+                    except SyntaxError as e:
+                        print(f"Could not parse flex cost function: {self.mpc_data.flex_cost_function}, error: {e}")
+
+                # Create conditional objective
+                cond_obj_stmt = ast.parse(
+                    "cond_obj = self.create_conditional_objective((market_time_condition, obj_flex), default_objective=obj_std)"
+                ).body[0]
+
+                # Return conditional objective
+                return_stmt = ast.Return(value=ast.Name(id="cond_obj", ctx=ast.Load()))
+
+                # Replace the return statement with our new statements
+                new_body = [std_obj_assign, market_time_condition] + flex_obj_statements + [cond_obj_stmt, return_stmt]
+                node.body[i:i + 1] = new_body
                 break
 
     def modify_setup_system_baseline(self, node: ast.FunctionDef):
@@ -459,32 +470,57 @@ class SetupSystemModifier(ast.NodeTransformer):
             node: The function definition node of setup_system.
 
         """
-
         # loop through setup_system function to find return statement
         for i, stmt in enumerate(node.body):
             if isinstance(stmt, ast.Return):
-                # store current return statement
+                # Store current return statement
                 original_return = stmt.value
-                new_body = [
-                    # create new standard objective variable
-                    ast.Assign(
-                        targets=[ast.Name(id="obj_std", ctx=ast.Store())],
-                        value=original_return,
-                    ),
-                    # overwrite return statement with custom function
-                    ast.Return(
-                        value=ast.parse(
-                            return_baseline_cost_function(
-                                power_variable=self.mpc_data.power_variable,
-                                comfort_variable=self.mpc_data.comfort_variable,
-                            )
-                        )
-                        .body[0]
-                        .value
-                    ),
-                ]
-                # append new variables to end of function
-                node.body[i:] = new_body
+
+                # Create standard objective
+                std_obj_assign = ast.Assign(
+                    targets=[ast.Name(id="obj_std", ctx=ast.Store())],
+                    value=original_return
+                )
+
+                # Create provision objective
+                if self.mpc_data.comfort_variable:
+                    prov_obj_code = ast.parse(
+                        f"provision_obj = self.create_combined_objective("
+                        f"    self.create_sub_objective(expressions=self.{self.mpc_data.power_variable} - self._P_external, "
+                        f"               weight=self.profile_deviation_weight, "
+                        f"               name='profile_deviation'),"
+                        f"    self.create_sub_objective(expressions=self.{self.mpc_data.comfort_variable}, "
+                        f"               weight=self.profile_comfort_weight, "
+                        f"               name='comfort'),"
+                        f")"
+                    ).body[0]
+                else:
+                    prov_obj_code = ast.parse(
+                        f"provision_obj = self.create_combined_objective("
+                        f"    self.create_sub_objective(expressions=self.{self.mpc_data.power_variable} - self._P_external, "
+                        f"               weight=self.profile_deviation_weight, "
+                        f"               name='profile_deviation'),"
+                        f")"
+                    ).body[0]
+
+                # Create provision time condition
+                provision_cond_stmt = ast.parse(
+                    "provision_condition = ca.logic_and(self.in_provision.sym, "
+                    "ca.logic_and(self.time >= self.rel_start.sym, "
+                    "            self.time < self.rel_end.sym))"
+                ).body[0]
+
+                # Create conditional objective
+                cond_obj_code = ast.parse(
+                    "cond_obj = self.create_conditional_objective((provision_condition, provision_obj), default_objective=obj_std)"
+                ).body[0]
+
+                # Return conditional objective
+                return_stmt = ast.Return(value=ast.Name(id="cond_obj", ctx=ast.Load()))
+
+                # Replace the return statement with our new statements
+                new_body = [std_obj_assign, prov_obj_code, provision_cond_stmt, cond_obj_code, return_stmt]
+                node.body[i:i + 1] = new_body
                 break
 
 
@@ -526,3 +562,4 @@ def remove_all_imports_from_tree(tree: ast.Module) -> ast.Module:
     # Update the body of the tree to the new list
     tree.body = new_body
     return tree
+

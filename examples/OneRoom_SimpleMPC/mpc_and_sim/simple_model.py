@@ -112,12 +112,9 @@ class BaselineMPCModel(CasadiModel):
         ]
 
         # Objective function
-        objective = sum(
-                [
-                    self.r_mDot * self.mDot,
-                    self.s_T * self.T_slack**2,
-                ]
-            )
+        objective1 = self.create_sub_objective(self.mDot, self.r_mDot, name="base_costs")
+        objective2 = self.create_sub_objective(self.T_slack**2, self.s_T, name="base_comfort")
+        objective = self.create_combined_objective(objective1, objective2)
         return objective
 
 

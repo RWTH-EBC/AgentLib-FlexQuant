@@ -1,7 +1,6 @@
 """
 Defines MPC and MINLP-MPC for baseline flexibility quantification.
 """
-from agentlib_mpc.modules import minlp_mpc, mpc_full
 import os
 import math
 import numpy as np
@@ -9,9 +8,8 @@ import pandas as pd
 from typing import Optional, Dict
 from pydantic import Field
 from collections.abc import Iterable
-import agentlib_flexquant.data_structures.globals as glbs
 from agentlib import AgentVariable
-from agentlib_mpc.modules import mpc_full, minlp_mpc
+from agentlib_mpc.modules.mpc import mpc_full, minlp_mpc
 from agentlib_mpc.data_structures.mpc_datamodels import Results
 from agentlib_flexquant.data_structures.globals import full_trajectory_suffix
 

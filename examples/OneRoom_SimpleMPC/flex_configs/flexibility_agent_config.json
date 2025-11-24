@@ -59,11 +59,19 @@
     },
     "shadow_mpc_config_generator_data": {
         "weights": [{"name": "s_P", "value": 10}],
-        "pos_flex": {
-            "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, self.s_P * self.P_el])"
+         "pos_flex": {
+            "flex_cost_function": [
+                "obj1 = self.create_sub_objective(expressions=self.P_el, weight=1, name=\"cost el\")",
+                "obj2 = self.create_sub_objective(expressions=self.T_slack**2, weight=1000, name=\"discomfort\")",
+                "obj_flex = self.create_combined_objective(obj1, obj2, normalization=7200)"
+            ]
         },
         "neg_flex": {
-            "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, -self.s_P * self.P_el])"
+            "flex_cost_function": [
+                "obj1 = self.create_sub_objective(expressions=self.P_el, weight=-1, name=\"cost el\")",
+                "obj2 = self.create_sub_objective(expressions=self.T_slack**2, weight=1000, name=\"discomfort\")",
+                "obj_flex = self.create_combined_objective(obj1, obj2, normalization=7200)"
+            ]
         }
     },
     "casadi_sim_time_step" : 0,

@@ -11,7 +11,7 @@ from pydantic import Field
 from typing import Dict, Union, Optional
 from collections.abc import Iterable
 from agentlib.core.datamodels import AgentVariable
-from agentlib_mpc.modules import mpc_full, minlp_mpc
+from agentlib_mpc.modules.mpc import mpc_full, minlp_mpc
 from agentlib_flexquant.utils.data_handling import fill_nans, MEAN
 from agentlib_flexquant.data_structures.globals import (
     full_trajectory_prefix,
