@@ -524,10 +524,9 @@ def add_objective_imports_to_tree(tree: ast.Module):
     objective_imports = ast.ImportFrom(
         module="agentlib_mpc.data_structures.objective",
         names=[
-            ast.alias(name="FullObjective", asname=None),
-            ast.alias(name="EqObjective", asname=None),
-            ast.alias(name="DeltaUObjective", asname=None),
-            ast.alias(name="SqObjective", asname=None),
+            ast.alias(name="CombinedObjective", asname=None),
+            ast.alias(name="SubObjective", asname=None),
+            ast.alias(name="ChangePenaltyObjective", asname=None),
             ast.alias(name="ConditionalObjective", asname=None),
         ],
         level=0

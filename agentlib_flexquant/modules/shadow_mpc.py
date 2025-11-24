@@ -1,8 +1,6 @@
 """
 Defines shadow MPC and MINLP-MPC for positive/negative flexibility quantification.
 """
-from typing import Dict, Union
-
 import os
 import math
 import numpy as np
@@ -11,13 +9,10 @@ from pydantic import Field
 from typing import Dict, Union, Optional
 from collections.abc import Iterable
 from agentlib.core.datamodels import AgentVariable
-from agentlib_mpc.modules import mpc_full, minlp_mpc
+from agentlib_mpc.modules.mpc import mpc_full, minlp_mpc
 from agentlib_flexquant.utils.data_handling import fill_nans, MEAN
 from agentlib_flexquant.data_structures.globals import (
-    full_trajectory_prefix,
     full_trajectory_suffix,
-    STORED_ENERGY_ALIAS_NEG,
-    STORED_ENERGY_ALIAS_POS,
 )
 
 

@@ -7,9 +7,10 @@ in flexquant. The models handle file paths, module configurations, variable
 mappings, and optimization weights for MPC implementations.
 """
 import pydantic
+from typing import Optional, Union
+
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from pydantic import ConfigDict, model_validator
-import flexibility_quantification.utils.config_management as cmng
 
 import agentlib_flexquant.data_structures.globals as glbs
 import agentlib_flexquant.utils.config_management as cmng

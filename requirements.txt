@@ -1,12 +1,9 @@
 setuptools
-agentlib_mpc[full] @ git+https://github.com/RWTH-EBC/AgentLib-MPC.git@main
-agentlib_mpc[fmu, interactive] @ git+https://github.com/RWTH-EBC/AgentLib-MPC.git
+agentlib_mpc[full, fmu, interactive] @ git+https://github.com/RWTH-EBC/AgentLib-MPC.git@main
 pycombina @ git+https://github.com/adbuerger/pycombina.gitpathlib
 astor==0.8.1
 black
 pre-commit
-
-# Building the docs
 sphinx>=6.1.3
 m2r2
 myst-parser

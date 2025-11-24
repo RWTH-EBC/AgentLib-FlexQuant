@@ -8,12 +8,8 @@ the MPC config.
 import ast
 import atexit
 import inspect
-import json
 import logging
 import os
-from copy import deepcopy
-from pathlib import Path
-from typing import Union
 
 import astor
 import black
@@ -30,7 +26,7 @@ from agentlib.core.module import BaseModuleConfig
 from agentlib.utils import custom_injection, load_config
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from agentlib_mpc.models.casadi_model import CasadiModelConfig
-from agentlib_mpc.modules.mpc_full import MPCConfig
+from agentlib_mpc.modules.mpc.mpc_full import MPCConfig
 
 from agentlib_mpc.optimization_backends.casadi_.basic import DirectCollocation
 from agentlib_mpc.data_structures.casadi_utils import CasadiDiscretizationOptions

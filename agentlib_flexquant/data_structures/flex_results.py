@@ -13,7 +13,7 @@ from pydantic import BaseModel, FilePath
 from agentlib.core.agent import AgentConfig
 from agentlib.modules.simulation.simulator import SimulatorConfig
 from agentlib.utils import load_config
-from agentlib_mpc.modules.mpc import BaseMPCConfig
+from agentlib_mpc.modules.mpc.mpc import BaseMPCConfig
 from agentlib_mpc.utils import TimeConversionTypes
 from agentlib_mpc.utils.analysis import load_mpc, load_mpc_stats, load_sim
 
