@@ -131,8 +131,8 @@ agentlib_flexquant/data_structures/flex_kpis.py:189:4: R0913: Too many arguments
 agentlib_flexquant/data_structures/flex_kpis.py:250:4: R0913: Too many arguments (6/5) (too-many-arguments)
 agentlib_flexquant/data_structures/flex_kpis.py:313:8: E0602: Undefined variable 'power_flex_offer_integration' (undefined-variable)
 agentlib_flexquant/data_structures/flex_kpis.py:317:31: E0602: Undefined variable 'power_flex_offer_integration' (undefined-variable)
-agentlib_flexquant/data_structures/flex_kpis.py:337:17: C2801: Unnecessarily calls dunder method __deepcopy__. Use copy.deepcopy function. (unnecessary-dunder-call)
-agentlib_flexquant/data_structures/flex_kpis.py:338:8: R1705: Unnecessary "else" after "return", remove the "else" and de-indent the code inside it (no-else-return)
+agentlib_flexquant/data_structures/flex_kpis.py:337:8: R1705: Unnecessary "else" after "return", remove the "else" and de-indent the code inside it (no-else-return)
+agentlib_flexquant/data_structures/flex_kpis.py:338:21: C2801: Unnecessarily calls dunder method __deepcopy__. Use copy.deepcopy function. (unnecessary-dunder-call)
 agentlib_flexquant/data_structures/flex_kpis.py:351:8: E0602: Undefined variable 'power_flex_offer_integration' (undefined-variable)
 agentlib_flexquant/data_structures/flex_kpis.py:352:19: E0602: Undefined variable 'power_flex_offer' (undefined-variable)
 agentlib_flexquant/data_structures/flex_kpis.py:355:22: E0602: Undefined variable 'power_flex_offer_integration' (undefined-variable)
@@ -813,14 +813,7 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
         # set the flex results format same as mpc result while updating Agentvariable
         self.flex_results.index = self.flex_results.index.get_level_values(1)
 
-    def _initialize_flex_results(
-        self, n_simulation_steps, horizon_length, sim_time_step, result_df
-    ):
-        """Initialize the flex results dataframe with the correct dimension and index
-        and fill with existing results from optimization
-        """
-
-        # create MultiIndex for collocation points (duplicate-code)
+    def register_callbacks(self): (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[441:494]
 ==agentlib_flexquant.modules.shadow_mpc:[190:243]
@@ -900,9 +893,7 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value
-
- (duplicate-code)
+                ] = self.flex_model.get_output(output).value (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[522:543]
 ==agentlib_flexquant.modules.shadow_mpc:[262:285]

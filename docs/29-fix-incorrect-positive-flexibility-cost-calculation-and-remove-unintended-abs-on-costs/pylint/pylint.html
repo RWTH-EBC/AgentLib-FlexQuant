@@ -234,22 +234,22 @@
             
             <tr>
                 <td>337</td>
-                <td>17</td>
-                <td>convention</td>
-                <td><code>unnecessary-dunder-call</code></td>
-                <td>C2801</td>
-                <td>FlexibilityKPIs._get_series_for_integration</td>
-                <td><pre>Unnecessarily calls dunder method __deepcopy__. Use copy.deepcopy function.</pre></td>
-            </tr>
-            
-            <tr>
-                <td>338</td>
                 <td>8</td>
                 <td>refactor</td>
                 <td><code>no-else-return</code></td>
                 <td>R1705</td>
                 <td>FlexibilityKPIs._get_series_for_integration</td>
                 <td><pre>Unnecessary &#34;else&#34; after &#34;return&#34;, remove the &#34;else&#34; and de-indent the code inside it</pre></td>
+            </tr>
+            
+            <tr>
+                <td>338</td>
+                <td>21</td>
+                <td>convention</td>
+                <td><code>unnecessary-dunder-call</code></td>
+                <td>C2801</td>
+                <td>FlexibilityKPIs._get_series_for_integration</td>
+                <td><pre>Unnecessarily calls dunder method __deepcopy__. Use copy.deepcopy function.</pre></td>
             </tr>
             
             <tr>
@@ -1564,7 +1564,10 @@
         # simulate with the casadi simulator
         self.sim_flex_model(solution)
 
+        # extract solution DataFrama
         df = solution.df
+
+        # send the outputs
         if self.flex_results is not None:
             for output in self.var_ref.outputs:
                 if output not in [
@@ -1632,8 +1635,9 @@
     def _initialize_flex_results(
         self, n_simulation_steps, horizon_length, sim_time_step, result_df
     ):
-        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension and index and fill with
-         existing results from optimization&#34;&#34;&#34;
+        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension and index
+        and fill with existing results from optimization
+        &#34;&#34;&#34;
 
         # create MultiIndex for collocation points
         index_coll = pd.MultiIndex.from_arrays(
@@ -1872,14 +1876,7 @@
         # set the flex results format same as mpc result while updating Agentvariable
         self.flex_results.index = self.flex_results.index.get_level_values(1)
 
-    def _initialize_flex_results(
-        self, n_simulation_steps, horizon_length, sim_time_step, result_df
-    ):
-        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension and index
-        and fill with existing results from optimization
-        &#34;&#34;&#34;
-
-        # create MultiIndex for collocation points</pre></td>
+    def register_callbacks(self):</pre></td>
             </tr>
             
             <tr>
@@ -1977,9 +1974,7 @@
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value
-
-</pre></td>
+                ] = self.flex_model.get_output(output).value</pre></td>
             </tr>
             
             <tr>
@@ -2012,9 +2007,7 @@
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value
-
-</pre></td>
+                ] = self.flex_model.get_output(output).value</pre></td>
             </tr>
             
             <tr>
@@ -2041,7 +2034,13 @@
             except:
                 pass
 
-    def register_callbacks(self):</pre></td>
+    def pre_computation_hook(self):
+        &#34;&#34;&#34;Calculate relative start and end times for flexibility provision.
+
+        When in provision mode, computes the relative timing for flexibility
+        events based on the external power profile timestamps and current
+        environment time.
+        &#34;&#34;&#34;</pre></td>
             </tr>
             
             <tr>
@@ -2055,8 +2054,8 @@
 ==agentlib_flexquant.modules.baseline_mpc:[60:81]
 ==agentlib_flexquant.modules.shadow_mpc:[50:67]
         if self.config.casadi_sim_time_step &gt; 0:
-            # generate a separate flex_model for integration to ensure
-            # the model used in MPC optimization remains unaffected
+            # generate a separate flex_model for integration to ensure the model used in MPC
+            # optimization remains unaffected
             self.flex_model = type(self.model)(dt=self.config.casadi_sim_time_step)
             # generate the filename for the simulation results
             self.res_file_flex = self.config.optimization_backend[&#34;results_file&#34;].replace(
@@ -2068,13 +2067,9 @@
             except:
                 pass
 
-    def pre_computation_hook(self):
-        &#34;&#34;&#34;Calculate relative start and end times for flexibility provision.
-
-        When in provision mode, computes the relative timing for flexibility
-        events based on the external power profile timestamps and current
-        environment time.
-        &#34;&#34;&#34;</pre></td>
+    def set_output(self, solution):
+        &#34;&#34;&#34;Takes the solution from optimization backend and sends it to AgentVariables.&#34;&#34;&#34;
+        # Output must be defined in the config as &#34;type&#34;=&#34;pd.Series&#34;</pre></td>
             </tr>
             
             <tr>
@@ -2147,7 +2142,21 @@
             self.logger.error(&#34;Results file %s was not found.&#34;, results_file)
             return None
 
-    def register_callbacks(self):</pre></td>
+    def write_results(self, df: pd.DataFrame, ts: float, n: int) -&gt; pd.DataFrame:
+        &#34;&#34;&#34;Write every data of variables in self.var_list in an DataFrame.
+
+        DataFrame will be updated every time step
+
+        Args:
+            df: DataFrame which is initialised as an empty DataFrame with columns
+            according to self.var_list
+            ts: time step
+            n: number of time steps during prediction horizon
+
+        Returns:
+            DataFrame with results of every variable in self.var_list
+
+        &#34;&#34;&#34;</pre></td>
             </tr>
             
             <tr>
