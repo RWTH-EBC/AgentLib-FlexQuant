@@ -334,8 +334,8 @@ class FlexibilityKPIs(pydantic.BaseModel):
             mpc_time_grid: the MPC time grid over the horizon
 
         """
-        series = series.__deepcopy__()
         if series.integration_method == CONSTANT:
+            series = series.__deepcopy__()
             return series.value.reindex(mpc_time_grid).dropna()
         else:
             return series.value
