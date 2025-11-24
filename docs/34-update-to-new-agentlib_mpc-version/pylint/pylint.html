@@ -28,9 +28,9 @@
 
         
         <h2>Score</h2>
-        7.15 / 10
+        7.16 / 10
             
-            (previous score: 7.15 / 10)
+            (previous score: 7.16 / 10)
             
         
 
@@ -447,7 +447,7 @@
                 <td><code>import-error</code></td>
                 <td>E0401</td>
                 <td></td>
-                <td><pre>Unable to import &#39;agentlib_mpc.modules.mpc&#39;</pre></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.modules.mpc.mpc&#39;</pre></td>
             </tr>
             
             <tr>
@@ -779,11 +779,11 @@
             <tr>
                 <td>10</td>
                 <td>0</td>
-                <td>error</td>
-                <td><code>import-error</code></td>
-                <td>E0401</td>
+                <td>convention</td>
+                <td><code>wrong-import-order</code></td>
+                <td>C0411</td>
                 <td></td>
-                <td><pre>Unable to import &#39;agentlib_mpc.data_structures.mpc_datamodels&#39;</pre></td>
+                <td><pre>standard import &#34;from typing import Optional, Union&#34; should be placed before &#34;import pydantic&#34;</pre></td>
             </tr>
             
             <tr>
@@ -793,11 +793,21 @@
                 <td><code>import-error</code></td>
                 <td>E0401</td>
                 <td></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.data_structures.mpc_datamodels&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>12</td>
+                <td>0</td>
+                <td>error</td>
+                <td><code>import-error</code></td>
+                <td>E0401</td>
+                <td></td>
                 <td><pre>Unable to import &#39;pydantic&#39;</pre></td>
             </tr>
             
             <tr>
-                <td>17</td>
+                <td>18</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -807,7 +817,7 @@
             </tr>
             
             <tr>
-                <td>39</td>
+                <td>40</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -817,7 +827,7 @@
             </tr>
             
             <tr>
-                <td>118</td>
+                <td>119</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -827,7 +837,7 @@
             </tr>
             
             <tr>
-                <td>149</td>
+                <td>150</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -1097,7 +1107,7 @@
                 <td><code>import-error</code></td>
                 <td>E0401</td>
                 <td></td>
-                <td><pre>Unable to import &#39;agentlib_mpc.modules.mpc_full&#39;</pre></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.modules.mpc.mpc_full&#39;</pre></td>
             </tr>
             
             <tr>
@@ -1191,7 +1201,7 @@
             </tr>
             
             <tr>
-                <td>538</td>
+                <td>539</td>
                 <td>16</td>
                 <td>convention</td>
                 <td><code>unnecessary-dunder-call</code></td>
@@ -1201,7 +1211,7 @@
             </tr>
             
             <tr>
-                <td>567</td>
+                <td>568</td>
                 <td>29</td>
                 <td>warning</td>
                 <td><code>protected-access</code></td>
@@ -1211,7 +1221,7 @@
             </tr>
             
             <tr>
-                <td>579</td>
+                <td>580</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-locals</code></td>
@@ -1221,7 +1231,7 @@
             </tr>
             
             <tr>
-                <td>601</td>
+                <td>602</td>
                 <td>65</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1231,7 +1241,7 @@
             </tr>
             
             <tr>
-                <td>651</td>
+                <td>652</td>
                 <td>57</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1241,7 +1251,37 @@
             </tr>
             
             <tr>
-                <td>677</td>
+                <td>672</td>
+                <td>12</td>
+                <td>warning</td>
+                <td><code>self-assigning-variable</code></td>
+                <td>W0127</td>
+                <td>FlexAgentGenerator.check_variables_in_casadi_config</td>
+                <td><pre>Assigning the same variable &#39;expr&#39; to itself</pre></td>
+            </tr>
+            
+            <tr>
+                <td>681</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (140/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>682</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (119/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>686</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-branches</code></td>
@@ -1251,7 +1291,7 @@
             </tr>
             
             <tr>
-                <td>741</td>
+                <td>750</td>
                 <td>8</td>
                 <td>refactor</td>
                 <td><code>no-else-raise</code></td>
@@ -1261,7 +1301,7 @@
             </tr>
             
             <tr>
-                <td>835</td>
+                <td>844</td>
                 <td>68</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1292,7 +1332,7 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[362:543]
+==agentlib_flexquant.modules.baseline_mpc:[360:541]
 ==agentlib_flexquant.modules.shadow_mpc:[382:563]
         if not self.config.set_outputs:
             return
@@ -1485,7 +1525,7 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[98:234]
+==agentlib_flexquant.modules.baseline_mpc:[96:232]
 ==agentlib_flexquant.modules.shadow_mpc:[382:514]
         if not self.config.set_outputs:
             return
@@ -1494,10 +1534,7 @@
         # simulate with the casadi simulator
         self.sim_flex_model(solution)
 
-        # extract solution DataFrama
         df = solution.df
-
-        # send the outputs
         if self.flex_results is not None:
             for output in self.var_ref.outputs:
                 if output not in [
@@ -1565,9 +1602,8 @@
     def _initialize_flex_results(
         self, n_simulation_steps, horizon_length, sim_time_step, result_df
     ):
-        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension and index
-        and fill with existing results from optimization
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension and index and fill with
+         existing results from optimization&#34;&#34;&#34;
 
         # create MultiIndex for collocation points
         index_coll = pd.MultiIndex.from_arrays(
@@ -1633,7 +1669,7 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[181:276]
+==agentlib_flexquant.modules.baseline_mpc:[179:274]
 ==agentlib_flexquant.modules.shadow_mpc:[190:285]
         index_coll = pd.MultiIndex.from_arrays(
             [[self.env.now] * len(result_df.index), result_df.index],
@@ -1740,7 +1776,7 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[109:181]
+==agentlib_flexquant.modules.baseline_mpc:[107:179]
 ==agentlib_flexquant.modules.shadow_mpc:[72:137]
         if self.flex_results is not None:
             for output in self.var_ref.outputs:
@@ -1806,7 +1842,14 @@
         # set the flex results format same as mpc result while updating Agentvariable
         self.flex_results.index = self.flex_results.index.get_level_values(1)
 
-    def register_callbacks(self):</pre></td>
+    def _initialize_flex_results(
+        self, n_simulation_steps, horizon_length, sim_time_step, result_df
+    ):
+        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension and index
+        and fill with existing results from optimization
+        &#34;&#34;&#34;
+
+        # create MultiIndex for collocation points</pre></td>
             </tr>
             
             <tr>
@@ -1817,7 +1860,7 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[441:494]
+==agentlib_flexquant.modules.baseline_mpc:[439:492]
 ==agentlib_flexquant.modules.shadow_mpc:[190:243]
         index_coll = pd.MultiIndex.from_arrays(
             [[self.env.now] * len(result_df.index), result_df.index],
@@ -1882,7 +1925,7 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[253:276]
+==agentlib_flexquant.modules.baseline_mpc:[251:274]
 ==agentlib_flexquant.modules.shadow_mpc:[542:563]
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
@@ -1904,7 +1947,9 @@
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value</pre></td>
+                ] = self.flex_model.get_output(output).value
+
+</pre></td>
             </tr>
             
             <tr>
@@ -1915,7 +1960,7 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[522:543]
+==agentlib_flexquant.modules.baseline_mpc:[520:541]
 ==agentlib_flexquant.modules.shadow_mpc:[262:285]
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
@@ -1950,7 +1995,7 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[318:339]
+==agentlib_flexquant.modules.baseline_mpc:[316:337]
 ==agentlib_flexquant.modules.shadow_mpc:[312:327]
         if self.config.casadi_sim_time_step &gt; 0:
             # generate a separate flex_model for integration to ensure the model used in MPC
@@ -1983,7 +2028,7 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[60:81]
+==agentlib_flexquant.modules.baseline_mpc:[58:79]
 ==agentlib_flexquant.modules.shadow_mpc:[50:67]
         if self.config.casadi_sim_time_step &gt; 0:
             # generate a separate flex_model for integration to ensure
@@ -2016,7 +2061,7 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[235:249]
+==agentlib_flexquant.modules.baseline_mpc:[233:247]
 ==agentlib_flexquant.modules.shadow_mpc:[517:531]
         input_values = result_df.parameter[self.var_ref.inputs].dropna()
 
@@ -2042,7 +2087,7 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[497:511]
+==agentlib_flexquant.modules.baseline_mpc:[495:509]
 ==agentlib_flexquant.modules.shadow_mpc:[244:258]
         input_values = result_df.parameter[self.var_ref.inputs].dropna()
 
@@ -2103,7 +2148,7 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[282:288]
+==agentlib_flexquant.modules.baseline_mpc:[280:286]
 ==agentlib_flexquant.modules.shadow_mpc:[25:31]
     casadi_sim_time_step: int = Field(
         default=0,
@@ -2148,37 +2193,7 @@
             </tr>
             
             <tr>
-                <td>4</td>
-                <td>0</td>
-                <td>error</td>
-                <td><code>import-error</code></td>
-                <td>E0401</td>
-                <td></td>
-                <td><pre>Unable to import &#39;agentlib_mpc.modules&#39;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>5</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>wrong-import-order</code></td>
-                <td>C0411</td>
-                <td></td>
-                <td><pre>standard import &#34;import os&#34; should be placed before &#34;from agentlib_mpc.modules import minlp_mpc, mpc_full&#34;</pre></td>
-            </tr>
-            
-            <tr>
                 <td>6</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>wrong-import-order</code></td>
-                <td>C0411</td>
-                <td></td>
-                <td><pre>standard import &#34;import math&#34; should be placed before &#34;from agentlib_mpc.modules import minlp_mpc, mpc_full&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>7</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -2188,7 +2203,7 @@
             </tr>
             
             <tr>
-                <td>8</td>
+                <td>7</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -2198,17 +2213,17 @@
             </tr>
             
             <tr>
-                <td>9</td>
+                <td>8</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>wrong-import-order</code></td>
                 <td>C0411</td>
                 <td></td>
-                <td><pre>standard import &#34;from typing import Optional, Dict&#34; should be placed before &#34;from agentlib_mpc.modules import minlp_mpc, mpc_full&#34;</pre></td>
+                <td><pre>standard import &#34;from typing import Optional, Dict&#34; should be placed before &#34;import numpy as np&#34;</pre></td>
             </tr>
             
             <tr>
-                <td>10</td>
+                <td>9</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -2218,27 +2233,17 @@
             </tr>
             
             <tr>
-                <td>11</td>
+                <td>10</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>wrong-import-order</code></td>
                 <td>C0411</td>
                 <td></td>
-                <td><pre>standard import &#34;from collections.abc import Iterable&#34; should be placed before &#34;from agentlib_mpc.modules import minlp_mpc, mpc_full&#34;</pre></td>
+                <td><pre>standard import &#34;from collections.abc import Iterable&#34; should be placed before &#34;import numpy as np&#34;</pre></td>
             </tr>
             
             <tr>
-                <td>12</td>
-                <td>0</td>
-                <td>warning</td>
-                <td><code>unused-import</code></td>
-                <td>W0611</td>
-                <td></td>
-                <td><pre>Unused agentlib_flexquant.data_structures.globals imported as glbs</pre></td>
-            </tr>
-            
-            <tr>
-                <td>13</td>
+                <td>11</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -2248,67 +2253,17 @@
             </tr>
             
             <tr>
-                <td>13</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>wrong-import-order</code></td>
-                <td>C0411</td>
-                <td></td>
-                <td><pre>third party import &#34;from agentlib import AgentVariable&#34; should be placed before &#34;import agentlib_flexquant.data_structures.globals as glbs&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>14</td>
+                <td>12</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
                 <td>E0401</td>
                 <td></td>
-                <td><pre>Unable to import &#39;agentlib_mpc.modules&#39;</pre></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.modules.mpc&#39;</pre></td>
             </tr>
             
             <tr>
-                <td>14</td>
-                <td>0</td>
-                <td>warning</td>
-                <td><code>reimported</code></td>
-                <td>W0404</td>
-                <td></td>
-                <td><pre>Reimport &#39;mpc_full&#39; (imported line 4)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>14</td>
-                <td>0</td>
-                <td>warning</td>
-                <td><code>reimported</code></td>
-                <td>W0404</td>
-                <td></td>
-                <td><pre>Reimport &#39;minlp_mpc&#39; (imported line 4)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>14</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>wrong-import-order</code></td>
-                <td>C0411</td>
-                <td></td>
-                <td><pre>third party import &#34;from agentlib_mpc.modules import mpc_full, minlp_mpc&#34; should be placed before &#34;import agentlib_flexquant.data_structures.globals as glbs&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>14</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>ungrouped-imports</code></td>
-                <td>C0412</td>
-                <td></td>
-                <td><pre>Imports from package agentlib_mpc are not grouped</pre></td>
-            </tr>
-            
-            <tr>
-                <td>15</td>
+                <td>13</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
@@ -2318,17 +2273,7 @@
             </tr>
             
             <tr>
-                <td>15</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>wrong-import-order</code></td>
-                <td>C0411</td>
-                <td></td>
-                <td><pre>third party import &#34;from agentlib_mpc.data_structures.mpc_datamodels import Results&#34; should be placed before &#34;import agentlib_flexquant.data_structures.globals as glbs&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>19</td>
+                <td>17</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
@@ -2338,7 +2283,7 @@
             </tr>
             
             <tr>
-                <td>19</td>
+                <td>17</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -2348,7 +2293,7 @@
             </tr>
             
             <tr>
-                <td>72</td>
+                <td>70</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>bare-except</code></td>
@@ -2358,7 +2303,7 @@
             </tr>
             
             <tr>
-                <td>88</td>
+                <td>86</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -2368,7 +2313,7 @@
             </tr>
             
             <tr>
-                <td>107</td>
+                <td>105</td>
                 <td>8</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2378,7 +2323,7 @@
             </tr>
             
             <tr>
-                <td>229</td>
+                <td>227</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
@@ -2388,7 +2333,7 @@
             </tr>
             
             <tr>
-                <td>229</td>
+                <td>227</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-locals</code></td>
@@ -2398,7 +2343,7 @@
             </tr>
             
             <tr>
-                <td>230</td>
+                <td>228</td>
                 <td>49</td>
                 <td>warning</td>
                 <td><code>unused-argument</code></td>
@@ -2408,7 +2353,7 @@
             </tr>
             
             <tr>
-                <td>258</td>
+                <td>256</td>
                 <td>30</td>
                 <td>warning</td>
                 <td><code>eval-used</code></td>
@@ -2418,7 +2363,7 @@
             </tr>
             
             <tr>
-                <td>277</td>
+                <td>275</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
@@ -2428,7 +2373,7 @@
             </tr>
             
             <tr>
-                <td>277</td>
+                <td>275</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -2438,7 +2383,7 @@
             </tr>
             
             <tr>
-                <td>330</td>
+                <td>328</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>bare-except</code></td>
@@ -2448,7 +2393,7 @@
             </tr>
             
             <tr>
-                <td>352</td>
+                <td>350</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -2458,7 +2403,7 @@
             </tr>
             
             <tr>
-                <td>370</td>
+                <td>368</td>
                 <td>8</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2468,7 +2413,7 @@
             </tr>
             
             <tr>
-                <td>489</td>
+                <td>487</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
@@ -2478,7 +2423,7 @@
             </tr>
             
             <tr>
-                <td>489</td>
+                <td>487</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-locals</code></td>
@@ -2488,7 +2433,7 @@
             </tr>
             
             <tr>
-                <td>490</td>
+                <td>488</td>
                 <td>49</td>
                 <td>warning</td>
                 <td><code>unused-argument</code></td>
@@ -2498,7 +2443,7 @@
             </tr>
             
             <tr>
-                <td>527</td>
+                <td>525</td>
                 <td>30</td>
                 <td>warning</td>
                 <td><code>eval-used</code></td>
@@ -3066,7 +3011,7 @@
                 <td><code>import-error</code></td>
                 <td>E0401</td>
                 <td></td>
-                <td><pre>Unable to import &#39;agentlib_mpc.modules&#39;</pre></td>
+                <td><pre>Unable to import &#39;agentlib_mpc.modules.mpc&#39;</pre></td>
             </tr>
             
             <tr>
@@ -4106,7 +4051,27 @@
                 <td><code>unused-import</code></td>
                 <td>W0611</td>
                 <td></td>
+                <td><pre>Unused SHADOW_MPC_COST_FUNCTION imported from agentlib_flexquant.data_structures.globals</pre></td>
+            </tr>
+            
+            <tr>
+                <td>7</td>
+                <td>0</td>
+                <td>warning</td>
+                <td><code>unused-import</code></td>
+                <td>W0611</td>
+                <td></td>
                 <td><pre>Unused full_trajectory_prefix imported from agentlib_flexquant.data_structures.globals</pre></td>
+            </tr>
+            
+            <tr>
+                <td>7</td>
+                <td>0</td>
+                <td>warning</td>
+                <td><code>unused-import</code></td>
+                <td>W0611</td>
+                <td></td>
+                <td><pre>Unused return_baseline_cost_function imported from agentlib_flexquant.data_structures.globals</pre></td>
             </tr>
             
             <tr>
@@ -4170,17 +4135,17 @@
             </tr>
             
             <tr>
-                <td>330</td>
-                <td>21</td>
+                <td>368</td>
+                <td>4</td>
                 <td>refactor</td>
-                <td><code>consider-merging-isinstance</code></td>
-                <td>R1701</td>
-                <td>SetupSystemModifier.modify_config_class_baseline</td>
-                <td><pre>Consider merging these isinstance calls to isinstance(body.value, (ast.BinOp, ast.Tuple))</pre></td>
+                <td><code>too-many-locals</code></td>
+                <td>R0914</td>
+                <td>SetupSystemModifier.modify_setup_system_shadow</td>
+                <td><pre>Too many local variables (18/15)</pre></td>
             </tr>
             
             <tr>
-                <td>397</td>
+                <td>386</td>
                 <td>24</td>
                 <td>warning</td>
                 <td><code>unused-variable</code></td>
@@ -4190,13 +4155,133 @@
             </tr>
             
             <tr>
-                <td>521</td>
+                <td>432</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (109/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>442</td>
+                <td>24</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>SetupSystemModifier.modify_setup_system_shadow</td>
+                <td><pre>Variable name &#34;e&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>447</td>
+                <td>20</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>SetupSystemModifier.modify_setup_system_shadow</td>
+                <td><pre>Variable name &#34;e&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>448</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (116/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>452</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (128/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>459</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (119/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>489</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (125/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>492</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (108/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>500</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (125/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>515</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (131/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>522</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (107/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>557</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
                 <td>C0116</td>
                 <td>remove_all_imports_from_tree</td>
                 <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>565</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>trailing-newlines</code></td>
+                <td>C0305</td>
+                <td></td>
+                <td><pre>Trailing newlines</pre></td>
             </tr>
             
         </table>
@@ -4214,12 +4299,12 @@
             
             <tr>
                 <td>error</td>
-                <td>82</td>
+                <td>81</td>
             </tr>
             
             <tr>
                 <td>convention</td>
-                <td>97</td>
+                <td>106</td>
             </tr>
             
             <tr>
@@ -4244,17 +4329,17 @@
             
             <tr>
                 <td>import-error</td>
-                <td>82</td>
+                <td>81</td>
             </tr>
             
             <tr>
                 <td>line-too-long</td>
-                <td>4</td>
+                <td>15</td>
             </tr>
             
             <tr>
                 <td>reimported</td>
-                <td>8</td>
+                <td>6</td>
             </tr>
             
             <tr>
@@ -4264,7 +4349,7 @@
             
             <tr>
                 <td>invalid-name</td>
-                <td>35</td>
+                <td>37</td>
             </tr>
             
             <tr>
@@ -4289,7 +4374,12 @@
             
             <tr>
                 <td>too-many-locals</td>
-                <td>6</td>
+                <td>7</td>
+            </tr>
+            
+            <tr>
+                <td>self-assigning-variable</td>
+                <td>2</td>
             </tr>
             
             <tr>
@@ -4299,17 +4389,17 @@
             
             <tr>
                 <td>wrong-import-order</td>
-                <td>15</td>
+                <td>11</td>
             </tr>
             
             <tr>
                 <td>ungrouped-imports</td>
-                <td>6</td>
+                <td>5</td>
             </tr>
             
             <tr>
                 <td>unused-import</td>
-                <td>8</td>
+                <td>9</td>
             </tr>
             
             <tr>
@@ -4383,6 +4473,11 @@
             </tr>
             
             <tr>
+                <td>trailing-newlines</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
                 <td>redefined-builtin</td>
                 <td>2</td>
             </tr>
@@ -4394,7 +4489,7 @@
             
             <tr>
                 <td>consider-merging-isinstance</td>
-                <td>2</td>
+                <td>1</td>
             </tr>
             
             <tr>
@@ -4405,11 +4500,6 @@
             <tr>
                 <td>eval-used</td>
                 <td>5</td>
-            </tr>
-            
-            <tr>
-                <td>self-assigning-variable</td>
-                <td>1</td>
             </tr>
             
             <tr>
@@ -4484,7 +4574,7 @@
             
             <tr>
                 <td>agentlib_flexquant.generate_flex_agents</td>
-                <td>42</td>
+                <td>45</td>
             </tr>
             
             <tr>
@@ -4499,7 +4589,7 @@
             
             <tr>
                 <td>agentlib_flexquant.utils.parsing</td>
-                <td>12</td>
+                <td>26</td>
             </tr>
             
             <tr>
@@ -4539,7 +4629,7 @@
             
             <tr>
                 <td>agentlib_flexquant.data_structures.mpcs</td>
-                <td>7</td>
+                <td>8</td>
             </tr>
             
             <tr>
@@ -4564,7 +4654,7 @@
             
             <tr>
                 <td>agentlib_flexquant.modules.baseline_mpc</td>
-                <td>36</td>
+                <td>26</td>
             </tr>
             
             <tr>
@@ -4589,7 +4679,7 @@
             
             <tr>
                 <td>agentlib_flexquant/generate_flex_agents.py</td>
-                <td>42</td>
+                <td>45</td>
             </tr>
             
             <tr>
@@ -4604,7 +4694,7 @@
             
             <tr>
                 <td>agentlib_flexquant/utils/parsing.py</td>
-                <td>12</td>
+                <td>26</td>
             </tr>
             
             <tr>
@@ -4644,7 +4734,7 @@
             
             <tr>
                 <td>agentlib_flexquant/data_structures/mpcs.py</td>
-                <td>7</td>
+                <td>8</td>
             </tr>
             
             <tr>
@@ -4669,7 +4759,7 @@
             
             <tr>
                 <td>agentlib_flexquant/modules/baseline_mpc.py</td>
-                <td>36</td>
+                <td>26</td>
             </tr>
             
             <tr>

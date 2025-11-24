@@ -5,11 +5,8 @@ agentlib_flexquant/generate_flex_agents.py:22:18: F811 Redefinition of unused `d
 agentlib_flexquant/generate_flex_agents.py:23:21: F811 Redefinition of unused `Path` from line 15
 agentlib_flexquant/generate_flex_agents.py:24:20: F401 [*] `typing.List` imported but unused
 agentlib_flexquant/generate_flex_agents.py:24:26: F811 Redefinition of unused `Union` from line 16
-agentlib_flexquant/modules/baseline_mpc.py:12:54: F401 [*] `agentlib_flexquant.data_structures.globals` imported but unused
-agentlib_flexquant/modules/baseline_mpc.py:14:34: F811 Redefinition of unused `mpc_full` from line 4
-agentlib_flexquant/modules/baseline_mpc.py:14:44: F811 Redefinition of unused `minlp_mpc` from line 4
-agentlib_flexquant/modules/baseline_mpc.py:72:13: E722 Do not use bare `except`
-agentlib_flexquant/modules/baseline_mpc.py:330:13: E722 Do not use bare `except`
+agentlib_flexquant/modules/baseline_mpc.py:70:13: E722 Do not use bare `except`
+agentlib_flexquant/modules/baseline_mpc.py:328:13: E722 Do not use bare `except`
 agentlib_flexquant/modules/shadow_mpc.py:11:20: F811 Redefinition of unused `Dict` from line 4
 agentlib_flexquant/modules/shadow_mpc.py:11:26: F811 Redefinition of unused `Union` from line 4
 agentlib_flexquant/modules/shadow_mpc.py:17:5: F401 [*] `agentlib_flexquant.data_structures.globals.full_trajectory_prefix` imported but unused
@@ -18,6 +15,8 @@ agentlib_flexquant/modules/shadow_mpc.py:20:5: F401 [*] `agentlib_flexquant.data
 agentlib_flexquant/modules/shadow_mpc.py:62:13: E722 Do not use bare `except`
 agentlib_flexquant/modules/shadow_mpc.py:324:13: E722 Do not use bare `except`
 agentlib_flexquant/utils/interactive.py:698:42: F541 [*] f-string without any placeholders
+agentlib_flexquant/utils/parsing.py:11:5: F401 [*] `agentlib_flexquant.data_structures.globals.SHADOW_MPC_COST_FUNCTION` imported but unused
 agentlib_flexquant/utils/parsing.py:12:5: F401 [*] `agentlib_flexquant.data_structures.globals.full_trajectory_prefix` imported but unused
-Found 21 errors.
-[*] 9 fixable with the `--fix` option.
+agentlib_flexquant/utils/parsing.py:14:5: F401 [*] `agentlib_flexquant.data_structures.globals.return_baseline_cost_function` imported but unused
+Found 20 errors.
+[*] 10 fixable with the `--fix` option.
