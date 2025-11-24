@@ -1,0 +1,984 @@
+{
+  "columns": [
+    [
+      "parameter",
+      "T_upper"
+    ],
+    [
+      "parameter",
+      "T_lower"
+    ],
+    [
+      "parameter",
+      "T_amb"
+    ],
+    [
+      "parameter",
+      "P_in_full"
+    ],
+    [
+      "parameter",
+      "in_provision"
+    ],
+    [
+      "parameter",
+      "C"
+    ],
+    [
+      "parameter",
+      "U"
+    ],
+    [
+      "parameter",
+      "s_T"
+    ],
+    [
+      "parameter",
+      "r_pel"
+    ],
+    [
+      "parameter",
+      "prep_time"
+    ],
+    [
+      "parameter",
+      "flex_event_duration"
+    ],
+    [
+      "parameter",
+      "market_time"
+    ],
+    [
+      "parameter",
+      "s_P"
+    ],
+    [
+      "parameter",
+      "T_zone"
+    ],
+    [
+      "parameter",
+      "P_in"
+    ],
+    [
+      "parameter",
+      "r_del_u_P_in"
+    ],
+    [
+      "variable",
+      "T_zone"
+    ],
+    [
+      "upper",
+      "T_zone"
+    ],
+    [
+      "lower",
+      "T_zone"
+    ],
+    [
+      "variable",
+      "P_in"
+    ],
+    [
+      "upper",
+      "P_in"
+    ],
+    [
+      "lower",
+      "P_in"
+    ],
+    [
+      "variable",
+      "T_slack"
+    ],
+    [
+      "upper",
+      "T_slack"
+    ],
+    [
+      "lower",
+      "T_slack"
+    ],
+    [
+      "variable",
+      "P_el"
+    ],
+    [
+      "upper",
+      "P_el"
+    ],
+    [
+      "lower",
+      "P_el"
+    ]
+  ],
+  "head_5_rows": {
+    "columns": [
+      [
+        "parameter",
+        "T_upper"
+      ],
+      [
+        "parameter",
+        "T_lower"
+      ],
+      [
+        "parameter",
+        "T_amb"
+      ],
+      [
+        "parameter",
+        "P_in_full"
+      ],
+      [
+        "parameter",
+        "in_provision"
+      ],
+      [
+        "parameter",
+        "C"
+      ],
+      [
+        "parameter",
+        "U"
+      ],
+      [
+        "parameter",
+        "s_T"
+      ],
+      [
+        "parameter",
+        "r_pel"
+      ],
+      [
+        "parameter",
+        "prep_time"
+      ],
+      [
+        "parameter",
+        "flex_event_duration"
+      ],
+      [
+        "parameter",
+        "market_time"
+      ],
+      [
+        "parameter",
+        "s_P"
+      ],
+      [
+        "parameter",
+        "T_zone"
+      ],
+      [
+        "parameter",
+        "P_in"
+      ],
+      [
+        "parameter",
+        "r_del_u_P_in"
+      ],
+      [
+        "variable",
+        "T_zone"
+      ],
+      [
+        "upper",
+        "T_zone"
+      ],
+      [
+        "lower",
+        "T_zone"
+      ],
+      [
+        "variable",
+        "P_in"
+      ],
+      [
+        "upper",
+        "P_in"
+      ],
+      [
+        "lower",
+        "P_in"
+      ],
+      [
+        "variable",
+        "T_slack"
+      ],
+      [
+        "upper",
+        "T_slack"
+      ],
+      [
+        "lower",
+        "T_slack"
+      ],
+      [
+        "variable",
+        "P_el"
+      ],
+      [
+        "upper",
+        "P_el"
+      ],
+      [
+        "lower",
+        "P_el"
+      ]
+    ],
+    "data": [
+      [
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        10000.0,
+        5.0,
+        250.0,
+        1.0,
+        900.0,
+        7200.0,
+        900.0,
+        10.0,
+        294.15,
+        100.0,
+        0.0,
+        294.15,
+        303.15,
+        288.15,
+        22.30528,
+        200.0,
+        0.0,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN
+      ],
+      [
+        299.0,
+        290.0,
+        278.21911,
+        22.30528,
+        0.0,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        293.1132,
+        303.15,
+        288.15,
+        NaN,
+        NaN,
+        NaN,
+        9e-05,
+        Infinity,
+        -Infinity,
+        22.30528,
+        Infinity,
+        -Infinity
+      ],
+      [
+        299.0,
+        290.0,
+        278.40791,
+        22.30528,
+        0.0,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        290.73596,
+        303.15,
+        288.15,
+        NaN,
+        NaN,
+        NaN,
+        9e-05,
+        Infinity,
+        -Infinity,
+        22.30528,
+        Infinity,
+        -Infinity
+      ],
+      [
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        290.03249,
+        303.15,
+        288.15,
+        48.95195,
+        200.0,
+        0.0,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN
+      ],
+      [
+        299.0,
+        290.0,
+        278.54583,
+        59.4637,
+        0.0,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        289.87692,
+        303.15,
+        288.15,
+        NaN,
+        NaN,
+        NaN,
+        0.12308,
+        Infinity,
+        -Infinity,
+        48.95195,
+        Infinity,
+        -Infinity
+      ]
+    ],
+    "index": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        190.19237886466843
+      ],
+      [
+        0.0,
+        709.8076211353316
+      ],
+      [
+        0.0,
+        900.0
+      ],
+      [
+        0.0,
+        1090.1923788646684
+      ]
+    ]
+  },
+  "index_end": "(2700.0, 43200.0)",
+  "index_start": "(0.0, 0.0)",
+  "shape": [
+    580,
+    28
+  ],
+  "statistics": {
+    "lower.P_el": {
+      "25%": NaN,
+      "50%": NaN,
+      "75%": NaN,
+      "count": 384.0,
+      "max": -Infinity,
+      "mean": -Infinity,
+      "min": -Infinity,
+      "std": NaN
+    },
+    "lower.P_in": {
+      "25%": 0.0,
+      "50%": 0.0,
+      "75%": 0.0,
+      "count": 192.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "std": 0.0
+    },
+    "lower.T_slack": {
+      "25%": NaN,
+      "50%": NaN,
+      "75%": NaN,
+      "count": 384.0,
+      "max": -Infinity,
+      "mean": -Infinity,
+      "min": -Infinity,
+      "std": NaN
+    },
+    "lower.T_zone": {
+      "25%": 288.15,
+      "50%": 288.15,
+      "75%": 288.15,
+      "count": 580.0,
+      "max": 288.15,
+      "mean": 288.15,
+      "min": 288.15,
+      "std": 0.0
+    },
+    "parameter.C": {
+      "25%": 10000.0,
+      "50%": 10000.0,
+      "75%": 10000.0,
+      "count": 4.0,
+      "max": 10000.0,
+      "mean": 10000.0,
+      "min": 10000.0,
+      "std": 0.0
+    },
+    "parameter.P_in": {
+      "25%": 45.09456,
+      "50%": 59.97333,
+      "75%": 75.44176,
+      "count": 4.0,
+      "max": 100.0,
+      "mean": 60.56299,
+      "min": 22.30528,
+      "std": 32.27843
+    },
+    "parameter.P_in_full": {
+      "25%": 44.61414,
+      "50%": 49.61625,
+      "75%": 59.1996,
+      "count": 384.0,
+      "max": 67.25567,
+      "mean": 50.92665,
+      "min": 22.30528,
+      "std": 6.90908
+    },
+    "parameter.T_amb": {
+      "25%": 280.09446,
+      "50%": 281.68393,
+      "75%": 282.75412,
+      "count": 384.0,
+      "max": 283.14781,
+      "mean": 281.30817,
+      "min": 277.24276,
+      "std": 1.58859
+    },
+    "parameter.T_lower": {
+      "25%": 290.01321,
+      "50%": 290.66667,
+      "75%": 291.32453,
+      "count": 384.0,
+      "max": 291.98239,
+      "mean": 290.75,
+      "min": 290.0,
+      "std": 0.6623
+    },
+    "parameter.T_upper": {
+      "25%": 297.67547,
+      "50%": 298.33333,
+      "75%": 298.98679,
+      "count": 384.0,
+      "max": 299.0,
+      "mean": 298.25,
+      "min": 297.01761,
+      "std": 0.6623
+    },
+    "parameter.T_zone": {
+      "25%": 290.12152,
+      "50%": 290.42626,
+      "75%": 291.51227,
+      "count": 4.0,
+      "max": 294.15,
+      "mean": 291.20753,
+      "min": 289.8276,
+      "std": 1.98902
+    },
+    "parameter.U": {
+      "25%": 5.0,
+      "50%": 5.0,
+      "75%": 5.0,
+      "count": 4.0,
+      "max": 5.0,
+      "mean": 5.0,
+      "min": 5.0,
+      "std": 0.0
+    },
+    "parameter.flex_event_duration": {
+      "25%": 7200.0,
+      "50%": 7200.0,
+      "75%": 7200.0,
+      "count": 4.0,
+      "max": 7200.0,
+      "mean": 7200.0,
+      "min": 7200.0,
+      "std": 0.0
+    },
+    "parameter.in_provision": {
+      "25%": 0.0,
+      "50%": 0.0,
+      "75%": 0.0,
+      "count": 384.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "std": 0.0
+    },
+    "parameter.market_time": {
+      "25%": 900.0,
+      "50%": 900.0,
+      "75%": 900.0,
+      "count": 4.0,
+      "max": 900.0,
+      "mean": 900.0,
+      "min": 900.0,
+      "std": 0.0
+    },
+    "parameter.prep_time": {
+      "25%": 900.0,
+      "50%": 900.0,
+      "75%": 900.0,
+      "count": 4.0,
+      "max": 900.0,
+      "mean": 900.0,
+      "min": 900.0,
+      "std": 0.0
+    },
+    "parameter.r_del_u_P_in": {
+      "25%": 0.0,
+      "50%": 0.0,
+      "75%": 0.0,
+      "count": 4.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "std": 0.0
+    },
+    "parameter.r_pel": {
+      "25%": 1.0,
+      "50%": 1.0,
+      "75%": 1.0,
+      "count": 4.0,
+      "max": 1.0,
+      "mean": 1.0,
+      "min": 1.0,
+      "std": 0.0
+    },
+    "parameter.s_P": {
+      "25%": 10.0,
+      "50%": 10.0,
+      "75%": 10.0,
+      "count": 4.0,
+      "max": 10.0,
+      "mean": 10.0,
+      "min": 10.0,
+      "std": 0.0
+    },
+    "parameter.s_T": {
+      "25%": 250.0,
+      "50%": 250.0,
+      "75%": 250.0,
+      "count": 4.0,
+      "max": 250.0,
+      "mean": 250.0,
+      "min": 250.0,
+      "std": 0.0
+    },
+    "upper.P_el": {
+      "25%": NaN,
+      "50%": NaN,
+      "75%": NaN,
+      "count": 384.0,
+      "max": Infinity,
+      "mean": Infinity,
+      "min": Infinity,
+      "std": NaN
+    },
+    "upper.P_in": {
+      "25%": 200.0,
+      "50%": 200.0,
+      "75%": 200.0,
+      "count": 192.0,
+      "max": 200.0,
+      "mean": 200.0,
+      "min": 200.0,
+      "std": 0.0
+    },
+    "upper.T_slack": {
+      "25%": NaN,
+      "50%": NaN,
+      "75%": NaN,
+      "count": 384.0,
+      "max": Infinity,
+      "mean": Infinity,
+      "min": Infinity,
+      "std": NaN
+    },
+    "upper.T_zone": {
+      "25%": 303.15,
+      "50%": 303.15,
+      "75%": 303.15,
+      "count": 580.0,
+      "max": 303.15,
+      "mean": 303.15,
+      "min": 303.15,
+      "std": 0.0
+    },
+    "variable.P_el": {
+      "25%": 42.76229,
+      "50%": 45.23904,
+      "75%": 55.51528,
+      "count": 384.0,
+      "max": 188.55806,
+      "mean": 53.87729,
+      "min": 0.0,
+      "std": 26.31269
+    },
+    "variable.P_in": {
+      "25%": 42.76229,
+      "50%": 45.23904,
+      "75%": 55.51528,
+      "count": 192.0,
+      "max": 188.55806,
+      "mean": 53.87729,
+      "min": 0.0,
+      "std": 26.34711
+    },
+    "variable.T_slack": {
+      "25%": 0.00978,
+      "50%": 0.01008,
+      "75%": 0.01027,
+      "count": 384.0,
+      "max": 0.66918,
+      "mean": 0.03485,
+      "min": 7e-05,
+      "std": 0.08786
+    },
+    "variable.T_zone": {
+      "25%": 290.09006,
+      "50%": 291.17409,
+      "75%": 291.84067,
+      "count": 580.0,
+      "max": 299.85458,
+      "mean": 292.12772,
+      "min": 289.45632,
+      "std": 2.95589
+    }
+  },
+  "tail_5_rows": {
+    "columns": [
+      [
+        "parameter",
+        "T_upper"
+      ],
+      [
+        "parameter",
+        "T_lower"
+      ],
+      [
+        "parameter",
+        "T_amb"
+      ],
+      [
+        "parameter",
+        "P_in_full"
+      ],
+      [
+        "parameter",
+        "in_provision"
+      ],
+      [
+        "parameter",
+        "C"
+      ],
+      [
+        "parameter",
+        "U"
+      ],
+      [
+        "parameter",
+        "s_T"
+      ],
+      [
+        "parameter",
+        "r_pel"
+      ],
+      [
+        "parameter",
+        "prep_time"
+      ],
+      [
+        "parameter",
+        "flex_event_duration"
+      ],
+      [
+        "parameter",
+        "market_time"
+      ],
+      [
+        "parameter",
+        "s_P"
+      ],
+      [
+        "parameter",
+        "T_zone"
+      ],
+      [
+        "parameter",
+        "P_in"
+      ],
+      [
+        "parameter",
+        "r_del_u_P_in"
+      ],
+      [
+        "variable",
+        "T_zone"
+      ],
+      [
+        "upper",
+        "T_zone"
+      ],
+      [
+        "lower",
+        "T_zone"
+      ],
+      [
+        "variable",
+        "P_in"
+      ],
+      [
+        "upper",
+        "P_in"
+      ],
+      [
+        "lower",
+        "P_in"
+      ],
+      [
+        "variable",
+        "T_slack"
+      ],
+      [
+        "upper",
+        "T_slack"
+      ],
+      [
+        "lower",
+        "T_slack"
+      ],
+      [
+        "variable",
+        "P_el"
+      ],
+      [
+        "upper",
+        "P_el"
+      ],
+      [
+        "lower",
+        "P_el"
+      ]
+    ],
+    "data": [
+      [
+        298.85094,
+        290.14906,
+        277.56617,
+        63.59694,
+        0.0,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        290.15852,
+        303.15,
+        288.15,
+        NaN,
+        NaN,
+        NaN,
+        0.00011,
+        Infinity,
+        -Infinity,
+        63.59694,
+        Infinity,
+        -Infinity
+      ],
+      [
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        290.16618,
+        303.15,
+        288.15,
+        64.04473,
+        200.0,
+        0.0,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN
+      ],
+      [
+        298.81572,
+        290.18428,
+        277.42916,
+        64.04473,
+        0.0,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        290.17527,
+        303.15,
+        288.15,
+        NaN,
+        NaN,
+        NaN,
+        0.009,
+        Infinity,
+        -Infinity,
+        64.04473,
+        Infinity,
+        -Infinity
+      ],
+      [
+        298.76761,
+        290.23239,
+        277.24276,
+        64.04473,
+        0.0,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        290.16829,
+        303.15,
+        288.15,
+        NaN,
+        NaN,
+        NaN,
+        0.0641,
+        Infinity,
+        -Infinity,
+        64.04473,
+        Infinity,
+        -Infinity
+      ],
+      [
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        290.15408,
+        303.15,
+        288.15,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN
+      ]
+    ],
+    "index": [
+      [
+        2700.0,
+        42109.80762113533
+      ],
+      [
+        2700.0,
+        42300.0
+      ],
+      [
+        2700.0,
+        42490.19237886467
+      ],
+      [
+        2700.0,
+        43009.80762113533
+      ],
+      [
+        2700.0,
+        43200.0
+      ]
+    ]
+  }
+}

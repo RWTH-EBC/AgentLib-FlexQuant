@@ -511,13 +511,8 @@ class FlexAgentGenerator:
         opt_backend = self.orig_mpc_module_config.optimization_backend["model"]["type"]
 
         # Extract the config class of the casadi model to check cost functions
-        if self.orig_mpc_module_config.optimization_backend["type"] == "casadi_ml":
-            config_class = inspect.get_annotations(custom_injection(opt_backend))["config"]
-            ml_model_sources = self.orig_mpc_module_config.optimization_backend["model"]["ml_model_sources"]
-            config_instance = config_class(ml_model_sources=ml_model_sources)
-        else:
-            config_class = inspect.get_annotations(custom_injection(opt_backend))["config"]
-            config_instance = config_class()
+        config_class = inspect.get_annotations(custom_injection(opt_backend))["config"]
+        config_instance = config_class()
 
         self.check_variables_in_casadi_config(
             config_instance,
@@ -587,44 +582,28 @@ class FlexAgentGenerator:
             ValueError: If any variable in the expression is not defined in the config.
         """
         variables_in_config = set(config.get_variable_names())
-        variables_in_cost_function = set()
+        variables_in_cost_function = set(ast.walk(ast.parse(expr)))
 
         # Handle both string and list of strings
+		#todo
         if isinstance(expr, list):
             # Join all lines into a single string for parsing
             combined_expr = "\n".join(expr)
         else:
-            combined_expr = expr
+            variables_in_cost_function = {
+            node.attr
+            for node in variables_in_cost_function
+            if isinstance(node, ast.Attribute)
+        }
 
-        try:
-            # Parse the code and extract all self.attribute references
-            parsed_tree = ast.parse(combined_expr)
-            for node in ast.walk(parsed_tree):
-                if isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name) and node.value.id == 'self':
-                    variables_in_cost_function.add(node.attr)
-        except SyntaxError as e:
-            # If we can't parse it as a whole, try line by line
-            logging.warning(f"Could not parse full cost function, trying line by line: {e}")
-            for line in combined_expr.splitlines():
-                try:
-                    parsed = ast.parse(line)
-                    for node in ast.walk(parsed):
-                        if isinstance(node, ast.Attribute) and isinstance(node.value,
-                                                                          ast.Name) and node.value.id == 'self':
-                            variables_in_cost_function.add(node.attr)
-                except SyntaxError:
-                    logging.warning(f"Could not parse line: {line}")
 
         variables_newly_created = set(
             weight.name
             for weight in self.flex_config.shadow_mpc_config_generator_data.weights
         )
 
-        # Add common parameter names that are known to be defined
-        known_vars = {"time", "market_time", "prep_time", "flex_event_duration"}
-
         unknown_vars = (
-                variables_in_cost_function - variables_in_config - variables_newly_created - known_vars
+                variables_in_cost_function - variables_in_config - variables_newly_created
         )
         if unknown_vars:
             raise ValueError(f"Unknown variables in new cost function: {unknown_vars}")
