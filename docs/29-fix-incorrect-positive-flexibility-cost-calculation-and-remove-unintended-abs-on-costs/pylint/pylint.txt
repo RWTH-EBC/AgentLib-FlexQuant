@@ -129,21 +129,13 @@ agentlib_flexquant/data_structures/flex_kpis.py:72:8: C0103: Variable name "dt" 
 agentlib_flexquant/data_structures/flex_kpis.py:95:4: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
 agentlib_flexquant/data_structures/flex_kpis.py:189:4: R0913: Too many arguments (12/5) (too-many-arguments)
 agentlib_flexquant/data_structures/flex_kpis.py:250:4: R0913: Too many arguments (6/5) (too-many-arguments)
-agentlib_flexquant/data_structures/flex_kpis.py:313:8: E0602: Undefined variable 'power_flex_offer_integration' (undefined-variable)
-agentlib_flexquant/data_structures/flex_kpis.py:317:31: E0602: Undefined variable 'power_flex_offer_integration' (undefined-variable)
-agentlib_flexquant/data_structures/flex_kpis.py:337:8: R1705: Unnecessary "else" after "return", remove the "else" and de-indent the code inside it (no-else-return)
-agentlib_flexquant/data_structures/flex_kpis.py:338:21: C2801: Unnecessarily calls dunder method __deepcopy__. Use copy.deepcopy function. (unnecessary-dunder-call)
-agentlib_flexquant/data_structures/flex_kpis.py:351:8: E0602: Undefined variable 'power_flex_offer_integration' (undefined-variable)
-agentlib_flexquant/data_structures/flex_kpis.py:352:19: E0602: Undefined variable 'power_flex_offer' (undefined-variable)
-agentlib_flexquant/data_structures/flex_kpis.py:355:22: E0602: Undefined variable 'power_flex_offer_integration' (undefined-variable)
-agentlib_flexquant/data_structures/flex_kpis.py:360:4: R0913: Too many arguments (6/5) (too-many-arguments)
-agentlib_flexquant/data_structures/flex_kpis.py:386:8: E0602: Undefined variable 'power_flex_full_integration' (undefined-variable)
-agentlib_flexquant/data_structures/flex_kpis.py:387:19: E0602: Undefined variable 'power_flex_full' (undefined-variable)
-agentlib_flexquant/data_structures/flex_kpis.py:392:39: E0602: Undefined variable 'power_flex_full_integration' (undefined-variable)
-agentlib_flexquant/data_structures/flex_kpis.py:450:0: R0902: Too many instance attributes (11/7) (too-many-instance-attributes)
-agentlib_flexquant/data_structures/flex_kpis.py:507:4: R0903: Too few public methods (0/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/flex_kpis.py:513:4: R0913: Too many arguments (6/5) (too-many-arguments)
-agentlib_flexquant/data_structures/flex_kpis.py:541:12: W0127: Assigning the same variable 'series' to itself (self-assigning-variable)
+agentlib_flexquant/data_structures/flex_kpis.py:339:8: R1705: Unnecessary "else" after "return", remove the "else" and de-indent the code inside it (no-else-return)
+agentlib_flexquant/data_structures/flex_kpis.py:340:21: C2801: Unnecessarily calls dunder method __deepcopy__. Use copy.deepcopy function. (unnecessary-dunder-call)
+agentlib_flexquant/data_structures/flex_kpis.py:365:4: R0913: Too many arguments (6/5) (too-many-arguments)
+agentlib_flexquant/data_structures/flex_kpis.py:457:0: R0902: Too many instance attributes (11/7) (too-many-instance-attributes)
+agentlib_flexquant/data_structures/flex_kpis.py:514:4: R0903: Too few public methods (0/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/flex_kpis.py:520:4: R0913: Too many arguments (6/5) (too-many-arguments)
+agentlib_flexquant/data_structures/flex_kpis.py:548:12: W0127: Assigning the same variable 'series' to itself (self-assigning-variable)
 agentlib_flexquant/data_structures/flex_kpis.py:19:0: W0611: Unused strip_multi_index imported from agentlib_flexquant.utils.data_handling (unused-import)
 ************* Module agentlib_flexquant.data_structures.market
 agentlib_flexquant/data_structures/market.py:10:0: E0401: Unable to import 'pydantic' (import-error)
@@ -407,8 +399,8 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
     def _initialize_flex_results(
         self, n_simulation_steps, horizon_length, sim_time_step, result_df
     ):
-        """Initialize the flex results dataframe with the correct dimension and index and fill with
-         existing results from optimization"""
+        """Initialize the flex results dataframe with the correct dimension and index and fill
+        with existing results from optimization"""
 
         # create MultiIndex for collocation points
         index_coll = pd.MultiIndex.from_arrays(
@@ -429,8 +421,8 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
         # initialize the flex results with correct dimension
         self.flex_results = pd.DataFrame(np.nan, index=new_index, columns=self.var_ref.outputs)
 
-        # Get the optimization outputs and create a series for fixed optimization outputs with the
-        # correct MultiIndex format
+        # Get the optimization outputs and create a series for fixed optimization outputs with
+        # the correct MultiIndex format
         opti_outputs = result_df.variable[self.config.power_variable_name]
         fixed_opti_output = pd.Series(
             opti_outputs.values,
@@ -523,7 +515,10 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
         # simulate with the casadi simulator
         self.sim_flex_model(solution)
 
+        # extract solution DataFrama
         df = solution.df
+
+        # send the outputs
         if self.flex_results is not None:
             for output in self.var_ref.outputs:
                 if output not in [
@@ -591,8 +586,9 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
     def _initialize_flex_results(
         self, n_simulation_steps, horizon_length, sim_time_step, result_df
     ):
-        """Initialize the flex results dataframe with the correct dimension and index and fill with
-         existing results from optimization"""
+        """Initialize the flex results dataframe with the correct dimension and index
+        and fill with existing results from optimization
+        """
 
         # create MultiIndex for collocation points
         index_coll = pd.MultiIndex.from_arrays(
@@ -893,7 +889,9 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value (duplicate-code)
+                ] = self.flex_model.get_output(output).value
+
+ (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[522:543]
 ==agentlib_flexquant.modules.shadow_mpc:[262:285]
@@ -917,33 +915,13 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value
-
- (duplicate-code)
+                ] = self.flex_model.get_output(output).value (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[318:339]
 ==agentlib_flexquant.modules.shadow_mpc:[312:327]
         if self.config.casadi_sim_time_step > 0:
             # generate a separate flex_model for integration to ensure the model used in MPC
             # optimization remains unaffected
-            self.flex_model = type(self.model)(dt=self.config.casadi_sim_time_step)
-            # generate the filename for the simulation results
-            self.res_file_flex = self.config.optimization_backend["results_file"].replace(
-                "mpc", "mpc_sim"
-            )
-            # clear the casadi simulator result at the first time step if already exists
-            try:
-                os.remove(self.res_file_flex)
-            except:
-                pass
-
-    def register_callbacks(self): (duplicate-code)
-agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[60:81]
-==agentlib_flexquant.modules.shadow_mpc:[50:67]
-        if self.config.casadi_sim_time_step > 0:
-            # generate a separate flex_model for integration to ensure
-            # the model used in MPC optimization remains unaffected
             self.flex_model = type(self.model)(dt=self.config.casadi_sim_time_step)
             # generate the filename for the simulation results
             self.res_file_flex = self.config.optimization_backend["results_file"].replace(
@@ -962,6 +940,26 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
         events based on the external power profile timestamps and current
         environment time.
         """ (duplicate-code)
+agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
+==agentlib_flexquant.modules.baseline_mpc:[60:81]
+==agentlib_flexquant.modules.shadow_mpc:[50:67]
+        if self.config.casadi_sim_time_step > 0:
+            # generate a separate flex_model for integration to ensure the model used in MPC
+            # optimization remains unaffected
+            self.flex_model = type(self.model)(dt=self.config.casadi_sim_time_step)
+            # generate the filename for the simulation results
+            self.res_file_flex = self.config.optimization_backend["results_file"].replace(
+                "mpc", "mpc_sim"
+            )
+            # clear the casadi simulator result at the first time step if already exists
+            try:
+                os.remove(self.res_file_flex)
+            except:
+                pass
+
+    def set_output(self, solution):
+        """Takes the solution from optimization backend and sends it to AgentVariables."""
+        # Output must be defined in the config as "type"="pd.Series" (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[235:249]
 ==agentlib_flexquant.modules.shadow_mpc:[517:531]
@@ -1030,5 +1028,5 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
  (duplicate-code)
 
 -----------------------------------
-Your code has been rated at 6.97/10
+Your code has been rated at 7.15/10
 

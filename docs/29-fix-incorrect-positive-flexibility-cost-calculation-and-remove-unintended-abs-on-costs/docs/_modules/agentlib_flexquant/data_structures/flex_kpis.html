@@ -384,9 +384,11 @@
         <span class="n">power_flex_offer_min</span> <span class="o">=</span> <span class="n">power_flex_offer</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
         <span class="c1"># Average of the power flex offer</span>
         <span class="c1"># Get the series for integration before calculating average</span>
-        <span class="n">power_flex_offer_integration</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_series_for_integration</span><span class="p">(</span>
-            <span class="n">series</span><span class="o">=</span><span class="n">power_flex_offer</span><span class="p">,</span> <span class="n">mpc_time_grid</span><span class="o">=</span><span class="n">mpc_time_grid</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">collocation_time_grid</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+        <span class="n">power_flex_offer_integration</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_series_for_integration</span><span class="p">(</span>
+            <span class="n">series</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">power_flex_offer</span><span class="p">,</span> <span class="n">mpc_time_grid</span><span class="o">=</span><span class="n">mpc_time_grid</span>
+        <span class="p">))</span>
+        <span class="n">power_flex_offer_integration</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">power_flex_offer_integration</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
+            <span class="n">collocation_time_grid</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
         <span class="c1"># Calculate the average and stores the original value</span>
         <span class="n">power_flex_offer_avg</span> <span class="o">=</span> <span class="n">power_flex_offer_integration</span><span class="o">.</span><span class="n">avg</span><span class="p">()</span>
 
@@ -397,7 +399,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_series_for_integration</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">series</span><span class="p">:</span> <span class="n">KPISeries</span><span class="p">,</span> <span class="n">mpc_time_grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KPISeries</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the KPISeries value sampled on the MPC time grid when the integration method is</span>
 <span class="sd">        constant.</span>
 
@@ -410,9 +412,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">series</span><span class="o">.</span><span class="n">integration_method</span> <span class="o">==</span> <span class="n">CONSTANT</span><span class="p">:</span>
             <span class="n">series</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">__deepcopy__</span><span class="p">()</span>
-            <span class="k">return</span> <span class="n">series</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">mpc_time_grid</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+            <span class="n">series</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">mpc_time_grid</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">series</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">series</span><span class="o">.</span><span class="n">value</span>
+            <span class="k">return</span> <span class="n">series</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_energy_flex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpc_time_grid</span><span class="p">,</span> <span class="n">collocation_time_grid</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the energy flexibility by integrating the power flexibility</span>
@@ -422,9 +425,11 @@
 
         <span class="c1"># Calculate flexibility</span>
         <span class="c1"># Get the series for integration before calculating average</span>
-        <span class="n">power_flex_offer_integration</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_series_for_integration</span><span class="p">(</span>
-            <span class="n">series</span><span class="o">=</span><span class="n">power_flex_offer</span><span class="p">,</span> <span class="n">mpc_time_grid</span><span class="o">=</span><span class="n">mpc_time_grid</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">collocation_time_grid</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+        <span class="n">power_flex_offer_integration</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_series_for_integration</span><span class="p">(</span>
+            <span class="n">series</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">power_flex_offer</span><span class="p">,</span> <span class="n">mpc_time_grid</span><span class="o">=</span><span class="n">mpc_time_grid</span>
+        <span class="p">))</span>
+        <span class="n">power_flex_offer_integration</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">power_flex_offer_integration</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
+            <span class="n">collocation_time_grid</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
         <span class="c1"># Calculate the energy flex and stores the original value</span>
         <span class="n">energy_flex</span> <span class="o">=</span> <span class="n">power_flex_offer_integration</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="n">time_unit</span><span class="o">=</span><span class="s2">&quot;hours&quot;</span><span class="p">)</span>
 
@@ -457,9 +462,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">electricity_costs_series</span><span class="o">.</span><span class="n">integration_method</span> <span class="o">=</span> <span class="n">integration_method</span>
 
         <span class="c1"># Get the series for integration before calculating</span>
-        <span class="n">power_flex_full_integration</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_series_for_integration</span><span class="p">(</span>
-            <span class="n">series</span><span class="o">=</span><span class="n">power_flex_full</span><span class="p">,</span> <span class="n">mpc_time_grid</span><span class="o">=</span><span class="n">mpc_time_grid</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">collocation_time_grid</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+        <span class="n">power_flex_full_integration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_series_for_integration</span><span class="p">(</span>
+            <span class="n">series</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">power_flex_full</span><span class="p">,</span> <span class="n">mpc_time_grid</span><span class="o">=</span><span class="n">mpc_time_grid</span>
+        <span class="p">)</span>
+        <span class="n">power_flex_full_integration</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">power_flex_full_integration</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
+            <span class="n">collocation_time_grid</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
 
         <span class="c1"># Calculate series</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">electricity_costs_series</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="p">(</span>
