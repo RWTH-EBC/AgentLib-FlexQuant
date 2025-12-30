@@ -833,6 +833,7 @@ class FlexAgentGenerator:
             FileNotFoundError: If the specified config file does not exist.
 
         """
+        simulator_agent_config = Path(simulator_agent_config)
         # open config and extract sim module
         with open(simulator_agent_config, "r", encoding="utf-8") as f:
             sim_config = json.load(f)
@@ -847,9 +848,10 @@ class FlexAgentGenerator:
             self.flex_config.results_directory / sim_file_name
         )
         try:
-            with open(simulator_agent_config + save_name_suffix, "w", encoding="utf-8") as f:
+            with open(Path(str(simulator_agent_config) + save_name_suffix),
+                      "w", encoding="utf-8") as f:
                 json.dump(sim_config, f, indent=4)
             return simulator_agent_config
         except Exception as e:
             raise Exception(f"Could not adapt and create a new simulation config due to: {e}. "
-                            f"Please check {simulator_agent_config} and {save_name_suffix}")
+                            f"Please check {simulator_agent_config} and '{save_name_suffix}'")
