@@ -28,9 +28,9 @@
 
         
         <h2>Score</h2>
-        7.16 / 10
+        7.15 / 10
             
-            (previous score: 7.16 / 10)
+            (previous score: 7.15 / 10)
             
         
 
@@ -1251,13 +1251,53 @@
             </tr>
             
             <tr>
-                <td>835</td>
+                <td>837</td>
                 <td>68</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
                 <td>C0103</td>
                 <td>FlexAgentGenerator.adapt_sim_results_path</td>
                 <td><pre>Variable name &#34;f&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>850</td>
+                <td>91</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>FlexAgentGenerator.adapt_sim_results_path</td>
+                <td><pre>Variable name &#34;f&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>853</td>
+                <td>8</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>FlexAgentGenerator.adapt_sim_results_path</td>
+                <td><pre>Variable name &#34;e&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>854</td>
+                <td>12</td>
+                <td>warning</td>
+                <td><code>raise-missing-from</code></td>
+                <td>W0707</td>
+                <td>FlexAgentGenerator.adapt_sim_results_path</td>
+                <td><pre>Consider explicitly re-raising using &#39;raise Exception(f&#39;Could not adapt and create a new simulation config due to: {e}. Please check {simulator_agent_config} and {save_name_suffix}&#39;) from e&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>854</td>
+                <td>12</td>
+                <td>warning</td>
+                <td><code>broad-exception-raised</code></td>
+                <td>W0719</td>
+                <td>FlexAgentGenerator.adapt_sim_results_path</td>
+                <td><pre>Raising too general exception: Exception</pre></td>
             </tr>
             
         </table>
@@ -1894,7 +1934,9 @@
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value</pre></td>
+                ] = self.flex_model.get_output(output).value
+
+</pre></td>
             </tr>
             
             <tr>
@@ -1927,7 +1969,9 @@
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value</pre></td>
+                ] = self.flex_model.get_output(output).value
+
+</pre></td>
             </tr>
             
             <tr>
@@ -1954,13 +1998,7 @@
             except:
                 pass
 
-    def pre_computation_hook(self):
-        &#34;&#34;&#34;Calculate relative start and end times for flexibility provision.
-
-        When in provision mode, computes the relative timing for flexibility
-        events based on the external power profile timestamps and current
-        environment time.
-        &#34;&#34;&#34;</pre></td>
+    def register_callbacks(self):</pre></td>
             </tr>
             
             <tr>
@@ -2066,7 +2104,21 @@
             self.logger.error(&#34;Results file %s was not found.&#34;, results_file)
             return None
 
-    def register_callbacks(self):</pre></td>
+    def write_results(self, df: pd.DataFrame, ts: float, n: int) -&gt; pd.DataFrame:
+        &#34;&#34;&#34;Write every data of variables in self.var_list in an DataFrame.
+
+        DataFrame will be updated every time step
+
+        Args:
+            df: DataFrame which is initialised as an empty DataFrame with columns
+            according to self.var_list
+            ts: time step
+            n: number of time steps during prediction horizon
+
+        Returns:
+            DataFrame with results of every variable in self.var_list
+
+        &#34;&#34;&#34;</pre></td>
             </tr>
             
             <tr>
@@ -4193,12 +4245,12 @@
             
             <tr>
                 <td>convention</td>
-                <td>96</td>
+                <td>98</td>
             </tr>
             
             <tr>
                 <td>warning</td>
-                <td>57</td>
+                <td>59</td>
             </tr>
             
             <tr>
@@ -4238,7 +4290,7 @@
             
             <tr>
                 <td>invalid-name</td>
-                <td>35</td>
+                <td>37</td>
             </tr>
             
             <tr>
@@ -4268,6 +4320,16 @@
             
             <tr>
                 <td>no-else-raise</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>raise-missing-from</td>
+                <td>2</td>
+            </tr>
+            
+            <tr>
+                <td>broad-exception-raised</td>
                 <td>1</td>
             </tr>
             
@@ -4397,11 +4459,6 @@
             </tr>
             
             <tr>
-                <td>raise-missing-from</td>
-                <td>1</td>
-            </tr>
-            
-            <tr>
                 <td>missing-class-docstring</td>
                 <td>8</td>
             </tr>
@@ -4458,7 +4515,7 @@
             
             <tr>
                 <td>agentlib_flexquant.generate_flex_agents</td>
-                <td>42</td>
+                <td>46</td>
             </tr>
             
             <tr>
@@ -4563,7 +4620,7 @@
             
             <tr>
                 <td>agentlib_flexquant/generate_flex_agents.py</td>
-                <td>42</td>
+                <td>46</td>
             </tr>
             
             <tr>

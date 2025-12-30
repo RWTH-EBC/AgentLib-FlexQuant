@@ -890,13 +890,15 @@
                             <span class="n">parameter</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
                         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="FlexAgentGenerator.adapt_sim_results_path"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_sim_results_path">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">adapt_sim_results_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">simulator_agent_config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="viewcode-block" id="FlexAgentGenerator.adapt_sim_results_path"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_sim_results_path">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">adapt_sim_results_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">simulator_agent_config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
+                               <span class="n">save_name_suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Optional helper function to adapt file path for simulator results in sim config,</span>
 <span class="sd">        so that sim results land in the same results directory as flex results.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            simulator_agent_config: Path to the simulator agent config JSON file.</span>
+<span class="sd">            save_name_suffix: Suffix added to the newly created sim_config file.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The updated simulator config dictionary with the modified result file path.</span>
@@ -918,7 +920,13 @@
         <span class="n">sim_module_config</span><span class="p">[</span><span class="s2">&quot;result_filename&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">results_directory</span> <span class="o">/</span> <span class="n">sim_file_name</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="n">sim_config</span></div></div>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">simulator_agent_config</span> <span class="o">+</span> <span class="n">save_name_suffix</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">sim_config</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">simulator_agent_config</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not adapt and create a new simulation config due to: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">. &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;Please check </span><span class="si">{</span><span class="n">simulator_agent_config</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">save_name_suffix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

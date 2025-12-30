@@ -645,12 +645,15 @@ which will be used to update the module_config.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_sim_results_path">
-<span class="sig-name descname"><span class="pre">adapt_sim_results_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulator_agent_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/generate_flex_agents.html#FlexAgentGenerator.adapt_sim_results_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_sim_results_path" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">adapt_sim_results_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulator_agent_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_name_suffix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/generate_flex_agents.html#FlexAgentGenerator.adapt_sim_results_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_sim_results_path" title="Permalink to this definition"></a></dt>
 <dd><p>Optional helper function to adapt file path for simulator results in sim config,
 so that sim results land in the same results directory as flex results.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>simulator_agent_config</strong> – Path to the simulator agent config JSON file.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>simulator_agent_config</strong> – Path to the simulator agent config JSON file.</p></li>
+<li><p><strong>save_name_suffix</strong> – Suffix added to the newly created sim_config file.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The updated simulator config dictionary with the modified result file path.</p>
