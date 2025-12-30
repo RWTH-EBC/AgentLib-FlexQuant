@@ -19,7 +19,7 @@ def run_example(until=until):
     )
 
     config_list = generator.generate_flex_agents()
-    sim_config_new = generator.adapt_sim_results_path(sim_config)
+    sim_config_new = generator.adapt_sim_results_path(sim_config, save_name_suffix="_temp")
 
     agent_configs = [sim_config_new, predictor_config]
     agent_configs.extend(config_list)

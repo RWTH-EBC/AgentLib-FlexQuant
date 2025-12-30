@@ -816,13 +816,15 @@ class FlexAgentGenerator:
                             parameter.name,
                         )
 
-    def adapt_sim_results_path(self, simulator_agent_config: Union[str, Path]) -> dict:
+    def adapt_sim_results_path(self, simulator_agent_config: Union[str, Path],
+                               save_name_suffix: str = "") -> Union[str, Path]:
         """
         Optional helper function to adapt file path for simulator results in sim config,
         so that sim results land in the same results directory as flex results.
 
         Args:
             simulator_agent_config: Path to the simulator agent config JSON file.
+            save_name_suffix: Suffix added to the newly created sim_config file.
 
         Returns:
             The updated simulator config dictionary with the modified result file path.
@@ -844,4 +846,10 @@ class FlexAgentGenerator:
         sim_module_config["result_filename"] = str(
             self.flex_config.results_directory / sim_file_name
         )
-        return sim_config
+        try:
+            with open(simulator_agent_config + save_name_suffix, "w", encoding="utf-8") as f:
+                json.dump(sim_config, f, indent=4)
+            return simulator_agent_config
+        except Exception as e:
+            raise Exception(f"Could not adapt and create a new simulation config due to: {e}. "
+                            f"Please check {simulator_agent_config} and {save_name_suffix}")
