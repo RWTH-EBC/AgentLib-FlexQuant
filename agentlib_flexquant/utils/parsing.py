@@ -286,6 +286,9 @@ class SetupSystemModifier(ast.NodeTransformer):
                 body.value.elts.append(
                     add_input("in_provision", False, "-", "provision flag", "bool")
                 )
+                body.value.elts.append(
+                    add_input("P_el_base", 0, "W", "baseline electrical power", "float") # review: Does the unit matter? Can we use the unit from flex config here? 
+                )
             # add the flex variables and the weights
             if body.target.id == "parameters":
                 for param_name in [PREP_TIME, FLEX_EVENT_DURATION, MARKET_TIME]:

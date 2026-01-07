@@ -139,6 +139,7 @@ class PFMPCData(BaseMPCData):
     ]
     config_inputs_appendix: list[MPCVariable] = [
         MPCVariable(name="in_provision", value=False),
+        MPCVariable(name="P_el_base", value=0, unit ="W", alias = "_P_el_base"),  # review: Does the unit matter? Can we use the unit from flex config here? 
     ]
     weights: list[MPCVariable] = pydantic.Field(
         default=[], description="Name and value of weights",
@@ -170,6 +171,7 @@ class NFMPCData(BaseMPCData):
     ]
     config_inputs_appendix: list[MPCVariable] = [
         MPCVariable(name="in_provision", value=False),
+        MPCVariable(name="P_el_base", value=0, unit = "W", alias="_P_el_base"),  # review: Does the unit matter? Can we use the unit from flex config here? 
     ]
     weights: list[MPCVariable] = pydantic.Field(
         default=[], description="Name and value of weights",
