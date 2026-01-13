@@ -260,7 +260,7 @@ class TestDashboardShow:
         with patch("webbrowser.open_new_tab"), patch.object(
             Dash, "run"
         ) as mock_run, patch(
-            "agentlib_mpc.utils.plotting.interactive.get_port", return_value=8888
+            "agentlib_flexquant.utils.interactive.get_port", return_value=8888
         ):
             mock_dashboard.show()
 
