@@ -12,7 +12,7 @@ import json
 import tempfile
 from pathlib import Path
 from unittest.mock import MagicMock
-
+import sys
 import pandas as pd
 import pytest
 
@@ -26,8 +26,11 @@ from agentlib_flexquant.data_structures.flex_results import (
 # =============================================================================
 # Path configuration
 # =============================================================================
-# Project root (parent of tests directory)
-PROJECT_ROOT = Path(__file__).parent.parent.parent
+
+# Add the project root to the Python path to allow for absolute imports
+# This helps in locating the agentlib_flexquant package if needed
+root_path = Path(__file__).parent.parent
+sys.path.insert(0, str(root_path))
 
 SAMPLE_FILES_DIR = Path(__file__).parent / "sample_files"
 CONFIGS_DIR = SAMPLE_FILES_DIR / "configs"
