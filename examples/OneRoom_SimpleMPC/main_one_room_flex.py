@@ -12,6 +12,16 @@ ENV_CONFIG = {"rt": False, "factor": 0.01, "t_sample": 60}
 
 
 def run_example(until=until, with_plots=False):
+    """ Example with market usage
+
+    Change flex_power_feedback_method in MarketSpecifications to deal with systems with
+    fast or slow inertia.
+    See difference in results: when using collocation, power during flex event does not
+    fully follow offer. When using constant it does. Reason is the fast inertia of the
+    system.
+
+    """
+
     results = []
     mpc_config = "mpc_and_sim/simple_model.json"
     sim_config = "mpc_and_sim/simple_sim.json"

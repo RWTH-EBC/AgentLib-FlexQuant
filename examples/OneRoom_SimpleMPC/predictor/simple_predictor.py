@@ -2,7 +2,6 @@ import agentlib as al
 import numpy as np
 import pandas as pd
 from agentlib.core import Agent
-from typing import List
 import json
 import csv
 from datetime import datetime
@@ -13,7 +12,7 @@ class PredictorModuleConfig(al.BaseModuleConfig):
     outputs: al.AgentVariables = [
         al.AgentVariable(
             name="r_pel", unit="ct/kWh", type="pd.Series", description="Weight for P_el in objective function"
-        ),
+        )
     ]
     parameters: al.AgentVariables = [
         al.AgentVariable(
@@ -27,7 +26,7 @@ class PredictorModuleConfig(al.BaseModuleConfig):
     ]
 
 
-    shared_variable_fields:List[str] = ["outputs"]
+    shared_variable_fields:list[str] = ["outputs"]
 
 
 class PredictorModule(al.BaseModule):
