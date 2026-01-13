@@ -1,0 +1,146 @@
+{
+  "id": "PosFlexMPC",
+  "modules": [
+    {
+      "module_id": "Ag1Com",
+      "type": "local_broadcast"
+    },
+    {
+      "type": "agentlib_flexquant.shadow_mpc",
+      "module_id": "PosFlexMPC",
+      "shared_variable_fields": [
+        "outputs"
+      ],
+      "optimization_backend": {
+        "type": "casadi",
+        "model": {
+          "type": {
+            "file": "tests\\sample_files\\models\\flex_agents.py",
+            "class_name": "PosFlexModel"
+          }
+        },
+        "discretization_options": {
+          "collocation_order": 2,
+          "collocation_method": "legendre"
+        },
+        "solver": {
+          "name": "fatrop",
+          "options": {
+            "fatrop": {
+              "max_iter": 100,
+              "tol": 0.0001
+            }
+          }
+        },
+        "results_file": "tests\\sample_files\\sample_results\\mpc_pos_flex.csv",
+        "save_results": true,
+        "overwrite_result_file": true
+      },
+      "time_step": 900.0,
+      "prediction_horizon": 48,
+      "sampling_time": 900.0,
+      "parameters": [
+        {
+          "name": "s_T",
+          "value": 250,
+          "alias": "s_T"
+        },
+        {
+          "name": "r_mDot",
+          "value": 1,
+          "alias": "r_mDot"
+        },
+        {
+          "name": "s_P",
+          "value": 10,
+          "alias": "s_P"
+        },
+        {
+          "name": "prep_time",
+          "value": 900,
+          "alias": "prep_time"
+        },
+        {
+          "name": "market_time",
+          "value": 900,
+          "alias": "market_time"
+        },
+        {
+          "name": "flex_event_duration",
+          "value": 7200,
+          "alias": "flex_event_duration"
+        }
+      ],
+      "inputs": [
+        {
+          "name": "load",
+          "value": 150,
+          "alias": "load"
+        },
+        {
+          "name": "T_upper",
+          "value": 294.15,
+          "alias": "T_upper"
+        },
+        {
+          "name": "T_lower",
+          "value": 292.15,
+          "alias": "T_lower"
+        },
+        {
+          "name": "T_in",
+          "value": 280.15,
+          "alias": "T_in"
+        },
+        {
+          "name": "mDot_full",
+          "value": null,
+          "alias": "mDot_full"
+        },
+        {
+          "name": "in_provision",
+          "value": false,
+          "alias": "in_provision"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "T_out",
+          "value": null,
+          "alias": "T_out"
+        },
+        {
+          "name": "P_el",
+          "value": null,
+          "alias": "_P_el_pos"
+        },
+        {
+          "name": "E_out",
+          "value": null,
+          "alias": "_E_stored_pos"
+        }
+      ],
+      "controls": [
+        {
+          "name": "mDot",
+          "value": 0.02,
+          "alias": "mDot_shadow",
+          "lb": 0,
+          "ub": 0.05
+        }
+      ],
+      "states": [
+        {
+          "name": "T",
+          "value": 298.16,
+          "alias": "T",
+          "lb": 288.15,
+          "ub": 303.15
+        }
+      ],
+      "set_outputs": true,
+      "power_variable_name": "P_el",
+      "storage_variable_name": "E_out"
+    }
+  ]
+}

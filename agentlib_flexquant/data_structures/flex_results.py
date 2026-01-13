@@ -21,6 +21,7 @@ import agentlib_flexquant.utils.config_management as cmng
 from agentlib_flexquant.data_structures.flexquant import (
     FlexQuantConfig,
     FlexibilityMarketConfig,
+    FlexibilityIndicatorConfig
 )
 from agentlib_flexquant.data_structures.mpcs import (
     BaselineMPCData,
@@ -76,9 +77,9 @@ class Results:
 
     # Configs:
     # Generator
-    generator_config: FlexQuantConfig
+    flex_config: FlexQuantConfig
     # Agents
-    simulator_agent_config: AgentConfig
+    simulator_agent_config: Optional[AgentConfig]
     baseline_agent_config: AgentConfig
     pos_flex_agent_config: AgentConfig
     neg_flex_agent_config: AgentConfig
@@ -130,8 +131,7 @@ class Results:
         # Load configs for mpc, indicator, market
         self._load_agent_module_configs()
         # Load sim configs if present
-        if simulator_agent_config:
-            self._load_simulator_config(simulator_agent_config)
+        self._load_simulator_config(simulator_agent_config)
         # Load results and get a dict for generating dataframes
         results_dict, results_path = self._load_results(results)
         # Get dataframes for mpc, sim, flex indicator results
@@ -164,40 +164,37 @@ class Results:
                     flex_config = json.load(f)
             flex_config["flex_base_directory_path"] = str(custom_base_path)
 
-        self.generator_config = load_config.load_config(
+        self.flex_config = load_config.load_config(
             config=flex_config, config_type=FlexQuantConfig
         )
 
     def _get_config_filenames(self):
         """Get filenames of configs to load agents and modules."""
         self.config_filename_baseline = BaselineMPCData.model_validate(
-            self.generator_config.baseline_config_generator_data
+            self.flex_config.baseline_config_generator_data
         ).name_of_created_file
         self.config_filename_pos_flex = PFMPCData.model_validate(
-            self.generator_config.shadow_mpc_config_generator_data.pos_flex
+            self.flex_config.shadow_mpc_config_generator_data.pos_flex
         ).name_of_created_file
         self.config_filename_neg_flex = NFMPCData.model_validate(
-            self.generator_config.shadow_mpc_config_generator_data.neg_flex
+            self.flex_config.shadow_mpc_config_generator_data.neg_flex
         ).name_of_created_file
-        self.config_filename_indicator = (
-            self.generator_config.indicator_config.name_of_created_file
-        )
 
-        if self.generator_config.market_config:
-            market_config_raw = self.generator_config.market_config
-            if isinstance(market_config_raw, (str, Path)):
-                market_config = FlexibilityMarketConfig.model_validate_json(
-                    Path(market_config_raw).read_text(encoding="utf-8")
-                )
-            else:
-                market_config = FlexibilityMarketConfig.model_validate(
-                    market_config_raw
-                )
-            self.config_filename_market = market_config.name_of_created_file
+        self.config_filename_indicator = FlexibilityIndicatorConfig.model_validate(
+            self.flex_config.indicator_config).name_of_created_file
+
+        if self.flex_config.market_config:
+            if isinstance(self.flex_config.market_config, Union[str, Path]):
+                self.config_filename_market = load_config.load_config(
+                    config=self.flex_config.market_config, config_type=FlexibilityMarketConfig
+                ).name_of_created_file
+            else:  # is dict
+                self.config_filename_market = FlexibilityMarketConfig.model_validate(
+                    self.flex_config.market_config).name_of_created_file
 
     def _load_agent_module_configs(self):
         """Load agent and module configs."""
-        for file_path in Path(self.generator_config.flex_files_directory).rglob(
+        for file_path in Path(self.flex_config.flex_files_directory).rglob(
             "*.json"
         ):
             if file_path.name in self.config_filename_baseline:
@@ -237,7 +234,7 @@ class Results:
                 )
 
             elif (
-                self.generator_config.market_config
+                self.flex_config.market_config
                 and file_path.name in self.config_filename_market
             ):
                 self.market_agent_config = load_config.load_config(
@@ -246,6 +243,16 @@ class Results:
                 self.market_module_config = cmng.get_module(
                     config=self.market_agent_config, module_type=cmng.MARKET_CONFIG_TYPE
                 )
+            else:
+                import warnings
+                warnings.warn(f"The file {file_path.name} is not listed in any of the known "
+                              f"filenames of the created files: {self.config_filename_baseline}, "
+                              f"{self.config_filename_pos_flex}, {self.config_filename_neg_flex}, "
+                              f"{self.config_filename_indicator}" +
+                              (f", {self.config_filename_market}" if
+                               self.flex_config.market_config else "") +
+                              ". This can cause trouble in loading the files. "
+                              "Please check the filenames.")
 
     def _load_simulator_config(self, simulator_agent_config):
         """Load simulator agent and module config separately.
@@ -254,10 +261,13 @@ class Results:
 
         """
         # check config type: with results path adaptation -> dict; without -> str/Path
+        if not simulator_agent_config:
+            self.simulator_agent_config = None
+            return
         if isinstance(simulator_agent_config, (str, Path)):
             with open(simulator_agent_config, "r", encoding="utf-8") as f:
                 sim_config = json.load(f)
-        elif isinstance(simulator_agent_config, dict):
+        else:  # is dict
             sim_config = simulator_agent_config
         sim_module_config = next(
             (
@@ -270,10 +280,10 @@ class Results:
         # instantiate and validate sim agent config
         self.simulator_agent_config = AgentConfig.model_validate(sim_config)
         # instantiate sim module config by skipping validation for result_filename
-        # to prevent file deletion
-        self.simulator_module_config = self.create_instance_with_skipped_validation(
-            model_class=SimulatorConfig,
-            config=sim_module_config,
+        # to prevent file deletion, if overwrite_result_file in sim config is true
+        self.simulator_module_config = self.create_simulator_config_with_skipped_validation(
+            sim_config_class=SimulatorConfig,
+            sim_config=sim_module_config,
             skip_fields=["result_filename"],
         )
 
@@ -341,16 +351,16 @@ class Results:
 
     def _load_results(
         self, results: Union[str, Path, dict]
-    ) -> dict[str, dict[str, pd.DataFrame]]:
+    ) -> [dict[str, dict[str, pd.DataFrame]], Union[str, Path]]:
         """Load dict with results for mpc, indicator, market and sim
         from specified results path."""
         # load results
         if results is None:
-            res_path = self.generator_config.results_directory
+            res_path = self.flex_config.results_directory
         elif isinstance(results, (str, Path)):
             res_path = results
         elif isinstance(results, dict):
-            res_path = self.generator_config.results_directory
+            res_path = self.flex_config.results_directory
         else:
             raise ValueError("results must be a path or dict")
 
@@ -410,7 +420,7 @@ class Results:
                     resolved_sim_results_path,
                 )
             }
-        if self.generator_config.market_config:
+        if self.flex_config.market_config:
             res[self.market_agent_config.id] = {
                 self.market_module_config.module_id: load_market(
                     Path(
@@ -439,7 +449,7 @@ class Results:
         self.df_indicator = results_dict[self.indicator_agent_config.id][
             self.indicator_module_config.module_id
         ]
-        if self.generator_config.market_config:
+        if self.flex_config.market_config:
             self.df_market = results_dict[self.market_agent_config.id][
                 self.market_module_config.module_id
             ]
@@ -490,7 +500,7 @@ class Results:
                 self.df_neg_flex_stats,
                 self.df_indicator,
             ]
-            + ([self.df_market] if self.generator_config.market_config else [])
+            + ([self.df_market] if self.flex_config.market_config else [])
             + ([self.df_simulation] if self.simulator_agent_config else [])
         ):
             convert_timescale_of_index(
@@ -531,17 +541,17 @@ class Results:
             for variable in variables:
                 get_id_alias_name_dict_element(variable.alias)
         get_id_alias_name_dict_element(
-            self.generator_config.baseline_config_generator_data.power_variable
+            self.flex_config.baseline_config_generator_data.power_variable
         )
 
         return id_alias_name_dict
 
-    def create_instance_with_skipped_validation(
+    def create_simulator_config_with_skipped_validation(
         self,
-        model_class: Type[BaseModel],
-        config: Dict[str, Any],
+        sim_config_class: Type[SimulatorConfig],
+        sim_config: Dict[str, Any],
         skip_fields: Optional[list[str]] = None,
-    ) -> BaseModel:
+    ) -> SimulatorConfig:
         """Create a Pydantic model instance while skipping validation for specified fields.
 
         This function allows partial validation of a model's config dictionary by validating
@@ -549,42 +559,46 @@ class Results:
         after construction without triggering their validators.
 
         Args:
-            model_class: The Pydantic model class to instantiate.
-            config: The input configuration dictionary.
+            sim_config_class: The Pydantic model class to instantiate.
+            sim_config: The input configuration dictionary.
             skip_fields: A list of field names to exclude from validation.
             These fields will be manually set after instantiation.
 
         Returns:
-            BaseModel: An instance of the model_class with validated and skipped fields assigned.
+            SimulatorConfig: An instance of the model_class with validated and skipped fields assigned.
 
         """
         if skip_fields is None:
             skip_fields = []
         # Separate data into validated and skipped fields
         validated_fields = {
-            field: value for field, value in config.items() if field not in skip_fields
+            field: value for field, value in sim_config.items() if field not in skip_fields
         }
         skipped_fields = {
-            field: value for field, value in config.items() if field in skip_fields
+            field: value for field, value in sim_config.items() if field in skip_fields
         }
         # Create instance with validation for non-skipped fields
         if validated_fields:
-            instance = model_class(
+            instance = sim_config_class(
                 **validated_fields, _agent_id=self.simulator_agent_config.id
             )
         else:
-            instance = model_class.model_construct()
+            instance = sim_config_class.model_construct()
         # Add skipped fields without validation
         for field, value in skipped_fields.items():
             # bypass pydantic immutability to directly set attribute value
             object.__setattr__(instance, field, value)
         # Store metadata about bypassed fields for deepcopy compatibility
         object.__setattr__(instance, "_bypassed_fields", skip_fields)
-        object.__setattr__(instance, "_original_config", config)
+        object.__setattr__(instance, "_original_config", sim_config)
         return instance
 
     def __deepcopy__(self, memo: Dict[int, Any]) -> "Results":
-        """Custom deepcopy implementation that handles Pydantic models with bypassed validation."""
+        """Custom deepcopy implementation that handles Pydantic models with bypassed
+        validation.
+        Needed, if an Results object should be copied with copy.deepcopy, without
+        deleting the simulator results due to its üydantic validators.
+        """
         # Create a new instance of the same class
         new_instance = self.__class__.__new__(self.__class__)
         # Add to memo immediately to prevent circular reference issues
@@ -593,10 +607,10 @@ class Results:
             if key in ["simulator_module_config"] and hasattr(
                 value, "_original_config"
             ):
-                # Reconstruct the specific problematic object instead of deepcopying
-                new_value = self.create_instance_with_skipped_validation(
-                    model_class=value.__class__,
-                    config=copy.deepcopy(value._original_config, memo),
+                # Reconstruct the specific problematic object instead of deep copying
+                new_value = self.create_simulator_config_with_skipped_validation(
+                    sim_config_class=value.__class__,
+                    sim_config=copy.deepcopy(value._original_config, memo),
                     skip_fields=getattr(value, "_bypassed_fields", []),
                 )
                 setattr(new_instance, key, new_value)

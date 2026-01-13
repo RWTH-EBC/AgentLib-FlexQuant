@@ -1,0 +1,30 @@
+{
+    "id": "SimAgent",
+    "modules": [
+        {
+            "module_id": "Ag1Com",
+            "type": "local_broadcast"
+        },
+        {
+            "module_id": "room",
+            "type": "simulator",
+            "model": {
+                "type": {"file": "tests\\sample_files\\models\\simple_model.py", "class_name": "BaselineMPCModel"},
+                "states": [{"name": "T", "value": 298}]
+                
+            },
+            "t_sample": 10,
+            "update_inputs_on_callback": false,
+            "save_results": true,
+            "result_filename": "tests\\sample_files\\sample_results\\simulator.csv",
+            "overwrite_result_file": true,
+            "outputs": [
+                {"name": "T_out", "alias": "T"},
+                {"name": "P_el","alias": "P_el_sim"}
+            ],
+            "inputs": [
+                {"name": "mDot", "value": 0.02, "alias": "mDot"}
+            ]
+        }
+    ]
+}

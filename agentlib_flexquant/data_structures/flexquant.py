@@ -1,12 +1,11 @@
 """
 Pydantic data models for FlexQuant configuration and validation.
 """
-# from enum import Enum
 from pathlib import Path
 from typing import Optional, Union
 
-import pydantic
-from pydantic import field_validator, ConfigDict, model_validator, Field, BaseModel
+from pydantic import (field_validator, ConfigDict, model_validator, Field, BaseModel,
+                      field_serializer)
 from agentlib.core.agent import AgentConfig
 from agentlib.core.errors import ConfigurationError
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
@@ -17,10 +16,18 @@ from agentlib_flexquant.data_structures.mpcs import (
     PFMPCData,
 )
 
-
-# class ForcedOffers(Enum):
-#     positive = "positive"
-#     negative = "negative"
+excluded_fields = [
+        "rdf_class",
+        "source",
+        "type",
+        "timestamp",
+        "description",
+        "unit",
+        "clip",
+        "shared",
+        "interpolation_method",
+        "allowed_values",
+    ]
 
 
 class ShadowMPCConfigGeneratorConfig(BaseModel):
@@ -51,16 +58,33 @@ class ShadowMPCConfigGeneratorConfig(BaseModel):
             self.neg_flex.weights = self.weights
         return self
 
+    @field_serializer('weights')
+    def serialize_mpc_variables(self, variables: list[MPCVariable], _info):
+        return [v.dict(exclude=excluded_fields) for v in variables]
+
 
 class FlexibilityMarketConfig(BaseModel):
     """Class defining the options to initialize the market."""
 
     model_config = ConfigDict(extra="forbid")
-    agent_config: AgentConfig
+    agent_config: Union[AgentConfig, Path, str]
     name_of_created_file: str = Field(
         default="flexibility_market.json",
         description="Name of the config that is created by the generator",
     )
+
+    @model_validator(mode="after")
+    def check_file_extension(self):
+        """Validate that name_of_created_file has a .json extension."""
+        if self.name_of_created_file:
+            file_path = Path(self.name_of_created_file)
+            if file_path.suffix != ".json":
+                raise ConfigurationError(
+                    f"Invalid file extension in market_config for "
+                    f"name_of_created_file: '{self.name_of_created_file}'. "
+                    f"Expected a '.json' file."
+                )
+        return self
 
 
 class FlexibilityIndicatorConfig(BaseModel):
@@ -69,7 +93,7 @@ class FlexibilityIndicatorConfig(BaseModel):
     model_config = ConfigDict(
         json_encoders={Path: str, AgentConfig: lambda v: v.model_dump()}, extra="forbid"
     )
-    agent_config: AgentConfig
+    agent_config: Union[AgentConfig, Path, str]
     name_of_created_file: str = Field(
         default="indicator.json",
         description="Name of the config that is created by the generator",
@@ -82,7 +106,7 @@ class FlexibilityIndicatorConfig(BaseModel):
             file_path = Path(self.name_of_created_file)
             if file_path.suffix != ".json":
                 raise ConfigurationError(
-                    f"Invalid file extension for "
+                    f"Invalid file extension for indicator config "
                     f"name_of_created_file: '{self.name_of_created_file}'. "
                     f"Expected a '.json' file."
                 )
