@@ -65,15 +65,14 @@ agentlib_flexquant/utils/interactive.py:46:0: R0902: Too many instance attribute
 agentlib_flexquant/utils/interactive.py:64:4: R0913: Too many arguments (7/5) (too-many-arguments)
 agentlib_flexquant/utils/interactive.py:110:12: R1721: Unnecessary use of a comprehension, use list(self.intersection_mpcs_sim.keys()) instead. (unnecessary-comprehension)
 agentlib_flexquant/utils/interactive.py:110:28: C0201: Consider iterating the dictionary directly instead of calling .keys() (consider-iterating-dictionary)
-agentlib_flexquant/utils/interactive.py:218:34: C0103: Argument name "s" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/utils/interactive.py:343:8: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
-agentlib_flexquant/utils/interactive.py:499:8: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
-agentlib_flexquant/utils/interactive.py:527:8: R0913: Too many arguments (6/5) (too-many-arguments)
-agentlib_flexquant/utils/interactive.py:561:29: C0201: Consider iterating the dictionary directly instead of calling .keys() (consider-iterating-dictionary)
-agentlib_flexquant/utils/interactive.py:581:16: C0103: Variable name "ts" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/utils/interactive.py:608:23: R1735: Consider using '{"t": 20, "b": 20}' instead of a call to 'dict'. (use-dict-literal)
-agentlib_flexquant/utils/interactive.py:698:41: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
-agentlib_flexquant/utils/interactive.py:119:4: R0915: Too many statements (135/50) (too-many-statements)
+agentlib_flexquant/utils/interactive.py:199:30: C0103: Argument name "s" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/utils/interactive.py:324:4: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+agentlib_flexquant/utils/interactive.py:479:4: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+agentlib_flexquant/utils/interactive.py:506:4: R0913: Too many arguments (7/5) (too-many-arguments)
+agentlib_flexquant/utils/interactive.py:541:25: C0201: Consider iterating the dictionary directly instead of calling .keys() (consider-iterating-dictionary)
+agentlib_flexquant/utils/interactive.py:562:16: C0103: Variable name "ts" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/utils/interactive.py:596:19: R1735: Consider using '{"t": 20, "b": 20}' instead of a call to 'dict'. (use-dict-literal)
+agentlib_flexquant/utils/interactive.py:691:41: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
 ************* Module agentlib_flexquant.utils.config_management
 agentlib_flexquant/utils/config_management.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 agentlib_flexquant/utils/config_management.py:9:0: E0401: Unable to import 'agentlib.core.agent' (import-error)
@@ -813,7 +812,14 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
         # set the flex results format same as mpc result while updating Agentvariable
         self.flex_results.index = self.flex_results.index.get_level_values(1)
 
-    def register_callbacks(self): (duplicate-code)
+    def _initialize_flex_results(
+        self, n_simulation_steps, horizon_length, sim_time_step, result_df
+    ):
+        """Initialize the flex results dataframe with the correct dimension and index
+        and fill with existing results from optimization
+        """
+
+        # create MultiIndex for collocation points (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[441:494]
 ==agentlib_flexquant.modules.shadow_mpc:[190:243]
@@ -835,8 +841,8 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
         # initialize the flex results with correct dimension
         self.flex_results = pd.DataFrame(np.nan, index=new_index, columns=self.var_ref.outputs)
 
-        # Get the optimization outputs and create a series for fixed optimization outputs with
-        # the correct MultiIndex format
+        # Get the optimization outputs and create a series for fixed optimization outputs with the
+        # correct MultiIndex format
         opti_outputs = result_df.variable[self.config.power_variable_name]
         fixed_opti_output = pd.Series(
             opti_outputs.values,
@@ -893,9 +899,7 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value
-
- (duplicate-code)
+                ] = self.flex_model.get_output(output).value (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[522:543]
 ==agentlib_flexquant.modules.shadow_mpc:[262:285]
@@ -948,8 +952,8 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[60:81]
 ==agentlib_flexquant.modules.shadow_mpc:[50:67]
         if self.config.casadi_sim_time_step > 0:
-            # generate a separate flex_model for integration to ensure the model used in MPC
-            # optimization remains unaffected
+            # generate a separate flex_model for integration to ensure
+            # the model used in MPC optimization remains unaffected
             self.flex_model = type(self.model)(dt=self.config.casadi_sim_time_step)
             # generate the filename for the simulation results
             self.res_file_flex = self.config.optimization_backend["results_file"].replace(
@@ -961,9 +965,13 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             except:
                 pass
 
-    def set_output(self, solution):
-        """Takes the solution from optimization backend and sends it to AgentVariables."""
-        # Output must be defined in the config as "type"="pd.Series" (duplicate-code)
+    def pre_computation_hook(self):
+        """Calculate relative start and end times for flexibility provision.
+
+        When in provision mode, computes the relative timing for flexibility
+        events based on the external power profile timestamps and current
+        environment time.
+        """ (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[235:249]
 ==agentlib_flexquant.modules.shadow_mpc:[517:531]
@@ -1009,21 +1017,7 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             self.logger.error("Results file %s was not found.", results_file)
             return None
 
-    def write_results(self, df: pd.DataFrame, ts: float, n: int) -> pd.DataFrame:
-        """Write every data of variables in self.var_list in an DataFrame.
-
-        DataFrame will be updated every time step
-
-        Args:
-            df: DataFrame which is initialised as an empty DataFrame with columns
-            according to self.var_list
-            ts: time step
-            n: number of time steps during prediction horizon
-
-        Returns:
-            DataFrame with results of every variable in self.var_list
-
-        """ (duplicate-code)
+    def register_callbacks(self): (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[282:288]
 ==agentlib_flexquant.modules.shadow_mpc:[25:31]
@@ -1046,5 +1040,5 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
  (duplicate-code)
 
 -----------------------------------
-Your code has been rated at 7.15/10
+Your code has been rated at 7.17/10
 

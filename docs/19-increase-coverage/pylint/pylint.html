@@ -28,9 +28,9 @@
 
         
         <h2>Score</h2>
-        7.15 / 10
+        7.17 / 10
             
-            (previous score: 7.15 / 10)
+            (previous score: 7.17 / 10)
             
         
 
@@ -1937,7 +1937,9 @@
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value</pre></td>
+                ] = self.flex_model.get_output(output).value
+
+</pre></td>
             </tr>
             
             <tr>
@@ -1999,13 +2001,7 @@
             except:
                 pass
 
-    def pre_computation_hook(self):
-        &#34;&#34;&#34;Calculate relative start and end times for flexibility provision.
-
-        When in provision mode, computes the relative timing for flexibility
-        events based on the external power profile timestamps and current
-        environment time.
-        &#34;&#34;&#34;</pre></td>
+    def register_callbacks(self):</pre></td>
             </tr>
             
             <tr>
@@ -2019,8 +2015,8 @@
 ==agentlib_flexquant.modules.baseline_mpc:[60:81]
 ==agentlib_flexquant.modules.shadow_mpc:[50:67]
         if self.config.casadi_sim_time_step &gt; 0:
-            # generate a separate flex_model for integration to ensure
-            # the model used in MPC optimization remains unaffected
+            # generate a separate flex_model for integration to ensure the model used in MPC
+            # optimization remains unaffected
             self.flex_model = type(self.model)(dt=self.config.casadi_sim_time_step)
             # generate the filename for the simulation results
             self.res_file_flex = self.config.optimization_backend[&#34;results_file&#34;].replace(
@@ -2032,13 +2028,9 @@
             except:
                 pass
 
-    def pre_computation_hook(self):
-        &#34;&#34;&#34;Calculate relative start and end times for flexibility provision.
-
-        When in provision mode, computes the relative timing for flexibility
-        events based on the external power profile timestamps and current
-        environment time.
-        &#34;&#34;&#34;</pre></td>
+    def set_output(self, solution):
+        &#34;&#34;&#34;Takes the solution from optimization backend and sends it to AgentVariables.&#34;&#34;&#34;
+        # Output must be defined in the config as &#34;type&#34;=&#34;pd.Series&#34;</pre></td>
             </tr>
             
             <tr>
@@ -4009,92 +4001,82 @@
             </tr>
             
             <tr>
-                <td>119</td>
-                <td>4</td>
-                <td>refactor</td>
-                <td><code>too-many-statements</code></td>
-                <td>R0915</td>
-                <td>Dashboard.show</td>
-                <td><pre>Too many statements (135/50)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>218</td>
-                <td>34</td>
+                <td>199</td>
+                <td>30</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
                 <td>C0103</td>
-                <td>Dashboard.show.plot_one_mpc_variable._add_step_to_data</td>
+                <td>Dashboard._plot_one_mpc_variable._add_step_to_data</td>
                 <td><pre>Argument name &#34;s&#34; doesn&#39;t conform to snake_case naming style</pre></td>
             </tr>
             
             <tr>
-                <td>343</td>
-                <td>8</td>
+                <td>324</td>
+                <td>4</td>
                 <td>refactor</td>
                 <td><code>inconsistent-return-statements</code></td>
                 <td>R1710</td>
-                <td>Dashboard.show.plot_flexibility_kpi</td>
+                <td>Dashboard._plot_flexibility_kpi</td>
                 <td><pre>Either all return statements in a function should return an expression, or none of them should.</pre></td>
             </tr>
             
             <tr>
-                <td>499</td>
-                <td>8</td>
+                <td>479</td>
+                <td>4</td>
                 <td>refactor</td>
                 <td><code>inconsistent-return-statements</code></td>
                 <td>R1710</td>
-                <td>Dashboard.show.mark_characteristic_times_of_accepted_offers</td>
+                <td>Dashboard._mark_characteristic_times_of_accepted_offers</td>
                 <td><pre>Either all return statements in a function should return an expression, or none of them should.</pre></td>
             </tr>
             
             <tr>
-                <td>527</td>
-                <td>8</td>
+                <td>506</td>
+                <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
                 <td>R0913</td>
-                <td>Dashboard.show.create_plot</td>
-                <td><pre>Too many arguments (6/5)</pre></td>
+                <td>Dashboard._create_plot</td>
+                <td><pre>Too many arguments (7/5)</pre></td>
             </tr>
             
             <tr>
-                <td>561</td>
-                <td>29</td>
+                <td>541</td>
+                <td>25</td>
                 <td>convention</td>
                 <td><code>consider-iterating-dictionary</code></td>
                 <td>C0201</td>
-                <td>Dashboard.show.create_plot</td>
+                <td>Dashboard._create_plot</td>
                 <td><pre>Consider iterating the dictionary directly instead of calling .keys()</pre></td>
             </tr>
             
             <tr>
-                <td>581</td>
+                <td>562</td>
                 <td>16</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
                 <td>C0103</td>
-                <td>Dashboard.show.create_plot</td>
+                <td>Dashboard._create_plot</td>
                 <td><pre>Variable name &#34;ts&#34; doesn&#39;t conform to snake_case naming style</pre></td>
             </tr>
             
             <tr>
-                <td>608</td>
-                <td>23</td>
+                <td>596</td>
+                <td>19</td>
                 <td>refactor</td>
                 <td><code>use-dict-literal</code></td>
                 <td>R1735</td>
-                <td>Dashboard.show.create_plot</td>
+                <td>Dashboard._create_plot</td>
                 <td><pre>Consider using &#39;{&#34;t&#34;: 20, &#34;b&#34;: 20}&#39; instead of a call to &#39;dict&#39;.</pre></td>
             </tr>
             
             <tr>
-                <td>698</td>
+                <td>691</td>
                 <td>41</td>
                 <td>warning</td>
                 <td><code>f-string-without-interpolation</code></td>
                 <td>W1309</td>
-                <td>Dashboard.show</td>
+                <td>Dashboard._create_layout</td>
                 <td><pre>Using an f-string that does not have any interpolated variables</pre></td>
             </tr>
             
@@ -4262,7 +4244,7 @@
             
             <tr>
                 <td>refactor</td>
-                <td>83</td>
+                <td>82</td>
             </tr>
             
         </table>
@@ -4401,11 +4383,6 @@
             </tr>
             
             <tr>
-                <td>too-many-statements</td>
-                <td>1</td>
-            </tr>
-            
-            <tr>
                 <td>consider-using-dict-items</td>
                 <td>1</td>
             </tr>
@@ -4527,7 +4504,7 @@
             
             <tr>
                 <td>agentlib_flexquant.utils.interactive</td>
-                <td>25</td>
+                <td>24</td>
             </tr>
             
             <tr>
@@ -4632,7 +4609,7 @@
             
             <tr>
                 <td>agentlib_flexquant/utils/interactive.py</td>
-                <td>25</td>
+                <td>24</td>
             </tr>
             
             <tr>
