@@ -106,6 +106,8 @@
     <span class="n">weights</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MPCVariable</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="p">[],</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name and value of weights&quot;</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">custom_inputs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MPCVariable</span><span class="p">]</span> <span class="c1"># todo </span>
+
     <span class="n">pos_flex</span><span class="p">:</span> <span class="n">PFMPCData</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Data for PF-MPC&quot;</span><span class="p">)</span>
     <span class="n">neg_flex</span><span class="p">:</span> <span class="n">NFMPCData</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Data for NF-MPC&quot;</span><span class="p">)</span>
 
@@ -123,6 +125,11 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pos_flex</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">neg_flex</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_inputs</span><span class="p">:</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">pos_flex</span><span class="o">.</span><span class="n">config_inputs_appendix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_inputs</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neg_flex</span><span class="o">.</span><span class="n">config_inputs_appendix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_inputs</span> 
+
         <span class="k">return</span> <span class="bp">self</span></div></div>
 
 

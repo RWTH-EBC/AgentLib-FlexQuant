@@ -4,7 +4,8 @@ agentlib_flexquant/__init__.py:4:0: E0401: Unable to import 'agentlib_mpc.optimi
 ************* Module agentlib_flexquant.generate_flex_agents
 agentlib_flexquant/generate_flex_agents.py:199:0: C0301: Line too long (104/100) (line-too-long)
 agentlib_flexquant/generate_flex_agents.py:205:0: C0301: Line too long (104/100) (line-too-long)
-agentlib_flexquant/generate_flex_agents.py:673:0: C0301: Line too long (113/100) (line-too-long)
+agentlib_flexquant/generate_flex_agents.py:672:0: C0301: Line too long (101/100) (line-too-long)
+agentlib_flexquant/generate_flex_agents.py:674:0: C0303: Trailing whitespace (trailing-whitespace)
 agentlib_flexquant/generate_flex_agents.py:18:0: E0401: Unable to import 'astor' (import-error)
 agentlib_flexquant/generate_flex_agents.py:19:0: E0401: Unable to import 'black' (import-error)
 agentlib_flexquant/generate_flex_agents.py:20:0: W0404: Reimport 'json' (imported line 11) (reimported)
@@ -33,13 +34,13 @@ agentlib_flexquant/generate_flex_agents.py:567:29: W0212: Access to a protected 
 agentlib_flexquant/generate_flex_agents.py:579:4: R0914: Too many local variables (17/15) (too-many-locals)
 agentlib_flexquant/generate_flex_agents.py:601:65: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
 agentlib_flexquant/generate_flex_agents.py:651:57: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/generate_flex_agents.py:741:8: R1720: Unnecessary "else" after "raise", remove the "else" and de-indent the code inside it (no-else-raise)
-agentlib_flexquant/generate_flex_agents.py:677:4: R0912: Too many branches (19/12) (too-many-branches)
-agentlib_flexquant/generate_flex_agents.py:838:68: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/generate_flex_agents.py:852:48: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/generate_flex_agents.py:855:8: C0103: Variable name "e" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/generate_flex_agents.py:856:12: W0707: Consider explicitly re-raising using 'raise Exception(f"Could not adapt and create a new simulation config due to: {e}. Please check {simulator_agent_config} and '{save_name_suffix}'") from e' (raise-missing-from)
-agentlib_flexquant/generate_flex_agents.py:856:12: W0719: Raising too general exception: Exception (broad-exception-raised)
+agentlib_flexquant/generate_flex_agents.py:743:8: R1720: Unnecessary "else" after "raise", remove the "else" and de-indent the code inside it (no-else-raise)
+agentlib_flexquant/generate_flex_agents.py:679:4: R0912: Too many branches (19/12) (too-many-branches)
+agentlib_flexquant/generate_flex_agents.py:840:68: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/generate_flex_agents.py:854:48: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/generate_flex_agents.py:857:8: C0103: Variable name "e" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/generate_flex_agents.py:858:12: W0707: Consider explicitly re-raising using 'raise Exception(f"Could not adapt and create a new simulation config due to: {e}. Please check {simulator_agent_config} and '{save_name_suffix}'") from e' (raise-missing-from)
+agentlib_flexquant/generate_flex_agents.py:858:12: W0719: Raising too general exception: Exception (broad-exception-raised)
 agentlib_flexquant/generate_flex_agents.py:20:0: C0411: standard import "import json" should be placed before "import astor" (wrong-import-order)
 agentlib_flexquant/generate_flex_agents.py:22:0: C0411: standard import "from copy import deepcopy" should be placed before "import astor" (wrong-import-order)
 agentlib_flexquant/generate_flex_agents.py:23:0: C0411: standard import "from pathlib import Path" should be placed before "import astor" (wrong-import-order)
@@ -89,8 +90,7 @@ agentlib_flexquant/utils/config_management.py:102:4: W0120: Else clause on loop 
 agentlib_flexquant/utils/config_management.py:166:24: C3002: Lambda expression called directly. Execute the expression inline instead. (unnecessary-direct-lambda-call)
 agentlib_flexquant/utils/config_management.py:174:0: C0116: Missing function or method docstring (missing-function-docstring)
 ************* Module agentlib_flexquant.utils.parsing
-agentlib_flexquant/utils/parsing.py:290:163: C0303: Trailing whitespace (trailing-whitespace)
-agentlib_flexquant/utils/parsing.py:290:0: C0301: Line too long (163/100) (line-too-long)
+agentlib_flexquant/utils/parsing.py:293:0: C0303: Trailing whitespace (trailing-whitespace)
 agentlib_flexquant/utils/parsing.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 agentlib_flexquant/utils/parsing.py:5:0: E0401: Unable to import 'agentlib_mpc.data_structures.mpc_datamodels' (import-error)
 agentlib_flexquant/utils/parsing.py:56:74: W0622: Redefining built-in 'type' (redefined-builtin)
@@ -98,10 +98,10 @@ agentlib_flexquant/utils/parsing.py:111:26: W0622: Redefining built-in 'type' (r
 agentlib_flexquant/utils/parsing.py:166:4: C0103: Method name "visit_Module" doesn't conform to snake_case naming style (invalid-name)
 agentlib_flexquant/utils/parsing.py:189:4: C0103: Method name "visit_ClassDef" doesn't conform to snake_case naming style (invalid-name)
 agentlib_flexquant/utils/parsing.py:241:8: R1705: Unnecessary "elif" after "return", remove the leading "el" from "elif" (no-else-return)
-agentlib_flexquant/utils/parsing.py:322:21: R1701: Consider merging these isinstance calls to isinstance(body.value, (ast.BinOp, ast.Tuple)) (consider-merging-isinstance)
-agentlib_flexquant/utils/parsing.py:333:21: R1701: Consider merging these isinstance calls to isinstance(body.value, (ast.BinOp, ast.Tuple)) (consider-merging-isinstance)
-agentlib_flexquant/utils/parsing.py:400:24: W0612: Unused variable 'ind' (unused-variable)
-agentlib_flexquant/utils/parsing.py:524:0: C0116: Missing function or method docstring (missing-function-docstring)
+agentlib_flexquant/utils/parsing.py:324:21: R1701: Consider merging these isinstance calls to isinstance(body.value, (ast.BinOp, ast.Tuple)) (consider-merging-isinstance)
+agentlib_flexquant/utils/parsing.py:335:21: R1701: Consider merging these isinstance calls to isinstance(body.value, (ast.BinOp, ast.Tuple)) (consider-merging-isinstance)
+agentlib_flexquant/utils/parsing.py:402:24: W0612: Unused variable 'ind' (unused-variable)
+agentlib_flexquant/utils/parsing.py:526:0: C0116: Missing function or method docstring (missing-function-docstring)
 agentlib_flexquant/utils/parsing.py:7:0: W0611: Unused full_trajectory_prefix imported from agentlib_flexquant.data_structures.globals (unused-import)
 ************* Module agentlib_flexquant.utils.data_handling
 agentlib_flexquant/utils/data_handling.py:1:0: C0114: Missing module docstring (missing-module-docstring)
@@ -113,15 +113,19 @@ agentlib_flexquant/utils/data_handling.py:77:40: W0108: Lambda may not be necess
 agentlib_flexquant/utils/data_handling.py:77:50: W0123: Use of eval (eval-used)
 agentlib_flexquant/utils/data_handling.py:85:4: C0103: Argument name "df" doesn't conform to snake_case naming style (invalid-name)
 ************* Module agentlib_flexquant.data_structures.flexquant
+agentlib_flexquant/data_structures/flexquant.py:35:43: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/data_structures/flexquant.py:55:30: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/data_structures/flexquant.py:57:69: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/data_structures/flexquant.py:35:38: W0511: todo  (fixme)
 agentlib_flexquant/data_structures/flexquant.py:8:0: E0401: Unable to import 'pydantic' (import-error)
 agentlib_flexquant/data_structures/flexquant.py:9:0: E0401: Unable to import 'pydantic' (import-error)
 agentlib_flexquant/data_structures/flexquant.py:10:0: E0401: Unable to import 'agentlib.core.agent' (import-error)
 agentlib_flexquant/data_structures/flexquant.py:11:0: E0401: Unable to import 'agentlib.core.errors' (import-error)
 agentlib_flexquant/data_structures/flexquant.py:12:0: E0401: Unable to import 'agentlib_mpc.data_structures.mpc_datamodels' (import-error)
 agentlib_flexquant/data_structures/flexquant.py:26:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/flexquant.py:55:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/flexquant.py:66:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/flexquant.py:176:4: C0116: Missing function or method docstring (missing-function-docstring)
+agentlib_flexquant/data_structures/flexquant.py:62:0: R0903: Too few public methods (0/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/flexquant.py:73:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/flexquant.py:183:4: C0116: Missing function or method docstring (missing-function-docstring)
 agentlib_flexquant/data_structures/flexquant.py:8:0: W0611: Unused import pydantic (unused-import)
 ************* Module agentlib_flexquant.data_structures.flex_kpis
 agentlib_flexquant/data_structures/flex_kpis.py:8:0: E0401: Unable to import 'numpy' (import-error)
@@ -178,17 +182,23 @@ agentlib_flexquant/data_structures/flex_offer.py:65:4: R0903: Too few public met
 agentlib_flexquant/data_structures/flex_offer.py:90:8: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
 agentlib_flexquant/data_structures/flex_offer.py:26:0: R0903: Too few public methods (1/2) (too-few-public-methods)
 ************* Module agentlib_flexquant.data_structures.mpcs
-agentlib_flexquant/data_structures/mpcs.py:142:156: C0303: Trailing whitespace (trailing-whitespace)
-agentlib_flexquant/data_structures/mpcs.py:142:0: C0301: Line too long (156/100) (line-too-long)
-agentlib_flexquant/data_structures/mpcs.py:174:155: C0303: Trailing whitespace (trailing-whitespace)
-agentlib_flexquant/data_structures/mpcs.py:174:0: C0301: Line too long (155/100) (line-too-long)
+agentlib_flexquant/data_structures/mpcs.py:143:0: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/data_structures/mpcs.py:147:0: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/data_structures/mpcs.py:152:66: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/data_structures/mpcs.py:166:15: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/data_structures/mpcs.py:179:100: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/data_structures/mpcs.py:188:66: C0303: Trailing whitespace (trailing-whitespace)
 agentlib_flexquant/data_structures/mpcs.py:9:0: E0401: Unable to import 'pydantic' (import-error)
 agentlib_flexquant/data_structures/mpcs.py:10:0: E0401: Unable to import 'agentlib_mpc.data_structures.mpc_datamodels' (import-error)
 agentlib_flexquant/data_structures/mpcs.py:11:0: E0401: Unable to import 'pydantic' (import-error)
 agentlib_flexquant/data_structures/mpcs.py:17:0: R0903: Too few public methods (0/2) (too-few-public-methods)
 agentlib_flexquant/data_structures/mpcs.py:39:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/mpcs.py:118:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/mpcs.py:150:0: R0903: Too few public methods (0/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/mpcs.py:152:4: C0116: Missing function or method docstring (missing-function-docstring)
+agentlib_flexquant/data_structures/mpcs.py:152:45: C0103: Argument name "v" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/data_structures/mpcs.py:118:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/mpcs.py:188:4: C0116: Missing function or method docstring (missing-function-docstring)
+agentlib_flexquant/data_structures/mpcs.py:188:45: C0103: Argument name "v" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/data_structures/mpcs.py:156:0: R0903: Too few public methods (1/2) (too-few-public-methods)
 ************* Module agentlib_flexquant.optimization_backends.constrained_cia
 agentlib_flexquant/optimization_backends/constrained_cia.py:64:0: W0311: Bad indentation. Found 20 spaces, expected 16 (bad-indentation)
 agentlib_flexquant/optimization_backends/constrained_cia.py:67:0: C0301: Line too long (149/100) (line-too-long)
@@ -410,8 +420,8 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
     def _initialize_flex_results(
         self, n_simulation_steps, horizon_length, sim_time_step, result_df
     ):
-        """Initialize the flex results dataframe with the correct dimension and index and fill with
-         existing results from optimization"""
+        """Initialize the flex results dataframe with the correct dimension and index and fill
+        with existing results from optimization"""
 
         # create MultiIndex for collocation points
         index_coll = pd.MultiIndex.from_arrays(
@@ -432,8 +442,8 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
         # initialize the flex results with correct dimension
         self.flex_results = pd.DataFrame(np.nan, index=new_index, columns=self.var_ref.outputs)
 
-        # Get the optimization outputs and create a series for fixed optimization outputs with the
-        # correct MultiIndex format
+        # Get the optimization outputs and create a series for fixed optimization outputs with
+        # the correct MultiIndex format
         opti_outputs = result_df.variable[self.config.power_variable_name]
         fixed_opti_output = pd.Series(
             opti_outputs.values,
@@ -526,7 +536,10 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
         # simulate with the casadi simulator
         self.sim_flex_model(solution)
 
+        # extract solution DataFrama
         df = solution.df
+
+        # send the outputs
         if self.flex_results is not None:
             for output in self.var_ref.outputs:
                 if output not in [
@@ -594,8 +607,9 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
     def _initialize_flex_results(
         self, n_simulation_steps, horizon_length, sim_time_step, result_df
     ):
-        """Initialize the flex results dataframe with the correct dimension and index and fill with
-         existing results from optimization"""
+        """Initialize the flex results dataframe with the correct dimension and index
+        and fill with existing results from optimization
+        """
 
         # create MultiIndex for collocation points
         index_coll = pd.MultiIndex.from_arrays(
@@ -816,7 +830,14 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
         # set the flex results format same as mpc result while updating Agentvariable
         self.flex_results.index = self.flex_results.index.get_level_values(1)
 
-    def register_callbacks(self): (duplicate-code)
+    def _initialize_flex_results(
+        self, n_simulation_steps, horizon_length, sim_time_step, result_df
+    ):
+        """Initialize the flex results dataframe with the correct dimension and index
+        and fill with existing results from optimization
+        """
+
+        # create MultiIndex for collocation points (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[441:494]
 ==agentlib_flexquant.modules.shadow_mpc:[190:243]
@@ -896,9 +917,7 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value
-
- (duplicate-code)
+                ] = self.flex_model.get_output(output).value (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[522:543]
 ==agentlib_flexquant.modules.shadow_mpc:[262:285]
@@ -922,7 +941,9 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value (duplicate-code)
+                ] = self.flex_model.get_output(output).value
+
+ (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[318:339]
 ==agentlib_flexquant.modules.shadow_mpc:[312:327]
@@ -1012,7 +1033,21 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             self.logger.error("Results file %s was not found.", results_file)
             return None
 
-    def register_callbacks(self): (duplicate-code)
+    def write_results(self, df: pd.DataFrame, ts: float, n: int) -> pd.DataFrame:
+        """Write every data of variables in self.var_list in an DataFrame.
+
+        DataFrame will be updated every time step
+
+        Args:
+            df: DataFrame which is initialised as an empty DataFrame with columns
+            according to self.var_list
+            ts: time step
+            n: number of time steps during prediction horizon
+
+        Returns:
+            DataFrame with results of every variable in self.var_list
+
+        """ (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[282:288]
 ==agentlib_flexquant.modules.shadow_mpc:[25:31]
@@ -1035,5 +1070,5 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
  (duplicate-code)
 
 -----------------------------------
-Your code has been rated at 7.12/10
+Your code has been rated at 7.09/10
 
