@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FormatStrFormatter
 import matplotlib
-matplotlib.use("TkAgg")
+matplotlib.use("Agg")
 from agentlib.utils.multi_agent_system import LocalMASAgency
 import numpy as np
 import agentlib_mpc.utils.plotting.basic as mpcplot
