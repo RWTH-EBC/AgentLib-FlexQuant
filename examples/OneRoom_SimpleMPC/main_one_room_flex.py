@@ -64,4 +64,4 @@ def run_example(until=until, with_plots=False, with_dashboard=False):
 
 
 if __name__ == "__main__":
-    run_example(until, with_plots=True, with_dashboard=True)
+    run_example(until, with_plots=False, with_dashboard=True)
