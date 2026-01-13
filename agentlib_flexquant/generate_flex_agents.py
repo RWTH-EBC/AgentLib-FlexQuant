@@ -668,9 +668,11 @@ class FlexAgentGenerator:
             node.attr for node in variables_in_cost_function if isinstance(node, ast.Attribute)
         }
         variables_newly_created = set(
-            weight.name for weight in self.flex_config.shadow_mpc_config_generator_data.weights
+            [weight.name for weight in self.flex_config.shadow_mpc_config_generator_data.weights] +
+            [input.name for input in self.flex_config.shadow_mpc_config_generator_data.custom_inputs]
         )
-        unknown_vars = variables_in_cost_function - variables_in_config - variables_newly_created - {"P_el_base"}
+        
+        unknown_vars = variables_in_cost_function - variables_in_config - variables_newly_created
         if unknown_vars:
             raise ValueError(f"Unknown variables in new cost function: {unknown_vars}")
 

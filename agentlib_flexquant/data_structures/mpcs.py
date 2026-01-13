@@ -8,7 +8,7 @@ mappings, and optimization weights for MPC implementations.
 """
 import pydantic
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
-from pydantic import ConfigDict, model_validator
+from pydantic import ConfigDict, model_validator, field_validator
 
 import agentlib_flexquant.data_structures.globals as glbs
 import agentlib_flexquant.utils.config_management as cmng
@@ -137,15 +137,21 @@ class PFMPCData(BaseMPCData):
         MPCVariable(name=glbs.MARKET_TIME, value=0, unit="s"),
         MPCVariable(name=glbs.FLEX_EVENT_DURATION, value=0, unit="s")
     ]
-    config_inputs_appendix: list[MPCVariable] = [
-        MPCVariable(name="in_provision", value=False),
-        MPCVariable(name="P_el_base", value=0, unit ="W", alias = "_P_el_base"),  # review: Does the unit matter? Can we use the unit from flex config here? 
-    ]
-    weights: list[MPCVariable] = pydantic.Field(
-        default=[], description="Name and value of weights",
+    config_inputs_appendix: list[MPCVariable] = pydantic.Field(
+        default_factory = list, description = "Inputs, which need to be appended to the shadow MPCs"
     )
+        
+    weights: list[MPCVariable] = pydantic.Field(
+        default_factory = list, description="Name and value of weights",
+    )
+    
     model_config = ConfigDict(json_encoders={MPCVariable: lambda v: v.dict()})
 
+    @field_validator("config_inputs_appendix", mode = "after")
+    @classmethod
+    def validate_config_inputs_appendix(cls, v:list[MPCVariable]): 
+        v.extend([MPCVariable(name="in_provision", value=False)])
+        return v
 
 class NFMPCData(BaseMPCData):
     """Data class for PF-MPC"""
@@ -157,7 +163,7 @@ class NFMPCData(BaseMPCData):
     module_types: dict = cmng.SHADOW_MODULE_TYPE_DICT
     class_name: str = "NegFlexModel"
     module_id: str = "NegFlexMPC"
-    # variables
+    # variables 
     power_alias: str = glbs.POWER_ALIAS_NEG
     stored_energy_alias: str = glbs.STORED_ENERGY_ALIAS_NEG
     flex_cost_function: str = pydantic.Field(
@@ -169,11 +175,16 @@ class NFMPCData(BaseMPCData):
         MPCVariable(name=glbs.MARKET_TIME, value=0, unit="s"),
         MPCVariable(name=glbs.FLEX_EVENT_DURATION, value=0, unit="s")
     ]
-    config_inputs_appendix: list[MPCVariable] = [
-        MPCVariable(name="in_provision", value=False),
-        MPCVariable(name="P_el_base", value=0, unit = "W", alias="_P_el_base"),  # review: Does the unit matter? Can we use the unit from flex config here? 
-    ]
+    config_inputs_appendix: list[MPCVariable] = pydantic.Field(
+        default_factory = list, description = "Inputs, which need to be appended to the shadow MPCs" 
+    )
     weights: list[MPCVariable] = pydantic.Field(
-        default=[], description="Name and value of weights",
+        default_factory = list, description="Name and value of weights",
     )
     model_config = ConfigDict(json_encoders={MPCVariable: lambda v: v.dict()})
+
+    @field_validator("config_inputs_appendix", mode = "after")
+    @classmethod
+    def validate_config_inputs_appendix(cls, v:list[MPCVariable]): 
+        v.extend([MPCVariable(name="in_provision", value=False)])
+        return v

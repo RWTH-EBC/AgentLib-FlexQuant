@@ -32,6 +32,8 @@ class ShadowMPCConfigGeneratorConfig(BaseModel):
     weights: list[MPCVariable] = Field(
         default=[], description="Name and value of weights",
     )
+    custom_inputs: list[MPCVariable] # todo 
+
     pos_flex: PFMPCData = Field(default=None, description="Data for PF-MPC")
     neg_flex: NFMPCData = Field(default=None, description="Data for NF-MPC")
 
@@ -49,6 +51,11 @@ class ShadowMPCConfigGeneratorConfig(BaseModel):
         if self.weights:
             self.pos_flex.weights = self.weights
             self.neg_flex.weights = self.weights
+
+        if self.custom_inputs: 
+            self.pos_flex.config_inputs_appendix = self.custom_inputs
+            self.neg_flex.config_inputs_appendix = self.custom_inputs 
+
         return self
 
 
