@@ -28,7 +28,6 @@ from agentlib_flexquant.data_structures.flex_results import (
 # =============================================================================
 
 # Add the project root to the Python path to allow for absolute imports
-# This helps in locating the agentlib_flexquant package if needed
 root_path = Path(__file__).parent.parent
 sys.path.insert(0, str(root_path))
 

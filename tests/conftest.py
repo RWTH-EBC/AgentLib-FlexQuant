@@ -1,6 +1,6 @@
 import matplotlib
 import matplotlib.pyplot as plt
-from util import convert_paths_to_absolute_in_json
+import pytest
 matplotlib.use('Agg')
 
 
