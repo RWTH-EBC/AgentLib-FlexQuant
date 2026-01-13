@@ -27,10 +27,6 @@ from agentlib_flexquant.data_structures.flex_results import (
 # Path configuration
 # =============================================================================
 
-# Add the project root to the Python path to allow for absolute imports
-root_path = Path(__file__).parent.parent
-sys.path.insert(0, str(root_path))
-
 SAMPLE_FILES_DIR = Path(__file__).parent / "sample_files"
 CONFIGS_DIR = SAMPLE_FILES_DIR / "configs"
 RESULTS_DIR = SAMPLE_FILES_DIR / "sample_results"
