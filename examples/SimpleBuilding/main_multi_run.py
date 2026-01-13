@@ -15,6 +15,7 @@ until = 3600 * 24
 
 ENV_CONFIG = {"rt": False, "factor": 0.002, "t_sample": 1} 
 
+
 def update_configs(flex_config, flex_event_duration):
     """Loads and modifies a flex config, returns path to updated temporary config file."""
     
@@ -38,6 +39,7 @@ def update_configs(flex_config, flex_event_duration):
     temp_file.close()
 
     return temp_file_path
+
 
 def run_example(flex_event_duration, until=until):
     """Runs MAS simulation with specified flex event duration."""
@@ -66,7 +68,8 @@ def run_example(flex_event_duration, until=until):
     mas.run(until=until)
 
     if os.path.exists(updated_flex_config_path):
-            os.remove(updated_flex_config_path)
+        os.remove(updated_flex_config_path)
+
 
 if __name__ == "__main__":
     flex_event_durations = [7200, 8100, 6300]

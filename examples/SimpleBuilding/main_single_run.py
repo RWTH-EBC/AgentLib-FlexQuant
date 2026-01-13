@@ -1,7 +1,6 @@
 import logging
 from agentlib_flexquant.generate_flex_agents import FlexAgentGenerator
 from agentlib.utils.multi_agent_system import LocalMASAgency
-from agentlib_flexquant.utils.interactive import Dashboard, CustomBound
 
 logging.basicConfig(level=logging.WARN)
 until = 3600 * 24 
@@ -11,6 +10,7 @@ sim_config = "mpc_and_sim/fmu_config.json"
 mpc_config = "mpc_and_sim/simple_building.json"
 predictor_config = "predictor/predictor_config.json"
 flex_config = "flex_configs/flexibility_agent_config.json"
+
 
 def run_example(until=until):
 
@@ -30,6 +30,7 @@ def run_example(until=until):
     mas.run(until=until)  
     results = mas.get_results(cleanup=False)
     return results
+
 
 if __name__ == "__main__":
     # Here the simulation is run once, 

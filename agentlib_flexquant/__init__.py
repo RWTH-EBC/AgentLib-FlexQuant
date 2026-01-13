@@ -37,7 +37,7 @@ MODULE_TYPES = {
 
 backend_types.update(
     {
-        "casadi_cia_cons": BackendImport(
+        "agentlib_flexquant.casadi_cia_cons": BackendImport(
             import_path="agentlib_flexquant.optimization_backends.constrained_cia",
             class_name="ConstrainedCasADiCIABackend",
         )

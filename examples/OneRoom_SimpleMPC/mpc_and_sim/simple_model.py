@@ -119,5 +119,3 @@ class BaselineMPCModel(CasadiModel):
                 ]
             )
         return objective
-
-

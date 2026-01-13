@@ -1,8 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
 import agentlib_mpc.utils.plotting.basic as mpcplot
 from agentlib_mpc.utils.analysis import mpc_at_time_step
 from agentlib_flexquant.data_structures.flex_results import Results
+matplotlib.use('TkAgg')
 
 
 def plot_results(results_data: dict = None):

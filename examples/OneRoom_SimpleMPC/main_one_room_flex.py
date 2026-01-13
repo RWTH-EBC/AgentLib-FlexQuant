@@ -1,7 +1,7 @@
 import logging
 from agentlib_flexquant.generate_flex_agents import FlexAgentGenerator
-from agentlib.utils.multi_agent_system import LocalMASAgency
 from agentlib_flexquant.utils.interactive import Dashboard, CustomBound
+from agentlib.utils.multi_agent_system import LocalMASAgency
 from plot_results import plot_results
 
 # Set the log-level
@@ -11,7 +11,7 @@ until = 21600
 ENV_CONFIG = {"rt": False, "factor": 0.01, "t_sample": 60}
 
 
-def run_example(until=until, with_plots=False):
+def run_example(until=until, with_plots=False, with_dashboard=False):
     """ Example with market usage
 
     Change flex_power_feedback_method in MarketSpecifications to deal with systems with
@@ -19,6 +19,9 @@ def run_example(until=until, with_plots=False):
     See difference in results: when using collocation, power during flex event does not
     fully follow offer. When using constant it does. Reason is the fast inertia of the
     system.
+
+    The time delay in the prediction plots (power profiles do not follow predictions)
+    is caused by the collocation points and is only a visual effect.
 
     """
 
@@ -42,6 +45,10 @@ def run_example(until=until, with_plots=False):
     results = mas.get_results(cleanup=False)
 
     if with_plots:
+        # Alternative plots using matplotlib
+        plot_results(results_data=results)
+
+    if with_dashboard:
         Dashboard(
             flex_config="flex_configs/flexibility_agent_config.json",
             simulator_agent_config="mpc_and_sim/simple_sim.json",
@@ -53,9 +60,8 @@ def run_example(until=until, with_plots=False):
                 ub_name="T_upper"
             )
         )
-        # plot_results(results_data=results)    # Alternative plotscript using matplotlib,
     return results
 
 
 if __name__ == "__main__":
-    run_example(until, with_plots=True)
+    run_example(until, with_plots=True, with_dashboard=True)
