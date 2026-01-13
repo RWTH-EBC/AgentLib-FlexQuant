@@ -1399,8 +1399,8 @@
     def _initialize_flex_results(
         self, n_simulation_steps, horizon_length, sim_time_step, result_df
     ):
-        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension and index and fill
-        with existing results from optimization&#34;&#34;&#34;
+        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension and index and fill with
+         existing results from optimization&#34;&#34;&#34;
 
         # create MultiIndex for collocation points
         index_coll = pd.MultiIndex.from_arrays(
@@ -1421,8 +1421,8 @@
         # initialize the flex results with correct dimension
         self.flex_results = pd.DataFrame(np.nan, index=new_index, columns=self.var_ref.outputs)
 
-        # Get the optimization outputs and create a series for fixed optimization outputs with
-        # the correct MultiIndex format
+        # Get the optimization outputs and create a series for fixed optimization outputs with the
+        # correct MultiIndex format
         opti_outputs = result_df.variable[self.config.power_variable_name]
         fixed_opti_output = pd.Series(
             opti_outputs.values,
@@ -1832,7 +1832,14 @@
         # set the flex results format same as mpc result while updating Agentvariable
         self.flex_results.index = self.flex_results.index.get_level_values(1)
 
-    def register_callbacks(self):</pre></td>
+    def _initialize_flex_results(
+        self, n_simulation_steps, horizon_length, sim_time_step, result_df
+    ):
+        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension and index
+        and fill with existing results from optimization
+        &#34;&#34;&#34;
+
+        # create MultiIndex for collocation points</pre></td>
             </tr>
             
             <tr>
@@ -1863,8 +1870,8 @@
         # initialize the flex results with correct dimension
         self.flex_results = pd.DataFrame(np.nan, index=new_index, columns=self.var_ref.outputs)
 
-        # Get the optimization outputs and create a series for fixed optimization outputs with the
-        # correct MultiIndex format
+        # Get the optimization outputs and create a series for fixed optimization outputs with
+        # the correct MultiIndex format
         opti_outputs = result_df.variable[self.config.power_variable_name]
         fixed_opti_output = pd.Series(
             opti_outputs.values,
@@ -1930,9 +1937,7 @@
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value
-
-</pre></td>
+                ] = self.flex_model.get_output(output).value</pre></td>
             </tr>
             
             <tr>
@@ -1965,7 +1970,9 @@
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value</pre></td>
+                ] = self.flex_model.get_output(output).value
+
+</pre></td>
             </tr>
             
             <tr>
@@ -1992,7 +1999,13 @@
             except:
                 pass
 
-    def register_callbacks(self):</pre></td>
+    def pre_computation_hook(self):
+        &#34;&#34;&#34;Calculate relative start and end times for flexibility provision.
+
+        When in provision mode, computes the relative timing for flexibility
+        events based on the external power profile timestamps and current
+        environment time.
+        &#34;&#34;&#34;</pre></td>
             </tr>
             
             <tr>
@@ -2006,8 +2019,8 @@
 ==agentlib_flexquant.modules.baseline_mpc:[60:81]
 ==agentlib_flexquant.modules.shadow_mpc:[50:67]
         if self.config.casadi_sim_time_step &gt; 0:
-            # generate a separate flex_model for integration to ensure the model used in MPC
-            # optimization remains unaffected
+            # generate a separate flex_model for integration to ensure
+            # the model used in MPC optimization remains unaffected
             self.flex_model = type(self.model)(dt=self.config.casadi_sim_time_step)
             # generate the filename for the simulation results
             self.res_file_flex = self.config.optimization_backend[&#34;results_file&#34;].replace(
@@ -2019,9 +2032,13 @@
             except:
                 pass
 
-    def set_output(self, solution):
-        &#34;&#34;&#34;Takes the solution from optimization backend and sends it to AgentVariables.&#34;&#34;&#34;
-        # Output must be defined in the config as &#34;type&#34;=&#34;pd.Series&#34;</pre></td>
+    def pre_computation_hook(self):
+        &#34;&#34;&#34;Calculate relative start and end times for flexibility provision.
+
+        When in provision mode, computes the relative timing for flexibility
+        events based on the external power profile timestamps and current
+        environment time.
+        &#34;&#34;&#34;</pre></td>
             </tr>
             
             <tr>
@@ -3440,7 +3457,7 @@
             </tr>
             
             <tr>
-                <td>27</td>
+                <td>31</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
@@ -3450,7 +3467,7 @@
             </tr>
             
             <tr>
-                <td>27</td>
+                <td>31</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -3460,7 +3477,7 @@
             </tr>
             
             <tr>
-                <td>32</td>
+                <td>36</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
@@ -3470,7 +3487,7 @@
             </tr>
             
             <tr>
-                <td>32</td>
+                <td>36</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -3480,7 +3497,7 @@
             </tr>
             
             <tr>
-                <td>36</td>
+                <td>40</td>
                 <td>4</td>
                 <td>warning</td>
                 <td><code>useless-parent-delegation</code></td>
@@ -3490,7 +3507,7 @@
             </tr>
             
             <tr>
-                <td>39</td>
+                <td>43</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -3500,63 +3517,13 @@
             </tr>
             
             <tr>
-                <td>52</td>
+                <td>60</td>
                 <td>12</td>
                 <td>refactor</td>
                 <td><code>no-else-continue</code></td>
                 <td>R1724</td>
                 <td>ConstrainedCasADiCIABackend.do_pycombina</td>
                 <td><pre>Unnecessary &#34;elif&#34; after &#34;continue&#34;, remove the leading &#34;el&#34; from &#34;elif&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>64</td>
-                <td>0</td>
-                <td>warning</td>
-                <td><code>bad-indentation</code></td>
-                <td>W0311</td>
-                <td></td>
-                <td><pre>Bad indentation. Found 20 spaces, expected 16</pre></td>
-            </tr>
-            
-            <tr>
-                <td>67</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>line-too-long</code></td>
-                <td>C0301</td>
-                <td></td>
-                <td><pre>Line too long (149/100)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>68</td>
-                <td>0</td>
-                <td>warning</td>
-                <td><code>bad-indentation</code></td>
-                <td>W0311</td>
-                <td></td>
-                <td><pre>Bad indentation. Found 20 spaces, expected 16</pre></td>
-            </tr>
-            
-            <tr>
-                <td>70</td>
-                <td>0</td>
-                <td>warning</td>
-                <td><code>bad-indentation</code></td>
-                <td>W0311</td>
-                <td></td>
-                <td><pre>Bad indentation. Found 20 spaces, expected 16</pre></td>
-            </tr>
-            
-            <tr>
-                <td>71</td>
-                <td>0</td>
-                <td>warning</td>
-                <td><code>bad-indentation</code></td>
-                <td>W0311</td>
-                <td></td>
-                <td><pre>Bad indentation. Found 20 spaces, expected 16</pre></td>
             </tr>
             
             <tr>
@@ -3570,7 +3537,57 @@
             </tr>
             
             <tr>
-                <td>74</td>
+                <td>75</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (149/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>76</td>
+                <td>0</td>
+                <td>warning</td>
+                <td><code>bad-indentation</code></td>
+                <td>W0311</td>
+                <td></td>
+                <td><pre>Bad indentation. Found 20 spaces, expected 16</pre></td>
+            </tr>
+            
+            <tr>
+                <td>78</td>
+                <td>0</td>
+                <td>warning</td>
+                <td><code>bad-indentation</code></td>
+                <td>W0311</td>
+                <td></td>
+                <td><pre>Bad indentation. Found 20 spaces, expected 16</pre></td>
+            </tr>
+            
+            <tr>
+                <td>79</td>
+                <td>0</td>
+                <td>warning</td>
+                <td><code>bad-indentation</code></td>
+                <td>W0311</td>
+                <td></td>
+                <td><pre>Bad indentation. Found 20 spaces, expected 16</pre></td>
+            </tr>
+            
+            <tr>
+                <td>80</td>
+                <td>0</td>
+                <td>warning</td>
+                <td><code>bad-indentation</code></td>
+                <td>W0311</td>
+                <td></td>
+                <td><pre>Bad indentation. Found 20 spaces, expected 16</pre></td>
+            </tr>
+            
+            <tr>
+                <td>82</td>
                 <td>0</td>
                 <td>warning</td>
                 <td><code>bad-indentation</code></td>
@@ -3580,7 +3597,7 @@
             </tr>
             
             <tr>
-                <td>77</td>
+                <td>85</td>
                 <td>0</td>
                 <td>warning</td>
                 <td><code>bad-indentation</code></td>
