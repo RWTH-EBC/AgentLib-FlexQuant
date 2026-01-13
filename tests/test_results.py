@@ -26,6 +26,8 @@ from agentlib_flexquant.data_structures.flex_results import (
 # =============================================================================
 # Path configuration
 # =============================================================================
+# Project root (parent of tests directory)
+PROJECT_ROOT = Path(__file__).parent.parent.parent
 
 SAMPLE_FILES_DIR = Path(__file__).parent / "sample_files"
 CONFIGS_DIR = SAMPLE_FILES_DIR / "configs"
