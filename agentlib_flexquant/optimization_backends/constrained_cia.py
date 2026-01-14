@@ -23,6 +23,10 @@ class ConstrainedCIABackendConfig(CasadiBackendConfig):
         unit="s",
         description="Time for market interaction",
     )
+    use_rounding: bool = pydantic.Field(
+        default=False,
+        description="If True, CIA is skipped and plain rounding is used.",
+    )
 
     class Config:
         # Explicitly set this to allow additional fields in the derived class
@@ -37,6 +41,10 @@ class ConstrainedCasADiCIABackend(CasADiCIABackend):
         super().__init__(*args, **kwargs)
 
     def do_pycombina(self, b_rel: np.array) -> np.array:
+
+        if self.config.use_rounding:
+            binary_array = np.array([np.round(b_rel[0])])
+            return binary_array
 
         grid = self.discretization.grid(self.system.binary_controls).copy()
         grid.append(grid[-1] + self.config.discretization_options.time_step)

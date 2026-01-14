@@ -6,7 +6,7 @@ from agentlib.core.agent import AgentConfig
 from agentlib_mpc.utils import TIME_CONVERSION, TimeConversionTypes
 from agentlib_mpc.utils.analysis import mpc_at_time_step
 from agentlib_mpc.utils.plotting.interactive import get_port
-from dash import Dash, Input, Output, callback, ctx, dcc, html
+from dash import Dash, Input, Output, ctx, dcc, html
 from plotly import graph_objects as go
 from pydantic import FilePath
 
@@ -116,250 +116,275 @@ class Dashboard(flex_results.Results):
         #     if not isinstance(kpi.value, pd.Series):
         #         self.plotting_variables.append(kpi.name)
 
-    def show(self, custom_bounds: Union[CustomBound, list[CustomBound]] = None):
-        """Show the dashboard in a web browser containing:
-            -- Statistics of the MPCs solver
-            -- The states, controls, and the power variable of the MPCs and the simulator
-            -- KPIs of the flexibility quantification
-            -- Markings of the characteristic flexibility times
+    def _plot_mpc_stats(self, fig: go.Figure, variable: str) -> go.Figure:
+        """ plot the statics of the baseline and shadow mpcs.
 
         Args:
-            custom_bounds: optional arguments to show the comfort bounds
+            fig: the figure to be updated
+            variable: the statics variable to be plotted
+
+        Returns:
+            The updated figure
 
         """
-        if custom_bounds is None:
-            self.custom_bounds = []
-        elif isinstance(custom_bounds, CustomBound):
-            self.custom_bounds = [custom_bounds]
-        else:
-            self.custom_bounds = custom_bounds
-
-        # Plotting functions
-        def plot_mpc_stats(fig: go.Figure, variable: str) -> go.Figure:
-            """ plot the statics of the baseline and shadow mpcs.
-
-            Args:
-                fig: the figure to be updated
-                variable: the statics variable to be plotted
-
-            Returns:
-                The updated figure
-
-            """
-            fig.add_trace(
-                go.Scatter(
-                    name=self.baseline_agent_config.id,
-                    x=self.df_baseline_stats.index,
-                    y=self.df_baseline_stats[variable],
-                    mode="markers",
-                    line=self.LINE_PROPERTIES[self.baseline_agent_config.id],
-                )
+        fig.add_trace(
+            go.Scatter(
+                name=self.baseline_agent_config.id,
+                x=self.df_baseline_stats.index,
+                y=self.df_baseline_stats[variable],
+                mode="markers",
+                line=self.LINE_PROPERTIES[self.baseline_agent_config.id],
             )
-            fig.add_trace(
-                go.Scatter(
-                    name=self.pos_flex_agent_config.id,
-                    x=self.df_pos_flex_stats.index,
-                    y=self.df_pos_flex_stats[variable],
-                    mode="markers",
-                    line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id],
-                )
+        )
+        fig.add_trace(
+            go.Scatter(
+                name=self.pos_flex_agent_config.id,
+                x=self.df_pos_flex_stats.index,
+                y=self.df_pos_flex_stats[variable],
+                mode="markers",
+                line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id],
             )
-            fig.add_trace(
-                go.Scatter(
-                    name=self.neg_flex_agent_config.id,
-                    x=self.df_neg_flex_stats.index,
-                    y=self.df_neg_flex_stats[variable],
-                    mode="markers",
-                    line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id],
-                )
+        )
+        fig.add_trace(
+            go.Scatter(
+                name=self.neg_flex_agent_config.id,
+                x=self.df_neg_flex_stats.index,
+                y=self.df_neg_flex_stats[variable],
+                mode="markers",
+                line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id],
             )
-            return fig
+        )
+        return fig
 
-        def plot_one_mpc_variable(
-            fig: go.Figure, variable: str, time_step: float
-        ) -> go.Figure:
-            """Plot the mpc series for the specified variable at the specified time step.
+    def _plot_one_mpc_variable(
+        self, fig: go.Figure, variable: str, time_step: float
+    ) -> go.Figure:
+        """Plot the mpc series for the specified variable at the specified time step.
 
-            Args:
-                fig: the figure to be updated
-                variable: the variable to be plotted
-                time_step: the time step to be plotted
+        Args:
+            fig: the figure to be updated
+            variable: the variable to be plotted
+            time_step: the time step to be plotted
 
-            Returns:
-                The updated figure
+        Returns:
+            The updated figure
 
-            """
-            # Get the mpc data for the plot
-            series_neg = mpc_at_time_step(
-                data=self.df_neg_flex,
-                time_step=time_step,
-                variable=self.intersection_mpcs_sim[variable][
-                    self.neg_flex_module_config.module_id
-                ],
-                index_offset=False,
-            )
-            series_pos = mpc_at_time_step(
-                data=self.df_pos_flex,
-                time_step=time_step,
-                variable=self.intersection_mpcs_sim[variable][
-                    self.pos_flex_module_config.module_id
-                ],
-                index_offset=False,
-            )
-            series_bas = mpc_at_time_step(
-                data=self.df_baseline,
-                time_step=time_step,
-                variable=self.intersection_mpcs_sim[variable][
-                    self.baseline_module_config.module_id
-                ],
-                index_offset=False,
-            )
+        """
+        # Get the mpc data for the plot
+        series_neg = mpc_at_time_step(
+            data=self.df_neg_flex,
+            time_step=time_step,
+            variable=self.intersection_mpcs_sim[variable][
+                self.neg_flex_module_config.module_id
+            ],
+            index_offset=False,
+        )
+        series_pos = mpc_at_time_step(
+            data=self.df_pos_flex,
+            time_step=time_step,
+            variable=self.intersection_mpcs_sim[variable][
+                self.pos_flex_module_config.module_id
+            ],
+            index_offset=False,
+        )
+        series_bas = mpc_at_time_step(
+            data=self.df_baseline,
+            time_step=time_step,
+            variable=self.intersection_mpcs_sim[variable][
+                self.baseline_module_config.module_id
+            ],
+            index_offset=False,
+        )
 
-            def _add_step_to_data(s: pd.Series) -> pd.Series:
-                """ shift the index of the series """
-                s_concat = s.copy().shift(periods=1)
-                s_concat.index = s.index - 0.01 * (s.index[1] - s.index[0])
-                for ind, val in s_concat.items():
-                    s[ind] = val
-                s.sort_index(inplace=True)
-                return s
+        def _add_step_to_data(s: pd.Series) -> pd.Series:
+            """ shift the index of the series """
+            s_concat = s.copy().shift(periods=1)
+            s_concat.index = s.index - 0.01 * (s.index[1] - s.index[0])
+            for ind, val in s_concat.items():
+                s[ind] = val
+            s.sort_index(inplace=True)
+            return s
 
-            # Manage nans
-            for series in [series_neg, series_pos, series_bas]:
-                if variable in [
-                    control.name for control in self.baseline_module_config.controls
-                ]:
-                    series.dropna(inplace=True)
-                    series = _add_step_to_data(s=series)
-                series.dropna(inplace=True)
-
-            # Plot the data
-            try:
-                df_sim = self.df_simulation[
-                    self.intersection_mpcs_sim[variable][
-                        self.simulator_module_config.module_id
-                    ]
-                ]
-                fig.add_trace(
-                    go.Scatter(
-                        name=self.simulator_agent_config.id,
-                        x=df_sim.index,
-                        y=df_sim,
-                        mode="lines",
-                        line=self.LINE_PROPERTIES[self.simulator_agent_config.id],
-                        zorder=2,
-                    )
-                )
-            except KeyError:
-                # E.g. when the simulator variable name was not found from the intersection
-                pass
-
-            fig.add_trace(
-                go.Scatter(
-                    name=self.baseline_agent_config.id,
-                    x=series_bas.index,
-                    y=series_bas,
-                    mode="lines",
-                    line=self.LINE_PROPERTIES[self.baseline_agent_config.id]
-                    | {"dash": "dash"},
-                    zorder=3,
-                )
-            )
-            fig.add_trace(
-                go.Scatter(
-                    name=self.neg_flex_agent_config.id,
-                    x=series_neg.index,
-                    y=series_neg,
-                    mode="lines",
-                    line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id]
-                    | {"dash": "dash"},
-                    zorder=4,
-                )
-            )
-            fig.add_trace(
-                go.Scatter(
-                    name=self.pos_flex_agent_config.id,
-                    x=series_pos.index,
-                    y=series_pos,
-                    mode="lines",
-                    line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]
-                    | {"dash": "dash"},
-                    zorder=4,
-                )
-            )
-
-            # Get the data for the bounds
-            def _get_mpc_series(var_type: str, var_name: str) -> pd.Series:
-                return self.df_baseline[(var_type, var_name)].xs(0, level=1)
-
-            def _get_bound(var_name: str) -> Optional[pd.Series]:
-                if var_name in self.df_baseline.columns.get_level_values(1):
-                    try:
-                        bound = _get_mpc_series(var_type="variable", var_name=var_name)
-                    except KeyError:
-                        bound = _get_mpc_series(var_type="parameter", var_name=var_name)
-                else:
-                    bound = None
-                return bound
-
-            df_lb = None
-            df_ub = None
-            for custom_bound in self.custom_bounds:
-                if variable == custom_bound.for_variable:
-                    df_lb = _get_bound(custom_bound.lower_bound)
-                    df_ub = _get_bound(custom_bound.upper_bound)
+        # Manage nans
+        for series in [series_neg, series_pos, series_bas]:
             if variable in [
                 control.name for control in self.baseline_module_config.controls
             ]:
-                df_lb = _get_mpc_series(var_type="lower", var_name=variable)
-                df_ub = _get_mpc_series(var_type="upper", var_name=variable)
+                series.dropna(inplace=True)
+                series = _add_step_to_data(s=series)
+            series.dropna(inplace=True)
 
-            # Plot bounds
-            if df_lb is not None:
-                fig.add_trace(
-                    go.Scatter(
-                        name="Lower bound",
-                        x=df_lb.index,
-                        y=df_lb,
-                        mode="lines",
-                        line=self.LINE_PROPERTIES[self.bounds_key],
-                        zorder=1,
-                    )
+        # Plot the data
+        try:
+            df_sim = self.df_simulation[
+                self.intersection_mpcs_sim[variable][
+                    self.simulator_module_config.module_id
+                ]
+            ]
+            fig.add_trace(
+                go.Scatter(
+                    name=self.simulator_agent_config.id,
+                    x=df_sim.index,
+                    y=df_sim,
+                    mode="lines",
+                    line=self.LINE_PROPERTIES[self.simulator_agent_config.id],
+                    zorder=2,
                 )
-            if df_ub is not None:
-                fig.add_trace(
-                    go.Scatter(
-                        name="Upper bound",
-                        x=df_ub.index,
-                        y=df_ub,
-                        mode="lines",
-                        line=self.LINE_PROPERTIES[self.bounds_key],
-                        zorder=1,
-                    )
+            )
+        except KeyError:
+            # E.g. when the simulator variable name was not found from the intersection
+            pass
+
+        fig.add_trace(
+            go.Scatter(
+                name=self.baseline_agent_config.id,
+                x=series_bas.index,
+                y=series_bas,
+                mode="lines",
+                line=self.LINE_PROPERTIES[self.baseline_agent_config.id]
+                | {"dash": "dash"},
+                zorder=3,
+            )
+        )
+        fig.add_trace(
+            go.Scatter(
+                name=self.neg_flex_agent_config.id,
+                x=series_neg.index,
+                y=series_neg,
+                mode="lines",
+                line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id]
+                | {"dash": "dash"},
+                zorder=4,
+            )
+        )
+        fig.add_trace(
+            go.Scatter(
+                name=self.pos_flex_agent_config.id,
+                x=series_pos.index,
+                y=series_pos,
+                mode="lines",
+                line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id]
+                | {"dash": "dash"},
+                zorder=4,
+            )
+        )
+
+        # Get the data for the bounds
+        def _get_mpc_series(var_type: str, var_name: str) -> pd.Series:
+            return self.df_baseline[(var_type, var_name)].xs(0, level=1)
+
+        def _get_bound(var_name: str) -> Optional[pd.Series]:
+            if var_name in self.df_baseline.columns.get_level_values(1):
+                try:
+                    bound = _get_mpc_series(var_type="variable", var_name=var_name)
+                except KeyError:
+                    bound = _get_mpc_series(var_type="parameter", var_name=var_name)
+            else:
+                bound = None
+            return bound
+
+        df_lb = None
+        df_ub = None
+        for custom_bound in self.custom_bounds:
+            if variable == custom_bound.for_variable:
+                df_lb = _get_bound(custom_bound.lower_bound)
+                df_ub = _get_bound(custom_bound.upper_bound)
+        if variable in [
+            control.name for control in self.baseline_module_config.controls
+        ]:
+            df_lb = _get_mpc_series(var_type="lower", var_name=variable)
+            df_ub = _get_mpc_series(var_type="upper", var_name=variable)
+
+        # Plot bounds
+        if df_lb is not None:
+            fig.add_trace(
+                go.Scatter(
+                    name="Lower bound",
+                    x=df_lb.index,
+                    y=df_lb,
+                    mode="lines",
+                    line=self.LINE_PROPERTIES[self.bounds_key],
+                    zorder=1,
                 )
+            )
+        if df_ub is not None:
+            fig.add_trace(
+                go.Scatter(
+                    name="Upper bound",
+                    x=df_ub.index,
+                    y=df_ub,
+                    mode="lines",
+                    line=self.LINE_PROPERTIES[self.bounds_key],
+                    zorder=1,
+                )
+            )
 
-            return fig
+        return fig
 
-        def plot_flexibility_kpi(fig: go.Figure, variable: str) -> go.Figure:
-            """Plot the flexibility kpi.
+    def _plot_flexibility_kpi(self, fig: go.Figure, variable: str) -> go.Figure:
+        """Plot the flexibility kpi.
 
-            Args:
-                fig: the figure to be updated
-                variable: the kpi variable to be plotted
+        Args:
+            fig: the figure to be updated
+            variable: the kpi variable to be plotted
 
-            Returns:
-                The updated figure
+        Returns:
+            The updated figure
 
-            """
-            df_ind = self.df_indicator.xs(0, level=1)
-            # if the variable only has NaN, don't plot
-            if df_ind[self.kpi_names_pos[variable]].isna().all():
-                return
+        """
+        df_ind = self.df_indicator.xs(0, level=1)
+        # if the variable only has NaN, don't plot
+        if df_ind[self.kpi_names_pos[variable]].isna().all():
+            return
+        fig.add_trace(
+            go.Scatter(
+                name=self.label_positive,
+                x=df_ind.index,
+                y=df_ind[self.kpi_names_pos[variable]],
+                mode="lines+markers",
+                line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id],
+            )
+        )
+        fig.add_trace(
+            go.Scatter(
+                name=self.label_negative,
+                x=df_ind.index,
+                y=df_ind[self.kpi_names_neg[variable]],
+                mode="lines+markers",
+                line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id],
+            )
+        )
+        return fig
+
+    def _plot_market_results(self, fig: go.Figure, variable: str) -> go.Figure:
+        """Plot the market results.
+
+        Args:
+            fig: the figure to be updated
+            variable: the variable to be plotted
+
+        Returns:
+            The updated figure
+
+        """
+        df_flex_market_index = self.df_market.index.droplevel("time")
+        if variable in self.df_market.columns:
+            fig.add_trace(
+                go.Scatter(
+                    x=df_flex_market_index,
+                    y=self.df_market[variable],
+                    mode="lines+markers",
+                    line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id],
+                )
+            )
+        else:
+            pos_var = f"pos_{variable}"
+            neg_var = f"neg_{variable}"
             fig.add_trace(
                 go.Scatter(
                     name=self.label_positive,
-                    x=df_ind.index,
-                    y=df_ind[self.kpi_names_pos[variable]],
+                    x=df_flex_market_index,
+                    y=self.df_market[pos_var],
                     mode="lines+markers",
                     line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id],
                 )
@@ -367,217 +392,173 @@ class Dashboard(flex_results.Results):
             fig.add_trace(
                 go.Scatter(
                     name=self.label_negative,
-                    x=df_ind.index,
-                    y=df_ind[self.kpi_names_neg[variable]],
+                    x=df_flex_market_index,
+                    y=self.df_market[neg_var],
                     mode="lines+markers",
                     line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id],
                 )
             )
-            return fig
+        return fig
 
-        def plot_market_results(fig: go.Figure, variable: str) -> go.Figure:
-            """Plot the market results.
+    def _get_characteristic_times(self, at_time_step: float) -> (float, float, float):
+        """Get the characteristic times.
 
-            Args:
-                fig: the figure to be updated
-                variable: the variable to be plotted
+        Args:
+            at_time_step: the time at which we want to get the characteristic times
 
-            Returns:
-                The updated figure
+        Returns:
+            market_time, prep_time and flex_event_duration
 
-            """
-            df_flex_market_index = self.df_market.index.droplevel("time")
-            if variable in self.df_market.columns:
-                fig.add_trace(
-                    go.Scatter(
-                        x=df_flex_market_index,
-                        y=self.df_market[variable],
-                        mode="lines+markers",
-                        line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id],
-                    )
-                )
-            else:
-                pos_var = f"pos_{variable}"
-                neg_var = f"neg_{variable}"
-                fig.add_trace(
-                    go.Scatter(
-                        name=self.label_positive,
-                        x=df_flex_market_index,
-                        y=self.df_market[pos_var],
-                        mode="lines+markers",
-                        line=self.LINE_PROPERTIES[self.pos_flex_agent_config.id],
-                    )
-                )
-                fig.add_trace(
-                    go.Scatter(
-                        name=self.label_negative,
-                        x=df_flex_market_index,
-                        y=self.df_market[neg_var],
-                        mode="lines+markers",
-                        line=self.LINE_PROPERTIES[self.neg_flex_agent_config.id],
-                    )
-                )
-            return fig
+        """
+        df_characteristic_times = self.df_indicator.xs(0, level="time")
+        rel_market_time = (
+            df_characteristic_times.loc[at_time_step, glbs.MARKET_TIME]
+            / TIME_CONVERSION[self.current_timescale_of_data]
+        )
+        rel_prep_time = (
+            df_characteristic_times.loc[at_time_step, glbs.PREP_TIME]
+            / TIME_CONVERSION[self.current_timescale_of_data]
+        )
+        flex_event_duration = (
+            df_characteristic_times.loc[at_time_step, glbs.FLEX_EVENT_DURATION]
+            / TIME_CONVERSION[self.current_timescale_of_data]
+        )
+        return rel_market_time, rel_prep_time, flex_event_duration
 
-        # Marking times
-        def get_characteristic_times(at_time_step: float) -> (float, float, float):
-            """Get the characteristic times.
+    def _mark_time(
+        self, fig: go.Figure, at_time_step: float, line_prop: dict
+    ) -> go.Figure:
+        fig.add_vline(x=at_time_step, line=line_prop, layer="below")
+        return fig
 
-            Args:
-                at_time_step: the time at which we want to get the characteristic times
+    def _mark_characteristic_times(
+        self, fig: go.Figure, offer_time: Union[float, int] = 0, line_prop: dict = None
+    ) -> go.Figure:
+        """Add markers of the characteristic times to the plot for a time step.
 
-            Returns:
-                market_time, prep_time and flex_event_duration
+        Args:
+            fig: the figure to plot the results into
+            offer_time: When to show the markers
+            line_prop: the graphic properties of the lines as in plotly
 
-            """
-            df_characteristic_times = self.df_indicator.xs(0, level="time")
-            rel_market_time = (
-                df_characteristic_times.loc[at_time_step, glbs.MARKET_TIME]
-                / TIME_CONVERSION[self.current_timescale_of_data]
+        Returns:
+            The updated figure
+
+        """
+        if line_prop is None:
+            line_prop = self.LINE_PROPERTIES[self.characteristic_times_current_key]
+        try:
+            (
+                rel_market_time,
+                rel_prep_time,
+                flex_event_duration,
+            ) = self._get_characteristic_times(offer_time)
+            self._mark_time(fig=fig, at_time_step=offer_time, line_prop=line_prop)
+            self._mark_time(
+                fig=fig,
+                at_time_step=offer_time + rel_market_time,
+                line_prop=line_prop,
             )
-            rel_prep_time = (
-                df_characteristic_times.loc[at_time_step, glbs.PREP_TIME]
-                / TIME_CONVERSION[self.current_timescale_of_data]
+            self._mark_time(
+                fig=fig,
+                at_time_step=offer_time + rel_prep_time + rel_market_time,
+                line_prop=line_prop,
             )
-            flex_event_duration = (
-                df_characteristic_times.loc[at_time_step, glbs.FLEX_EVENT_DURATION]
-                / TIME_CONVERSION[self.current_timescale_of_data]
+            self._mark_time(
+                fig=fig,
+                at_time_step=offer_time
+                + rel_prep_time
+                + rel_market_time
+                + flex_event_duration,
+                line_prop=line_prop,
             )
-            return rel_market_time, rel_prep_time, flex_event_duration
+        except KeyError:
+            pass  # No data of characteristic times available, e.g. if offer accepted
+        return fig
 
-        def mark_time(
-            fig: go.Figure, at_time_step: float, line_prop: dict
-        ) -> go.Figure:
-            fig.add_vline(x=at_time_step, line=line_prop, layer="below")
-            return fig
+    def _mark_characteristic_times_of_accepted_offers(self, fig: go.Figure) -> go.Figure:
+        """Add markers of the characteristic times for accepted offers to the plot."""
+        if self.df_market is not None:
+            if (
+                self.df_market["status"]
+                .isin(
+                    [
+                        OfferStatus.ACCEPTED_NEGATIVE.value,
+                        OfferStatus.ACCEPTED_POSITIVE.value,
+                    ]
+                )
+                .any()
+            ):
+                df_accepted_offers = self.df_market["status"].str.contains(
+                    pat="OfferStatus.accepted"
+                )
+                for i in df_accepted_offers.index.to_list():
+                    if df_accepted_offers[i]:
+                        fig = self._mark_characteristic_times(
+                            fig=fig,
+                            offer_time=i[0],
+                            line_prop=self.LINE_PROPERTIES[
+                                self.characteristic_times_accepted_key
+                            ],
+                        )
+                return fig
 
-        def mark_characteristic_times(
-            fig: go.Figure, offer_time: Union[float, int] = 0, line_prop: dict = None
-        ) -> go.Figure:
-            """Add markers of the characteristic times to the plot for a time step.
+    def _create_plot(
+        self,
+        variable: str,
+        at_time_step: float,
+        show_accepted_characteristic_times: bool = True,
+        show_current_characteristic_times: bool = True,
+        zoom_to_offer_window: bool = False,
+        zoom_to_prediction_interval: bool = False,
+    ) -> go.Figure:
+        """Create a plot for one variable
 
-            Args:
-                fig: the figure to plot the results into
-                offer_time: When to show the markers
-                line_prop: the graphic properties of the lines as in plotly
+        Args:
+            variable: the variable to plot
+            at_time_step: the time_step to show the mpc predictions
+            and the characteristic times
+            show_accepted_characteristic_times: whether to show
+            the accepted characteristic times
+            show_current_characteristic_times: whether to show
+            the current characteristic times
+            zoom_to_offer_window: whether to zoom to offer window
+            zoom_to_prediction_interval: wether to zoom to prediction interval
 
-            Returns:
-                The updated figure
+        Returns:
+            The created figure
 
-            """
-            if line_prop is None:
-                line_prop = self.LINE_PROPERTIES[self.characteristic_times_current_key]
+        """
+        # Create the figure
+        fig = go.Figure()
+        self._mark_time(fig=fig, at_time_step=at_time_step, line_prop={"color": "green"})
+        if show_accepted_characteristic_times:
+            self._mark_characteristic_times_of_accepted_offers(fig=fig)
+
+        # Plot variable
+        if variable in self.df_baseline_stats.columns:
+            self._plot_mpc_stats(fig=fig, variable=variable)
+        elif variable in self.intersection_mpcs_sim.keys():
+            self._plot_one_mpc_variable(
+                fig=fig, variable=variable, time_step=at_time_step
+            )
+            if show_current_characteristic_times:
+                self._mark_characteristic_times(fig=fig, offer_time=at_time_step)
+        elif any(variable in label for label in self.df_indicator.columns):
+            self._plot_flexibility_kpi(fig=fig, variable=variable)
+        elif any(variable in label for label in self.df_market.columns):
+            self._plot_market_results(fig=fig, variable=variable)
+        else:
+            raise ValueError(f"No plotting function found for variable {variable}")
+
+        # Set layout
+        if zoom_to_offer_window:
             try:
                 (
                     rel_market_time,
                     rel_prep_time,
                     flex_event_duration,
-                ) = get_characteristic_times(offer_time)
-                mark_time(fig=fig, at_time_step=offer_time, line_prop=line_prop)
-                mark_time(
-                    fig=fig,
-                    at_time_step=offer_time + rel_market_time,
-                    line_prop=line_prop,
-                )
-                mark_time(
-                    fig=fig,
-                    at_time_step=offer_time + rel_prep_time + rel_market_time,
-                    line_prop=line_prop,
-                )
-                mark_time(
-                    fig=fig,
-                    at_time_step=offer_time
-                    + rel_prep_time
-                    + rel_market_time
-                    + flex_event_duration,
-                    line_prop=line_prop,
-                )
-            except KeyError:
-                pass  # No data of characteristic times available, e.g. if offer accepted
-            return fig
-
-        def mark_characteristic_times_of_accepted_offers(fig: go.Figure) -> go.Figure:
-            """Add markers of the characteristic times for accepted offers to the plot."""
-            if self.df_market is not None:
-                if (
-                    self.df_market["status"]
-                    .isin(
-                        [
-                            OfferStatus.ACCEPTED_NEGATIVE.value,
-                            OfferStatus.ACCEPTED_POSITIVE.value,
-                        ]
-                    )
-                    .any()
-                ):
-                    df_accepted_offers = self.df_market["status"].str.contains(
-                        pat="OfferStatus.accepted"
-                    )
-                    for i in df_accepted_offers.index.to_list():
-                        if df_accepted_offers[i]:
-                            fig = mark_characteristic_times(
-                                fig=fig,
-                                offer_time=i[0],
-                                line_prop=self.LINE_PROPERTIES[
-                                    self.characteristic_times_accepted_key
-                                ],
-                            )
-                    return fig
-
-        # Master plotting function
-        def create_plot(
-            variable: str,
-            at_time_step: float,
-            show_accepted_characteristic_times: bool = True,
-            show_current_characteristic_times: bool = True,
-            zoom_to_offer_window: bool = False,
-            zoom_to_prediction_interval: bool = False,
-        ) -> go.Figure:
-            """Create a plot for one variable
-
-            Args:
-                variable: the variable to plot
-                at_time_step: the time_step to show the mpc predictions
-                and the characteristic times
-                show_accepted_characteristic_times: whether to show
-                the accepted characteristic times
-                show_current_characteristic_times: whether to show
-                the current characteristic times
-                zoom_to_offer_window: whether to zoom to offer window
-                zoom_to_prediction_interval: wether to zoom to prediction interval
-
-            Returns:
-                The created figure
-
-            """
-            # Create the figure
-            fig = go.Figure()
-            mark_time(fig=fig, at_time_step=at_time_step, line_prop={"color": "green"})
-            if show_accepted_characteristic_times:
-                mark_characteristic_times_of_accepted_offers(fig=fig)
-
-            # Plot variable
-            if variable in self.df_baseline_stats.columns:
-                plot_mpc_stats(fig=fig, variable=variable)
-            elif variable in self.intersection_mpcs_sim.keys():
-                plot_one_mpc_variable(
-                    fig=fig, variable=variable, time_step=at_time_step
-                )
-                if show_current_characteristic_times:
-                    mark_characteristic_times(fig=fig, offer_time=at_time_step)
-            elif any(variable in label for label in self.df_indicator.columns):
-                plot_flexibility_kpi(fig=fig, variable=variable)
-            elif any(variable in label for label in self.df_market.columns):
-                plot_market_results(fig=fig, variable=variable)
-            else:
-                raise ValueError(f"No plotting function found for variable {variable}")
-
-            # Set layout
-            if zoom_to_offer_window:
-                (
-                    rel_market_time,
-                    rel_prep_time,
-                    flex_event_duration,
-                ) = get_characteristic_times(at_time_step)
+                ) = self._get_characteristic_times(at_time_step)
                 ts = (
                     self.baseline_module_config.time_step
                     / TIME_CONVERSION[self.current_timescale_of_data]
@@ -591,33 +572,45 @@ class Dashboard(flex_results.Results):
                     + flex_event_duration
                     + 4 * ts
                 )
-            elif zoom_to_prediction_interval:
-                xlim_left = at_time_step
-                xlim_right = at_time_step + self.df_baseline.index[-1][-1]
-            else:
+            except KeyError:
+                # No data of characteristic times available for this time step,
+                # fall back to default zoom
                 xlim_left = self.df_simulation.index[0]
                 xlim_right = (
                     self.df_simulation.index[-1] + self.df_baseline.index[-1][-1]
                 )
-
-            fig.update_layout(
-                yaxis_title=variable,
-                xaxis_title=f"Time in {self.current_timescale_of_data}",
-                xaxis_range=[xlim_left, xlim_right],
-                height=350,
-                margin=dict(t=20, b=20),
+        elif zoom_to_prediction_interval:
+            xlim_left = at_time_step
+            xlim_right = at_time_step + self.df_baseline.index[-1][-1]
+        else:
+            xlim_left = self.df_simulation.index[0]
+            xlim_right = (
+                self.df_simulation.index[-1] + self.df_baseline.index[-1][-1]
             )
-            fig.update_xaxes(
-                dtick=round(self.baseline_module_config.prediction_horizon / 6)
-                * self.baseline_module_config.time_step
-                / TIME_CONVERSION[self.current_timescale_of_data]
-            )
-            fig.update_yaxes(tickformat="~r")
-            return fig
 
-        # Create the app
-        app = Dash(__name__ + "_flexibility", title="Flexibility Results")
-        app.layout = [
+        fig.update_layout(
+            yaxis_title=variable,
+            xaxis_title=f"Time in {self.current_timescale_of_data}",
+            xaxis_range=[xlim_left, xlim_right],
+            height=350,
+            margin=dict(t=20, b=20),
+        )
+        fig.update_xaxes(
+            dtick=round(self.baseline_module_config.prediction_horizon / 6)
+            * self.baseline_module_config.time_step
+            / TIME_CONVERSION[self.current_timescale_of_data]
+        )
+        fig.update_yaxes(tickformat="~r")
+        return fig
+
+    def _create_layout(self) -> list:
+        """Create the layout for the Dash app.
+
+        Returns:
+            The layout as a list of Dash components.
+
+        """
+        return [
             html.H1("Results"),
             html.H3("Settings"),
             html.Div(
@@ -748,9 +741,16 @@ class Dashboard(flex_results.Results):
             html.Div(id="graphs_container_variables", children=[]),
         ]
 
+    def _register_callbacks(self, app: Dash) -> None:
+        """Register all callbacks for the Dash app.
+
+        Args:
+            app: The Dash application instance to register callbacks on.
+
+        """
         # Callbacks
         # Update the time value or the time unit
-        @callback(
+        @app.callback(
             Output(component_id="time_slider", component_property="value"),
             Output(component_id="time_slider", component_property="min"),
             Output(component_id="time_slider", component_property="max"),
@@ -796,7 +796,7 @@ class Dashboard(flex_results.Results):
             return (value, minimum, maximum, step, value, minimum, maximum, step)
 
         # Update the graphs
-        @callback(
+        @app.callback(
             Output(
                 component_id="graphs_container_variables", component_property="children"
             ),
@@ -822,7 +822,7 @@ class Dashboard(flex_results.Results):
             """Update all graphs based on the options and slider values"""
             figs = []
             for variable in self.plotting_variables:
-                fig = create_plot(
+                fig = self._create_plot(
                     variable=variable,
                     at_time_step=at_time_step,
                     show_accepted_characteristic_times=show_accepted_characteristic_times,
@@ -832,6 +832,50 @@ class Dashboard(flex_results.Results):
                 )
                 figs.append(dcc.Graph(id=f"graph_{variable}", figure=fig))
             return figs
+
+    def create_app(
+        self, custom_bounds: Union[CustomBound, list[CustomBound]] = None
+    ) -> Dash:
+        """Create and return the Dash app without running it.
+
+        This method sets up the entire app layout and callbacks but doesn't
+        block by calling app.run(). This is useful for testing.
+
+        Args:
+            custom_bounds: optional arguments to show the comfort bounds
+
+        Returns:
+            The configured Dash application instance.
+
+        """
+        if custom_bounds is None:
+            self.custom_bounds = []
+        elif isinstance(custom_bounds, CustomBound):
+            self.custom_bounds = [custom_bounds]
+        else:
+            self.custom_bounds = custom_bounds
+
+        # Create the app
+        app = Dash(__name__ + "_flexibility", title="Flexibility Results")
+        app.layout = self._create_layout()
+
+        # Register callbacks
+        self._register_callbacks(app)
+
+        return app
+
+    def show(self, custom_bounds: Union[CustomBound, list[CustomBound]] = None):
+        """Show the dashboard in a web browser containing:
+            -- Statistics of the MPCs solver
+            -- The states, controls, and the power variable of the MPCs and the simulator
+            -- KPIs of the flexibility quantification
+            -- Markings of the characteristic flexibility times
+
+        Args:
+            custom_bounds: optional arguments to show the comfort bounds
+
+        """
+        app = self.create_app(custom_bounds=custom_bounds)
 
         # Run the app
         if self.port:

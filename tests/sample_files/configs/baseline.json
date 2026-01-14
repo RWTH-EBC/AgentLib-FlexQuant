@@ -1,0 +1,151 @@
+{
+  "id": "FlexModel",
+  "modules": [
+    {
+      "module_id": "Ag1Com",
+      "type": "local_broadcast"
+    },
+    {
+      "type": "agentlib_flexquant.baseline_mpc",
+      "module_id": "Baseline",
+      "optimization_backend": {
+        "type": "casadi",
+        "model": {
+          "type": {
+            "file": "tests/sample_files/models/flex_agents.py",
+            "class_name": "BaselineMPCModel"
+          }
+        },
+        "discretization_options": {
+          "collocation_order": 2,
+          "collocation_method": "legendre"
+        },
+        "solver": {
+          "name": "fatrop",
+          "options": {
+            "fatrop": {
+              "max_iter": 100,
+              "tol": 0.0001
+            }
+          }
+        },
+        "results_file": "tests/sample_files/sample_results/mpc_base.csv",
+        "save_results": true,
+        "overwrite_result_file": true
+      },
+      "time_step": 900.0,
+      "prediction_horizon": 48,
+      "sampling_time": 900.0,
+      "parameters": [
+        {
+          "name": "s_T",
+          "value": 250,
+          "alias": "s_T"
+        },
+        {
+          "name": "r_mDot",
+          "value": 1,
+          "alias": "r_mDot"
+        },
+        {
+          "name": "profile_deviation_weight",
+          "value": 100.0,
+          "alias": "profile_deviation_weight"
+        },
+        {
+          "name": "profile_comfort_weight",
+          "value": 1.0,
+          "alias": "profile_comfort_weight"
+        }
+      ],
+      "inputs": [
+        {
+          "name": "load",
+          "value": 150,
+          "alias": "load"
+        },
+        {
+          "name": "T_upper",
+          "value": 294.15,
+          "alias": "T_upper"
+        },
+        {
+          "name": "T_lower",
+          "value": 292.15,
+          "alias": "T_lower"
+        },
+        {
+          "name": "T_in",
+          "value": 280.15,
+          "alias": "T_in"
+        },
+        {
+          "name": "_P_external",
+          "value": 0,
+          "alias": "_P_external"
+        },
+        {
+          "name": "in_provision",
+          "value": false,
+          "alias": "in_provision"
+        },
+        {
+          "name": "rel_start",
+          "value": 0,
+          "alias": "rel_start"
+        },
+        {
+          "name": "rel_end",
+          "value": 0,
+          "alias": "rel_end"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "T_out",
+          "value": null,
+          "alias": "T_out"
+        },
+        {
+          "name": "P_el",
+          "value": null,
+          "alias": "_P_el_base"
+        },
+        {
+          "name": "E_out",
+          "value": null,
+          "alias": "_E_stored_base"
+        }
+      ],
+      "controls": [
+        {
+          "name": "mDot",
+          "value": 0.02,
+          "alias": "mDot",
+          "lb": 0,
+          "ub": 0.05
+        }
+      ],
+      "states": [
+        {
+          "name": "T",
+          "value": 298.16,
+          "alias": "T",
+          "lb": 288.15,
+          "ub": 303.15
+        }
+      ],
+      "set_outputs": true,
+      "full_controls": [
+        {
+          "name": "mDot_full",
+          "value": null,
+          "shared": true,
+          "alias": "mDot_full"
+        }
+      ],
+      "power_variable_name": "P_el",
+      "storage_variable_name": "E_out"
+    }
+  ]
+}

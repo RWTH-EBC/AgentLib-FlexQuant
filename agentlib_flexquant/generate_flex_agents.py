@@ -179,11 +179,11 @@ class FlexAgentGenerator:
             mpc_dataclass=self.flex_config.shadow_mpc_config_generator_data.neg_flex,
             agent_id=self.neg_flex_mpc_agent_config.id,
         )
-        indicator_module_config = self.adapt_indicator_config(
+        indicator_module_config = self.adapt_indicator_module_config(
             module_config=self.indicator_module_config
         )
         if self.flex_config.market_config:
-            market_module_config = self.adapt_market_config(module_config=self.market_module_config)
+            market_module_config = self.adapt_market_module_config(module_config=self.market_module_config)
 
         # dump jsons of the agents including the adapted module configs
         self.append_module_and_dump_agent(
@@ -220,18 +220,13 @@ class FlexAgentGenerator:
         # generate python files for the shadow mpcs
         self._generate_flex_model_definition()
 
-        # save flex config to created flex files
-        with open(
-            os.path.join(self.flex_config.flex_files_directory, self.flex_config_file_name),
-            "w",
-            encoding="utf-8",
-        ) as f:
-            config_json = self.flex_config.model_dump_json(exclude_defaults=True)
-            f.write(config_json)
+        # add new paths to flex config and dump it
+        self.adapt_and_dump_flex_config()
 
         # register the exit function if the corresponding flag is set
         if self.flex_config.delete_files:
             atexit.register(lambda: self._delete_created_files())
+
         return self.get_config_file_paths()
 
     def append_module_and_dump_agent(
@@ -486,7 +481,7 @@ class FlexAgentGenerator:
 
         return module_config_flex
 
-    def adapt_indicator_config(
+    def adapt_indicator_module_config(
         self, module_config: FlexibilityIndicatorModuleConfig
     ) -> FlexibilityIndicatorModuleConfig:
         """Adapt the indicator module config for automated flexibility quantification."""
@@ -527,7 +522,7 @@ class FlexAgentGenerator:
         module_config.model_config["frozen"] = True
         return module_config
 
-    def adapt_market_config(
+    def adapt_market_module_config(
         self, module_config: FlexibilityMarketModuleConfig
     ) -> FlexibilityMarketModuleConfig:
         """Adapt the market module config for automated flexibility quantification."""
@@ -551,6 +546,28 @@ class FlexAgentGenerator:
                 parameter.value = self.baseline_mpc_module_config.time_step
         module_config.model_config["frozen"] = True
         return module_config
+
+    def adapt_and_dump_flex_config(self):
+        """Updates the flex_config with the new paths of the market or indicator config,
+        if these were given as paths to the FlexAgentGenerator.
+        Dumps the flex config to the new path
+        """
+        # store market and indicator with file path of created agent config
+        if self.flex_config.market_config:
+            self.flex_config.market_config = self.market_config
+            self.flex_config.market_config.agent_config = os.path.join(
+                self.flex_config.flex_files_directory,
+                self.market_config.name_of_created_file)
+        self.flex_config.indicator_config = self.indicator_config
+        self.flex_config.indicator_config.agent_config = os.path.join(
+            self.flex_config.flex_files_directory,
+            self.indicator_config.name_of_created_file)
+        # save flex config to created flex files
+        with open(os.path.join(self.flex_config.flex_files_directory,
+                               self.flex_config_file_name),
+                  "w", encoding="utf-8", ) as f:
+            config_json = self.flex_config.model_dump_json(exclude_defaults=True)
+            f.write(config_json)
 
     def get_collocation_time_grid(self, discretization_options: dict):
         """Get the mpc output collocation grid over the horizon"""
@@ -693,8 +710,8 @@ class FlexAgentGenerator:
         6. Ensures market time equals the MPC model time step if market config is present.
         7. Ensures that all flex time values are multiples of the MPC model time step.
         8. Checks for mismatches between time-related parameters in the flex/MPC and
-        indicator configs and issues warnings
-        when discrepancies exist, using the flex/MPC config values as the source of truth.
+        indicator configs and issues warnings when discrepancies exist, using the
+        flex/MPC config values as the source of truth.
 
         """
         # check if the power variable exists in the mpc config

@@ -116,7 +116,8 @@ def run_example_from_path(example_path: Path):
                 "The 'run.py' script must contain a 'run_example' function.")
 
         # Execute the function and get the results
-        results = run_module.run_example(until=3600)
+        results = run_module.run_example(until=3600, with_plots=True,
+                                         with_dashboard=False)
         return results
 
     finally:

@@ -1,0 +1,308 @@
+{
+  "id": "FlexibilityIndicator",
+  "modules": [
+    {
+      "module_id": "Ag1Com",
+      "type": "local_broadcast"
+    },
+    {
+      "type": "agentlib_flexquant.flexibility_indicator",
+      "module_id": "FlexibilityIndicator",
+      "inputs": [
+        {
+          "name": "_P_el_base",
+          "value": null,
+          "alias": "_P_el_base"
+        },
+        {
+          "name": "_P_el_neg",
+          "value": null,
+          "alias": "_P_el_neg"
+        },
+        {
+          "name": "_P_el_pos",
+          "value": null,
+          "alias": "_P_el_pos"
+        },
+        {
+          "name": "_E_stored_base",
+          "value": null,
+          "alias": "_E_stored_base"
+        },
+        {
+          "name": "_E_stored_neg",
+          "value": null,
+          "alias": "_E_stored_neg"
+        },
+        {
+          "name": "_E_stored_pos",
+          "value": null,
+          "alias": "_E_stored_pos"
+        },
+        {
+          "name": "r_pel",
+          "value": null,
+          "alias": "r_pel"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "FlexibilityOffer",
+          "value": null,
+          "alias": "FlexibilityOffer"
+        },
+        {
+          "name": "negative_power_flex_full",
+          "value": null,
+          "alias": "negative_power_flex_full"
+        },
+        {
+          "name": "positive_power_flex_full",
+          "value": null,
+          "alias": "positive_power_flex_full"
+        },
+        {
+          "name": "negative_power_flex_offer",
+          "value": null,
+          "alias": "negative_power_flex_offer"
+        },
+        {
+          "name": "positive_power_flex_offer",
+          "value": null,
+          "alias": "positive_power_flex_offer"
+        },
+        {
+          "name": "negative_power_flex_offer_min",
+          "value": null,
+          "alias": "negative_power_flex_offer_min"
+        },
+        {
+          "name": "positive_power_flex_offer_min",
+          "value": null,
+          "alias": "positive_power_flex_offer_min"
+        },
+        {
+          "name": "negative_power_flex_offer_max",
+          "value": null,
+          "alias": "negative_power_flex_offer_max"
+        },
+        {
+          "name": "positive_power_flex_offer_max",
+          "value": null,
+          "alias": "positive_power_flex_offer_max"
+        },
+        {
+          "name": "negative_power_flex_offer_avg",
+          "value": null,
+          "alias": "negative_power_flex_offer_avg"
+        },
+        {
+          "name": "positive_power_flex_offer_avg",
+          "value": null,
+          "alias": "positive_power_flex_offer_avg"
+        },
+        {
+          "name": "negative_power_flex_within_boundary",
+          "value": null,
+          "alias": "negative_power_flex_within_boundary"
+        },
+        {
+          "name": "positive_power_flex_within_boundary",
+          "value": null,
+          "alias": "positive_power_flex_within_boundary"
+        },
+        {
+          "name": "negative_energy_flex",
+          "value": null,
+          "alias": "negative_energy_flex"
+        },
+        {
+          "name": "positive_energy_flex",
+          "value": null,
+          "alias": "positive_energy_flex"
+        },
+        {
+          "name": "negative_costs",
+          "value": null,
+          "alias": "negative_costs"
+        },
+        {
+          "name": "positive_costs",
+          "value": null,
+          "alias": "positive_costs"
+        },
+        {
+          "name": "negative_corrected_costs",
+          "value": null,
+          "alias": "negative_corrected_costs"
+        },
+        {
+          "name": "positive_corrected_costs",
+          "value": null,
+          "alias": "positive_corrected_costs"
+        },
+        {
+          "name": "negative_costs_rel",
+          "value": null,
+          "alias": "negative_costs_rel"
+        },
+        {
+          "name": "positive_costs_rel",
+          "value": null,
+          "alias": "positive_costs_rel"
+        },
+        {
+          "name": "negative_corrected_costs_rel",
+          "value": null,
+          "alias": "negative_corrected_costs_rel"
+        },
+        {
+          "name": "positive_corrected_costs_rel",
+          "value": null,
+          "alias": "positive_corrected_costs_rel"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "prep_time",
+          "value": 900,
+          "alias": "prep_time"
+        },
+        {
+          "name": "market_time",
+          "value": 900,
+          "alias": "market_time"
+        },
+        {
+          "name": "flex_event_duration",
+          "value": 7200,
+          "alias": "flex_event_duration"
+        },
+        {
+          "name": "time_step",
+          "value": 900.0,
+          "alias": "time_step"
+        },
+        {
+          "name": "prediction_horizon",
+          "value": 48,
+          "alias": "prediction_horizon"
+        },
+        {
+          "name": "collocation_time_grid",
+          "value": [
+            190.19237886466843,
+            709.8076211353316,
+            1090.1923788646684,
+            1609.8076211353316,
+            1990.1923788646684,
+            2509.807621135332,
+            2890.1923788646686,
+            3409.807621135332,
+            3790.1923788646686,
+            4309.807621135332,
+            4690.192378864668,
+            5209.807621135332,
+            5590.192378864668,
+            6109.807621135332,
+            6490.192378864668,
+            7009.807621135332,
+            7390.192378864668,
+            7909.807621135332,
+            8290.192378864669,
+            8809.807621135331,
+            9190.192378864669,
+            9709.807621135331,
+            10090.192378864669,
+            10609.807621135331,
+            10990.192378864669,
+            11509.807621135331,
+            11890.192378864669,
+            12409.807621135331,
+            12790.192378864669,
+            13309.807621135331,
+            13690.192378864669,
+            14209.807621135331,
+            14590.192378864669,
+            15109.807621135331,
+            15490.192378864669,
+            16009.807621135331,
+            16390.192378864667,
+            16909.807621135333,
+            17290.192378864667,
+            17809.807621135333,
+            18190.192378864667,
+            18709.807621135333,
+            19090.192378864667,
+            19609.807621135333,
+            19990.192378864667,
+            20509.807621135333,
+            20890.192378864667,
+            21409.807621135333,
+            21790.192378864667,
+            22309.807621135333,
+            22690.192378864667,
+            23209.807621135333,
+            23590.192378864667,
+            24109.807621135333,
+            24490.192378864667,
+            25009.807621135333,
+            25390.192378864667,
+            25909.807621135333,
+            26290.192378864667,
+            26809.807621135333,
+            27190.192378864667,
+            27709.807621135333,
+            28090.192378864667,
+            28609.807621135333,
+            28990.192378864667,
+            29509.807621135333,
+            29890.192378864667,
+            30409.807621135333,
+            30790.192378864667,
+            31309.807621135333,
+            31690.192378864667,
+            32209.807621135333,
+            32590.192378864667,
+            33109.80762113533,
+            33490.19237886467,
+            34009.80762113533,
+            34390.19237886467,
+            34909.80762113533,
+            35290.19237886467,
+            35809.80762113533,
+            36190.19237886467,
+            36709.80762113533,
+            37090.19237886467,
+            37609.80762113533,
+            37990.19237886467,
+            38509.80762113533,
+            38890.19237886467,
+            39409.80762113533,
+            39790.19237886467,
+            40309.80762113533,
+            40690.19237886467,
+            41209.80762113533,
+            41590.19237886467,
+            42109.80762113533,
+            42490.19237886467,
+            43009.80762113533
+          ],
+          "alias": "collocation_time_grid"
+        }
+      ],
+      "results_file": "tests/sample_files/sample_results/flexibility_indicator.csv",
+      "price_variable": "r_pel",
+      "integration_method": "constant",
+      "correct_costs": {
+        "enable_energy_costs_correction": true,
+        "absolute_power_deviation_tolerance": 0.05,
+        "stored_energy_variable": "E_out"
+      },
+      "calculate_costs": {
+        "use_constant_electricity_price": true,
+        "const_electricity_price": 10.0
+      }
+    }
+  ]
+}
