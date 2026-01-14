@@ -8,7 +8,7 @@ mappings, and optimization weights for MPC implementations.
 """
 import pydantic
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
-from pydantic import ConfigDict, model_validator, field_serializer
+from pydantic import ConfigDict, model_validator, field_serializer, Field
 
 import agentlib_flexquant.data_structures.globals as glbs
 import agentlib_flexquant.utils.config_management as cmng
@@ -41,8 +41,8 @@ class BaseMPCData(pydantic.BaseModel):
     # variables
     power_alias: str
     stored_energy_alias: str
-    config_inputs_appendix: list[MPCVariable] = []
-    config_parameters_appendix: list[MPCVariable] = []
+    config_inputs_appendix: list[MPCVariable] = Field(default=[], description="Inputs, which are appended to the MPCs' config (.json file and ConfigClass).")
+    config_parameters_appendix: list[MPCVariable] = Field(default=[], description="Parameters, which are appended to the MPCs' config (.json file and ConfigClass).")
     weights: list[MPCVariable] = pydantic.Field(
         default=[], description="Name and value of weights",
     )
@@ -168,14 +168,23 @@ class PFMPCData(BaseMPCData):
     def serialize_mpc_variables(self, variables: list[MPCVariable], _info):
         return [v.dict(exclude=excluded_fields) for v in variables]
 
-    @model_validator(mode="after")
-    def add_in_provision(self):
-        if not any(v.name == "in_provision" for v in self.config_inputs_appendix):
-            self.config_inputs_appendix = [
-                *self.config_inputs_appendix,
-                MPCVariable(name="in_provision", value=False, type="bool"),
+    @model_validator(mode="before")
+    @classmethod
+    def add_in_provision(cls, data):
+        inputs = data.get("config_inputs_appendix")
+
+        if inputs is None:
+            inputs = []
+
+        if not any(v.get("name") == "in_provision" if isinstance(v, dict) else v.name == "in_provision"
+                for v in inputs):
+            inputs = [
+                *inputs,
+                MPCVariable(name="in_provision", value=False),
             ]
-        return self
+
+        data["config_inputs_appendix"] = inputs
+        return data
 class NFMPCData(BaseMPCData):
     """Data class for PF-MPC"""
 
@@ -208,12 +217,21 @@ class NFMPCData(BaseMPCData):
     @field_serializer('weights', 'config_inputs_appendix', 'config_parameters_appendix')
     def serialize_mpc_variables(self, variables: list[MPCVariable], _info):
         return [v.dict(exclude=excluded_fields) for v in variables]
-      
-    @model_validator(mode="after")
-    def add_in_provision(self):
-        if not any(v.name == "in_provision" for v in self.config_inputs_appendix):
-            self.config_inputs_appendix = [
-                *self.config_inputs_appendix,
-                MPCVariable(name="in_provision", value=False, type="bool"),
+    
+    @model_validator(mode="before")
+    @classmethod
+    def add_in_provision(cls, data):
+        inputs = data.get("config_inputs_appendix")
+
+        if inputs is None:
+            inputs = []
+
+        if not any(v.get("name") == "in_provision" if isinstance(v, dict) else v.name == "in_provision"
+                for v in inputs):
+            inputs = [
+                *inputs,
+                MPCVariable(name="in_provision", value=False),
             ]
-        return self
+
+        data["config_inputs_appendix"] = inputs
+        return data
