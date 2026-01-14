@@ -28,9 +28,9 @@
 
         
         <h2>Score</h2>
-        7.11 / 10
+        7.17 / 10
             
-            (previous score: 7.11 / 10)
+            (previous score: 7.17 / 10)
             
         
 
@@ -401,6 +401,16 @@
             </tr>
             
             <tr>
+                <td>12</td>
+                <td>0</td>
+                <td>warning</td>
+                <td><code>unused-import</code></td>
+                <td>W0611</td>
+                <td></td>
+                <td><pre>Unused BaseModel imported from pydantic</pre></td>
+            </tr>
+            
+            <tr>
                 <td>13</td>
                 <td>0</td>
                 <td>error</td>
@@ -461,7 +471,7 @@
             </tr>
             
             <tr>
-                <td>47</td>
+                <td>48</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -471,7 +481,7 @@
             </tr>
             
             <tr>
-                <td>61</td>
+                <td>62</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -481,7 +491,7 @@
             </tr>
             
             <tr>
-                <td>65</td>
+                <td>66</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-many-instance-attributes</code></td>
@@ -491,7 +501,7 @@
             </tr>
             
             <tr>
-                <td>111</td>
+                <td>112</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
@@ -511,7 +521,17 @@
             </tr>
             
             <tr>
-                <td>258</td>
+                <td>247</td>
+                <td>16</td>
+                <td>convention</td>
+                <td><code>import-outside-toplevel</code></td>
+                <td>C0415</td>
+                <td>Results._load_agent_module_configs</td>
+                <td><pre>Import outside toplevel (warnings)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>268</td>
                 <td>72</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -521,13 +541,23 @@
             </tr>
             
             <tr>
-                <td>483</td>
+                <td>493</td>
                 <td>12</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
                 <td>C0103</td>
                 <td>Results.convert_timescale_of_dataframe_index</td>
                 <td><pre>Variable name &#34;df&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>568</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (103/100)</pre></td>
             </tr>
             
         </table>
@@ -545,23 +575,13 @@
             </tr>
             
             <tr>
-                <td>8</td>
+                <td>7</td>
                 <td>0</td>
                 <td>error</td>
                 <td><code>import-error</code></td>
                 <td>E0401</td>
                 <td></td>
                 <td><pre>Unable to import &#39;pydantic&#39;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>8</td>
-                <td>0</td>
-                <td>warning</td>
-                <td><code>unused-import</code></td>
-                <td>W0611</td>
-                <td></td>
-                <td><pre>Unused import pydantic</pre></td>
             </tr>
             
             <tr>
@@ -571,7 +591,7 @@
                 <td><code>import-error</code></td>
                 <td>E0401</td>
                 <td></td>
-                <td><pre>Unable to import &#39;pydantic&#39;</pre></td>
+                <td><pre>Unable to import &#39;agentlib.core.agent&#39;</pre></td>
             </tr>
             
             <tr>
@@ -581,7 +601,7 @@
                 <td><code>import-error</code></td>
                 <td>E0401</td>
                 <td></td>
-                <td><pre>Unable to import &#39;agentlib.core.agent&#39;</pre></td>
+                <td><pre>Unable to import &#39;agentlib.core.errors&#39;</pre></td>
             </tr>
             
             <tr>
@@ -591,31 +611,11 @@
                 <td><code>import-error</code></td>
                 <td>E0401</td>
                 <td></td>
-                <td><pre>Unable to import &#39;agentlib.core.errors&#39;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>12</td>
-                <td>0</td>
-                <td>error</td>
-                <td><code>import-error</code></td>
-                <td>E0401</td>
-                <td></td>
                 <td><pre>Unable to import &#39;agentlib_mpc.data_structures.mpc_datamodels&#39;</pre></td>
             </tr>
             
             <tr>
-                <td>26</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>too-few-public-methods</code></td>
-                <td>R0903</td>
-                <td>ShadowMPCConfigGeneratorConfig</td>
-                <td><pre>Too few public methods (1/2)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>36</td>
+                <td>43</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -625,7 +625,7 @@
             </tr>
             
             <tr>
-                <td>57</td>
+                <td>64</td>
                 <td>30</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -635,7 +635,7 @@
             </tr>
             
             <tr>
-                <td>59</td>
+                <td>66</td>
                 <td>69</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -645,17 +645,27 @@
             </tr>
             
             <tr>
-                <td>64</td>
+                <td>71</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>ShadowMPCConfigGeneratorConfig.serialize_mpc_variables</td>
+                <td><pre>Missing function or method docstring</pre></td>
+            </tr>
+            
+            <tr>
+                <td>75</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
                 <td>R0903</td>
                 <td>FlexibilityMarketConfig</td>
-                <td><pre>Too few public methods (0/2)</pre></td>
+                <td><pre>Too few public methods (1/2)</pre></td>
             </tr>
             
             <tr>
-                <td>75</td>
+                <td>99</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -665,7 +675,7 @@
             </tr>
             
             <tr>
-                <td>185</td>
+                <td>209</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -817,37 +827,37 @@
             </tr>
             
             <tr>
-                <td>17</td>
+                <td>11</td>
+                <td>0</td>
+                <td>warning</td>
+                <td><code>unused-import</code></td>
+                <td>W0611</td>
+                <td></td>
+                <td><pre>Unused ConfigDict imported from pydantic</pre></td>
+            </tr>
+            
+            <tr>
+                <td>30</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
                 <td>R0903</td>
                 <td>BaseMPCData</td>
-                <td><pre>Too few public methods (0/2)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>39</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>too-few-public-methods</code></td>
-                <td>R0903</td>
-                <td>BaselineMPCData</td>
                 <td><pre>Too few public methods (1/2)</pre></td>
             </tr>
             
             <tr>
-                <td>118</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>too-few-public-methods</code></td>
-                <td>R0903</td>
-                <td>PFMPCData</td>
-                <td><pre>Too few public methods (1/2)</pre></td>
+                <td>51</td>
+                <td>4</td>
+                <td>convention</td>
+                <td><code>missing-function-docstring</code></td>
+                <td>C0116</td>
+                <td>BaseMPCData.serialize_mpc_variables</td>
+                <td><pre>Missing function or method docstring</pre></td>
             </tr>
             
             <tr>
-                <td>143</td>
+                <td>162</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -857,17 +867,7 @@
             </tr>
             
             <tr>
-                <td>147</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>trailing-whitespace</code></td>
-                <td>C0303</td>
-                <td></td>
-                <td><pre>Trailing whitespace</pre></td>
-            </tr>
-            
-            <tr>
-                <td>151</td>
+                <td>172</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -877,17 +877,7 @@
             </tr>
             
             <tr>
-                <td>158</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>too-few-public-methods</code></td>
-                <td>R0903</td>
-                <td>NFMPCData</td>
-                <td><pre>Too few public methods (1/2)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>168</td>
+                <td>189</td>
                 <td>15</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -897,7 +887,7 @@
             </tr>
             
             <tr>
-                <td>181</td>
+                <td>202</td>
                 <td>88</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -907,7 +897,17 @@
             </tr>
             
             <tr>
-                <td>189</td>
+                <td>211</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>213</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -1211,6 +1211,16 @@
             </tr>
             
             <tr>
+                <td>186</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (107/100)</pre></td>
+            </tr>
+            
+            <tr>
                 <td>199</td>
                 <td>0</td>
                 <td>convention</td>
@@ -1232,16 +1242,6 @@
             
             <tr>
                 <td>228</td>
-                <td>13</td>
-                <td>convention</td>
-                <td><code>invalid-name</code></td>
-                <td>C0103</td>
-                <td>FlexAgentGenerator.generate_flex_agents</td>
-                <td><pre>Variable name &#34;f&#34; doesn&#39;t conform to snake_case naming style</pre></td>
-            </tr>
-            
-            <tr>
-                <td>234</td>
                 <td>28</td>
                 <td>warning</td>
                 <td><code>unnecessary-lambda</code></td>
@@ -1251,7 +1251,7 @@
             </tr>
             
             <tr>
-                <td>277</td>
+                <td>272</td>
                 <td>17</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1261,7 +1261,7 @@
             </tr>
             
             <tr>
-                <td>327</td>
+                <td>322</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-branches</code></td>
@@ -1271,17 +1271,27 @@
             </tr>
             
             <tr>
-                <td>538</td>
+                <td>533</td>
                 <td>16</td>
                 <td>convention</td>
                 <td><code>unnecessary-dunder-call</code></td>
                 <td>C2801</td>
-                <td>FlexAgentGenerator.adapt_market_config</td>
+                <td>FlexAgentGenerator.adapt_market_module_config</td>
                 <td><pre>Unnecessarily calls dunder method __setattr__. Set attribute directly or use setattr built-in function.</pre></td>
             </tr>
             
             <tr>
-                <td>567</td>
+                <td>568</td>
+                <td>46</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>FlexAgentGenerator.adapt_and_dump_flex_config</td>
+                <td><pre>Variable name &#34;f&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>584</td>
                 <td>29</td>
                 <td>warning</td>
                 <td><code>protected-access</code></td>
@@ -1291,7 +1301,7 @@
             </tr>
             
             <tr>
-                <td>579</td>
+                <td>596</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-locals</code></td>
@@ -1301,7 +1311,7 @@
             </tr>
             
             <tr>
-                <td>601</td>
+                <td>618</td>
                 <td>65</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1311,7 +1321,7 @@
             </tr>
             
             <tr>
-                <td>651</td>
+                <td>668</td>
                 <td>57</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1321,7 +1331,7 @@
             </tr>
             
             <tr>
-                <td>672</td>
+                <td>689</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1331,7 +1341,7 @@
             </tr>
             
             <tr>
-                <td>674</td>
+                <td>691</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -1341,7 +1351,7 @@
             </tr>
             
             <tr>
-                <td>679</td>
+                <td>696</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-branches</code></td>
@@ -1351,7 +1361,7 @@
             </tr>
             
             <tr>
-                <td>743</td>
+                <td>760</td>
                 <td>8</td>
                 <td>refactor</td>
                 <td><code>no-else-raise</code></td>
@@ -1361,7 +1371,7 @@
             </tr>
             
             <tr>
-                <td>840</td>
+                <td>857</td>
                 <td>68</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1371,7 +1381,7 @@
             </tr>
             
             <tr>
-                <td>854</td>
+                <td>871</td>
                 <td>48</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1381,7 +1391,7 @@
             </tr>
             
             <tr>
-                <td>857</td>
+                <td>874</td>
                 <td>8</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1391,7 +1401,7 @@
             </tr>
             
             <tr>
-                <td>858</td>
+                <td>875</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>raise-missing-from</code></td>
@@ -1401,7 +1411,7 @@
             </tr>
             
             <tr>
-                <td>858</td>
+                <td>875</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>broad-exception-raised</code></td>
@@ -1509,8 +1519,8 @@
     def _initialize_flex_results(
         self, n_simulation_steps, horizon_length, sim_time_step, result_df
     ):
-        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension and index and fill
-        with existing results from optimization&#34;&#34;&#34;
+        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension and index and fill with
+         existing results from optimization&#34;&#34;&#34;
 
         # create MultiIndex for collocation points
         index_coll = pd.MultiIndex.from_arrays(
@@ -1531,8 +1541,8 @@
         # initialize the flex results with correct dimension
         self.flex_results = pd.DataFrame(np.nan, index=new_index, columns=self.var_ref.outputs)
 
-        # Get the optimization outputs and create a series for fixed optimization outputs with
-        # the correct MultiIndex format
+        # Get the optimization outputs and create a series for fixed optimization outputs with the
+        # correct MultiIndex format
         opti_outputs = result_df.variable[self.config.power_variable_name]
         fixed_opti_output = pd.Series(
             opti_outputs.values,
@@ -1634,7 +1644,10 @@
         # simulate with the casadi simulator
         self.sim_flex_model(solution)
 
+        # extract solution DataFrama
         df = solution.df
+
+        # send the outputs
         if self.flex_results is not None:
             for output in self.var_ref.outputs:
                 if output not in [
@@ -1702,8 +1715,9 @@
     def _initialize_flex_results(
         self, n_simulation_steps, horizon_length, sim_time_step, result_df
     ):
-        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension and index and fill with
-         existing results from optimization&#34;&#34;&#34;
+        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension and index
+        and fill with existing results from optimization
+        &#34;&#34;&#34;
 
         # create MultiIndex for collocation points
         index_coll = pd.MultiIndex.from_arrays(
@@ -1973,8 +1987,8 @@
         # initialize the flex results with correct dimension
         self.flex_results = pd.DataFrame(np.nan, index=new_index, columns=self.var_ref.outputs)
 
-        # Get the optimization outputs and create a series for fixed optimization outputs with the
-        # correct MultiIndex format
+        # Get the optimization outputs and create a series for fixed optimization outputs with
+        # the correct MultiIndex format
         opti_outputs = result_df.variable[self.config.power_variable_name]
         fixed_opti_output = pd.Series(
             opti_outputs.values,
@@ -2040,7 +2054,9 @@
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value</pre></td>
+                ] = self.flex_model.get_output(output).value
+
+</pre></td>
             </tr>
             
             <tr>
@@ -2084,6 +2100,32 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
+==agentlib_flexquant.data_structures.flexquant:[18:32]
+==agentlib_flexquant.utils.config_management:[118:132]
+    excluded_fields = [
+        &#34;rdf_class&#34;,
+        &#34;source&#34;,
+        &#34;type&#34;,
+        &#34;timestamp&#34;,
+        &#34;description&#34;,
+        &#34;unit&#34;,
+        &#34;clip&#34;,
+        &#34;shared&#34;,
+        &#34;interpolation_method&#34;,
+        &#34;allowed_values&#34;,
+    ]
+
+    def check_bounds(parameter):</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[318:339]
 ==agentlib_flexquant.modules.shadow_mpc:[312:327]
         if self.config.casadi_sim_time_step &gt; 0:
@@ -2100,7 +2142,13 @@
             except:
                 pass
 
-    def register_callbacks(self):</pre></td>
+    def pre_computation_hook(self):
+        &#34;&#34;&#34;Calculate relative start and end times for flexibility provision.
+
+        When in provision mode, computes the relative timing for flexibility
+        events based on the external power profile timestamps and current
+        environment time.
+        &#34;&#34;&#34;</pre></td>
             </tr>
             
             <tr>
@@ -2202,7 +2250,21 @@
             self.logger.error(&#34;Results file %s was not found.&#34;, results_file)
             return None
 
-    def register_callbacks(self):</pre></td>
+    def write_results(self, df: pd.DataFrame, ts: float, n: int) -&gt; pd.DataFrame:
+        &#34;&#34;&#34;Write every data of variables in self.var_list in an DataFrame.
+
+        DataFrame will be updated every time step
+
+        Args:
+            df: DataFrame which is initialised as an empty DataFrame with columns
+            according to self.var_list
+            ts: time step
+            n: number of time steps during prediction horizon
+
+        Returns:
+            DataFrame with results of every variable in self.var_list
+
+        &#34;&#34;&#34;</pre></td>
             </tr>
             
             <tr>
@@ -3534,7 +3596,7 @@
             </tr>
             
             <tr>
-                <td>27</td>
+                <td>31</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
@@ -3544,7 +3606,7 @@
             </tr>
             
             <tr>
-                <td>27</td>
+                <td>31</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -3554,7 +3616,7 @@
             </tr>
             
             <tr>
-                <td>32</td>
+                <td>36</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
@@ -3564,7 +3626,7 @@
             </tr>
             
             <tr>
-                <td>32</td>
+                <td>36</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -3574,7 +3636,7 @@
             </tr>
             
             <tr>
-                <td>36</td>
+                <td>40</td>
                 <td>4</td>
                 <td>warning</td>
                 <td><code>useless-parent-delegation</code></td>
@@ -3584,7 +3646,7 @@
             </tr>
             
             <tr>
-                <td>39</td>
+                <td>43</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -3594,63 +3656,13 @@
             </tr>
             
             <tr>
-                <td>52</td>
+                <td>60</td>
                 <td>12</td>
                 <td>refactor</td>
                 <td><code>no-else-continue</code></td>
                 <td>R1724</td>
                 <td>ConstrainedCasADiCIABackend.do_pycombina</td>
                 <td><pre>Unnecessary &#34;elif&#34; after &#34;continue&#34;, remove the leading &#34;el&#34; from &#34;elif&#34;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>64</td>
-                <td>0</td>
-                <td>warning</td>
-                <td><code>bad-indentation</code></td>
-                <td>W0311</td>
-                <td></td>
-                <td><pre>Bad indentation. Found 20 spaces, expected 16</pre></td>
-            </tr>
-            
-            <tr>
-                <td>67</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>line-too-long</code></td>
-                <td>C0301</td>
-                <td></td>
-                <td><pre>Line too long (149/100)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>68</td>
-                <td>0</td>
-                <td>warning</td>
-                <td><code>bad-indentation</code></td>
-                <td>W0311</td>
-                <td></td>
-                <td><pre>Bad indentation. Found 20 spaces, expected 16</pre></td>
-            </tr>
-            
-            <tr>
-                <td>70</td>
-                <td>0</td>
-                <td>warning</td>
-                <td><code>bad-indentation</code></td>
-                <td>W0311</td>
-                <td></td>
-                <td><pre>Bad indentation. Found 20 spaces, expected 16</pre></td>
-            </tr>
-            
-            <tr>
-                <td>71</td>
-                <td>0</td>
-                <td>warning</td>
-                <td><code>bad-indentation</code></td>
-                <td>W0311</td>
-                <td></td>
-                <td><pre>Bad indentation. Found 20 spaces, expected 16</pre></td>
             </tr>
             
             <tr>
@@ -3664,7 +3676,57 @@
             </tr>
             
             <tr>
-                <td>74</td>
+                <td>75</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (149/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>76</td>
+                <td>0</td>
+                <td>warning</td>
+                <td><code>bad-indentation</code></td>
+                <td>W0311</td>
+                <td></td>
+                <td><pre>Bad indentation. Found 20 spaces, expected 16</pre></td>
+            </tr>
+            
+            <tr>
+                <td>78</td>
+                <td>0</td>
+                <td>warning</td>
+                <td><code>bad-indentation</code></td>
+                <td>W0311</td>
+                <td></td>
+                <td><pre>Bad indentation. Found 20 spaces, expected 16</pre></td>
+            </tr>
+            
+            <tr>
+                <td>79</td>
+                <td>0</td>
+                <td>warning</td>
+                <td><code>bad-indentation</code></td>
+                <td>W0311</td>
+                <td></td>
+                <td><pre>Bad indentation. Found 20 spaces, expected 16</pre></td>
+            </tr>
+            
+            <tr>
+                <td>80</td>
+                <td>0</td>
+                <td>warning</td>
+                <td><code>bad-indentation</code></td>
+                <td>W0311</td>
+                <td></td>
+                <td><pre>Bad indentation. Found 20 spaces, expected 16</pre></td>
+            </tr>
+            
+            <tr>
+                <td>82</td>
                 <td>0</td>
                 <td>warning</td>
                 <td><code>bad-indentation</code></td>
@@ -3674,7 +3736,7 @@
             </tr>
             
             <tr>
-                <td>77</td>
+                <td>85</td>
                 <td>0</td>
                 <td>warning</td>
                 <td><code>bad-indentation</code></td>
@@ -4086,92 +4148,82 @@
             </tr>
             
             <tr>
-                <td>119</td>
-                <td>4</td>
-                <td>refactor</td>
-                <td><code>too-many-statements</code></td>
-                <td>R0915</td>
-                <td>Dashboard.show</td>
-                <td><pre>Too many statements (135/50)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>218</td>
-                <td>34</td>
+                <td>199</td>
+                <td>30</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
                 <td>C0103</td>
-                <td>Dashboard.show.plot_one_mpc_variable._add_step_to_data</td>
+                <td>Dashboard._plot_one_mpc_variable._add_step_to_data</td>
                 <td><pre>Argument name &#34;s&#34; doesn&#39;t conform to snake_case naming style</pre></td>
             </tr>
             
             <tr>
-                <td>343</td>
-                <td>8</td>
+                <td>324</td>
+                <td>4</td>
                 <td>refactor</td>
                 <td><code>inconsistent-return-statements</code></td>
                 <td>R1710</td>
-                <td>Dashboard.show.plot_flexibility_kpi</td>
+                <td>Dashboard._plot_flexibility_kpi</td>
                 <td><pre>Either all return statements in a function should return an expression, or none of them should.</pre></td>
             </tr>
             
             <tr>
-                <td>499</td>
-                <td>8</td>
+                <td>479</td>
+                <td>4</td>
                 <td>refactor</td>
                 <td><code>inconsistent-return-statements</code></td>
                 <td>R1710</td>
-                <td>Dashboard.show.mark_characteristic_times_of_accepted_offers</td>
+                <td>Dashboard._mark_characteristic_times_of_accepted_offers</td>
                 <td><pre>Either all return statements in a function should return an expression, or none of them should.</pre></td>
             </tr>
             
             <tr>
-                <td>527</td>
-                <td>8</td>
+                <td>506</td>
+                <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
                 <td>R0913</td>
-                <td>Dashboard.show.create_plot</td>
-                <td><pre>Too many arguments (6/5)</pre></td>
+                <td>Dashboard._create_plot</td>
+                <td><pre>Too many arguments (7/5)</pre></td>
             </tr>
             
             <tr>
-                <td>561</td>
-                <td>29</td>
+                <td>541</td>
+                <td>25</td>
                 <td>convention</td>
                 <td><code>consider-iterating-dictionary</code></td>
                 <td>C0201</td>
-                <td>Dashboard.show.create_plot</td>
+                <td>Dashboard._create_plot</td>
                 <td><pre>Consider iterating the dictionary directly instead of calling .keys()</pre></td>
             </tr>
             
             <tr>
-                <td>581</td>
+                <td>562</td>
                 <td>16</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
                 <td>C0103</td>
-                <td>Dashboard.show.create_plot</td>
+                <td>Dashboard._create_plot</td>
                 <td><pre>Variable name &#34;ts&#34; doesn&#39;t conform to snake_case naming style</pre></td>
             </tr>
             
             <tr>
-                <td>608</td>
-                <td>23</td>
+                <td>596</td>
+                <td>19</td>
                 <td>refactor</td>
                 <td><code>use-dict-literal</code></td>
                 <td>R1735</td>
-                <td>Dashboard.show.create_plot</td>
+                <td>Dashboard._create_plot</td>
                 <td><pre>Consider using &#39;{&#34;t&#34;: 20, &#34;b&#34;: 20}&#39; instead of a call to &#39;dict&#39;.</pre></td>
             </tr>
             
             <tr>
-                <td>698</td>
+                <td>691</td>
                 <td>41</td>
                 <td>warning</td>
                 <td><code>f-string-without-interpolation</code></td>
                 <td>W1309</td>
-                <td>Dashboard.show</td>
+                <td>Dashboard._create_layout</td>
                 <td><pre>Using an f-string that does not have any interpolated variables</pre></td>
             </tr>
             
@@ -4334,22 +4386,22 @@
             
             <tr>
                 <td>error</td>
-                <td>82</td>
+                <td>81</td>
             </tr>
             
             <tr>
                 <td>convention</td>
-                <td>110</td>
+                <td>115</td>
             </tr>
             
             <tr>
                 <td>warning</td>
-                <td>59</td>
+                <td>60</td>
             </tr>
             
             <tr>
                 <td>refactor</td>
-                <td>83</td>
+                <td>79</td>
             </tr>
             
         </table>
@@ -4364,12 +4416,12 @@
             
             <tr>
                 <td>import-error</td>
-                <td>82</td>
+                <td>81</td>
             </tr>
             
             <tr>
                 <td>line-too-long</td>
-                <td>6</td>
+                <td>8</td>
             </tr>
             
             <tr>
@@ -4388,13 +4440,13 @@
             </tr>
             
             <tr>
-                <td>invalid-name</td>
-                <td>37</td>
+                <td>unnecessary-lambda</td>
+                <td>2</td>
             </tr>
             
             <tr>
-                <td>unnecessary-lambda</td>
-                <td>2</td>
+                <td>invalid-name</td>
+                <td>37</td>
             </tr>
             
             <tr>
@@ -4444,7 +4496,7 @@
             
             <tr>
                 <td>unused-import</td>
-                <td>8</td>
+                <td>9</td>
             </tr>
             
             <tr>
@@ -4459,7 +4511,7 @@
             
             <tr>
                 <td>too-few-public-methods</td>
-                <td>29</td>
+                <td>25</td>
             </tr>
             
             <tr>
@@ -4493,11 +4545,6 @@
             </tr>
             
             <tr>
-                <td>too-many-statements</td>
-                <td>1</td>
-            </tr>
-            
-            <tr>
                 <td>consider-using-dict-items</td>
                 <td>1</td>
             </tr>
@@ -4514,7 +4561,7 @@
             
             <tr>
                 <td>missing-function-docstring</td>
-                <td>17</td>
+                <td>19</td>
             </tr>
             
             <tr>
@@ -4544,6 +4591,11 @@
             
             <tr>
                 <td>self-assigning-variable</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>import-outside-toplevel</td>
                 <td>1</td>
             </tr>
             
@@ -4594,7 +4646,7 @@
             
             <tr>
                 <td>duplicate-code</td>
-                <td>14</td>
+                <td>15</td>
             </tr>
             
         </table>
@@ -4614,12 +4666,12 @@
             
             <tr>
                 <td>agentlib_flexquant.generate_flex_agents</td>
-                <td>48</td>
+                <td>49</td>
             </tr>
             
             <tr>
                 <td>agentlib_flexquant.utils.interactive</td>
-                <td>25</td>
+                <td>24</td>
             </tr>
             
             <tr>
@@ -4639,7 +4691,7 @@
             
             <tr>
                 <td>agentlib_flexquant.data_structures.flexquant</td>
-                <td>13</td>
+                <td>11</td>
             </tr>
             
             <tr>
@@ -4654,7 +4706,7 @@
             
             <tr>
                 <td>agentlib_flexquant.data_structures.flex_results</td>
-                <td>15</td>
+                <td>18</td>
             </tr>
             
             <tr>
@@ -4669,7 +4721,7 @@
             
             <tr>
                 <td>agentlib_flexquant.data_structures.mpcs</td>
-                <td>13</td>
+                <td>12</td>
             </tr>
             
             <tr>
@@ -4699,7 +4751,7 @@
             
             <tr>
                 <td>agentlib_flexquant.modules.__init__</td>
-                <td>14</td>
+                <td>15</td>
             </tr>
             
         </table>
@@ -4719,12 +4771,12 @@
             
             <tr>
                 <td>agentlib_flexquant/generate_flex_agents.py</td>
-                <td>48</td>
+                <td>49</td>
             </tr>
             
             <tr>
                 <td>agentlib_flexquant/utils/interactive.py</td>
-                <td>25</td>
+                <td>24</td>
             </tr>
             
             <tr>
@@ -4744,7 +4796,7 @@
             
             <tr>
                 <td>agentlib_flexquant/data_structures/flexquant.py</td>
-                <td>13</td>
+                <td>11</td>
             </tr>
             
             <tr>
@@ -4759,7 +4811,7 @@
             
             <tr>
                 <td>agentlib_flexquant/data_structures/flex_results.py</td>
-                <td>15</td>
+                <td>18</td>
             </tr>
             
             <tr>
@@ -4774,7 +4826,7 @@
             
             <tr>
                 <td>agentlib_flexquant/data_structures/mpcs.py</td>
-                <td>13</td>
+                <td>12</td>
             </tr>
             
             <tr>
@@ -4804,7 +4856,7 @@
             
             <tr>
                 <td>agentlib_flexquant/modules/__init__.py</td>
-                <td>14</td>
+                <td>15</td>
             </tr>
             
         </table>

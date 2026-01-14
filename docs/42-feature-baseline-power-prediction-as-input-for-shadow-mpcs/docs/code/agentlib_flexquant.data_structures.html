@@ -702,8 +702,8 @@ e.g. plotting and analysis.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flex_results.Results.create_instance_with_skipped_validation">
-<span class="sig-name descname"><span class="pre">create_instance_with_skipped_validation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_class</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">BaseModel</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_fields</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">BaseModel</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flex_results.html#Results.create_instance_with_skipped_validation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flex_results.Results.create_instance_with_skipped_validation" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flex_results.Results.create_simulator_config_with_skipped_validation">
+<span class="sig-name descname"><span class="pre">create_simulator_config_with_skipped_validation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim_config_class</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">SimulatorConfig</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_fields</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SimulatorConfig</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flex_results.html#Results.create_simulator_config_with_skipped_validation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flex_results.Results.create_simulator_config_with_skipped_validation" title="Permalink to this definition"></a></dt>
 <dd><p>Create a Pydantic model instance while skipping validation for specified fields.</p>
 <p>This function allows partial validation of a model’s config dictionary by validating
 all fields except those listed in <cite>skip_fields</cite>. Skipped fields are set on the instance
@@ -711,8 +711,8 @@ after construction without triggering their validators.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>model_class</strong> – The Pydantic model class to instantiate.</p></li>
-<li><p><strong>config</strong> – The input configuration dictionary.</p></li>
+<li><p><strong>sim_config_class</strong> – The Pydantic model class to instantiate.</p></li>
+<li><p><strong>sim_config</strong> – The input configuration dictionary.</p></li>
 <li><p><strong>skip_fields</strong> – A list of field names to exclude from validation.</p></li>
 <li><p><strong>instantiation.</strong> (<em>These fields will be manually set after</em>) – </p></li>
 </ul>
@@ -721,7 +721,7 @@ after construction without triggering their validators.</p>
 <dd class="field-even"><p>An instance of the model_class with validated and skipped fields assigned.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>BaseModel</p>
+<dd class="field-odd"><p>SimulatorConfig</p>
 </dd>
 </dl>
 </dd></dl>
@@ -777,8 +777,8 @@ after construction without triggering their validators.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flex_results.Results.generator_config">
-<span class="sig-name descname"><span class="pre">generator_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig"><span class="pre">FlexQuantConfig</span></a></em><a class="headerlink" href="#agentlib_flexquant.data_structures.flex_results.Results.generator_config" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flex_results.Results.flex_config">
+<span class="sig-name descname"><span class="pre">flex_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig"><span class="pre">FlexQuantConfig</span></a></em><a class="headerlink" href="#agentlib_flexquant.data_structures.flex_results.Results.flex_config" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -841,7 +841,7 @@ after construction without triggering their validators.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flex_results.Results.simulator_agent_config">
-<span class="sig-name descname"><span class="pre">simulator_agent_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">AgentConfig</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.flex_results.Results.simulator_agent_config" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">simulator_agent_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">AgentConfig</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.flex_results.Results.simulator_agent_config" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1154,13 +1154,13 @@ the base flex directory, using only the directory names (ignoring any user-suppl
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘pathlib.Path’&gt;: &lt;class ‘str’&gt;, &lt;class ‘agentlib.core.agent.AgentConfig’&gt;: &lt;function FlexibilityIndicatorConfig.&lt;lambda&gt; at 0x7fbfcbce1940&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘pathlib.Path’&gt;: &lt;class ‘str’&gt;, &lt;class ‘agentlib.core.agent.AgentConfig’&gt;: &lt;function FlexibilityIndicatorConfig.&lt;lambda&gt; at 0x7f6d5becafc0&gt;}</em></p></li>
 <li><p><strong>extra</strong>: <em>str = forbid</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.agent_config" title="agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.agent_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">agent_config</span> <span class="pre">(agentlib.core.agent.AgentConfig)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.agent_config" title="agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.agent_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">agent_config</span> <span class="pre">(agentlib.core.agent.AgentConfig</span> <span class="pre">|</span> <span class="pre">pathlib.Path</span> <span class="pre">|</span> <span class="pre">str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.name_of_created_file" title="agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.name_of_created_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_of_created_file</span> <span class="pre">(str)</span></code></a></p></li>
 </ul>
 </dd>
@@ -1172,7 +1172,7 @@ the base flex directory, using only the directory names (ignoring any user-suppl
 </dl>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.agent_config">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">agent_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">AgentConfig</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.agent_config" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">agent_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">AgentConfig</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.agent_config" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1216,20 +1216,45 @@ the base flex directory, using only the directory names (ignoring any user-suppl
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.agent_config" title="agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.agent_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">agent_config</span> <span class="pre">(agentlib.core.agent.AgentConfig)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.agent_config" title="agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.agent_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">agent_config</span> <span class="pre">(agentlib.core.agent.AgentConfig</span> <span class="pre">|</span> <span class="pre">pathlib.Path</span> <span class="pre">|</span> <span class="pre">str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.name_of_created_file" title="agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.name_of_created_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_of_created_file</span> <span class="pre">(str)</span></code></a></p></li>
+</ul>
+</dd>
+<dt class="field-odd">Validators<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.check_file_extension" title="agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.check_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_file_extension</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.agent_config">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">agent_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">AgentConfig</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.agent_config" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">agent_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">AgentConfig</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.agent_config" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.check_file_extension" title="agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.check_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_file_extension</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.name_of_created_file">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name_of_created_file</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'flexibility_market.json'</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.name_of_created_file" title="Permalink to this definition"></a></dt>
 <dd><p>Name of the config that is created by the generator</p>
+<dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.check_file_extension" title="agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.check_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_file_extension</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method pydantic_validator">
+<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.check_file_extension">
+<em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_file_extension</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flexquant.html#FlexibilityMarketConfig.check_file_extension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.check_file_extension" title="Permalink to this definition"></a></dt>
+<dd><p>Validate that name_of_created_file has a .json extension.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1242,7 +1267,7 @@ the base flex directory, using only the directory names (ignoring any user-suppl
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function ShadowMPCConfigGeneratorConfig.&lt;lambda&gt; at 0x7fbfcbce1620&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function ShadowMPCConfigGeneratorConfig.&lt;lambda&gt; at 0x7f6d5becab60&gt;}</em></p></li>
 <li><p><strong>extra</strong>: <em>str = forbid</em></p></li>
 </ul>
 </dd>
@@ -1317,6 +1342,11 @@ the base flex directory, using only the directory names (ignoring any user-suppl
 <em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">assign_weights_to_flex</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flexquant.html#ShadowMPCConfigGeneratorConfig.assign_weights_to_flex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flexquant.ShadowMPCConfigGeneratorConfig.assign_weights_to_flex" title="Permalink to this definition"></a></dt>
 <dd><p>Validate flexibility cost function fields and assign weights to them.</p>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flexquant.ShadowMPCConfigGeneratorConfig.serialize_mpc_variables">
+<span class="sig-name descname"><span class="pre">serialize_mpc_variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">agentlib_mpc.data_structures.mpc_datamodels.MPCVariable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flexquant.html#ShadowMPCConfigGeneratorConfig.serialize_mpc_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flexquant.ShadowMPCConfigGeneratorConfig.serialize_mpc_variables" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -1598,13 +1628,8 @@ mappings, and optimization weights for MPC implementations.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
 <p>Base class containing necessary data for the code creation of the different mpcs</p>
 <dl class="field-list simple">
-<dt class="field-odd">Config<span class="colon">:</span></dt>
+<dt class="field-odd">Fields<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function BaseMPCData.&lt;lambda&gt; at 0x7fbfcbce0400&gt;}</em></p></li>
-</ul>
-</dd>
-<dt class="field-even">Fields<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaseMPCData.class_name" title="agentlib_flexquant.data_structures.mpcs.BaseMPCData.class_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">class_name</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaseMPCData.config_inputs_appendix" title="agentlib_flexquant.data_structures.mpcs.BaseMPCData.config_inputs_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">config_inputs_appendix</span> <span class="pre">(list[agentlib_mpc.data_structures.mpc_datamodels.MPCVariable])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaseMPCData.config_parameters_appendix" title="agentlib_flexquant.data_structures.mpcs.BaseMPCData.config_parameters_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">config_parameters_appendix</span> <span class="pre">(list[agentlib_mpc.data_structures.mpc_datamodels.MPCVariable])</span></code></a></p></li>
@@ -1675,6 +1700,11 @@ mappings, and optimization weights for MPC implementations.</p>
 <dd><p>Name and value of weights</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.BaseMPCData.serialize_mpc_variables">
+<span class="sig-name descname"><span class="pre">serialize_mpc_variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">agentlib_mpc.data_structures.mpc_datamodels.MPCVariable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/mpcs.html#BaseMPCData.serialize_mpc_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.BaseMPCData.serialize_mpc_variables" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class pydantic_model">
@@ -1683,13 +1713,8 @@ mappings, and optimization weights for MPC implementations.</p>
 <dd><p>Bases: <a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaseMPCData" title="agentlib_flexquant.data_structures.mpcs.BaseMPCData"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseMPCData</span></code></a></p>
 <p>Data class for Baseline MPC</p>
 <dl class="field-list simple">
-<dt class="field-odd">Config<span class="colon">:</span></dt>
+<dt class="field-odd">Fields<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function BaselineMPCData.&lt;lambda&gt; at 0x7fbfcbce0540&gt;}</em></p></li>
-</ul>
-</dd>
-<dt class="field-even">Fields<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.class_name" title="agentlib_flexquant.data_structures.mpcs.BaselineMPCData.class_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">class_name</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.comfort_variable" title="agentlib_flexquant.data_structures.mpcs.BaselineMPCData.comfort_variable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">comfort_variable</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.config_inputs_appendix" title="agentlib_flexquant.data_structures.mpcs.BaselineMPCData.config_inputs_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">config_inputs_appendix</span> <span class="pre">(list[agentlib_mpc.data_structures.mpc_datamodels.MPCVariable])</span></code></a></p></li>
@@ -1707,8 +1732,8 @@ mappings, and optimization weights for MPC implementations.</p>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.weights" title="agentlib_flexquant.data_structures.mpcs.BaselineMPCData.weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">weights</span> <span class="pre">(list[agentlib_mpc.data_structures.mpc_datamodels.MPCVariable])</span></code></a></p></li>
 </ul>
 </dd>
-<dt class="field-odd">Validators<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
+<dt class="field-even">Validators<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.update_config_parameters_appendix" title="agentlib_flexquant.data_structures.mpcs.BaselineMPCData.update_config_parameters_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_config_parameters_appendix</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
 </ul>
 </dd>
@@ -1899,6 +1924,11 @@ mappings, and optimization weights for MPC implementations.</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.BaselineMPCData.serialize_mpc_variables">
+<span class="sig-name descname"><span class="pre">serialize_mpc_variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">agentlib_mpc.data_structures.mpc_datamodels.MPCVariable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/mpcs.html#BaselineMPCData.serialize_mpc_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.serialize_mpc_variables" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method pydantic_validator">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.BaselineMPCData.update_config_parameters_appendix">
 <em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_config_parameters_appendix</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/mpcs.html#BaselineMPCData.update_config_parameters_appendix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.update_config_parameters_appendix" title="Permalink to this definition"></a></dt>
@@ -1916,13 +1946,8 @@ list as MPCVariable instances.</p>
 <dd><p>Bases: <a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaseMPCData" title="agentlib_flexquant.data_structures.mpcs.BaseMPCData"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseMPCData</span></code></a></p>
 <p>Data class for PF-MPC</p>
 <dl class="field-list simple">
-<dt class="field-odd">Config<span class="colon">:</span></dt>
+<dt class="field-odd">Fields<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function NFMPCData.&lt;lambda&gt; at 0x7fbfcbce0ae0&gt;}</em></p></li>
-</ul>
-</dd>
-<dt class="field-even">Fields<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.class_name" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.class_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">class_name</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.config_inputs_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.config_inputs_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">config_inputs_appendix</span> <span class="pre">(list[agentlib_mpc.data_structures.mpc_datamodels.MPCVariable])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.config_parameters_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.config_parameters_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">config_parameters_appendix</span> <span class="pre">(list[agentlib_mpc.data_structures.mpc_datamodels.MPCVariable])</span></code></a></p></li>
@@ -1936,8 +1961,8 @@ list as MPCVariable instances.</p>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.weights" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">weights</span> <span class="pre">(list[agentlib_mpc.data_structures.mpc_datamodels.MPCVariable])</span></code></a></p></li>
 </ul>
 </dd>
-<dt class="field-odd">Validators<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
+<dt class="field-even">Validators<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
 </ul>
 </dd>
@@ -2082,6 +2107,11 @@ list as MPCVariable instances.</p>
 <em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_in_provision</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/mpcs.html#NFMPCData.add_in_provision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.NFMPCData.serialize_mpc_variables">
+<span class="sig-name descname"><span class="pre">serialize_mpc_variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">agentlib_mpc.data_structures.mpc_datamodels.MPCVariable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/mpcs.html#NFMPCData.serialize_mpc_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.serialize_mpc_variables" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class pydantic_model">
@@ -2090,13 +2120,8 @@ list as MPCVariable instances.</p>
 <dd><p>Bases: <a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaseMPCData" title="agentlib_flexquant.data_structures.mpcs.BaseMPCData"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseMPCData</span></code></a></p>
 <p>Data class for PF-MPC</p>
 <dl class="field-list simple">
-<dt class="field-odd">Config<span class="colon">:</span></dt>
+<dt class="field-odd">Fields<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function PFMPCData.&lt;lambda&gt; at 0x7fbfcbce0720&gt;}</em></p></li>
-</ul>
-</dd>
-<dt class="field-even">Fields<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.class_name" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.class_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">class_name</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.config_inputs_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.config_inputs_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">config_inputs_appendix</span> <span class="pre">(list[agentlib_mpc.data_structures.mpc_datamodels.MPCVariable])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.config_parameters_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.config_parameters_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">config_parameters_appendix</span> <span class="pre">(list[agentlib_mpc.data_structures.mpc_datamodels.MPCVariable])</span></code></a></p></li>
@@ -2110,8 +2135,8 @@ list as MPCVariable instances.</p>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.weights" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">weights</span> <span class="pre">(list[agentlib_mpc.data_structures.mpc_datamodels.MPCVariable])</span></code></a></p></li>
 </ul>
 </dd>
-<dt class="field-odd">Validators<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
+<dt class="field-even">Validators<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
 </ul>
 </dd>
@@ -2254,6 +2279,11 @@ list as MPCVariable instances.</p>
 <dl class="py method pydantic_validator">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision">
 <em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_in_provision</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/mpcs.html#PFMPCData.add_in_provision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.PFMPCData.serialize_mpc_variables">
+<span class="sig-name descname"><span class="pre">serialize_mpc_variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">agentlib_mpc.data_structures.mpc_datamodels.MPCVariable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/mpcs.html#PFMPCData.serialize_mpc_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.serialize_mpc_variables" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
