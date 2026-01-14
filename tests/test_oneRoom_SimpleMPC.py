@@ -55,6 +55,7 @@ def create_dataframe_summary(df: pd.DataFrame, precision: int = 6) -> dict:
     }
     return summary
 
+
 def assert_frame_matches_summary_snapshot(snapshot, df: pd.DataFrame,
                                           snapshot_name: str):
     """Assert that a DataFrame's summary matches a stored snapshot.
@@ -74,6 +75,7 @@ def assert_frame_matches_summary_snapshot(snapshot, df: pd.DataFrame,
 
     # Use snapshot.assert_match on the small, stable JSON string
     snapshot.assert_match(summary_json, snapshot_name)
+
 
 def run_example_from_path(example_path: Path):
     """Dynamically import and run the 'run_example' function from a script
@@ -115,13 +117,14 @@ def run_example_from_path(example_path: Path):
                 "The 'run.py' script must contain a 'run_example' function.")
 
         # Execute the function and get the results
-        results = run_module.run_example(until=3600)
+        results = run_module.run_example(until=3600, with_plots=True)
         return results
 
     finally:
         # --- TEARDOWN: Always restore original paths to avoid side-effects ---
         os.chdir(original_cwd)
         sys.path[:] = original_sys_path  # Restore the original sys.path
+
 
 def test_oneroom_simple_mpc(snapshot, module_cleanup):
     """Unit test for the oneroom_simpleMPC example using snapshot testing.

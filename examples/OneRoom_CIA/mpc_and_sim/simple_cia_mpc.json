@@ -6,7 +6,7 @@
             "module_id": "myMPC",
             "type": "agentlib_mpc.minlp_mpc",
             "optimization_backend": {
-                "type": "casadi_cia",
+                "type": "agentlib_flexquant.casadi_cia_cons",
                 "model": {"type": {"file": "mpc_and_sim/mixed_integer_mpc_cia.py", "class_name": "MyCasadiModel"}},
                 "discretization_options": {
                     "collocation_order": 2,
@@ -17,7 +17,8 @@
                 },
                 "overwrite_result_file": true,
                 "results_file": "results//mpc.csv",
-                "save_results": true
+                "save_results": true,
+                "use_rounding": false
             },
             "time_step": 300,
             "prediction_horizon": 16,

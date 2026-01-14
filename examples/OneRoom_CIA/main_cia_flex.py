@@ -1,15 +1,13 @@
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FormatStrFormatter
-from pathlib import Path
+import matplotlib
+matplotlib.use("Agg")
 from agentlib.utils.multi_agent_system import LocalMASAgency
-from agentlib_mpc.utils.plotting.mpc import plot_mpc
 import numpy as np
 import agentlib_mpc.utils.plotting.basic as mpcplot
-from agentlib_mpc.utils.analysis import load_sim, load_mpc
 from agentlib_mpc.utils.analysis import mpc_at_time_step
 from agentlib_flexquant.generate_flex_agents import FlexAgentGenerator
 import logging
-import pandas as pd
 from agentlib_flexquant.utils.interactive import Dashboard
 
 # Set the log-level
@@ -21,7 +19,13 @@ time_of_activation = 1500
 ENV_CONFIG = {"rt": False, "factor": 0.01, "t_sample": 10}
 
 
-def run_example(until=until, with_plots=False):
+def run_example(until=until, with_plots=False, with_dashboard=False):
+    """
+    Runs with the CIA algorithm for solving MINLPs. AgentLib-FlexQuant implements a
+    custom optimization backend, that also enables rounding instead of CIA for solving
+    these problems, which sometimes shows better performance. To toggle this option set
+    use_rounding in the config.
+    """
     results = []
     mpc_config = "mpc_and_sim/simple_cia_mpc.json"
     sim_config = "mpc_and_sim/simple_cia_sim.json"
@@ -151,8 +155,9 @@ def run_example(until=until, with_plots=False):
         for ax in axs:
             mpcplot.make_grid(ax)
             ax.set_xlim(0, 3600 * 6)
-        # plt.show()
+        plt.show()
 
+    if with_dashboard:
         Dashboard(
             flex_config="flex_configs/flexibility_agent_config.json",
             simulator_agent_config="mpc_and_sim/simple_cia_sim.json",
@@ -161,5 +166,6 @@ def run_example(until=until, with_plots=False):
 
     return results
 
+
 if __name__ == "__main__":
-    run_example(until, with_plots=True)
+    run_example(until, with_plots=True, with_dashboard=False)

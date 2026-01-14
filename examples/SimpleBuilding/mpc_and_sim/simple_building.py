@@ -8,6 +8,7 @@ from agentlib_mpc.models.casadi_model import (
 )
 from math import inf
 
+
 class BaselineMPCModelConfig(CasadiModelConfig):
 
     inputs: list[CasadiInput] = [
@@ -95,6 +96,7 @@ class BaselineMPCModelConfig(CasadiModelConfig):
             description="Electrical power of heating rod (system input)",
         )
     ]
+
 
 class BaselineMPCModel(CasadiModel):
 

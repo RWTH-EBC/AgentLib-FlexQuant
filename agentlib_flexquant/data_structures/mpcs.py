@@ -8,10 +8,23 @@ mappings, and optimization weights for MPC implementations.
 """
 import pydantic
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
-from pydantic import ConfigDict, model_validator
+from pydantic import ConfigDict, model_validator, field_serializer
 
 import agentlib_flexquant.data_structures.globals as glbs
 import agentlib_flexquant.utils.config_management as cmng
+
+excluded_fields = [
+        "rdf_class",
+        "source",
+        "type",
+        "timestamp",
+        "description",
+        "unit",
+        "clip",
+        "shared",
+        "interpolation_method",
+        "allowed_values",
+    ]
 
 
 class BaseMPCData(pydantic.BaseModel):
@@ -33,7 +46,10 @@ class BaseMPCData(pydantic.BaseModel):
     weights: list[MPCVariable] = pydantic.Field(
         default=[], description="Name and value of weights",
     )
-    model_config = ConfigDict(json_encoders={MPCVariable: lambda v: v.dict()})
+
+    @field_serializer('weights', 'config_inputs_appendix', 'config_parameters_appendix')
+    def serialize_mpc_variables(self, variables: list[MPCVariable], _info):
+        return [v.dict(exclude=excluded_fields) for v in variables]
 
 
 class BaselineMPCData(BaseMPCData):
@@ -83,7 +99,10 @@ class BaselineMPCData(BaseMPCData):
     weights: list[MPCVariable] = pydantic.Field(
         default=[], description="Name and value of weights",
     )
-    model_config = ConfigDict(json_encoders={MPCVariable: lambda v: v.dict()})
+
+    @field_serializer('weights', 'config_inputs_appendix', 'config_parameters_appendix')
+    def serialize_mpc_variables(self, variables: list[MPCVariable], _info):
+        return [v.dict(exclude=excluded_fields) for v in variables]
 
     @model_validator(mode="after")
     def update_config_parameters_appendix(self) -> "BaselineMPCData":
@@ -144,8 +163,10 @@ class PFMPCData(BaseMPCData):
     weights: list[MPCVariable] = pydantic.Field(
         default=[], description="Name and value of weights",
     )
-    
-    model_config = ConfigDict(json_encoders={MPCVariable: lambda v: v.dict()})
+
+    @field_serializer('weights', 'config_inputs_appendix', 'config_parameters_appendix')
+    def serialize_mpc_variables(self, variables: list[MPCVariable], _info):
+        return [v.dict(exclude=excluded_fields) for v in variables]
 
     @model_validator(mode="after")
     def add_in_provision(self):
@@ -183,8 +204,11 @@ class NFMPCData(BaseMPCData):
     weights: list[MPCVariable] = pydantic.Field(
         default=[], description="Name and value of weights",
     )
-    model_config = ConfigDict(json_encoders={MPCVariable: lambda v: v.dict()})
 
+    @field_serializer('weights', 'config_inputs_appendix', 'config_parameters_appendix')
+    def serialize_mpc_variables(self, variables: list[MPCVariable], _info):
+        return [v.dict(exclude=excluded_fields) for v in variables]
+      
     @model_validator(mode="after")
     def add_in_provision(self):
         if not any(v.name == "in_provision" for v in self.config_inputs_appendix):

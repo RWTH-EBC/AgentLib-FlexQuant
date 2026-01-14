@@ -2,12 +2,13 @@ import agentlib_flexquant.data_structures.globals as glbs
 from agentlib_flexquant.utils.interactive import Dashboard, CustomBound
 from agentlib_flexquant.data_structures.flex_results import Results
 
+
 def plot_results(results):
-# loaded results can be passed to the Dashboard for plotting 
-# alternatively, flex and sim agent config, and base path can be passed for loading results
-# as shown in plot_results_mult.py
+    # loaded results can be passed to the Dashboard for plotting
+    # alternatively, flex and sim agent config, and base path can be passed for
+    # loading results as shown in plot_results_mult.py
     Dashboard( 
-            results = results
+            results=results
         ).show(
             custom_bounds=CustomBound(
                 for_variable="T_zone",
@@ -15,6 +16,7 @@ def plot_results(results):
                 ub_name="T_upper"
             )
         )
+
 
 def load_and_view_results_data():
     # results object can be loaded from the 
@@ -30,6 +32,7 @@ def load_and_view_results_data():
     df = results.df_indicator[columns].head()
     print(df)
     return results
+
 
 if __name__ == "__main__":
     # Plotting with results extracted from current working directory as base
