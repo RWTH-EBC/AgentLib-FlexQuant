@@ -230,6 +230,22 @@ in the MPC</p>
 <span class="sig-name descname"><span class="pre">characteristic_times_current_key</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'characteristic_times_current'</span></em><a class="headerlink" href="#agentlib_flexquant.utils.interactive.Dashboard.characteristic_times_current_key" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.utils.interactive.Dashboard.create_app">
+<span class="sig-name descname"><span class="pre">create_app</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">custom_bounds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#agentlib_flexquant.utils.interactive.CustomBound" title="agentlib_flexquant.utils.interactive.CustomBound"><span class="pre">CustomBound</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#agentlib_flexquant.utils.interactive.CustomBound" title="agentlib_flexquant.utils.interactive.CustomBound"><span class="pre">agentlib_flexquant.utils.interactive.CustomBound</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dash</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/utils/interactive.html#Dashboard.create_app"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.utils.interactive.Dashboard.create_app" title="Permalink to this definition"></a></dt>
+<dd><p>Create and return the Dash app without running it.</p>
+<p>This method sets up the entire app layout and callbacks but doesn’t
+block by calling app.run(). This is useful for testing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>custom_bounds</strong> – optional arguments to show the comfort bounds</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The configured Dash application instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="agentlib_flexquant.utils.interactive.Dashboard.custom_bounds">
 <span class="sig-name descname"><span class="pre">custom_bounds</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#agentlib_flexquant.utils.interactive.CustomBound" title="agentlib_flexquant.utils.interactive.CustomBound"><span class="pre">agentlib_flexquant.utils.interactive.CustomBound</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#agentlib_flexquant.utils.interactive.Dashboard.custom_bounds" title="Permalink to this definition"></a></dt>

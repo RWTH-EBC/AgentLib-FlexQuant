@@ -109,9 +109,11 @@
 </li>
       <li><a href="code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.OfferStatus.ACCEPTED_POSITIVE">ACCEPTED_POSITIVE (agentlib_flexquant.data_structures.flex_offer.OfferStatus attribute)</a>
 </li>
-      <li><a href="code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_indicator_config">adapt_indicator_config() (agentlib_flexquant.generate_flex_agents.FlexAgentGenerator method)</a>
+      <li><a href="code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_and_dump_flex_config">adapt_and_dump_flex_config() (agentlib_flexquant.generate_flex_agents.FlexAgentGenerator method)</a>
 </li>
-      <li><a href="code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_market_config">adapt_market_config() (agentlib_flexquant.generate_flex_agents.FlexAgentGenerator method)</a>
+      <li><a href="code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_indicator_module_config">adapt_indicator_module_config() (agentlib_flexquant.generate_flex_agents.FlexAgentGenerator method)</a>
+</li>
+      <li><a href="code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_market_module_config">adapt_market_module_config() (agentlib_flexquant.generate_flex_agents.FlexAgentGenerator method)</a>
 </li>
       <li><a href="code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_mpc_module_config">adapt_mpc_module_config() (agentlib_flexquant.generate_flex_agents.FlexAgentGenerator method)</a>
 </li>
@@ -370,7 +372,11 @@
       <li><a href="code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension">check_config_file_extension() (agentlib_flexquant.data_structures.flexquant.FlexQuantConfig method)</a>
 </li>
       <li><a href="code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.check_file_extension">check_file_extension() (agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig method)</a>
+
+      <ul>
+        <li><a href="code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.check_file_extension">(agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig method)</a>
 </li>
+      </ul></li>
       <li><a href="code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.check_power_end_deviation">check_power_end_deviation() (agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule method)</a>
 </li>
       <li><a href="code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension">check_results_file_extension() (agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig method)</a>
@@ -445,9 +451,11 @@
 </li>
       <li><a href="code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs.costs_rel">costs_rel (agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs attribute)</a>
 </li>
+      <li><a href="code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.Dashboard.create_app">create_app() (agentlib_flexquant.utils.interactive.Dashboard method)</a>
+</li>
       <li><a href="code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.create_ast_element">create_ast_element() (in module agentlib_flexquant.utils.parsing)</a>
 </li>
-      <li><a href="code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.create_instance_with_skipped_validation">create_instance_with_skipped_validation() (agentlib_flexquant.data_structures.flex_results.Results method)</a>
+      <li><a href="code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.create_simulator_config_with_skipped_validation">create_simulator_config_with_skipped_validation() (agentlib_flexquant.data_structures.flex_results.Results method)</a>
 </li>
       <li><a href="code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaseMPCData.created_flex_mpcs_file">created_flex_mpcs_file (agentlib_flexquant.data_structures.mpcs.BaseMPCData attribute)</a>
 </li>
@@ -533,6 +541,8 @@
 </li>
       <li><a href="code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.flex_base_directory_path">flex_base_directory_path (agentlib_flexquant.data_structures.flexquant.FlexQuantConfig attribute)</a>
 </li>
+      <li><a href="code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.flex_config">flex_config (agentlib_flexquant.data_structures.flex_results.Results attribute)</a>
+</li>
       <li><a href="code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.NFMPCData.flex_cost_function">flex_cost_function (agentlib_flexquant.data_structures.mpcs.NFMPCData attribute)</a>
 
       <ul>
@@ -549,10 +559,10 @@
 </li>
       <li><a href="code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator">FlexAgentGenerator (class in agentlib_flexquant.generate_flex_agents)</a>
 </li>
-      <li><a href="code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC">FlexibilityBaselineMINLPMPC (class in agentlib_flexquant.modules.baseline_mpc)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC">FlexibilityBaselineMINLPMPC (class in agentlib_flexquant.modules.baseline_mpc)</a>
+</li>
       <li><a href="code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC">FlexibilityBaselineMPC (class in agentlib_flexquant.modules.baseline_mpc)</a>
 </li>
       <li><a href="code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData.Config">FlexibilityData.Config (class in agentlib_flexquant.data_structures.flex_kpis)</a>
@@ -583,8 +593,6 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.generate_flex_agents">generate_flex_agents() (agentlib_flexquant.generate_flex_agents.FlexAgentGenerator method)</a>
 </li>
-      <li><a href="code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.generator_config">generator_config (agentlib_flexquant.data_structures.flex_results.Results attribute)</a>
-</li>
       <li><a href="code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.config_management.get_class_from_file">get_class_from_file() (in module agentlib_flexquant.utils.config_management)</a>
 </li>
       <li><a href="code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.get_collocation_time_grid">get_collocation_time_grid() (agentlib_flexquant.generate_flex_agents.FlexAgentGenerator method)</a>
@@ -597,10 +605,10 @@
 </li>
       <li><a href="code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs.get_kpi_dict">get_kpi_dict() (agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.KPI.get_kpi_identifier">get_kpi_identifier() (agentlib_flexquant.data_structures.flex_kpis.KPI method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData.get_kpis">get_kpis() (agentlib_flexquant.data_structures.flex_kpis.FlexibilityData method)</a>
 </li>
       <li><a href="code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.get_leftmost_list">get_leftmost_list() (agentlib_flexquant.utils.parsing.SetupSystemModifier method)</a>
@@ -1038,6 +1046,18 @@
       </ul></li>
       <li><a href="code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.send_flex_offer">send_flex_offer() (agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule method)</a>
 </li>
+      <li><a href="code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.ShadowMPCConfigGeneratorConfig.serialize_mpc_variables">serialize_mpc_variables() (agentlib_flexquant.data_structures.flexquant.ShadowMPCConfigGeneratorConfig method)</a>
+
+      <ul>
+        <li><a href="code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.serialize_mpc_variables">(agentlib_flexquant.data_structures.mpcs.BaselineMPCData method)</a>
+</li>
+        <li><a href="code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaseMPCData.serialize_mpc_variables">(agentlib_flexquant.data_structures.mpcs.BaseMPCData method)</a>
+</li>
+        <li><a href="code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.NFMPCData.serialize_mpc_variables">(agentlib_flexquant.data_structures.mpcs.NFMPCData method)</a>
+</li>
+        <li><a href="code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.PFMPCData.serialize_mpc_variables">(agentlib_flexquant.data_structures.mpcs.PFMPCData method)</a>
+</li>
+      </ul></li>
       <li><a href="code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.set_actuation">set_actuation() (agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC method)</a>
 
       <ul>
@@ -1070,6 +1090,8 @@
       </ul></li>
       <li><a href="code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.Dashboard.show">show() (agentlib_flexquant.utils.interactive.Dashboard method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.sim_flex_model">sim_flex_model() (agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC method)</a>
 
       <ul>
@@ -1080,8 +1102,6 @@
         <li><a href="code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPC.sim_flex_model">(agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPC method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.simulator_agent_config">simulator_agent_config (agentlib_flexquant.data_structures.flex_results.Results attribute)</a>
 </li>
       <li><a href="code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.simulator_module_config">simulator_module_config (agentlib_flexquant.data_structures.flex_results.Results attribute)</a>
@@ -1152,13 +1172,15 @@
 </li>
       <li><a href="code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.KPI.unit">unit (agentlib_flexquant.data_structures.flex_kpis.KPI attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.update_config_parameters_appendix">update_config_parameters_appendix() (agentlib_flexquant.data_structures.mpcs.BaselineMPCData method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.interactive.CustomBound.upper_bound">upper_bound (agentlib_flexquant.utils.interactive.CustomBound attribute)</a>
 </li>
       <li><a href="code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.use_constant_electricity_price">use_constant_electricity_price (agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts attribute)</a>
+</li>
+      <li><a href="code/agentlib_flexquant.optimization_backends.html#agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCIABackendConfig.use_rounding">use_rounding (agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCIABackendConfig attribute)</a>
 </li>
   </ul></td>
 </tr></table>

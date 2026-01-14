@@ -97,6 +97,10 @@
         <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Time for market interaction&quot;</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">use_rounding</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;If True, CIA is skipped and plain rounding is used.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
 
 <div class="viewcode-block" id="ConstrainedCIABackendConfig.Config"><a class="viewcode-back" href="../../../code/agentlib_flexquant.optimization_backends.html#agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCIABackendConfig.Config">[docs]</a>    <span class="k">class</span><span class="w"> </span><span class="nc">Config</span><span class="p">:</span>
         <span class="c1"># Explicitly set this to allow additional fields in the derived class</span>
@@ -111,6 +115,10 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ConstrainedCasADiCIABackend.do_pycombina"><a class="viewcode-back" href="../../../code/agentlib_flexquant.optimization_backends.html#agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCasADiCIABackend.do_pycombina">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">do_pycombina</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b_rel</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">use_rounding</span><span class="p">:</span>
+            <span class="n">binary_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">b_rel</span><span class="p">[</span><span class="mi">0</span><span class="p">])])</span>
+            <span class="k">return</span> <span class="n">binary_array</span>
 
         <span class="n">grid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">discretization</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">binary_controls</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">grid</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">discretization_options</span><span class="o">.</span><span class="n">time_step</span><span class="p">)</span>

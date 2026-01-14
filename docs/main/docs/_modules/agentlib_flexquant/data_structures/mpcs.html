@@ -82,10 +82,23 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pydantic</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.data_structures.mpc_datamodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPCVariable</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigDict</span><span class="p">,</span> <span class="n">model_validator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigDict</span><span class="p">,</span> <span class="n">model_validator</span><span class="p">,</span> <span class="n">field_serializer</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">glbs</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">agentlib_flexquant.utils.config_management</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cmng</span>
+
+<span class="n">excluded_fields</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;rdf_class&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;source&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;timestamp&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;unit&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;clip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;shared&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;interpolation_method&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;allowed_values&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
 
 
 <div class="viewcode-block" id="BaseMPCData"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaseMPCData">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">BaseMPCData</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -107,7 +120,10 @@
     <span class="n">weights</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MPCVariable</span><span class="p">]</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="p">[],</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name and value of weights&quot;</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">json_encoders</span><span class="o">=</span><span class="p">{</span><span class="n">MPCVariable</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">dict</span><span class="p">()})</span></div>
+
+<div class="viewcode-block" id="BaseMPCData.serialize_mpc_variables"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaseMPCData.serialize_mpc_variables">[docs]</a>    <span class="nd">@field_serializer</span><span class="p">(</span><span class="s1">&#39;weights&#39;</span><span class="p">,</span> <span class="s1">&#39;config_inputs_appendix&#39;</span><span class="p">,</span> <span class="s1">&#39;config_parameters_appendix&#39;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">serialize_mpc_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MPCVariable</span><span class="p">],</span> <span class="n">_info</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="n">excluded_fields</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">]</span></div></div>
 
 
 <div class="viewcode-block" id="BaselineMPCData"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaselineMPCData">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">BaselineMPCData</span><span class="p">(</span><span class="n">BaseMPCData</span><span class="p">):</span>
@@ -157,7 +173,10 @@
     <span class="n">weights</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MPCVariable</span><span class="p">]</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="p">[],</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name and value of weights&quot;</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">json_encoders</span><span class="o">=</span><span class="p">{</span><span class="n">MPCVariable</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">dict</span><span class="p">()})</span>
+
+<div class="viewcode-block" id="BaselineMPCData.serialize_mpc_variables"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.serialize_mpc_variables">[docs]</a>    <span class="nd">@field_serializer</span><span class="p">(</span><span class="s1">&#39;weights&#39;</span><span class="p">,</span> <span class="s1">&#39;config_inputs_appendix&#39;</span><span class="p">,</span> <span class="s1">&#39;config_parameters_appendix&#39;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">serialize_mpc_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MPCVariable</span><span class="p">],</span> <span class="n">_info</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="n">excluded_fields</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="BaselineMPCData.update_config_parameters_appendix"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.update_config_parameters_appendix">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_config_parameters_appendix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BaselineMPCData&quot;</span><span class="p">:</span>
@@ -217,7 +236,10 @@
     <span class="n">weights</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MPCVariable</span><span class="p">]</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="p">[],</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name and value of weights&quot;</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">json_encoders</span><span class="o">=</span><span class="p">{</span><span class="n">MPCVariable</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">dict</span><span class="p">()})</span></div>
+
+<div class="viewcode-block" id="PFMPCData.serialize_mpc_variables"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.PFMPCData.serialize_mpc_variables">[docs]</a>    <span class="nd">@field_serializer</span><span class="p">(</span><span class="s1">&#39;weights&#39;</span><span class="p">,</span> <span class="s1">&#39;config_inputs_appendix&#39;</span><span class="p">,</span> <span class="s1">&#39;config_parameters_appendix&#39;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">serialize_mpc_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MPCVariable</span><span class="p">],</span> <span class="n">_info</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="n">excluded_fields</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">]</span></div></div>
 
 
 <div class="viewcode-block" id="NFMPCData"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.NFMPCData">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">NFMPCData</span><span class="p">(</span><span class="n">BaseMPCData</span><span class="p">):</span>
@@ -248,7 +270,10 @@
     <span class="n">weights</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MPCVariable</span><span class="p">]</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="p">[],</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name and value of weights&quot;</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">json_encoders</span><span class="o">=</span><span class="p">{</span><span class="n">MPCVariable</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">dict</span><span class="p">()})</span></div>
+
+<div class="viewcode-block" id="NFMPCData.serialize_mpc_variables"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.NFMPCData.serialize_mpc_variables">[docs]</a>    <span class="nd">@field_serializer</span><span class="p">(</span><span class="s1">&#39;weights&#39;</span><span class="p">,</span> <span class="s1">&#39;config_inputs_appendix&#39;</span><span class="p">,</span> <span class="s1">&#39;config_parameters_appendix&#39;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">serialize_mpc_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MPCVariable</span><span class="p">],</span> <span class="n">_info</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="n">excluded_fields</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">]</span></div></div>
 </pre></div>
 
            </div>
