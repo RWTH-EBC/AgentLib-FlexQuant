@@ -100,7 +100,14 @@
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.modules.baseline_mpc.</span></span><span class="sig-name descname"><span class="pre">FlexibilityBaselineMINLPMPC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/baseline_mpc.html#FlexibilityBaselineMINLPMPC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MINLPMPC</span></code></p>
-<p>MINLP-MPC for baseline flexibility quantification with mixed-integer optimization.</p>
+<p>MINLP-MPC for baseline flexibility quantification with mixed-integer
+optimization.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.do_step">
+<span class="sig-name descname"><span class="pre">do_step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/baseline_mpc.html#FlexibilityBaselineMINLPMPC.do_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.do_step" title="Permalink to this definition"></a></dt>
+<dd><p>Performs an MPC step.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.pre_computation_hook">
 <span class="sig-name descname"><span class="pre">pre_computation_hook</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/baseline_mpc.html#FlexibilityBaselineMINLPMPC.pre_computation_hook"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.pre_computation_hook" title="Permalink to this definition"></a></dt>
@@ -120,7 +127,17 @@ step to AgentVariables.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.set_output">
 <span class="sig-name descname"><span class="pre">set_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solution</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/baseline_mpc.html#FlexibilityBaselineMINLPMPC.set_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.set_output" title="Permalink to this definition"></a></dt>
-<dd><p>Takes the solution from optimization backend and sends it to AgentVariables.</p>
+<dd><p>Takes the solution from optimization backend and sends it
+to AgentVariables.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.set_vars_for_shadow">
+<span class="sig-name descname"><span class="pre">set_vars_for_shadow</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/baseline_mpc.html#FlexibilityBaselineMINLPMPC.set_vars_for_shadow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.set_vars_for_shadow" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the variables of the Baseline MPC needed by the shadow MPCs
+with a predefined suffix.
+This essentially sends the same inputs and states the Baseline used
+for optimization to the Shadow MPC, ensuring synchronisation.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -150,6 +167,7 @@ step to AgentVariables.</p>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.full_controls" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.full_controls"><code class="xref py py-obj docutils literal notranslate"><span class="pre">full_controls</span> <span class="pre">(list[agentlib.core.datamodels.AgentVariable])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.power_variable_name" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.power_variable_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">power_variable_name</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.storage_variable_name" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.storage_variable_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">storage_variable_name</span> <span class="pre">(str</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.vars_to_communicate" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.vars_to_communicate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vars_to_communicate</span> <span class="pre">(list[agentlib.core.datamodels.AgentVariable])</span></code></a></p></li>
 </ul>
 </dd>
 <dt class="field-odd">Validators<span class="colon">:</span></dt>
@@ -158,7 +176,7 @@ step to AgentVariables.</p>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.casadi_sim_time_step">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">casadi_sim_time_step</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.casadi_sim_time_step" title="Permalink to this definition"></a></dt>
-<dd><p>Time step for simulation with Casadi simulator. Value is read from FlexQuantConfig</p>
+<dd><p>Time step for simulation with Casadi simulator. Value is read from  FlexQuantConfig</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
@@ -177,6 +195,11 @@ step to AgentVariables.</p>
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">storage_variable_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.storage_variable_name" title="Permalink to this definition"></a></dt>
 <dd><p>Name of the storage variable in the baseline mpc model.</p>
 </dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.vars_to_communicate">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vars_to_communicate</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">agentlib.core.datamodels.AgentVariable</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.vars_to_communicate" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.model_post_init">
@@ -201,6 +224,12 @@ step to AgentVariables.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MPC</span></code></p>
 <p>MPC for baseline flexibility quantification.</p>
 <dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.do_step">
+<span class="sig-name descname"><span class="pre">do_step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/baseline_mpc.html#FlexibilityBaselineMPC.do_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.do_step" title="Permalink to this definition"></a></dt>
+<dd><p>Performs an MPC step.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.pre_computation_hook">
 <span class="sig-name descname"><span class="pre">pre_computation_hook</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/baseline_mpc.html#FlexibilityBaselineMPC.pre_computation_hook"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.pre_computation_hook" title="Permalink to this definition"></a></dt>
 <dd><p>Calculate relative start and end times for flexibility provision.</p>
@@ -219,7 +248,17 @@ step to AgentVariables.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.set_output">
 <span class="sig-name descname"><span class="pre">set_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solution</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/baseline_mpc.html#FlexibilityBaselineMPC.set_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.set_output" title="Permalink to this definition"></a></dt>
-<dd><p>Takes the solution from optimization backend and sends it to AgentVariables.</p>
+<dd><p>Takes the solution from optimization backend and sends it
+to AgentVariables.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.set_vars_for_shadow">
+<span class="sig-name descname"><span class="pre">set_vars_for_shadow</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/baseline_mpc.html#FlexibilityBaselineMPC.set_vars_for_shadow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.set_vars_for_shadow" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the variables of the Baseline MPC needed by the shadow MPCs
+with a predefined suffix.
+This essentially sends the same inputs and states the Baseline used
+for optimization to the Shadow MPC, ensuring synchronisation.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -249,6 +288,7 @@ step to AgentVariables.</p>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.full_controls" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.full_controls"><code class="xref py py-obj docutils literal notranslate"><span class="pre">full_controls</span> <span class="pre">(list[agentlib.core.datamodels.AgentVariable])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.power_variable_name" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.power_variable_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">power_variable_name</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.storage_variable_name" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.storage_variable_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">storage_variable_name</span> <span class="pre">(str</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.vars_to_communicate" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.vars_to_communicate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vars_to_communicate</span> <span class="pre">(list[agentlib.core.datamodels.AgentVariable])</span></code></a></p></li>
 </ul>
 </dd>
 <dt class="field-odd">Validators<span class="colon">:</span></dt>
@@ -276,6 +316,11 @@ step to AgentVariables.</p>
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">storage_variable_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.storage_variable_name" title="Permalink to this definition"></a></dt>
 <dd><p>Name of the storage variable in the baseline mpc model.</p>
 </dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.vars_to_communicate">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vars_to_communicate</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">agentlib.core.datamodels.AgentVariable</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.vars_to_communicate" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.model_post_init">
@@ -603,7 +648,8 @@ KPI outputs, and cost calculation settings.</p>
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts">
 <em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.modules.flexibility_indicator.</span></span><span class="sig-name descname"><span class="pre">InputsForCalculateFlexCosts</span></span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#InputsForCalculateFlexCosts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
-<p>Configuration for flexibility cost calculation with optional constant pricing.</p>
+<p>Configuration for flexibility cost calculation with optional constant
+pricing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Fields<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -689,7 +735,7 @@ when constant pricing is enabled.</p>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.enable_energy_costs_correction">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">enable_energy_costs_correction</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.enable_energy_costs_correction" title="Permalink to this definition"></a></dt>
-<dd><p>Variable determining whether to correct the costs of the flexible energy Define the variable for stored electrical energy in the base MPC model and config as output if the correction of costs is enabled</p>
+<dd><p>Variable determining whether to correct the costs of the flexible energy. Define the variable for stored electrical energy in the base MPC model and config as output if the correction of costs is enabled</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
@@ -758,7 +804,8 @@ the random factor for offer acceptance.
 self.pos_neg_rate is the random factor for the direction of the flexibility.
 A higher rate means that more positive offers will be accepted.</p>
 <dl class="simple">
-<dt>Constraints:</dt><dd><p>cooldown: during $cooldown steps after a flexibility event no offer is accepted
+<dt>Constraints:</dt><dd><p>cooldown: during $cooldown steps after a flexibility event no offer is
+accepted
 minimum_average_flex: min amount of flexibility to be accepted,
 to account for the model error</p>
 </dd>
@@ -941,8 +988,8 @@ to account for the model error</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPC.calc_flex_callback">
 <span class="sig-name descname"><span class="pre">calc_flex_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AgentVariable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/shadow_mpc.html#FlexibilityShadowMINLPMPC.calc_flex_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPC.calc_flex_callback" title="Permalink to this definition"></a></dt>
-<dd><p>Set the control trajectories before calculating the flexibility offer.</p>
-<p>self.model should account for flexibility in its cost function</p>
+<dd><p>Ensure that all control trajectories and Baseline inputs/states
+have been set before starting the calculation.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -962,7 +1009,8 @@ cannot be changed without recreating the optimization problem.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPC.set_output">
 <span class="sig-name descname"><span class="pre">set_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solution</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/shadow_mpc.html#FlexibilityShadowMINLPMPC.set_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPC.set_output" title="Permalink to this definition"></a></dt>
-<dd><p>Takes the solution from optimization backend and sends it to AgentVariables.</p>
+<dd><p>Takes the solution from optimization backend and sends
+it to AgentVariables.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -988,7 +1036,11 @@ cannot be changed without recreating the optimization problem.</p>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.baseline_agent_id" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.baseline_agent_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">baseline_agent_id</span> <span class="pre">(str)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.baseline_input_names" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.baseline_input_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">baseline_input_names</span> <span class="pre">(list[str])</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.baseline_state_names" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.baseline_state_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">baseline_state_names</span> <span class="pre">(list[str])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.casadi_sim_time_step" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.casadi_sim_time_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">casadi_sim_time_step</span> <span class="pre">(int)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.full_control_names" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.full_control_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">full_control_names</span> <span class="pre">(list[str])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.power_variable_name" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.power_variable_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">power_variable_name</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.storage_variable_name" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.storage_variable_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">storage_variable_name</span> <span class="pre">(str</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
 </ul>
@@ -997,10 +1049,30 @@ cannot be changed without recreating the optimization problem.</p>
 <dd class="field-odd"><p></p></dd>
 </dl>
 <dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.baseline_agent_id">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">baseline_agent_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.baseline_agent_id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.baseline_input_names">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">baseline_input_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.baseline_input_names" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.baseline_state_names">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">baseline_state_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.baseline_state_names" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.casadi_sim_time_step">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">casadi_sim_time_step</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.casadi_sim_time_step" title="Permalink to this definition"></a></dt>
 <dd><p>Time step for simulation with Casadi simulator. Value is read from FlexQuantConfig</p>
 </dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.full_control_names">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">full_control_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.full_control_names" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.power_variable_name">
@@ -1039,8 +1111,8 @@ cannot be changed without recreating the optimization problem.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPC.calc_flex_callback">
 <span class="sig-name descname"><span class="pre">calc_flex_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AgentVariable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/shadow_mpc.html#FlexibilityShadowMPC.calc_flex_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPC.calc_flex_callback" title="Permalink to this definition"></a></dt>
-<dd><p>Set the control trajectories before calculating the flexibility offer.</p>
-<p>self.model should account for flexibility in its cost function.</p>
+<dd><p>Ensure that all control trajectories and Baseline inputs/states
+have been set before starting the calculation.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1086,7 +1158,11 @@ cannot be changed without recreating the optimization problem.</p>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.baseline_agent_id" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.baseline_agent_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">baseline_agent_id</span> <span class="pre">(str)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.baseline_input_names" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.baseline_input_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">baseline_input_names</span> <span class="pre">(list[str])</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.baseline_state_names" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.baseline_state_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">baseline_state_names</span> <span class="pre">(list[str])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.casadi_sim_time_step" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.casadi_sim_time_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">casadi_sim_time_step</span> <span class="pre">(int)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.full_control_names" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.full_control_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">full_control_names</span> <span class="pre">(list[str])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.power_variable_name" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.power_variable_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">power_variable_name</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.storage_variable_name" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.storage_variable_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">storage_variable_name</span> <span class="pre">(str</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
 </ul>
@@ -1095,10 +1171,30 @@ cannot be changed without recreating the optimization problem.</p>
 <dd class="field-odd"><p></p></dd>
 </dl>
 <dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.baseline_agent_id">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">baseline_agent_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.baseline_agent_id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.baseline_input_names">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">baseline_input_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.baseline_input_names" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.baseline_state_names">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">baseline_state_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.baseline_state_names" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.casadi_sim_time_step">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">casadi_sim_time_step</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.casadi_sim_time_step" title="Permalink to this definition"></a></dt>
 <dd><p>Time step for simulation with Casadi simulator. Value is read from FlexQuantConfig</p>
 </dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.full_control_names">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">full_control_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.full_control_names" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.power_variable_name">
