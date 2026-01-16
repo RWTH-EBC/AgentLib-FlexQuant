@@ -25,12 +25,10 @@ def run_example(until=until, with_plots=False, with_dashboard=False):
 
     """
 
-    results = []
     mpc_config = "mpc_and_sim/simple_model.json"
     sim_config = "mpc_and_sim/simple_sim.json"
-    predictor_config = "predictor/predictor_config.json"
     flex_config = "flex_configs/flexibility_agent_config.json"
-    agent_configs = [sim_config, predictor_config]
+    agent_configs = [sim_config]
 
     config_list = FlexAgentGenerator(
         flex_config=flex_config, mpc_agent_config=mpc_config

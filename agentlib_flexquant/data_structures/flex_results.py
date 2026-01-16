@@ -66,13 +66,14 @@ def load_market(file_path: Union[str, FilePath]) -> pd.DataFrame:
 class Results:
     """
     Loads the results for the baseline, positive and negative flexibility,
-    the indicator, market and simulator results/data. Additionally the MPC stats are loaded.
+    the indicator, market and simulator results/data. Additionally the MPC stats
+    are loaded.
 
     Results can be loaded either from a user-specified custom base path or from the
     (default) base path specified in the flex config.
 
-    Loaded results are stored in pandas DataFrames which can be used for further processing,
-    e.g. plotting and analysis.
+    Loaded results are stored in pandas DataFrames which can be used for further
+    processing,  e.g. plotting and analysis.
     """
 
     # Configs:
@@ -186,7 +187,8 @@ class Results:
         if self.flex_config.market_config:
             if isinstance(self.flex_config.market_config, Union[str, Path]):
                 self.config_filename_market = load_config.load_config(
-                    config=self.flex_config.market_config, config_type=FlexibilityMarketConfig
+                    config=self.flex_config.market_config,
+                    config_type=FlexibilityMarketConfig
                 ).name_of_created_file
             else:  # is dict
                 self.config_filename_market = FlexibilityMarketConfig.model_validate(
@@ -194,6 +196,7 @@ class Results:
 
     def _load_agent_module_configs(self):
         """Load agent and module configs."""
+        files_found = []
         for file_path in Path(self.flex_config.flex_files_directory).rglob(
             "*.json"
         ):
@@ -203,8 +206,10 @@ class Results:
                 )
                 self.baseline_module_config = cmng.get_module(
                     config=self.baseline_agent_config,
-                    module_type=self._get_flexquant_mpc_module_type(self.baseline_agent_config),
+                    module_type=
+                    self._get_flexquant_mpc_module_type(self.baseline_agent_config),
                 )
+                files_found.append(self.config_filename_baseline)
 
             elif file_path.name in self.config_filename_pos_flex:
                 self.pos_flex_agent_config = load_config.load_config(
@@ -212,8 +217,10 @@ class Results:
                 )
                 self.pos_flex_module_config = cmng.get_module(
                     config=self.pos_flex_agent_config,
-                    module_type=self._get_flexquant_mpc_module_type(self.pos_flex_agent_config),
+                    module_type=
+                    self._get_flexquant_mpc_module_type(self.pos_flex_agent_config),
                 )
+                files_found.append(self.config_filename_pos_flex)
 
             elif file_path.name in self.config_filename_neg_flex:
                 self.neg_flex_agent_config = load_config.load_config(
@@ -221,8 +228,10 @@ class Results:
                 )
                 self.neg_flex_module_config = cmng.get_module(
                     config=self.neg_flex_agent_config,
-                    module_type=self._get_flexquant_mpc_module_type(self.neg_flex_agent_config),
+                    module_type=
+                    self._get_flexquant_mpc_module_type(self.neg_flex_agent_config),
                 )
+                files_found.append(self.config_filename_neg_flex)
 
             elif file_path.name in self.config_filename_indicator:
                 self.indicator_agent_config = load_config.load_config(
@@ -232,6 +241,7 @@ class Results:
                     config=self.indicator_agent_config,
                     module_type=cmng.INDICATOR_CONFIG_TYPE,
                 )
+                files_found.append(self.config_filename_indicator)
 
             elif (
                 self.flex_config.market_config
@@ -243,16 +253,18 @@ class Results:
                 self.market_module_config = cmng.get_module(
                     config=self.market_agent_config, module_type=cmng.MARKET_CONFIG_TYPE
                 )
-            else:
-                import warnings
-                warnings.warn(f"The file {file_path.name} is not listed in any of the known "
-                              f"filenames of the created files: {self.config_filename_baseline}, "
-                              f"{self.config_filename_pos_flex}, {self.config_filename_neg_flex}, "
-                              f"{self.config_filename_indicator}" +
-                              (f", {self.config_filename_market}" if
-                               self.flex_config.market_config else "") +
-                              ". This can cause trouble in loading the files. "
-                              "Please check the filenames.")
+                files_found.append(self.config_filename_market)
+        files_needed = [self.config_filename_baseline,
+                        self.config_filename_pos_flex, self.config_filename_neg_flex,
+                        self.config_filename_indicator]
+        if self.flex_config.market_config:
+            files_needed.append(self.config_filename_market)
+        difference = list(set(files_needed) - set(files_found))
+        if difference:
+            import warnings
+            warnings.warn(f"The files {difference} have not been found in the "
+                          f"given Path.  This will most likely cause problems "
+                          f"later on.  Please check the filenames.")
 
     def _load_simulator_config(self, simulator_agent_config):
         """Load simulator agent and module config separately.
@@ -281,11 +293,12 @@ class Results:
         self.simulator_agent_config = AgentConfig.model_validate(sim_config)
         # instantiate sim module config by skipping validation for result_filename
         # to prevent file deletion, if overwrite_result_file in sim config is true
-        self.simulator_module_config = self.create_simulator_config_with_skipped_validation(
-            sim_config_class=SimulatorConfig,
-            sim_config=sim_module_config,
-            skip_fields=["result_filename"],
-        )
+        self.simulator_module_config = (
+            self.create_simulator_config_with_skipped_validation(
+                sim_config_class=SimulatorConfig,
+                sim_config=sim_module_config,
+                skip_fields=["result_filename"],
+            ))
 
     def _get_flexquant_mpc_module_type(self, agent_config: AgentConfig) -> str:
         """Get the mpc module type from agent_config.
@@ -300,12 +313,15 @@ class Results:
 
         """
         for module in agent_config.modules:
-            if module['type'] in [cmng.BASELINEMPC_CONFIG_TYPE, cmng.BASELINEMINLPMPC_CONFIG_TYPE,
-                                  cmng.SHADOWMPC_CONFIG_TYPE, cmng.SHADOWMINLPMPC_CONFIG_TYPE]:
+            if module['type'] in [cmng.BASELINEMPC_CONFIG_TYPE,
+                                  cmng.BASELINEMINLPMPC_CONFIG_TYPE,
+                                  cmng.SHADOWMPC_CONFIG_TYPE,
+                                  cmng.SHADOWMINLPMPC_CONFIG_TYPE]:
                 return module['type']
 
-        raise ModuleNotFoundError(f'There is no matching mpc module type in Agentlib_FlexQuant for '
-                                  f'modules in agent {agent_config.id}.')
+        raise ModuleNotFoundError(f'There is no matching mpc module type in '
+                                  f'Agentlib_FlexQuant for modules in agent '
+                                  f'{agent_config.id}.')
 
     def _resolve_sim_results_path(
         self, sim_result_filename: str, results_path: Union[str, Path]
@@ -340,8 +356,8 @@ class Results:
         if not sim_results_path.is_absolute() and sim_results_path.exists():
             return sim_results_path
 
-        # Strategy 3: Try in results directory (handles both relative paths and just filenames)
-        # (fallback for helper function usage)
+        # Strategy 3: Try in results directory (handles both relative paths
+        # and just filenames) (fallback for helper function usage)
         results_dir_path = results_path / sim_results_path.name
         if results_dir_path.exists():
             return results_dir_path
@@ -514,8 +530,9 @@ class Results:
         """Get the intersection of the MPCs and the simulator variables.
 
         Returns:
-             dictionary with the following structure: Key: variable alias (from baseline)
-                                                    Value: {module id: variable name}
+             dictionary with the following structure:
+             Key: variable alias  (from baseline)
+             Value: {module id: variable name}
 
         """
         id_alias_name_dict = {}
@@ -552,11 +569,13 @@ class Results:
         sim_config: Dict[str, Any],
         skip_fields: Optional[list[str]] = None,
     ) -> SimulatorConfig:
-        """Create a Pydantic model instance while skipping validation for specified fields.
+        """Create a Pydantic model instance while skipping validation for
+        specified fields.
 
-        This function allows partial validation of a model's config dictionary by validating
-        all fields except those listed in `skip_fields`. Skipped fields are set on the instance
-        after construction without triggering their validators.
+        This function allows partial validation of a model's config dictionary
+        by validating all fields except those listed in `skip_fields`.
+        Skipped fields are set on the instance after construction without
+        triggering their validators.
 
         Args:
             sim_config_class: The Pydantic model class to instantiate.
@@ -565,17 +584,20 @@ class Results:
             These fields will be manually set after instantiation.
 
         Returns:
-            SimulatorConfig: An instance of the model_class with validated and skipped fields assigned.
+            SimulatorConfig: An instance of the model_class with validated and
+             skipped fields assigned.
 
         """
         if skip_fields is None:
             skip_fields = []
         # Separate data into validated and skipped fields
         validated_fields = {
-            field: value for field, value in sim_config.items() if field not in skip_fields
+            field: value for field, value in sim_config.items() if
+            field not in skip_fields
         }
         skipped_fields = {
-            field: value for field, value in sim_config.items() if field in skip_fields
+            field: value for field, value in sim_config.items() if
+            field in skip_fields
         }
         # Create instance with validation for non-skipped fields
         if validated_fields:
@@ -596,8 +618,8 @@ class Results:
     def __deepcopy__(self, memo: Dict[int, Any]) -> "Results":
         """Custom deepcopy implementation that handles Pydantic models with bypassed
         validation.
-        Needed, if an Results object should be copied with copy.deepcopy, without
-        deleting the simulator results due to its üydantic validators.
+        Needed, if a Results object should be copied with copy.deepcopy, without
+        deleting the simulator results due to its pydantic validators.
         """
         # Create a new instance of the same class
         new_instance = self.__class__.__new__(self.__class__)
