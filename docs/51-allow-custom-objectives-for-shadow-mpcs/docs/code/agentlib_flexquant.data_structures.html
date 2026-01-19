@@ -1154,7 +1154,7 @@ the base flex directory, using only the directory names (ignoring any user-suppl
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘pathlib.Path’&gt;: &lt;class ‘str’&gt;, &lt;class ‘agentlib.core.agent.AgentConfig’&gt;: &lt;function FlexibilityIndicatorConfig.&lt;lambda&gt; at 0x7ff91ca94d60&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘pathlib.Path’&gt;: &lt;class ‘str’&gt;, &lt;class ‘agentlib.core.agent.AgentConfig’&gt;: &lt;function FlexibilityIndicatorConfig.&lt;lambda&gt; at 0x7f93a36b0cc0&gt;}</em></p></li>
 <li><p><strong>extra</strong>: <em>str = forbid</em></p></li>
 </ul>
 </dd>
@@ -1267,7 +1267,7 @@ the base flex directory, using only the directory names (ignoring any user-suppl
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function ShadowMPCConfigGeneratorConfig.&lt;lambda&gt; at 0x7ff91ca949a0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function ShadowMPCConfigGeneratorConfig.&lt;lambda&gt; at 0x7f93a36b0900&gt;}</em></p></li>
 <li><p><strong>extra</strong>: <em>str = forbid</em></p></li>
 </ul>
 </dd>
@@ -1612,7 +1612,8 @@ mappings, and optimization weights for MPC implementations.</p>
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.BaseMPCData">
 <em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.data_structures.mpcs.</span></span><span class="sig-name descname"><span class="pre">BaseMPCData</span></span><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/mpcs.html#BaseMPCData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.BaseMPCData" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
-<p>Base class containing necessary data for the code creation of the different mpcs</p>
+<p>Base class containing necessary data for the code creation
+of the different mpcs</p>
 <dl class="field-list simple">
 <dt class="field-odd">Fields<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1918,10 +1919,11 @@ mappings, and optimization weights for MPC implementations.</p>
 <dl class="py method pydantic_validator">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.BaselineMPCData.update_config_parameters_appendix">
 <em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_config_parameters_appendix</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/mpcs.html#BaselineMPCData.update_config_parameters_appendix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.update_config_parameters_appendix" title="Permalink to this definition"></a></dt>
-<dd><p>Update the config parameters appendix with profile deviation and comfort weights.</p>
-<p>Adds the profile deviation weight parameter and optionally the profile comfort
-weight parameter (if comfort_variable is enabled) to the config_parameters_appendix
-list as MPCVariable instances.</p>
+<dd><p>Update the config parameters appendix with profile deviation and comfort
+weights.</p>
+<p>Adds the profile deviation weight parameter and optionally the profile
+comfort weight parameter (if comfort_variable is enabled) to the
+config_parameters_appendix list as MPCVariable instances.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1938,6 +1940,7 @@ list as MPCVariable instances.</p>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.config_inputs_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.config_inputs_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">config_inputs_appendix</span> <span class="pre">(list[agentlib_mpc.data_structures.mpc_datamodels.MPCVariable])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.config_parameters_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.config_parameters_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">config_parameters_appendix</span> <span class="pre">(list[agentlib_mpc.data_structures.mpc_datamodels.MPCVariable])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.flex_cost_function" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.flex_cost_function"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flex_cost_function</span> <span class="pre">(str)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.flex_cost_function_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.flex_cost_function_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flex_cost_function_appendix</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.module_id" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.module_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">module_id</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.module_types" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.module_types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">module_types</span> <span class="pre">(dict)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.name_of_created_file" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.name_of_created_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_of_created_file</span> <span class="pre">(str)</span></code></a></p></li>
@@ -1966,7 +1969,13 @@ list as MPCVariable instances.</p>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.NFMPCData.flex_cost_function">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">flex_cost_function</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.flex_cost_function" title="Permalink to this definition"></a></dt>
-<dd><p>Cost function of the NF-MPC</p>
+<dd><p>Cost function of the NF-MPC during the event</p>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.NFMPCData.flex_cost_function_appendix">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">flex_cost_function_appendix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.flex_cost_function_appendix" title="Permalink to this definition"></a></dt>
+<dd><p>Cost function appendix of the NF-MPC added to the Baseline cost function</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
@@ -2024,6 +2033,7 @@ list as MPCVariable instances.</p>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.config_inputs_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.config_inputs_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">config_inputs_appendix</span> <span class="pre">(list[agentlib_mpc.data_structures.mpc_datamodels.MPCVariable])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.config_parameters_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.config_parameters_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">config_parameters_appendix</span> <span class="pre">(list[agentlib_mpc.data_structures.mpc_datamodels.MPCVariable])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.flex_cost_function" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.flex_cost_function"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flex_cost_function</span> <span class="pre">(str)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.flex_cost_function_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.flex_cost_function_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flex_cost_function_appendix</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.module_id" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.module_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">module_id</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.module_types" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.module_types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">module_types</span> <span class="pre">(dict)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.name_of_created_file" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.name_of_created_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_of_created_file</span> <span class="pre">(str)</span></code></a></p></li>
@@ -2052,7 +2062,13 @@ list as MPCVariable instances.</p>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.PFMPCData.flex_cost_function">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">flex_cost_function</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.flex_cost_function" title="Permalink to this definition"></a></dt>
-<dd><p>Cost function of the PF-MPC</p>
+<dd><p>Cost function of the PF-MPC during the event</p>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.PFMPCData.flex_cost_function_appendix">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">flex_cost_function_appendix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.flex_cost_function_appendix" title="Permalink to this definition"></a></dt>
+<dd><p>Cost function appendix of the PF-MPC added to the Baseline cost function</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">

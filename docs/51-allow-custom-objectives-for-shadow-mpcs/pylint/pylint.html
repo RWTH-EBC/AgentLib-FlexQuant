@@ -28,9 +28,9 @@
 
         
         <h2>Score</h2>
-        7.20 / 10
+        7.18 / 10
             
-            (previous score: 7.20 / 10)
+            (previous score: 7.18 / 10)
             
         
 
@@ -817,7 +817,7 @@
             </tr>
             
             <tr>
-                <td>51</td>
+                <td>55</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -827,7 +827,7 @@
             </tr>
             
             <tr>
-                <td>137</td>
+                <td>147</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -837,7 +837,7 @@
             </tr>
             
             <tr>
-                <td>171</td>
+                <td>186</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -1241,7 +1241,47 @@
             </tr>
             
             <tr>
-                <td>618</td>
+                <td>613</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (107/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>614</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (111/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>619</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (107/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>620</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (111/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>624</td>
                 <td>65</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1251,7 +1291,7 @@
             </tr>
             
             <tr>
-                <td>668</td>
+                <td>674</td>
                 <td>57</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1261,7 +1301,7 @@
             </tr>
             
             <tr>
-                <td>694</td>
+                <td>700</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-branches</code></td>
@@ -1271,7 +1311,7 @@
             </tr>
             
             <tr>
-                <td>758</td>
+                <td>764</td>
                 <td>8</td>
                 <td>refactor</td>
                 <td><code>no-else-raise</code></td>
@@ -1281,7 +1321,7 @@
             </tr>
             
             <tr>
-                <td>855</td>
+                <td>861</td>
                 <td>68</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1291,7 +1331,7 @@
             </tr>
             
             <tr>
-                <td>869</td>
+                <td>875</td>
                 <td>48</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1301,7 +1341,7 @@
             </tr>
             
             <tr>
-                <td>872</td>
+                <td>878</td>
                 <td>8</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1311,7 +1351,7 @@
             </tr>
             
             <tr>
-                <td>873</td>
+                <td>879</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>raise-missing-from</code></td>
@@ -1321,7 +1361,7 @@
             </tr>
             
             <tr>
-                <td>873</td>
+                <td>879</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>broad-exception-raised</code></td>
@@ -1866,14 +1906,7 @@
         # set the flex results format same as mpc result while updating Agentvariable
         self.flex_results.index = self.flex_results.index.get_level_values(1)
 
-    def _initialize_flex_results(
-        self, n_simulation_steps, horizon_length, sim_time_step, result_df
-    ):
-        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension and index
-        and fill with existing results from optimization
-        &#34;&#34;&#34;
-
-        # create MultiIndex for collocation points</pre></td>
+    def register_callbacks(self):</pre></td>
             </tr>
             
             <tr>
@@ -1971,9 +2004,7 @@
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value
-
-</pre></td>
+                ] = self.flex_model.get_output(output).value</pre></td>
             </tr>
             
             <tr>
@@ -2006,9 +2037,7 @@
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value
-
-</pre></td>
+                ] = self.flex_model.get_output(output).value</pre></td>
             </tr>
             
             <tr>
@@ -2021,7 +2050,7 @@
                 <td><pre>Similar lines in 2 files
 ==agentlib_flexquant.data_structures.flexquant:[18:32]
 ==agentlib_flexquant.utils.config_management:[118:132]
-excluded_fields = [
+    excluded_fields = [
         &#34;rdf_class&#34;,
         &#34;source&#34;,
         &#34;type&#34;,
@@ -2034,7 +2063,7 @@ excluded_fields = [
         &#34;allowed_values&#34;,
     ]
 
-</pre></td>
+    def check_bounds(parameter):</pre></td>
             </tr>
             
             <tr>
@@ -2081,8 +2110,8 @@ excluded_fields = [
 ==agentlib_flexquant.modules.baseline_mpc:[60:81]
 ==agentlib_flexquant.modules.shadow_mpc:[50:67]
         if self.config.casadi_sim_time_step &gt; 0:
-            # generate a separate flex_model for integration to ensure
-            # the model used in MPC optimization remains unaffected
+            # generate a separate flex_model for integration to ensure the model used in MPC
+            # optimization remains unaffected
             self.flex_model = type(self.model)(dt=self.config.casadi_sim_time_step)
             # generate the filename for the simulation results
             self.res_file_flex = self.config.optimization_backend[&#34;results_file&#34;].replace(
@@ -2094,13 +2123,9 @@ excluded_fields = [
             except:
                 pass
 
-    def pre_computation_hook(self):
-        &#34;&#34;&#34;Calculate relative start and end times for flexibility provision.
-
-        When in provision mode, computes the relative timing for flexibility
-        events based on the external power profile timestamps and current
-        environment time.
-        &#34;&#34;&#34;</pre></td>
+    def set_output(self, solution):
+        &#34;&#34;&#34;Takes the solution from optimization backend and sends it to AgentVariables.&#34;&#34;&#34;
+        # Output must be defined in the config as &#34;type&#34;=&#34;pd.Series&#34;</pre></td>
             </tr>
             
             <tr>
@@ -2173,7 +2198,21 @@ excluded_fields = [
             self.logger.error(&#34;Results file %s was not found.&#34;, results_file)
             return None
 
-    def register_callbacks(self):</pre></td>
+    def write_results(self, df: pd.DataFrame, ts: float, n: int) -&gt; pd.DataFrame:
+        &#34;&#34;&#34;Write every data of variables in self.var_list in an DataFrame.
+
+        DataFrame will be updated every time step
+
+        Args:
+            df: DataFrame which is initialised as an empty DataFrame with columns
+            according to self.var_list
+            ts: time step
+            n: number of time steps during prediction horizon
+
+        Returns:
+            DataFrame with results of every variable in self.var_list
+
+        &#34;&#34;&#34;</pre></td>
             </tr>
             
             <tr>
@@ -4181,7 +4220,17 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>56</td>
+                <td>16</td>
+                <td>0</td>
+                <td>warning</td>
+                <td><code>unused-import</code></td>
+                <td>W0611</td>
+                <td></td>
+                <td><pre>Unused BaseMPCData imported from agentlib_flexquant.data_structures.mpcs</pre></td>
+            </tr>
+            
+            <tr>
+                <td>57</td>
                 <td>74</td>
                 <td>warning</td>
                 <td><code>redefined-builtin</code></td>
@@ -4191,7 +4240,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>111</td>
+                <td>112</td>
                 <td>26</td>
                 <td>warning</td>
                 <td><code>redefined-builtin</code></td>
@@ -4201,7 +4250,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>166</td>
+                <td>167</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -4211,7 +4260,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>189</td>
+                <td>190</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -4221,7 +4270,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>241</td>
+                <td>242</td>
                 <td>8</td>
                 <td>refactor</td>
                 <td><code>no-else-return</code></td>
@@ -4231,7 +4280,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>319</td>
+                <td>320</td>
                 <td>21</td>
                 <td>refactor</td>
                 <td><code>consider-merging-isinstance</code></td>
@@ -4241,7 +4290,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>330</td>
+                <td>331</td>
                 <td>21</td>
                 <td>refactor</td>
                 <td><code>consider-merging-isinstance</code></td>
@@ -4251,7 +4300,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>397</td>
+                <td>398</td>
                 <td>24</td>
                 <td>warning</td>
                 <td><code>unused-variable</code></td>
@@ -4261,7 +4310,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>521</td>
+                <td>535</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -4290,12 +4339,12 @@ excluded_fields = [
             
             <tr>
                 <td>convention</td>
-                <td>103</td>
+                <td>107</td>
             </tr>
             
             <tr>
                 <td>warning</td>
-                <td>60</td>
+                <td>61</td>
             </tr>
             
             <tr>
@@ -4320,7 +4369,7 @@ excluded_fields = [
             
             <tr>
                 <td>line-too-long</td>
-                <td>6</td>
+                <td>10</td>
             </tr>
             
             <tr>
@@ -4390,7 +4439,7 @@ excluded_fields = [
             
             <tr>
                 <td>unused-import</td>
-                <td>9</td>
+                <td>10</td>
             </tr>
             
             <tr>
@@ -4560,7 +4609,7 @@ excluded_fields = [
             
             <tr>
                 <td>agentlib_flexquant.generate_flex_agents</td>
-                <td>47</td>
+                <td>51</td>
             </tr>
             
             <tr>
@@ -4575,7 +4624,7 @@ excluded_fields = [
             
             <tr>
                 <td>agentlib_flexquant.utils.parsing</td>
-                <td>12</td>
+                <td>13</td>
             </tr>
             
             <tr>
@@ -4665,7 +4714,7 @@ excluded_fields = [
             
             <tr>
                 <td>agentlib_flexquant/generate_flex_agents.py</td>
-                <td>47</td>
+                <td>51</td>
             </tr>
             
             <tr>
@@ -4680,7 +4729,7 @@ excluded_fields = [
             
             <tr>
                 <td>agentlib_flexquant/utils/parsing.py</td>
-                <td>12</td>
+                <td>13</td>
             </tr>
             
             <tr>

@@ -679,13 +679,19 @@
         <span class="c1"># Extract the config class of the casadi model to check cost functions</span>
         <span class="n">config_class</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">get_annotations</span><span class="p">(</span><span class="n">custom_injection</span><span class="p">(</span><span class="n">opt_backend</span><span class="p">))[</span><span class="s2">&quot;config&quot;</span><span class="p">]</span>
         <span class="n">config_instance</span> <span class="o">=</span> <span class="n">config_class</span><span class="p">()</span>
+        <span class="c1"># The &quot; + &quot; is just there to simplify the validation, it does not affect</span>
+        <span class="c1"># the generated code</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">check_variables_in_casadi_config</span><span class="p">(</span>
             <span class="n">config_instance</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">neg_flex</span><span class="o">.</span><span class="n">flex_cost_function</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">neg_flex</span><span class="o">.</span><span class="n">flex_cost_function</span> <span class="o">+</span>
+            <span class="p">(</span><span class="s2">&quot; + &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">neg_flex</span><span class="o">.</span><span class="n">flex_cost_function_appendix</span>
+             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">neg_flex</span><span class="o">.</span><span class="n">flex_cost_function_appendix</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">check_variables_in_casadi_config</span><span class="p">(</span>
             <span class="n">config_instance</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">pos_flex</span><span class="o">.</span><span class="n">flex_cost_function</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">pos_flex</span><span class="o">.</span><span class="n">flex_cost_function</span> <span class="o">+</span>
+            <span class="p">(</span><span class="s2">&quot; + &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">pos_flex</span><span class="o">.</span><span class="n">flex_cost_function_appendix</span>
+             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">pos_flex</span><span class="o">.</span><span class="n">flex_cost_function_appendix</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
         <span class="p">)</span>
 
         <span class="c1"># parse mpc python file</span>
