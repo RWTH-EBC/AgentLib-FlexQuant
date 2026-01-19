@@ -39,14 +39,15 @@ OUTPUT_TEMPLATE = Template(
 )
 
 
-def create_ast_element(template_string: str) -> ast.Call:
+def create_ast_element(template_string: str) -> ast.expr:
     """Convert a template string into an AST call node.
 
     Args:
         template_string: A Python code template string to parse.
 
     Returns:
-        ast.Call: An abstract syntax tree (AST) call node parsed from the template string.
+        ast.Expr: An abstract syntax tree (AST) expr node parsed from the template
+        string.
 
     """
     return ast.parse(template_string).body[0].value
@@ -54,7 +55,7 @@ def create_ast_element(template_string: str) -> ast.Call:
 
 def add_input(
     name: str, value: Union[bool, str, int], unit: str, description: str, type: str
-) -> ast.Call:
+) -> ast.expr:
     """Create an AST node for an input definition.
 
     Args:
@@ -82,7 +83,7 @@ def add_input(
 
 def add_parameter(
     name: str, value: Union[int, float], unit: str, description: str
-) -> ast.Call:
+) -> ast.expr:
     """Create an AST node for a parameter definition.
 
         Args:
@@ -92,7 +93,7 @@ def add_parameter(
             description: A human-readable description of the parameter.
 
         Returns:
-            ast.Call: An abstract syntax tree (AST) call node
+            ast.expr: An abstract syntax tree (AST) call node
             representing the parameter definition.
 
         """
@@ -109,7 +110,7 @@ def add_parameter(
 
 def add_output(
     name: str, unit: str, type: str, value: Union[str, float], description: str
-) -> ast.Call:
+) -> ast.expr:
     """Create an AST node for an output definition.
 
     Args:
@@ -120,7 +121,7 @@ def add_output(
         description: A human-readable description of the output.
 
     Returns:
-        ast.Call: An abstract syntax tree (AST) call node representing the output definition.
+        ast.expr: An abstract syntax tree (AST) call node representing the output definition.
 
     """
     return create_ast_element(
@@ -145,7 +146,7 @@ class SetupSystemModifier(ast.NodeTransformer):
 
     def __init__(
         self,
-        mpc_data: BaseMPCData,
+        mpc_data: Union[BaselineMPCData, NFMPCData, PFMPCData],
         controls: list[MPCVariable],
         binary_controls: Optional[list[MPCVariable]],
     ):
@@ -429,11 +430,25 @@ class SetupSystemModifier(ast.NodeTransformer):
             if isinstance(stmt, ast.Return):
                 # store current return statement
                 original_return = stmt.value
+
+                # First, check if there's actually an appendix to add
+                if self.mpc_data.flex_cost_function_appendix:
+                    # Parse the appendix string into an AST expression
+                    appendix_ast = ast.parse(self.mpc_data.flex_cost_function_appendix,
+                                             mode="eval").body
+                    # Create a BinOp node representing: original_return + appendix
+                    combined_value = ast.BinOp(
+                        left=original_return,
+                        op=ast.Add(),
+                        right=appendix_ast
+                    )
+                else:
+                    combined_value = original_return
+
                 new_body = [
-                    # create new standard objective variable
                     ast.Assign(
                         targets=[ast.Name(id="obj_std", ctx=ast.Store())],
-                        value=original_return,
+                        value=combined_value,
                     ),
                     # create flex objective variable
                     ast.Assign(
@@ -445,7 +460,6 @@ class SetupSystemModifier(ast.NodeTransformer):
                     # overwrite return statement with custom function
                     ast.Return(value=ast.parse(SHADOW_MPC_COST_FUNCTION).body[0].value),
                 ]
-                # append new variables to end of function
                 node.body[i:] = new_body
                 break
 

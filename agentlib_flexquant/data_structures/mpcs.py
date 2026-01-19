@@ -28,7 +28,10 @@ excluded_fields = [
 
 
 class BaseMPCData(pydantic.BaseModel):
-    """Base class containing necessary data for the code creation of the different mpcs"""
+    """Base class containing necessary data for the code creation
+    of the different mpcs
+
+    """
 
     # files and paths
     created_flex_mpcs_file: str = "flex_agents.py"
@@ -47,7 +50,8 @@ class BaseMPCData(pydantic.BaseModel):
         default=[], description="Name and value of weights",
     )
 
-    @field_serializer('weights', 'config_inputs_appendix', 'config_parameters_appendix')
+    @field_serializer('weights', 'config_inputs_appendix',
+                      'config_parameters_appendix')
     def serialize_mpc_variables(self, variables: list[MPCVariable], _info):
         return [v.dict(exclude=excluded_fields) for v in variables]
 
@@ -68,12 +72,14 @@ class BaselineMPCData(BaseMPCData):
     power_variable: str = pydantic.Field(
         default="P_el",
         description=(
-            "Name of the variable representing the electrical power in the baseline config"
+            "Name of the variable representing the electrical "
+            "power in the baseline config"
         ),
     )
     profile_deviation_weight: float = pydantic.Field(
         default=0,
-        description="Weight of soft constraint for deviation from accepted flexible profile",
+        description="Weight of soft constraint for deviation from "
+                    "accepted flexible profile",
     )
     power_unit: str = pydantic.Field(
         default="kW", description="Unit of the power variable"
@@ -81,7 +87,8 @@ class BaselineMPCData(BaseMPCData):
     comfort_variable: str = pydantic.Field(
         default=None,
         description=(
-            "Name of the slack variable representing the thermal comfort in the baseline config"
+            "Name of the slack variable representing the thermal "
+            "comfort in the baseline config"
         ),
     )
     profile_comfort_weight: float = pydantic.Field(
@@ -100,17 +107,19 @@ class BaselineMPCData(BaseMPCData):
         default=[], description="Name and value of weights",
     )
 
-    @field_serializer('weights', 'config_inputs_appendix', 'config_parameters_appendix')
+    @field_serializer('weights', 'config_inputs_appendix',
+                      'config_parameters_appendix')
     def serialize_mpc_variables(self, variables: list[MPCVariable], _info):
         return [v.dict(exclude=excluded_fields) for v in variables]
 
     @model_validator(mode="after")
     def update_config_parameters_appendix(self) -> "BaselineMPCData":
-        """Update the config parameters appendix with profile deviation and comfort weights.
+        """Update the config parameters appendix with profile deviation and comfort
+        weights.
 
-        Adds the profile deviation weight parameter and optionally the profile comfort
-        weight parameter (if comfort_variable is enabled) to the config_parameters_appendix
-        list as MPCVariable instances.
+        Adds the profile deviation weight parameter and optionally the profile
+        comfort weight parameter (if comfort_variable is enabled) to the
+        config_parameters_appendix list as MPCVariable instances.
         """
         self.config_parameters_appendix = [
             MPCVariable(
@@ -118,7 +127,8 @@ class BaselineMPCData(BaseMPCData):
                 value=self.profile_deviation_weight,
                 unit="-",
                 description=(
-                    "Weight of soft constraint for deviation from accepted flexible profile"
+                    "Weight of soft constraint for deviation from accepted "
+                    "flexible profile"
                 ),
             )
         ]
@@ -148,7 +158,11 @@ class PFMPCData(BaseMPCData):
     power_alias: str = glbs.POWER_ALIAS_POS
     stored_energy_alias: str = glbs.STORED_ENERGY_ALIAS_POS
     flex_cost_function: str = pydantic.Field(
-        default=None, description="Cost function of the PF-MPC",
+        default=None, description="Cost function of the PF-MPC during the event",
+    )
+    flex_cost_function_appendix: str = pydantic.Field(
+        default=None, description="Cost function appendix of the PF-MPC added "
+                                  "to the Baseline cost function",
     )
     # initialize market parameters with dummy values (0)
     config_parameters_appendix: list[MPCVariable] = [
@@ -163,7 +177,8 @@ class PFMPCData(BaseMPCData):
         default=[], description="Name and value of weights",
     )
 
-    @field_serializer('weights', 'config_inputs_appendix', 'config_parameters_appendix')
+    @field_serializer('weights', 'config_inputs_appendix',
+                      'config_parameters_appendix')
     def serialize_mpc_variables(self, variables: list[MPCVariable], _info):
         return [v.dict(exclude=excluded_fields) for v in variables]
 
@@ -182,7 +197,11 @@ class NFMPCData(BaseMPCData):
     power_alias: str = glbs.POWER_ALIAS_NEG
     stored_energy_alias: str = glbs.STORED_ENERGY_ALIAS_NEG
     flex_cost_function: str = pydantic.Field(
-        default=None, description="Cost function of the NF-MPC",
+        default=None, description="Cost function of the NF-MPC during the event",
+    )
+    flex_cost_function_appendix: str = pydantic.Field(
+        default=None, description="Cost function appendix of the NF-MPC added "
+                                  "to the Baseline cost function",
     )
     # initialize market parameters with dummy values (0)
     config_parameters_appendix: list[MPCVariable] = [
@@ -197,6 +216,7 @@ class NFMPCData(BaseMPCData):
         default=[], description="Name and value of weights",
     )
 
-    @field_serializer('weights', 'config_inputs_appendix', 'config_parameters_appendix')
+    @field_serializer('weights', 'config_inputs_appendix',
+                      'config_parameters_appendix')
     def serialize_mpc_variables(self, variables: list[MPCVariable], _info):
         return [v.dict(exclude=excluded_fields) for v in variables]
