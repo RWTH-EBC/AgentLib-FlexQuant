@@ -153,7 +153,8 @@
     <span class="k">return</span> <span class="n">baseline_matches</span><span class="p">,</span> <span class="n">shadow_matches</span></div>
 
 
-<span class="n">BASELINE_MODULE_TYPE_DICT</span><span class="p">,</span> <span class="n">SHADOW_MODULE_TYPE_DICT</span> <span class="o">=</span> <span class="n">get_module_type_matching_dict</span><span class="p">(</span><span class="n">MODULE_NAME_DICT</span><span class="p">)</span>
+<span class="n">BASELINE_MODULE_TYPE_DICT</span><span class="p">,</span> <span class="n">SHADOW_MODULE_TYPE_DICT</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">get_module_type_matching_dict</span><span class="p">(</span><span class="n">MODULE_NAME_DICT</span><span class="p">))</span>
 
 
 <div class="viewcode-block" id="get_orig_module_type"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.config_management.get_orig_module_type">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_orig_module_type</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">AgentConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -215,10 +216,12 @@
     <span class="c1"># update every variable with a dict excluding the defined fields</span>
     <span class="k">if</span> <span class="s2">&quot;parameters&quot;</span> <span class="ow">in</span> <span class="n">parent_dict</span><span class="p">:</span>
         <span class="n">parent_dict</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">parameter</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="n">check_bounds</span><span class="p">(</span><span class="n">parameter</span><span class="p">))</span> <span class="k">for</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="n">module</span><span class="o">.</span><span class="n">parameters</span>
+            <span class="n">parameter</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="n">check_bounds</span><span class="p">(</span><span class="n">parameter</span><span class="p">))</span> <span class="k">for</span>
+            <span class="n">parameter</span> <span class="ow">in</span> <span class="n">module</span><span class="o">.</span><span class="n">parameters</span>
         <span class="p">]</span>
     <span class="k">if</span> <span class="s2">&quot;inputs&quot;</span> <span class="ow">in</span> <span class="n">parent_dict</span><span class="p">:</span>
-        <span class="n">parent_dict</span><span class="p">[</span><span class="s2">&quot;inputs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">input</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="n">check_bounds</span><span class="p">(</span><span class="nb">input</span><span class="p">))</span> <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="n">module</span><span class="o">.</span><span class="n">inputs</span><span class="p">]</span>
+        <span class="n">parent_dict</span><span class="p">[</span><span class="s2">&quot;inputs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">input</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="n">check_bounds</span><span class="p">(</span><span class="nb">input</span><span class="p">))</span> <span class="k">for</span>
+                                 <span class="nb">input</span> <span class="ow">in</span> <span class="n">module</span><span class="o">.</span><span class="n">inputs</span><span class="p">]</span>
     <span class="k">if</span> <span class="s2">&quot;outputs&quot;</span> <span class="ow">in</span> <span class="n">parent_dict</span><span class="p">:</span>
         <span class="n">parent_dict</span><span class="p">[</span><span class="s2">&quot;outputs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">output</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="n">check_bounds</span><span class="p">(</span><span class="n">output</span><span class="p">))</span> <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">module</span><span class="o">.</span><span class="n">outputs</span>
@@ -233,13 +236,23 @@
             <span class="k">for</span> <span class="n">binary_control</span> <span class="ow">in</span> <span class="n">module</span><span class="o">.</span><span class="n">binary_controls</span>
         <span class="p">]</span>
     <span class="k">if</span> <span class="s2">&quot;states&quot;</span> <span class="ow">in</span> <span class="n">parent_dict</span><span class="p">:</span>
-        <span class="n">parent_dict</span><span class="p">[</span><span class="s2">&quot;states&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">state</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="n">check_bounds</span><span class="p">(</span><span class="n">state</span><span class="p">))</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">module</span><span class="o">.</span><span class="n">states</span><span class="p">]</span>
+        <span class="n">parent_dict</span><span class="p">[</span><span class="s2">&quot;states&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">state</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="n">check_bounds</span><span class="p">(</span><span class="n">state</span><span class="p">))</span> <span class="k">for</span>
+                                 <span class="n">state</span> <span class="ow">in</span> <span class="n">module</span><span class="o">.</span><span class="n">states</span><span class="p">]</span>
     <span class="k">if</span> <span class="s2">&quot;full_controls&quot;</span> <span class="ow">in</span> <span class="n">parent_dict</span><span class="p">:</span>
         <span class="n">parent_dict</span><span class="p">[</span><span class="s2">&quot;full_controls&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">full_control</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span>
-                <span class="n">exclude</span><span class="o">=</span><span class="p">(</span><span class="k">lambda</span> <span class="n">ex</span><span class="p">:</span> <span class="n">ex</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;shared&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">ex</span><span class="p">)(</span><span class="n">check_bounds</span><span class="p">(</span><span class="n">full_control</span><span class="p">))</span>
+                <span class="n">exclude</span><span class="o">=</span><span class="p">(</span><span class="k">lambda</span> <span class="n">ex</span><span class="p">:</span>
+                         <span class="n">ex</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;shared&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">ex</span><span class="p">)(</span><span class="n">check_bounds</span><span class="p">(</span><span class="n">full_control</span><span class="p">))</span>
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">full_control</span> <span class="ow">in</span> <span class="n">module</span><span class="o">.</span><span class="n">full_controls</span>
+        <span class="p">]</span>
+    <span class="k">if</span> <span class="s2">&quot;vars_to_communicate&quot;</span> <span class="ow">in</span> <span class="n">parent_dict</span><span class="p">:</span>
+        <span class="n">parent_dict</span><span class="p">[</span><span class="s2">&quot;vars_to_communicate&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">var_to_communicate</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span>
+                <span class="n">exclude</span><span class="o">=</span><span class="p">(</span><span class="k">lambda</span> <span class="n">ex</span><span class="p">:</span>
+                         <span class="n">ex</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;shared&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">ex</span><span class="p">)(</span><span class="n">check_bounds</span><span class="p">(</span><span class="n">var_to_communicate</span><span class="p">))</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">var_to_communicate</span> <span class="ow">in</span> <span class="n">module</span><span class="o">.</span><span class="n">vars_to_communicate</span>
         <span class="p">]</span>
 
     <span class="k">return</span> <span class="n">parent_dict</span></div>

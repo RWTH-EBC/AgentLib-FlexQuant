@@ -86,14 +86,17 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">glbs</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentVariable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.modules</span><span class="w"> </span><span class="kn">import</span> <span class="n">mpc_full</span><span class="p">,</span> <span class="n">minlp_mpc</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.data_structures.mpc_datamodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">Results</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="kn">import</span> <span class="n">full_trajectory_suffix</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.data_structures.mpc_datamodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">Results</span><span class="p">,</span> <span class="n">InitStatus</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">full_trajectory_suffix</span><span class="p">,</span>
+                                                        <span class="n">base_vars_to_communicate_suffix</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="FlexibilityBaselineMPCConfig"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityBaselineMPCConfig</span><span class="p">(</span><span class="n">mpc_full</span><span class="o">.</span><span class="n">MPCConfig</span><span class="p">):</span>
-    <span class="c1"># define an AgentVariable list for the full control trajectory, since use MPCVariable output</span>
-    <span class="c1"># affects the optimization result</span>
+    <span class="c1"># define an AgentVariable list for the full control trajectory</span>
     <span class="n">full_controls</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AgentVariable</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="p">[])</span>
+
+    <span class="c1"># define an AgentVariable list for the variables to communicate to the shadow MPCs</span>
+    <span class="n">vars_to_communicate</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AgentVariable</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="p">[])</span>
 
     <span class="n">casadi_sim_time_step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
@@ -102,10 +105,12 @@
         <span class="s2">&quot;FlexQuantConfig&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">power_variable_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the power variable in the &quot;</span> <span class="s2">&quot;baseline mpc model.&quot;</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the power variable in the &quot;</span>
+                                  <span class="s2">&quot;baseline mpc model.&quot;</span>
     <span class="p">)</span>
     <span class="n">storage_variable_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the storage v&quot;</span> <span class="s2">&quot;ariable in the baseline &quot;</span> <span class="s2">&quot;mpc model.&quot;</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the storage variable in the &quot;</span>
+                                  <span class="s2">&quot;baseline mpc model.&quot;</span>
     <span class="p">)</span></div>
 
 
@@ -116,17 +121,21 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">agent</span><span class="p">)</span>
-        <span class="c1"># initialize a control mapping dictionary which maps the full control names to the control</span>
-        <span class="c1"># names</span>
+        <span class="c1"># initialize a control mapping dictionary which maps the names of the</span>
+        <span class="c1"># incoming AgentVariables (with suffix) to the names without suffix</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_controls_name_mapping</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vars_to_com_name_mapping</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">for</span> <span class="n">full_control</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">full_controls</span><span class="p">:</span>
-            <span class="c1"># add full_control to the variables dictionary, so that the set function can be applied</span>
-            <span class="c1"># to it</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_variables_dict</span><span class="p">[</span><span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">full_control</span>
             <span class="c1"># fill the mapping dictionary</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_controls_name_mapping</span><span class="p">[</span><span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
                 <span class="n">full_trajectory_suffix</span><span class="p">,</span> <span class="s2">&quot;&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">vars_to_com</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">vars_to_communicate</span><span class="p">:</span>
+            <span class="c1"># fill the mapping dictionary</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_vars_to_com_name_mapping</span><span class="p">[</span><span class="n">vars_to_com</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">vars_to_com</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="n">base_vars_to_communicate_suffix</span><span class="p">,</span> <span class="s2">&quot;&quot;</span>
             <span class="p">)</span>
 
         <span class="c1"># initialize flex_results with None</span>
@@ -138,13 +147,37 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)(</span><span class="n">dt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">casadi_sim_time_step</span><span class="p">)</span>
             <span class="c1"># generate the filename for the simulation results</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">res_file_flex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;results_file&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
-                <span class="s2">&quot;mpc&quot;</span><span class="p">,</span> <span class="s2">&quot;mpc_sim&quot;</span>
+                <span class="s2">&quot;_base&quot;</span><span class="p">,</span> <span class="s2">&quot;_sim_base&quot;</span>
             <span class="p">)</span>
             <span class="c1"># clear the casadi simulator result at the first time step if already exists</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">res_file_flex</span><span class="p">)</span>
-            <span class="k">except</span><span class="p">:</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
                 <span class="k">pass</span>
+
+<div class="viewcode-block" id="FlexibilityBaselineMPC.do_step"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.do_step">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">do_step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs an MPC step.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_status</span> <span class="o">==</span> <span class="n">InitStatus</span><span class="o">.</span><span class="n">ready</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Skipping step, optimization_backend is not ready.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pre_computation_hook</span><span class="p">()</span>
+
+        <span class="c1"># get new values from data_broker</span>
+        <span class="n">updated_vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collect_variables_for_optimization</span><span class="p">()</span>
+
+        <span class="c1"># solve optimization problem with up-to-date values from data_broker</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimization_backend</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">updated_vars</span><span class="p">)</span>
+
+        <span class="c1"># Set variables in data_broker</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_actuation</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="c1"># Set variables, so that shadow MPCs are initialized with the</span>
+        <span class="c1"># same values as the Baseline</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_vars_for_shadow</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_output</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_remove_old_values_from_history</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="FlexibilityBaselineMPC.pre_computation_hook"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.pre_computation_hook">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">pre_computation_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate relative start and end times for flexibility provision.</span>
@@ -153,11 +186,25 @@
 <span class="sd">        events based on the external power profile timestamps and current</span>
 <span class="sd">        environment time.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;in_provision&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;rel_start&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;_P_external&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">PROVISION_VAR_NAME</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">RELATIVE_EVENT_START_TIME_VAR_NAME</span><span class="p">,</span>
+                     <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">ACCEPTED_POWER_VAR_NAME</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span>
+                     <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
             <span class="c1"># the provision profile gives a value for the start of a time step.</span>
             <span class="c1"># For the end of the flex interval add time step!</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;rel_end&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;_P_external&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">RELATIVE_EVENT_END_TIME_VAR_NAME</span><span class="p">,</span>
+                     <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">ACCEPTED_POWER_VAR_NAME</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span>
+                     <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FlexibilityBaselineMPC.set_vars_for_shadow"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.set_vars_for_shadow">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_vars_for_shadow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the variables of the Baseline MPC needed by the shadow MPCs</span>
+<span class="sd">        with a predefined suffix.</span>
+<span class="sd">        This essentially sends the same inputs and states the Baseline used</span>
+<span class="sd">        for optimization to the Shadow MPC, ensuring synchronisation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">vars_to_com</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">vars_to_communicate</span><span class="p">:</span>
+            <span class="n">vars_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vars_to_com_name_mapping</span><span class="p">[</span><span class="n">vars_to_com</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">vars_to_com</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">vars_name</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="FlexibilityBaselineMPC.set_actuation"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.set_actuation">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_actuation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solution</span><span class="p">:</span> <span class="n">Results</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_actuation</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
@@ -168,7 +215,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">solution</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">variable</span><span class="p">[</span><span class="n">control</span><span class="p">]</span><span class="o">.</span><span class="n">ffill</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="FlexibilityBaselineMPC.set_output"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.set_output">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solution</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Takes the solution from optimization backend and sends it to AgentVariables.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Takes the solution from optimization backend and sends it</span>
+<span class="sd">        to AgentVariables.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Output must be defined in the config as &quot;type&quot;=&quot;pd.Series&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">:</span>
             <span class="k">return</span>
@@ -193,18 +243,23 @@
             <span class="n">upsampled_output_power</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">power_variable_name</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">power_variable_name</span><span class="p">,</span> <span class="n">upsampled_output_power</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage_variable_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">upsampled_output_storage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage_variable_name</span><span class="p">]</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage_variable_name</span><span class="p">,</span> <span class="n">upsampled_output_storage</span><span class="o">.</span><span class="n">dropna</span><span class="p">())</span>
+                <span class="n">upsampled_output_storage</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="p">)[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage_variable_name</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage_variable_name</span><span class="p">,</span>
+                         <span class="n">upsampled_output_storage</span><span class="o">.</span><span class="n">dropna</span><span class="p">())</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span>
                 <span class="n">series</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">variable</span><span class="p">[</span><span class="n">output</span><span class="p">]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">series</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlexibilityBaselineMPC.sim_flex_model"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.sim_flex_model">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">sim_flex_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solution</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;simulate the flex model over the preditcion horizon and save results&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;simulate the flex model over the preditcion horizon and save results</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># return if sim_time_step is not a positive integer and system is in provision</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">casadi_sim_time_step</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;in_provision&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">casadi_sim_time_step</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">PROVISION_VAR_NAME</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">):</span>
             <span class="k">return</span>
 
         <span class="c1"># read the defined simulation time step</span>
@@ -229,7 +284,8 @@
 
         <span class="c1"># Run simulation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_run_simulation</span><span class="p">(</span>
-            <span class="n">n_simulation_steps</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">mpc_time_step</span><span class="p">,</span> <span class="n">result_df</span><span class="p">,</span> <span class="n">total_horizon_time</span>
+            <span class="n">n_simulation_steps</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">mpc_time_step</span><span class="p">,</span> <span class="n">result_df</span><span class="p">,</span>
+            <span class="n">total_horizon_time</span>
         <span class="p">)</span>
 
         <span class="c1"># set index of flex results to the same as mpc result</span>
@@ -250,6 +306,7 @@
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the flex results dataframe with the correct dimension and index</span>
 <span class="sd">        and fill with existing results from optimization</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># create MultiIndex for collocation points</span>
@@ -269,23 +326,28 @@
         <span class="c1"># merge indexes</span>
         <span class="n">new_index</span> <span class="o">=</span> <span class="n">index_coll</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">index_full_sample</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span>
         <span class="c1"># initialize the flex results with correct dimension</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">new_index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">outputs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">new_index</span><span class="p">,</span>
+                                         <span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">outputs</span><span class="p">)</span>
 
-        <span class="c1"># Get the optimization outputs and create a series for fixed optimization outputs with the</span>
-        <span class="c1"># correct MultiIndex format</span>
+        <span class="c1"># Get the optimization outputs and create a series for fixed</span>
+        <span class="c1"># optimization outputs with the correct MultiIndex format</span>
         <span class="n">opti_outputs</span> <span class="o">=</span> <span class="n">result_df</span><span class="o">.</span><span class="n">variable</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">power_variable_name</span><span class="p">]</span>
         <span class="n">fixed_opti_output</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
             <span class="n">opti_outputs</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
             <span class="n">index</span><span class="o">=</span><span class="n">index_coll</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="c1"># fill the output value at the time step where it already exists in optimization output</span>
+        <span class="c1"># fill the output value at the time step where it already exists</span>
+        <span class="c1"># in optimization output</span>
         <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">fixed_opti_output</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">idx</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">power_variable_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fixed_opti_output</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">power_variable_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">fixed_opti_output</span><span class="p">)[</span><span class="n">idx</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_update_model_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;update the value of module parameters with value from config,</span>
-<span class="sd">        since creating a model just reads the value in the model class but not the config</span>
+<span class="sd">        since creating a model just reads the value in the model class but</span>
+<span class="sd">        not the config</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">parameters</span><span class="p">:</span>
@@ -301,20 +363,26 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_run_simulation</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">n_simulation_steps</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">mpc_time_step</span><span class="p">,</span> <span class="n">result_df</span><span class="p">,</span> <span class="n">total_horizon_time</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">n_simulation_steps</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">mpc_time_step</span><span class="p">,</span> <span class="n">result_df</span><span class="p">,</span>
+            <span class="n">total_horizon_time</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;simulate with flex model over the prediction horizon&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;simulate with flex model over the prediction horizon</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># get control and input values from the mpc optimization result</span>
         <span class="n">control_values</span> <span class="o">=</span> <span class="n">result_df</span><span class="o">.</span><span class="n">variable</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">controls</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
         <span class="n">input_values</span> <span class="o">=</span> <span class="n">result_df</span><span class="o">.</span><span class="n">parameter</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">inputs</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
 
         <span class="c1"># Get the simulation time step index</span>
-        <span class="n">sim_time_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">n_simulation_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">)</span>
+        <span class="n">sim_time_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">n_simulation_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">sim_time_step</span><span class="p">,</span>
+                                   <span class="n">sim_time_step</span><span class="p">)</span>
 
         <span class="c1"># Reindex the controls and inputs to sim_time_index</span>
-        <span class="n">control_values_full</span> <span class="o">=</span> <span class="n">control_values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">sim_time_index</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;ffill&quot;</span><span class="p">)</span>
-        <span class="n">input_values_full</span> <span class="o">=</span> <span class="n">input_values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">sim_time_index</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">)</span>
+        <span class="n">control_values_full</span> <span class="o">=</span> <span class="n">control_values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">sim_time_index</span><span class="p">,</span>
+                                                            <span class="n">method</span><span class="o">=</span><span class="s2">&quot;ffill&quot;</span><span class="p">)</span>
+        <span class="n">input_values_full</span> <span class="o">=</span> <span class="n">input_values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">sim_time_index</span><span class="p">,</span>
+                                                        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_simulation_steps</span><span class="p">):</span>
             <span class="n">current_sim_time</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">sim_time_step</span>
@@ -328,13 +396,15 @@
             <span class="k">for</span> <span class="n">input_var</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">input_values_full</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">current_sim_time</span><span class="p">]</span>
             <span class="p">):</span>
-                <span class="c1"># change the type of iterable input, since casadi model can&#39;t deal with iterable</span>
+                <span class="c1"># change the type of iterable input, since casadi model</span>
+                <span class="c1"># can&#39;t deal with iterable</span>
                 <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">input_var</span><span class="p">)</span><span class="o">.</span><span class="n">type</span><span class="p">),</span> <span class="n">Iterable</span><span class="p">):</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">input_var</span><span class="p">)</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">input_var</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
             <span class="c1"># do integration</span>
-            <span class="c1"># reduce the simulation time step so that the total horizon time will not be exceeded</span>
+            <span class="c1"># reduce the simulation time step so that the total horizon time</span>
+            <span class="c1"># will not be exceeded</span>
             <span class="k">if</span> <span class="n">current_sim_time</span> <span class="o">+</span> <span class="n">sim_time_step</span> <span class="o">&lt;=</span> <span class="n">total_horizon_time</span><span class="p">:</span>
                 <span class="n">t_sample</span> <span class="o">=</span> <span class="n">sim_time_step</span>
             <span class="k">else</span><span class="p">:</span>
@@ -349,60 +419,92 @@
 
 
 <div class="viewcode-block" id="FlexibilityBaselineMINLPMPCConfig"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityBaselineMINLPMPCConfig</span><span class="p">(</span><span class="n">minlp_mpc</span><span class="o">.</span><span class="n">MINLPMPCConfig</span><span class="p">):</span>
-
-    <span class="c1"># define an AgentVariable list for the full control trajectory, since use MPCVariable output</span>
-    <span class="c1"># affects the optimization result</span>
+    <span class="c1"># define an AgentVariable list for the full control trajectory</span>
     <span class="n">full_controls</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AgentVariable</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="p">[])</span>
+
+    <span class="c1"># define an AgentVariable list for the variables to communicate to the shadow MPCs</span>
+    <span class="n">vars_to_communicate</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AgentVariable</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="p">[])</span>
 
     <span class="n">casadi_sim_time_step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Time step for simulation with Casadi simulator. Value is read from &quot;</span>
-                    <span class="s2">&quot;FlexQuantConfig&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Time step for simulation with Casadi simulator. &quot;</span>
+                    <span class="s2">&quot;Value is read from  FlexQuantConfig&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">power_variable_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the power variable in the baseline mpc model.&quot;</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the power variable in the &quot;</span>
+                                  <span class="s2">&quot;baseline mpc model.&quot;</span>
     <span class="p">)</span>
     <span class="n">storage_variable_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the storage variable in the baseline mpc model.&quot;</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the storage variable in the &quot;</span>
+                                  <span class="s2">&quot;baseline mpc model.&quot;</span>
     <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="FlexibilityBaselineMINLPMPC"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityBaselineMINLPMPC</span><span class="p">(</span><span class="n">minlp_mpc</span><span class="o">.</span><span class="n">MINLPMPC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;MINLP-MPC for baseline flexibility quantification with mixed-integer optimization.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;MINLP-MPC for baseline flexibility quantification with mixed-integer</span>
+<span class="sd">    optimization.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">config</span><span class="p">:</span> <span class="n">FlexibilityBaselineMINLPMPCConfig</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">agent</span><span class="p">)</span>
-        <span class="c1"># initialize a control mapping dictionary which maps the full control names to the control</span>
-        <span class="c1"># names</span>
+        <span class="c1"># initialize a control mapping dictionary which maps the names of the</span>
+        <span class="c1"># incoming AgentVariables (with suffix) to the names without suffix</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_controls_name_mapping</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vars_to_com_name_mapping</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">for</span> <span class="n">full_control</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">full_controls</span><span class="p">:</span>
-            <span class="c1"># add full_control to the variables dictionary, so that the set function can be applied</span>
-            <span class="c1"># to it</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_variables_dict</span><span class="p">[</span><span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">full_control</span>
             <span class="c1"># fill the mapping dictionary</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_controls_name_mapping</span><span class="p">[</span><span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
                 <span class="n">full_trajectory_suffix</span><span class="p">,</span> <span class="s2">&quot;&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">vars_to_com</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">vars_to_communicate</span><span class="p">:</span>
+            <span class="c1"># fill the mapping dictionary</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_vars_to_com_name_mapping</span><span class="p">[</span><span class="n">vars_to_com</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">vars_to_com</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="n">base_vars_to_communicate_suffix</span><span class="p">,</span> <span class="s2">&quot;&quot;</span>
             <span class="p">)</span>
 
         <span class="c1"># initialize flex_results with None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1"># set up necessary components if simulation is enabled</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">casadi_sim_time_step</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="c1"># generate a separate flex_model for integration to ensure the model used in MPC</span>
-            <span class="c1"># optimization remains unaffected</span>
+            <span class="c1"># generate a separate flex_model for integration to ensure</span>
+            <span class="c1"># the model used in MPC optimization remains unaffected</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)(</span><span class="n">dt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">casadi_sim_time_step</span><span class="p">)</span>
             <span class="c1"># generate the filename for the simulation results</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">res_file_flex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;results_file&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
-                <span class="s2">&quot;mpc&quot;</span><span class="p">,</span> <span class="s2">&quot;mpc_sim&quot;</span>
-            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">res_file_flex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span>
+                <span class="s2">&quot;results_file&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_base&quot;</span><span class="p">,</span> <span class="s2">&quot;_sim_base&quot;</span><span class="p">)</span>
             <span class="c1"># clear the casadi simulator result at the first time step if already exists</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">res_file_flex</span><span class="p">)</span>
-            <span class="k">except</span><span class="p">:</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
                 <span class="k">pass</span>
+
+<div class="viewcode-block" id="FlexibilityBaselineMINLPMPC.do_step"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.do_step">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">do_step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs an MPC step.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_status</span> <span class="o">==</span> <span class="n">InitStatus</span><span class="o">.</span><span class="n">ready</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Skipping step, optimization_backend is not ready.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pre_computation_hook</span><span class="p">()</span>
+
+        <span class="c1"># get new values from data_broker</span>
+        <span class="n">updated_vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collect_variables_for_optimization</span><span class="p">()</span>
+
+        <span class="c1"># solve optimization problem with up-to-date values from data_broker</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimization_backend</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">updated_vars</span><span class="p">)</span>
+
+        <span class="c1"># Set variables in data_broker</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_actuation</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="c1"># Set variables, so that shadow MPCs are initialized</span>
+        <span class="c1"># with the same values as the Baseline</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_vars_for_shadow</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_output</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlexibilityBaselineMINLPMPC.pre_computation_hook"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.pre_computation_hook">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">pre_computation_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate relative start and end times for flexibility provision.</span>
@@ -411,17 +513,27 @@
 <span class="sd">        events based on the external power profile timestamps and current</span>
 <span class="sd">        environment time.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;in_provision&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
-            <span class="n">timestep</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;_P_external&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;_P_external&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;rel_start&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;_P_external&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">PROVISION_VAR_NAME</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="n">timestep</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">ACCEPTED_POWER_VAR_NAME</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">ACCEPTED_POWER_VAR_NAME</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">RELATIVE_EVENT_START_TIME_VAR_NAME</span><span class="p">,</span>
+                     <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">ACCEPTED_POWER_VAR_NAME</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span>
+                     <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
             <span class="c1"># the provision profile gives a value for the start of a time step.</span>
             <span class="c1"># For the end of the flex interval add time step!</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
-                <span class="s2">&quot;rel_end&quot;</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;_P_external&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span> <span class="o">+</span> <span class="n">timestep</span><span class="p">,</span>
-            <span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">RELATIVE_EVENT_END_TIME_VAR_NAME</span><span class="p">,</span>
+                     <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">ACCEPTED_POWER_VAR_NAME</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span>
+                     <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span> <span class="o">+</span> <span class="n">timestep</span><span class="p">,)</span></div>
+
+<div class="viewcode-block" id="FlexibilityBaselineMINLPMPC.set_vars_for_shadow"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.set_vars_for_shadow">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_vars_for_shadow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the variables of the Baseline MPC needed by the shadow MPCs</span>
+<span class="sd">        with a predefined suffix.</span>
+<span class="sd">        This essentially sends the same inputs and states the Baseline used</span>
+<span class="sd">        for optimization to the Shadow MPC, ensuring synchronisation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">vars_to_com</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">vars_to_communicate</span><span class="p">:</span>
+            <span class="n">vars_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vars_to_com_name_mapping</span><span class="p">[</span><span class="n">vars_to_com</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">vars_to_com</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">vars_name</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="FlexibilityBaselineMINLPMPC.set_actuation"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.set_actuation">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_actuation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solution</span><span class="p">:</span> <span class="n">Results</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_actuation</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
@@ -432,7 +544,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">full_control</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">solution</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">variable</span><span class="p">[</span><span class="n">control</span><span class="p">]</span><span class="o">.</span><span class="n">ffill</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="FlexibilityBaselineMINLPMPC.set_output"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.set_output">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solution</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Takes the solution from optimization backend and sends it to AgentVariables.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Takes the solution from optimization backend and sends it</span>
+<span class="sd">        to AgentVariables.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Output must be defined in the config as &quot;type&quot;=&quot;pd.Series&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">:</span>
             <span class="k">return</span>
@@ -451,21 +566,27 @@
                     <span class="n">series</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">variable</span><span class="p">[</span><span class="n">output</span><span class="p">]</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">series</span><span class="p">)</span>
             <span class="c1"># send the power and storage variable value from simulation results</span>
-            <span class="n">upsampled_output_power</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">power_variable_name</span><span class="p">]</span>
+            <span class="n">upsampled_output_power</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="p">)[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">power_variable_name</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">power_variable_name</span><span class="p">,</span> <span class="n">upsampled_output_power</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage_variable_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">upsampled_output_storage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage_variable_name</span><span class="p">]</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage_variable_name</span><span class="p">,</span> <span class="n">upsampled_output_storage</span><span class="o">.</span><span class="n">dropna</span><span class="p">())</span>
+                <span class="n">upsampled_output_storage</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="p">)[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage_variable_name</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage_variable_name</span><span class="p">,</span>
+                         <span class="n">upsampled_output_storage</span><span class="o">.</span><span class="n">dropna</span><span class="p">())</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span>
                 <span class="n">series</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">variable</span><span class="p">[</span><span class="n">output</span><span class="p">]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">series</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlexibilityBaselineMINLPMPC.sim_flex_model"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.sim_flex_model">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">sim_flex_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solution</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;simulate the flex model over the preditcion horizon and save results&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;simulate the flex model over the preditcion horizon and save results</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># return if sim_time_step is not a positive integer and system is in provision</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">casadi_sim_time_step</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;in_provision&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">casadi_sim_time_step</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">PROVISION_VAR_NAME</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">):</span>
             <span class="k">return</span>
 
         <span class="c1"># read the defined simulation time step</span>
@@ -490,7 +611,8 @@
 
         <span class="c1"># Run simulation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_run_simulation</span><span class="p">(</span>
-            <span class="n">n_simulation_steps</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">mpc_time_step</span><span class="p">,</span> <span class="n">result_df</span><span class="p">,</span> <span class="n">total_horizon_time</span>
+            <span class="n">n_simulation_steps</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">mpc_time_step</span><span class="p">,</span> <span class="n">result_df</span><span class="p">,</span>
+            <span class="n">total_horizon_time</span>
         <span class="p">)</span>
 
         <span class="c1"># set index of flex results to the same as mpc result</span>
@@ -509,8 +631,10 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_flex_results</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">n_simulation_steps</span><span class="p">,</span> <span class="n">horizon_length</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">result_df</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the flex results dataframe with the correct dimension and index and fill</span>
-<span class="sd">        with existing results from optimization&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the flex results dataframe with the correct dimension</span>
+<span class="sd">        and index and fill with existing results from optimization</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># create MultiIndex for collocation points</span>
         <span class="n">index_coll</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">(</span>
@@ -529,23 +653,28 @@
         <span class="c1"># merge indexes</span>
         <span class="n">new_index</span> <span class="o">=</span> <span class="n">index_coll</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">index_full_sample</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span>
         <span class="c1"># initialize the flex results with correct dimension</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">new_index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">outputs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">new_index</span><span class="p">,</span>
+                                         <span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">outputs</span><span class="p">)</span>
 
-        <span class="c1"># Get the optimization outputs and create a series for fixed optimization outputs with</span>
-        <span class="c1"># the correct MultiIndex format</span>
+        <span class="c1"># Get the optimization outputs and create a series for fixed</span>
+        <span class="c1"># optimization outputs with the correct MultiIndex format</span>
         <span class="n">opti_outputs</span> <span class="o">=</span> <span class="n">result_df</span><span class="o">.</span><span class="n">variable</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">power_variable_name</span><span class="p">]</span>
         <span class="n">fixed_opti_output</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
             <span class="n">opti_outputs</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
             <span class="n">index</span><span class="o">=</span><span class="n">index_coll</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="c1"># fill the output value at the time step where it already exists in optimization output</span>
+        <span class="c1"># fill the output value at the time step where it already exists</span>
+        <span class="c1"># in optimization output</span>
         <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">fixed_opti_output</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">idx</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">power_variable_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fixed_opti_output</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">power_variable_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">fixed_opti_output</span><span class="p">)[</span><span class="n">idx</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_update_model_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;update the value of module parameters with value from config,</span>
-<span class="sd">        since creating a model just reads the value in the model class but not the config</span>
+<span class="sd">        since creating a model just reads the value in the model class but</span>
+<span class="sd">        not the config</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">parameters</span><span class="p">:</span>
@@ -561,9 +690,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_run_simulation</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">n_simulation_steps</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">mpc_time_step</span><span class="p">,</span> <span class="n">result_df</span><span class="p">,</span> <span class="n">total_horizon_time</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">n_simulation_steps</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">mpc_time_step</span><span class="p">,</span> <span class="n">result_df</span><span class="p">,</span>
+            <span class="n">total_horizon_time</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;simulate with flex model over the prediction horizon&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;simulate with flex model over the prediction horizon</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># get control and input values from the mpc optimization result</span>
         <span class="n">control_values</span> <span class="o">=</span> <span class="n">result_df</span><span class="o">.</span><span class="n">variable</span><span class="p">[</span>
@@ -572,11 +704,14 @@
         <span class="n">input_values</span> <span class="o">=</span> <span class="n">result_df</span><span class="o">.</span><span class="n">parameter</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">inputs</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
 
         <span class="c1"># Get the simulation time step index</span>
-        <span class="n">sim_time_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">n_simulation_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">sim_time_step</span><span class="p">,</span> <span class="n">sim_time_step</span><span class="p">)</span>
+        <span class="n">sim_time_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">n_simulation_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">sim_time_step</span><span class="p">,</span>
+                                   <span class="n">sim_time_step</span><span class="p">)</span>
 
         <span class="c1"># Reindex the controls and inputs to sim_time_index</span>
-        <span class="n">control_values_full</span> <span class="o">=</span> <span class="n">control_values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">sim_time_index</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;ffill&quot;</span><span class="p">)</span>
-        <span class="n">input_values_full</span> <span class="o">=</span> <span class="n">input_values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">sim_time_index</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">)</span>
+        <span class="n">control_values_full</span> <span class="o">=</span> <span class="n">control_values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">sim_time_index</span><span class="p">,</span>
+                                                            <span class="n">method</span><span class="o">=</span><span class="s2">&quot;ffill&quot;</span><span class="p">)</span>
+        <span class="n">input_values_full</span> <span class="o">=</span> <span class="n">input_values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">sim_time_index</span><span class="p">,</span>
+                                                        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_simulation_steps</span><span class="p">):</span>
             <span class="n">current_sim_time</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">sim_time_step</span>
@@ -597,13 +732,15 @@
             <span class="k">for</span> <span class="n">input_var</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">input_values_full</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">current_sim_time</span><span class="p">]</span>
             <span class="p">):</span>
-                <span class="c1"># change the type of iterable input, since casadi model can&#39;t deal with iterable</span>
+                <span class="c1"># change the type of iterable input, since casadi model can&#39;t</span>
+                <span class="c1"># deal with iterable</span>
                 <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">input_var</span><span class="p">)</span><span class="o">.</span><span class="n">type</span><span class="p">),</span> <span class="n">Iterable</span><span class="p">):</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">input_var</span><span class="p">)</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">flex_model</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">input_var</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
             <span class="c1"># do integration</span>
-            <span class="c1"># reduce the simulation time step so that the total horizon time will not be exceeded</span>
+            <span class="c1"># reduce the simulation time step so that the total horizon time</span>
+            <span class="c1"># will not be exceeded</span>
             <span class="k">if</span> <span class="n">current_sim_time</span> <span class="o">+</span> <span class="n">sim_time_step</span> <span class="o">&lt;=</span> <span class="n">total_horizon_time</span><span class="p">:</span>
                 <span class="n">t_sample</span> <span class="o">=</span> <span class="n">sim_time_step</span>
             <span class="k">else</span><span class="p">:</span>
