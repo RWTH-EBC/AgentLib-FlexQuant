@@ -142,7 +142,7 @@ def test_oneroom_cia(snapshot, module_cleanup):
     # Extract the full resulting dataframes as requested
     df_neg_flex_res = res["NegFlexMPC"]["NegFlexMPC"]
     df_pos_flex_res = res["PosFlexMPC"]["PosFlexMPC"]
-    df_baseline_res = res["myMPCAgent"]["Baseline"]
+    df_baseline_res = res["Baseline"]["Baseline"]
     df_indicator_res = res["FlexibilityIndicator"]["FlexibilityIndicator"]
 
     # Assert that a summary of each result DataFrame matches its snapshot
