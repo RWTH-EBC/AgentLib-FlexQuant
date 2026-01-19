@@ -21,21 +21,22 @@ class FlexibilityMarketModuleConfig(agentlib.BaseModuleConfig):
 
     outputs: list[AgentVariable] = [
         AgentVariable(
-            name="_P_external", alias="_P_external", description="External Power IO"
+            name=glbs.ACCEPTED_POWER_VAR_NAME, alias=glbs.ACCEPTED_POWER_VAR_NAME,
+            description="External Power IO"
         ),
         AgentVariable(
-            name="rel_start",
-            alias="rel_start",
+            name=glbs.RELATIVE_EVENT_START_TIME_VAR_NAME,
+            alias=glbs.RELATIVE_EVENT_START_TIME_VAR_NAME,
             description="relative start time of the flexibility event",
         ),
         AgentVariable(
-            name="rel_end",
-            alias="rel_end",
+            name=glbs.RELATIVE_EVENT_END_TIME_VAR_NAME,
+            alias=glbs.RELATIVE_EVENT_END_TIME_VAR_NAME,
             description="relative end time of the flexibility event",
         ),
         AgentVariable(
-            name="in_provision",
-            alias="in_provision",
+            name=glbs.PROVISION_VAR_NAME,
+            alias=glbs.PROVISION_VAR_NAME,
             description="Set if the system is in provision",
             value=False,
         ),
@@ -75,8 +76,8 @@ class FlexibilityMarketModule(agentlib.BaseModule):
     # DataFrame for flex offer. Multiindex: (time_step, time).
     # Columns: pos_price, neg_price, status
     flex_offer_df: pd.DataFrame = None
-    # absolute end time of a flexibility event (now + relative end time of the flexibility
-    # event on the mpc horizon)
+    # absolute end time of a flexibility event (now + relative end time
+    # of the flexibility event on the mpc horizon)
     abs_flex_event_end: Union[int, float] = 0
 
     def set_random_seed(self, random_seed: int):
@@ -142,14 +143,15 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         A higher rate means that more positive offers will be accepted.
 
         Constraints:
-            cooldown: during $cooldown steps after a flexibility event no offer is accepted
+            cooldown: during $cooldown steps after a flexibility event no offer is
+            accepted
             minimum_average_flex: min amount of flexibility to be accepted,
             to account for the model error
 
         """
         offer = inp.value
         # check if there is a flexibility provision and the cooldown is finished
-        if not self.get("in_provision").value and self.cooldown_ticker == 0:
+        if not self.get(glbs.PROVISION_VAR_NAME).value and self.cooldown_ticker == 0:
             if (
                 self.random_generator.random()
                 < self.config.market_specs.options.offer_acceptance_rate
@@ -177,21 +179,24 @@ class FlexibilityMarketModule(agentlib.BaseModule):
 
                 if profile is not None:
                     # reindex the profile to the mpc output time grid
-                    flex_power_feedback_method = self.config.market_specs.accepted_offer_sample_points
+                    flex_power_feedback_method = (
+                        self.config.market_specs.accepted_offer_sample_points)
                     if flex_power_feedback_method == glbs.COLLOCATION:
-                        profile = profile.reindex(self.get(glbs.COLLOCATION_TIME_GRID).value)
+                        profile = profile.reindex(
+                            self.get(glbs.COLLOCATION_TIME_GRID).value)
                     elif flex_power_feedback_method == glbs.CONSTANT:
-                        index_to_keep = ~np.isin(profile.index,
-                                                 self.get(glbs.COLLOCATION_TIME_GRID).value)
+                        index_to_keep = ~np.isin(
+                            profile.index, self.get(glbs.COLLOCATION_TIME_GRID).value)
                         profile = profile.get(index_to_keep)
                         helper_indices = [i - 1 for i in profile.index[1:]]
-                        new_index = sorted(set(profile.index.tolist() + helper_indices))[:-1]
+                        new_index = sorted(set(profile.index.tolist() +
+                                               helper_indices))[:-1]
                         profile = profile.reindex(new_index).ffill()
                     profile = profile.dropna()
                     profile.index += self.env.time
-                    self.set("_P_external", profile)
+                    self.set(glbs.ACCEPTED_POWER_VAR_NAME, profile)
                     self.abs_flex_event_end = profile.index[-1]
-                    self.set("in_provision", True)
+                    self.set(glbs.PROVISION_VAR_NAME, True)
                     self.cooldown_ticker = self.config.market_specs.cooldown
 
         elif self.cooldown_ticker > 0:
@@ -205,7 +210,8 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         profile = None
         t_sample = self.get(glbs.TIME_STEP).value
         acceptance_time_lower = (
-            self.env.config.offset + self.config.market_specs.options.offer_acceptance_time
+            self.env.config.offset +
+            self.config.market_specs.options.offer_acceptance_time
         )
         acceptance_time_upper = (
             self.env.config.offset
@@ -214,7 +220,7 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         )
         if (
             acceptance_time_lower <= self.env.now < acceptance_time_upper
-            and not self.get("in_provision").value
+            and not self.get(glbs.PROVISION_VAR_NAME).value
         ):
             if self.config.market_specs.options.direction == "positive":
                 if (
@@ -233,21 +239,24 @@ class FlexibilityMarketModule(agentlib.BaseModule):
 
             if profile is not None:
                 # reindex the profile to the mpc output time grid
-                flex_power_feedback_method = self.config.market_specs.accepted_offer_sample_points
+                flex_power_feedback_method = (
+                    self.config.market_specs.accepted_offer_sample_points)
                 if flex_power_feedback_method == glbs.COLLOCATION:
-                    profile = profile.reindex(self.get(glbs.COLLOCATION_TIME_GRID).value)
+                    profile = profile.reindex(self.get(
+                        glbs.COLLOCATION_TIME_GRID).value)
                 elif flex_power_feedback_method == glbs.CONSTANT:
                     index_to_keep = ~np.isin(profile.index,
                                              self.get(glbs.COLLOCATION_TIME_GRID).value)
                     profile = profile.get(index_to_keep)
                     helper_indices = [i - 1 for i in profile.index[1:]]
-                    new_index = sorted(set(profile.index.tolist() + helper_indices))[:-1]
+                    new_index = sorted(set(profile.index.tolist() +
+                                           helper_indices))[:-1]
                     profile = profile.reindex(new_index).ffill()
                 profile = profile.dropna()
                 profile.index += self.env.time
-                self.set("_P_external", profile)
+                self.set(glbs.ACCEPTED_POWER_VAR_NAME, profile)
                 self.abs_flex_event_end = profile.index[-1]
-                self.set("in_provision", True)
+                self.set(glbs.PROVISION_VAR_NAME, True)
 
         self.write_results(offer)
 
@@ -270,5 +279,5 @@ class FlexibilityMarketModule(agentlib.BaseModule):
         while True:
             # End the provision at the appropriate time
             if self.abs_flex_event_end <= self.env.time:
-                self.set("in_provision", False)
+                self.set(glbs.PROVISION_VAR_NAME, False)
             yield self.env.timeout(self.env.config.t_sample)

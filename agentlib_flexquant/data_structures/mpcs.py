@@ -21,7 +21,6 @@ excluded_fields = [
         "description",
         "unit",
         "clip",
-        "shared",
         "interpolation_method",
         "allowed_values",
     ]
@@ -38,6 +37,7 @@ class BaseMPCData(pydantic.BaseModel):
     module_types: dict
     class_name: str
     module_id: str
+    agent_id: str
     # variables
     power_alias: str
     stored_energy_alias: str
@@ -62,6 +62,7 @@ class BaselineMPCData(BaseMPCData):
     module_types: dict = cmng.BASELINE_MODULE_TYPE_DICT
     class_name: str = "BaselineMPCModel"
     module_id: str = "Baseline"
+    agent_id: str = "Baseline"
     # variables
     power_alias: str = glbs.POWER_ALIAS_BASE
     stored_energy_alias: str = glbs.STORED_ENERGY_ALIAS_BASE
@@ -88,10 +89,10 @@ class BaselineMPCData(BaseMPCData):
         default=1, description="Weight of soft constraint for discomfort",
     )
     config_inputs_appendix: list[MPCVariable] = [
-        MPCVariable(name="_P_external", value=0, unit="W"),
-        MPCVariable(name="in_provision", value=False),
-        MPCVariable(name="rel_start", value=0, unit="s"),
-        MPCVariable(name="rel_end", value=0, unit="s"),
+        MPCVariable(name=glbs.ACCEPTED_POWER_VAR_NAME, value=0, unit="W"),
+        MPCVariable(name=glbs.PROVISION_VAR_NAME, value=False),
+        MPCVariable(name=glbs.RELATIVE_EVENT_START_TIME_VAR_NAME, value=0, unit="s"),
+        MPCVariable(name=glbs.RELATIVE_EVENT_END_TIME_VAR_NAME, value=0, unit="s"),
     ]
 
     config_parameters_appendix: list[MPCVariable] = []
@@ -144,6 +145,7 @@ class PFMPCData(BaseMPCData):
     module_types: dict = cmng.SHADOW_MODULE_TYPE_DICT
     class_name: str = "PosFlexModel"
     module_id: str = "PosFlexMPC"
+    agent_id: str = "PosFlexMPC"
     # variables
     power_alias: str = glbs.POWER_ALIAS_POS
     stored_energy_alias: str = glbs.STORED_ENERGY_ALIAS_POS
@@ -195,7 +197,8 @@ class NFMPCData(BaseMPCData):
     module_types: dict = cmng.SHADOW_MODULE_TYPE_DICT
     class_name: str = "NegFlexModel"
     module_id: str = "NegFlexMPC"
-    # variables 
+    agent_id: str = "NegFlexMPC"
+    # variables
     power_alias: str = glbs.POWER_ALIAS_NEG
     stored_energy_alias: str = glbs.STORED_ENERGY_ALIAS_NEG
     flex_cost_function: str = pydantic.Field(
