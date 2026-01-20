@@ -8,7 +8,7 @@ mappings, and optimization weights for MPC implementations.
 """
 import pydantic
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
-from pydantic import ConfigDict, model_validator, field_serializer, Field
+from pydantic import model_validator, field_serializer, Field
 
 import agentlib_flexquant.data_structures.globals as glbs
 import agentlib_flexquant.utils.config_management as cmng
