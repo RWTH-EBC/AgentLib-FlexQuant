@@ -26,14 +26,37 @@ excluded_fields = [
     ]
 
 default_parameters = [
-        MPCVariable(name=glbs.PREP_TIME, value=0, unit="s", type="int"),
-        MPCVariable(name=glbs.MARKET_TIME, value=0, unit="s", type="int"),
-        MPCVariable(name=glbs.FLEX_EVENT_DURATION, value=0, unit="s", type="int")
-        ]
+        MPCVariable(
+            name=glbs.PREP_TIME,
+            value=0,
+            unit="s",
+            type="int",
+            description="Preparation time before switching objective",
+        ),
+        MPCVariable(
+            name=glbs.MARKET_TIME,
+            value=0,
+            unit="s",
+            type="int",
+            description="Market time associated with the objective switch",
+        ),
+        MPCVariable(
+            name=glbs.FLEX_EVENT_DURATION,
+            value=0,
+            unit="s",
+            type="int",
+            description="Duration of the flexibility event",
+        ),
+    ]
 
 default_inputs = [
-        MPCVariable(name=glbs.PROVISION_VAR_NAME, value=False, unit="-", type="bool"),
-        ]
+        MPCVariable(
+            name=glbs.PROVISION_VAR_NAME,
+            value=False,
+            type="bool",
+            description="Flag indicating whether flexibility should be provisioned",
+        ),
+    ]
 
 def _ensure_defaults_in_appendix(
     data: dict,
