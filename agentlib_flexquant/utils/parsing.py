@@ -260,6 +260,9 @@ class SetupSystemModifier(ast.NodeTransformer):
         """
         # loop over config object and modify fields
         for body in node.body:
+            # If there are custom functions in the config class, skip them
+            if isinstance(body, ast.FunctionDef):
+                continue
             # add the time and full baseline control trajectory as inputs
             if body.target.id == "inputs":
                 for control in self.controls:
@@ -312,6 +315,9 @@ class SetupSystemModifier(ast.NodeTransformer):
         """
         # loop over config object and modify fields
         for body in node.body:
+            # If there are custom functions in the config class, skip them
+            if isinstance(body, ast.FunctionDef):
+                continue
             # add the fullcontrol trajectories to the baseline config class
             if body.target.id == "outputs":
                 if isinstance(body.value, ast.List):

@@ -604,7 +604,10 @@ class FlexAgentGenerator:
 
         # Extract the config class of the casadi model to check cost functions
         config_class = inspect.get_annotations(custom_injection(opt_backend))["config"]
-        config_instance = config_class()
+        # Get custom module fields provided by the user and add them
+        model_fields = self.baseline_mpc_module_config.optimization_backend["model"]
+        _ = model_fields.pop("type")
+        config_instance = config_class(**model_fields)
         # The " + " is just there to simplify the validation, it does not affect
         # the generated code
         self.check_variables_in_casadi_config(
