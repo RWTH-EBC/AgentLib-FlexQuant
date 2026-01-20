@@ -100,14 +100,37 @@
     <span class="p">]</span>
 
 <span class="n">default_parameters</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">PREP_TIME</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">),</span>
-        <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">MARKET_TIME</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">),</span>
-        <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">FLEX_EVENT_DURATION</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">)</span>
-        <span class="p">]</span>
+        <span class="n">MPCVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">PREP_TIME</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Preparation time before switching objective&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">MPCVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">MARKET_TIME</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Market time associated with the objective switch&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">MPCVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">FLEX_EVENT_DURATION</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Duration of the flexibility event&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">]</span>
 
 <span class="n">default_inputs</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">PROVISION_VAR_NAME</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;bool&quot;</span><span class="p">),</span>
-        <span class="p">]</span>
+        <span class="n">MPCVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">PROVISION_VAR_NAME</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;bool&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Flag indicating whether flexibility should be provisioned&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">]</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_defaults_in_appendix</span><span class="p">(</span>
     <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
