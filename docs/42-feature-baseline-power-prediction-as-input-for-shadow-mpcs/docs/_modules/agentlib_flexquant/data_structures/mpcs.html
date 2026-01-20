@@ -99,6 +99,15 @@
         <span class="s2">&quot;allowed_values&quot;</span><span class="p">,</span>
     <span class="p">]</span>
 
+<span class="n">default_parameters</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">PREP_TIME</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">),</span>
+        <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">MARKET_TIME</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">),</span>
+        <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">FLEX_EVENT_DURATION</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">)</span>
+        <span class="p">]</span>
+
+<span class="n">default_inputs</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">PROVISION_VAR_NAME</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;bool&quot;</span><span class="p">),</span>
+        <span class="p">]</span>
 
 <div class="viewcode-block" id="BaseMPCData"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.BaseMPCData">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">BaseMPCData</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class containing necessary data for the code creation of the different mpcs&quot;&quot;&quot;</span>
@@ -242,9 +251,6 @@
 <span class="sd">        (e.g., PROVISION_VAR_NAME) is missing, </span>
 <span class="sd">        it appends them to the list. </span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">default_inputs</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">PROVISION_VAR_NAME</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
-        <span class="p">]</span>
 
         <span class="c1"># Get the provided config_inputs_appendix or use an empty list</span>
         <span class="n">provided_inputs</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;config_inputs_appendix&quot;</span><span class="p">,</span> <span class="p">[])</span>
@@ -268,11 +274,7 @@
 <span class="sd">        (e.g., PREP_TIME, MARKET_TIME, FLEX_EVENT_DURATION) is missing, </span>
 <span class="sd">        it appends them to the list. </span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">default_parameters</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">PREP_TIME</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">),</span>
-        <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">MARKET_TIME</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">),</span>
-        <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">FLEX_EVENT_DURATION</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">)</span>
-        <span class="p">]</span>
+        
 
         <span class="c1"># Get the provided config_parameters_appendix or use an empty list</span>
         <span class="n">provided_parameters</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;config_parameters_appendix&quot;</span><span class="p">,</span> <span class="p">[])</span>
@@ -345,9 +347,6 @@
 <span class="sd">        ``config_inputs_appendix``. If any default framework parameter </span>
 <span class="sd">        (e.g., PROVISION_VAR_NAME) is missing, it appends them to the list. </span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">default_inputs</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">PROVISION_VAR_NAME</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
-        <span class="p">]</span>
 
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_ensure_defaults_in_appendix</span><span class="p">(</span>
             <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
@@ -364,11 +363,6 @@
 <span class="sd">        (e.g., PREP_TIME, MARKET_TIME, FLEX_EVENT_DURATION) is missing, </span>
 <span class="sd">        it appends them to the list. </span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">default_parameters</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">PREP_TIME</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">),</span>
-            <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">MARKET_TIME</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">),</span>
-            <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">FLEX_EVENT_DURATION</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">),</span>
-        <span class="p">]</span>
 
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_ensure_defaults_in_appendix</span><span class="p">(</span>
             <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
