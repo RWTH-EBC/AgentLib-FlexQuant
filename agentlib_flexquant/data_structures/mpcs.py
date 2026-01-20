@@ -32,7 +32,7 @@ default_parameters = [
         ]
 
 default_inputs = [
-        MPCVariable(name=glbs.PROVISION_VAR_NAME, value=False, type="bool"),
+        MPCVariable(name=glbs.PROVISION_VAR_NAME, value=False, unit="-", type="bool"),
         ]
 
 def _ensure_defaults_in_appendix(
