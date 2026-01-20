@@ -28,9 +28,9 @@
 
         
         <h2>Score</h2>
-        7.18 / 10
+        7.19 / 10
             
-            (previous score: 7.18 / 10)
+            (previous score: 7.19 / 10)
             
         
 
@@ -1237,11 +1237,11 @@
                 <td><code>too-many-locals</code></td>
                 <td>R0914</td>
                 <td>FlexAgentGenerator._generate_flex_model_definition</td>
-                <td><pre>Too many local variables (17/15)</pre></td>
+                <td><pre>Too many local variables (18/15)</pre></td>
             </tr>
             
             <tr>
-                <td>613</td>
+                <td>616</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1251,7 +1251,7 @@
             </tr>
             
             <tr>
-                <td>614</td>
+                <td>617</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1261,7 +1261,7 @@
             </tr>
             
             <tr>
-                <td>619</td>
+                <td>622</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1271,7 +1271,7 @@
             </tr>
             
             <tr>
-                <td>620</td>
+                <td>623</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1281,7 +1281,7 @@
             </tr>
             
             <tr>
-                <td>624</td>
+                <td>627</td>
                 <td>65</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1291,7 +1291,7 @@
             </tr>
             
             <tr>
-                <td>674</td>
+                <td>677</td>
                 <td>57</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1301,7 +1301,7 @@
             </tr>
             
             <tr>
-                <td>700</td>
+                <td>703</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-branches</code></td>
@@ -1311,7 +1311,7 @@
             </tr>
             
             <tr>
-                <td>764</td>
+                <td>767</td>
                 <td>8</td>
                 <td>refactor</td>
                 <td><code>no-else-raise</code></td>
@@ -1321,7 +1321,7 @@
             </tr>
             
             <tr>
-                <td>861</td>
+                <td>864</td>
                 <td>68</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1331,7 +1331,7 @@
             </tr>
             
             <tr>
-                <td>875</td>
+                <td>878</td>
                 <td>48</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1341,7 +1341,7 @@
             </tr>
             
             <tr>
-                <td>878</td>
+                <td>881</td>
                 <td>8</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1351,7 +1351,7 @@
             </tr>
             
             <tr>
-                <td>879</td>
+                <td>882</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>raise-missing-from</code></td>
@@ -1361,7 +1361,7 @@
             </tr>
             
             <tr>
-                <td>879</td>
+                <td>882</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>broad-exception-raised</code></td>
@@ -1469,8 +1469,8 @@
     def _initialize_flex_results(
         self, n_simulation_steps, horizon_length, sim_time_step, result_df
     ):
-        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension and index and fill with
-         existing results from optimization&#34;&#34;&#34;
+        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension and index and fill
+        with existing results from optimization&#34;&#34;&#34;
 
         # create MultiIndex for collocation points
         index_coll = pd.MultiIndex.from_arrays(
@@ -1491,8 +1491,8 @@
         # initialize the flex results with correct dimension
         self.flex_results = pd.DataFrame(np.nan, index=new_index, columns=self.var_ref.outputs)
 
-        # Get the optimization outputs and create a series for fixed optimization outputs with the
-        # correct MultiIndex format
+        # Get the optimization outputs and create a series for fixed optimization outputs with
+        # the correct MultiIndex format
         opti_outputs = result_df.variable[self.config.power_variable_name]
         fixed_opti_output = pd.Series(
             opti_outputs.values,
@@ -1594,10 +1594,7 @@
         # simulate with the casadi simulator
         self.sim_flex_model(solution)
 
-        # extract solution DataFrama
         df = solution.df
-
-        # send the outputs
         if self.flex_results is not None:
             for output in self.var_ref.outputs:
                 if output not in [
@@ -1665,9 +1662,8 @@
     def _initialize_flex_results(
         self, n_simulation_steps, horizon_length, sim_time_step, result_df
     ):
-        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension and index
-        and fill with existing results from optimization
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension and index and fill with
+         existing results from optimization&#34;&#34;&#34;
 
         # create MultiIndex for collocation points
         index_coll = pd.MultiIndex.from_arrays(
@@ -1937,8 +1933,8 @@
         # initialize the flex results with correct dimension
         self.flex_results = pd.DataFrame(np.nan, index=new_index, columns=self.var_ref.outputs)
 
-        # Get the optimization outputs and create a series for fixed optimization outputs with the
-        # correct MultiIndex format
+        # Get the optimization outputs and create a series for fixed optimization outputs with
+        # the correct MultiIndex format
         opti_outputs = result_df.variable[self.config.power_variable_name]
         fixed_opti_output = pd.Series(
             opti_outputs.values,
@@ -2090,13 +2086,7 @@
             except:
                 pass
 
-    def pre_computation_hook(self):
-        &#34;&#34;&#34;Calculate relative start and end times for flexibility provision.
-
-        When in provision mode, computes the relative timing for flexibility
-        events based on the external power profile timestamps and current
-        environment time.
-        &#34;&#34;&#34;</pre></td>
+    def register_callbacks(self):</pre></td>
             </tr>
             
             <tr>
@@ -2110,8 +2100,8 @@
 ==agentlib_flexquant.modules.baseline_mpc:[60:81]
 ==agentlib_flexquant.modules.shadow_mpc:[50:67]
         if self.config.casadi_sim_time_step &gt; 0:
-            # generate a separate flex_model for integration to ensure the model used in MPC
-            # optimization remains unaffected
+            # generate a separate flex_model for integration to ensure
+            # the model used in MPC optimization remains unaffected
             self.flex_model = type(self.model)(dt=self.config.casadi_sim_time_step)
             # generate the filename for the simulation results
             self.res_file_flex = self.config.optimization_backend[&#34;results_file&#34;].replace(
@@ -2123,9 +2113,13 @@
             except:
                 pass
 
-    def set_output(self, solution):
-        &#34;&#34;&#34;Takes the solution from optimization backend and sends it to AgentVariables.&#34;&#34;&#34;
-        # Output must be defined in the config as &#34;type&#34;=&#34;pd.Series&#34;</pre></td>
+    def pre_computation_hook(self):
+        &#34;&#34;&#34;Calculate relative start and end times for flexibility provision.
+
+        When in provision mode, computes the relative timing for flexibility
+        events based on the external power profile timestamps and current
+        environment time.
+        &#34;&#34;&#34;</pre></td>
             </tr>
             
             <tr>
@@ -4280,7 +4274,7 @@
             </tr>
             
             <tr>
-                <td>320</td>
+                <td>326</td>
                 <td>21</td>
                 <td>refactor</td>
                 <td><code>consider-merging-isinstance</code></td>
@@ -4290,7 +4284,7 @@
             </tr>
             
             <tr>
-                <td>331</td>
+                <td>337</td>
                 <td>21</td>
                 <td>refactor</td>
                 <td><code>consider-merging-isinstance</code></td>
@@ -4300,7 +4294,7 @@
             </tr>
             
             <tr>
-                <td>398</td>
+                <td>404</td>
                 <td>24</td>
                 <td>warning</td>
                 <td><code>unused-variable</code></td>
@@ -4310,7 +4304,7 @@
             </tr>
             
             <tr>
-                <td>535</td>
+                <td>541</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>

@@ -334,6 +334,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># loop over config object and modify fields</span>
         <span class="k">for</span> <span class="n">body</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
+            <span class="c1"># If there are custom functions in the config class, skip them</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">FunctionDef</span><span class="p">):</span>
+                <span class="k">continue</span>
             <span class="c1"># add the time and full baseline control trajectory as inputs</span>
             <span class="k">if</span> <span class="n">body</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s2">&quot;inputs&quot;</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">control</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">controls</span><span class="p">:</span>
@@ -386,6 +389,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># loop over config object and modify fields</span>
         <span class="k">for</span> <span class="n">body</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
+            <span class="c1"># If there are custom functions in the config class, skip them</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">FunctionDef</span><span class="p">):</span>
+                <span class="k">continue</span>
             <span class="c1"># add the fullcontrol trajectories to the baseline config class</span>
             <span class="k">if</span> <span class="n">body</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s2">&quot;outputs&quot;</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">List</span><span class="p">):</span>
