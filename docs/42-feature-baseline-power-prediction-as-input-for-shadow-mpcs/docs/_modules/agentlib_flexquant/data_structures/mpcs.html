@@ -289,9 +289,10 @@
     <span class="nd">@classmethod</span> 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_defaults_to_appendix</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span> 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Ensures that all required framework parameters are included in </span>
-<span class="sd">        ``config_inputs_appendix``. If any default framework parameter </span>
-<span class="sd">        (e.g., PROVISION_VAR_NAME) is missing, it appends them to the list. </span>
+<span class="sd">        Ensure that all required framework variables are included in both</span>
+<span class="sd">        ``config_inputs_appendix`` and ``config_parameters_appendix``.</span>
+<span class="sd">        If any default framework input or parameter (e.g., PROVISION_VAR_NAME)</span>
+<span class="sd">        is missing, it is appended to the corresponding list.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">data</span> <span class="o">=</span>  <span class="n">_ensure_defaults_in_appendix</span><span class="p">(</span>
