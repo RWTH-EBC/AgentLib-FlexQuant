@@ -291,7 +291,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                 )
                 for var in self.mpc_data.config_inputs_appendix:
                     body.value.elts.append(
-                        add_input(var.name,var.value,var.unit,var.description,var.type)
+                        add_input(var.name, var.value, var.unit, var.description, var.type)
                     )
                     
             # add the flex variables and the weights
