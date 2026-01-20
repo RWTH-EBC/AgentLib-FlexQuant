@@ -450,11 +450,19 @@ class FlexAgentGenerator:
                 if input in self.baseline_mpc_module_config.inputs:
                     module_config_flex.inputs[i].alias = (
                             input.alias + glbs.base_vars_to_communicate_suffix)
+                    
             # add Baseline input names to shadow MPC config for inputs tracking
             module_config_flex.baseline_input_names = [
                 input.alias + glbs.base_vars_to_communicate_suffix for input in
                 self.baseline_mpc_module_config.inputs]
+            
+            # add custom input names for the shadow MPC to track. Here, the communication suffix is not added, as 
+            # the user is free to define custom inputs as desired.
+            module_config_flex.custom_input_names = [
+                input.alias for input in self.flex_config.shadow_mpc_config_generator_data.custom_inputs
+            ]
 
+            
             for i, state in enumerate(module_config_flex.states):
                 if state in self.baseline_mpc_module_config.states:
                     module_config_flex.states[i].alias = (
@@ -688,10 +696,12 @@ class FlexAgentGenerator:
         self.check_variables_in_casadi_config(
             config_instance,
             self.flex_config.shadow_mpc_config_generator_data.neg_flex.flex_cost_function,
+            shadow_mpc_type="neg_flex",
         )
         self.check_variables_in_casadi_config(
             config_instance,
             self.flex_config.shadow_mpc_config_generator_data.pos_flex.flex_cost_function,
+            shadow_mpc_type="pos_flex",
         )
 
         # parse mpc python file
@@ -748,7 +758,7 @@ class FlexAgentGenerator:
         with open(output_file, "w", encoding="utf-8") as f:
             f.write(formatted_code)
 
-    def check_variables_in_casadi_config(self, config: CasadiModelConfig, expr: str):
+    def check_variables_in_casadi_config(self, config: CasadiModelConfig, expr: str, shadow_mpc_type: str):
         """Check if all variables in the expression are defined in the config.
 
         Args:
@@ -762,15 +772,15 @@ class FlexAgentGenerator:
         variables_in_config = set(config.get_variable_names())
         variables_in_cost_function = set(ast.walk(ast.parse(expr)))
         variables_in_cost_function = {
-            node.attr for node in variables_in_cost_function if isinstance(node,
-                                                                           ast.Attribute)
+            node.attr for node in variables_in_cost_function if isinstance(node,ast.Attribute)
         }
+        flex_config_data = (self.flex_config.shadow_mpc_config_generator_data.pos_flex 
+                            if shadow_mpc_type == "pos_flex" 
+                            else self.flex_config.shadow_mpc_config_generator_data.neg_flex)
         variables_newly_created = set(
-            [par.name for par in self.flex_config.shadow_mpc_config_generator_data.pos_flex.config_parameters_appendix] +
-            [inp.name for inp in self.flex_config.shadow_mpc_config_generator_data.pos_flex.config_inputs_appendix] +
-            [par.name for par in self.flex_config.shadow_mpc_config_generator_data.neg_flex.config_parameters_appendix] +
-            [inp.name for inp in self.flex_config.shadow_mpc_config_generator_data.neg_flex.config_inputs_appendix] 
-        )
+            [par.name for par in flex_config_data.config_parameters_appendix] +
+            [inp.name for inp in flex_config_data.config_inputs_appendix]
+            )
         
         unknown_vars = variables_in_cost_function - variables_in_config - variables_newly_created
         if unknown_vars:
