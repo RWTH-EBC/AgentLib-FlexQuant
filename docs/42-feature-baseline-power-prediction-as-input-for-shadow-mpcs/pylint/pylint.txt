@@ -94,7 +94,8 @@ agentlib_flexquant/utils/config_management.py:170:24: C3002: Lambda expression c
 agentlib_flexquant/utils/config_management.py:178:24: C3002: Lambda expression called directly. Execute the expression inline instead. (unnecessary-direct-lambda-call)
 agentlib_flexquant/utils/config_management.py:187:0: C0116: Missing function or method docstring (missing-function-docstring)
 ************* Module agentlib_flexquant.utils.parsing
-agentlib_flexquant/utils/parsing.py:296:0: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/utils/parsing.py:297:0: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/utils/parsing.py:522:0: C0304: Final newline missing (missing-final-newline)
 agentlib_flexquant/utils/parsing.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 agentlib_flexquant/utils/parsing.py:5:0: E0401: Unable to import 'agentlib_mpc.data_structures.mpc_datamodels' (import-error)
 agentlib_flexquant/utils/parsing.py:59:74: W0622: Redefining built-in 'type' (redefined-builtin)
@@ -102,10 +103,14 @@ agentlib_flexquant/utils/parsing.py:114:26: W0622: Redefining built-in 'type' (r
 agentlib_flexquant/utils/parsing.py:169:4: C0103: Method name "visit_Module" doesn't conform to snake_case naming style (invalid-name)
 agentlib_flexquant/utils/parsing.py:192:4: C0103: Method name "visit_ClassDef" doesn't conform to snake_case naming style (invalid-name)
 agentlib_flexquant/utils/parsing.py:244:8: R1705: Unnecessary "elif" after "return", remove the leading "el" from "elif" (no-else-return)
-agentlib_flexquant/utils/parsing.py:327:21: R1701: Consider merging these isinstance calls to isinstance(body.value, (ast.BinOp, ast.Tuple)) (consider-merging-isinstance)
-agentlib_flexquant/utils/parsing.py:338:21: R1701: Consider merging these isinstance calls to isinstance(body.value, (ast.BinOp, ast.Tuple)) (consider-merging-isinstance)
-agentlib_flexquant/utils/parsing.py:405:24: W0612: Unused variable 'ind' (unused-variable)
-agentlib_flexquant/utils/parsing.py:529:0: C0116: Missing function or method docstring (missing-function-docstring)
+agentlib_flexquant/utils/parsing.py:295:24: E1121: Too many positional arguments for function call (too-many-function-args)
+agentlib_flexquant/utils/parsing.py:313:21: R1701: Consider merging these isinstance calls to isinstance(body.value, (ast.BinOp, ast.Tuple)) (consider-merging-isinstance)
+agentlib_flexquant/utils/parsing.py:324:21: R1701: Consider merging these isinstance calls to isinstance(body.value, (ast.BinOp, ast.Tuple)) (consider-merging-isinstance)
+agentlib_flexquant/utils/parsing.py:391:24: W0612: Unused variable 'ind' (unused-variable)
+agentlib_flexquant/utils/parsing.py:515:0: C0116: Missing function or method docstring (missing-function-docstring)
+agentlib_flexquant/utils/parsing.py:7:0: W0611: Unused FLEX_EVENT_DURATION imported from agentlib_flexquant.data_structures.globals (unused-import)
+agentlib_flexquant/utils/parsing.py:7:0: W0611: Unused MARKET_TIME imported from agentlib_flexquant.data_structures.globals (unused-import)
+agentlib_flexquant/utils/parsing.py:7:0: W0611: Unused PREP_TIME imported from agentlib_flexquant.data_structures.globals (unused-import)
 ************* Module agentlib_flexquant.utils.data_handling
 agentlib_flexquant/utils/data_handling.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 agentlib_flexquant/utils/data_handling.py:3:0: E0401: Unable to import 'pandas' (import-error)
@@ -117,14 +122,17 @@ agentlib_flexquant/utils/data_handling.py:77:50: W0123: Use of eval (eval-used)
 agentlib_flexquant/utils/data_handling.py:85:4: C0103: Argument name "df" doesn't conform to snake_case naming style (invalid-name)
 ************* Module agentlib_flexquant.data_structures.flexquant
 agentlib_flexquant/data_structures/flexquant.py:42:0: C0301: Line too long (117/100) (line-too-long)
+agentlib_flexquant/data_structures/flexquant.py:64:17: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/data_structures/flexquant.py:69:17: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/data_structures/flexquant.py:71:0: C0303: Trailing whitespace (trailing-whitespace)
 agentlib_flexquant/data_structures/flexquant.py:7:0: E0401: Unable to import 'pydantic' (import-error)
 agentlib_flexquant/data_structures/flexquant.py:9:0: E0401: Unable to import 'agentlib.core.agent' (import-error)
 agentlib_flexquant/data_structures/flexquant.py:10:0: E0401: Unable to import 'agentlib.core.errors' (import-error)
 agentlib_flexquant/data_structures/flexquant.py:11:0: E0401: Unable to import 'agentlib_mpc.data_structures.mpc_datamodels' (import-error)
-agentlib_flexquant/data_structures/flexquant.py:80:4: C0116: Missing function or method docstring (missing-function-docstring)
-agentlib_flexquant/data_structures/flexquant.py:84:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/flexquant.py:108:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/flexquant.py:221:4: C0116: Missing function or method docstring (missing-function-docstring)
+agentlib_flexquant/data_structures/flexquant.py:87:4: C0116: Missing function or method docstring (missing-function-docstring)
+agentlib_flexquant/data_structures/flexquant.py:91:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/flexquant.py:115:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/flexquant.py:228:4: C0116: Missing function or method docstring (missing-function-docstring)
 ************* Module agentlib_flexquant.data_structures.flex_kpis
 agentlib_flexquant/data_structures/flex_kpis.py:8:0: E0401: Unable to import 'numpy' (import-error)
 agentlib_flexquant/data_structures/flex_kpis.py:9:0: E0401: Unable to import 'pandas' (import-error)
@@ -365,13 +373,15 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model can't deal with iterable
+                # change the type of iterable input, since casadi model
+                # can't deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time will not be exceeded
+            # reduce the simulation time step so that the total horizon time
+            # will not be exceeded
             if current_sim_time + sim_time_step <= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -406,8 +416,8 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
     def _initialize_flex_results(
         self, n_simulation_steps, horizon_length, sim_time_step, result_df
     ):
-        """Initialize the flex results dataframe with the correct dimension and index
-        and fill with existing results from optimization
+        """Initialize the flex results dataframe with the correct dimension
+        and index and fill with existing results from optimization
 
         """
 
@@ -449,8 +459,8 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 
     def _update_model_parameters(self):
         """update the value of module parameters with value from config,
-        since creating a model just reads the value in the model class but
-        not the config
+        since creating a model just reads the value in the model class
+        but not the config.
 
         """
 
@@ -467,8 +477,7 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
-            total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
     ):
         """simulate with flex model over the prediction horizon
 
@@ -501,15 +510,13 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model can't
-                # deal with iterable
+                # change the type of iterable input, since casadi model can't deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time
-            # will not be exceeded
+            # reduce the simulation time step so that the total horizon time will not be exceeded
             if current_sim_time + sim_time_step <= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -531,10 +538,7 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
         # simulate with the casadi simulator
         self.sim_flex_model(solution)
 
-        # extract solution DataFrama
         df = solution.df
-
-        # send the outputs
         if self.flex_results is not None:
             for output in self.var_ref.outputs:
                 if output not in [
@@ -553,15 +557,13 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model
-                # can't deal with iterable
+                # change the type of iterable input, since casadi model can't deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time
-            # will not be exceeded
+            # reduce the simulation time step so that the total horizon time will not be exceeded
             if current_sim_time + sim_time_step <= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -572,9 +574,7 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value
-
- (duplicate-code)
+                ] = self.flex_model.get_output(output).value (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[657:680]
 ==agentlib_flexquant.modules.shadow_mpc:[303:326]
@@ -622,8 +622,8 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 
     def _update_model_parameters(self):
         """update the value of module parameters with value from config,
-        since creating a model just reads the value in the model class
-        but not the config.
+        since creating a model just reads the value in the model class but
+        not the config
 
         """
 
@@ -640,7 +640,8 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
         """simulate with flex model over the prediction horizon
 
@@ -787,12 +788,9 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
-            total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
     ):
-        """simulate with flex model over the prediction horizon
-
-        """
+        """simulate with flex model over the prediction horizon"""
 
         # get control and input values from the mpc optimization result
         control_values = result_df.variable[
@@ -819,7 +817,15 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
         # set the flex results format same as mpc result while updating Agentvariable
         self.flex_results.index = self.flex_results.index.get_level_values(1)
 
-    def register_callbacks(self): (duplicate-code)
+    def _initialize_flex_results(
+        self, n_simulation_steps, horizon_length, sim_time_step, result_df
+    ):
+        """Initialize the flex results dataframe with the correct dimension and index
+        and fill with existing results from optimization
+
+        """
+
+        # create MultiIndex for collocation points (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[485:494]
 ==agentlib_flexquant.modules.shadow_mpc:[88:97]
@@ -835,7 +841,7 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.data_structures.flexquant:[18:26]
 ==agentlib_flexquant.utils.config_management:[119:127]
-excluded_fields = [
+    excluded_fields = [
         "rdf_class",
         "source",
         "type",
@@ -851,8 +857,7 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             opti_outputs.values,
             index=index_coll,
         )
-        # fill the output value at the time step where it already exists
-        # in optimization output
+        # fill the output value at the time step where it already exists in optimization output
         for idx in fixed_opti_output.index:
             if idx in self.flex_results.index: (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
@@ -908,12 +913,15 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
-        """simulate with flex model over the prediction horizon"""
+        """simulate with flex model over the prediction horizon
+
+        """
 
         # get control and input values from the mpc optimization result (duplicate-code)
 
 -----------------------------------
-Your code has been rated at 7.22/10
+Your code has been rated at 7.17/10
 
