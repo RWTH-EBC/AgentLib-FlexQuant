@@ -269,9 +269,10 @@ class NFMPCData(BaseMPCData):
     @classmethod 
     def add_defaults_to_appendix(cls, data): 
         """
-        Ensures that all required framework parameters are included in 
-        ``config_inputs_appendix``. If any default framework parameter 
-        (e.g., PROVISION_VAR_NAME) is missing, it appends them to the list. 
+        Ensures that all required framework input and parameter variables are included in
+        ``config_inputs_appendix`` and ``config_parameters_appendix``. If any default
+        framework input or parameter (e.g., PROVISION_VAR_NAME) is missing, it is appended
+        to the corresponding list.
         """
 
         data =  _ensure_defaults_in_appendix(
