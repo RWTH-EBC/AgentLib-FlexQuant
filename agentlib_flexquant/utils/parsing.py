@@ -9,9 +9,12 @@ from agentlib_flexquant.data_structures.globals import (
     MARKET_TIME,
     PREP_TIME,
     SHADOW_MPC_COST_FUNCTION,
-    full_trajectory_prefix,
     full_trajectory_suffix,
     return_baseline_cost_function,
+    PROVISION_VAR_NAME,
+    ACCEPTED_POWER_VAR_NAME,
+    RELATIVE_EVENT_START_TIME_VAR_NAME,
+    RELATIVE_EVENT_END_TIME_VAR_NAME
 )
 from agentlib_flexquant.data_structures.mpcs import (
     BaselineMPCData,
@@ -288,7 +291,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                             )
                         )
                 body.value.elts.append(
-                    add_input("in_provision", False, "-", "provision flag", "bool")
+                    add_input(PROVISION_VAR_NAME, False, "-", "provision flag", "bool")
                 )
             # add the flex variables and the weights
             if body.target.id == "parameters":
@@ -341,7 +344,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                     value_list = self.get_leftmost_list(body.value)
                 value_list.elts.append(
                     add_input(
-                        "_P_external",
+                        ACCEPTED_POWER_VAR_NAME,
                         0,
                         "W",
                         "External power profile to be provided",
@@ -350,7 +353,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                 )
                 value_list.elts.append(
                     add_input(
-                        "in_provision",
+                        PROVISION_VAR_NAME,
                         False,
                         "-",
                         "Flag signaling if the flexibility is in provision",
@@ -359,7 +362,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                 )
                 value_list.elts.append(
                     add_input(
-                        "rel_start",
+                        RELATIVE_EVENT_START_TIME_VAR_NAME,
                         0,
                         "s",
                         "relative start time of the flexibility event",
@@ -368,7 +371,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                 )
                 value_list.elts.append(
                     add_input(
-                        "rel_end",
+                        RELATIVE_EVENT_END_TIME_VAR_NAME,
                         0,
                         "s",
                         "relative end time of the flexibility event",
