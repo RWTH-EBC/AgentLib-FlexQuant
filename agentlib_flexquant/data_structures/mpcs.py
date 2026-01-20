@@ -25,6 +25,15 @@ excluded_fields = [
         "allowed_values",
     ]
 
+default_parameters = [
+        MPCVariable(name=glbs.PREP_TIME, value=0, unit="s", type="int"),
+        MPCVariable(name=glbs.MARKET_TIME, value=0, unit="s", type="int"),
+        MPCVariable(name=glbs.FLEX_EVENT_DURATION, value=0, unit="s", type="int")
+        ]
+
+default_inputs = [
+        MPCVariable(name=glbs.PROVISION_VAR_NAME, value=False, type="bool"),
+        ]
 
 class BaseMPCData(pydantic.BaseModel):
     """Base class containing necessary data for the code creation of the different mpcs"""
@@ -168,9 +177,6 @@ class PFMPCData(BaseMPCData):
         (e.g., PROVISION_VAR_NAME) is missing, 
         it appends them to the list. 
         """
-        default_inputs = [
-        MPCVariable(name=glbs.PROVISION_VAR_NAME, value=False),
-        ]
 
         # Get the provided config_inputs_appendix or use an empty list
         provided_inputs = data.get("config_inputs_appendix", [])
@@ -194,11 +200,7 @@ class PFMPCData(BaseMPCData):
         (e.g., PREP_TIME, MARKET_TIME, FLEX_EVENT_DURATION) is missing, 
         it appends them to the list. 
         """
-        default_parameters = [
-        MPCVariable(name=glbs.PREP_TIME, value=0, unit="s"),
-        MPCVariable(name=glbs.MARKET_TIME, value=0, unit="s"),
-        MPCVariable(name=glbs.FLEX_EVENT_DURATION, value=0, unit="s")
-        ]
+        
 
         # Get the provided config_parameters_appendix or use an empty list
         provided_parameters = data.get("config_parameters_appendix", [])
@@ -271,9 +273,6 @@ class NFMPCData(BaseMPCData):
         ``config_inputs_appendix``. If any default framework parameter 
         (e.g., PROVISION_VAR_NAME) is missing, it appends them to the list. 
         """
-        default_inputs = [
-            MPCVariable(name=glbs.PROVISION_VAR_NAME, value=False),
-        ]
 
         return cls._ensure_defaults_in_appendix(
             data=data,
@@ -290,11 +289,6 @@ class NFMPCData(BaseMPCData):
         (e.g., PREP_TIME, MARKET_TIME, FLEX_EVENT_DURATION) is missing, 
         it appends them to the list. 
         """
-        default_parameters = [
-            MPCVariable(name=glbs.PREP_TIME, value=0, unit="s"),
-            MPCVariable(name=glbs.MARKET_TIME, value=0, unit="s"),
-            MPCVariable(name=glbs.FLEX_EVENT_DURATION, value=0, unit="s"),
-        ]
 
         return cls._ensure_defaults_in_appendix(
             data=data,
