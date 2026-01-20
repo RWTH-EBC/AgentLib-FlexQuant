@@ -1331,17 +1331,7 @@
             </tr>
             
             <tr>
-                <td>618</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>line-too-long</code></td>
-                <td>C0301</td>
-                <td></td>
-                <td><pre>Line too long (116/100)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>632</td>
+                <td>647</td>
                 <td>46</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1351,7 +1341,7 @@
             </tr>
             
             <tr>
-                <td>648</td>
+                <td>663</td>
                 <td>29</td>
                 <td>warning</td>
                 <td><code>protected-access</code></td>
@@ -1361,7 +1351,7 @@
             </tr>
             
             <tr>
-                <td>661</td>
+                <td>676</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-locals</code></td>
@@ -1371,7 +1361,7 @@
             </tr>
             
             <tr>
-                <td>683</td>
+                <td>698</td>
                 <td>65</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1381,7 +1371,7 @@
             </tr>
             
             <tr>
-                <td>733</td>
+                <td>748</td>
                 <td>57</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1391,7 +1381,7 @@
             </tr>
             
             <tr>
-                <td>754</td>
+                <td>769</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1401,7 +1391,7 @@
             </tr>
             
             <tr>
-                <td>755</td>
+                <td>770</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1411,7 +1401,7 @@
             </tr>
             
             <tr>
-                <td>756</td>
+                <td>771</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1421,7 +1411,7 @@
             </tr>
             
             <tr>
-                <td>757</td>
+                <td>772</td>
                 <td>115</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -1431,7 +1421,7 @@
             </tr>
             
             <tr>
-                <td>757</td>
+                <td>772</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -1441,7 +1431,7 @@
             </tr>
             
             <tr>
-                <td>759</td>
+                <td>774</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -1451,7 +1441,7 @@
             </tr>
             
             <tr>
-                <td>764</td>
+                <td>779</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-branches</code></td>
@@ -1461,7 +1451,7 @@
             </tr>
             
             <tr>
-                <td>828</td>
+                <td>843</td>
                 <td>8</td>
                 <td>refactor</td>
                 <td><code>no-else-raise</code></td>
@@ -1471,7 +1461,7 @@
             </tr>
             
             <tr>
-                <td>927</td>
+                <td>942</td>
                 <td>68</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1481,7 +1471,7 @@
             </tr>
             
             <tr>
-                <td>941</td>
+                <td>956</td>
                 <td>48</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1491,7 +1481,7 @@
             </tr>
             
             <tr>
-                <td>944</td>
+                <td>959</td>
                 <td>8</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1501,7 +1491,7 @@
             </tr>
             
             <tr>
-                <td>945</td>
+                <td>960</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>raise-missing-from</code></td>
@@ -1511,7 +1501,7 @@
             </tr>
             
             <tr>
-                <td>945</td>
+                <td>960</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>broad-exception-raised</code></td>
@@ -1556,15 +1546,13 @@
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model
-                # can&#39;t deal with iterable
+                # change the type of iterable input, since casadi model can&#39;t deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time
-            # will not be exceeded
+            # reduce the simulation time step so that the total horizon time will not be exceeded
             if current_sim_time + sim_time_step &lt;= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -1660,8 +1648,8 @@
 
     def _update_model_parameters(self):
         &#34;&#34;&#34;update the value of module parameters with value from config,
-        since creating a model just reads the value in the model class
-        but not the config.
+        since creating a model just reads the value in the model class but
+        not the config
 
         &#34;&#34;&#34;
 
@@ -1678,7 +1666,8 @@
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
         &#34;&#34;&#34;simulate with flex model over the prediction horizon
 
@@ -1790,41 +1779,8 @@
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model can&#39;t deal with iterable
-                if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
-                    self.flex_model.get(input_var).type = type(value).__name__
-                self.flex_model.set(input_var, value)
-
-            # do integration
-            # reduce the simulation time step so that the total horizon time will not be exceeded
-            if current_sim_time + sim_time_step &lt;= total_horizon_time:
-                t_sample = sim_time_step
-            else:
-                t_sample = total_horizon_time - current_sim_time
-            self.flex_model.do_step(t_start=0, t_sample=t_sample)
-
-            # save output
-            for output in self.var_ref.outputs:
-                self.flex_results.loc[
-                    (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value</pre></td>
-            </tr>
-            
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[657:680]
-==agentlib_flexquant.modules.shadow_mpc:[303:326]
-            for input_var, value in zip(
-                self.var_ref.inputs, input_values_full.loc[current_sim_time]
-            ):
-                # change the type of iterable input, since casadi model can&#39;t
-                # deal with iterable
+                # change the type of iterable input, since casadi model
+                # can&#39;t deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
@@ -1842,7 +1798,44 @@
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value</pre></td>
+                ] = self.flex_model.get_output(output).value
+
+</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==agentlib_flexquant.modules.baseline_mpc:[657:680]
+==agentlib_flexquant.modules.shadow_mpc:[303:326]
+            for input_var, value in zip(
+                self.var_ref.inputs, input_values_full.loc[current_sim_time]
+            ):
+                # change the type of iterable input, since casadi model can&#39;t deal with iterable
+                if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
+                    self.flex_model.get(input_var).type = type(value).__name__
+                self.flex_model.set(input_var, value)
+
+            # do integration
+            # reduce the simulation time step so that the total horizon time will not be exceeded
+            if current_sim_time + sim_time_step &lt;= total_horizon_time:
+                t_sample = sim_time_step
+            else:
+                t_sample = total_horizon_time - current_sim_time
+            self.flex_model.do_step(t_start=0, t_sample=t_sample)
+
+            # save output
+            for output in self.var_ref.outputs:
+                self.flex_results.loc[
+                    (self.env.now, current_sim_time + t_sample), output
+                ] = self.flex_model.get_output(output).value
+
+</pre></td>
             </tr>
             
             <tr>
@@ -1873,8 +1866,8 @@
 
     def _update_model_parameters(self):
         &#34;&#34;&#34;update the value of module parameters with value from config,
-        since creating a model just reads the value in the model class but
-        not the config
+        since creating a model just reads the value in the model class
+        but not the config.
 
         &#34;&#34;&#34;
 
@@ -1891,8 +1884,7 @@
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
-            total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
     ):
         &#34;&#34;&#34;simulate with flex model over the prediction horizon
 
@@ -2075,6 +2067,7 @@ excluded_fields = [
         &#34;interpolation_method&#34;,
         &#34;allowed_values&#34;,
     ]
+
 </pre></td>
             </tr>
             
@@ -2101,9 +2094,12 @@ excluded_fields = [
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
-        &#34;&#34;&#34;simulate with flex model over the prediction horizon&#34;&#34;&#34;
+        &#34;&#34;&#34;simulate with flex model over the prediction horizon
+
+        &#34;&#34;&#34;
 
         # get control and input values from the mpc optimization result
         control_values = result_df.variable[
@@ -2198,7 +2194,8 @@ excluded_fields = [
             opti_outputs.values,
             index=index_coll,
         )
-        # fill the output value at the time step where it already exists in optimization output
+        # fill the output value at the time step where it already exists
+        # in optimization output
         for idx in fixed_opti_output.index:
             if idx in self.flex_results.index:</pre></td>
             </tr>
@@ -2267,12 +2264,9 @@ excluded_fields = [
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
-            total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
     ):
-        &#34;&#34;&#34;simulate with flex model over the prediction horizon
-
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;simulate with flex model over the prediction horizon&#34;&#34;&#34;
 
         # get control and input values from the mpc optimization result</pre></td>
             </tr>
@@ -4383,7 +4377,7 @@ excluded_fields = [
             
             <tr>
                 <td>convention</td>
-                <td>132</td>
+                <td>131</td>
             </tr>
             
             <tr>
@@ -4413,7 +4407,7 @@ excluded_fields = [
             
             <tr>
                 <td>line-too-long</td>
-                <td>17</td>
+                <td>16</td>
             </tr>
             
             <tr>
@@ -4663,7 +4657,7 @@ excluded_fields = [
             
             <tr>
                 <td>agentlib_flexquant.generate_flex_agents</td>
-                <td>53</td>
+                <td>52</td>
             </tr>
             
             <tr>
@@ -4768,7 +4762,7 @@ excluded_fields = [
             
             <tr>
                 <td>agentlib_flexquant/generate_flex_agents.py</td>
-                <td>53</td>
+                <td>52</td>
             </tr>
             
             <tr>
