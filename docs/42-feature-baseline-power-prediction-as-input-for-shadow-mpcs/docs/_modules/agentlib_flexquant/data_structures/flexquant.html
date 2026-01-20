@@ -98,7 +98,6 @@
         <span class="s2">&quot;description&quot;</span><span class="p">,</span>
         <span class="s2">&quot;unit&quot;</span><span class="p">,</span>
         <span class="s2">&quot;clip&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;shared&quot;</span><span class="p">,</span>
         <span class="s2">&quot;interpolation_method&quot;</span><span class="p">,</span>
         <span class="s2">&quot;allowed_values&quot;</span><span class="p">,</span>
     <span class="p">]</span>
@@ -125,11 +124,13 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate flexibility cost function fields and assign weights to them.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_flex</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Missing required field: &#39;pos_flex&#39; specifying the pos flex cost function.&quot;</span>
+                <span class="s2">&quot;Missing required field: &#39;pos_flex&#39; specifying the pos flex &quot;</span>
+                <span class="s2">&quot;cost function.&quot;</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">neg_flex</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Missing required field: &#39;neg_flex&#39; specifying the neg flex cost function.&quot;</span>
+                <span class="s2">&quot;Missing required field: &#39;neg_flex&#39; specifying the neg flex &quot;</span>
+                <span class="s2">&quot;cost function.&quot;</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pos_flex</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span>
@@ -226,10 +227,10 @@
     <span class="p">)</span>
     <span class="n">casadi_sim_time_step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Simulate over the prediction horizon with a defined resolution using Casadi &quot;</span>
-                    <span class="s2">&quot;simulator. &quot;</span>
-                    <span class="s2">&quot;Only use it when the power depends on the states. Don&#39;t use it when power &quot;</span>
-                    <span class="s2">&quot;itself is the control variable.&quot;</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Simulate over the prediction horizon with a defined resolution &quot;</span>
+                    <span class="s2">&quot;using Casadi simulator. &quot;</span>
+                    <span class="s2">&quot;Only use it when the power depends on the states. &quot;</span>
+                    <span class="s2">&quot;Don&#39;t use it when power itself is the control variable.&quot;</span>
                     <span class="s2">&quot;Set to 0 to skip simulation&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">flex_base_directory_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
@@ -254,7 +255,8 @@
 
 <div class="viewcode-block" id="FlexQuantConfig.check_config_file_extension"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">check_config_file_extension</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate that the indicator and market config file paths have a &#39;.json&#39; extension.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate that the indicator and market config file paths have a &#39;.json&#39;</span>
+<span class="sd">        extension.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If either file does not have the expected &#39;.json&#39; extension.</span>
@@ -265,7 +267,8 @@
             <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">indicator_config</span><span class="o">.</span><span class="n">suffix</span> <span class="o">!=</span> <span class="s2">&quot;.json&quot;</span>
         <span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Invalid file extension for indicator config: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">indicator_config</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid file extension for indicator &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;config: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">indicator_config</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;Expected a &#39;.json&#39; file.&quot;</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span>
@@ -273,7 +276,8 @@
             <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">market_config</span><span class="o">.</span><span class="n">suffix</span> <span class="o">!=</span> <span class="s2">&quot;.json&quot;</span>
         <span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Invalid file extension for market config: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">market_config</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid file extension for market &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;config: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">market_config</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;Expected a &#39;.json&#39; file.&quot;</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
@@ -287,12 +291,16 @@
 
 <div class="viewcode-block" id="FlexQuantConfig.adapt_paths_and_create_directory"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">adapt_paths_and_create_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adjust and ensure the directory structure for flex file generation and results storage.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adjust and ensure the directory structure for flex file generation and</span>
+<span class="sd">        results storage.</span>
 
 <span class="sd">        This method:</span>
-<span class="sd">        - Updates `flex_files_directory` and `results_directory` paths, so they are relative to</span>
-<span class="sd">        the base flex directory, using only the directory names (ignoring any user-supplied paths).</span>
-<span class="sd">        - Creates the base, flex files, and results directories if they do not already exist.</span>
+<span class="sd">        - Updates `flex_files_directory` and `results_directory` paths, so they are</span>
+<span class="sd">        relative to</span>
+<span class="sd">        the base flex directory, using only the directory names (ignoring any</span>
+<span class="sd">        user-supplied paths).</span>
+<span class="sd">        - Creates the base, flex files, and results directories if they do not</span>
+<span class="sd">        already exist.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># adapt paths and use only names for user supplied data</span>

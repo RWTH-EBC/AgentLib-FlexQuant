@@ -82,7 +82,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pydantic</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.data_structures.mpc_datamodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPCVariable</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigDict</span><span class="p">,</span> <span class="n">model_validator</span><span class="p">,</span> <span class="n">field_serializer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigDict</span><span class="p">,</span> <span class="n">model_validator</span><span class="p">,</span> <span class="n">field_serializer</span><span class="p">,</span> <span class="n">Field</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">glbs</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">agentlib_flexquant.utils.config_management</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cmng</span>
@@ -95,7 +95,6 @@
         <span class="s2">&quot;description&quot;</span><span class="p">,</span>
         <span class="s2">&quot;unit&quot;</span><span class="p">,</span>
         <span class="s2">&quot;clip&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;shared&quot;</span><span class="p">,</span>
         <span class="s2">&quot;interpolation_method&quot;</span><span class="p">,</span>
         <span class="s2">&quot;allowed_values&quot;</span><span class="p">,</span>
     <span class="p">]</span>
@@ -112,11 +111,12 @@
     <span class="n">module_types</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="n">class_name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">module_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span>
     <span class="c1"># variables</span>
     <span class="n">power_alias</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">stored_energy_alias</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">config_inputs_appendix</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MPCVariable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">config_parameters_appendix</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MPCVariable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">config_inputs_appendix</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MPCVariable</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="p">[],</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Inputs, which are appended to the MPCs&#39; config (.json file and ConfigClass).&quot;</span><span class="p">)</span>
+    <span class="n">config_parameters_appendix</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MPCVariable</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="p">[],</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Parameters, which are appended to the MPCs&#39; config (.json file and ConfigClass).&quot;</span><span class="p">)</span>
     <span class="n">weights</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MPCVariable</span><span class="p">]</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="p">[],</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name and value of weights&quot;</span><span class="p">,</span>
     <span class="p">)</span>
@@ -136,6 +136,7 @@
     <span class="n">module_types</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">cmng</span><span class="o">.</span><span class="n">BASELINE_MODULE_TYPE_DICT</span>
     <span class="n">class_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;BaselineMPCModel&quot;</span>
     <span class="n">module_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Baseline&quot;</span>
+    <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Baseline&quot;</span>
     <span class="c1"># variables</span>
     <span class="n">power_alias</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">glbs</span><span class="o">.</span><span class="n">POWER_ALIAS_BASE</span>
     <span class="n">stored_energy_alias</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">glbs</span><span class="o">.</span><span class="n">STORED_ENERGY_ALIAS_BASE</span>
@@ -162,10 +163,10 @@
         <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Weight of soft constraint for discomfort&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">config_inputs_appendix</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MPCVariable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;_P_external&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;W&quot;</span><span class="p">),</span>
-        <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;in_provision&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
-        <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;rel_start&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">),</span>
-        <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;rel_end&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">),</span>
+        <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">ACCEPTED_POWER_VAR_NAME</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;W&quot;</span><span class="p">),</span>
+        <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">PROVISION_VAR_NAME</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+        <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">RELATIVE_EVENT_START_TIME_VAR_NAME</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">),</span>
+        <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">RELATIVE_EVENT_END_TIME_VAR_NAME</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">),</span>
     <span class="p">]</span>
 
     <span class="n">config_parameters_appendix</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MPCVariable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -218,6 +219,7 @@
     <span class="n">module_types</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">cmng</span><span class="o">.</span><span class="n">SHADOW_MODULE_TYPE_DICT</span>
     <span class="n">class_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;PosFlexModel&quot;</span>
     <span class="n">module_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;PosFlexMPC&quot;</span>
+    <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;PosFlexMPC&quot;</span>
     <span class="c1"># variables</span>
     <span class="n">power_alias</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">glbs</span><span class="o">.</span><span class="n">POWER_ALIAS_POS</span>
     <span class="n">stored_energy_alias</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">glbs</span><span class="o">.</span><span class="n">STORED_ENERGY_ALIAS_POS</span>
@@ -242,14 +244,23 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">serialize_mpc_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MPCVariable</span><span class="p">],</span> <span class="n">_info</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="n">excluded_fields</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="PFMPCData.add_in_provision"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_in_provision</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;in_provision&quot;</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_inputs_appendix</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">config_inputs_appendix</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">config_inputs_appendix</span><span class="p">,</span>
-                <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;in_provision&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;bool&quot;</span><span class="p">),</span>
+<div class="viewcode-block" id="PFMPCData.add_in_provision"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;before&quot;</span><span class="p">)</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_in_provision</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;config_inputs_appendix&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">inputs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;in_provision&quot;</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="n">v</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;in_provision&quot;</span>
+                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">):</span>
+            <span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="o">*</span><span class="n">inputs</span><span class="p">,</span>
+                <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;in_provision&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
             <span class="p">]</span>
-        <span class="k">return</span> <span class="bp">self</span></div></div>
+
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;config_inputs_appendix&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputs</span>
+        <span class="k">return</span> <span class="n">data</span></div></div>
 <div class="viewcode-block" id="NFMPCData"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.NFMPCData">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">NFMPCData</span><span class="p">(</span><span class="n">BaseMPCData</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Data class for PF-MPC&quot;&quot;&quot;</span>
 
@@ -260,7 +271,8 @@
     <span class="n">module_types</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">cmng</span><span class="o">.</span><span class="n">SHADOW_MODULE_TYPE_DICT</span>
     <span class="n">class_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;NegFlexModel&quot;</span>
     <span class="n">module_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;NegFlexMPC&quot;</span>
-    <span class="c1"># variables </span>
+    <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;NegFlexMPC&quot;</span>
+    <span class="c1"># variables</span>
     <span class="n">power_alias</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">glbs</span><span class="o">.</span><span class="n">POWER_ALIAS_NEG</span>
     <span class="n">stored_energy_alias</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">glbs</span><span class="o">.</span><span class="n">STORED_ENERGY_ALIAS_NEG</span>
     <span class="n">flex_cost_function</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
@@ -282,15 +294,24 @@
 <div class="viewcode-block" id="NFMPCData.serialize_mpc_variables"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.NFMPCData.serialize_mpc_variables">[docs]</a>    <span class="nd">@field_serializer</span><span class="p">(</span><span class="s1">&#39;weights&#39;</span><span class="p">,</span> <span class="s1">&#39;config_inputs_appendix&#39;</span><span class="p">,</span> <span class="s1">&#39;config_parameters_appendix&#39;</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">serialize_mpc_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MPCVariable</span><span class="p">],</span> <span class="n">_info</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="n">excluded_fields</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">]</span></div>
-      
-<div class="viewcode-block" id="NFMPCData.add_in_provision"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_in_provision</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;in_provision&quot;</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_inputs_appendix</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">config_inputs_appendix</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">config_inputs_appendix</span><span class="p">,</span>
-                <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;in_provision&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;bool&quot;</span><span class="p">),</span>
+    
+<div class="viewcode-block" id="NFMPCData.add_in_provision"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;before&quot;</span><span class="p">)</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_in_provision</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;config_inputs_appendix&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">inputs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;in_provision&quot;</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="n">v</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;in_provision&quot;</span>
+                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">):</span>
+            <span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="o">*</span><span class="n">inputs</span><span class="p">,</span>
+                <span class="n">MPCVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;in_provision&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
             <span class="p">]</span>
-        <span class="k">return</span> <span class="bp">self</span></div></div>
+
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;config_inputs_appendix&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputs</span>
+        <span class="k">return</span> <span class="n">data</span></div></div>
 </pre></div>
 
            </div>

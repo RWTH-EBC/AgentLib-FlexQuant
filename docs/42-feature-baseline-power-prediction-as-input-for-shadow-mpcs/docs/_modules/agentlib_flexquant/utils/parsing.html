@@ -83,9 +83,12 @@
     <span class="n">MARKET_TIME</span><span class="p">,</span>
     <span class="n">PREP_TIME</span><span class="p">,</span>
     <span class="n">SHADOW_MPC_COST_FUNCTION</span><span class="p">,</span>
-    <span class="n">full_trajectory_prefix</span><span class="p">,</span>
     <span class="n">full_trajectory_suffix</span><span class="p">,</span>
     <span class="n">return_baseline_cost_function</span><span class="p">,</span>
+    <span class="n">PROVISION_VAR_NAME</span><span class="p">,</span>
+    <span class="n">ACCEPTED_POWER_VAR_NAME</span><span class="p">,</span>
+    <span class="n">RELATIVE_EVENT_START_TIME_VAR_NAME</span><span class="p">,</span>
+    <span class="n">RELATIVE_EVENT_END_TIME_VAR_NAME</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.mpcs</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">BaselineMPCData</span><span class="p">,</span>
@@ -358,7 +361,7 @@
                             <span class="p">)</span>
                         <span class="p">)</span>
                 <span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">elts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="n">add_input</span><span class="p">(</span><span class="s2">&quot;in_provision&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;provision flag&quot;</span><span class="p">,</span> <span class="s2">&quot;bool&quot;</span><span class="p">)</span>
+                    <span class="n">add_input</span><span class="p">(</span><span class="n">PROVISION_VAR_NAME</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;provision flag&quot;</span><span class="p">,</span> <span class="s2">&quot;bool&quot;</span><span class="p">)</span>
                 <span class="p">)</span>
                 <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpc_data</span><span class="o">.</span><span class="n">config_inputs_appendix</span><span class="p">:</span>
                     <span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">elts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -413,7 +416,7 @@
                     <span class="n">value_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_leftmost_list</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
                 <span class="n">value_list</span><span class="o">.</span><span class="n">elts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                     <span class="n">add_input</span><span class="p">(</span>
-                        <span class="s2">&quot;_P_external&quot;</span><span class="p">,</span>
+                        <span class="n">ACCEPTED_POWER_VAR_NAME</span><span class="p">,</span>
                         <span class="mi">0</span><span class="p">,</span>
                         <span class="s2">&quot;W&quot;</span><span class="p">,</span>
                         <span class="s2">&quot;External power profile to be provided&quot;</span><span class="p">,</span>
@@ -422,7 +425,7 @@
                 <span class="p">)</span>
                 <span class="n">value_list</span><span class="o">.</span><span class="n">elts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                     <span class="n">add_input</span><span class="p">(</span>
-                        <span class="s2">&quot;in_provision&quot;</span><span class="p">,</span>
+                        <span class="n">PROVISION_VAR_NAME</span><span class="p">,</span>
                         <span class="kc">False</span><span class="p">,</span>
                         <span class="s2">&quot;-&quot;</span><span class="p">,</span>
                         <span class="s2">&quot;Flag signaling if the flexibility is in provision&quot;</span><span class="p">,</span>
@@ -431,7 +434,7 @@
                 <span class="p">)</span>
                 <span class="n">value_list</span><span class="o">.</span><span class="n">elts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                     <span class="n">add_input</span><span class="p">(</span>
-                        <span class="s2">&quot;rel_start&quot;</span><span class="p">,</span>
+                        <span class="n">RELATIVE_EVENT_START_TIME_VAR_NAME</span><span class="p">,</span>
                         <span class="mi">0</span><span class="p">,</span>
                         <span class="s2">&quot;s&quot;</span><span class="p">,</span>
                         <span class="s2">&quot;relative start time of the flexibility event&quot;</span><span class="p">,</span>
@@ -440,7 +443,7 @@
                 <span class="p">)</span>
                 <span class="n">value_list</span><span class="o">.</span><span class="n">elts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                     <span class="n">add_input</span><span class="p">(</span>
-                        <span class="s2">&quot;rel_end&quot;</span><span class="p">,</span>
+                        <span class="n">RELATIVE_EVENT_END_TIME_VAR_NAME</span><span class="p">,</span>
                         <span class="mi">0</span><span class="p">,</span>
                         <span class="s2">&quot;s&quot;</span><span class="p">,</span>
                         <span class="s2">&quot;relative end time of the flexibility event&quot;</span><span class="p">,</span>
