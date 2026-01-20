@@ -148,10 +148,10 @@ class PFMPCData(BaseMPCData):
     )
     # initialize market parameters with dummy values (0)
     config_parameters_appendix: list[MPCVariable] = pydantic.Field(
-        default=[], description = "Parameters, which need to be appended to the shadow MPCs"
+        default=[], description="Parameters, which need to be appended to the shadow MPCs"
     )
     config_inputs_appendix: list[MPCVariable] = pydantic.Field(
-        default=[], description = "Inputs, which need to be appended to the shadow MPCs"
+        default=[], description="Inputs, which need to be appended to the shadow MPCs"
     )
         
     

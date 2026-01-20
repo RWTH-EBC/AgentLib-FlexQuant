@@ -59,9 +59,16 @@ class ShadowMPCConfigGeneratorConfig(BaseModel):
                 "cost function."
             )
         if self.weights:
-            self.pos_flex.config_parameters_appendix = self.weights
-            self.neg_flex.config_parameters_appendix = self.weights
+            if getattr(self.pos_flex, "config_parameters_appendix", None) is None:
+                self.pos_flex.config_parameters_appendix = self.weights
+            else: 
+                self.pos_flex.config_parameters_appendix.extend(self.weights)
 
+            if getattr(self.neg_flex, "config_parameters_appendix", None) is None:
+                self.neg_flex.config_parameters_appendix = self.weights
+            else: 
+                self.neg_flex.config_parameters_appendix.extend(self.weights)
+                
         if self.custom_inputs:
             # Preserve any default or pre-existing inputs in config_inputs_appendix
             # by extending the list instead of overwriting it.
