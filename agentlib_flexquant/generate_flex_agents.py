@@ -615,7 +615,8 @@ class FlexAgentGenerator:
         return module_config
 
     def adapt_and_dump_flex_config(self):
-        """Updates the flex_config with the new paths of the market or indicator config,
+        """
+        Updates the flex_config with the new paths of the market or indicator config,
         if these were given as paths to the FlexAgentGenerator.
         Dumps the flex config to the new path
         """

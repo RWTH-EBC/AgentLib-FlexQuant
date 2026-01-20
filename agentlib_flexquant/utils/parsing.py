@@ -295,7 +295,7 @@ class SetupSystemModifier(ast.NodeTransformer):
             if body.target.id == "parameters":
                 for parameter in self.mpc_data.config_parameters_appendix:
                     body.value.elts.append(
-                        add_parameter(parameter.name, 0, "-", parameter.description)
+                        add_parameter(parameter.name, parameter.value, parameter.unit, parameter.description)
                     )
 
 

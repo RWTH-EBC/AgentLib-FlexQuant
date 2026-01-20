@@ -59,28 +59,13 @@ class ShadowMPCConfigGeneratorConfig(BaseModel):
                 "cost function."
             )
         if self.weights:
-            if getattr(self.pos_flex, "config_parameters_appendix", None) is None:
-                self.pos_flex.config_parameters_appendix = self.weights
-            else: 
-                self.pos_flex.config_parameters_appendix.extend(self.weights)
-
-            if getattr(self.neg_flex, "config_parameters_appendix", None) is None:
-                self.neg_flex.config_parameters_appendix = self.weights
-            else: 
-                self.neg_flex.config_parameters_appendix.extend(self.weights)
+            self.pos_flex.config_parameters_appendix.extend(self.weights)
+            self.neg_flex.config_parameters_appendix.extend(self.weights)
                 
         if self.custom_inputs:
-            # Preserve any default or pre-existing inputs in config_inputs_appendix
-            # by extending the list instead of overwriting it.
-            if getattr(self.pos_flex, "config_inputs_appendix", None) is None:
-                self.pos_flex.config_inputs_appendix = list(self.custom_inputs)
-            else:
-                self.pos_flex.config_inputs_appendix.extend(self.custom_inputs)
-
-            if getattr(self.neg_flex, "config_inputs_appendix", None) is None:
-                self.neg_flex.config_inputs_appendix = list(self.custom_inputs)
-            else:
-                self.neg_flex.config_inputs_appendix.extend(self.custom_inputs)
+            self.pos_flex.config_inputs_appendix.extend(self.custom_inputs)
+            self.neg_flex.config_inputs_appendix.extend(self.custom_inputs)
+        
         return self
 
     @field_serializer('weights', 'custom_inputs')
