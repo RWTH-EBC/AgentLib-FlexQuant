@@ -290,11 +290,14 @@ class SetupSystemModifier(ast.NodeTransformer):
                     body.value.elts.append(
                         add_input(var.name, var.value, var.unit, var.description, var.type)
                     )
-                for var in self.mpc_data.config_parameters_appendix:
+            
+            # add the flex variables and the weights
+            if body.target.id == "parameters":
+                for parameter in self.mpc_data.config_parameters_appendix:
                     body.value.elts.append(
-                        add_parameter(var.name, var.value, var.unit, var.description, var.type)
+                        add_parameter(parameter.name, 0, "-", parameter.description)
                     )
-                    
+
 
     def modify_config_class_baseline(self, node: ast.ClassDef):
         """Modify the config class of the baseline mpc.
