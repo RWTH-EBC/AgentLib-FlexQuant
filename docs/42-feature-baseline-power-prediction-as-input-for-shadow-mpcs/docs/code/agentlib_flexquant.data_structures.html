@@ -1163,7 +1163,7 @@ extension.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘pathlib.Path’&gt;: &lt;class ‘str’&gt;, &lt;class ‘agentlib.core.agent.AgentConfig’&gt;: &lt;function FlexibilityIndicatorConfig.&lt;lambda&gt; at 0x7f75726f94e0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘pathlib.Path’&gt;: &lt;class ‘str’&gt;, &lt;class ‘agentlib.core.agent.AgentConfig’&gt;: &lt;function FlexibilityIndicatorConfig.&lt;lambda&gt; at 0x7fbb81eb5760&gt;}</em></p></li>
 <li><p><strong>extra</strong>: <em>str = forbid</em></p></li>
 </ul>
 </dd>
@@ -1276,7 +1276,7 @@ extension.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function ShadowMPCConfigGeneratorConfig.&lt;lambda&gt; at 0x7f75726f9080&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function ShadowMPCConfigGeneratorConfig.&lt;lambda&gt; at 0x7fbb81eb5260&gt;}</em></p></li>
 <li><p><strong>extra</strong>: <em>str = forbid</em></p></li>
 </ul>
 </dd>
@@ -1650,7 +1650,6 @@ mappings, and optimization weights for MPC implementations.</p>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaseMPCData.power_alias" title="agentlib_flexquant.data_structures.mpcs.BaseMPCData.power_alias"><code class="xref py py-obj docutils literal notranslate"><span class="pre">power_alias</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaseMPCData.results_suffix" title="agentlib_flexquant.data_structures.mpcs.BaseMPCData.results_suffix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">results_suffix</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaseMPCData.stored_energy_alias" title="agentlib_flexquant.data_structures.mpcs.BaseMPCData.stored_energy_alias"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stored_energy_alias</span> <span class="pre">(str)</span></code></a></p></li>
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaseMPCData.weights" title="agentlib_flexquant.data_structures.mpcs.BaseMPCData.weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">weights</span> <span class="pre">(list[agentlib_mpc.data_structures.mpc_datamodels.MPCVariable])</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -1711,12 +1710,6 @@ mappings, and optimization weights for MPC implementations.</p>
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stored_energy_alias</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.BaseMPCData.stored_energy_alias" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.BaseMPCData.weights">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">weights</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">agentlib_mpc.data_structures.mpc_datamodels.MPCVariable</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.BaseMPCData.weights" title="Permalink to this definition"></a></dt>
-<dd><p>Name and value of weights</p>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.BaseMPCData.serialize_mpc_variables">
 <span class="sig-name descname"><span class="pre">serialize_mpc_variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">agentlib_mpc.data_structures.mpc_datamodels.MPCVariable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/mpcs.html#BaseMPCData.serialize_mpc_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.BaseMPCData.serialize_mpc_variables" title="Permalink to this definition"></a></dt>
@@ -1747,7 +1740,6 @@ mappings, and optimization weights for MPC implementations.</p>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.profile_deviation_weight" title="agentlib_flexquant.data_structures.mpcs.BaselineMPCData.profile_deviation_weight"><code class="xref py py-obj docutils literal notranslate"><span class="pre">profile_deviation_weight</span> <span class="pre">(float)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.results_suffix" title="agentlib_flexquant.data_structures.mpcs.BaselineMPCData.results_suffix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">results_suffix</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.stored_energy_alias" title="agentlib_flexquant.data_structures.mpcs.BaselineMPCData.stored_energy_alias"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stored_energy_alias</span> <span class="pre">(str)</span></code></a></p></li>
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.weights" title="agentlib_flexquant.data_structures.mpcs.BaselineMPCData.weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">weights</span> <span class="pre">(list[agentlib_mpc.data_structures.mpc_datamodels.MPCVariable])</span></code></a></p></li>
 </ul>
 </dd>
 <dt class="field-even">Validators<span class="colon">:</span></dt>
@@ -1941,19 +1933,6 @@ mappings, and optimization weights for MPC implementations.</p>
 </dl>
 </dd></dl>
 
-<dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.BaselineMPCData.weights">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">weights</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">agentlib_mpc.data_structures.mpc_datamodels.MPCVariable</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.weights" title="Permalink to this definition"></a></dt>
-<dd><p>Name and value of weights</p>
-<dl class="field-list simple">
-<dt class="field-odd">Validated by<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.update_config_parameters_appendix" title="agentlib_flexquant.data_structures.mpcs.BaselineMPCData.update_config_parameters_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_config_parameters_appendix</span></code></a></p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.BaselineMPCData.serialize_mpc_variables">
 <span class="sig-name descname"><span class="pre">serialize_mpc_variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">agentlib_mpc.data_structures.mpc_datamodels.MPCVariable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/mpcs.html#BaselineMPCData.serialize_mpc_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.serialize_mpc_variables" title="Permalink to this definition"></a></dt>
@@ -1989,12 +1968,12 @@ list as MPCVariable instances.</p>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.power_alias" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.power_alias"><code class="xref py py-obj docutils literal notranslate"><span class="pre">power_alias</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.results_suffix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.results_suffix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">results_suffix</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.stored_energy_alias" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.stored_energy_alias"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stored_energy_alias</span> <span class="pre">(str)</span></code></a></p></li>
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.weights" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">weights</span> <span class="pre">(list[agentlib_mpc.data_structures.mpc_datamodels.MPCVariable])</span></code></a></p></li>
 </ul>
 </dd>
 <dt class="field-even">Validators<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_inputs_to_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_inputs_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_inputs_to_appendix</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_parameters_to_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_parameters_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_parameters_to_appendix</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
 </ul>
 </dd>
 </dl>
@@ -2004,7 +1983,8 @@ list as MPCVariable instances.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_inputs_to_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_inputs_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_inputs_to_appendix</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_parameters_to_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_parameters_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_parameters_to_appendix</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -2016,7 +1996,8 @@ list as MPCVariable instances.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_inputs_to_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_inputs_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_inputs_to_appendix</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_parameters_to_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_parameters_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_parameters_to_appendix</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -2029,7 +2010,8 @@ list as MPCVariable instances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_inputs_to_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_inputs_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_inputs_to_appendix</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_parameters_to_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_parameters_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_parameters_to_appendix</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -2037,11 +2019,13 @@ list as MPCVariable instances.</p>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.NFMPCData.config_parameters_appendix">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">config_parameters_appendix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">agentlib_mpc.data_structures.mpc_datamodels.MPCVariable</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[MPCVariable(name='prep_time',</span> <span class="pre">type=None,</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='s',</span> <span class="pre">description='Not</span> <span class="pre">defined',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=0,</span> <span class="pre">alias='prep_time',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None,</span> <span class="pre">interpolation_method=&lt;InterpolationMethods.linear:</span> <span class="pre">'linear'&gt;),</span> <span class="pre">MPCVariable(name='market_time',</span> <span class="pre">type=None,</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='s',</span> <span class="pre">description='Not</span> <span class="pre">defined',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=0,</span> <span class="pre">alias='market_time',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None,</span> <span class="pre">interpolation_method=&lt;InterpolationMethods.linear:</span> <span class="pre">'linear'&gt;),</span> <span class="pre">MPCVariable(name='flex_event_duration',</span> <span class="pre">type=None,</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='s',</span> <span class="pre">description='Not</span> <span class="pre">defined',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=0,</span> <span class="pre">alias='flex_event_duration',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None,</span> <span class="pre">interpolation_method=&lt;InterpolationMethods.linear:</span> <span class="pre">'linear'&gt;)]</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.config_parameters_appendix" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">config_parameters_appendix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">agentlib_mpc.data_structures.mpc_datamodels.MPCVariable</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.config_parameters_appendix" title="Permalink to this definition"></a></dt>
+<dd><p>Parameters, which need to be appended to the shadow MPCs</p>
+<dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_inputs_to_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_inputs_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_inputs_to_appendix</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_parameters_to_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_parameters_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_parameters_to_appendix</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -2054,7 +2038,8 @@ list as MPCVariable instances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_inputs_to_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_inputs_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_inputs_to_appendix</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_parameters_to_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_parameters_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_parameters_to_appendix</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -2066,7 +2051,8 @@ list as MPCVariable instances.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_inputs_to_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_inputs_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_inputs_to_appendix</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_parameters_to_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_parameters_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_parameters_to_appendix</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -2078,7 +2064,8 @@ list as MPCVariable instances.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_inputs_to_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_inputs_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_inputs_to_appendix</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_parameters_to_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_parameters_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_parameters_to_appendix</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -2090,7 +2077,8 @@ list as MPCVariable instances.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_inputs_to_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_inputs_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_inputs_to_appendix</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_parameters_to_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_parameters_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_parameters_to_appendix</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -2102,7 +2090,8 @@ list as MPCVariable instances.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_inputs_to_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_inputs_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_inputs_to_appendix</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_parameters_to_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_parameters_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_parameters_to_appendix</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -2114,7 +2103,8 @@ list as MPCVariable instances.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_inputs_to_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_inputs_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_inputs_to_appendix</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_parameters_to_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_parameters_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_parameters_to_appendix</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -2126,29 +2116,30 @@ list as MPCVariable instances.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a></p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.NFMPCData.weights">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">weights</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">agentlib_mpc.data_structures.mpc_datamodels.MPCVariable</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.weights" title="Permalink to this definition"></a></dt>
-<dd><p>Name and value of weights</p>
-<dl class="field-list simple">
-<dt class="field-odd">Validated by<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_inputs_to_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_inputs_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_inputs_to_appendix</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_parameters_to_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_parameters_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_parameters_to_appendix</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method pydantic_validator">
-<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision">
-<em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_in_provision</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/mpcs.html#NFMPCData.add_in_provision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_in_provision" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_inputs_to_appendix">
+<em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_default_inputs_to_appendix</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/mpcs.html#NFMPCData.add_default_inputs_to_appendix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_inputs_to_appendix" title="Permalink to this definition"></a></dt>
+<dd><p>Ensures that all required framework parameters are included in
+<cite>config_inputs_appendix</cite>. If any default framework parameter
+(e.g., PROVISION_VAR_NAME) is missing,
+it appends them to the list.</p>
+</dd></dl>
+
+<dl class="py method pydantic_validator">
+<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_parameters_to_appendix">
+<em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_default_parameters_to_appendix</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/mpcs.html#NFMPCData.add_default_parameters_to_appendix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_default_parameters_to_appendix" title="Permalink to this definition"></a></dt>
+<dd><p>Ensures that all required framework parameters are included in
+<cite>config_parameters_appendix</cite>. If any default framework parameter
+(e.g., PREP_TIME, MARKET_TIME, FLEX_EVENT_DURATION) is missing,
+it appends them to the list.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.NFMPCData.serialize_mpc_variables">
@@ -2176,12 +2167,12 @@ list as MPCVariable instances.</p>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.power_alias" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.power_alias"><code class="xref py py-obj docutils literal notranslate"><span class="pre">power_alias</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.results_suffix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.results_suffix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">results_suffix</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.stored_energy_alias" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.stored_energy_alias"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stored_energy_alias</span> <span class="pre">(str)</span></code></a></p></li>
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.weights" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">weights</span> <span class="pre">(list[agentlib_mpc.data_structures.mpc_datamodels.MPCVariable])</span></code></a></p></li>
 </ul>
 </dd>
 <dt class="field-even">Validators<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_inputs_to_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_inputs_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_inputs_to_appendix</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_parameters_to_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_parameters_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_parameters_to_appendix</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
 </ul>
 </dd>
 </dl>
@@ -2191,7 +2182,8 @@ list as MPCVariable instances.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_inputs_to_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_inputs_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_inputs_to_appendix</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_parameters_to_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_parameters_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_parameters_to_appendix</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -2203,7 +2195,8 @@ list as MPCVariable instances.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_inputs_to_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_inputs_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_inputs_to_appendix</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_parameters_to_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_parameters_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_parameters_to_appendix</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -2216,7 +2209,8 @@ list as MPCVariable instances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_inputs_to_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_inputs_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_inputs_to_appendix</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_parameters_to_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_parameters_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_parameters_to_appendix</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -2224,11 +2218,13 @@ list as MPCVariable instances.</p>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.PFMPCData.config_parameters_appendix">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">config_parameters_appendix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">agentlib_mpc.data_structures.mpc_datamodels.MPCVariable</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[MPCVariable(name='prep_time',</span> <span class="pre">type=None,</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='s',</span> <span class="pre">description='Not</span> <span class="pre">defined',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=0,</span> <span class="pre">alias='prep_time',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None,</span> <span class="pre">interpolation_method=&lt;InterpolationMethods.linear:</span> <span class="pre">'linear'&gt;),</span> <span class="pre">MPCVariable(name='market_time',</span> <span class="pre">type=None,</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='s',</span> <span class="pre">description='Not</span> <span class="pre">defined',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=0,</span> <span class="pre">alias='market_time',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None,</span> <span class="pre">interpolation_method=&lt;InterpolationMethods.linear:</span> <span class="pre">'linear'&gt;),</span> <span class="pre">MPCVariable(name='flex_event_duration',</span> <span class="pre">type=None,</span> <span class="pre">timestamp=None,</span> <span class="pre">unit='s',</span> <span class="pre">description='Not</span> <span class="pre">defined',</span> <span class="pre">ub=inf,</span> <span class="pre">lb=-inf,</span> <span class="pre">clip=False,</span> <span class="pre">allowed_values=[],</span> <span class="pre">value=0,</span> <span class="pre">alias='flex_event_duration',</span> <span class="pre">source=Source(agent_id=None,</span> <span class="pre">module_id=None),</span> <span class="pre">shared=None,</span> <span class="pre">rdf_class=None,</span> <span class="pre">interpolation_method=&lt;InterpolationMethods.linear:</span> <span class="pre">'linear'&gt;)]</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.config_parameters_appendix" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">config_parameters_appendix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">agentlib_mpc.data_structures.mpc_datamodels.MPCVariable</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.config_parameters_appendix" title="Permalink to this definition"></a></dt>
+<dd><p>Parameters, which need to be appended to the shadow MPCs</p>
+<dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_inputs_to_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_inputs_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_inputs_to_appendix</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_parameters_to_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_parameters_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_parameters_to_appendix</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -2241,7 +2237,8 @@ list as MPCVariable instances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_inputs_to_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_inputs_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_inputs_to_appendix</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_parameters_to_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_parameters_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_parameters_to_appendix</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -2253,7 +2250,8 @@ list as MPCVariable instances.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_inputs_to_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_inputs_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_inputs_to_appendix</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_parameters_to_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_parameters_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_parameters_to_appendix</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -2265,7 +2263,8 @@ list as MPCVariable instances.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_inputs_to_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_inputs_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_inputs_to_appendix</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_parameters_to_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_parameters_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_parameters_to_appendix</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -2277,7 +2276,8 @@ list as MPCVariable instances.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_inputs_to_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_inputs_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_inputs_to_appendix</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_parameters_to_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_parameters_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_parameters_to_appendix</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -2289,7 +2289,8 @@ list as MPCVariable instances.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_inputs_to_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_inputs_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_inputs_to_appendix</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_parameters_to_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_parameters_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_parameters_to_appendix</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -2301,7 +2302,8 @@ list as MPCVariable instances.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_inputs_to_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_inputs_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_inputs_to_appendix</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_parameters_to_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_parameters_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_parameters_to_appendix</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -2313,29 +2315,30 @@ list as MPCVariable instances.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a></p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.PFMPCData.weights">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">weights</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">agentlib_mpc.data_structures.mpc_datamodels.MPCVariable</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.weights" title="Permalink to this definition"></a></dt>
-<dd><p>Name and value of weights</p>
-<dl class="field-list simple">
-<dt class="field-odd">Validated by<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_in_provision</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_inputs_to_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_inputs_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_inputs_to_appendix</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_parameters_to_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_parameters_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_default_parameters_to_appendix</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method pydantic_validator">
-<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision">
-<em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_in_provision</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/mpcs.html#PFMPCData.add_in_provision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_in_provision" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_inputs_to_appendix">
+<em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_default_inputs_to_appendix</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/mpcs.html#PFMPCData.add_default_inputs_to_appendix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_inputs_to_appendix" title="Permalink to this definition"></a></dt>
+<dd><p>Ensures that all required framework parameters are included in
+<cite>config_inputs_appendix</cite>. If any default framework parameter
+(e.g., PROVISION_VAR_NAME) is missing,
+it appends them to the list.</p>
+</dd></dl>
+
+<dl class="py method pydantic_validator">
+<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_parameters_to_appendix">
+<em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_default_parameters_to_appendix</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/mpcs.html#PFMPCData.add_default_parameters_to_appendix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_default_parameters_to_appendix" title="Permalink to this definition"></a></dt>
+<dd><p>Ensures that all required framework parameters are included in
+<cite>config_parameters_appendix</cite>. If any default framework parameter
+(e.g., PREP_TIME, MARKET_TIME, FLEX_EVENT_DURATION) is missing,
+it appends them to the list.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.PFMPCData.serialize_mpc_variables">
