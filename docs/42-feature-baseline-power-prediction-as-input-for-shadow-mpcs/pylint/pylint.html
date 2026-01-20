@@ -28,9 +28,9 @@
 
         
         <h2>Score</h2>
-        7.19 / 10
+        7.20 / 10
             
-            (previous score: 7.19 / 10)
+            (previous score: 7.20 / 10)
             
         
 
@@ -615,27 +615,7 @@
             </tr>
             
             <tr>
-                <td>65</td>
-                <td>30</td>
-                <td>convention</td>
-                <td><code>trailing-whitespace</code></td>
-                <td>C0303</td>
-                <td></td>
-                <td><pre>Trailing whitespace</pre></td>
-            </tr>
-            
-            <tr>
-                <td>67</td>
-                <td>69</td>
-                <td>convention</td>
-                <td><code>trailing-whitespace</code></td>
-                <td>C0303</td>
-                <td></td>
-                <td><pre>Trailing whitespace</pre></td>
-            </tr>
-            
-            <tr>
-                <td>72</td>
+                <td>80</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -645,7 +625,7 @@
             </tr>
             
             <tr>
-                <td>76</td>
+                <td>84</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -655,7 +635,7 @@
             </tr>
             
             <tr>
-                <td>100</td>
+                <td>108</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -665,7 +645,7 @@
             </tr>
             
             <tr>
-                <td>213</td>
+                <td>221</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -1929,41 +1909,8 @@
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model can&#39;t deal with iterable
-                if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
-                    self.flex_model.get(input_var).type = type(value).__name__
-                self.flex_model.set(input_var, value)
-
-            # do integration
-            # reduce the simulation time step so that the total horizon time will not be exceeded
-            if current_sim_time + sim_time_step &lt;= total_horizon_time:
-                t_sample = sim_time_step
-            else:
-                t_sample = total_horizon_time - current_sim_time
-            self.flex_model.do_step(t_start=0, t_sample=t_sample)
-
-            # save output
-            for output in self.var_ref.outputs:
-                self.flex_results.loc[
-                    (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value</pre></td>
-            </tr>
-            
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[657:680]
-==agentlib_flexquant.modules.shadow_mpc:[303:326]
-            for input_var, value in zip(
-                self.var_ref.inputs, input_values_full.loc[current_sim_time]
-            ):
-                # change the type of iterable input, since casadi model can&#39;t
-                # deal with iterable
+                # change the type of iterable input, since casadi model
+                # can&#39;t deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
@@ -1981,7 +1928,44 @@
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value</pre></td>
+                ] = self.flex_model.get_output(output).value
+
+</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==agentlib_flexquant.modules.baseline_mpc:[657:680]
+==agentlib_flexquant.modules.shadow_mpc:[303:326]
+            for input_var, value in zip(
+                self.var_ref.inputs, input_values_full.loc[current_sim_time]
+            ):
+                # change the type of iterable input, since casadi model can&#39;t deal with iterable
+                if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
+                    self.flex_model.get(input_var).type = type(value).__name__
+                self.flex_model.set(input_var, value)
+
+            # do integration
+            # reduce the simulation time step so that the total horizon time will not be exceeded
+            if current_sim_time + sim_time_step &lt;= total_horizon_time:
+                t_sample = sim_time_step
+            else:
+                t_sample = total_horizon_time - current_sim_time
+            self.flex_model.do_step(t_start=0, t_sample=t_sample)
+
+            # save output
+            for output in self.var_ref.outputs:
+                self.flex_results.loc[
+                    (self.env.now, current_sim_time + t_sample), output
+                ] = self.flex_model.get_output(output).value
+
+</pre></td>
             </tr>
             
             <tr>
@@ -2316,7 +2300,7 @@ excluded_fields = [
                 <td><pre>Similar lines in 2 files
 ==agentlib_flexquant.data_structures.flexquant:[18:26]
 ==agentlib_flexquant.utils.config_management:[119:127]
-excluded_fields = [
+    excluded_fields = [
         &#34;rdf_class&#34;,
         &#34;source&#34;,
         &#34;type&#34;,
@@ -2365,21 +2349,7 @@ excluded_fields = [
             self.logger.error(&#34;Results file %s was not found.&#34;, results_file)
             return None
 
-    def write_results(self, df: pd.DataFrame, ts: float, n: int) -&gt; pd.DataFrame:
-        &#34;&#34;&#34;Write every data of variables in self.var_list in an DataFrame.
-
-        DataFrame will be updated every time step
-
-        Args:
-            df: DataFrame which is initialised as an empty DataFrame with columns
-            according to self.var_list
-            ts: time step
-            n: number of time steps during prediction horizon
-
-        Returns:
-            DataFrame with results of every variable in self.var_list
-
-        &#34;&#34;&#34;</pre></td>
+    def register_callbacks(self):</pre></td>
             </tr>
             
             <tr>
@@ -4491,7 +4461,7 @@ excluded_fields = [
             
             <tr>
                 <td>convention</td>
-                <td>143</td>
+                <td>141</td>
             </tr>
             
             <tr>
@@ -4526,7 +4496,7 @@ excluded_fields = [
             
             <tr>
                 <td>trailing-whitespace</td>
-                <td>30</td>
+                <td>28</td>
             </tr>
             
             <tr>
@@ -4796,7 +4766,7 @@ excluded_fields = [
             
             <tr>
                 <td>agentlib_flexquant.data_structures.flexquant</td>
-                <td>11</td>
+                <td>9</td>
             </tr>
             
             <tr>
@@ -4901,7 +4871,7 @@ excluded_fields = [
             
             <tr>
                 <td>agentlib_flexquant/data_structures/flexquant.py</td>
-                <td>11</td>
+                <td>9</td>
             </tr>
             
             <tr>
