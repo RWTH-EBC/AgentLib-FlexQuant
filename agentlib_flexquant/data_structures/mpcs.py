@@ -242,57 +242,62 @@ class NFMPCData(BaseMPCData):
     @field_serializer('config_inputs_appendix', 'config_parameters_appendix')
     def serialize_mpc_variables(self, variables: list[MPCVariable], _info):
         return [v.dict(exclude=excluded_fields) for v in variables]
+
+    @classmethod
+    def _ensure_defaults_in_appendix(
+        cls,
+        data: dict,
+        field_name: str,
+        default_variables: list[MPCVariable],
+    ) -> dict:
+        """
+        Helper to ensure that all default_variables are present in
+        data[field_name], based on their ``name`` attribute.
+        """
+        provided_variables = data.get(field_name, [])
+        provided_names = {param.name for param in provided_variables}
+        for default_var in default_variables:
+            if default_var.name not in provided_names:
+                provided_variables.append(default_var)
+
+        data[field_name] = provided_variables
+        return data
     
     @model_validator(mode="before")
     @classmethod 
     def add_default_inputs_to_appendix(cls, data): 
         """
         Ensures that all required framework parameters are included in 
-        `config_inputs_appendix`. If any default framework parameter 
-        (e.g., PROVISION_VAR_NAME) is missing, 
-        it appends them to the list. 
+        ``config_inputs_appendix``. If any default framework parameter 
+        (e.g., PROVISION_VAR_NAME) is missing, it appends them to the list. 
         """
         default_inputs = [
-        MPCVariable(name=glbs.PROVISION_VAR_NAME, value=False),
+            MPCVariable(name=glbs.PROVISION_VAR_NAME, value=False),
         ]
 
-        # Get the provided config_inputs_appendix or use an empty list
-        provided_inputs = data.get("config_inputs_appendix", [])
-        
-        # Ensure all default parameters are included
-        provided_names = {param.name for param in provided_inputs}
-        for default_input in default_inputs:
-            if default_input.name not in provided_names:
-                provided_inputs.append(default_input)
-        
-        # Update the data with the complete list of parameters
-        data["config_inputs_appendix"] = provided_inputs
-        return data 
+        return cls._ensure_defaults_in_appendix(
+            data=data,
+            field_name="config_inputs_appendix",
+            default_variables=default_inputs,
+        )
 
     @model_validator(mode="before")
     @classmethod 
     def add_default_parameters_to_appendix(cls, data): 
         """
         Ensures that all required framework parameters are included in 
-        `config_parameters_appendix`. If any default framework parameter 
+        ``config_parameters_appendix``. If any default framework parameter 
         (e.g., PREP_TIME, MARKET_TIME, FLEX_EVENT_DURATION) is missing, 
         it appends them to the list. 
         """
         default_parameters = [
-        MPCVariable(name=glbs.PREP_TIME, value=0, unit="s"),
-        MPCVariable(name=glbs.MARKET_TIME, value=0, unit="s"),
-        MPCVariable(name=glbs.FLEX_EVENT_DURATION, value=0, unit="s")
+            MPCVariable(name=glbs.PREP_TIME, value=0, unit="s"),
+            MPCVariable(name=glbs.MARKET_TIME, value=0, unit="s"),
+            MPCVariable(name=glbs.FLEX_EVENT_DURATION, value=0, unit="s"),
         ]
 
-        # Get the provided config_parameters_appendix or use an empty list
-        provided_parameters = data.get("config_parameters_appendix", [])
-        
-        # Ensure all default parameters are included
-        provided_names = {param.name for param in provided_parameters}
-        for default_param in default_parameters:
-            if default_param.name not in provided_names:
-                provided_parameters.append(default_param)
-        
-        # Update the data with the complete list of parameters
-        data["config_parameters_appendix"] = provided_parameters
-        return data 
+        return cls._ensure_defaults_in_appendix(
+            data=data,
+            field_name="config_parameters_appendix",
+            default_variables=default_parameters,
+        )
