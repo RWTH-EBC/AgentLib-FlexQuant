@@ -45,6 +45,7 @@ def _ensure_defaults_in_appendix(
     data[field_name], based on their ``name`` attribute.
     """
     provided_variables = data.get(field_name, [])
+    provided_variables = [MPCVariable(**var) if isinstance(var, dict) else var for var in provided_variables]
     provided_names = {param.name for param in provided_variables}
     for default_var in default_variables:
         if default_var.name not in provided_names:
