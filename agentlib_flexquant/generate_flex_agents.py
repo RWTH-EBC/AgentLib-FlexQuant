@@ -383,15 +383,6 @@ class FlexAgentGenerator:
 
         module_config_flex.module_id = mpc_dataclass.module_id
 
-        # append the new weights as parameter to the MPC or update its value
-        parameter_dict = {parameter.name: parameter for parameter in
-                          module_config_flex.parameters}
-        for weight in mpc_dataclass.weights:
-            if weight.name in parameter_dict:
-                parameter_dict[weight.name].value = weight.value
-            else:
-                module_config_flex.parameters.append(weight)
-
         # set new id (needed for plotting)
         module_config_flex.module_id = mpc_dataclass.module_id
         # update optimization backend to use the created mpc files and classes
@@ -536,11 +527,10 @@ class FlexAgentGenerator:
                 self.indicator_module_config.correct_costs.stored_energy_variable
             ].alias = mpc_dataclass.stored_energy_alias
 
-        # add extra inputs needed for activation of flex
+        # add extra inputs needed for activation of flex or custom cost functions
         module_config_flex.inputs.extend(mpc_dataclass.config_inputs_appendix)
-        # CONFIG_PARAMETERS_APPENDIX only includes dummy values
-        # overwrite dummy values with values from flex config and
-        # append it to module config
+
+        # add extra parameters needed for activation of flex or custom weights
         for var in mpc_dataclass.config_parameters_appendix:
             if var.name in self.flex_config.model_fields:
                 var.value = getattr(self.flex_config, var.name)
@@ -764,8 +754,10 @@ class FlexAgentGenerator:
                                                                            ast.Attribute)
         }
         variables_newly_created = set(
-            [weight.name for weight in self.flex_config.shadow_mpc_config_generator_data.weights] +
-            [input.name for input in self.flex_config.shadow_mpc_config_generator_data.custom_inputs]
+            [par.name for par in self.flex_config.shadow_mpc_config_generator_data.pos_flex.config_parameters_appendix] +
+            [inp.name for inp in self.flex_config.shadow_mpc_config_generator_data.pos_flex.config_inputs_appendix] +
+            [par.name for par in self.flex_config.shadow_mpc_config_generator_data.neg_flex.config_parameters_appendix] +
+            [inp.name for inp in self.flex_config.shadow_mpc_config_generator_data.neg_flex.config_inputs_appendix] 
         )
         
         unknown_vars = variables_in_cost_function - variables_in_config - variables_newly_created

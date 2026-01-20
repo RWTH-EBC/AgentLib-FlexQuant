@@ -59,8 +59,8 @@ class ShadowMPCConfigGeneratorConfig(BaseModel):
                 "cost function."
             )
         if self.weights:
-            self.pos_flex.weights = self.weights
-            self.neg_flex.weights = self.weights
+            self.pos_flex.config_parameters_appendix = self.weights
+            self.neg_flex.config_parameters_appendix = self.weights
 
         if self.custom_inputs: 
             self.pos_flex.config_inputs_appendix = self.custom_inputs
@@ -68,7 +68,7 @@ class ShadowMPCConfigGeneratorConfig(BaseModel):
 
         return self
 
-    @field_serializer('weights')
+    @field_serializer('weights', 'custom_inputs')
     def serialize_mpc_variables(self, variables: list[MPCVariable], _info):
         return [v.dict(exclude=excluded_fields) for v in variables]
 
