@@ -1,16 +1,14 @@
 agentlib_flexquant/data_structures/flex_kpis.py:19:69: F401 [*] `agentlib_flexquant.utils.data_handling.strip_multi_index` imported but unused
 agentlib_flexquant/data_structures/flex_results.py:12:22: F401 [*] `pydantic.BaseModel` imported but unused
-agentlib_flexquant/data_structures/mpcs.py:11:22: F401 [*] `pydantic.ConfigDict` imported but unused
-agentlib_flexquant/generate_flex_agents.py:20:8: F811 Redefinition of unused `json` from line 11
-agentlib_flexquant/generate_flex_agents.py:22:18: F811 Redefinition of unused `deepcopy` from line 14
-agentlib_flexquant/generate_flex_agents.py:23:21: F811 Redefinition of unused `Path` from line 15
-agentlib_flexquant/generate_flex_agents.py:24:20: F401 [*] `typing.List` imported but unused
-agentlib_flexquant/generate_flex_agents.py:24:26: F811 Redefinition of unused `Union` from line 16
+agentlib_flexquant/generate_flex_agents.py:706:13: E999 SyntaxError: Unexpected token 'shadow_mpc_type'
 agentlib_flexquant/modules/baseline_mpc.py:14:34: F811 Redefinition of unused `mpc_full` from line 4
 agentlib_flexquant/modules/baseline_mpc.py:14:44: F811 Redefinition of unused `minlp_mpc` from line 4
 agentlib_flexquant/modules/shadow_mpc.py:11:20: F811 Redefinition of unused `Dict` from line 4
 agentlib_flexquant/modules/shadow_mpc.py:11:26: F811 Redefinition of unused `Union` from line 4
 agentlib_flexquant/utils/interactive.py:691:42: F541 [*] f-string without any placeholders
+agentlib_flexquant/utils/parsing.py:8:5: F401 [*] `agentlib_flexquant.data_structures.globals.FLEX_EVENT_DURATION` imported but unused
+agentlib_flexquant/utils/parsing.py:9:5: F401 [*] `agentlib_flexquant.data_structures.globals.MARKET_TIME` imported but unused
+agentlib_flexquant/utils/parsing.py:10:5: F401 [*] `agentlib_flexquant.data_structures.globals.PREP_TIME` imported but unused
 agentlib_flexquant/utils/parsing.py:21:5: F401 [*] `agentlib_flexquant.data_structures.mpcs.BaseMPCData` imported but unused
-Found 14 errors.
-[*] 6 fixable with the `--fix` option.
+Found 12 errors.
+[*] 7 fixable with the `--fix` option.
