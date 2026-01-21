@@ -8,7 +8,7 @@ mappings, and optimization weights for MPC implementations.
 """
 import pydantic
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
-from pydantic import ConfigDict, model_validator, field_serializer
+from pydantic import model_validator, field_serializer, Field
 
 import agentlib_flexquant.data_structures.globals as glbs
 import agentlib_flexquant.utils.config_management as cmng
@@ -25,6 +25,58 @@ excluded_fields = [
         "allowed_values",
     ]
 
+default_parameters = [
+        MPCVariable(
+            name=glbs.PREP_TIME,
+            value=0,
+            unit="s",
+            type="int",
+            description="Preparation time before switching objective",
+        ),
+        MPCVariable(
+            name=glbs.FLEX_EVENT_DURATION,
+            value=0,
+            unit="s",
+            type="int",
+            description="Duration of the flexibility event",
+        ),
+        MPCVariable(
+            name=glbs.MARKET_TIME,
+            value=0,
+            unit="s",
+            type="int",
+            description="Market time associated with the objective switch",
+        ),
+    ]
+
+default_inputs = [
+        MPCVariable(
+            name=glbs.PROVISION_VAR_NAME,
+            value=False,
+            type="bool",
+            description="Flag indicating whether flexibility should be provisioned",
+        ),
+    ]
+
+def _ensure_defaults_in_appendix(
+    data: dict,
+    field_name: str,
+    default_variables: list[MPCVariable],
+) -> dict:
+    """
+    Helper to ensure that all default_variables are present in
+    data[field_name], based on their ``name`` attribute.
+    """
+    provided_variables = data.get(field_name, [])
+    provided_variables = [MPCVariable(**var) if isinstance(var, dict) else var for var in provided_variables]
+    provided_names = {param.name for param in provided_variables}
+    for default_var in default_variables:
+        if default_var.name not in provided_names:
+            provided_variables.append(default_var)
+
+    data[field_name] = provided_variables
+    return data
+    
 
 class BaseMPCData(pydantic.BaseModel):
     """Base class containing necessary data for the code creation
@@ -44,14 +96,10 @@ class BaseMPCData(pydantic.BaseModel):
     # variables
     power_alias: str
     stored_energy_alias: str
-    config_inputs_appendix: list[MPCVariable] = []
-    config_parameters_appendix: list[MPCVariable] = []
-    weights: list[MPCVariable] = pydantic.Field(
-        default=[], description="Name and value of weights",
-    )
-
-    @field_serializer('weights', 'config_inputs_appendix',
-                      'config_parameters_appendix')
+    config_inputs_appendix: list[MPCVariable] = Field(default=[], description="Inputs, which are appended to the MPCs' config (.json file and ConfigClass).")
+    config_parameters_appendix: list[MPCVariable] = Field(default=[], description="Parameters, which are appended to the MPCs' config (.json file and ConfigClass).")
+    
+    @field_serializer('config_inputs_appendix', 'config_parameters_appendix')
     def serialize_mpc_variables(self, variables: list[MPCVariable], _info):
         return [v.dict(exclude=excluded_fields) for v in variables]
 
@@ -104,12 +152,8 @@ class BaselineMPCData(BaseMPCData):
 
     config_parameters_appendix: list[MPCVariable] = []
 
-    weights: list[MPCVariable] = pydantic.Field(
-        default=[], description="Name and value of weights",
-    )
 
-    @field_serializer('weights', 'config_inputs_appendix',
-                      'config_parameters_appendix')
+    @field_serializer('config_inputs_appendix', 'config_parameters_appendix')
     def serialize_mpc_variables(self, variables: list[MPCVariable], _info):
         return [v.dict(exclude=excluded_fields) for v in variables]
 
@@ -167,26 +211,44 @@ class PFMPCData(BaseMPCData):
                                   "to the Baseline cost function",
     )
     # initialize market parameters with dummy values (0)
-    config_parameters_appendix: list[MPCVariable] = [
-        MPCVariable(name=glbs.PREP_TIME, value=0, unit="s"),
-        MPCVariable(name=glbs.MARKET_TIME, value=0, unit="s"),
-        MPCVariable(name=glbs.FLEX_EVENT_DURATION, value=0, unit="s")
-    ]
-    config_inputs_appendix: list[MPCVariable] = [
-        MPCVariable(name=glbs.PROVISION_VAR_NAME, value=False),
-    ]
-    weights: list[MPCVariable] = pydantic.Field(
-        default=[], description="Name and value of weights",
+    config_parameters_appendix: list[MPCVariable] = pydantic.Field(
+        default=[], description="Parameters, which need to be appended to the shadow MPCs"
     )
-
-    @field_serializer('weights', 'config_inputs_appendix',
-                      'config_parameters_appendix')
+    config_inputs_appendix: list[MPCVariable] = pydantic.Field(
+        default=[], description="Inputs, which need to be appended to the shadow MPCs"
+    )
+        
+    
+    @field_serializer('config_inputs_appendix', 'config_parameters_appendix')
     def serialize_mpc_variables(self, variables: list[MPCVariable], _info):
         return [v.dict(exclude=excluded_fields) for v in variables]
 
+    @model_validator(mode="before")
+    @classmethod 
+    def add_defaults_to_appendix(cls, data): 
+        """
+        Ensure that all required framework variables are included in both
+        ``config_inputs_appendix`` and ``config_parameters_appendix``.
+        If any default framework input or parameter (e.g., PROVISION_VAR_NAME)
+        is missing, it is appended to the corresponding list.
+        """
 
+        data =  _ensure_defaults_in_appendix(
+            data=data,
+            field_name="config_inputs_appendix",
+            default_variables=default_inputs,
+        )
+
+        data = _ensure_defaults_in_appendix(
+            data=data,
+            field_name="config_parameters_appendix",
+            default_variables=default_parameters,
+        )
+        return data
+
+    
 class NFMPCData(BaseMPCData):
-    """Data class for PF-MPC"""
+    """Data class for NF-MPC"""
 
     # files and paths
     results_suffix: str = "_neg_flex.csv"
@@ -207,19 +269,38 @@ class NFMPCData(BaseMPCData):
                                   "to the Baseline cost function",
     )
     # initialize market parameters with dummy values (0)
-    config_parameters_appendix: list[MPCVariable] = [
-        MPCVariable(name=glbs.PREP_TIME, value=0, unit="s"),
-        MPCVariable(name=glbs.MARKET_TIME, value=0, unit="s"),
-        MPCVariable(name=glbs.FLEX_EVENT_DURATION, value=0, unit="s")
-    ]
-    config_inputs_appendix: list[MPCVariable] = [
-        MPCVariable(name=glbs.PROVISION_VAR_NAME, value=False),
-    ]
-    weights: list[MPCVariable] = pydantic.Field(
-        default=[], description="Name and value of weights",
+    config_parameters_appendix: list[MPCVariable] = pydantic.Field(
+        default=[], description="Parameters, which need to be appended to the shadow MPCs"
+    )
+    config_inputs_appendix: list[MPCVariable] = pydantic.Field(
+        default=[], description = "Inputs, which need to be appended to the shadow MPCs" 
     )
 
-    @field_serializer('weights', 'config_inputs_appendix',
-                      'config_parameters_appendix')
+
+    @field_serializer('config_inputs_appendix', 'config_parameters_appendix')
     def serialize_mpc_variables(self, variables: list[MPCVariable], _info):
         return [v.dict(exclude=excluded_fields) for v in variables]
+
+    
+    @model_validator(mode="before")
+    @classmethod 
+    def add_defaults_to_appendix(cls, data): 
+        """
+        Ensures that all required framework input and parameter variables are included in
+        ``config_inputs_appendix`` and ``config_parameters_appendix``. If any default
+        framework input or parameter (e.g., PROVISION_VAR_NAME) is missing, it is appended
+        to the corresponding list.
+        """
+
+        data =  _ensure_defaults_in_appendix(
+            data=data,
+            field_name="config_inputs_appendix",
+            default_variables=default_inputs,
+        )
+
+        data = _ensure_defaults_in_appendix(
+            data=data,
+            field_name="config_parameters_appendix",
+            default_variables=default_parameters,
+        )
+        return data

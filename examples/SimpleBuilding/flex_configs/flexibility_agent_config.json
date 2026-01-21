@@ -59,6 +59,13 @@
                 "value": 10
             }
         ],
+        "custom_inputs":[
+            {   
+                "name": "P_el_base",
+                "value": 0, 
+                "alias":"_P_el_base"
+            }
+        ],
         "pos_flex": {
             "flex_cost_function": "sum([self.s_T * self.T_slack**2, self.s_P * self.P_el])"
         },

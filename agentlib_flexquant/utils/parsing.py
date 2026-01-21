@@ -290,24 +290,18 @@ class SetupSystemModifier(ast.NodeTransformer):
                                 "pd.Series",
                             )
                         )
-                body.value.elts.append(
-                    add_input(PROVISION_VAR_NAME, False, "-", "provision flag", "bool")
-                )
+                for var in self.mpc_data.config_inputs_appendix:
+                    body.value.elts.append(
+                        add_input(var.name, var.value, var.unit, var.description, var.type)
+                    )
+            
             # add the flex variables and the weights
             if body.target.id == "parameters":
-                for param_name in [PREP_TIME, FLEX_EVENT_DURATION, MARKET_TIME]:
+                for parameter in self.mpc_data.config_parameters_appendix:
                     body.value.elts.append(
-                        add_parameter(param_name, 0, "s", "time to switch objective")
+                        add_parameter(parameter.name, parameter.value, parameter.unit, parameter.description)
                     )
-                for weight in self.mpc_data.weights:
-                    body.value.elts.append(
-                        add_parameter(
-                            weight.name,
-                            weight.value,
-                            "-",
-                            "Weight for P in objective function",
-                        )
-                    )
+
 
     def modify_config_class_baseline(self, node: ast.ClassDef):
         """Modify the config class of the baseline mpc.
