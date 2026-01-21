@@ -1,0 +1,65 @@
+import logging
+from agentlib_flexquant.generate_flex_agents import FlexAgentGenerator
+from agentlib_flexquant.utils.interactive import Dashboard, CustomBound
+from agentlib.utils.multi_agent_system import LocalMASAgency
+from plot_results import plot_results
+
+# Set the log-level
+logging.basicConfig(level=logging.WARN)
+until = 21600
+
+ENV_CONFIG = {"rt": False, "factor": 0.01, "t_sample": 60}
+
+
+def run_example(until=until, with_plots=False, with_dashboard=False):
+    """ Example with market usage
+
+    Change flex_power_feedback_method in MarketSpecifications to deal with systems with
+    fast or slow inertia.
+    See difference in results: when using collocation, power during flex event does not
+    fully follow offer. When using constant it does. Reason is the fast inertia of the
+    system.
+
+    The time delay in the prediction plots (power profiles do not follow predictions)
+    is caused by the collocation points and is only a visual effect.
+
+    """
+
+    mpc_config = "mpc_and_sim/simple_model.json"
+    sim_config = "mpc_and_sim/simple_sim.json"
+    flex_config = "flex_configs/flexibility_agent_config.json"
+    agent_configs = [sim_config]
+
+    config_list = FlexAgentGenerator(
+        flex_config=flex_config, mpc_agent_config=mpc_config
+    ).generate_flex_agents()
+    agent_configs.extend(config_list)
+
+    mas = LocalMASAgency(
+        agent_configs=agent_configs, env=ENV_CONFIG, variable_logging=False
+    )
+
+    mas.run(until=until)
+    results = mas.get_results(cleanup=False)
+
+    if with_plots:
+        # Alternative plots using matplotlib
+        plot_results(results_data=results)
+
+    if with_dashboard:
+        Dashboard(
+            flex_config="flex_configs/flexibility_agent_config.json",
+            simulator_agent_config="mpc_and_sim/simple_sim.json",
+            results=results
+        ).show(
+            custom_bounds=CustomBound(
+                for_variable="T",
+                lb_name="T_lower",
+                ub_name="T_upper"
+            )
+        )
+    return results
+
+
+if __name__ == "__main__":
+    run_example(until, with_plots=False, with_dashboard=True)
