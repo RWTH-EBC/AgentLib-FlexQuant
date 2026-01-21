@@ -1244,50 +1244,6 @@
             "message-id": "E0401"
         },
         {
-            "type": "error",
-            "module": "agentlib_flexquant.utils.parsing",
-            "obj": "",
-            "line": 8,
-            "column": 0,
-            "path": "agentlib_flexquant/utils/parsing.py",
-            "symbol": "no-name-in-module",
-            "message": "No name 'PROVISION_VAR_NAME' in module 'agentlib_flexquant.data_structures.globals'",
-            "message-id": "E0611"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.utils.parsing",
-            "obj": "",
-            "line": 8,
-            "column": 0,
-            "path": "agentlib_flexquant/utils/parsing.py",
-            "symbol": "no-name-in-module",
-            "message": "No name 'ACCEPTED_POWER_VAR_NAME' in module 'agentlib_flexquant.data_structures.globals'",
-            "message-id": "E0611"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.utils.parsing",
-            "obj": "",
-            "line": 8,
-            "column": 0,
-            "path": "agentlib_flexquant/utils/parsing.py",
-            "symbol": "no-name-in-module",
-            "message": "No name 'RELATIVE_EVENT_START_TIME_VAR_NAME' in module 'agentlib_flexquant.data_structures.globals'",
-            "message-id": "E0611"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.utils.parsing",
-            "obj": "",
-            "line": 8,
-            "column": 0,
-            "path": "agentlib_flexquant/utils/parsing.py",
-            "symbol": "no-name-in-module",
-            "message": "No name 'RELATIVE_EVENT_END_TIME_VAR_NAME' in module 'agentlib_flexquant.data_structures.globals'",
-            "message-id": "E0611"
-        },
-        {
             "type": "warning",
             "module": "agentlib_flexquant.utils.parsing",
             "obj": "add_input",
@@ -1673,39 +1629,6 @@
             "message-id": "E0401"
         },
         {
-            "type": "error",
-            "module": "agentlib_flexquant.data_structures.flex_kpis",
-            "obj": "",
-            "line": 13,
-            "column": 0,
-            "path": "agentlib_flexquant/data_structures/flex_kpis.py",
-            "symbol": "no-name-in-module",
-            "message": "No name 'LINEAR' in module 'agentlib_flexquant.data_structures.globals'",
-            "message-id": "E0611"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.data_structures.flex_kpis",
-            "obj": "",
-            "line": 13,
-            "column": 0,
-            "path": "agentlib_flexquant/data_structures/flex_kpis.py",
-            "symbol": "no-name-in-module",
-            "message": "No name 'CONSTANT' in module 'agentlib_flexquant.data_structures.globals'",
-            "message-id": "E0611"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.data_structures.flex_kpis",
-            "obj": "",
-            "line": 13,
-            "column": 0,
-            "path": "agentlib_flexquant/data_structures/flex_kpis.py",
-            "symbol": "no-name-in-module",
-            "message": "No name 'INTEGRATION_METHOD' in module 'agentlib_flexquant.data_structures.globals'",
-            "message-id": "E0611"
-        },
-        {
             "type": "refactor",
             "module": "agentlib_flexquant.data_structures.flex_kpis",
             "obj": "KPI.Config",
@@ -1891,28 +1814,6 @@
             "symbol": "import-error",
             "message": "Unable to import 'pydantic'",
             "message-id": "E0401"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.data_structures.market",
-            "obj": "",
-            "line": 12,
-            "column": 0,
-            "path": "agentlib_flexquant/data_structures/market.py",
-            "symbol": "no-name-in-module",
-            "message": "No name 'COLLOCATION' in module 'agentlib_flexquant.data_structures.globals'",
-            "message-id": "E0611"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.data_structures.market",
-            "obj": "",
-            "line": 12,
-            "column": 0,
-            "path": "agentlib_flexquant/data_structures/market.py",
-            "symbol": "no-name-in-module",
-            "message": "No name 'CONSTANT' in module 'agentlib_flexquant.data_structures.globals'",
-            "message-id": "E0611"
         },
         {
             "type": "refactor",
@@ -2160,23 +2061,12 @@
             "type": "convention",
             "module": "agentlib_flexquant.data_structures.globals",
             "obj": "",
-            "line": 13,
+            "line": 17,
             "column": 0,
             "path": "agentlib_flexquant/data_structures/globals.py",
             "symbol": "invalid-name",
-            "message": "Constant name \"FlexibilityOffer\" doesn't conform to UPPER_CASE naming style",
+            "message": "Class name \"INTEGRATION_METHOD\" doesn't conform to PascalCase naming style",
             "message-id": "C0103"
-        },
-        {
-            "type": "convention",
-            "module": "agentlib_flexquant.data_structures.globals",
-            "obj": "return_baseline_cost_function",
-            "line": 33,
-            "column": 0,
-            "path": "agentlib_flexquant/data_structures/globals.py",
-            "symbol": "missing-function-docstring",
-            "message": "Missing function or method docstring",
-            "message-id": "C0116"
         },
         {
             "type": "error",
@@ -2311,61 +2201,6 @@
             "message-id": "R0903"
         },
         {
-            "type": "error",
-            "module": "agentlib_flexquant.data_structures.mpcs",
-            "obj": "BaselineMPCData",
-            "line": 92,
-            "column": 25,
-            "path": "agentlib_flexquant/data_structures/mpcs.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'ACCEPTED_POWER_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.data_structures.mpcs",
-            "obj": "BaselineMPCData",
-            "line": 93,
-            "column": 25,
-            "path": "agentlib_flexquant/data_structures/mpcs.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.data_structures.mpcs",
-            "obj": "BaselineMPCData",
-            "line": 94,
-            "column": 25,
-            "path": "agentlib_flexquant/data_structures/mpcs.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'RELATIVE_EVENT_START_TIME_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.data_structures.mpcs",
-            "obj": "BaselineMPCData",
-            "line": 95,
-            "column": 25,
-            "path": "agentlib_flexquant/data_structures/mpcs.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'RELATIVE_EVENT_END_TIME_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.data_structures.mpcs",
-            "obj": "PFMPCData",
-            "line": 162,
-            "column": 25,
-            "path": "agentlib_flexquant/data_structures/mpcs.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
             "type": "refactor",
             "module": "agentlib_flexquant.data_structures.mpcs",
             "obj": "PFMPCData",
@@ -2375,17 +2210,6 @@
             "symbol": "too-few-public-methods",
             "message": "Too few public methods (1/2)",
             "message-id": "R0903"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.data_structures.mpcs",
-            "obj": "NFMPCData",
-            "line": 197,
-            "column": 25,
-            "path": "agentlib_flexquant/data_structures/mpcs.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member",
-            "message-id": "E1101"
         },
         {
             "type": "refactor",
@@ -2773,116 +2597,6 @@
             "message-id": "C0115"
         },
         {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_market",
-            "obj": "FlexibilityMarketModuleConfig",
-            "line": 24,
-            "column": 17,
-            "path": "agentlib_flexquant/modules/flexibility_market.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'ACCEPTED_POWER_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_market",
-            "obj": "FlexibilityMarketModuleConfig",
-            "line": 24,
-            "column": 53,
-            "path": "agentlib_flexquant/modules/flexibility_market.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'ACCEPTED_POWER_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_market",
-            "obj": "FlexibilityMarketModuleConfig",
-            "line": 28,
-            "column": 17,
-            "path": "agentlib_flexquant/modules/flexibility_market.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'RELATIVE_EVENT_START_TIME_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_market",
-            "obj": "FlexibilityMarketModuleConfig",
-            "line": 29,
-            "column": 18,
-            "path": "agentlib_flexquant/modules/flexibility_market.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'RELATIVE_EVENT_START_TIME_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_market",
-            "obj": "FlexibilityMarketModuleConfig",
-            "line": 33,
-            "column": 17,
-            "path": "agentlib_flexquant/modules/flexibility_market.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'RELATIVE_EVENT_END_TIME_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_market",
-            "obj": "FlexibilityMarketModuleConfig",
-            "line": 34,
-            "column": 18,
-            "path": "agentlib_flexquant/modules/flexibility_market.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'RELATIVE_EVENT_END_TIME_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_market",
-            "obj": "FlexibilityMarketModuleConfig",
-            "line": 38,
-            "column": 17,
-            "path": "agentlib_flexquant/modules/flexibility_market.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_market",
-            "obj": "FlexibilityMarketModuleConfig",
-            "line": 39,
-            "column": 18,
-            "path": "agentlib_flexquant/modules/flexibility_market.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_market",
-            "obj": "FlexibilityMarketModuleConfig",
-            "line": 46,
-            "column": 27,
-            "path": "agentlib_flexquant/modules/flexibility_market.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'COLLOCATION_TIME_GRID' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_market",
-            "obj": "FlexibilityMarketModuleConfig",
-            "line": 46,
-            "column": 61,
-            "path": "agentlib_flexquant/modules/flexibility_market.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'COLLOCATION_TIME_GRID' member",
-            "message-id": "E1101"
-        },
-        {
             "type": "convention",
             "module": "agentlib_flexquant.modules.flexibility_market",
             "obj": "FlexibilityMarketModuleConfig.check_results_file_extension",
@@ -2927,83 +2641,6 @@
             "message-id": "C0103"
         },
         {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_market",
-            "obj": "FlexibilityMarketModule.random_flexibility_callback",
-            "line": 154,
-            "column": 24,
-            "path": "agentlib_flexquant/modules/flexibility_market.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_market",
-            "obj": "FlexibilityMarketModule.random_flexibility_callback",
-            "line": 184,
-            "column": 53,
-            "path": "agentlib_flexquant/modules/flexibility_market.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'COLLOCATION' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_market",
-            "obj": "FlexibilityMarketModule.random_flexibility_callback",
-            "line": 186,
-            "column": 37,
-            "path": "agentlib_flexquant/modules/flexibility_market.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'COLLOCATION_TIME_GRID' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_market",
-            "obj": "FlexibilityMarketModule.random_flexibility_callback",
-            "line": 187,
-            "column": 55,
-            "path": "agentlib_flexquant/modules/flexibility_market.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'CONSTANT' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_market",
-            "obj": "FlexibilityMarketModule.random_flexibility_callback",
-            "line": 189,
-            "column": 52,
-            "path": "agentlib_flexquant/modules/flexibility_market.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'COLLOCATION_TIME_GRID' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_market",
-            "obj": "FlexibilityMarketModule.random_flexibility_callback",
-            "line": 197,
-            "column": 29,
-            "path": "agentlib_flexquant/modules/flexibility_market.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'ACCEPTED_POWER_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_market",
-            "obj": "FlexibilityMarketModule.random_flexibility_callback",
-            "line": 199,
-            "column": 29,
-            "path": "agentlib_flexquant/modules/flexibility_market.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
             "type": "warning",
             "module": "agentlib_flexquant.modules.flexibility_market",
             "obj": "FlexibilityMarketModule.random_flexibility_callback",
@@ -3013,83 +2650,6 @@
             "symbol": "unused-argument",
             "message": "Unused argument 'name'",
             "message-id": "W0613"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_market",
-            "obj": "FlexibilityMarketModule.single_flexibility_callback",
-            "line": 223,
-            "column": 29,
-            "path": "agentlib_flexquant/modules/flexibility_market.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_market",
-            "obj": "FlexibilityMarketModule.single_flexibility_callback",
-            "line": 244,
-            "column": 49,
-            "path": "agentlib_flexquant/modules/flexibility_market.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'COLLOCATION' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_market",
-            "obj": "FlexibilityMarketModule.single_flexibility_callback",
-            "line": 246,
-            "column": 24,
-            "path": "agentlib_flexquant/modules/flexibility_market.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'COLLOCATION_TIME_GRID' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_market",
-            "obj": "FlexibilityMarketModule.single_flexibility_callback",
-            "line": 247,
-            "column": 51,
-            "path": "agentlib_flexquant/modules/flexibility_market.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'CONSTANT' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_market",
-            "obj": "FlexibilityMarketModule.single_flexibility_callback",
-            "line": 249,
-            "column": 54,
-            "path": "agentlib_flexquant/modules/flexibility_market.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'COLLOCATION_TIME_GRID' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_market",
-            "obj": "FlexibilityMarketModule.single_flexibility_callback",
-            "line": 257,
-            "column": 25,
-            "path": "agentlib_flexquant/modules/flexibility_market.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'ACCEPTED_POWER_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_market",
-            "obj": "FlexibilityMarketModule.single_flexibility_callback",
-            "line": 259,
-            "column": 25,
-            "path": "agentlib_flexquant/modules/flexibility_market.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member",
-            "message-id": "E1101"
         },
         {
             "type": "warning",
@@ -3145,17 +2705,6 @@
             "symbol": "missing-function-docstring",
             "message": "Missing function or method docstring",
             "message-id": "C0116"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_market",
-            "obj": "FlexibilityMarketModule.process",
-            "line": 282,
-            "column": 25,
-            "path": "agentlib_flexquant/modules/flexibility_market.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member",
-            "message-id": "E1101"
         },
         {
             "type": "warning",
@@ -3279,61 +2828,6 @@
             "message-id": "R0903"
         },
         {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_indicator",
-            "obj": "FlexibilityIndicatorModuleConfig",
-            "line": 148,
-            "column": 36,
-            "path": "agentlib_flexquant/modules/flexibility_indicator.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'FLEXIBILITY_OFFER' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_indicator",
-            "obj": "FlexibilityIndicatorModuleConfig",
-            "line": 303,
-            "column": 36,
-            "path": "agentlib_flexquant/modules/flexibility_indicator.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'COLLOCATION_TIME_GRID' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_indicator",
-            "obj": "FlexibilityIndicatorModuleConfig",
-            "line": 304,
-            "column": 37,
-            "path": "agentlib_flexquant/modules/flexibility_indicator.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'COLLOCATION_TIME_GRID' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_indicator",
-            "obj": "FlexibilityIndicatorModuleConfig",
-            "line": 323,
-            "column": 24,
-            "path": "agentlib_flexquant/modules/flexibility_indicator.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'INTEGRATION_METHOD' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_indicator",
-            "obj": "FlexibilityIndicatorModuleConfig",
-            "line": 324,
-            "column": 16,
-            "path": "agentlib_flexquant/modules/flexibility_indicator.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'LINEAR' member",
-            "message-id": "E1101"
-        },
-        {
             "type": "refactor",
             "module": "agentlib_flexquant.modules.flexibility_indicator",
             "obj": "FlexibilityIndicatorModuleConfig",
@@ -3356,17 +2850,6 @@
             "message-id": "C0103"
         },
         {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_indicator",
-            "obj": "FlexibilityIndicatorModule.__init__",
-            "line": 354,
-            "column": 33,
-            "path": "agentlib_flexquant/modules/flexibility_indicator.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'FLEXIBILITY_OFFER' member",
-            "message-id": "E1101"
-        },
-        {
             "type": "convention",
             "module": "agentlib_flexquant.modules.flexibility_indicator",
             "obj": "FlexibilityIndicatorModule.register_callbacks",
@@ -3376,39 +2859,6 @@
             "symbol": "missing-function-docstring",
             "message": "Missing function or method docstring",
             "message-id": "C0116"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_indicator",
-            "obj": "FlexibilityIndicatorModule.register_callbacks",
-            "line": 376,
-            "column": 17,
-            "path": "agentlib_flexquant/modules/flexibility_indicator.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_indicator",
-            "obj": "FlexibilityIndicatorModule.register_callbacks",
-            "line": 376,
-            "column": 48,
-            "path": "agentlib_flexquant/modules/flexibility_indicator.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_indicator",
-            "obj": "FlexibilityIndicatorModule.callback",
-            "line": 387,
-            "column": 19,
-            "path": "agentlib_flexquant/modules/flexibility_indicator.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member",
-            "message-id": "E1101"
         },
         {
             "type": "convention",
@@ -3488,17 +2938,6 @@
             "message-id": "R0914"
         },
         {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_indicator",
-            "obj": "FlexibilityIndicatorModule.write_results",
-            "line": 513,
-            "column": 25,
-            "path": "agentlib_flexquant/modules/flexibility_indicator.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'COLLOCATION_TIME_GRID' member",
-            "message-id": "E1101"
-        },
-        {
             "type": "refactor",
             "module": "agentlib_flexquant.modules.flexibility_indicator",
             "obj": "FlexibilityIndicatorModule.write_results",
@@ -3519,28 +2958,6 @@
             "symbol": "unused-variable",
             "message": "Unused variable 'i'",
             "message-id": "W0612"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_indicator",
-            "obj": "FlexibilityIndicatorModule.calc_and_send_offer",
-            "line": 574,
-            "column": 41,
-            "path": "agentlib_flexquant/modules/flexibility_indicator.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'COLLOCATION_TIME_GRID' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.flexibility_indicator",
-            "obj": "FlexibilityIndicatorModule.calc_and_send_offer",
-            "line": 607,
-            "column": 17,
-            "path": "agentlib_flexquant/modules/flexibility_indicator.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'FLEXIBILITY_OFFER' member",
-            "message-id": "E1101"
         },
         {
             "type": "refactor",
@@ -3961,17 +3378,6 @@
             "message-id": "E0401"
         },
         {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.baseline_mpc",
-            "obj": "",
-            "line": 16,
-            "column": 0,
-            "path": "agentlib_flexquant/modules/baseline_mpc.py",
-            "symbol": "no-name-in-module",
-            "message": "No name 'base_vars_to_communicate_suffix' in module 'agentlib_flexquant.data_structures.globals'",
-            "message-id": "E0611"
-        },
-        {
             "type": "convention",
             "module": "agentlib_flexquant.modules.baseline_mpc",
             "obj": "FlexibilityBaselineMPCConfig",
@@ -3994,61 +3400,6 @@
             "message-id": "R0903"
         },
         {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.baseline_mpc",
-            "obj": "FlexibilityBaselineMPC.pre_computation_hook",
-            "line": 115,
-            "column": 20,
-            "path": "agentlib_flexquant/modules/baseline_mpc.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.baseline_mpc",
-            "obj": "FlexibilityBaselineMPC.pre_computation_hook",
-            "line": 116,
-            "column": 21,
-            "path": "agentlib_flexquant/modules/baseline_mpc.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'RELATIVE_EVENT_START_TIME_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.baseline_mpc",
-            "obj": "FlexibilityBaselineMPC.pre_computation_hook",
-            "line": 117,
-            "column": 30,
-            "path": "agentlib_flexquant/modules/baseline_mpc.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'ACCEPTED_POWER_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.baseline_mpc",
-            "obj": "FlexibilityBaselineMPC.pre_computation_hook",
-            "line": 121,
-            "column": 21,
-            "path": "agentlib_flexquant/modules/baseline_mpc.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'RELATIVE_EVENT_END_TIME_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.baseline_mpc",
-            "obj": "FlexibilityBaselineMPC.pre_computation_hook",
-            "line": 122,
-            "column": 30,
-            "path": "agentlib_flexquant/modules/baseline_mpc.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'ACCEPTED_POWER_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
             "type": "convention",
             "module": "agentlib_flexquant.modules.baseline_mpc",
             "obj": "FlexibilityBaselineMPC.set_actuation",
@@ -4069,17 +3420,6 @@
             "symbol": "invalid-name",
             "message": "Variable name \"df\" doesn't conform to snake_case naming style",
             "message-id": "C0103"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.baseline_mpc",
-            "obj": "FlexibilityBaselineMPC.sim_flex_model",
-            "line": 188,
-            "column": 25,
-            "path": "agentlib_flexquant/modules/baseline_mpc.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member",
-            "message-id": "E1101"
         },
         {
             "type": "refactor",
@@ -4148,83 +3488,6 @@
             "message-id": "R0903"
         },
         {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.baseline_mpc",
-            "obj": "FlexibilityBaselineMINLPMPC.pre_computation_hook",
-            "line": 442,
-            "column": 20,
-            "path": "agentlib_flexquant/modules/baseline_mpc.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.baseline_mpc",
-            "obj": "FlexibilityBaselineMINLPMPC.pre_computation_hook",
-            "line": 443,
-            "column": 33,
-            "path": "agentlib_flexquant/modules/baseline_mpc.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'ACCEPTED_POWER_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.baseline_mpc",
-            "obj": "FlexibilityBaselineMINLPMPC.pre_computation_hook",
-            "line": 444,
-            "column": 33,
-            "path": "agentlib_flexquant/modules/baseline_mpc.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'ACCEPTED_POWER_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.baseline_mpc",
-            "obj": "FlexibilityBaselineMINLPMPC.pre_computation_hook",
-            "line": 445,
-            "column": 21,
-            "path": "agentlib_flexquant/modules/baseline_mpc.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'RELATIVE_EVENT_START_TIME_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.baseline_mpc",
-            "obj": "FlexibilityBaselineMINLPMPC.pre_computation_hook",
-            "line": 446,
-            "column": 30,
-            "path": "agentlib_flexquant/modules/baseline_mpc.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'ACCEPTED_POWER_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.baseline_mpc",
-            "obj": "FlexibilityBaselineMINLPMPC.pre_computation_hook",
-            "line": 450,
-            "column": 21,
-            "path": "agentlib_flexquant/modules/baseline_mpc.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'RELATIVE_EVENT_END_TIME_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.baseline_mpc",
-            "obj": "FlexibilityBaselineMINLPMPC.pre_computation_hook",
-            "line": 451,
-            "column": 30,
-            "path": "agentlib_flexquant/modules/baseline_mpc.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'ACCEPTED_POWER_VAR_NAME' member",
-            "message-id": "E1101"
-        },
-        {
             "type": "convention",
             "module": "agentlib_flexquant.modules.baseline_mpc",
             "obj": "FlexibilityBaselineMINLPMPC.set_actuation",
@@ -4245,17 +3508,6 @@
             "symbol": "invalid-name",
             "message": "Variable name \"df\" doesn't conform to snake_case naming style",
             "message-id": "C0103"
-        },
-        {
-            "type": "error",
-            "module": "agentlib_flexquant.modules.baseline_mpc",
-            "obj": "FlexibilityBaselineMINLPMPC.sim_flex_model",
-            "line": 515,
-            "column": 17,
-            "path": "agentlib_flexquant/modules/baseline_mpc.py",
-            "symbol": "no-member",
-            "message": "Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member",
-            "message-id": "E1101"
         },
         {
             "type": "refactor",
@@ -4438,10 +3690,10 @@
         "bad_names": {
             "argument": 6,
             "attr": 3,
-            "klass": 0,
+            "klass": 1,
             "class_attribute": 0,
             "class_const": 0,
-            "const": 1,
+            "const": 0,
             "inlinevar": 0,
             "function": 0,
             "method": 2,
@@ -4498,7 +3750,7 @@
             },
             "agentlib_flexquant.utils.parsing": {
                 "convention": 8,
-                "error": 5,
+                "error": 1,
                 "fatal": 0,
                 "info": 0,
                 "refactor": 5,
@@ -4525,7 +3777,7 @@
             },
             "agentlib_flexquant.data_structures.flex_kpis": {
                 "convention": 4,
-                "error": 7,
+                "error": 4,
                 "fatal": 0,
                 "info": 0,
                 "refactor": 10,
@@ -4534,7 +3786,7 @@
             },
             "agentlib_flexquant.data_structures.market": {
                 "convention": 0,
-                "error": 3,
+                "error": 1,
                 "fatal": 0,
                 "info": 0,
                 "refactor": 5,
@@ -4551,12 +3803,12 @@
                 "warning": 1
             },
             "agentlib_flexquant.data_structures.globals": {
-                "convention": 2,
+                "convention": 1,
                 "error": 0,
                 "fatal": 0,
                 "info": 0,
                 "refactor": 0,
-                "statement": 24,
+                "statement": 35,
                 "warning": 0
             },
             "agentlib_flexquant.data_structures.__init__": {
@@ -4579,7 +3831,7 @@
             },
             "agentlib_flexquant.data_structures.mpcs": {
                 "convention": 1,
-                "error": 9,
+                "error": 3,
                 "fatal": 0,
                 "info": 0,
                 "refactor": 3,
@@ -4606,7 +3858,7 @@
             },
             "agentlib_flexquant.modules.flexibility_market": {
                 "convention": 8,
-                "error": 30,
+                "error": 5,
                 "fatal": 0,
                 "info": 0,
                 "refactor": 1,
@@ -4615,7 +3867,7 @@
             },
             "agentlib_flexquant.modules.flexibility_indicator": {
                 "convention": 7,
-                "error": 16,
+                "error": 4,
                 "fatal": 0,
                 "info": 0,
                 "refactor": 7,
@@ -4633,7 +3885,7 @@
             },
             "agentlib_flexquant.modules.baseline_mpc": {
                 "convention": 14,
-                "error": 22,
+                "error": 7,
                 "fatal": 0,
                 "info": 0,
                 "refactor": 6,
@@ -4654,7 +3906,7 @@
             "import-error": 81,
             "line-too-long": 22,
             "missing-module-docstring": 8,
-            "no-name-in-module": 16,
+            "no-name-in-module": 6,
             "missing-class-docstring": 9,
             "too-many-instance-attributes": 4,
             "unspecified-encoding": 4,
@@ -4679,7 +3931,7 @@
             "consider-using-dict-items": 3,
             "useless-else-on-loop": 1,
             "unnecessary-direct-lambda-call": 2,
-            "missing-function-docstring": 18,
+            "missing-function-docstring": 17,
             "trailing-whitespace": 2,
             "redefined-builtin": 2,
             "consider-using-in": 2,
@@ -4688,7 +3940,6 @@
             "unused-variable": 5,
             "eval-used": 3,
             "self-assigning-variable": 1,
-            "no-member": 57,
             "bad-indentation": 7,
             "anomalous-backslash-in-string": 1,
             "raise-missing-from": 1,
@@ -4713,12 +3964,12 @@
                 "agentlib_flexquant"
             ],
             "agentlib_flexquant.modules.flexibility_indicator": [
-                "agentlib_flexquant",
-                "agentlib_flexquant.data_structures.flex_results"
+                "agentlib_flexquant.data_structures.flex_results",
+                "agentlib_flexquant"
             ],
             "agentlib_flexquant.modules.flexibility_market": [
-                "agentlib_flexquant",
-                "agentlib_flexquant.data_structures.flex_results"
+                "agentlib_flexquant.data_structures.flex_results",
+                "agentlib_flexquant"
             ],
             "agentlib_flexquant.modules.shadow_mpc": [
                 "agentlib_flexquant"
@@ -4731,15 +3982,15 @@
                 "agentlib_flexquant.utils.interactive"
             ],
             "agentlib_flexquant.data_structures.globals": [
-                "agentlib_flexquant.modules.baseline_mpc",
+                "agentlib_flexquant.modules.flexibility_indicator",
+                "agentlib_flexquant.data_structures.market",
+                "agentlib_flexquant.optimization_backends.constrained_cia",
+                "agentlib_flexquant.data_structures.mpcs",
                 "agentlib_flexquant.modules.flexibility_market",
                 "agentlib_flexquant.utils.parsing",
-                "agentlib_flexquant.optimization_backends.constrained_cia",
-                "agentlib_flexquant.data_structures.market",
-                "agentlib_flexquant.data_structures.flex_kpis",
-                "agentlib_flexquant.data_structures.mpcs",
+                "agentlib_flexquant.modules.baseline_mpc",
                 "agentlib_flexquant.utils.interactive",
-                "agentlib_flexquant.modules.flexibility_indicator"
+                "agentlib_flexquant.data_structures.flex_kpis"
             ],
             "agentlib_flexquant.data_structures.flex_kpis": [
                 "agentlib_flexquant.utils.interactive",
@@ -4751,18 +4002,18 @@
                 "agentlib_flexquant.modules.flexibility_market"
             ],
             "agentlib_flexquant.data_structures.flexquant": [
-                "agentlib_flexquant.data_structures.flex_results",
-                "agentlib_flexquant.utils.interactive"
+                "agentlib_flexquant.utils.interactive",
+                "agentlib_flexquant.data_structures.flex_results"
             ],
             "agentlib_flexquant.data_structures.mpcs": [
-                "agentlib_flexquant.data_structures.flex_results",
+                "agentlib_flexquant.utils.parsing",
                 "agentlib_flexquant.data_structures.flexquant",
-                "agentlib_flexquant.utils.parsing"
+                "agentlib_flexquant.data_structures.flex_results"
             ],
             "agentlib_flexquant.utils.data_handling": [
+                "agentlib_flexquant.modules.flexibility_indicator",
                 "agentlib_flexquant.data_structures.flex_kpis",
-                "agentlib_flexquant.data_structures.flex_results",
-                "agentlib_flexquant.modules.flexibility_indicator"
+                "agentlib_flexquant.data_structures.flex_results"
             ],
             "agentlib_flexquant.utils.config_management": [
                 "agentlib_flexquant.data_structures.mpcs",
@@ -4786,30 +4037,30 @@
             "module": 22
         },
         "undocumented": {
-            "function": 4,
+            "function": 3,
             "klass": 9,
             "method": 14,
             "module": 8
         },
-        "convention": 136,
-        "error": 154,
+        "convention": 135,
+        "error": 87,
         "fatal": 0,
         "info": 0,
         "refactor": 66,
-        "statement": 2092,
+        "statement": 2103,
         "warning": 47,
         "global_note": 0,
         "nb_duplicated_lines": 32,
-        "percent_duplicated_lines": 0.5089058524173028
+        "percent_duplicated_lines": 0.5063291139240507
     },
     "previous": {
         "bad_names": {
             "argument": 6,
             "attr": 3,
-            "klass": 0,
+            "klass": 1,
             "class_attribute": 0,
             "class_const": 0,
-            "const": 1,
+            "const": 0,
             "inlinevar": 0,
             "function": 0,
             "method": 2,
@@ -4866,7 +4117,7 @@
             },
             "agentlib_flexquant.utils.parsing": {
                 "convention": 8,
-                "error": 5,
+                "error": 1,
                 "fatal": 0,
                 "info": 0,
                 "refactor": 5,
@@ -4893,7 +4144,7 @@
             },
             "agentlib_flexquant.data_structures.flex_kpis": {
                 "convention": 4,
-                "error": 7,
+                "error": 4,
                 "fatal": 0,
                 "info": 0,
                 "refactor": 10,
@@ -4902,7 +4153,7 @@
             },
             "agentlib_flexquant.data_structures.market": {
                 "convention": 0,
-                "error": 3,
+                "error": 1,
                 "fatal": 0,
                 "info": 0,
                 "refactor": 5,
@@ -4919,12 +4170,12 @@
                 "warning": 1
             },
             "agentlib_flexquant.data_structures.globals": {
-                "convention": 2,
+                "convention": 1,
                 "error": 0,
                 "fatal": 0,
                 "info": 0,
                 "refactor": 0,
-                "statement": 24,
+                "statement": 35,
                 "warning": 0
             },
             "agentlib_flexquant.data_structures.__init__": {
@@ -4947,7 +4198,7 @@
             },
             "agentlib_flexquant.data_structures.mpcs": {
                 "convention": 1,
-                "error": 9,
+                "error": 3,
                 "fatal": 0,
                 "info": 0,
                 "refactor": 3,
@@ -4974,7 +4225,7 @@
             },
             "agentlib_flexquant.modules.flexibility_market": {
                 "convention": 8,
-                "error": 30,
+                "error": 5,
                 "fatal": 0,
                 "info": 0,
                 "refactor": 1,
@@ -4983,7 +4234,7 @@
             },
             "agentlib_flexquant.modules.flexibility_indicator": {
                 "convention": 7,
-                "error": 16,
+                "error": 4,
                 "fatal": 0,
                 "info": 0,
                 "refactor": 7,
@@ -5001,7 +4252,7 @@
             },
             "agentlib_flexquant.modules.baseline_mpc": {
                 "convention": 14,
-                "error": 22,
+                "error": 7,
                 "fatal": 0,
                 "info": 0,
                 "refactor": 6,
@@ -5022,7 +4273,7 @@
             "import-error": 81,
             "line-too-long": 22,
             "missing-module-docstring": 8,
-            "no-name-in-module": 16,
+            "no-name-in-module": 6,
             "missing-class-docstring": 9,
             "too-many-instance-attributes": 4,
             "unspecified-encoding": 4,
@@ -5047,7 +4298,7 @@
             "consider-using-dict-items": 3,
             "useless-else-on-loop": 1,
             "unnecessary-direct-lambda-call": 2,
-            "missing-function-docstring": 18,
+            "missing-function-docstring": 17,
             "trailing-whitespace": 2,
             "redefined-builtin": 2,
             "consider-using-in": 2,
@@ -5056,7 +4307,6 @@
             "unused-variable": 5,
             "eval-used": 3,
             "self-assigning-variable": 1,
-            "no-member": 57,
             "bad-indentation": 7,
             "anomalous-backslash-in-string": 1,
             "raise-missing-from": 1,
@@ -5081,12 +4331,12 @@
                 "agentlib_flexquant"
             ],
             "agentlib_flexquant.modules.flexibility_indicator": [
-                "agentlib_flexquant",
-                "agentlib_flexquant.data_structures.flex_results"
+                "agentlib_flexquant.data_structures.flex_results",
+                "agentlib_flexquant"
             ],
             "agentlib_flexquant.modules.flexibility_market": [
-                "agentlib_flexquant",
-                "agentlib_flexquant.data_structures.flex_results"
+                "agentlib_flexquant.data_structures.flex_results",
+                "agentlib_flexquant"
             ],
             "agentlib_flexquant.modules.shadow_mpc": [
                 "agentlib_flexquant"
@@ -5099,38 +4349,38 @@
                 "agentlib_flexquant.utils.interactive"
             ],
             "agentlib_flexquant.data_structures.globals": [
-                "agentlib_flexquant.modules.baseline_mpc",
-                "agentlib_flexquant.modules.flexibility_market",
-                "agentlib_flexquant.utils.parsing",
+                "agentlib_flexquant.modules.flexibility_indicator",
                 "agentlib_flexquant.optimization_backends.constrained_cia",
                 "agentlib_flexquant.data_structures.market",
-                "agentlib_flexquant.data_structures.flex_kpis",
                 "agentlib_flexquant.data_structures.mpcs",
+                "agentlib_flexquant.modules.flexibility_market",
+                "agentlib_flexquant.utils.parsing",
+                "agentlib_flexquant.modules.baseline_mpc",
                 "agentlib_flexquant.utils.interactive",
-                "agentlib_flexquant.modules.flexibility_indicator"
+                "agentlib_flexquant.data_structures.flex_kpis"
             ],
             "agentlib_flexquant.data_structures.flex_kpis": [
                 "agentlib_flexquant.utils.interactive",
                 "agentlib_flexquant.modules.flexibility_indicator"
             ],
             "agentlib_flexquant.data_structures.flex_offer": [
-                "agentlib_flexquant.modules.flexibility_market",
+                "agentlib_flexquant.modules.flexibility_indicator",
                 "agentlib_flexquant.utils.interactive",
-                "agentlib_flexquant.modules.flexibility_indicator"
+                "agentlib_flexquant.modules.flexibility_market"
             ],
             "agentlib_flexquant.data_structures.flexquant": [
-                "agentlib_flexquant.data_structures.flex_results",
-                "agentlib_flexquant.utils.interactive"
+                "agentlib_flexquant.utils.interactive",
+                "agentlib_flexquant.data_structures.flex_results"
             ],
             "agentlib_flexquant.data_structures.mpcs": [
-                "agentlib_flexquant.data_structures.flex_results",
+                "agentlib_flexquant.utils.parsing",
                 "agentlib_flexquant.data_structures.flexquant",
-                "agentlib_flexquant.utils.parsing"
+                "agentlib_flexquant.data_structures.flex_results"
             ],
             "agentlib_flexquant.utils.data_handling": [
+                "agentlib_flexquant.modules.flexibility_indicator",
                 "agentlib_flexquant.data_structures.flex_kpis",
-                "agentlib_flexquant.data_structures.flex_results",
-                "agentlib_flexquant.modules.flexibility_indicator"
+                "agentlib_flexquant.data_structures.flex_results"
             ],
             "agentlib_flexquant.utils.config_management": [
                 "agentlib_flexquant.data_structures.mpcs",
@@ -5154,20 +4404,20 @@
             "module": 22
         },
         "undocumented": {
-            "function": 4,
+            "function": 3,
             "klass": 9,
             "method": 14,
             "module": 8
         },
-        "convention": 136,
-        "error": 154,
+        "convention": 135,
+        "error": 87,
         "fatal": 0,
         "info": 0,
         "refactor": 66,
-        "statement": 2092,
+        "statement": 2103,
         "warning": 47,
-        "global_note": 5.12906309751434,
+        "global_note": 6.752258678078935,
         "nb_duplicated_lines": 32,
-        "percent_duplicated_lines": 0.5089058524173028
+        "percent_duplicated_lines": 0.5063291139240507
     }
 }

@@ -116,10 +116,6 @@ agentlib_flexquant/utils/parsing.py:343:0: C0303: Trailing whitespace (trailing-
 agentlib_flexquant/utils/parsing.py:445:0: C0303: Trailing whitespace (trailing-whitespace)
 agentlib_flexquant/utils/parsing.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 agentlib_flexquant/utils/parsing.py:6:0: E0401: Unable to import 'agentlib_mpc.data_structures.mpc_datamodels' (import-error)
-agentlib_flexquant/utils/parsing.py:8:0: E0611: No name 'PROVISION_VAR_NAME' in module 'agentlib_flexquant.data_structures.globals' (no-name-in-module)
-agentlib_flexquant/utils/parsing.py:8:0: E0611: No name 'ACCEPTED_POWER_VAR_NAME' in module 'agentlib_flexquant.data_structures.globals' (no-name-in-module)
-agentlib_flexquant/utils/parsing.py:8:0: E0611: No name 'RELATIVE_EVENT_START_TIME_VAR_NAME' in module 'agentlib_flexquant.data_structures.globals' (no-name-in-module)
-agentlib_flexquant/utils/parsing.py:8:0: E0611: No name 'RELATIVE_EVENT_END_TIME_VAR_NAME' in module 'agentlib_flexquant.data_structures.globals' (no-name-in-module)
 agentlib_flexquant/utils/parsing.py:61:74: W0622: Redefining built-in 'type' (redefined-builtin)
 agentlib_flexquant/utils/parsing.py:118:26: W0622: Redefining built-in 'type' (redefined-builtin)
 agentlib_flexquant/utils/parsing.py:175:4: C0103: Method name "visit_Module" doesn't conform to snake_case naming style (invalid-name)
@@ -158,9 +154,6 @@ agentlib_flexquant/data_structures/flex_kpis.py:8:0: E0401: Unable to import 'nu
 agentlib_flexquant/data_structures/flex_kpis.py:9:0: E0401: Unable to import 'pandas' (import-error)
 agentlib_flexquant/data_structures/flex_kpis.py:10:0: E0401: Unable to import 'pydantic' (import-error)
 agentlib_flexquant/data_structures/flex_kpis.py:11:0: E0401: Unable to import 'agentlib_mpc.utils' (import-error)
-agentlib_flexquant/data_structures/flex_kpis.py:13:0: E0611: No name 'LINEAR' in module 'agentlib_flexquant.data_structures.globals' (no-name-in-module)
-agentlib_flexquant/data_structures/flex_kpis.py:13:0: E0611: No name 'CONSTANT' in module 'agentlib_flexquant.data_structures.globals' (no-name-in-module)
-agentlib_flexquant/data_structures/flex_kpis.py:13:0: E0611: No name 'INTEGRATION_METHOD' in module 'agentlib_flexquant.data_structures.globals' (no-name-in-module)
 agentlib_flexquant/data_structures/flex_kpis.py:41:4: R0903: Too few public methods (0/2) (too-few-public-methods)
 agentlib_flexquant/data_structures/flex_kpis.py:22:0: R0903: Too few public methods (1/2) (too-few-public-methods)
 agentlib_flexquant/data_structures/flex_kpis.py:76:8: C0103: Attribute name "dt" doesn't conform to snake_case naming style (invalid-name)
@@ -179,8 +172,6 @@ agentlib_flexquant/data_structures/flex_kpis.py:563:12: W0127: Assigning the sam
 agentlib_flexquant/data_structures/flex_kpis.py:19:0: W0611: Unused strip_multi_index imported from agentlib_flexquant.utils.data_handling (unused-import)
 ************* Module agentlib_flexquant.data_structures.market
 agentlib_flexquant/data_structures/market.py:10:0: E0401: Unable to import 'pydantic' (import-error)
-agentlib_flexquant/data_structures/market.py:12:0: E0611: No name 'COLLOCATION' in module 'agentlib_flexquant.data_structures.globals' (no-name-in-module)
-agentlib_flexquant/data_structures/market.py:12:0: E0611: No name 'CONSTANT' in module 'agentlib_flexquant.data_structures.globals' (no-name-in-module)
 agentlib_flexquant/data_structures/market.py:15:0: R0903: Too few public methods (0/2) (too-few-public-methods)
 agentlib_flexquant/data_structures/market.py:43:0: R0903: Too few public methods (0/2) (too-few-public-methods)
 agentlib_flexquant/data_structures/market.py:55:0: R0903: Too few public methods (0/2) (too-few-public-methods)
@@ -205,8 +196,7 @@ agentlib_flexquant/data_structures/flex_results.py:280:72: C0103: Variable name 
 agentlib_flexquant/data_structures/flex_results.py:509:12: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
 agentlib_flexquant/data_structures/flex_results.py:12:0: W0611: Unused BaseModel imported from pydantic (unused-import)
 ************* Module agentlib_flexquant.data_structures.globals
-agentlib_flexquant/data_structures/globals.py:13:0: C0103: Constant name "FlexibilityOffer" doesn't conform to UPPER_CASE naming style (invalid-name)
-agentlib_flexquant/data_structures/globals.py:33:0: C0116: Missing function or method docstring (missing-function-docstring)
+agentlib_flexquant/data_structures/globals.py:17:0: C0103: Class name "INTEGRATION_METHOD" doesn't conform to PascalCase naming style (invalid-name)
 ************* Module agentlib_flexquant.data_structures.flex_offer
 agentlib_flexquant/data_structures/flex_offer.py:12:0: E0401: Unable to import 'pandas' (import-error)
 agentlib_flexquant/data_structures/flex_offer.py:13:0: E0401: Unable to import 'pydantic' (import-error)
@@ -221,13 +211,7 @@ agentlib_flexquant/data_structures/mpcs.py:10:0: E0401: Unable to import 'agentl
 agentlib_flexquant/data_structures/mpcs.py:11:0: E0401: Unable to import 'pydantic' (import-error)
 agentlib_flexquant/data_structures/mpcs.py:51:4: C0116: Missing function or method docstring (missing-function-docstring)
 agentlib_flexquant/data_structures/mpcs.py:29:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/mpcs.py:92:25: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'ACCEPTED_POWER_VAR_NAME' member (no-member)
-agentlib_flexquant/data_structures/mpcs.py:93:25: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member (no-member)
-agentlib_flexquant/data_structures/mpcs.py:94:25: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'RELATIVE_EVENT_START_TIME_VAR_NAME' member (no-member)
-agentlib_flexquant/data_structures/mpcs.py:95:25: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'RELATIVE_EVENT_END_TIME_VAR_NAME' member (no-member)
-agentlib_flexquant/data_structures/mpcs.py:162:25: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member (no-member)
 agentlib_flexquant/data_structures/mpcs.py:138:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-agentlib_flexquant/data_structures/mpcs.py:197:25: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member (no-member)
 agentlib_flexquant/data_structures/mpcs.py:173:0: R0903: Too few public methods (1/2) (too-few-public-methods)
 agentlib_flexquant/data_structures/mpcs.py:11:0: W0611: Unused ConfigDict imported from pydantic (unused-import)
 ************* Module agentlib_flexquant.optimization_backends.constrained_cia
@@ -265,41 +249,16 @@ agentlib_flexquant/modules/flexibility_market.py:7:0: E0401: Unable to import 'p
 agentlib_flexquant/modules/flexibility_market.py:9:0: E0401: Unable to import 'agentlib.core.datamodels' (import-error)
 agentlib_flexquant/modules/flexibility_market.py:10:0: E0401: Unable to import 'pydantic' (import-error)
 agentlib_flexquant/modules/flexibility_market.py:16:0: C0115: Missing class docstring (missing-class-docstring)
-agentlib_flexquant/modules/flexibility_market.py:24:17: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'ACCEPTED_POWER_VAR_NAME' member (no-member)
-agentlib_flexquant/modules/flexibility_market.py:24:53: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'ACCEPTED_POWER_VAR_NAME' member (no-member)
-agentlib_flexquant/modules/flexibility_market.py:28:17: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'RELATIVE_EVENT_START_TIME_VAR_NAME' member (no-member)
-agentlib_flexquant/modules/flexibility_market.py:29:18: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'RELATIVE_EVENT_START_TIME_VAR_NAME' member (no-member)
-agentlib_flexquant/modules/flexibility_market.py:33:17: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'RELATIVE_EVENT_END_TIME_VAR_NAME' member (no-member)
-agentlib_flexquant/modules/flexibility_market.py:34:18: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'RELATIVE_EVENT_END_TIME_VAR_NAME' member (no-member)
-agentlib_flexquant/modules/flexibility_market.py:38:17: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member (no-member)
-agentlib_flexquant/modules/flexibility_market.py:39:18: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member (no-member)
-agentlib_flexquant/modules/flexibility_market.py:46:27: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'COLLOCATION_TIME_GRID' member (no-member)
-agentlib_flexquant/modules/flexibility_market.py:46:61: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'COLLOCATION_TIME_GRID' member (no-member)
 agentlib_flexquant/modules/flexibility_market.py:62:4: C0116: Missing function or method docstring (missing-function-docstring)
 agentlib_flexquant/modules/flexibility_market.py:16:0: R0903: Too few public methods (1/2) (too-few-public-methods)
 agentlib_flexquant/modules/flexibility_market.py:97:4: C0116: Missing function or method docstring (missing-function-docstring)
 agentlib_flexquant/modules/flexibility_market.py:125:8: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/flexibility_market.py:154:24: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member (no-member)
-agentlib_flexquant/modules/flexibility_market.py:184:53: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'COLLOCATION' member (no-member)
-agentlib_flexquant/modules/flexibility_market.py:186:37: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'COLLOCATION_TIME_GRID' member (no-member)
-agentlib_flexquant/modules/flexibility_market.py:187:55: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'CONSTANT' member (no-member)
-agentlib_flexquant/modules/flexibility_market.py:189:52: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'COLLOCATION_TIME_GRID' member (no-member)
-agentlib_flexquant/modules/flexibility_market.py:197:29: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'ACCEPTED_POWER_VAR_NAME' member (no-member)
-agentlib_flexquant/modules/flexibility_market.py:199:29: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member (no-member)
 agentlib_flexquant/modules/flexibility_market.py:137:62: W0613: Unused argument 'name' (unused-argument)
-agentlib_flexquant/modules/flexibility_market.py:223:29: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member (no-member)
-agentlib_flexquant/modules/flexibility_market.py:244:49: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'COLLOCATION' member (no-member)
-agentlib_flexquant/modules/flexibility_market.py:246:24: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'COLLOCATION_TIME_GRID' member (no-member)
-agentlib_flexquant/modules/flexibility_market.py:247:51: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'CONSTANT' member (no-member)
-agentlib_flexquant/modules/flexibility_market.py:249:54: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'COLLOCATION_TIME_GRID' member (no-member)
-agentlib_flexquant/modules/flexibility_market.py:257:25: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'ACCEPTED_POWER_VAR_NAME' member (no-member)
-agentlib_flexquant/modules/flexibility_market.py:259:25: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member (no-member)
 agentlib_flexquant/modules/flexibility_market.py:207:62: W0613: Unused argument 'name' (unused-argument)
 agentlib_flexquant/modules/flexibility_market.py:265:8: W0107: Unnecessary pass statement (unnecessary-pass)
 agentlib_flexquant/modules/flexibility_market.py:267:29: W0613: Unused argument 'inp' (unused-argument)
 agentlib_flexquant/modules/flexibility_market.py:267:49: W0613: Unused argument 'name' (unused-argument)
 agentlib_flexquant/modules/flexibility_market.py:278:4: C0116: Missing function or method docstring (missing-function-docstring)
-agentlib_flexquant/modules/flexibility_market.py:282:25: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member (no-member)
 agentlib_flexquant/modules/flexibility_market.py:85:8: W0201: Attribute 'random_generator' defined outside __init__ (attribute-defined-outside-init)
 agentlib_flexquant/modules/flexibility_market.py:119:8: W0201: Attribute 'cooldown_ticker' defined outside __init__ (attribute-defined-outside-init)
 agentlib_flexquant/modules/flexibility_market.py:200:20: W0201: Attribute 'cooldown_ticker' defined outside __init__ (attribute-defined-outside-init)
@@ -312,18 +271,9 @@ agentlib_flexquant/modules/flexibility_indicator.py:16:0: E0401: Unable to impor
 agentlib_flexquant/modules/flexibility_indicator.py:17:0: E0401: Unable to import 'pydantic' (import-error)
 agentlib_flexquant/modules/flexibility_indicator.py:28:0: R0903: Too few public methods (0/2) (too-few-public-methods)
 agentlib_flexquant/modules/flexibility_indicator.py:58:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-agentlib_flexquant/modules/flexibility_indicator.py:148:36: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'FLEXIBILITY_OFFER' member (no-member)
-agentlib_flexquant/modules/flexibility_indicator.py:303:36: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'COLLOCATION_TIME_GRID' member (no-member)
-agentlib_flexquant/modules/flexibility_indicator.py:304:37: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'COLLOCATION_TIME_GRID' member (no-member)
-agentlib_flexquant/modules/flexibility_indicator.py:323:24: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'INTEGRATION_METHOD' member (no-member)
-agentlib_flexquant/modules/flexibility_indicator.py:324:16: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'LINEAR' member (no-member)
 agentlib_flexquant/modules/flexibility_indicator.py:99:0: R0903: Too few public methods (1/2) (too-few-public-methods)
 agentlib_flexquant/modules/flexibility_indicator.py:367:8: C0103: Attribute name "df" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/flexibility_indicator.py:354:33: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'FLEXIBILITY_OFFER' member (no-member)
 agentlib_flexquant/modules/flexibility_indicator.py:369:4: C0116: Missing function or method docstring (missing-function-docstring)
-agentlib_flexquant/modules/flexibility_indicator.py:376:17: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member (no-member)
-agentlib_flexquant/modules/flexibility_indicator.py:376:48: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member (no-member)
-agentlib_flexquant/modules/flexibility_indicator.py:387:19: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member (no-member)
 agentlib_flexquant/modules/flexibility_indicator.py:419:16: C0103: Variable name "n" doesn't conform to snake_case naming style (invalid-name)
 agentlib_flexquant/modules/flexibility_indicator.py:420:16: C0103: Variable name "ts" doesn't conform to snake_case naming style (invalid-name)
 agentlib_flexquant/modules/flexibility_indicator.py:384:4: R0912: Too many branches (17/12) (too-many-branches)
@@ -331,11 +281,8 @@ agentlib_flexquant/modules/flexibility_indicator.py:477:28: C0103: Argument name
 agentlib_flexquant/modules/flexibility_indicator.py:477:46: C0103: Argument name "ts" doesn't conform to snake_case naming style (invalid-name)
 agentlib_flexquant/modules/flexibility_indicator.py:477:57: C0103: Argument name "n" doesn't conform to snake_case naming style (invalid-name)
 agentlib_flexquant/modules/flexibility_indicator.py:477:4: R0914: Too many local variables (18/15) (too-many-locals)
-agentlib_flexquant/modules/flexibility_indicator.py:513:25: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'COLLOCATION_TIME_GRID' member (no-member)
 agentlib_flexquant/modules/flexibility_indicator.py:477:4: R0912: Too many branches (15/12) (too-many-branches)
 agentlib_flexquant/modules/flexibility_indicator.py:535:12: W0612: Unused variable 'i' (unused-variable)
-agentlib_flexquant/modules/flexibility_indicator.py:574:41: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'COLLOCATION_TIME_GRID' member (no-member)
-agentlib_flexquant/modules/flexibility_indicator.py:607:17: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'FLEXIBILITY_OFFER' member (no-member)
 agentlib_flexquant/modules/flexibility_indicator.py:636:4: R0913: Too many arguments (8/5) (too-many-arguments)
 ************* Module agentlib_flexquant.modules.shadow_mpc
 agentlib_flexquant/modules/shadow_mpc.py:2:0: C0301: Line too long (106/100) (line-too-long)
@@ -376,33 +323,18 @@ agentlib_flexquant/modules/baseline_mpc.py:14:0: E0401: Unable to import 'agentl
 agentlib_flexquant/modules/baseline_mpc.py:14:0: W0404: Reimport 'mpc_full' (imported line 4) (reimported)
 agentlib_flexquant/modules/baseline_mpc.py:14:0: W0404: Reimport 'minlp_mpc' (imported line 4) (reimported)
 agentlib_flexquant/modules/baseline_mpc.py:15:0: E0401: Unable to import 'agentlib_mpc.data_structures.mpc_datamodels' (import-error)
-agentlib_flexquant/modules/baseline_mpc.py:16:0: E0611: No name 'base_vars_to_communicate_suffix' in module 'agentlib_flexquant.data_structures.globals' (no-name-in-module)
 agentlib_flexquant/modules/baseline_mpc.py:20:0: C0115: Missing class docstring (missing-class-docstring)
 agentlib_flexquant/modules/baseline_mpc.py:20:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-agentlib_flexquant/modules/baseline_mpc.py:115:20: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member (no-member)
-agentlib_flexquant/modules/baseline_mpc.py:116:21: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'RELATIVE_EVENT_START_TIME_VAR_NAME' member (no-member)
-agentlib_flexquant/modules/baseline_mpc.py:117:30: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'ACCEPTED_POWER_VAR_NAME' member (no-member)
-agentlib_flexquant/modules/baseline_mpc.py:121:21: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'RELATIVE_EVENT_END_TIME_VAR_NAME' member (no-member)
-agentlib_flexquant/modules/baseline_mpc.py:122:30: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'ACCEPTED_POWER_VAR_NAME' member (no-member)
 agentlib_flexquant/modules/baseline_mpc.py:135:4: C0116: Missing function or method docstring (missing-function-docstring)
 agentlib_flexquant/modules/baseline_mpc.py:157:8: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/baseline_mpc.py:188:25: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member (no-member)
 agentlib_flexquant/modules/baseline_mpc.py:291:4: R0913: Too many arguments (6/5) (too-many-arguments)
 agentlib_flexquant/modules/baseline_mpc.py:291:4: R0914: Too many local variables (18/15) (too-many-locals)
 agentlib_flexquant/modules/baseline_mpc.py:327:30: W0123: Use of eval (eval-used)
 agentlib_flexquant/modules/baseline_mpc.py:292:49: W0613: Unused argument 'mpc_time_step' (unused-argument)
 agentlib_flexquant/modules/baseline_mpc.py:347:0: C0115: Missing class docstring (missing-class-docstring)
 agentlib_flexquant/modules/baseline_mpc.py:347:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-agentlib_flexquant/modules/baseline_mpc.py:442:20: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member (no-member)
-agentlib_flexquant/modules/baseline_mpc.py:443:33: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'ACCEPTED_POWER_VAR_NAME' member (no-member)
-agentlib_flexquant/modules/baseline_mpc.py:444:33: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'ACCEPTED_POWER_VAR_NAME' member (no-member)
-agentlib_flexquant/modules/baseline_mpc.py:445:21: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'RELATIVE_EVENT_START_TIME_VAR_NAME' member (no-member)
-agentlib_flexquant/modules/baseline_mpc.py:446:30: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'ACCEPTED_POWER_VAR_NAME' member (no-member)
-agentlib_flexquant/modules/baseline_mpc.py:450:21: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'RELATIVE_EVENT_END_TIME_VAR_NAME' member (no-member)
-agentlib_flexquant/modules/baseline_mpc.py:451:30: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'ACCEPTED_POWER_VAR_NAME' member (no-member)
 agentlib_flexquant/modules/baseline_mpc.py:464:4: C0116: Missing function or method docstring (missing-function-docstring)
 agentlib_flexquant/modules/baseline_mpc.py:485:8: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/baseline_mpc.py:515:17: E1101: Module 'agentlib_flexquant.data_structures.globals' has no 'PROVISION_VAR_NAME' member (no-member)
 agentlib_flexquant/modules/baseline_mpc.py:618:4: R0913: Too many arguments (6/5) (too-many-arguments)
 agentlib_flexquant/modules/baseline_mpc.py:618:4: R0914: Too many local variables (19/15) (too-many-locals)
 agentlib_flexquant/modules/baseline_mpc.py:663:30: W0123: Use of eval (eval-used)
@@ -435,7 +367,7 @@ excluded_fields = [
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.data_structures.flexquant:[18:26]
 ==agentlib_flexquant.utils.config_management:[119:127]
-    excluded_fields = [
+excluded_fields = [
         "rdf_class",
         "source",
         "type",
@@ -454,21 +386,7 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             self.logger.error("Results file %s was not found.", results_file)
             return None
 
-    def write_results(self, df: pd.DataFrame, ts: float, n: int) -> pd.DataFrame:
-        """Write every data of variables in self.var_list in an DataFrame.
-
-        DataFrame will be updated every time step
-
-        Args:
-            df: DataFrame which is initialised as an empty DataFrame with columns
-            according to self.var_list
-            ts: time step
-            n: number of time steps during prediction horizon
-
-        Returns:
-            DataFrame with results of every variable in self.var_list
-
-        """ (duplicate-code)
+    def register_callbacks(self): (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.flexibility_indicator:[334:342]
 ==agentlib_flexquant.modules.flexibility_market:[62:70]
@@ -482,5 +400,5 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
  (duplicate-code)
 
 -----------------------------------
-Your code has been rated at 5.13/10
+Your code has been rated at 6.75/10
 
