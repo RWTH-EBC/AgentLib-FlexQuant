@@ -21,8 +21,10 @@ import agentlib_flexquant.data_structures.globals as glbs
 class FlexibilityShadowMPCConfig(mpc_full.MPCConfig):
 
     baseline_input_names: list[str] = Field(default=[])
+    custom_input_names: list[str] = Field(default=[])
     baseline_state_names: list[str] = Field(default=[])
     full_control_names: list[str] = Field(default=[])
+
 
     baseline_agent_id: str = ""
 
@@ -60,7 +62,8 @@ class FlexibilityShadowMPC(mpc_full.MPC):
                     comm_var.name + base_vars_to_communicate_suffix in
                     self.config.baseline_input_names or
                     comm_var.name + base_vars_to_communicate_suffix in
-                    self.config.baseline_state_names):
+                    self.config.baseline_state_names or
+                    comm_var.name in self.config.custom_input_names):
                 comm_var.value = None
                 self._track_base_comm_vars_dict[comm_var.name] = comm_var.copy(deep=True)
         # set up necessary components if simulation is enabled
@@ -327,6 +330,7 @@ class FlexibilityShadowMPC(mpc_full.MPC):
 class FlexibilityShadowMINLPMPCConfig(minlp_mpc.MINLPMPCConfig):
 
     baseline_input_names: list[str] = Field(default=[])
+    custom_input_names: list[str] = Field(default=[])
     baseline_state_names: list[str] = Field(default=[])
     full_control_names: list[str] = Field(default=[])
 
@@ -368,7 +372,8 @@ class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
                     comm_var.name + base_vars_to_communicate_suffix in
                     self.config.baseline_input_names or
                     comm_var.name + base_vars_to_communicate_suffix in
-                    self.config.baseline_state_names):
+                    self.config.baseline_state_names or
+                    comm_var.name in self.config.custom_input_names):
                 comm_var.value = None
                 self._track_base_comm_vars_dict[comm_var.name] = comm_var.copy(deep=True)
         # set up necessary components if simulation is enabled
