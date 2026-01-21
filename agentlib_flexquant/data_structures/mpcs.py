@@ -27,13 +27,6 @@ excluded_fields = [
 
 default_parameters = [
         MPCVariable(
-            name=glbs.MARKET_TIME,
-            value=0,
-            unit="s",
-            type="int",
-            description="Market time associated with the objective switch",
-        ),
-        MPCVariable(
             name=glbs.PREP_TIME,
             value=0,
             unit="s",
@@ -46,6 +39,13 @@ default_parameters = [
             unit="s",
             type="int",
             description="Duration of the flexibility event",
+        ),
+        MPCVariable(
+            name=glbs.MARKET_TIME,
+            value=0,
+            unit="s",
+            type="int",
+            description="Market time associated with the objective switch",
         ),
     ]
 
