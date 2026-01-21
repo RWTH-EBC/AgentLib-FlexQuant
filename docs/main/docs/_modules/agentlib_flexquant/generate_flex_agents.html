@@ -457,15 +457,6 @@
 
         <span class="n">module_config_flex</span><span class="o">.</span><span class="n">module_id</span> <span class="o">=</span> <span class="n">mpc_dataclass</span><span class="o">.</span><span class="n">module_id</span>
 
-        <span class="c1"># append the new weights as parameter to the MPC or update its value</span>
-        <span class="n">parameter_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">parameter</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">parameter</span> <span class="k">for</span> <span class="n">parameter</span> <span class="ow">in</span>
-                          <span class="n">module_config_flex</span><span class="o">.</span><span class="n">parameters</span><span class="p">}</span>
-        <span class="k">for</span> <span class="n">weight</span> <span class="ow">in</span> <span class="n">mpc_dataclass</span><span class="o">.</span><span class="n">weights</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">weight</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">parameter_dict</span><span class="p">:</span>
-                <span class="n">parameter_dict</span><span class="p">[</span><span class="n">weight</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">weight</span><span class="o">.</span><span class="n">value</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">module_config_flex</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span>
-
         <span class="c1"># set new id (needed for plotting)</span>
         <span class="n">module_config_flex</span><span class="o">.</span><span class="n">module_id</span> <span class="o">=</span> <span class="n">mpc_dataclass</span><span class="o">.</span><span class="n">module_id</span>
         <span class="c1"># update optimization backend to use the created mpc files and classes</span>
@@ -533,11 +524,19 @@
                 <span class="k">if</span> <span class="nb">input</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">inputs</span><span class="p">:</span>
                     <span class="n">module_config_flex</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">alias</span> <span class="o">=</span> <span class="p">(</span>
                             <span class="nb">input</span><span class="o">.</span><span class="n">alias</span> <span class="o">+</span> <span class="n">glbs</span><span class="o">.</span><span class="n">base_vars_to_communicate_suffix</span><span class="p">)</span>
+                    
             <span class="c1"># add Baseline input names to shadow MPC config for inputs tracking</span>
             <span class="n">module_config_flex</span><span class="o">.</span><span class="n">baseline_input_names</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="nb">input</span><span class="o">.</span><span class="n">alias</span> <span class="o">+</span> <span class="n">glbs</span><span class="o">.</span><span class="n">base_vars_to_communicate_suffix</span> <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">inputs</span><span class="p">]</span>
+            
+            <span class="c1"># add custom input names for the shadow MPC to track. Here, the communication suffix is not added, as </span>
+            <span class="c1"># the user is free to define custom inputs as desired.</span>
+            <span class="n">module_config_flex</span><span class="o">.</span><span class="n">custom_input_names</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="nb">input</span><span class="o">.</span><span class="n">alias</span> <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">custom_inputs</span>
+            <span class="p">]</span>
 
+            
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">module_config_flex</span><span class="o">.</span><span class="n">states</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">states</span><span class="p">:</span>
                     <span class="n">module_config_flex</span><span class="o">.</span><span class="n">states</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">alias</span> <span class="o">=</span> <span class="p">(</span>
@@ -610,11 +609,10 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">indicator_module_config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">stored_energy_variable</span>
             <span class="p">]</span><span class="o">.</span><span class="n">alias</span> <span class="o">=</span> <span class="n">mpc_dataclass</span><span class="o">.</span><span class="n">stored_energy_alias</span>
 
-        <span class="c1"># add extra inputs needed for activation of flex</span>
+        <span class="c1"># add extra inputs needed for activation of flex or custom cost functions</span>
         <span class="n">module_config_flex</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">mpc_dataclass</span><span class="o">.</span><span class="n">config_inputs_appendix</span><span class="p">)</span>
-        <span class="c1"># CONFIG_PARAMETERS_APPENDIX only includes dummy values</span>
-        <span class="c1"># overwrite dummy values with values from flex config and</span>
-        <span class="c1"># append it to module config</span>
+
+        <span class="c1"># add extra parameters needed for activation of flex or custom weights</span>
         <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">mpc_dataclass</span><span class="o">.</span><span class="n">config_parameters_appendix</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">model_fields</span><span class="p">:</span>
                 <span class="n">var</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
@@ -699,9 +697,21 @@
         <span class="k">return</span> <span class="n">module_config</span></div>
 
 <div class="viewcode-block" id="FlexAgentGenerator.adapt_and_dump_flex_config"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.adapt_and_dump_flex_config">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">adapt_and_dump_flex_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the flex_config with the new paths of the market or indicator config,</span>
-<span class="sd">        if these were given as paths to the FlexAgentGenerator.</span>
-<span class="sd">        Dumps the flex config to the new path</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update flex_config to reference the newly generated market/indicator agent configs and</span>
+<span class="sd">        dump the updated flex configuration to disk.</span>
+
+<span class="sd">        This method replaces the market and indicator configuration entries in ``self.flex_config``</span>
+<span class="sd">        with the internally created ``self.market_config`` and ``self.indicator_config``. If a</span>
+<span class="sd">        market configuration is present, its ``agent_config`` attribute is updated to the path of</span>
+<span class="sd">        the newly created market agent config file under ``flex_files_directory``. Likewise, the</span>
+<span class="sd">        indicator configuration&#39;s ``agent_config`` attribute is set to the path of the newly</span>
+<span class="sd">        created indicator agent config file. These paths correspond to the new locations of the</span>
+<span class="sd">        market or indicator config files when they were originally provided to the</span>
+<span class="sd">        ``FlexAgentGenerator`` as file paths.</span>
+
+<span class="sd">        After updating these paths, the complete ``flex_config`` is serialized (excluding default</span>
+<span class="sd">        values) and written as JSON to ``flex_files_directory / flex_config_file_name`` so that</span>
+<span class="sd">        subsequent runs can use the resolved configuration directly.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># store market and indicator with file path of created agent config</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">market_config</span><span class="p">:</span>
@@ -760,10 +770,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">check_variables_in_casadi_config</span><span class="p">(</span>
             <span class="n">config_instance</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">neg_flex</span><span class="o">.</span><span class="n">flex_cost_function</span><span class="p">,</span>
+            <span class="n">shadow_mpc_type</span><span class="o">=</span><span class="s2">&quot;neg_flex&quot;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">check_variables_in_casadi_config</span><span class="p">(</span>
             <span class="n">config_instance</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">pos_flex</span><span class="o">.</span><span class="n">flex_cost_function</span><span class="p">,</span>
+            <span class="n">shadow_mpc_type</span><span class="o">=</span><span class="s2">&quot;pos_flex&quot;</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="c1"># parse mpc python file</span>
@@ -820,7 +832,7 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">formatted_code</span><span class="p">)</span>
 
-<div class="viewcode-block" id="FlexAgentGenerator.check_variables_in_casadi_config"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.check_variables_in_casadi_config">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">check_variables_in_casadi_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">CasadiModelConfig</span><span class="p">,</span> <span class="n">expr</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="FlexAgentGenerator.check_variables_in_casadi_config"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.check_variables_in_casadi_config">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">check_variables_in_casadi_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">CasadiModelConfig</span><span class="p">,</span> <span class="n">expr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">shadow_mpc_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if all variables in the expression are defined in the config.</span>
 
 <span class="sd">        Args:</span>
@@ -834,15 +846,17 @@
         <span class="n">variables_in_config</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_variable_names</span><span class="p">())</span>
         <span class="n">variables_in_cost_function</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expr</span><span class="p">)))</span>
         <span class="n">variables_in_cost_function</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">node</span><span class="o">.</span><span class="n">attr</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">variables_in_cost_function</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span>
-                                                                           <span class="n">ast</span><span class="o">.</span><span class="n">Attribute</span><span class="p">)</span>
+            <span class="n">node</span><span class="o">.</span><span class="n">attr</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">variables_in_cost_function</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">ast</span><span class="o">.</span><span class="n">Attribute</span><span class="p">)</span>
         <span class="p">}</span>
+        <span class="n">flex_config_data</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">pos_flex</span> 
+                            <span class="k">if</span> <span class="n">shadow_mpc_type</span> <span class="o">==</span> <span class="s2">&quot;pos_flex&quot;</span> 
+                            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">neg_flex</span><span class="p">)</span>
         <span class="n">variables_newly_created</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
-            <span class="n">weight</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">weight</span> <span class="ow">in</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">weights</span>
-        <span class="p">)</span>
-        <span class="n">unknown_vars</span> <span class="o">=</span> <span class="p">(</span><span class="n">variables_in_cost_function</span> <span class="o">-</span> <span class="n">variables_in_config</span> <span class="o">-</span>
-                        <span class="n">variables_newly_created</span><span class="p">)</span>
+            <span class="p">[</span><span class="n">par</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="n">flex_config_data</span><span class="o">.</span><span class="n">config_parameters_appendix</span><span class="p">]</span> <span class="o">+</span>
+            <span class="p">[</span><span class="n">inp</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">inp</span> <span class="ow">in</span> <span class="n">flex_config_data</span><span class="o">.</span><span class="n">config_inputs_appendix</span><span class="p">]</span>
+            <span class="p">)</span>
+        
+        <span class="n">unknown_vars</span> <span class="o">=</span> <span class="n">variables_in_cost_function</span> <span class="o">-</span> <span class="n">variables_in_config</span> <span class="o">-</span> <span class="n">variables_newly_created</span>
         <span class="k">if</span> <span class="n">unknown_vars</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown variables in new cost function: </span><span class="si">{</span><span class="n">unknown_vars</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
