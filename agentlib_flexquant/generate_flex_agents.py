@@ -702,15 +702,15 @@ class FlexAgentGenerator:
             config_instance,
             self.flex_config.shadow_mpc_config_generator_data.neg_flex.flex_cost_function +
             (" + " + self.flex_config.shadow_mpc_config_generator_data.neg_flex.flex_cost_function_appendix
-             if self.flex_config.shadow_mpc_config_generator_data.neg_flex.flex_cost_function_appendix else ""
-            shadow_mpc_type="neg_flex",)
-        )
+             if self.flex_config.shadow_mpc_config_generator_data.neg_flex.flex_cost_function_appendix else ""),
+            shadow_mpc_type="neg_flex"
+            )
         self.check_variables_in_casadi_config(
             config_instance,
             self.flex_config.shadow_mpc_config_generator_data.pos_flex.flex_cost_function +
             (" + " + self.flex_config.shadow_mpc_config_generator_data.pos_flex.flex_cost_function_appendix
-             if self.flex_config.shadow_mpc_config_generator_data.pos_flex.flex_cost_function_appendix else "",
-            shadow_mpc_type="pos_flex",
+             if self.flex_config.shadow_mpc_config_generator_data.pos_flex.flex_cost_function_appendix else ""),
+            shadow_mpc_type="pos_flex"
         )
 
         # parse mpc python file
