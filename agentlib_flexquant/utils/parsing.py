@@ -9,9 +9,12 @@ from agentlib_flexquant.data_structures.globals import (
     MARKET_TIME,
     PREP_TIME,
     SHADOW_MPC_COST_FUNCTION,
-    full_trajectory_prefix,
     full_trajectory_suffix,
     return_baseline_cost_function,
+    PROVISION_VAR_NAME,
+    ACCEPTED_POWER_VAR_NAME,
+    RELATIVE_EVENT_START_TIME_VAR_NAME,
+    RELATIVE_EVENT_END_TIME_VAR_NAME
 )
 from agentlib_flexquant.data_structures.mpcs import (
     BaselineMPCData,
@@ -39,14 +42,15 @@ OUTPUT_TEMPLATE = Template(
 )
 
 
-def create_ast_element(template_string: str) -> ast.Call:
+def create_ast_element(template_string: str) -> ast.expr:
     """Convert a template string into an AST call node.
 
     Args:
         template_string: A Python code template string to parse.
 
     Returns:
-        ast.Call: An abstract syntax tree (AST) call node parsed from the template string.
+        ast.Expr: An abstract syntax tree (AST) expr node parsed from the template
+        string.
 
     """
     return ast.parse(template_string).body[0].value
@@ -54,7 +58,7 @@ def create_ast_element(template_string: str) -> ast.Call:
 
 def add_input(
     name: str, value: Union[bool, str, int], unit: str, description: str, type: str
-) -> ast.Call:
+) -> ast.expr:
     """Create an AST node for an input definition.
 
     Args:
@@ -82,7 +86,7 @@ def add_input(
 
 def add_parameter(
     name: str, value: Union[int, float], unit: str, description: str
-) -> ast.Call:
+) -> ast.expr:
     """Create an AST node for a parameter definition.
 
         Args:
@@ -92,7 +96,7 @@ def add_parameter(
             description: A human-readable description of the parameter.
 
         Returns:
-            ast.Call: An abstract syntax tree (AST) call node
+            ast.expr: An abstract syntax tree (AST) call node
             representing the parameter definition.
 
         """
@@ -109,7 +113,7 @@ def add_parameter(
 
 def add_output(
     name: str, unit: str, type: str, value: Union[str, float], description: str
-) -> ast.Call:
+) -> ast.expr:
     """Create an AST node for an output definition.
 
     Args:
@@ -120,7 +124,7 @@ def add_output(
         description: A human-readable description of the output.
 
     Returns:
-        ast.Call: An abstract syntax tree (AST) call node representing the output definition.
+        ast.expr: An abstract syntax tree (AST) call node representing the output definition.
 
     """
     return create_ast_element(
@@ -145,7 +149,7 @@ class SetupSystemModifier(ast.NodeTransformer):
 
     def __init__(
         self,
-        mpc_data: BaseMPCData,
+        mpc_data: Union[BaselineMPCData, NFMPCData, PFMPCData],
         controls: list[MPCVariable],
         binary_controls: Optional[list[MPCVariable]],
     ):
@@ -259,6 +263,9 @@ class SetupSystemModifier(ast.NodeTransformer):
         """
         # loop over config object and modify fields
         for body in node.body:
+            # If there are custom functions in the config class, skip them
+            if isinstance(body, ast.FunctionDef):
+                continue
             # add the time and full baseline control trajectory as inputs
             if body.target.id == "inputs":
                 for control in self.controls:
@@ -283,24 +290,18 @@ class SetupSystemModifier(ast.NodeTransformer):
                                 "pd.Series",
                             )
                         )
-                body.value.elts.append(
-                    add_input("in_provision", False, "-", "provision flag", "bool")
-                )
+                for var in self.mpc_data.config_inputs_appendix:
+                    body.value.elts.append(
+                        add_input(var.name, var.value, var.unit, var.description, var.type)
+                    )
+            
             # add the flex variables and the weights
             if body.target.id == "parameters":
-                for param_name in [PREP_TIME, FLEX_EVENT_DURATION, MARKET_TIME]:
+                for parameter in self.mpc_data.config_parameters_appendix:
                     body.value.elts.append(
-                        add_parameter(param_name, 0, "s", "time to switch objective")
+                        add_parameter(parameter.name, parameter.value, parameter.unit, parameter.description)
                     )
-                for weight in self.mpc_data.weights:
-                    body.value.elts.append(
-                        add_parameter(
-                            weight.name,
-                            weight.value,
-                            "-",
-                            "Weight for P in objective function",
-                        )
-                    )
+
 
     def modify_config_class_baseline(self, node: ast.ClassDef):
         """Modify the config class of the baseline mpc.
@@ -311,6 +312,9 @@ class SetupSystemModifier(ast.NodeTransformer):
         """
         # loop over config object and modify fields
         for body in node.body:
+            # If there are custom functions in the config class, skip them
+            if isinstance(body, ast.FunctionDef):
+                continue
             # add the fullcontrol trajectories to the baseline config class
             if body.target.id == "outputs":
                 if isinstance(body.value, ast.List):
@@ -334,7 +338,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                     value_list = self.get_leftmost_list(body.value)
                 value_list.elts.append(
                     add_input(
-                        "_P_external",
+                        ACCEPTED_POWER_VAR_NAME,
                         0,
                         "W",
                         "External power profile to be provided",
@@ -343,7 +347,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                 )
                 value_list.elts.append(
                     add_input(
-                        "in_provision",
+                        PROVISION_VAR_NAME,
                         False,
                         "-",
                         "Flag signaling if the flexibility is in provision",
@@ -352,7 +356,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                 )
                 value_list.elts.append(
                     add_input(
-                        "rel_start",
+                        RELATIVE_EVENT_START_TIME_VAR_NAME,
                         0,
                         "s",
                         "relative start time of the flexibility event",
@@ -361,7 +365,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                 )
                 value_list.elts.append(
                     add_input(
-                        "rel_end",
+                        RELATIVE_EVENT_END_TIME_VAR_NAME,
                         0,
                         "s",
                         "relative end time of the flexibility event",
@@ -429,11 +433,25 @@ class SetupSystemModifier(ast.NodeTransformer):
             if isinstance(stmt, ast.Return):
                 # store current return statement
                 original_return = stmt.value
+
+                # First, check if there's actually an appendix to add
+                if self.mpc_data.flex_cost_function_appendix:
+                    # Parse the appendix string into an AST expression
+                    appendix_ast = ast.parse(self.mpc_data.flex_cost_function_appendix,
+                                             mode="eval").body
+                    # Create a BinOp node representing: original_return + appendix
+                    combined_value = ast.BinOp(
+                        left=original_return,
+                        op=ast.Add(),
+                        right=appendix_ast
+                    )
+                else:
+                    combined_value = original_return
+
                 new_body = [
-                    # create new standard objective variable
                     ast.Assign(
                         targets=[ast.Name(id="obj_std", ctx=ast.Store())],
-                        value=original_return,
+                        value=combined_value,
                     ),
                     # create flex objective variable
                     ast.Assign(
@@ -445,7 +463,6 @@ class SetupSystemModifier(ast.NodeTransformer):
                     # overwrite return statement with custom function
                     ast.Return(value=ast.parse(SHADOW_MPC_COST_FUNCTION).body[0].value),
                 ]
-                # append new variables to end of function
                 node.body[i:] = new_body
                 break
 

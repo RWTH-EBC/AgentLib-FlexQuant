@@ -60,7 +60,8 @@
     "shadow_mpc_config_generator_data": {
         "weights": [{"name": "s_P", "value": 10}],
         "pos_flex": {
-            "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, self.s_P * self.P_el])"
+            "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, self.s_P * self.P_el])",
+            "flex_cost_function_appendix": "self.P_el**2 * 0"
         },
         "neg_flex": {
             "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, -self.s_P * self.P_el])"

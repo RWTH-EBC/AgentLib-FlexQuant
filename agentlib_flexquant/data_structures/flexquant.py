@@ -24,7 +24,6 @@ excluded_fields = [
         "description",
         "unit",
         "clip",
-        "shared",
         "interpolation_method",
         "allowed_values",
     ]
@@ -39,6 +38,10 @@ class ShadowMPCConfigGeneratorConfig(BaseModel):
     weights: list[MPCVariable] = Field(
         default=[], description="Name and value of weights",
     )
+    custom_inputs: list[MPCVariable] = Field(
+        default=[], description="Additional Inputs for the Shadow-MPCs. E.g. the baseline power prediction P_el_base"
+    )
+
     pos_flex: PFMPCData = Field(default=None, description="Data for PF-MPC")
     neg_flex: NFMPCData = Field(default=None, description="Data for NF-MPC")
 
@@ -47,18 +50,25 @@ class ShadowMPCConfigGeneratorConfig(BaseModel):
         """Validate flexibility cost function fields and assign weights to them."""
         if self.pos_flex is None:
             raise ValueError(
-                "Missing required field: 'pos_flex' specifying the pos flex cost function."
+                "Missing required field: 'pos_flex' specifying the pos flex "
+                "cost function."
             )
         if self.neg_flex is None:
             raise ValueError(
-                "Missing required field: 'neg_flex' specifying the neg flex cost function."
+                "Missing required field: 'neg_flex' specifying the neg flex "
+                "cost function."
             )
         if self.weights:
-            self.pos_flex.weights = self.weights
-            self.neg_flex.weights = self.weights
+            self.pos_flex.config_parameters_appendix.extend(self.weights)
+            self.neg_flex.config_parameters_appendix.extend(self.weights)
+                
+        if self.custom_inputs:
+            self.pos_flex.config_inputs_appendix.extend(self.custom_inputs)
+            self.neg_flex.config_inputs_appendix.extend(self.custom_inputs)
+        
         return self
 
-    @field_serializer('weights')
+    @field_serializer('weights', 'custom_inputs')
     def serialize_mpc_variables(self, variables: list[MPCVariable], _info):
         return [v.dict(exclude=excluded_fields) for v in variables]
 
@@ -143,10 +153,10 @@ class FlexQuantConfig(BaseModel):
     )
     casadi_sim_time_step: int = Field(
         default=0,
-        description="Simulate over the prediction horizon with a defined resolution using Casadi "
-                    "simulator. "
-                    "Only use it when the power depends on the states. Don't use it when power "
-                    "itself is the control variable."
+        description="Simulate over the prediction horizon with a defined resolution "
+                    "using Casadi simulator. "
+                    "Only use it when the power depends on the states. "
+                    "Don't use it when power itself is the control variable."
                     "Set to 0 to skip simulation",
     )
     flex_base_directory_path: Optional[Path] = Field(
@@ -171,7 +181,8 @@ class FlexQuantConfig(BaseModel):
 
     @model_validator(mode="after")
     def check_config_file_extension(self):
-        """Validate that the indicator and market config file paths have a '.json' extension.
+        """Validate that the indicator and market config file paths have a '.json'
+        extension.
 
         Raises:
             ValueError: If either file does not have the expected '.json' extension.
@@ -182,7 +193,8 @@ class FlexQuantConfig(BaseModel):
             and self.indicator_config.suffix != ".json"
         ):
             raise ValueError(
-                f"Invalid file extension for indicator config: '{self.indicator_config}'. "
+                f"Invalid file extension for indicator "
+                f"config: '{self.indicator_config}'. "
                 f"Expected a '.json' file."
             )
         if (
@@ -190,7 +202,8 @@ class FlexQuantConfig(BaseModel):
             and self.market_config.suffix != ".json"
         ):
             raise ValueError(
-                f"Invalid file extension for market config: '{self.market_config}'. "
+                f"Invalid file extension for market "
+                f"config: '{self.market_config}'. "
                 f"Expected a '.json' file."
             )
         return self
@@ -204,12 +217,16 @@ class FlexQuantConfig(BaseModel):
 
     @model_validator(mode="after")
     def adapt_paths_and_create_directory(self):
-        """Adjust and ensure the directory structure for flex file generation and results storage.
+        """Adjust and ensure the directory structure for flex file generation and
+        results storage.
 
         This method:
-        - Updates `flex_files_directory` and `results_directory` paths, so they are relative to
-        the base flex directory, using only the directory names (ignoring any user-supplied paths).
-        - Creates the base, flex files, and results directories if they do not already exist.
+        - Updates `flex_files_directory` and `results_directory` paths, so they are
+        relative to
+        the base flex directory, using only the directory names (ignoring any
+        user-supplied paths).
+        - Creates the base, flex files, and results directories if they do not
+        already exist.
 
         """
         # adapt paths and use only names for user supplied data

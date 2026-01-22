@@ -15,7 +15,7 @@ requirements = [
 
 
 setuptools.setup(
-    name="flexquant",
+    name="agentlib_flexquant",
     version="0.1.0",
     author="",
     author_email="",
