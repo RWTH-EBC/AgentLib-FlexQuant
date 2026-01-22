@@ -83,9 +83,12 @@
     <span class="n">MARKET_TIME</span><span class="p">,</span>
     <span class="n">PREP_TIME</span><span class="p">,</span>
     <span class="n">SHADOW_MPC_COST_FUNCTION</span><span class="p">,</span>
-    <span class="n">full_trajectory_prefix</span><span class="p">,</span>
     <span class="n">full_trajectory_suffix</span><span class="p">,</span>
     <span class="n">return_baseline_cost_function</span><span class="p">,</span>
+    <span class="n">PROVISION_VAR_NAME</span><span class="p">,</span>
+    <span class="n">ACCEPTED_POWER_VAR_NAME</span><span class="p">,</span>
+    <span class="n">RELATIVE_EVENT_START_TIME_VAR_NAME</span><span class="p">,</span>
+    <span class="n">RELATIVE_EVENT_END_TIME_VAR_NAME</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.mpcs</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">BaselineMPCData</span><span class="p">,</span>
@@ -113,14 +116,15 @@
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="create_ast_element"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.create_ast_element">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">create_ast_element</span><span class="p">(</span><span class="n">template_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">:</span>
+<div class="viewcode-block" id="create_ast_element"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.create_ast_element">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">create_ast_element</span><span class="p">(</span><span class="n">template_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">expr</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a template string into an AST call node.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        template_string: A Python code template string to parse.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        ast.Call: An abstract syntax tree (AST) call node parsed from the template string.</span>
+<span class="sd">        ast.Expr: An abstract syntax tree (AST) expr node parsed from the template</span>
+<span class="sd">        string.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">template_string</span><span class="p">)</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span></div>
@@ -128,7 +132,7 @@
 
 <div class="viewcode-block" id="add_input"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_input">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">add_input</span><span class="p">(</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">expr</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create an AST node for an input definition.</span>
 
 <span class="sd">    Args:</span>
@@ -156,7 +160,7 @@
 
 <div class="viewcode-block" id="add_parameter"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_parameter">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">add_parameter</span><span class="p">(</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">expr</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create an AST node for a parameter definition.</span>
 
 <span class="sd">        Args:</span>
@@ -166,7 +170,7 @@
 <span class="sd">            description: A human-readable description of the parameter.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            ast.Call: An abstract syntax tree (AST) call node</span>
+<span class="sd">            ast.expr: An abstract syntax tree (AST) call node</span>
 <span class="sd">            representing the parameter definition.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -183,7 +187,7 @@
 
 <div class="viewcode-block" id="add_output"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.add_output">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">add_output</span><span class="p">(</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">expr</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create an AST node for an output definition.</span>
 
 <span class="sd">    Args:</span>
@@ -194,7 +198,7 @@
 <span class="sd">        description: A human-readable description of the output.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        ast.Call: An abstract syntax tree (AST) call node representing the output definition.</span>
+<span class="sd">        ast.expr: An abstract syntax tree (AST) call node representing the output definition.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">create_ast_element</span><span class="p">(</span>
@@ -219,7 +223,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">mpc_data</span><span class="p">:</span> <span class="n">BaseMPCData</span><span class="p">,</span>
+        <span class="n">mpc_data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">BaselineMPCData</span><span class="p">,</span> <span class="n">NFMPCData</span><span class="p">,</span> <span class="n">PFMPCData</span><span class="p">],</span>
         <span class="n">controls</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MPCVariable</span><span class="p">],</span>
         <span class="n">binary_controls</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">MPCVariable</span><span class="p">]],</span>
     <span class="p">):</span>
@@ -333,6 +337,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># loop over config object and modify fields</span>
         <span class="k">for</span> <span class="n">body</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
+            <span class="c1"># If there are custom functions in the config class, skip them</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">FunctionDef</span><span class="p">):</span>
+                <span class="k">continue</span>
             <span class="c1"># add the time and full baseline control trajectory as inputs</span>
             <span class="k">if</span> <span class="n">body</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s2">&quot;inputs&quot;</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">control</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">controls</span><span class="p">:</span>
@@ -357,24 +364,18 @@
                                 <span class="s2">&quot;pd.Series&quot;</span><span class="p">,</span>
                             <span class="p">)</span>
                         <span class="p">)</span>
-                <span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">elts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="n">add_input</span><span class="p">(</span><span class="s2">&quot;in_provision&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;provision flag&quot;</span><span class="p">,</span> <span class="s2">&quot;bool&quot;</span><span class="p">)</span>
-                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpc_data</span><span class="o">.</span><span class="n">config_inputs_appendix</span><span class="p">:</span>
+                    <span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">elts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">add_input</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">unit</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+                    <span class="p">)</span>
+            
             <span class="c1"># add the flex variables and the weights</span>
             <span class="k">if</span> <span class="n">body</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s2">&quot;parameters&quot;</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">param_name</span> <span class="ow">in</span> <span class="p">[</span><span class="n">PREP_TIME</span><span class="p">,</span> <span class="n">FLEX_EVENT_DURATION</span><span class="p">,</span> <span class="n">MARKET_TIME</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpc_data</span><span class="o">.</span><span class="n">config_parameters_appendix</span><span class="p">:</span>
                     <span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">elts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                        <span class="n">add_parameter</span><span class="p">(</span><span class="n">param_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="s2">&quot;time to switch objective&quot;</span><span class="p">)</span>
-                    <span class="p">)</span>
-                <span class="k">for</span> <span class="n">weight</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpc_data</span><span class="o">.</span><span class="n">weights</span><span class="p">:</span>
-                    <span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">elts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                        <span class="n">add_parameter</span><span class="p">(</span>
-                            <span class="n">weight</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                            <span class="n">weight</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
-                            <span class="s2">&quot;-&quot;</span><span class="p">,</span>
-                            <span class="s2">&quot;Weight for P in objective function&quot;</span><span class="p">,</span>
-                        <span class="p">)</span>
+                        <span class="n">add_parameter</span><span class="p">(</span><span class="n">parameter</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">parameter</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">parameter</span><span class="o">.</span><span class="n">unit</span><span class="p">,</span> <span class="n">parameter</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
                     <span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="SetupSystemModifier.modify_config_class_baseline"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.parsing.SetupSystemModifier.modify_config_class_baseline">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">modify_config_class_baseline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">ClassDef</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Modify the config class of the baseline mpc.</span>
@@ -385,6 +386,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># loop over config object and modify fields</span>
         <span class="k">for</span> <span class="n">body</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
+            <span class="c1"># If there are custom functions in the config class, skip them</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">FunctionDef</span><span class="p">):</span>
+                <span class="k">continue</span>
             <span class="c1"># add the fullcontrol trajectories to the baseline config class</span>
             <span class="k">if</span> <span class="n">body</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s2">&quot;outputs&quot;</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">List</span><span class="p">):</span>
@@ -408,7 +412,7 @@
                     <span class="n">value_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_leftmost_list</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
                 <span class="n">value_list</span><span class="o">.</span><span class="n">elts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                     <span class="n">add_input</span><span class="p">(</span>
-                        <span class="s2">&quot;_P_external&quot;</span><span class="p">,</span>
+                        <span class="n">ACCEPTED_POWER_VAR_NAME</span><span class="p">,</span>
                         <span class="mi">0</span><span class="p">,</span>
                         <span class="s2">&quot;W&quot;</span><span class="p">,</span>
                         <span class="s2">&quot;External power profile to be provided&quot;</span><span class="p">,</span>
@@ -417,7 +421,7 @@
                 <span class="p">)</span>
                 <span class="n">value_list</span><span class="o">.</span><span class="n">elts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                     <span class="n">add_input</span><span class="p">(</span>
-                        <span class="s2">&quot;in_provision&quot;</span><span class="p">,</span>
+                        <span class="n">PROVISION_VAR_NAME</span><span class="p">,</span>
                         <span class="kc">False</span><span class="p">,</span>
                         <span class="s2">&quot;-&quot;</span><span class="p">,</span>
                         <span class="s2">&quot;Flag signaling if the flexibility is in provision&quot;</span><span class="p">,</span>
@@ -426,7 +430,7 @@
                 <span class="p">)</span>
                 <span class="n">value_list</span><span class="o">.</span><span class="n">elts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                     <span class="n">add_input</span><span class="p">(</span>
-                        <span class="s2">&quot;rel_start&quot;</span><span class="p">,</span>
+                        <span class="n">RELATIVE_EVENT_START_TIME_VAR_NAME</span><span class="p">,</span>
                         <span class="mi">0</span><span class="p">,</span>
                         <span class="s2">&quot;s&quot;</span><span class="p">,</span>
                         <span class="s2">&quot;relative start time of the flexibility event&quot;</span><span class="p">,</span>
@@ -435,7 +439,7 @@
                 <span class="p">)</span>
                 <span class="n">value_list</span><span class="o">.</span><span class="n">elts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                     <span class="n">add_input</span><span class="p">(</span>
-                        <span class="s2">&quot;rel_end&quot;</span><span class="p">,</span>
+                        <span class="n">RELATIVE_EVENT_END_TIME_VAR_NAME</span><span class="p">,</span>
                         <span class="mi">0</span><span class="p">,</span>
                         <span class="s2">&quot;s&quot;</span><span class="p">,</span>
                         <span class="s2">&quot;relative end time of the flexibility event&quot;</span><span class="p">,</span>
@@ -503,11 +507,25 @@
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stmt</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Return</span><span class="p">):</span>
                 <span class="c1"># store current return statement</span>
                 <span class="n">original_return</span> <span class="o">=</span> <span class="n">stmt</span><span class="o">.</span><span class="n">value</span>
+
+                <span class="c1"># First, check if there&#39;s actually an appendix to add</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpc_data</span><span class="o">.</span><span class="n">flex_cost_function_appendix</span><span class="p">:</span>
+                    <span class="c1"># Parse the appendix string into an AST expression</span>
+                    <span class="n">appendix_ast</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mpc_data</span><span class="o">.</span><span class="n">flex_cost_function_appendix</span><span class="p">,</span>
+                                             <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;eval&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">body</span>
+                    <span class="c1"># Create a BinOp node representing: original_return + appendix</span>
+                    <span class="n">combined_value</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">BinOp</span><span class="p">(</span>
+                        <span class="n">left</span><span class="o">=</span><span class="n">original_return</span><span class="p">,</span>
+                        <span class="n">op</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Add</span><span class="p">(),</span>
+                        <span class="n">right</span><span class="o">=</span><span class="n">appendix_ast</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">combined_value</span> <span class="o">=</span> <span class="n">original_return</span>
+
                 <span class="n">new_body</span> <span class="o">=</span> <span class="p">[</span>
-                    <span class="c1"># create new standard objective variable</span>
                     <span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">(</span>
                         <span class="n">targets</span><span class="o">=</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;obj_std&quot;</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Store</span><span class="p">())],</span>
-                        <span class="n">value</span><span class="o">=</span><span class="n">original_return</span><span class="p">,</span>
+                        <span class="n">value</span><span class="o">=</span><span class="n">combined_value</span><span class="p">,</span>
                     <span class="p">),</span>
                     <span class="c1"># create flex objective variable</span>
                     <span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">(</span>
@@ -519,7 +537,6 @@
                     <span class="c1"># overwrite return statement with custom function</span>
                     <span class="n">ast</span><span class="o">.</span><span class="n">Return</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">SHADOW_MPC_COST_FUNCTION</span><span class="p">)</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">),</span>
                 <span class="p">]</span>
-                <span class="c1"># append new variables to end of function</span>
                 <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="n">i</span><span class="p">:]</span> <span class="o">=</span> <span class="n">new_body</span>
                 <span class="k">break</span></div>
 
