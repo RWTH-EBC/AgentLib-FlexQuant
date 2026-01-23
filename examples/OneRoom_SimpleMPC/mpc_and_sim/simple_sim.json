@@ -11,10 +11,9 @@
             "model": {
                 "type": {"file": "mpc_and_sim/simple_model.py", "class_name": "BaselineMPCModel"},
                 "states": [{"name": "T", "value": 298}]
-                
             },
-            "t_sample": 10,
-            "update_inputs_on_callback": false,
+            "t_sample_communication":  10,
+            "t_sample_simulation": 10,
             "save_results": true,
             "result_filename": "results/sim_room.csv",
             "overwrite_result_file": true,
