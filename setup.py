@@ -1,16 +1,19 @@
 import setuptools
 
 requirements = [
-    "setuptools",
-    "agentlib[full]==0.8.7",
-    "agentlib_mpc[fmu, interactive] @ git+https://github.com/RWTH-EBC/AgentLib-MPC.git@356fa23bb612667f176e3c14bd4e9330127e35e7",
+    "agentlib[full] @ git+https://github.com/RWTH-EBC/AgentLib.git@27af08d",
+    "agentlib_mpc[fmu, interactive] @ git+https://github.com/RWTH-EBC/AgentLib-MPC.git@be75092",
     "pycombina @ git+https://github.com/adbuerger/pycombina.git",
     "pathlib",
     "astor==0.8.1",
     "black",
     "pre-commit",
-    "pytest",
-    "pytest-snapshot"
+    # Building the docs
+    "sphinx>=6.1.3",
+    "m2r2",
+    "myst-parser",
+    "autodoc_pydantic>=1.8.0",
+    "sphinx-material",
 ]
 
 
