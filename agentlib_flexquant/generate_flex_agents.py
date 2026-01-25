@@ -402,7 +402,8 @@ class FlexAgentGenerator:
         module_config_flex.optimization_backend["results_file"] = str(full_path)
         # change cia backend to custom backend of flexquant
         if module_config_flex.optimization_backend["type"] == "casadi_cia":
-            module_config_flex.optimization_backend["type"] = "casadi_cia_cons"
+            module_config_flex.optimization_backend["type"] = "agentlib_flexquant.casadi_cia_cons"
+        if module_config_flex.optimization_backend["type"] == "agentlib_flexquant.casadi_cia_cons":
             module_config_flex.optimization_backend["market_time"] = (
                 self.flex_config.market_time)
 

@@ -204,6 +204,7 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         self._track_base_comm_vars_dict[name].value = vals
         # set value
         self.set(name, vals)
+        self.model.set(name, vals)
 
         # make sure all necessary inputs are set
         if all(x.value is not None for x in self._track_base_comm_vars_dict.values()):
@@ -443,6 +444,7 @@ class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
         self._track_base_comm_vars_dict[name].value = vals
         # set value
         self.set(name, vals)
+        self.model.set(name, vals)
 
         # make sure all necessary inputs are set
         if all(x.value is not None for x in self._track_base_comm_vars_dict.values()):
