@@ -75,8 +75,6 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Defines shadow MPC and MINLP-MPC for positive/negative flexibility quantification.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
-
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -90,6 +88,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">full_trajectory_suffix</span><span class="p">,</span>
                                                         <span class="n">base_vars_to_communicate_suffix</span><span class="p">)</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">glbs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.optimization_backends.constrained_cia</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConstrainedCasADiCIABackend</span>
 
 
 <div class="viewcode-block" id="FlexibilityShadowMPCConfig"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityShadowMPCConfig</span><span class="p">(</span><span class="n">mpc_full</span><span class="o">.</span><span class="n">MPCConfig</span><span class="p">):</span>
@@ -278,7 +277,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_track_base_comm_vars_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span>
         <span class="c1"># set value</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">vals</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">vals</span><span class="p">)</span>
+        <span class="c1"># self.model.set(name, (vals if not isinstance(vals, Iterable) else vals[0]))</span>
 
         <span class="c1"># make sure all necessary inputs are set</span>
         <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_track_base_comm_vars_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
@@ -513,12 +512,14 @@
             <span class="c1"># add time shift env.now to the mpc prediction index if it starts at t=0</span>
             <span class="k">if</span> <span class="n">vals</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">vals</span><span class="o">.</span><span class="n">index</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span>
+            <span class="c1"># set full controls to custom cia backend to constrain during market time</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">,</span> <span class="n">ConstrainedCasADiCIABackend</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">optimization_backend</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">full_controls_dict</span><span class="p">[</span><span class="n">inp</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">vals</span>
 
         <span class="c1"># update value in the tracking dictionary</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_track_base_comm_vars_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span>
         <span class="c1"># set value</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">vals</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">vals</span><span class="p">)</span>
 
         <span class="c1"># make sure all necessary inputs are set</span>
         <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_track_base_comm_vars_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>

@@ -102,6 +102,10 @@
         <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;If True, CIA is skipped and plain rounding is used.&quot;</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">full_controls_dict</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">{},</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Holds a key value pair for each full control of the Baseline&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
 
 <div class="viewcode-block" id="ConstrainedCIABackendConfig.Config"><a class="viewcode-back" href="../../../code/agentlib_flexquant.optimization_backends.html#agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCIABackendConfig.Config">[docs]</a>    <span class="k">class</span><span class="w"> </span><span class="nc">Config</span><span class="p">:</span>
         <span class="c1"># Explicitly set this to allow additional fields in the derived class</span>
@@ -202,11 +206,13 @@
 
 <div class="viewcode-block" id="ConstrainedCasADiCIABackend.get_baseline_binary_solution"><a class="viewcode-back" href="../../../code/agentlib_flexquant.optimization_backends.html#agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCasADiCIABackend.get_baseline_binary_solution">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_baseline_binary_solution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bin_con</span><span class="p">):</span>
         <span class="c1"># check for baseline or shadow MPC</span>
-        <span class="k">if</span> <span class="n">bin_con</span> <span class="o">+</span> <span class="n">full_trajectory_suffix</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_input_names</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">full_controls_dict</span><span class="p">:</span>
+            <span class="c1"># if baseline, return</span>
             <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">bin_con</span> <span class="o">+</span> <span class="n">full_trajectory_suffix</span>
         <span class="c1"># if shadow MPC, get current value send by baseline</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_input</span><span class="p">(</span><span class="n">bin_con</span> <span class="o">+</span> <span class="n">full_trajectory_suffix</span><span class="p">)</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">cons</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_input</span><span class="p">(</span><span class="n">bin_con</span> <span class="o">+</span> <span class="n">full_trajectory_suffix</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">full_controls_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cons</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">full_controls_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
             <span class="c1"># the index of constraints starts at the absolute current environment</span>
             <span class="c1"># time, while the market time is relative time on mpc horizon</span>
             <span class="n">cons</span><span class="o">.</span><span class="n">index</span> <span class="o">-=</span> <span class="n">cons</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
