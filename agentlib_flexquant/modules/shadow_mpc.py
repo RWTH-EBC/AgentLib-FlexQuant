@@ -1,8 +1,6 @@
 """
 Defines shadow MPC and MINLP-MPC for positive/negative flexibility quantification.
 """
-from typing import Dict, Union
-
 import os
 import math
 import numpy as np
@@ -16,6 +14,7 @@ from agentlib_flexquant.utils.data_handling import fill_nans, MEAN
 from agentlib_flexquant.data_structures.globals import (full_trajectory_suffix,
                                                         base_vars_to_communicate_suffix)
 import agentlib_flexquant.data_structures.globals as glbs
+from agentlib_flexquant.optimization_backends.constrained_cia import ConstrainedCasADiCIABackend
 
 
 class FlexibilityShadowMPCConfig(mpc_full.MPCConfig):
@@ -204,7 +203,7 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         self._track_base_comm_vars_dict[name].value = vals
         # set value
         self.set(name, vals)
-        self.model.set(name, vals)
+        # self.model.set(name, (vals if not isinstance(vals, Iterable) else vals[0]))
 
         # make sure all necessary inputs are set
         if all(x.value is not None for x in self._track_base_comm_vars_dict.values()):
@@ -439,12 +438,14 @@ class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
             # add time shift env.now to the mpc prediction index if it starts at t=0
             if vals.index[0] == 0:
                 vals.index += self.env.time
+            # set full controls to custom cia backend to constrain during market time
+            if isinstance(self.optimization_backend, ConstrainedCasADiCIABackend):
+                self.optimization_backend.config.full_controls_dict[inp.name] = vals
 
         # update value in the tracking dictionary
         self._track_base_comm_vars_dict[name].value = vals
         # set value
         self.set(name, vals)
-        self.model.set(name, vals)
 
         # make sure all necessary inputs are set
         if all(x.value is not None for x in self._track_base_comm_vars_dict.values()):

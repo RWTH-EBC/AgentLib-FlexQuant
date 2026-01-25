@@ -402,8 +402,10 @@ class FlexAgentGenerator:
         module_config_flex.optimization_backend["results_file"] = str(full_path)
         # change cia backend to custom backend of flexquant
         if module_config_flex.optimization_backend["type"] == "casadi_cia":
-            module_config_flex.optimization_backend["type"] = "agentlib_flexquant.casadi_cia_cons"
-        if module_config_flex.optimization_backend["type"] == "agentlib_flexquant.casadi_cia_cons":
+            module_config_flex.optimization_backend["type"] = \
+                "agentlib_flexquant.casadi_cia_cons"
+        if (module_config_flex.optimization_backend["type"] ==
+                "agentlib_flexquant.casadi_cia_cons"):
             module_config_flex.optimization_backend["market_time"] = (
                 self.flex_config.market_time)
 
@@ -447,8 +449,9 @@ class FlexAgentGenerator:
             # and states  of the Baseline are communicated to the Shadow MPC
             # to ensure synchronisation. Therefore, all inputs and states of
             # the Baseline are added to the Shadow MPCs with an alias
+            baseline_names = {inp.name for inp in self.baseline_mpc_module_config.inputs}
             for i, input in enumerate(module_config_flex.inputs):
-                if input in self.baseline_mpc_module_config.inputs:
+                if input.name in baseline_names:
                     module_config_flex.inputs[i].alias = (
                             input.alias + glbs.base_vars_to_communicate_suffix)
                     
@@ -457,13 +460,14 @@ class FlexAgentGenerator:
                 input.alias + glbs.base_vars_to_communicate_suffix for input in
                 self.baseline_mpc_module_config.inputs]
             
-            # add custom input names for the shadow MPC to track. Here, the communication suffix is not added, as 
-            # the user is free to define custom inputs as desired.
+            # add custom input names for the shadow MPC to track. Here, the
+            # communication suffix is not added, as  the user is free to define
+            # custom inputs as desired.
             module_config_flex.custom_input_names = [
-                input.alias for input in self.flex_config.shadow_mpc_config_generator_data.custom_inputs
+                input.alias for input in
+                self.flex_config.shadow_mpc_config_generator_data.custom_inputs
             ]
 
-            
             for i, state in enumerate(module_config_flex.states):
                 if state in self.baseline_mpc_module_config.states:
                     module_config_flex.states[i].alias = (
@@ -497,6 +501,14 @@ class FlexAgentGenerator:
                             shared=True,
                         )
                     )
+                # add full controls to custom cia backend to constrain
+                # during market time
+                if (module_config_flex.optimization_backend["type"] ==
+                        "agentlib_flexquant.casadi_cia_cons"):
+                    module_config_flex.optimization_backend["full_controls_dict"] = (
+                        dict(zip([var.name for var in module_config_flex.full_controls],
+                                 [None]*len(module_config_flex.full_controls))
+                             ))
             # add input and states copy variables which send the Baseline inputs
             # to the shadow MPC
             for input in module_config_flex.inputs:

@@ -28,6 +28,10 @@ class ConstrainedCIABackendConfig(CasadiBackendConfig):
         default=False,
         description="If True, CIA is skipped and plain rounding is used.",
     )
+    full_controls_dict: dict = pydantic.Field(
+        default={},
+        description="Holds a key value pair for each full control of the Baseline",
+    )
 
     class Config:
         # Explicitly set this to allow additional fields in the derived class
@@ -128,11 +132,13 @@ class ConstrainedCasADiCIABackend(CasADiCIABackend):
 
     def get_baseline_binary_solution(self, bin_con):
         # check for baseline or shadow MPC
-        if bin_con + full_trajectory_suffix not in self.model.get_input_names():
+        if not self.config.full_controls_dict:
+            # if baseline, return
             return None
+        name = bin_con + full_trajectory_suffix
         # if shadow MPC, get current value send by baseline
-        elif self.model.get_input(bin_con + full_trajectory_suffix).value is not None:
-            cons = self.model.get_input(bin_con + full_trajectory_suffix).value
+        if self.config.full_controls_dict[name] is not None:
+            cons = self.config.full_controls_dict[name]
             # the index of constraints starts at the absolute current environment
             # time, while the market time is relative time on mpc horizon
             cons.index -= cons.index[0]
