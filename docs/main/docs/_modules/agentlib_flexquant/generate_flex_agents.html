@@ -476,7 +476,10 @@
         <span class="n">module_config_flex</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;results_file&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">full_path</span><span class="p">)</span>
         <span class="c1"># change cia backend to custom backend of flexquant</span>
         <span class="k">if</span> <span class="n">module_config_flex</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;casadi_cia&quot;</span><span class="p">:</span>
-            <span class="n">module_config_flex</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;casadi_cia_cons&quot;</span>
+            <span class="n">module_config_flex</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="s2">&quot;agentlib_flexquant.casadi_cia_cons&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">module_config_flex</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span>
+                <span class="s2">&quot;agentlib_flexquant.casadi_cia_cons&quot;</span><span class="p">):</span>
             <span class="n">module_config_flex</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;market_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">market_time</span><span class="p">)</span>
 
@@ -520,8 +523,9 @@
             <span class="c1"># and states  of the Baseline are communicated to the Shadow MPC</span>
             <span class="c1"># to ensure synchronisation. Therefore, all inputs and states of</span>
             <span class="c1"># the Baseline are added to the Shadow MPCs with an alias</span>
+            <span class="n">baseline_names</span> <span class="o">=</span> <span class="p">{</span><span class="n">inp</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">inp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">inputs</span><span class="p">}</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="nb">input</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">module_config_flex</span><span class="o">.</span><span class="n">inputs</span><span class="p">):</span>
-                <span class="k">if</span> <span class="nb">input</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">inputs</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">input</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">baseline_names</span><span class="p">:</span>
                     <span class="n">module_config_flex</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">alias</span> <span class="o">=</span> <span class="p">(</span>
                             <span class="nb">input</span><span class="o">.</span><span class="n">alias</span> <span class="o">+</span> <span class="n">glbs</span><span class="o">.</span><span class="n">base_vars_to_communicate_suffix</span><span class="p">)</span>
                     
@@ -530,13 +534,14 @@
                 <span class="nb">input</span><span class="o">.</span><span class="n">alias</span> <span class="o">+</span> <span class="n">glbs</span><span class="o">.</span><span class="n">base_vars_to_communicate_suffix</span> <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">inputs</span><span class="p">]</span>
             
-            <span class="c1"># add custom input names for the shadow MPC to track. Here, the communication suffix is not added, as </span>
-            <span class="c1"># the user is free to define custom inputs as desired.</span>
+            <span class="c1"># add custom input names for the shadow MPC to track. Here, the</span>
+            <span class="c1"># communication suffix is not added, as  the user is free to define</span>
+            <span class="c1"># custom inputs as desired.</span>
             <span class="n">module_config_flex</span><span class="o">.</span><span class="n">custom_input_names</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="nb">input</span><span class="o">.</span><span class="n">alias</span> <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">custom_inputs</span>
+                <span class="nb">input</span><span class="o">.</span><span class="n">alias</span> <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">custom_inputs</span>
             <span class="p">]</span>
 
-            
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">module_config_flex</span><span class="o">.</span><span class="n">states</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">states</span><span class="p">:</span>
                     <span class="n">module_config_flex</span><span class="o">.</span><span class="n">states</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">alias</span> <span class="o">=</span> <span class="p">(</span>
@@ -570,6 +575,14 @@
                             <span class="n">shared</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                         <span class="p">)</span>
                     <span class="p">)</span>
+                <span class="c1"># add full controls to custom cia backend to constrain</span>
+                <span class="c1"># during market time</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">module_config_flex</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span>
+                        <span class="s2">&quot;agentlib_flexquant.casadi_cia_cons&quot;</span><span class="p">):</span>
+                    <span class="n">module_config_flex</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;full_controls_dict&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">([</span><span class="n">var</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">module_config_flex</span><span class="o">.</span><span class="n">full_controls</span><span class="p">],</span>
+                                 <span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">module_config_flex</span><span class="o">.</span><span class="n">full_controls</span><span class="p">))</span>
+                             <span class="p">))</span>
             <span class="c1"># add input and states copy variables which send the Baseline inputs</span>
             <span class="c1"># to the shadow MPC</span>
             <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="n">module_config_flex</span><span class="o">.</span><span class="n">inputs</span><span class="p">:</span>

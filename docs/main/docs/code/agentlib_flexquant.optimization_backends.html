@@ -107,6 +107,7 @@
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCIABackendConfig.full_controls_dict" title="agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCIABackendConfig.full_controls_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">full_controls_dict</span> <span class="pre">(dict)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCIABackendConfig.market_time" title="agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCIABackendConfig.market_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">market_time</span> <span class="pre">(int)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCIABackendConfig.use_rounding" title="agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCIABackendConfig.use_rounding"><code class="xref py py-obj docutils literal notranslate"><span class="pre">use_rounding</span> <span class="pre">(bool)</span></code></a></p></li>
 </ul>
@@ -114,6 +115,12 @@
 <dt class="field-odd">Validators<span class="colon">:</span></dt>
 <dd class="field-odd"><p></p></dd>
 </dl>
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCIABackendConfig.full_controls_dict">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">full_controls_dict</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCIABackendConfig.full_controls_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Holds a key value pair for each full control of the Baseline</p>
+</dd></dl>
+
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCIABackendConfig.market_time">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">market_time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">900</span></em><a class="headerlink" href="#agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCIABackendConfig.market_time" title="Permalink to this definition"></a></dt>
@@ -160,6 +167,50 @@
 <dt class="sig sig-object py" id="agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCasADiCIABackend.do_pycombina">
 <span class="sig-name descname"><span class="pre">do_pycombina</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b_rel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">array</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/optimization_backends/constrained_cia.html#ConstrainedCasADiCIABackend.do_pycombina"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCasADiCIABackend.do_pycombina" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCasADiCIABackend.get_baseline_binary_solution">
+<span class="sig-name descname"><span class="pre">get_baseline_binary_solution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bin_con</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/optimization_backends/constrained_cia.html#ConstrainedCasADiCIABackend.get_baseline_binary_solution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCasADiCIABackend.get_baseline_binary_solution" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCasADiCIABackend.solve">
+<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">now</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_vars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">agentlib_mpc.data_structures.mpc_datamodels.MPCVariable</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Results</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/optimization_backends/constrained_cia.html#ConstrainedCasADiCIABackend.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCasADiCIABackend.solve" title="Permalink to this definition"></a></dt>
+<dd><p>Solves the optimization problem given the current values of the
+corresponding AgentVariables and system time. The standardization of
+return values is a work in progress.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>now</strong> – Current time used for interpolation of input trajectories.</p></li>
+<li><p><strong>current_vars</strong> – Dict of AgentVariables holding the values relevant to
+the optimization problem. Keys are the names</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>A dataframe with all optimization variables over their respective
+grids. Depending on discretization, can include many nan’s, so care
+should be taken when using this, e.g. always use dropna() after
+accessing a column.</p>
+<blockquote>
+<div><dl>
+<dt>Example:</dt><dd><blockquote>
+<div><p>variables   mDot | T_0 | slack_T</p>
+</div></blockquote>
+<p>time
+0                0.1  | 298 | nan
+230              nan  | 297 | 3
+470              nan  | 296 | 2
+588              nan  | 295 | 1
+700              0.05 | 294 | nan
+930              nan  | 294 | 0.1</p>
+</dd>
+</dl>
+</div></blockquote>
+</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCasADiCIABackend.var_ref">
