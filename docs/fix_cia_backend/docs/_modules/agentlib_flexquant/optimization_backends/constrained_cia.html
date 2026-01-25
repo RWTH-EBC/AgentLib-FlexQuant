@@ -1,0 +1,245 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>agentlib_flexquant.optimization_backends.constrained_cia &mdash; agentlib_flexquant 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
+
+  
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            agentlib_flexquant
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">agentlib_flexquant</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">agentlib_flexquant.optimization_backends.constrained_cia</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for agentlib_flexquant.optimization_backends.constrained_cia</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pydantic</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">OptionalDependencyError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.optimization_backends.casadi_.minlp_cia</span><span class="w"> </span><span class="kn">import</span> <span class="n">CasADiCIABackend</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.optimization_backends.casadi_.core.casadi_backend</span><span class="w"> </span><span class="kn">import</span> <span class="n">CasadiBackendConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.data_structures.mpc_datamodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">MINLPVariableReference</span><span class="p">,</span> <span class="n">MPCVariable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="kn">import</span> <span class="n">full_trajectory_suffix</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.optimization_backends.casadi_.core.discretization</span><span class="w"> </span><span class="kn">import</span> <span class="n">Results</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">pycombina</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="n">OptionalDependencyError</span><span class="p">(</span>
+        <span class="n">used_object</span><span class="o">=</span><span class="s2">&quot;Pycombina&quot;</span><span class="p">,</span>
+        <span class="n">dependency_install</span><span class="o">=</span><span class="s2">&quot;.\ after cloning pycombina. Instructions: &quot;</span>
+        <span class="s2">&quot;https://pycombina.readthedocs.io/en/latest/install.html#&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<div class="viewcode-block" id="ConstrainedCIABackendConfig"><a class="viewcode-back" href="../../../code/agentlib_flexquant.optimization_backends.html#agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCIABackendConfig">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ConstrainedCIABackendConfig</span><span class="p">(</span><span class="n">CasadiBackendConfig</span><span class="p">):</span>
+    <span class="n">market_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">900</span><span class="p">,</span>
+        <span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Time for market interaction&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">use_rounding</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;If True, CIA is skipped and plain rounding is used.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="ConstrainedCIABackendConfig.Config"><a class="viewcode-back" href="../../../code/agentlib_flexquant.optimization_backends.html#agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCIABackendConfig.Config">[docs]</a>    <span class="k">class</span><span class="w"> </span><span class="nc">Config</span><span class="p">:</span>
+        <span class="c1"># Explicitly set this to allow additional fields in the derived class</span>
+        <span class="n">extra</span> <span class="o">=</span> <span class="s2">&quot;forbid&quot;</span></div></div>
+
+
+<div class="viewcode-block" id="ConstrainedCasADiCIABackend"><a class="viewcode-back" href="../../../code/agentlib_flexquant.optimization_backends.html#agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCasADiCIABackend">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ConstrainedCasADiCIABackend</span><span class="p">(</span><span class="n">CasADiCIABackend</span><span class="p">):</span>
+    <span class="n">var_ref</span><span class="p">:</span> <span class="n">MINLPVariableReference</span>
+    <span class="n">config_type</span> <span class="o">=</span> <span class="n">ConstrainedCIABackendConfig</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ConstrainedCasADiCIABackend.solve"><a class="viewcode-back" href="../../../code/agentlib_flexquant.optimization_backends.html#agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCasADiCIABackend.solve">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">now</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">current_vars</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">MPCVariable</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Results</span><span class="p">:</span>
+        <span class="c1"># collect and format inputs</span>
+        <span class="n">mpc_inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_current_mpc_inputs</span><span class="p">(</span><span class="n">agent_variables</span><span class="o">=</span><span class="n">current_vars</span><span class="p">,</span> <span class="n">now</span><span class="o">=</span><span class="n">now</span><span class="p">)</span>
+
+        <span class="c1"># solve NLP with relaxed binaries</span>
+        <span class="n">relaxed_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">discretization</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">mpc_inputs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">use_rounding</span><span class="p">:</span>
+            <span class="n">b_rel</span> <span class="o">=</span> <span class="p">[</span><span class="n">relaxed_results</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">binary_controls</span><span class="p">]</span>
+            <span class="n">b_rel_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">b_rel</span><span class="p">))</span>
+
+            <span class="c1"># List to collect all rounded/overwritten binary arrays</span>
+            <span class="n">binary_arrays</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="c1"># constrain shadow MPCs to values of baseline for time&lt;market_time</span>
+            <span class="k">for</span> <span class="n">bin_con</span><span class="p">,</span> <span class="n">bin_rel</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">binary_controls</span><span class="p">,</span> <span class="n">b_rel_np</span><span class="p">):</span>
+                <span class="n">cons</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_baseline_binary_solution</span><span class="p">(</span><span class="n">bin_con</span><span class="p">)</span>
+                <span class="c1"># round binaries</span>
+                <span class="n">binary_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">bin_rel</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">cons</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># Determine how many sample times are before the market time</span>
+                    <span class="n">sample_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">discretization_options</span><span class="o">.</span><span class="n">time_step</span>
+                    <span class="n">market_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_time</span>
+                    <span class="n">num_samples_before_market</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">market_time</span> <span class="o">/</span> <span class="n">sample_time</span><span class="p">)</span>
+                    <span class="c1"># Overwrite the market time entries with baseline values</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_samples_before_market</span><span class="p">):</span>
+                        <span class="n">time_point</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">sample_time</span>
+                        <span class="k">if</span> <span class="n">time_point</span> <span class="ow">in</span> <span class="n">cons</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+                            <span class="n">binary_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">cons</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">time_point</span><span class="p">]</span>
+                <span class="n">binary_arrays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">binary_array</span><span class="p">)</span>
+            <span class="c1"># Stack all binary arrays back together (transpose to match expected shape)</span>
+            <span class="n">binary_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">binary_arrays</span><span class="p">))</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">relaxed_binary_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_binary_array</span><span class="p">(</span><span class="n">full_results</span><span class="o">=</span><span class="n">relaxed_results</span><span class="p">)</span>
+            <span class="n">binary_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_pycombina</span><span class="p">(</span><span class="n">b_rel</span><span class="o">=</span><span class="n">relaxed_binary_array</span><span class="p">)</span>
+
+        <span class="n">mpc_inputs_new</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">constrain_binary_inputs</span><span class="p">(</span>
+            <span class="n">mpc_inputs_old</span><span class="o">=</span><span class="n">mpc_inputs</span><span class="p">,</span>
+            <span class="n">binary_array</span><span class="o">=</span><span class="n">binary_array</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="c1"># solve NLP with fixed binaries</span>
+        <span class="n">full_results_final</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">discretization</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">mpc_inputs_new</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_rel_result_df</span><span class="p">(</span><span class="n">relaxed_results</span><span class="p">,</span> <span class="n">now</span><span class="o">=</span><span class="n">now</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_result_df</span><span class="p">(</span><span class="n">full_results_final</span><span class="p">,</span> <span class="n">now</span><span class="o">=</span><span class="n">now</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">full_results_final</span></div>
+
+<div class="viewcode-block" id="ConstrainedCasADiCIABackend.do_pycombina"><a class="viewcode-back" href="../../../code/agentlib_flexquant.optimization_backends.html#agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCasADiCIABackend.do_pycombina">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">do_pycombina</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b_rel</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
+
+        <span class="n">grid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">discretization</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">binary_controls</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">grid</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">discretization_options</span><span class="o">.</span><span class="n">time_step</span><span class="p">)</span>
+
+        <span class="n">binapprox</span> <span class="o">=</span> <span class="n">pycombina</span><span class="o">.</span><span class="n">BinApprox</span><span class="p">(</span>
+            <span class="n">t</span><span class="o">=</span><span class="n">grid</span><span class="p">,</span>
+            <span class="n">b_rel</span><span class="o">=</span><span class="n">b_rel</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># constrain shadow MPCs to values of baseline for time&lt;market_time</span>
+        <span class="k">for</span> <span class="n">bin_con</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">binary_controls</span><span class="p">:</span>
+            <span class="n">cons</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_baseline_binary_solution</span><span class="p">(</span><span class="n">bin_con</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">cons</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">last_idx</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">cons</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="c1"># constrain ever timestep before market_time with values of baseline</span>
+                    <span class="n">binapprox</span><span class="o">.</span><span class="n">set_valid_controls_for_interval</span><span class="p">(</span>
+                        <span class="p">(</span><span class="n">last_idx</span><span class="p">,</span> <span class="n">idx</span><span class="p">),</span> <span class="p">[</span><span class="n">value</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">value</span><span class="p">]</span>
+                    <span class="p">)</span>
+                    <span class="n">last_idx</span> <span class="o">=</span> <span class="n">idx</span>
+
+        <span class="n">bnb</span> <span class="o">=</span> <span class="n">pycombina</span><span class="o">.</span><span class="n">CombinaBnB</span><span class="p">(</span><span class="n">binapprox</span><span class="p">)</span>
+        <span class="n">bnb</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span>
+            <span class="n">use_warm_start</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">max_cpu_time</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+            <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">b_bin</span> <span class="o">=</span> <span class="n">binapprox</span><span class="o">.</span><span class="n">b_bin</span>
+
+        <span class="c1"># if there is only one mode, we created a dummy mode which we remove now</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">binary_controls</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">b_bin</span> <span class="o">=</span> <span class="n">b_bin</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">b_bin</span></div>
+
+<div class="viewcode-block" id="ConstrainedCasADiCIABackend.get_baseline_binary_solution"><a class="viewcode-back" href="../../../code/agentlib_flexquant.optimization_backends.html#agentlib_flexquant.optimization_backends.constrained_cia.ConstrainedCasADiCIABackend.get_baseline_binary_solution">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_baseline_binary_solution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bin_con</span><span class="p">):</span>
+        <span class="c1"># check for baseline or shadow MPC</span>
+        <span class="k">if</span> <span class="n">bin_con</span> <span class="o">+</span> <span class="n">full_trajectory_suffix</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_input_names</span><span class="p">():</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="c1"># if shadow MPC, get current value send by baseline</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_input</span><span class="p">(</span><span class="n">bin_con</span> <span class="o">+</span> <span class="n">full_trajectory_suffix</span><span class="p">)</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cons</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_input</span><span class="p">(</span><span class="n">bin_con</span> <span class="o">+</span> <span class="n">full_trajectory_suffix</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+            <span class="c1"># the index of constraints starts at the absolute current environment</span>
+            <span class="c1"># time, while the market time is relative time on mpc horizon</span>
+            <span class="n">cons</span><span class="o">.</span><span class="n">index</span> <span class="o">-=</span> <span class="n">cons</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="c1"># get the constraints in the market time</span>
+            <span class="n">cons</span> <span class="o">=</span> <span class="n">cons</span><span class="p">[</span><span class="n">cons</span><span class="o">.</span><span class="n">index</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">market_time</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">cons</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Felix Stegemerten.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
