@@ -74,20 +74,17 @@
   <h1>Source code for agentlib_flexquant.generate_flex_agents</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Generate agents for flexibility quantification.</span>
 
-<span class="sd">This module provides the FlexAgentGenerator class that creates and configures flexibility agents.</span>
+<span class="sd">This module provides the FlexAgentGenerator class that creates and configures</span>
+<span class="sd">flexibility agents.</span>
 <span class="sd">The agents created include the baseline, positive and negative flexibility agents,</span>
-<span class="sd">the flexibility indicator and market agents. The agents are created based on the flex config and</span>
-<span class="sd">the MPC config.</span>
+<span class="sd">the flexibility indicator and market agents. The agents are created based on the</span>
+<span class="sd">flex config and the MPC config.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">atexit</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">astor</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">black</span>
@@ -95,7 +92,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">FilePath</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.core.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentConfig</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.core.datamodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentVariable</span>
@@ -854,7 +851,8 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">formatted_code</span><span class="p">)</span>
 
-<div class="viewcode-block" id="FlexAgentGenerator.check_variables_in_casadi_config"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.check_variables_in_casadi_config">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">check_variables_in_casadi_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">CasadiModelConfig</span><span class="p">,</span> <span class="n">expr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">shadow_mpc_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="FlexAgentGenerator.check_variables_in_casadi_config"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.check_variables_in_casadi_config">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">check_variables_in_casadi_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">CasadiModelConfig</span><span class="p">,</span> <span class="n">expr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                                         <span class="n">shadow_mpc_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if all variables in the expression are defined in the config.</span>
 
 <span class="sd">        Args:</span>
@@ -868,7 +866,8 @@
         <span class="n">variables_in_config</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_variable_names</span><span class="p">())</span>
         <span class="n">variables_in_cost_function</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expr</span><span class="p">)))</span>
         <span class="n">variables_in_cost_function</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">node</span><span class="o">.</span><span class="n">attr</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">variables_in_cost_function</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="n">ast</span><span class="o">.</span><span class="n">Attribute</span><span class="p">)</span>
+            <span class="n">node</span><span class="o">.</span><span class="n">attr</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">variables_in_cost_function</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Attribute</span><span class="p">)</span>
         <span class="p">}</span>
         <span class="n">flex_config_data</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">pos_flex</span> 
                             <span class="k">if</span> <span class="n">shadow_mpc_type</span> <span class="o">==</span> <span class="s2">&quot;pos_flex&quot;</span> 
@@ -878,9 +877,12 @@
             <span class="p">[</span><span class="n">inp</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">inp</span> <span class="ow">in</span> <span class="n">flex_config_data</span><span class="o">.</span><span class="n">config_inputs_appendix</span><span class="p">]</span>
             <span class="p">)</span>
         
-        <span class="n">unknown_vars</span> <span class="o">=</span> <span class="n">variables_in_cost_function</span> <span class="o">-</span> <span class="n">variables_in_config</span> <span class="o">-</span> <span class="n">variables_newly_created</span>
+        <span class="n">unknown_vars</span> <span class="o">=</span> <span class="p">(</span><span class="n">variables_in_cost_function</span> <span class="o">-</span> <span class="n">variables_in_config</span> <span class="o">-</span>
+                        <span class="n">variables_newly_created</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">unknown_vars</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown variables in new cost function: </span><span class="si">{</span><span class="n">unknown_vars</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown variables in new cost function: &quot;</span>
+                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">unknown_vars</span><span class="si">}</span><span class="s2">. This might cause problems with &quot;</span>
+                                <span class="sa">f</span><span class="s2">&quot;the optimization backend.&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlexAgentGenerator.run_config_validations"><a class="viewcode-back" href="../../code/agentlib_flexquant.html#agentlib_flexquant.generate_flex_agents.FlexAgentGenerator.run_config_validations">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">run_config_validations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Function to validate integrity of user-supplied flex config.</span>
