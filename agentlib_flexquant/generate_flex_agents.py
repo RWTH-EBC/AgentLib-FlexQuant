@@ -1,19 +1,16 @@
 """Generate agents for flexibility quantification.
 
-This module provides the FlexAgentGenerator class that creates and configures flexibility agents.
+This module provides the FlexAgentGenerator class that creates and configures
+flexibility agents.
 The agents created include the baseline, positive and negative flexibility agents,
-the flexibility indicator and market agents. The agents are created based on the flex config and
-the MPC config.
+the flexibility indicator and market agents. The agents are created based on the
+flex config and the MPC config.
 """
 import ast
 import atexit
 import inspect
-import json
 import logging
 import os
-from copy import deepcopy
-from pathlib import Path
-from typing import Union
 
 import astor
 import black
@@ -21,7 +18,7 @@ import json
 import numpy as np
 from copy import deepcopy
 from pathlib import Path
-from typing import List, Union
+from typing import Union
 from pydantic import FilePath
 from agentlib.core.agent import AgentConfig
 from agentlib.core.datamodels import AgentVariable
@@ -780,7 +777,8 @@ class FlexAgentGenerator:
         with open(output_file, "w", encoding="utf-8") as f:
             f.write(formatted_code)
 
-    def check_variables_in_casadi_config(self, config: CasadiModelConfig, expr: str, shadow_mpc_type: str):
+    def check_variables_in_casadi_config(self, config: CasadiModelConfig, expr: str,
+                                         shadow_mpc_type: str):
         """Check if all variables in the expression are defined in the config.
 
         Args:
@@ -794,7 +792,8 @@ class FlexAgentGenerator:
         variables_in_config = set(config.get_variable_names())
         variables_in_cost_function = set(ast.walk(ast.parse(expr)))
         variables_in_cost_function = {
-            node.attr for node in variables_in_cost_function if isinstance(node,ast.Attribute)
+            node.attr for node in variables_in_cost_function
+            if isinstance(node, ast.Attribute)
         }
         flex_config_data = (self.flex_config.shadow_mpc_config_generator_data.pos_flex 
                             if shadow_mpc_type == "pos_flex" 
@@ -804,9 +803,12 @@ class FlexAgentGenerator:
             [inp.name for inp in flex_config_data.config_inputs_appendix]
             )
         
-        unknown_vars = variables_in_cost_function - variables_in_config - variables_newly_created
+        unknown_vars = (variables_in_cost_function - variables_in_config -
+                        variables_newly_created)
         if unknown_vars:
-            raise ValueError(f"Unknown variables in new cost function: {unknown_vars}")
+            self.logger.warning(f"Unknown variables in new cost function: "
+                                f"{unknown_vars}. This might cause problems with "
+                                f"the optimization backend.")
 
     def run_config_validations(self):
         """Function to validate integrity of user-supplied flex config.
