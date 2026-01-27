@@ -5,9 +5,6 @@ from typing import Optional, Union
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 
 from agentlib_flexquant.data_structures.globals import (
-    FLEX_EVENT_DURATION,
-    MARKET_TIME,
-    PREP_TIME,
     SHADOW_MPC_COST_FUNCTION,
     full_trajectory_suffix,
     return_baseline_cost_function,
@@ -18,7 +15,6 @@ from agentlib_flexquant.data_structures.globals import (
 )
 from agentlib_flexquant.data_structures.mpcs import (
     BaselineMPCData,
-    BaseMPCData,
     NFMPCData,
     PFMPCData,
 )

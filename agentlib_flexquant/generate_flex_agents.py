@@ -459,11 +459,15 @@ class FlexAgentGenerator:
             
             # add custom input names for the shadow MPC to track. Here, the
             # communication suffix is not added, as  the user is free to define
-            # custom inputs as desired.
-            module_config_flex.custom_input_names = [
-                {"name": input.name, "alias": input.alias} for input in
-                self.flex_config.shadow_mpc_config_generator_data.custom_inputs
-            ]
+            # custom inputs as desired. If the variable already exists in the
+            # MPC inputs, this is skipped (as its already in the list).
+            existing_names = {inp["name"] for inp in
+                              module_config_flex.custom_input_names}
+            module_config_flex.custom_input_names.extend([
+                {"name": input.name, "alias": input.alias}
+                for input in mpc_dataclass.config_inputs_appendix
+                if input.name not in existing_names
+            ])
 
             for i, state in enumerate(module_config_flex.states):
                 if state in self.baseline_mpc_module_config.states:
@@ -546,7 +550,25 @@ class FlexAgentGenerator:
             ].alias = mpc_dataclass.stored_energy_alias
 
         # add extra inputs needed for activation of flex or custom cost functions
-        module_config_flex.inputs.extend(mpc_dataclass.config_inputs_appendix)
+        existing_input_names = {inp.name: idx for idx, inp in enumerate(module_config_flex.inputs)}
+        for appendix_inp in mpc_dataclass.config_inputs_appendix:
+            # If variable already exists in the config
+            if appendix_inp.name in existing_input_names:
+                self.logger.warning(f"The given variable {appendix_inp.name} in the "
+                                    f"config_inputs_appendix already exists in the MPC "
+                                    f"model. I am updating the alias of the existing "
+                                    f"variable to {appendix_inp.alias} (provided by you). "
+                                    f"However, this cann still cause issues dow the line "
+                                    f"if the alias is not chosen wisely.")
+                # Update only the alias of the existing input
+                idx = existing_input_names[appendix_inp.name]
+                existing_inp = module_config_flex.inputs[idx]
+                inp_dict = existing_inp.dict()
+                inp_dict["alias"] = appendix_inp.alias
+                module_config_flex.inputs[idx] = type(existing_inp)(**inp_dict)
+            else:
+                # Add the new input
+                module_config_flex.inputs.append(appendix_inp)
 
         # add extra parameters needed for activation of flex or custom weights
         for var in mpc_dataclass.config_parameters_appendix:
