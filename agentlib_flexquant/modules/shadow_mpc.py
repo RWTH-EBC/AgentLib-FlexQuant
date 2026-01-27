@@ -20,7 +20,7 @@ from agentlib_flexquant.optimization_backends.constrained_cia import Constrained
 class FlexibilityShadowMPCConfig(mpc_full.MPCConfig):
 
     baseline_input_names: list[str] = Field(default=[])
-    custom_input_names: list[str] = Field(default=[])
+    custom_input_names: list[Dict] = Field(default=[])
     baseline_state_names: list[str] = Field(default=[])
     full_control_names: list[str] = Field(default=[])
 
@@ -55,6 +55,7 @@ class FlexibilityShadowMPC(mpc_full.MPC):
 
         # setup look up dict to track incoming inputs and states
         # (maps name as str to actual AgentVariable)
+        input_names_list = [var["name"] for var in self.config.custom_input_names]
         self._track_base_comm_vars_dict: Dict[str, Union[AgentVariable, None]] = {}
         for comm_var in self.config.inputs + self.config.states:
             if (comm_var.name in self.config.full_control_names or
@@ -62,7 +63,7 @@ class FlexibilityShadowMPC(mpc_full.MPC):
                     self.config.baseline_input_names or
                     comm_var.name + base_vars_to_communicate_suffix in
                     self.config.baseline_state_names or
-                    comm_var.name in self.config.custom_input_names):
+                    comm_var.name in input_names_list):
                 comm_var.value = None
                 self._track_base_comm_vars_dict[comm_var.name] = comm_var.copy(deep=True)
         # set up necessary components if simulation is enabled
@@ -166,6 +167,12 @@ class FlexibilityShadowMPC(mpc_full.MPC):
                 alias=base_inputs,
                 callback=self.calc_flex_callback,
                 source=Source(agent_id=self.config.baseline_agent_id, module_id=None)
+            )
+        for custom_inputs in self.config.custom_input_names:
+            self.agent.data_broker.register_callback(
+                name=custom_inputs["name"],
+                alias=custom_inputs["alias"],
+                callback=self.calc_flex_callback
             )
         for base_states in self.config.baseline_state_names:
             self.agent.data_broker.register_callback(
@@ -330,7 +337,7 @@ class FlexibilityShadowMPC(mpc_full.MPC):
 class FlexibilityShadowMINLPMPCConfig(minlp_mpc.MINLPMPCConfig):
 
     baseline_input_names: list[str] = Field(default=[])
-    custom_input_names: list[str] = Field(default=[])
+    custom_input_names: list[Dict] = Field(default=[])
     baseline_state_names: list[str] = Field(default=[])
     full_control_names: list[str] = Field(default=[])
 
@@ -366,6 +373,7 @@ class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
 
         # setup look up dict to track incoming inputs and states
         # (maps name as str to actual AgentVariable)
+        input_names_list = [var["name"] for var in self.config.custom_input_names]
         self._track_base_comm_vars_dict: Dict[str, Union[AgentVariable, None]] = {}
         for comm_var in self.config.inputs + self.config.states:
             if (comm_var.name in self.config.full_control_names or
@@ -373,7 +381,7 @@ class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
                     self.config.baseline_input_names or
                     comm_var.name + base_vars_to_communicate_suffix in
                     self.config.baseline_state_names or
-                    comm_var.name in self.config.custom_input_names):
+                    comm_var.name in input_names_list):
                 comm_var.value = None
                 self._track_base_comm_vars_dict[comm_var.name] = comm_var.copy(deep=True)
         # set up necessary components if simulation is enabled
@@ -405,6 +413,12 @@ class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
                 alias=base_inputs,
                 callback=self.calc_flex_callback,
                 source=Source(agent_id=self.config.baseline_agent_id, module_id=None)
+            )
+        for custom_inputs in self.config.custom_input_names:
+            self.agent.data_broker.register_callback(
+                name=custom_inputs["name"],
+                alias=custom_inputs["alias"],
+                callback=self.calc_flex_callback
             )
         for base_states in self.config.baseline_state_names:
             self.agent.data_broker.register_callback(

@@ -450,25 +450,25 @@ class FlexAgentGenerator:
             for i, input in enumerate(module_config_flex.inputs):
                 if input.name in baseline_names:
                     module_config_flex.inputs[i].alias = (
-                            input.alias + glbs.base_vars_to_communicate_suffix)
+                            input.name + glbs.base_vars_to_communicate_suffix)
                     
             # add Baseline input names to shadow MPC config for inputs tracking
             module_config_flex.baseline_input_names = [
-                input.alias + glbs.base_vars_to_communicate_suffix for input in
+                input.name + glbs.base_vars_to_communicate_suffix for input in
                 self.baseline_mpc_module_config.inputs]
             
             # add custom input names for the shadow MPC to track. Here, the
             # communication suffix is not added, as  the user is free to define
             # custom inputs as desired.
             module_config_flex.custom_input_names = [
-                input.alias for input in
+                {"name": input.name, "alias": input.alias} for input in
                 self.flex_config.shadow_mpc_config_generator_data.custom_inputs
             ]
 
             for i, state in enumerate(module_config_flex.states):
                 if state in self.baseline_mpc_module_config.states:
                     module_config_flex.states[i].alias = (
-                            state.alias + glbs.base_vars_to_communicate_suffix)
+                            state.name + glbs.base_vars_to_communicate_suffix)
             # add Baseline state names to shadow MPC config for inputs tracking
             module_config_flex.baseline_state_names = [
                 state.alias + glbs.base_vars_to_communicate_suffix for state in
