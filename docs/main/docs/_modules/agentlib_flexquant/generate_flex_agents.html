@@ -524,25 +524,25 @@
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="nb">input</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">module_config_flex</span><span class="o">.</span><span class="n">inputs</span><span class="p">):</span>
                 <span class="k">if</span> <span class="nb">input</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">baseline_names</span><span class="p">:</span>
                     <span class="n">module_config_flex</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">alias</span> <span class="o">=</span> <span class="p">(</span>
-                            <span class="nb">input</span><span class="o">.</span><span class="n">alias</span> <span class="o">+</span> <span class="n">glbs</span><span class="o">.</span><span class="n">base_vars_to_communicate_suffix</span><span class="p">)</span>
+                            <span class="nb">input</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="n">glbs</span><span class="o">.</span><span class="n">base_vars_to_communicate_suffix</span><span class="p">)</span>
                     
             <span class="c1"># add Baseline input names to shadow MPC config for inputs tracking</span>
             <span class="n">module_config_flex</span><span class="o">.</span><span class="n">baseline_input_names</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="nb">input</span><span class="o">.</span><span class="n">alias</span> <span class="o">+</span> <span class="n">glbs</span><span class="o">.</span><span class="n">base_vars_to_communicate_suffix</span> <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span>
+                <span class="nb">input</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="n">glbs</span><span class="o">.</span><span class="n">base_vars_to_communicate_suffix</span> <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">inputs</span><span class="p">]</span>
             
             <span class="c1"># add custom input names for the shadow MPC to track. Here, the</span>
             <span class="c1"># communication suffix is not added, as  the user is free to define</span>
             <span class="c1"># custom inputs as desired.</span>
             <span class="n">module_config_flex</span><span class="o">.</span><span class="n">custom_input_names</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="nb">input</span><span class="o">.</span><span class="n">alias</span> <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span>
+                <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="nb">input</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="nb">input</span><span class="o">.</span><span class="n">alias</span><span class="p">}</span> <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">custom_inputs</span>
             <span class="p">]</span>
 
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">module_config_flex</span><span class="o">.</span><span class="n">states</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">states</span><span class="p">:</span>
                     <span class="n">module_config_flex</span><span class="o">.</span><span class="n">states</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">alias</span> <span class="o">=</span> <span class="p">(</span>
-                            <span class="n">state</span><span class="o">.</span><span class="n">alias</span> <span class="o">+</span> <span class="n">glbs</span><span class="o">.</span><span class="n">base_vars_to_communicate_suffix</span><span class="p">)</span>
+                            <span class="n">state</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="n">glbs</span><span class="o">.</span><span class="n">base_vars_to_communicate_suffix</span><span class="p">)</span>
             <span class="c1"># add Baseline state names to shadow MPC config for inputs tracking</span>
             <span class="n">module_config_flex</span><span class="o">.</span><span class="n">baseline_state_names</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="n">state</span><span class="o">.</span><span class="n">alias</span> <span class="o">+</span> <span class="n">glbs</span><span class="o">.</span><span class="n">base_vars_to_communicate_suffix</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span>
