@@ -354,13 +354,15 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model can't deal with iterable
+                # change the type of iterable input, since casadi model
+                # can't deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time will not be exceeded
+            # reduce the simulation time step so that the total horizon time
+            # will not be exceeded
             if current_sim_time + sim_time_step <= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -804,15 +806,7 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
         # set the flex results format same as mpc result while updating Agentvariable
         self.flex_results.index = self.flex_results.index.get_level_values(1)
 
-    def _initialize_flex_results(
-        self, n_simulation_steps, horizon_length, sim_time_step, result_df
-    ):
-        """Initialize the flex results dataframe with the correct dimension and index
-        and fill with existing results from optimization
-
-        """
-
-        # create MultiIndex for collocation points (duplicate-code)
+    def register_callbacks(self): (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[485:494]
 ==agentlib_flexquant.modules.shadow_mpc:[91:100]
@@ -828,7 +822,7 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.data_structures.flexquant:[18:26]
 ==agentlib_flexquant.utils.config_management:[119:127]
-    excluded_fields = [
+excluded_fields = [
         "rdf_class",
         "source",
         "type",
@@ -844,8 +838,7 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             opti_outputs.values,
             index=index_coll,
         )
-        # fill the output value at the time step where it already exists
-        # in optimization output
+        # fill the output value at the time step where it already exists in optimization output
         for idx in fixed_opti_output.index:
             if idx in self.flex_results.index: (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
@@ -859,7 +852,21 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             self.logger.error("Results file %s was not found.", results_file)
             return None
 
-    def register_callbacks(self): (duplicate-code)
+    def write_results(self, df: pd.DataFrame, ts: float, n: int) -> pd.DataFrame:
+        """Write every data of variables in self.var_list in an DataFrame.
+
+        DataFrame will be updated every time step
+
+        Args:
+            df: DataFrame which is initialised as an empty DataFrame with columns
+            according to self.var_list
+            ts: time step
+            n: number of time steps during prediction horizon
+
+        Returns:
+            DataFrame with results of every variable in self.var_list
+
+        """ (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.flexibility_indicator:[334:342]
 ==agentlib_flexquant.modules.flexibility_market:[62:70]
