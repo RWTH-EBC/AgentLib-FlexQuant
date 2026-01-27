@@ -512,7 +512,7 @@ class FlexAgentGenerator:
                 module_config_flex.vars_to_communicate.append(
                     AgentVariable(
                         name=input.name + glbs.base_vars_to_communicate_suffix,
-                        alias=input.name + glbs.base_vars_to_communicate_suffix,
+                        alias=input.alias + glbs.base_vars_to_communicate_suffix,
                         shared=True,
                     )
                 )
@@ -520,7 +520,7 @@ class FlexAgentGenerator:
                 module_config_flex.vars_to_communicate.append(
                     AgentVariable(
                         name=state.name + glbs.base_vars_to_communicate_suffix,
-                        alias=state.name + glbs.base_vars_to_communicate_suffix,
+                        alias=state.alias + glbs.base_vars_to_communicate_suffix,
                         shared=True,
                     )
                 )
