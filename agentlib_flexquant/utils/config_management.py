@@ -17,7 +17,7 @@ all_module_types = get_all_module_types(["agentlib_mpc", "agentlib_flexquant"])
 all_module_types.pop("agentlib_mpc.ann_trainer")
 all_module_types.pop("agentlib_mpc.gpr_trainer")
 all_module_types.pop("agentlib_mpc.linreg_trainer")
-all_module_types.pop("agentlib_mpc.ann_simulator")
+all_module_types.pop("agentlib_mpc.ml_simulator")
 all_module_types.pop("agentlib_mpc.set_point_generator")
 # remove clone since not used
 all_module_types.pop("clonemap")
