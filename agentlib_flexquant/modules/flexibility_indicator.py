@@ -316,6 +316,10 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
     price_variable: str = Field(
         default="c_pel", description="Name of the price variable sent by a predictor",
     )
+    price_variable_feed_in: str = Field(
+        default="c_pel_feed_in",
+        description="Name of the feed-in price variable sent by a predictor",
+    )
     power_unit: str = Field(
         default="kW",
         description="Unit of the power variable"
@@ -409,20 +413,32 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                     # price comes from predictor
                     self.data.electricity_price_series = (
                         self.data.unify_inputs(inp.value, mpc=False))
+            elif name == self.config.price_variable_feed_in:
+                if not self.config.calculate_costs.use_constant_electricity_price:
+                    # feed-in price comes from predictor
+                    self.data.feed_in_price_series = (
+                        self.data.unify_inputs(inp.value, mpc=False))
 
             # set the constant electricity price series if given
             if (
                 self.config.calculate_costs.use_constant_electricity_price
-                and self.data.electricity_price_series is None
+                and (self.data.electricity_price_series is None
+                     or self.data.feed_in_price_series is None)
             ):
                 # get the index for the electricity price series
                 n = self.get(glbs.PREDICTION_HORIZON).value
                 ts = self.get(glbs.TIME_STEP).value
                 grid = np.arange(0, n * ts + ts, ts)
-                # fill the electricity_price_series with values
-                self.data.electricity_price_series = pd.Series(
-                    [self.config.calculate_costs.const_electricity_price
-                     for i in grid], index=grid)
+                if self.data.electricity_price_series is None:
+                    # fill the electricity_price_series with values
+                    self.data.electricity_price_series = pd.Series(
+                        [self.config.calculate_costs.const_electricity_price
+                         for i in grid], index=grid)
+                if self.data.feed_in_price_series is None:
+                    # default feed-in price to constant if no series provided
+                    self.data.feed_in_price_series = pd.Series(
+                        [self.config.calculate_costs.const_electricity_price
+                         for i in grid], index=grid)
 
             necessary_input_for_calc_flex = [
                 self.data.power_profile_base,
@@ -431,14 +447,25 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             ]
 
             if self.config.calculate_costs.calculate_flex_costs:
-                necessary_input_for_calc_flex.append(self.data.electricity_price_series)
+                necessary_input_for_calc_flex.extend(
+                    [
+                        self.data.electricity_price_series,
+                        self.data.feed_in_price_series,
+                    ]
+                )
 
-            if (all(var is not None for var in necessary_input_for_calc_flex) and
-                    len(necessary_input_for_calc_flex) == 4):
+            if self.config.calculate_costs.calculate_flex_costs and all(
+                var is not None for var in necessary_input_for_calc_flex
+            ):
                 # align the index of price variable to the index of inputs from mpc;
                 # electricity price signal is usually steps
-                necessary_input_for_calc_flex[-1] = (
+                self.data.electricity_price_series = (
                     self.data.electricity_price_series.reindex(
+                        self.data.power_profile_base.index
+                    ).ffill()
+                )
+                self.data.feed_in_price_series = (
+                    self.data.feed_in_price_series.reindex(
                         self.data.power_profile_base.index).ffill())
 
             if self.config.correct_costs.enable_energy_costs_correction:
@@ -510,6 +537,8 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 values = self.data.stored_energy_profile_flex_pos
             elif name == self.config.price_variable:
                 values = self.data.electricity_price_series
+            elif name == self.config.price_variable_feed_in:
+                values = self.data.feed_in_price_series
             elif name == glbs.COLLOCATION_TIME_GRID:
                 value = self.get(name).value
                 values = pd.Series(index=value, data=value)
@@ -682,6 +711,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         self.data.power_profile_flex_neg = None
         self.data.power_profile_flex_pos = None
         self.data.electricity_price_series = None
+        self.data.feed_in_price_series = None
         self.data.stored_energy_profile_base = None
         self.data.stored_energy_profile_flex_neg = None
         self.data.stored_energy_profile_flex_pos = None

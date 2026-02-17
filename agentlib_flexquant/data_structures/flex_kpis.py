@@ -193,6 +193,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         power_profile_base: pd.Series,
         power_profile_shadow: pd.Series,
         electricity_price_series: pd.Series,
+        feed_in_price_series: pd.Series,
         mpc_time_grid: np.ndarray,
         flex_offer_time_grid: np.ndarray,
         stored_energy_base: pd.Series,
@@ -208,6 +209,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
             power_profile_base: power profile from baseline mpc
             power_profile_shadow: power profile from shadow mpc
             electricity_price_series: time series of electricity prices
+            feed_in_price_series: time series of electricity feed-in prices
             flex_offer_time_grid: time grid over which the flexibility offer is calculated,
             for indexing of the power flexibility profiles
             stored_energy_base: time series of stored energy from baseline mpc
@@ -242,6 +244,9 @@ class FlexibilityKPIs(pydantic.BaseModel):
         if calculate_flex_cost:
             self._calculate_costs(
                 electricity_price_signal=electricity_price_series,
+                feed_in_price_signal=feed_in_price_series,
+                power_profile_base=power_profile_base,
+                power_profile_shadow=power_profile_shadow,
                 stored_energy_diff=stored_energy_diff,
                 integration_method=integration_method,
                 mpc_time_grid=mpc_time_grid,
@@ -375,6 +380,9 @@ class FlexibilityKPIs(pydantic.BaseModel):
     def _calculate_costs(
         self,
         electricity_price_signal: pd.Series,
+        feed_in_price_signal: pd.Series,
+        power_profile_base: pd.Series,
+        power_profile_shadow: pd.Series,
         stored_energy_diff: float,
         integration_method: INTEGRATION_METHOD,
         mpc_time_grid: np.ndarray,
@@ -385,6 +393,9 @@ class FlexibilityKPIs(pydantic.BaseModel):
 
         Args:
             electricity_price_signal: time series of the electricity price signal
+            feed_in_price_signal: time series of the feed-in price signal
+            power_profile_base: baseline power profile used to select tariff by sign
+            power_profile_shadow: shadow mpc power profile used to select tariff by sign
             stored_energy_diff: the difference of the stored energy between baseline and shadow mpc
             integration_method: the integration method used to integrate KPISeries
             mpc_time_grid: the MPC time grid over the horizon
@@ -392,11 +403,6 @@ class FlexibilityKPIs(pydantic.BaseModel):
 
 
         """
-        # based on direction, define sign of cost calculation
-        if self.direction == "positive":
-            cost_coeff = -1
-        elif self.direction == "negative":
-            cost_coeff = 1
         # Set integration method
         self.power_flex_full.integration_method = integration_method
         self.electricity_costs_series.integration_method = integration_method
@@ -409,16 +415,43 @@ class FlexibilityKPIs(pydantic.BaseModel):
             collocation_time_grid, errors="ignore"
         )
 
+        if feed_in_price_signal is None:
+            feed_in_price_signal = electricity_price_signal
+
+        price_index = power_flex_full_integration.value.index
+        base_power_aligned = power_profile_base.reindex(price_index).ffill()
+        shadow_power_aligned = power_profile_shadow.reindex(price_index).ffill()
+        electricity_price_aligned = electricity_price_signal.reindex(price_index).ffill()
+        feed_in_price_aligned = feed_in_price_signal.reindex(price_index).ffill()
+
+        effective_price_base = electricity_price_aligned.copy()
+        effective_price_base.loc[base_power_aligned < 0] = feed_in_price_aligned.loc[
+            base_power_aligned < 0
+        ]
+
+        effective_price_shadow = electricity_price_aligned.copy()
+        effective_price_shadow.loc[shadow_power_aligned < 0] = feed_in_price_aligned.loc[
+            shadow_power_aligned < 0
+        ]
+
+        # based on direction, define sign of cost calculation
+        if self.direction == "positive":
+            cost_coeff = -1
+        elif self.direction == "negative":
+            cost_coeff = 1
+
         # Calculate series
         self.electricity_costs_series.value = (
-            electricity_price_signal * power_flex_full_integration.value * cost_coeff
+            (effective_price_shadow * shadow_power_aligned
+             - effective_price_base * base_power_aligned)
+            * cost_coeff
         ).dropna()
 
         # Calculate the costs and stores the original value
         costs = self.electricity_costs_series.integrate(time_unit="hours")
 
         # correct the costs
-        corrected_costs = costs - stored_energy_diff * np.mean(electricity_price_signal)
+        corrected_costs = costs - stored_energy_diff * np.mean(effective_price_base)
 
         self.costs.value = costs
         self.corrected_costs.value = corrected_costs
@@ -514,6 +547,10 @@ class FlexibilityData(pydantic.BaseModel):
     electricity_price_series: pd.Series = pydantic.Field(
         default=None,
         description="Profile of the electricity price",
+    )
+    feed_in_price_series: pd.Series = pydantic.Field(
+        default=None,
+        description="Profile of the electricity feed-in price",
     )
 
     # KPIs
@@ -620,6 +657,7 @@ class FlexibilityData(pydantic.BaseModel):
             power_profile_base=self.power_profile_base,
             power_profile_shadow=self.power_profile_flex_pos,
             electricity_price_series=self.electricity_price_series,
+            feed_in_price_series=self.feed_in_price_series,
             mpc_time_grid=self.mpc_time_grid,
             flex_offer_time_grid=self.flex_offer_time_grid,
             stored_energy_base=self.stored_energy_profile_base,
@@ -633,6 +671,7 @@ class FlexibilityData(pydantic.BaseModel):
             power_profile_base=self.power_profile_base,
             power_profile_shadow=self.power_profile_flex_neg,
             electricity_price_series=self.electricity_price_series,
+            feed_in_price_series=self.feed_in_price_series,
             mpc_time_grid=self.mpc_time_grid,
             flex_offer_time_grid=self.flex_offer_time_grid,
             stored_energy_base=self.stored_energy_profile_base,

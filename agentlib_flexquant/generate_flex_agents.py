@@ -577,6 +577,14 @@ class FlexAgentGenerator:
                 description="electricity price",
             )
         )
+        module_config.inputs.append(
+            AgentVariable(
+                name=module_config.price_variable_feed_in,
+                unit="ct/kWh",
+                type="pd.Series",
+                description="electricity feed-in price",
+            )
+        )
         # allow the module config to be changed
         module_config.model_config["frozen"] = False
         for parameter in module_config.parameters:
