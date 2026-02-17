@@ -447,6 +447,8 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             ]
 
             if self.config.calculate_costs.calculate_flex_costs:
+                if self.data.feed_in_price_series is None:
+                    self.data.feed_in_price_series = self.data.electricity_price_series
                 necessary_input_for_calc_flex.extend(
                     [
                         self.data.electricity_price_series,

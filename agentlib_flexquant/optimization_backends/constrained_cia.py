@@ -1,5 +1,6 @@
 import pydantic
 import numpy as np
+import pandas as pd
 from agentlib.core.errors import OptionalDependencyError
 from agentlib_mpc.optimization_backends.casadi_.minlp_cia import CasADiCIABackend
 from agentlib_mpc.optimization_backends.casadi_.core.casadi_backend import CasadiBackendConfig
@@ -105,16 +106,29 @@ class ConstrainedCasADiCIABackend(CasADiCIABackend):
         )
 
         # constrain shadow MPCs to values of baseline for time<market_time
+        baseline_constraints = {}
         for bin_con in self.var_ref.binary_controls:
             cons = self.get_baseline_binary_solution(bin_con)
             if cons is not None:
-                last_idx = 0
-                for idx, value in cons.items():
-                    # constrain ever timestep before market_time with values of baseline
-                    binapprox.set_valid_controls_for_interval(
-                        (last_idx, idx), [value, 1 - value]
+                baseline_constraints[bin_con] = cons
+
+        if baseline_constraints:
+            cons_df = pd.concat(baseline_constraints, axis=1).sort_index()
+            last_idx = 0
+            for idx, row in cons_df.iterrows():
+                b_bin_valid = row.to_numpy()
+                if binapprox.n_c == 2 and b_bin_valid.size == 1:
+                    b_bin_valid = np.array([b_bin_valid[0], 1 - b_bin_valid[0]])
+                elif b_bin_valid.size != binapprox.n_c:
+                    raise ValueError(
+                        "The number of values in b_bin_valid must be equal to the "
+                        "number of binary controls."
                     )
-                    last_idx = idx
+                # constrain every timestep before market_time with values of baseline
+                binapprox.set_valid_controls_for_interval(
+                    (last_idx, idx), b_bin_valid
+                )
+                last_idx = idx
 
         bnb = pycombina.CombinaBnB(binapprox)
         bnb.solve(
