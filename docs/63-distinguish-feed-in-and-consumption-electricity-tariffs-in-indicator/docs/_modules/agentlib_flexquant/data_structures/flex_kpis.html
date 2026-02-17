@@ -267,6 +267,7 @@
         <span class="n">power_profile_base</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
         <span class="n">power_profile_shadow</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
         <span class="n">electricity_price_series</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
+        <span class="n">feed_in_price_series</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
         <span class="n">mpc_time_grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">flex_offer_time_grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">stored_energy_base</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
@@ -282,6 +283,7 @@
 <span class="sd">            power_profile_base: power profile from baseline mpc</span>
 <span class="sd">            power_profile_shadow: power profile from shadow mpc</span>
 <span class="sd">            electricity_price_series: time series of electricity prices</span>
+<span class="sd">            feed_in_price_series: time series of electricity feed-in prices</span>
 <span class="sd">            flex_offer_time_grid: time grid over which the flexibility offer is calculated,</span>
 <span class="sd">            for indexing of the power flexibility profiles</span>
 <span class="sd">            stored_energy_base: time series of stored energy from baseline mpc</span>
@@ -316,6 +318,9 @@
         <span class="k">if</span> <span class="n">calculate_flex_cost</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_costs</span><span class="p">(</span>
                 <span class="n">electricity_price_signal</span><span class="o">=</span><span class="n">electricity_price_series</span><span class="p">,</span>
+                <span class="n">feed_in_price_signal</span><span class="o">=</span><span class="n">feed_in_price_series</span><span class="p">,</span>
+                <span class="n">power_profile_base</span><span class="o">=</span><span class="n">power_profile_base</span><span class="p">,</span>
+                <span class="n">power_profile_shadow</span><span class="o">=</span><span class="n">power_profile_shadow</span><span class="p">,</span>
                 <span class="n">stored_energy_diff</span><span class="o">=</span><span class="n">stored_energy_diff</span><span class="p">,</span>
                 <span class="n">integration_method</span><span class="o">=</span><span class="n">integration_method</span><span class="p">,</span>
                 <span class="n">mpc_time_grid</span><span class="o">=</span><span class="n">mpc_time_grid</span><span class="p">,</span>
@@ -449,6 +454,9 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_costs</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">electricity_price_signal</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
+        <span class="n">feed_in_price_signal</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
+        <span class="n">power_profile_base</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
+        <span class="n">power_profile_shadow</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
         <span class="n">stored_energy_diff</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">integration_method</span><span class="p">:</span> <span class="n">INTEGRATION_METHOD</span><span class="p">,</span>
         <span class="n">mpc_time_grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -459,6 +467,9 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            electricity_price_signal: time series of the electricity price signal</span>
+<span class="sd">            feed_in_price_signal: time series of the feed-in price signal</span>
+<span class="sd">            power_profile_base: baseline power profile used to select tariff by sign</span>
+<span class="sd">            power_profile_shadow: shadow mpc power profile used to select tariff by sign</span>
 <span class="sd">            stored_energy_diff: the difference of the stored energy between baseline and shadow mpc</span>
 <span class="sd">            integration_method: the integration method used to integrate KPISeries</span>
 <span class="sd">            mpc_time_grid: the MPC time grid over the horizon</span>
@@ -466,11 +477,6 @@
 
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># based on direction, define sign of cost calculation</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">==</span> <span class="s2">&quot;positive&quot;</span><span class="p">:</span>
-            <span class="n">cost_coeff</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">==</span> <span class="s2">&quot;negative&quot;</span><span class="p">:</span>
-            <span class="n">cost_coeff</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="c1"># Set integration method</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">power_flex_full</span><span class="o">.</span><span class="n">integration_method</span> <span class="o">=</span> <span class="n">integration_method</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">electricity_costs_series</span><span class="o">.</span><span class="n">integration_method</span> <span class="o">=</span> <span class="n">integration_method</span>
@@ -483,16 +489,43 @@
             <span class="n">collocation_time_grid</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span>
         <span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">feed_in_price_signal</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">feed_in_price_signal</span> <span class="o">=</span> <span class="n">electricity_price_signal</span>
+
+        <span class="n">price_index</span> <span class="o">=</span> <span class="n">power_flex_full_integration</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">index</span>
+        <span class="n">base_power_aligned</span> <span class="o">=</span> <span class="n">power_profile_base</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">price_index</span><span class="p">)</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
+        <span class="n">shadow_power_aligned</span> <span class="o">=</span> <span class="n">power_profile_shadow</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">price_index</span><span class="p">)</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
+        <span class="n">electricity_price_aligned</span> <span class="o">=</span> <span class="n">electricity_price_signal</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">price_index</span><span class="p">)</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
+        <span class="n">feed_in_price_aligned</span> <span class="o">=</span> <span class="n">feed_in_price_signal</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">price_index</span><span class="p">)</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
+
+        <span class="n">effective_price_base</span> <span class="o">=</span> <span class="n">electricity_price_aligned</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">effective_price_base</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">base_power_aligned</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">feed_in_price_aligned</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+            <span class="n">base_power_aligned</span> <span class="o">&lt;</span> <span class="mi">0</span>
+        <span class="p">]</span>
+
+        <span class="n">effective_price_shadow</span> <span class="o">=</span> <span class="n">electricity_price_aligned</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">effective_price_shadow</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">shadow_power_aligned</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">feed_in_price_aligned</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+            <span class="n">shadow_power_aligned</span> <span class="o">&lt;</span> <span class="mi">0</span>
+        <span class="p">]</span>
+
+        <span class="c1"># based on direction, define sign of cost calculation</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">==</span> <span class="s2">&quot;positive&quot;</span><span class="p">:</span>
+            <span class="n">cost_coeff</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">==</span> <span class="s2">&quot;negative&quot;</span><span class="p">:</span>
+            <span class="n">cost_coeff</span> <span class="o">=</span> <span class="mi">1</span>
+
         <span class="c1"># Calculate series</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">electricity_costs_series</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">electricity_price_signal</span> <span class="o">*</span> <span class="n">power_flex_full_integration</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="n">cost_coeff</span>
+            <span class="p">(</span><span class="n">effective_price_shadow</span> <span class="o">*</span> <span class="n">shadow_power_aligned</span>
+             <span class="o">-</span> <span class="n">effective_price_base</span> <span class="o">*</span> <span class="n">base_power_aligned</span><span class="p">)</span>
+            <span class="o">*</span> <span class="n">cost_coeff</span>
         <span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
 
         <span class="c1"># Calculate the costs and stores the original value</span>
         <span class="n">costs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">electricity_costs_series</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="n">time_unit</span><span class="o">=</span><span class="s2">&quot;hours&quot;</span><span class="p">)</span>
 
         <span class="c1"># correct the costs</span>
-        <span class="n">corrected_costs</span> <span class="o">=</span> <span class="n">costs</span> <span class="o">-</span> <span class="n">stored_energy_diff</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">electricity_price_signal</span><span class="p">)</span>
+        <span class="n">corrected_costs</span> <span class="o">=</span> <span class="n">costs</span> <span class="o">-</span> <span class="n">stored_energy_diff</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">effective_price_base</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">costs</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">costs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">corrected_costs</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">corrected_costs</span>
@@ -588,6 +621,10 @@
     <span class="n">electricity_price_series</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Profile of the electricity price&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">feed_in_price_series</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Profile of the electricity feed-in price&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="c1"># KPIs</span>
@@ -694,6 +731,7 @@
             <span class="n">power_profile_base</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">power_profile_base</span><span class="p">,</span>
             <span class="n">power_profile_shadow</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">power_profile_flex_pos</span><span class="p">,</span>
             <span class="n">electricity_price_series</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">electricity_price_series</span><span class="p">,</span>
+            <span class="n">feed_in_price_series</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">feed_in_price_series</span><span class="p">,</span>
             <span class="n">mpc_time_grid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mpc_time_grid</span><span class="p">,</span>
             <span class="n">flex_offer_time_grid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_offer_time_grid</span><span class="p">,</span>
             <span class="n">stored_energy_base</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stored_energy_profile_base</span><span class="p">,</span>
@@ -707,6 +745,7 @@
             <span class="n">power_profile_base</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">power_profile_base</span><span class="p">,</span>
             <span class="n">power_profile_shadow</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">power_profile_flex_neg</span><span class="p">,</span>
             <span class="n">electricity_price_series</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">electricity_price_series</span><span class="p">,</span>
+            <span class="n">feed_in_price_series</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">feed_in_price_series</span><span class="p">,</span>
             <span class="n">mpc_time_grid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mpc_time_grid</span><span class="p">,</span>
             <span class="n">flex_offer_time_grid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_offer_time_grid</span><span class="p">,</span>
             <span class="n">stored_energy_base</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stored_energy_profile_base</span><span class="p">,</span>

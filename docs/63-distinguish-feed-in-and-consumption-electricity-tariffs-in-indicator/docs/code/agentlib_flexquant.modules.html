@@ -472,6 +472,7 @@ KPI outputs, and cost calculation settings.</p>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.parameters" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameters</span> <span class="pre">(list[agentlib.core.datamodels.AgentVariable])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.power_unit" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.power_unit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">power_unit</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.price_variable" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.price_variable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">price_variable</span> <span class="pre">(str)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.price_variable_feed_in" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.price_variable_feed_in"><code class="xref py py-obj docutils literal notranslate"><span class="pre">price_variable_feed_in</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.results_file" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.results_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">results_file</span> <span class="pre">(pathlib.Path</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.save_results" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.save_results"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_results</span> <span class="pre">(bool</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.shared_variable_fields" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.shared_variable_fields"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shared_variable_fields</span> <span class="pre">(list[str])</span></code></a></p></li>
@@ -574,6 +575,19 @@ KPI outputs, and cost calculation settings.</p>
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.price_variable">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">price_variable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'c_pel'</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.price_variable" title="Permalink to this definition"></a></dt>
 <dd><p>Name of the price variable sent by a predictor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.price_variable_feed_in">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">price_variable_feed_in</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'c_pel_feed_in'</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.price_variable_feed_in" title="Permalink to this definition"></a></dt>
+<dd><p>Name of the feed-in price variable sent by a predictor</p>
 <dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
