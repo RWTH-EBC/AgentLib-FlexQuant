@@ -279,7 +279,7 @@
         <span class="c1"># add time shift env.time to the incoming variable to adapt to mpc output,</span>
         <span class="c1"># which starts at t=0</span>
         <span class="k">if</span> <span class="n">vals</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The incoming variable </span><span class="si">{</span><span class="n">inp</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> starts with a time &quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The incoming variable </span><span class="si">{</span><span class="n">inp</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> starts with a time &quot;</span>
                              <span class="sa">f</span><span class="s2">&quot;index of 0. Adding the current environment time.&quot;</span><span class="p">)</span>
             <span class="n">vals</span><span class="o">.</span><span class="n">index</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span>
 
