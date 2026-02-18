@@ -205,7 +205,7 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         # add time shift env.time to the incoming variable to adapt to mpc output,
         # which starts at t=0
         if vals.index[0] == 0:
-            self.logger.warn(f"The incoming variable {inp.name} starts with a time "
+            self.logger.info(f"The incoming variable {inp.name} starts with a time "
                              f"index of 0. Adding the current environment time.")
             vals.index += self.env.time
 
