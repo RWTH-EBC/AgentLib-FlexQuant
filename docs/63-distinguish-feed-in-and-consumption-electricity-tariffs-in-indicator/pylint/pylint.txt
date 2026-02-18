@@ -237,10 +237,10 @@ agentlib_flexquant/utils/parsing.py:7:0: W0611: Unused PREP_TIME imported from a
 agentlib_flexquant/utils/parsing.py:19:0: W0611: Unused BaseMPCData imported from agentlib_flexquant.data_structures.mpcs (unused-import)
 ************* Module agentlib_flexquant.modules.flexibility_indicator
 agentlib_flexquant/modules/flexibility_indicator.py:428:0: C0301: Line too long (122/100) (line-too-long)
-agentlib_flexquant/modules/flexibility_indicator.py:441:0: C0301: Line too long (125/100) (line-too-long)
-agentlib_flexquant/modules/flexibility_indicator.py:443:0: C0303: Trailing whitespace (trailing-whitespace)
-agentlib_flexquant/modules/flexibility_indicator.py:456:0: C0301: Line too long (117/100) (line-too-long)
-agentlib_flexquant/modules/flexibility_indicator.py:458:0: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/modules/flexibility_indicator.py:440:0: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/modules/flexibility_indicator.py:441:0: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/modules/flexibility_indicator.py:453:0: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/modules/flexibility_indicator.py:454:0: C0303: Trailing whitespace (trailing-whitespace)
 agentlib_flexquant/modules/flexibility_indicator.py:14:0: E0401: Unable to import 'agentlib' (import-error)
 agentlib_flexquant/modules/flexibility_indicator.py:15:0: E0401: Unable to import 'numpy' (import-error)
 agentlib_flexquant/modules/flexibility_indicator.py:16:0: E0401: Unable to import 'pandas' (import-error)
@@ -252,17 +252,16 @@ agentlib_flexquant/modules/flexibility_indicator.py:377:8: C0103: Attribute name
 agentlib_flexquant/modules/flexibility_indicator.py:379:4: C0116: Missing function or method docstring (missing-function-docstring)
 agentlib_flexquant/modules/flexibility_indicator.py:433:16: C0103: Variable name "n" doesn't conform to snake_case naming style (invalid-name)
 agentlib_flexquant/modules/flexibility_indicator.py:434:16: C0103: Variable name "ts" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/flexibility_indicator.py:448:16: C0103: Variable name "n" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/flexibility_indicator.py:449:16: C0103: Variable name "ts" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/flexibility_indicator.py:394:4: R0912: Too many branches (23/12) (too-many-branches)
-agentlib_flexquant/modules/flexibility_indicator.py:394:4: R0915: Too many statements (53/50) (too-many-statements)
-agentlib_flexquant/modules/flexibility_indicator.py:519:28: C0103: Argument name "df" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/flexibility_indicator.py:519:46: C0103: Argument name "ts" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/flexibility_indicator.py:519:57: C0103: Argument name "n" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/flexibility_indicator.py:519:4: R0914: Too many local variables (18/15) (too-many-locals)
-agentlib_flexquant/modules/flexibility_indicator.py:519:4: R0912: Too many branches (16/12) (too-many-branches)
-agentlib_flexquant/modules/flexibility_indicator.py:579:12: W0612: Unused variable 'i' (unused-variable)
-agentlib_flexquant/modules/flexibility_indicator.py:680:4: R0913: Too many arguments (8/5) (too-many-arguments)
+agentlib_flexquant/modules/flexibility_indicator.py:446:16: C0103: Variable name "n" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/modules/flexibility_indicator.py:447:16: C0103: Variable name "ts" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/modules/flexibility_indicator.py:394:4: R0912: Too many branches (21/12) (too-many-branches)
+agentlib_flexquant/modules/flexibility_indicator.py:515:28: C0103: Argument name "df" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/modules/flexibility_indicator.py:515:46: C0103: Argument name "ts" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/modules/flexibility_indicator.py:515:57: C0103: Argument name "n" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/modules/flexibility_indicator.py:515:4: R0914: Too many local variables (18/15) (too-many-locals)
+agentlib_flexquant/modules/flexibility_indicator.py:515:4: R0912: Too many branches (16/12) (too-many-branches)
+agentlib_flexquant/modules/flexibility_indicator.py:575:12: W0612: Unused variable 'i' (unused-variable)
+agentlib_flexquant/modules/flexibility_indicator.py:676:4: R0913: Too many arguments (8/5) (too-many-arguments)
 ************* Module agentlib_flexquant.modules.baseline_mpc
 agentlib_flexquant/modules/baseline_mpc.py:4:0: E0401: Unable to import 'agentlib_mpc.modules' (import-error)
 agentlib_flexquant/modules/baseline_mpc.py:7:0: E0401: Unable to import 'numpy' (import-error)
@@ -408,8 +407,8 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
     def _initialize_flex_results(
         self, n_simulation_steps, horizon_length, sim_time_step, result_df
     ):
-        """Initialize the flex results dataframe with the correct dimension and index
-        and fill with existing results from optimization
+        """Initialize the flex results dataframe with the correct dimension
+        and index and fill with existing results from optimization
 
         """
 
@@ -451,8 +450,8 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
 
     def _update_model_parameters(self):
         """update the value of module parameters with value from config,
-        since creating a model just reads the value in the model class
-        but not the config.
+        since creating a model just reads the value in the model class but
+        not the config
 
         """
 
@@ -469,7 +468,8 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
         """simulate with flex model over the prediction horizon
 
@@ -502,15 +502,13 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model can't
-                # deal with iterable
+                # change the type of iterable input, since casadi model can't deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time
-            # will not be exceeded
+            # reduce the simulation time step so that the total horizon time will not be exceeded
             if current_sim_time + sim_time_step <= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -619,8 +617,8 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
 
     def _update_model_parameters(self):
         """update the value of module parameters with value from config,
-        since creating a model just reads the value in the model class
-        but not the config.
+        since creating a model just reads the value in the model class but
+        not the config
 
         """
 
@@ -637,7 +635,8 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
         """simulate with flex model over the prediction horizon
 
@@ -861,7 +860,7 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
         for idx in fixed_opti_output.index:
             if idx in self.flex_results.index: (duplicate-code)
 agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
-==agentlib_flexquant.modules.flexibility_indicator:[510:533]
+==agentlib_flexquant.modules.flexibility_indicator:[506:529]
 ==agentlib_flexquant.modules.flexibility_market:[88:97]
         results_file = self.config.results_file
         try:
@@ -913,9 +912,12 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
-        """simulate with flex model over the prediction horizon"""
+        """simulate with flex model over the prediction horizon
+
+        """
 
         # get control and input values from the mpc optimization result (duplicate-code)
 

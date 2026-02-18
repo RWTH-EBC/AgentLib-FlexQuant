@@ -1975,17 +1975,7 @@
                 <td><code>too-many-branches</code></td>
                 <td>R0912</td>
                 <td>FlexibilityIndicatorModule.callback</td>
-                <td><pre>Too many branches (23/12)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>394</td>
-                <td>4</td>
-                <td>refactor</td>
-                <td><code>too-many-statements</code></td>
-                <td>R0915</td>
-                <td>FlexibilityIndicatorModule.callback</td>
-                <td><pre>Too many statements (53/50)</pre></td>
+                <td><pre>Too many branches (21/12)</pre></td>
             </tr>
             
             <tr>
@@ -2019,17 +2009,7 @@
             </tr>
             
             <tr>
-                <td>441</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>line-too-long</code></td>
-                <td>C0301</td>
-                <td></td>
-                <td><pre>Line too long (125/100)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>443</td>
+                <td>440</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2039,7 +2019,17 @@
             </tr>
             
             <tr>
-                <td>448</td>
+                <td>441</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>446</td>
                 <td>16</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2049,7 +2039,7 @@
             </tr>
             
             <tr>
-                <td>449</td>
+                <td>447</td>
                 <td>16</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2059,17 +2049,7 @@
             </tr>
             
             <tr>
-                <td>456</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>line-too-long</code></td>
-                <td>C0301</td>
-                <td></td>
-                <td><pre>Line too long (117/100)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>458</td>
+                <td>453</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2079,7 +2059,17 @@
             </tr>
             
             <tr>
-                <td>519</td>
+                <td>454</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>515</td>
                 <td>28</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2089,7 +2079,7 @@
             </tr>
             
             <tr>
-                <td>519</td>
+                <td>515</td>
                 <td>46</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2099,7 +2089,7 @@
             </tr>
             
             <tr>
-                <td>519</td>
+                <td>515</td>
                 <td>57</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2109,7 +2099,7 @@
             </tr>
             
             <tr>
-                <td>519</td>
+                <td>515</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-locals</code></td>
@@ -2119,7 +2109,7 @@
             </tr>
             
             <tr>
-                <td>519</td>
+                <td>515</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-branches</code></td>
@@ -2129,7 +2119,7 @@
             </tr>
             
             <tr>
-                <td>579</td>
+                <td>575</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>unused-variable</code></td>
@@ -2139,7 +2129,7 @@
             </tr>
             
             <tr>
-                <td>680</td>
+                <td>676</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
@@ -2418,15 +2408,13 @@
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model
-                # can&#39;t deal with iterable
+                # change the type of iterable input, since casadi model can&#39;t deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time
-            # will not be exceeded
+            # reduce the simulation time step so that the total horizon time will not be exceeded
             if current_sim_time + sim_time_step &lt;= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -2470,8 +2458,8 @@
     def _initialize_flex_results(
         self, n_simulation_steps, horizon_length, sim_time_step, result_df
     ):
-        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension
-        and index and fill with existing results from optimization
+        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension and index
+        and fill with existing results from optimization
 
         &#34;&#34;&#34;
 
@@ -2522,8 +2510,8 @@
 
     def _update_model_parameters(self):
         &#34;&#34;&#34;update the value of module parameters with value from config,
-        since creating a model just reads the value in the model class
-        but not the config.
+        since creating a model just reads the value in the model class but
+        not the config
 
         &#34;&#34;&#34;
 
@@ -2540,7 +2528,8 @@
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
         &#34;&#34;&#34;simulate with flex model over the prediction horizon
 
@@ -2582,13 +2571,15 @@
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model can&#39;t deal with iterable
+                # change the type of iterable input, since casadi model can&#39;t
+                # deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time will not be exceeded
+            # reduce the simulation time step so that the total horizon time
+            # will not be exceeded
             if current_sim_time + sim_time_step &lt;= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -2619,7 +2610,10 @@
         # simulate with the casadi simulator
         self.sim_flex_model(solution)
 
+        # extract solution DataFrama
         df = solution.df
+
+        # send the outputs
         if self.flex_results is not None:
             for output in self.var_ref.outputs:
                 if output not in [
@@ -2647,13 +2641,15 @@
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model can&#39;t deal with iterable
+                # change the type of iterable input, since casadi model can&#39;t
+                # deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time will not be exceeded
+            # reduce the simulation time step so that the total horizon time
+            # will not be exceeded
             if current_sim_time + sim_time_step &lt;= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -2664,9 +2660,7 @@
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value
-
-</pre></td>
+                ] = self.flex_model.get_output(output).value</pre></td>
             </tr>
             
             <tr>
@@ -2682,13 +2676,15 @@
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model can&#39;t deal with iterable
+                # change the type of iterable input, since casadi model
+                # can&#39;t deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time will not be exceeded
+            # reduce the simulation time step so that the total horizon time
+            # will not be exceeded
             if current_sim_time + sim_time_step &lt;= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -2699,7 +2695,9 @@
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value</pre></td>
+                ] = self.flex_model.get_output(output).value
+
+</pre></td>
             </tr>
             
             <tr>
@@ -2730,8 +2728,8 @@
 
     def _update_model_parameters(self):
         &#34;&#34;&#34;update the value of module parameters with value from config,
-        since creating a model just reads the value in the model class
-        but not the config.
+        since creating a model just reads the value in the model class but
+        not the config
 
         &#34;&#34;&#34;
 
@@ -2748,7 +2746,8 @@
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
         &#34;&#34;&#34;simulate with flex model over the prediction horizon
 
@@ -2999,15 +2998,7 @@ excluded_fields = [
         # set the flex results format same as mpc result while updating Agentvariable
         self.flex_results.index = self.flex_results.index.get_level_values(1)
 
-    def _initialize_flex_results(
-        self, n_simulation_steps, horizon_length, sim_time_step, result_df
-    ):
-        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension and index
-        and fill with existing results from optimization
-
-        &#34;&#34;&#34;
-
-        # create MultiIndex for collocation points</pre></td>
+    def register_callbacks(self):</pre></td>
             </tr>
             
             <tr>
@@ -3080,7 +3071,7 @@ excluded_fields = [
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.flexibility_indicator:[510:533]
+==agentlib_flexquant.modules.flexibility_indicator:[506:529]
 ==agentlib_flexquant.modules.flexibility_market:[88:97]
         results_file = self.config.results_file
         try:
@@ -4418,7 +4409,7 @@ excluded_fields = [
             
             <tr>
                 <td>refactor</td>
-                <td>89</td>
+                <td>88</td>
             </tr>
             
             <tr>
@@ -4443,12 +4434,12 @@ excluded_fields = [
             
             <tr>
                 <td>trailing-whitespace</td>
-                <td>21</td>
+                <td>23</td>
             </tr>
             
             <tr>
                 <td>line-too-long</td>
-                <td>20</td>
+                <td>18</td>
             </tr>
             
             <tr>
@@ -4488,7 +4479,7 @@ excluded_fields = [
             
             <tr>
                 <td>too-many-statements</td>
-                <td>2</td>
+                <td>1</td>
             </tr>
             
             <tr>
@@ -4758,7 +4749,7 @@ excluded_fields = [
             
             <tr>
                 <td>agentlib_flexquant.modules.flexibility_indicator</td>
-                <td>27</td>
+                <td>26</td>
             </tr>
             
             <tr>
@@ -4858,7 +4849,7 @@ excluded_fields = [
             
             <tr>
                 <td>agentlib_flexquant/modules/flexibility_indicator.py</td>
-                <td>27</td>
+                <td>26</td>
             </tr>
             
             <tr>
