@@ -276,9 +276,12 @@
         <span class="k">if</span> <span class="n">inp</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">full_control_names</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">vals</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
                 <span class="n">vals</span> <span class="o">=</span> <span class="n">fill_nans</span><span class="p">(</span><span class="n">series</span><span class="o">=</span><span class="n">vals</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">MEAN</span><span class="p">)</span>
-            <span class="c1"># add time shift env.now to the mpc prediction index if it starts at t=0</span>
-            <span class="k">if</span> <span class="n">vals</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">vals</span><span class="o">.</span><span class="n">index</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span>
+        <span class="c1"># add time shift env.time to the incoming variable to adapt to mpc output,</span>
+        <span class="c1"># which starts at t=0</span>
+        <span class="k">if</span> <span class="n">vals</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The incoming variable </span><span class="si">{</span><span class="n">inp</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> starts with a time &quot;</span>
+                             <span class="sa">f</span><span class="s2">&quot;index of 0. Adding the current environment time.&quot;</span><span class="p">)</span>
+            <span class="n">vals</span><span class="o">.</span><span class="n">index</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span>
 
         <span class="c1"># update value in the tracking dictionary</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_track_base_comm_vars_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span>
