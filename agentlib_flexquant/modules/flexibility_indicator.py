@@ -64,11 +64,17 @@ class InputsForCalculateFlexCosts(BaseModel):
     use_constant_electricity_price: bool = Field(
         default=False, description="Use constant electricity price"
     )
+    use_constant_feed_in_price: bool = Field(
+        default=False, description="Use constant feed-in price"
+    )
     calculate_flex_costs: bool = Field(
         default=True, description="Calculate the flexibility cost"
     )
     const_electricity_price: float = Field(
         default=np.nan, description="constant electricity price in ct/kWh"
+    )
+    const_feed_in_price: float = Field(
+        default=np.nan, description="constant feed-in price in ct/kWh"
     )
 
     @model_validator(mode="after")
@@ -414,32 +420,42 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                     self.data.electricity_price_series = (
                         self.data.unify_inputs(inp.value, mpc=False))
             elif name == self.config.price_variable_feed_in:
-                if not self.config.calculate_costs.use_constant_electricity_price:
+                if not self.config.calculate_costs.use_constant_feed_in_price:
                     # feed-in price comes from predictor
                     self.data.feed_in_price_series = (
                         self.data.unify_inputs(inp.value, mpc=False))
 
-            # set the constant electricity price series if given
-            if (
-                self.config.calculate_costs.use_constant_electricity_price
-                and (self.data.electricity_price_series is None
-                     or self.data.feed_in_price_series is None)
-            ):
+            # set constant electricity price series if the option is enabled and the series are not provided by predictors
+            if (self.config.calculate_costs.use_constant_electricity_price and
+                self.data.electricity_price_series is None):
+
                 # get the index for the electricity price series
                 n = self.get(glbs.PREDICTION_HORIZON).value
                 ts = self.get(glbs.TIME_STEP).value
                 grid = np.arange(0, n * ts + ts, ts)
-                if self.data.electricity_price_series is None:
-                    # fill the electricity_price_series with values
-                    self.data.electricity_price_series = pd.Series(
-                        [self.config.calculate_costs.const_electricity_price
-                         for i in grid], index=grid)
-                if self.data.feed_in_price_series is None:
-                    # default feed-in price to constant if no series provided
-                    self.data.feed_in_price_series = pd.Series(
-                        [self.config.calculate_costs.const_electricity_price
-                         for i in grid], index=grid)
+                # fill the electricity_price_series with values
+                self.data.electricity_price_series = pd.Series(
+                    [self.config.calculate_costs.const_electricity_price
+                     for i in grid], index=grid)
+            else: raise ValueError(
+                "Electricity price series must be provided by predictor or constant electricity price option must be enabled"
+            )
+            
+            if (self.config.calculate_costs.use_constant_feed_in_price and
+                self.data.feed_in_price_series is None):
 
+                # get the index for the feed-in price series
+                n = self.get(glbs.PREDICTION_HORIZON).value
+                ts = self.get(glbs.TIME_STEP).value
+                grid = np.arange(0, n * ts + ts, ts)
+                # fill the feed_in_price_series with values
+                self.data.feed_in_price_series = pd.Series(
+                    [self.config.calculate_costs.const_feed_in_price
+                     for i in grid], index=grid)
+            else: raise ValueError(
+                "Feed-in price series must be provided by predictor or constant feed-in price option must be enabled"
+            )
+             
             necessary_input_for_calc_flex = [
                 self.data.power_profile_base,
                 self.data.power_profile_flex_neg,
@@ -456,17 +472,14 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                     ]
                 )
 
-            if self.config.calculate_costs.calculate_flex_costs and all(
-                var is not None for var in necessary_input_for_calc_flex
-            ):
+            if (all(var is not None for var in necessary_input_for_calc_flex) and
+                    len(necessary_input_for_calc_flex) == 5):
                 # align the index of price variable to the index of inputs from mpc;
                 # electricity price signal is usually steps
-                self.data.electricity_price_series = (
+                necessary_input_for_calc_flex[-2] = (
                     self.data.electricity_price_series.reindex(
-                        self.data.power_profile_base.index
-                    ).ffill()
-                )
-                self.data.feed_in_price_series = (
+                        self.data.power_profile_base.index).ffill())
+                necessary_input_for_calc_flex[-1] = (
                     self.data.feed_in_price_series.reindex(
                         self.data.power_profile_base.index).ffill())
 

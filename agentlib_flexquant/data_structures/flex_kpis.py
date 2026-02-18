@@ -161,7 +161,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
     # Costs KPIs
     electricity_costs_series: KPISeries = pydantic.Field(
         default=KPISeries(name="electricity_costs_series", unit="ct/h", integration_method=LINEAR),
-        description="Costs of flexibility",
+        description="Difference in electricity costs between shadow and baseline mpc over full prediction horizon",
     )
     costs: KPI = pydantic.Field(
         default=KPI(name="costs", unit="ct"),
@@ -403,55 +403,40 @@ class FlexibilityKPIs(pydantic.BaseModel):
 
 
         """
+        if not power_profile_shadow.index.equals(power_profile_base.index):
+            raise ValueError(
+                f"Indices of power profiles do not match.\n"
+                f"Baseline: {power_profile_base.index}\n"
+                f"Shadow: {power_profile_shadow.index}"
+            )
+
         # Set integration method
         self.power_flex_full.integration_method = integration_method
         self.electricity_costs_series.integration_method = integration_method
 
-        # Get the series for integration before calculating
-        power_flex_full_integration = self._get_series_for_integration(
-            series=self.power_flex_full, mpc_time_grid=mpc_time_grid
-        )
-        power_flex_full_integration.value = power_flex_full_integration.value.drop(
-            collocation_time_grid, errors="ignore"
-        )
-
+        # if there is no feed-in tariff provided, the electricity price signal is used for both consumption and feed-in
         if feed_in_price_signal is None:
             feed_in_price_signal = electricity_price_signal
 
-        price_index = power_flex_full_integration.value.index
-        base_power_aligned = power_profile_base.reindex(price_index).ffill()
-        shadow_power_aligned = power_profile_shadow.reindex(price_index).ffill()
-        electricity_price_aligned = electricity_price_signal.reindex(price_index).ffill()
-        feed_in_price_aligned = feed_in_price_signal.reindex(price_index).ffill()
+        # Effective cost profiles depending on wheter power is consumed from or fed into the grid
+        cost_profile_base = (power_profile_base * electricity_price_signal).where(
+            power_profile_base > 0,
+            power_profile_base * feed_in_price_signal
+        )
 
-        effective_price_base = electricity_price_aligned.copy()
-        effective_price_base.loc[base_power_aligned < 0] = feed_in_price_aligned.loc[
-            base_power_aligned < 0
-        ]
+        cost_profile_shadow = (power_profile_shadow * electricity_price_signal).where(
+            power_profile_shadow > 0,
+            power_profile_shadow * feed_in_price_signal
+        )
 
-        effective_price_shadow = electricity_price_aligned.copy()
-        effective_price_shadow.loc[shadow_power_aligned < 0] = feed_in_price_aligned.loc[
-            shadow_power_aligned < 0
-        ]
-
-        # based on direction, define sign of cost calculation
-        if self.direction == "positive":
-            cost_coeff = -1
-        elif self.direction == "negative":
-            cost_coeff = 1
-
-        # Calculate series
-        self.electricity_costs_series.value = (
-            (effective_price_shadow * shadow_power_aligned
-             - effective_price_base * base_power_aligned)
-            * cost_coeff
-        ).dropna()
+        # Difference in costs between shadow and baseline mpc
+        self.electricity_costs_series.value = (cost_profile_shadow - cost_profile_base).dropna()
 
         # Calculate the costs and stores the original value
         costs = self.electricity_costs_series.integrate(time_unit="hours")
 
         # correct the costs
-        corrected_costs = costs - stored_energy_diff * np.mean(effective_price_base)
+        corrected_costs = costs - stored_energy_diff * np.mean(electricity_price_signal)
 
         self.costs.value = costs
         self.corrected_costs.value = corrected_costs
