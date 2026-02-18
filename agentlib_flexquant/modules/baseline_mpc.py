@@ -101,7 +101,7 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
         self.set_actuation(result)
         # Set variables, so that shadow MPCs are initialized with the
         # same values as the Baseline
-        self.set_vars_for_shadow()
+        self.set_vars_for_shadow(result)
         self.set_output(result)
         self._remove_old_values_from_history()
 
@@ -122,7 +122,7 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
                      self.get(glbs.ACCEPTED_POWER_VAR_NAME).value.index[-1] -
                      self.env.time)
 
-    def set_vars_for_shadow(self):
+    def set_vars_for_shadow(self, solution):
         """Sets the variables of the Baseline MPC needed by the shadow MPCs
         with a predefined suffix.
         This essentially sends the same inputs and states the Baseline used
@@ -130,7 +130,11 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
         """
         for vars_to_com in self.config.vars_to_communicate:
             vars_name = self._vars_to_com_name_mapping[vars_to_com.name]
-            self.set(vars_to_com.name, self.get_value(vars_name))
+            if vars_name in solution.df.variable:
+                vars_value = solution.df.variable[vars_name]
+            else:  # parameter
+                vars_value = solution.df.parameter[vars_name]
+            self.set(vars_to_com.name, vars_value)
 
     def set_actuation(self, solution: Results):
         super().set_actuation(solution)

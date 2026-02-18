@@ -202,9 +202,12 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         if inp.name in self.config.full_control_names:
             if vals.isna().any():
                 vals = fill_nans(series=vals, method=MEAN)
-            # add time shift env.now to the mpc prediction index if it starts at t=0
-            if vals.index[0] == 0:
-                vals.index += self.env.time
+        # add time shift env.time to the incoming variable to adapt to mpc output,
+        # which starts at t=0
+        if vals.index[0] == 0:
+            self.logger.warn(f"The incoming variable {inp.name} starts with a time "
+                             f"index of 0. Adding the current environment time.")
+            vals.index += self.env.time
 
         # update value in the tracking dictionary
         self._track_base_comm_vars_dict[name].value = vals
