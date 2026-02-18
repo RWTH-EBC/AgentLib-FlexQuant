@@ -487,7 +487,7 @@ KPI outputs, and cost calculation settings.</p>
 </dl>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.calculate_costs">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calculate_costs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts"><span class="pre">InputsForCalculateFlexCosts</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">InputsForCalculateFlexCosts(use_constant_electricity_price=False,</span> <span class="pre">calculate_flex_costs=True,</span> <span class="pre">const_electricity_price=nan)</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.calculate_costs" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calculate_costs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts"><span class="pre">InputsForCalculateFlexCosts</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">InputsForCalculateFlexCosts(use_constant_electricity_price=False,</span> <span class="pre">use_constant_feed_in_price=False,</span> <span class="pre">calculate_flex_costs=True,</span> <span class="pre">const_electricity_price=nan,</span> <span class="pre">const_feed_in_price=nan)</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.calculate_costs" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -669,7 +669,9 @@ pricing.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.calculate_flex_costs" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.calculate_flex_costs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_flex_costs</span> <span class="pre">(bool)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.const_electricity_price" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.const_electricity_price"><code class="xref py py-obj docutils literal notranslate"><span class="pre">const_electricity_price</span> <span class="pre">(float)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.const_feed_in_price" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.const_feed_in_price"><code class="xref py py-obj docutils literal notranslate"><span class="pre">const_feed_in_price</span> <span class="pre">(float)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.use_constant_electricity_price" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.use_constant_electricity_price"><code class="xref py py-obj docutils literal notranslate"><span class="pre">use_constant_electricity_price</span> <span class="pre">(bool)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.use_constant_feed_in_price" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.use_constant_feed_in_price"><code class="xref py py-obj docutils literal notranslate"><span class="pre">use_constant_feed_in_price</span> <span class="pre">(bool)</span></code></a></p></li>
 </ul>
 </dd>
 <dt class="field-even">Validators<span class="colon">:</span></dt>
@@ -705,9 +707,35 @@ pricing.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.const_feed_in_price">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">const_feed_in_price</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">nan</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.const_feed_in_price" title="Permalink to this definition"></a></dt>
+<dd><p>constant feed-in price in ct/kWh</p>
+<dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_constant_price</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.use_constant_electricity_price">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">use_constant_electricity_price</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.use_constant_electricity_price" title="Permalink to this definition"></a></dt>
 <dd><p>Use constant electricity price</p>
+<dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_constant_price</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.use_constant_feed_in_price">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">use_constant_feed_in_price</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.use_constant_feed_in_price" title="Permalink to this definition"></a></dt>
+<dd><p>Use constant feed-in price</p>
 <dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
