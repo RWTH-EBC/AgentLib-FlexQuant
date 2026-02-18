@@ -437,9 +437,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 self.data.electricity_price_series = pd.Series(
                     [self.config.calculate_costs.const_electricity_price
                      for i in grid], index=grid)
-            else: raise ValueError(
-                "Electricity price series must be provided by predictor or constant electricity price option must be enabled"
-            )
+            
             
             if (self.config.calculate_costs.use_constant_feed_in_price and
                 self.data.feed_in_price_series is None):
@@ -452,9 +450,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 self.data.feed_in_price_series = pd.Series(
                     [self.config.calculate_costs.const_feed_in_price
                      for i in grid], index=grid)
-            else: raise ValueError(
-                "Feed-in price series must be provided by predictor or constant feed-in price option must be enabled"
-            )
+            
              
             necessary_input_for_calc_flex = [
                 self.data.power_profile_base,
