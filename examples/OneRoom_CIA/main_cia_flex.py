@@ -1,8 +1,5 @@
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FormatStrFormatter
-import matplotlib
-
-matplotlib.use("Agg")
 from agentlib.utils.multi_agent_system import LocalMASAgency
 import numpy as np
 import agentlib_mpc.utils.plotting.basic as mpcplot
@@ -15,7 +12,7 @@ from agentlib_flexquant.utils.interactive import Dashboard
 logging.basicConfig(level=logging.WARN)
 until = 12000
 
-time_of_activation = 1500
+time_of_activation = 9000
 
 ENV_CONFIG = {"rt": False, "factor": 0.01, "t_sample": 10}
 
@@ -52,7 +49,7 @@ def run_example(until=until, with_plots=False, with_dashboard=False):
         ax1 = axs[0]
         # load
         ax1.set_ylabel("$dot{Q}_{Room}$ in W")
-        results["SimAgent"]["room"]["load"].plot(ax=ax1)
+        results["SimAgent"]["room"]["load"].dropna().plot(ax=ax1, drawstyle="steps-post")
         x_ticks = np.arange(0, 3600 * 6 + 1, 3600)
         x_tick_labels = [int(tick / 3600) for tick in x_ticks]
         ax1.set_xticks(x_ticks)

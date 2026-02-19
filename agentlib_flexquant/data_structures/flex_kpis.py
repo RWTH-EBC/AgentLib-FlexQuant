@@ -106,8 +106,8 @@ class KPISeries(KPI):
         if self.integration_method == LINEAR:
             # Linear integration: apply the trapezoidal rule, which assumes
             # the function changes linearly between sample points
-            return np.trapz(self.value.values,
-                            self.value.index) / TIME_CONVERSION[time_unit]
+            return np.trapezoid(self.value.values,
+                                self.value.index) / TIME_CONVERSION[time_unit]
         if self.integration_method == CONSTANT:
             # Constant integration: use a step-wise constant approach by
             # holding the value constant over each interval
