@@ -83,7 +83,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.core.datamodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentVariable</span><span class="p">,</span> <span class="n">Source</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.modules</span><span class="w"> </span><span class="kn">import</span> <span class="n">mpc_full</span><span class="p">,</span> <span class="n">minlp_mpc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.modules.mpc</span><span class="w"> </span><span class="kn">import</span> <span class="n">mpc_full</span><span class="p">,</span> <span class="n">minlp_mpc</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.utils.data_handling</span><span class="w"> </span><span class="kn">import</span> <span class="n">fill_nans</span><span class="p">,</span> <span class="n">MEAN</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">full_trajectory_suffix</span><span class="p">,</span>
                                                         <span class="n">base_vars_to_communicate_suffix</span><span class="p">)</span>
@@ -276,15 +276,17 @@
         <span class="k">if</span> <span class="n">inp</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">full_control_names</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">vals</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
                 <span class="n">vals</span> <span class="o">=</span> <span class="n">fill_nans</span><span class="p">(</span><span class="n">series</span><span class="o">=</span><span class="n">vals</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">MEAN</span><span class="p">)</span>
-            <span class="c1"># add time shift env.now to the mpc prediction index if it starts at t=0</span>
-            <span class="k">if</span> <span class="n">vals</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">vals</span><span class="o">.</span><span class="n">index</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span>
+        <span class="c1"># add time shift env.time to the incoming variable to adapt to mpc output,</span>
+        <span class="c1"># which starts at t=0</span>
+        <span class="k">if</span> <span class="n">vals</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The incoming variable </span><span class="si">{</span><span class="n">inp</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> starts with a time &quot;</span>
+                             <span class="sa">f</span><span class="s2">&quot;index of 0. Adding the current environment time.&quot;</span><span class="p">)</span>
+            <span class="n">vals</span><span class="o">.</span><span class="n">index</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span>
 
         <span class="c1"># update value in the tracking dictionary</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_track_base_comm_vars_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span>
         <span class="c1"># set value</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">vals</span><span class="p">)</span>
-        <span class="c1"># self.model.set(name, (vals if not isinstance(vals, Iterable) else vals[0]))</span>
 
         <span class="c1"># make sure all necessary inputs are set</span>
         <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_track_base_comm_vars_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
@@ -523,12 +525,12 @@
         <span class="k">if</span> <span class="n">inp</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">full_control_names</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">vals</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
                 <span class="n">vals</span> <span class="o">=</span> <span class="n">fill_nans</span><span class="p">(</span><span class="n">series</span><span class="o">=</span><span class="n">vals</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">MEAN</span><span class="p">)</span>
-            <span class="c1"># add time shift env.now to the mpc prediction index if it starts at t=0</span>
-            <span class="k">if</span> <span class="n">vals</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">vals</span><span class="o">.</span><span class="n">index</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span>
             <span class="c1"># set full controls to custom cia backend to constrain during market time</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">,</span> <span class="n">ConstrainedCasADiCIABackend</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">optimization_backend</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">full_controls_dict</span><span class="p">[</span><span class="n">inp</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">vals</span>
+        <span class="c1"># add time shift env.now to the mpc prediction index if it starts at t=0</span>
+        <span class="k">if</span> <span class="n">vals</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">vals</span><span class="o">.</span><span class="n">index</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span>
 
         <span class="c1"># update value in the tracking dictionary</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_track_base_comm_vars_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span>

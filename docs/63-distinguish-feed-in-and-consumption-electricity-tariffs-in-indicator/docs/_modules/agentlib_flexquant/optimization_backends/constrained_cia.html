@@ -184,7 +184,8 @@
             <span class="k">if</span> <span class="n">cons</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">last_idx</span> <span class="o">=</span> <span class="mi">0</span>
                 <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">cons</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                    <span class="c1"># constrain ever timestep before market_time with values of baseline</span>
+                    <span class="c1"># constrain every timestep before market_time</span>
+                    <span class="c1"># with values of baseline</span>
                     <span class="n">binapprox</span><span class="o">.</span><span class="n">set_valid_controls_for_interval</span><span class="p">(</span>
                         <span class="p">(</span><span class="n">last_idx</span><span class="p">,</span> <span class="n">idx</span><span class="p">),</span> <span class="p">[</span><span class="n">value</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">value</span><span class="p">]</span>
                     <span class="p">)</span>

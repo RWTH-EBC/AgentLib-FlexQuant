@@ -75,7 +75,6 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Defines MPC and MINLP-MPC for baseline flexibility quantification.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.modules</span><span class="w"> </span><span class="kn">import</span> <span class="n">minlp_mpc</span><span class="p">,</span> <span class="n">mpc_full</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -85,7 +84,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">glbs</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentVariable</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.modules</span><span class="w"> </span><span class="kn">import</span> <span class="n">mpc_full</span><span class="p">,</span> <span class="n">minlp_mpc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.modules.mpc</span><span class="w"> </span><span class="kn">import</span> <span class="n">mpc_full</span><span class="p">,</span> <span class="n">minlp_mpc</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.data_structures.mpc_datamodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">Results</span><span class="p">,</span> <span class="n">InitStatus</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">full_trajectory_suffix</span><span class="p">,</span>
                                                         <span class="n">base_vars_to_communicate_suffix</span><span class="p">)</span>
@@ -175,7 +174,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">set_actuation</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
         <span class="c1"># Set variables, so that shadow MPCs are initialized with the</span>
         <span class="c1"># same values as the Baseline</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_vars_for_shadow</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_vars_for_shadow</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_output</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_remove_old_values_from_history</span><span class="p">()</span></div>
 
@@ -196,7 +195,7 @@
                      <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">ACCEPTED_POWER_VAR_NAME</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span>
                      <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FlexibilityBaselineMPC.set_vars_for_shadow"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.set_vars_for_shadow">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_vars_for_shadow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="FlexibilityBaselineMPC.set_vars_for_shadow"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.set_vars_for_shadow">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_vars_for_shadow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solution</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the variables of the Baseline MPC needed by the shadow MPCs</span>
 <span class="sd">        with a predefined suffix.</span>
 <span class="sd">        This essentially sends the same inputs and states the Baseline used</span>
@@ -204,7 +203,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">vars_to_com</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">vars_to_communicate</span><span class="p">:</span>
             <span class="n">vars_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vars_to_com_name_mapping</span><span class="p">[</span><span class="n">vars_to_com</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">vars_to_com</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">vars_name</span><span class="p">))</span></div>
+            <span class="k">if</span> <span class="n">vars_name</span> <span class="ow">in</span> <span class="n">solution</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">variable</span><span class="p">:</span>
+                <span class="n">vars_value</span> <span class="o">=</span> <span class="n">solution</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">variable</span><span class="p">[</span><span class="n">vars_name</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># parameter</span>
+                <span class="n">vars_value</span> <span class="o">=</span> <span class="n">solution</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">parameter</span><span class="p">[</span><span class="n">vars_name</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">vars_to_com</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">vars_value</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlexibilityBaselineMPC.set_actuation"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPC.set_actuation">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_actuation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solution</span><span class="p">:</span> <span class="n">Results</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_actuation</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
@@ -503,7 +506,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">set_actuation</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
         <span class="c1"># Set variables, so that shadow MPCs are initialized</span>
         <span class="c1"># with the same values as the Baseline</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_vars_for_shadow</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_vars_for_shadow</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_output</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlexibilityBaselineMINLPMPC.pre_computation_hook"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.pre_computation_hook">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">pre_computation_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -525,7 +528,7 @@
                      <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">ACCEPTED_POWER_VAR_NAME</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span>
                      <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span> <span class="o">+</span> <span class="n">timestep</span><span class="p">,)</span></div>
 
-<div class="viewcode-block" id="FlexibilityBaselineMINLPMPC.set_vars_for_shadow"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.set_vars_for_shadow">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_vars_for_shadow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="FlexibilityBaselineMINLPMPC.set_vars_for_shadow"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.set_vars_for_shadow">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_vars_for_shadow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solution</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the variables of the Baseline MPC needed by the shadow MPCs</span>
 <span class="sd">        with a predefined suffix.</span>
 <span class="sd">        This essentially sends the same inputs and states the Baseline used</span>
@@ -533,7 +536,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">vars_to_com</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">vars_to_communicate</span><span class="p">:</span>
             <span class="n">vars_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vars_to_com_name_mapping</span><span class="p">[</span><span class="n">vars_to_com</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">vars_to_com</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">vars_name</span><span class="p">))</span></div>
+            <span class="k">if</span> <span class="n">vars_name</span> <span class="ow">in</span> <span class="n">solution</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">variable</span><span class="p">:</span>
+                <span class="n">vars_value</span> <span class="o">=</span> <span class="n">solution</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">variable</span><span class="p">[</span><span class="n">vars_name</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># parameter</span>
+                <span class="n">vars_value</span> <span class="o">=</span> <span class="n">solution</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">parameter</span><span class="p">[</span><span class="n">vars_name</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">vars_to_com</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">vars_value</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlexibilityBaselineMINLPMPC.set_actuation"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPC.set_actuation">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_actuation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solution</span><span class="p">:</span> <span class="n">Results</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_actuation</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
