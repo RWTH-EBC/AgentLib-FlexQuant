@@ -503,10 +503,7 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
         # simulate with the casadi simulator
         self.sim_flex_model(solution)
 
-        # extract solution DataFrama
         df = solution.df
-
-        # send the outputs
         if self.flex_results is not None:
             for output in self.var_ref.outputs:
                 if output not in [
@@ -738,6 +735,7 @@ excluded_fields = [
         "interpolation_method",
         "allowed_values",
     ]
+
  (duplicate-code)
 agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[612:639]
@@ -811,7 +809,7 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
 agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.data_structures.mpcs:[15:23]
 ==agentlib_flexquant.utils.config_management:[125:133]
-    excluded_fields = [
+excluded_fields = [
         "rdf_class",
         "source",
         "type",
@@ -827,7 +825,8 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
             opti_outputs.values,
             index=index_coll,
         )
-        # fill the output value at the time step where it already exists in optimization output
+        # fill the output value at the time step where it already exists
+        # in optimization output
         for idx in fixed_opti_output.index:
             if idx in self.flex_results.index: (duplicate-code)
 agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
@@ -841,21 +840,7 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
             self.logger.error("Results file %s was not found.", results_file)
             return None
 
-    def write_results(self, df: pd.DataFrame, ts: float, n: int) -> pd.DataFrame:
-        """Write every data of variables in self.var_list in an DataFrame.
-
-        DataFrame will be updated every time step
-
-        Args:
-            df: DataFrame which is initialised as an empty DataFrame with columns
-            according to self.var_list
-            ts: time step
-            n: number of time steps during prediction horizon
-
-        Returns:
-            DataFrame with results of every variable in self.var_list
-
-        """ (duplicate-code)
+    def register_callbacks(self): (duplicate-code)
 agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.flexibility_indicator:[334:342]
 ==agentlib_flexquant.modules.flexibility_market:[62:70]
@@ -883,9 +868,12 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
-        """simulate with flex model over the prediction horizon"""
+        """simulate with flex model over the prediction horizon
+
+        """
 
         # get control and input values from the mpc optimization result (duplicate-code)
 
