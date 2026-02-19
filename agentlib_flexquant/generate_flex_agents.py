@@ -27,7 +27,7 @@ from agentlib.core.module import BaseModuleConfig
 from agentlib.utils import custom_injection, load_config
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from agentlib_mpc.models.casadi_model import CasadiModelConfig
-from agentlib_mpc.modules.mpc_full import MPCConfig
+from agentlib_mpc.modules.mpc.mpc_full import MPCConfig
 
 from agentlib_mpc.optimization_backends.casadi_.basic import DirectCollocation
 from agentlib_mpc.data_structures.casadi_utils import CasadiDiscretizationOptions
@@ -121,7 +121,7 @@ class FlexAgentGenerator:
             module_config=self.baseline_mpc_module_config,
             module_type=self.flex_config.baseline_config_generator_data.module_types[
                 self.baseline_mpc_module_config.type
-            ],
+            ]
         )
         # pos module
         self.pos_flex_mpc_module_config = cmng.get_module(
@@ -376,6 +376,11 @@ class FlexAgentGenerator:
         module_config_flex = cmng.MODULE_TYPE_DICT[module_config.type](
             **module_config_flex_dict, _agent_id=agent_id
         )
+
+        # HOTFIX due to AgentLib-MPC bug. Needs to be adapted after Objectives
+        # in AgentLib-MPC are fixed.
+        if module_config_flex.r_del_u is None:
+            module_config_flex = module_config_flex.model_copy(update={"r_del_u": {}})
 
         # allow the module config to be changed
         module_config_flex.model_config["frozen"] = False
@@ -1024,7 +1029,7 @@ class FlexAgentGenerator:
             self.flex_config.results_directory / sim_file_name
         )
         try:
-            with open(Path(str(simulator_agent_config) + save_name_suffix),
+            with open(Path(str(simulator_agent_config.stem) + save_name_suffix + ".json"),
                       "w", encoding="utf-8") as f:
                 json.dump(sim_config, f, indent=4)
             return simulator_agent_config
