@@ -1,3 +1,5 @@
+<img src="./docs/images/logos/agentlib_flexquant_logo.svg" alt="drawing" height="150"/>
+
 # Flexibility Quantification
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 [![pylint](https://rwth-ebc.github.io/AgentLib-FlexQuant/main/pylint/pylint.svg)](https://rwth-ebc.github.io/AgentLib-FlexQuant/main/pylint/pylint.html)
