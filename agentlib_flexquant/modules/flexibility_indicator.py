@@ -405,7 +405,6 @@ class CallBackHandler:
             data.update_profile(variable_name, value)
         return data
 
-
 class FlexibilityIndicatorModule(agentlib.BaseModule):
     """Module for calculating flexibility KPIs and generating flexibility offers
     from MPC power/energy profiles."""
@@ -453,8 +452,15 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
     def callback(self, inp, name):
         """Handle incoming data by storing power/energy/price profiles and triggering
         flexibility calculations when all required inputs are available.
-        """
-        self.data = self.callback_handler.update_input(data=self.data, name=name, value=inp)
+        """ 
+        if name == glbs.PROVISION_VAR_NAME:
+            self.in_provision = bool(inp)
+        
+        if self.in_provision:
+            self.data = self.callback_handler.set_all_callback_variables_to_none(data=self.data)
+        else: 
+            self.data = self.callback_handler.update_input(data=self.data, name=name, value=inp)
+        
         if self.data.is_ready_for_calculation():
             self.calc_and_send_offer()
             self.data = self.callback_handler.clear_callback_variables(data=self.data)
