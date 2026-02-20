@@ -126,7 +126,7 @@ agentlib_flexquant/data_structures/flexquant.py:213:4: C0116: Missing function o
 ************* Module agentlib_flexquant.data_structures.flex_kpis
 agentlib_flexquant/data_structures/flex_kpis.py:162:0: C0301: Line too long (115/100) (line-too-long)
 agentlib_flexquant/data_structures/flex_kpis.py:415:0: C0301: Line too long (119/100) (line-too-long)
-agentlib_flexquant/data_structures/flex_kpis.py:698:0: C0304: Final newline missing (missing-final-newline)
+agentlib_flexquant/data_structures/flex_kpis.py:686:0: C0305: Trailing newlines (trailing-newlines)
 agentlib_flexquant/data_structures/flex_kpis.py:8:0: E0401: Unable to import 'numpy' (import-error)
 agentlib_flexquant/data_structures/flex_kpis.py:9:0: E0401: Unable to import 'pandas' (import-error)
 agentlib_flexquant/data_structures/flex_kpis.py:10:0: E0401: Unable to import 'pydantic' (import-error)
@@ -263,12 +263,16 @@ agentlib_flexquant/modules/flexibility_indicator.py:394:0: C0303: Trailing white
 agentlib_flexquant/modules/flexibility_indicator.py:395:126: C0303: Trailing whitespace (trailing-whitespace)
 agentlib_flexquant/modules/flexibility_indicator.py:395:0: C0301: Line too long (126/100) (line-too-long)
 agentlib_flexquant/modules/flexibility_indicator.py:401:98: C0303: Trailing whitespace (trailing-whitespace)
-agentlib_flexquant/modules/flexibility_indicator.py:435:0: C0301: Line too long (107/100) (line-too-long)
-agentlib_flexquant/modules/flexibility_indicator.py:455:11: C0303: Trailing whitespace (trailing-whitespace)
-agentlib_flexquant/modules/flexibility_indicator.py:458:0: C0303: Trailing whitespace (trailing-whitespace)
-agentlib_flexquant/modules/flexibility_indicator.py:461:13: C0303: Trailing whitespace (trailing-whitespace)
-agentlib_flexquant/modules/flexibility_indicator.py:463:0: C0303: Trailing whitespace (trailing-whitespace)
-agentlib_flexquant/modules/flexibility_indicator.py:717:0: C0305: Trailing newlines (trailing-newlines)
+agentlib_flexquant/modules/flexibility_indicator.py:407:0: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/modules/flexibility_indicator.py:410:0: C0301: Line too long (106/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:440:0: C0301: Line too long (107/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:460:11: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/modules/flexibility_indicator.py:461:0: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/modules/flexibility_indicator.py:467:13: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/modules/flexibility_indicator.py:468:0: C0301: Line too long (102/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:469:0: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/modules/flexibility_indicator.py:474:0: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/modules/flexibility_indicator.py:724:0: C0305: Trailing newlines (trailing-newlines)
 agentlib_flexquant/modules/flexibility_indicator.py:15:0: E0401: Unable to import 'agentlib' (import-error)
 agentlib_flexquant/modules/flexibility_indicator.py:16:0: E0401: Unable to import 'numpy' (import-error)
 agentlib_flexquant/modules/flexibility_indicator.py:17:0: E0401: Unable to import 'pandas' (import-error)
@@ -278,16 +282,16 @@ agentlib_flexquant/modules/flexibility_indicator.py:62:0: R0903: Too few public 
 agentlib_flexquant/modules/flexibility_indicator.py:109:0: R0903: Too few public methods (1/2) (too-few-public-methods)
 agentlib_flexquant/modules/flexibility_indicator.py:375:4: C0116: Missing function or method docstring (missing-function-docstring)
 agentlib_flexquant/modules/flexibility_indicator.py:397:12: W0612: Unused variable 'alias' (unused-variable)
-agentlib_flexquant/modules/flexibility_indicator.py:426:8: C0103: Attribute name "df" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/flexibility_indicator.py:437:4: C0116: Missing function or method docstring (missing-function-docstring)
-agentlib_flexquant/modules/flexibility_indicator.py:466:24: E1101: Instance of 'CallBackHandler' has no 'clear_callback_variables' member (no-member)
-agentlib_flexquant/modules/flexibility_indicator.py:478:28: C0103: Argument name "df" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/flexibility_indicator.py:478:46: C0103: Argument name "ts" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/flexibility_indicator.py:478:57: C0103: Argument name "n" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/modules/flexibility_indicator.py:478:4: R0914: Too many local variables (18/15) (too-many-locals)
-agentlib_flexquant/modules/flexibility_indicator.py:478:4: R0912: Too many branches (16/12) (too-many-branches)
-agentlib_flexquant/modules/flexibility_indicator.py:538:12: W0612: Unused variable 'i' (unused-variable)
-agentlib_flexquant/modules/flexibility_indicator.py:639:4: R0913: Too many arguments (8/5) (too-many-arguments)
+agentlib_flexquant/modules/flexibility_indicator.py:431:8: C0103: Attribute name "df" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/modules/flexibility_indicator.py:442:4: C0116: Missing function or method docstring (missing-function-docstring)
+agentlib_flexquant/modules/flexibility_indicator.py:473:24: E1101: Instance of 'CallBackHandler' has no 'clear_callback_variables' member (no-member)
+agentlib_flexquant/modules/flexibility_indicator.py:485:28: C0103: Argument name "df" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/modules/flexibility_indicator.py:485:46: C0103: Argument name "ts" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/modules/flexibility_indicator.py:485:57: C0103: Argument name "n" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/modules/flexibility_indicator.py:485:4: R0914: Too many local variables (18/15) (too-many-locals)
+agentlib_flexquant/modules/flexibility_indicator.py:485:4: R0912: Too many branches (16/12) (too-many-branches)
+agentlib_flexquant/modules/flexibility_indicator.py:545:12: W0612: Unused variable 'i' (unused-variable)
+agentlib_flexquant/modules/flexibility_indicator.py:646:4: R0913: Too many arguments (8/5) (too-many-arguments)
 agentlib_flexquant/modules/flexibility_indicator.py:27:0: C0411: standard import "from dataclasses import dataclass" should be placed before "import agentlib" (wrong-import-order)
 agentlib_flexquant/modules/flexibility_indicator.py:12:0: W0611: Unused Any imported from typing (unused-import)
 agentlib_flexquant/modules/flexibility_indicator.py:13:0: W0611: Unused import warnings (unused-import)
@@ -411,8 +415,8 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
     def _initialize_flex_results(
         self, n_simulation_steps, horizon_length, sim_time_step, result_df
     ):
-        """Initialize the flex results dataframe with the correct dimension and index
-        and fill with existing results from optimization
+        """Initialize the flex results dataframe with the correct dimension
+        and index and fill with existing results from optimization
 
         """
 
@@ -454,8 +458,8 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 
     def _update_model_parameters(self):
         """update the value of module parameters with value from config,
-        since creating a model just reads the value in the model class
-        but not the config.
+        since creating a model just reads the value in the model class but
+        not the config
 
         """
 
@@ -472,7 +476,8 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
         """simulate with flex model over the prediction horizon
 
@@ -505,15 +510,13 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model can't
-                # deal with iterable
+                # change the type of iterable input, since casadi model can't deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time
-            # will not be exceeded
+            # reduce the simulation time step so that the total horizon time will not be exceeded
             if current_sim_time + sim_time_step <= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -829,7 +832,7 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.data_structures.flexquant:[18:26]
 ==agentlib_flexquant.utils.config_management:[125:133]
-excluded_fields = [
+    excluded_fields = [
         "rdf_class",
         "source",
         "type",
@@ -849,7 +852,7 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
         for idx in fixed_opti_output.index:
             if idx in self.flex_results.index: (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
-==agentlib_flexquant.modules.flexibility_indicator:[469:492]
+==agentlib_flexquant.modules.flexibility_indicator:[476:499]
 ==agentlib_flexquant.modules.flexibility_market:[88:97]
         results_file = self.config.results_file
         try:
@@ -859,21 +862,7 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             self.logger.error("Results file %s was not found.", results_file)
             return None
 
-    def write_results(self, df: pd.DataFrame, ts: float, n: int) -> pd.DataFrame:
-        """Write every data of variables in self.var_list in an DataFrame.
-
-        DataFrame will be updated every time step
-
-        Args:
-            df: DataFrame which is initialised as an empty DataFrame with columns
-            according to self.var_list
-            ts: time step
-            n: number of time steps during prediction horizon
-
-        Returns:
-            DataFrame with results of every variable in self.var_list
-
-        """ (duplicate-code)
+    def register_callbacks(self): (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.flexibility_indicator:[348:355]
 ==agentlib_flexquant.modules.flexibility_market:[62:70]
@@ -883,7 +872,6 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
                 f"Expected a '.csv' file."
             )
         return self
-
  (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[281:302]
@@ -901,15 +889,12 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
-            total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
     ):
-        """simulate with flex model over the prediction horizon
-
-        """
+        """simulate with flex model over the prediction horizon"""
 
         # get control and input values from the mpc optimization result (duplicate-code)
 
 -----------------------------------
-Your code has been rated at 7.28/10
+Your code has been rated at 7.26/10
 

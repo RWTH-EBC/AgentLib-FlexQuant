@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Coverage for agentlib_flexquant/modules/baseline_mpc.py: 69%</title>
+    <title>Coverage for agentlib_flexquant/modules/baseline_mpc.py: 68%</title>
     <link rel="icon" sizes="32x32" href="favicon_32.png">
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="coverage_html.js" defer></script>
@@ -12,7 +12,7 @@
     <div class="content">
         <h1>
             <span class="text">Coverage for </span><b>agentlib_flexquant/modules/baseline_mpc.py</b>:
-            <span class="pc_cov">69%</span>
+            <span class="pc_cov">68%</span>
         </h1>
         <aside id="help_panel_wrapper">
             <input id="help_panel_state" type="checkbox">
@@ -55,8 +55,8 @@
         </aside>
         <h2>
             <span class="text">264 statements &nbsp;</span>
-            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">181<span class="text"> run</span></button>
-            <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">83<span class="text"> missing</span></button>
+            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">180<span class="text"> run</span></button>
+            <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">84<span class="text"> missing</span></button>
             <button type="button" class="exc show_exc button_toggle_exc" value="exc" data-shortcut="x" title="Toggle lines excluded">0<span class="text"> excluded</span></button>
         </h2>
         <p class="text">
@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="d_adb463408970a82b_flexibility_indicator_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.4.4">coverage.py v7.4.4</a>,
-            created at 2026-02-20 16:13 +0000
+            created at 2026-02-20 17:21 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"/>
@@ -638,7 +638,7 @@
     <p class="run"><span class="n"><a id="t556" href="#t556">556</a></span><span class="t">        <span class="key">if</span> <span class="key">not</span> <span class="nam">os</span><span class="op">.</span><span class="nam">path</span><span class="op">.</span><span class="nam">exists</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">res_file_flex</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t557" href="#t557">557</a></span><span class="t">            <span class="nam">store_results_df</span><span class="op">.</span><span class="nam">to_csv</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">res_file_flex</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t558" href="#t558">558</a></span><span class="t">        <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t559" href="#t559">559</a></span><span class="t">            <span class="nam">store_results_df</span><span class="op">.</span><span class="nam">to_csv</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">res_file_flex</span><span class="op">,</span> <span class="nam">mode</span><span class="op">=</span><span class="str">"a"</span><span class="op">,</span> <span class="nam">header</span><span class="op">=</span><span class="key">False</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t559" href="#t559">559</a></span><span class="t">            <span class="nam">store_results_df</span><span class="op">.</span><span class="nam">to_csv</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">res_file_flex</span><span class="op">,</span> <span class="nam">mode</span><span class="op">=</span><span class="str">"a"</span><span class="op">,</span> <span class="nam">header</span><span class="op">=</span><span class="key">False</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t560" href="#t560">560</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t561" href="#t561">561</a></span><span class="t">        <span class="com"># set the flex results format same as mpc result while updating Agentvariable</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t562" href="#t562">562</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">flex_results</span><span class="op">.</span><span class="nam">index</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">flex_results</span><span class="op">.</span><span class="nam">index</span><span class="op">.</span><span class="nam">get_level_values</span><span class="op">(</span><span class="num">1</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -776,7 +776,7 @@
             <a id="nextFileLink" class="nav" href="d_adb463408970a82b_flexibility_indicator_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.4.4">coverage.py v7.4.4</a>,
-            created at 2026-02-20 16:13 +0000
+            created at 2026-02-20 17:21 +0000
         </p>
     </div>
 </footer>

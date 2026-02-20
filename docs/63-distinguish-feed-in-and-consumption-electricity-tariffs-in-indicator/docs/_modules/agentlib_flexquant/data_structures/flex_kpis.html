@@ -756,20 +756,9 @@
 
 <div class="viewcode-block" id="FlexibilityData.update_profile"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData.update_profile">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">update_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update a specific profile for calculation with a new value.&quot;&quot;&quot;</span>
-        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div></div>
 
-<div class="viewcode-block" id="FlexibilityData.is_ready_for_calculation"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData.is_ready_for_calculation">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_ready_for_calculation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if all necessary profiles and parameters are set for KPI calculation.&quot;&quot;&quot;</span>
-        <span class="n">required_profiles</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">power_profile_base</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">power_profile_flex_neg</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">power_profile_flex_pos</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">stored_energy_profile_base</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">stored_energy_profile_flex_neg</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">stored_energy_profile_flex_pos</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">electricity_price_series</span><span class="p">,</span>
-        <span class="p">]</span>
-        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">profile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">profile</span> <span class="ow">in</span> <span class="n">required_profiles</span><span class="p">)</span></div></div>
+    
 </pre></div>
 
            </div>

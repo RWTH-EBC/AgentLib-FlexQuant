@@ -28,9 +28,9 @@
 
         
         <h2>Score</h2>
-        7.28 / 10
+        7.26 / 10
             
-            (previous score: 7.28 / 10)
+            (previous score: 7.26 / 10)
             
         
 
@@ -313,13 +313,13 @@
             </tr>
             
             <tr>
-                <td>698</td>
+                <td>686</td>
                 <td>0</td>
                 <td>convention</td>
-                <td><code>missing-final-newline</code></td>
-                <td>C0304</td>
+                <td><code>trailing-newlines</code></td>
+                <td>C0305</td>
                 <td></td>
-                <td><pre>Final newline missing</pre></td>
+                <td><pre>Trailing newlines</pre></td>
             </tr>
             
         </table>
@@ -1486,15 +1486,13 @@
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model
-                # can&#39;t deal with iterable
+                # change the type of iterable input, since casadi model can&#39;t deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time
-            # will not be exceeded
+            # reduce the simulation time step so that the total horizon time will not be exceeded
             if current_sim_time + sim_time_step &lt;= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -1651,13 +1649,15 @@
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model can&#39;t deal with iterable
+                # change the type of iterable input, since casadi model can&#39;t
+                # deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time will not be exceeded
+            # reduce the simulation time step so that the total horizon time
+            # will not be exceeded
             if current_sim_time + sim_time_step &lt;= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -1719,43 +1719,6 @@
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model
-                # can&#39;t deal with iterable
-                if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
-                    self.flex_model.get(input_var).type = type(value).__name__
-                self.flex_model.set(input_var, value)
-
-            # do integration
-            # reduce the simulation time step so that the total horizon time
-            # will not be exceeded
-            if current_sim_time + sim_time_step &lt;= total_horizon_time:
-                t_sample = sim_time_step
-            else:
-                t_sample = total_horizon_time - current_sim_time
-            self.flex_model.do_step(t_start=0, t_sample=t_sample)
-
-            # save output
-            for output in self.var_ref.outputs:
-                self.flex_results.loc[
-                    (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value
-
-</pre></td>
-            </tr>
-            
-            <tr>
-                <td>1</td>
-                <td>0</td>
-                <td>refactor</td>
-                <td><code>duplicate-code</code></td>
-                <td>R0801</td>
-                <td></td>
-                <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[664:687]
-==agentlib_flexquant.modules.shadow_mpc:[315:338]
-            for input_var, value in zip(
-                self.var_ref.inputs, input_values_full.loc[current_sim_time]
-            ):
                 # change the type of iterable input, since casadi model can&#39;t deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
@@ -1773,9 +1736,42 @@
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value
+                ] = self.flex_model.get_output(output).value</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>refactor</td>
+                <td><code>duplicate-code</code></td>
+                <td>R0801</td>
+                <td></td>
+                <td><pre>Similar lines in 2 files
+==agentlib_flexquant.modules.baseline_mpc:[664:687]
+==agentlib_flexquant.modules.shadow_mpc:[315:338]
+            for input_var, value in zip(
+                self.var_ref.inputs, input_values_full.loc[current_sim_time]
+            ):
+                # change the type of iterable input, since casadi model can&#39;t
+                # deal with iterable
+                if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
+                    self.flex_model.get(input_var).type = type(value).__name__
+                self.flex_model.set(input_var, value)
 
-</pre></td>
+            # do integration
+            # reduce the simulation time step so that the total horizon time
+            # will not be exceeded
+            if current_sim_time + sim_time_step &lt;= total_horizon_time:
+                t_sample = sim_time_step
+            else:
+                t_sample = total_horizon_time - current_sim_time
+            self.flex_model.do_step(t_start=0, t_sample=t_sample)
+
+            # save output
+            for output in self.var_ref.outputs:
+                self.flex_results.loc[
+                    (self.env.now, current_sim_time + t_sample), output
+                ] = self.flex_model.get_output(output).value</pre></td>
             </tr>
             
             <tr>
@@ -1806,8 +1802,8 @@
 
     def _update_model_parameters(self):
         &#34;&#34;&#34;update the value of module parameters with value from config,
-        since creating a model just reads the value in the model class but
-        not the config
+        since creating a model just reads the value in the model class
+        but not the config.
 
         &#34;&#34;&#34;
 
@@ -1824,8 +1820,7 @@
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
-            total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
     ):
         &#34;&#34;&#34;simulate with flex model over the prediction horizon
 
@@ -2131,7 +2126,8 @@ excluded_fields = [
             opti_outputs.values,
             index=index_coll,
         )
-        # fill the output value at the time step where it already exists in optimization output
+        # fill the output value at the time step where it already exists
+        # in optimization output
         for idx in fixed_opti_output.index:
             if idx in self.flex_results.index:</pre></td>
             </tr>
@@ -2144,7 +2140,7 @@ excluded_fields = [
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.flexibility_indicator:[469:492]
+==agentlib_flexquant.modules.flexibility_indicator:[476:499]
 ==agentlib_flexquant.modules.flexibility_market:[88:97]
         results_file = self.config.results_file
         try:
@@ -2173,7 +2169,6 @@ excluded_fields = [
                 f&#34;Expected a &#39;.csv&#39; file.&#34;
             )
         return self
-
 </pre></td>
             </tr>
             
@@ -2200,9 +2195,12 @@ excluded_fields = [
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
-        &#34;&#34;&#34;simulate with flex model over the prediction horizon&#34;&#34;&#34;
+        &#34;&#34;&#34;simulate with flex model over the prediction horizon
+
+        &#34;&#34;&#34;
 
         # get control and input values from the mpc optimization result</pre></td>
             </tr>
@@ -2776,7 +2774,27 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>426</td>
+                <td>407</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>410</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (106/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>431</td>
                 <td>8</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2786,7 +2804,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>435</td>
+                <td>440</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2796,7 +2814,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>437</td>
+                <td>442</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -2806,7 +2824,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>455</td>
+                <td>460</td>
                 <td>11</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2816,7 +2834,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>458</td>
+                <td>461</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2826,7 +2844,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>461</td>
+                <td>467</td>
                 <td>13</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2836,7 +2854,17 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>463</td>
+                <td>468</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (102/100)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>469</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2846,7 +2874,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>466</td>
+                <td>473</td>
                 <td>24</td>
                 <td>error</td>
                 <td><code>no-member</code></td>
@@ -2856,7 +2884,17 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>478</td>
+                <td>474</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>485</td>
                 <td>28</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2866,7 +2904,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>478</td>
+                <td>485</td>
                 <td>46</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2876,7 +2914,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>478</td>
+                <td>485</td>
                 <td>57</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2886,7 +2924,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>478</td>
+                <td>485</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-locals</code></td>
@@ -2896,7 +2934,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>478</td>
+                <td>485</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-branches</code></td>
@@ -2906,7 +2944,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>538</td>
+                <td>545</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>unused-variable</code></td>
@@ -2916,7 +2954,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>639</td>
+                <td>646</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
@@ -2926,7 +2964,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>717</td>
+                <td>724</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-newlines</code></td>
@@ -4423,7 +4461,7 @@ excluded_fields = [
             
             <tr>
                 <td>convention</td>
-                <td>147</td>
+                <td>151</td>
             </tr>
             
             <tr>
@@ -4453,7 +4491,7 @@ excluded_fields = [
             
             <tr>
                 <td>line-too-long</td>
-                <td>22</td>
+                <td>24</td>
             </tr>
             
             <tr>
@@ -4598,12 +4636,12 @@ excluded_fields = [
             
             <tr>
                 <td>trailing-whitespace</td>
-                <td>26</td>
+                <td>28</td>
             </tr>
             
             <tr>
                 <td>missing-final-newline</td>
-                <td>3</td>
+                <td>2</td>
             </tr>
             
             <tr>
@@ -4624,6 +4662,11 @@ excluded_fields = [
             <tr>
                 <td>eval-used</td>
                 <td>5</td>
+            </tr>
+            
+            <tr>
+                <td>trailing-newlines</td>
+                <td>2</td>
             </tr>
             
             <tr>
@@ -4674,11 +4717,6 @@ excluded_fields = [
             <tr>
                 <td>attribute-defined-outside-init</td>
                 <td>3</td>
-            </tr>
-            
-            <tr>
-                <td>trailing-newlines</td>
-                <td>1</td>
             </tr>
             
             <tr>
@@ -4778,7 +4816,7 @@ excluded_fields = [
             
             <tr>
                 <td>agentlib_flexquant.modules.flexibility_indicator</td>
-                <td>43</td>
+                <td>47</td>
             </tr>
             
             <tr>
@@ -4883,7 +4921,7 @@ excluded_fields = [
             
             <tr>
                 <td>agentlib_flexquant/modules/flexibility_indicator.py</td>
-                <td>43</td>
+                <td>47</td>
             </tr>
             
             <tr>
