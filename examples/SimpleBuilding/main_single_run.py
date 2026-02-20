@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 from agentlib_flexquant.generate_flex_agents import FlexAgentGenerator
 from agentlib.utils.multi_agent_system import LocalMASAgency
 
@@ -10,7 +11,6 @@ sim_config = "mpc_and_sim/fmu_config.json"
 mpc_config = "mpc_and_sim/simple_building.json"
 predictor_config = "predictor/predictor_config.json"
 flex_config = "flex_configs/flexibility_agent_config.json"
-
 
 def run_example(until=until):
 
@@ -38,4 +38,6 @@ if __name__ == "__main__":
     # For an example with multiple runs, see: examples\SimpleBuilding\main_multi_run.py
     # For plotting of results generated from this main file, 
     # see: examples\SimpleBuilding\plot_results_single.py
+    import os 
+    os.chdir(Path(__file__).parent) # set working directory to the location of this file, so that generated files are stored here.
     run_example(until)

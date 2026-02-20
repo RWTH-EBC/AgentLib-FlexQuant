@@ -50,7 +50,6 @@ class KPI(pydantic.BaseModel):
         name = f"{self.direction}_{self.name}"
         return name
 
-
 class KPISeries(KPI):
     """Class defining extra attributes of the indicator KPISeries in addition to KPI."""
 
@@ -115,7 +114,6 @@ class KPISeries(KPI):
                 np.sum(self.value.values[:-1] * self._get_dt().iloc[:-1])
                 / TIME_CONVERSION[time_unit]
             )
-
 
 class FlexibilityKPIs(pydantic.BaseModel):
     """Class defining the indicator KPIs."""
@@ -486,7 +484,6 @@ class FlexibilityKPIs(pydantic.BaseModel):
             name_dict[name] = kpi.get_kpi_identifier()
         return name_dict
 
-
 class FlexibilityData(pydantic.BaseModel):
     """Class containing the data for the calculation of the flexibility."""
 
@@ -683,10 +680,13 @@ class FlexibilityData(pydantic.BaseModel):
         """
         self._common_time_grid = None
 
-    def get_necessary_profiles_for_calc_list(self) -> list[pd.Series]:
-        """returns the list of necessary profiles for the calculation of the KPIs. 
-        This can be used to check if all necessary data is available before performing the calculation. (callback)"""
-        return [
+    def update_profile(self, name: str, value: pd.Series) -> None:
+        """Update a specific profile for calculation with a new value."""
+        setattr(self, name, value)
+
+    def is_ready_for_calculation(self) -> bool:
+        """Check if all necessary profiles and parameters are set for KPI calculation."""
+        required_profiles = [
             self.power_profile_base,
             self.power_profile_flex_neg,
             self.power_profile_flex_pos,
@@ -694,23 +694,5 @@ class FlexibilityData(pydantic.BaseModel):
             self.stored_energy_profile_flex_neg,
             self.stored_energy_profile_flex_pos,
             self.electricity_price_series,
-            self.feed_in_price_series,
         ]
-
-    def clear_profiles(self) -> None:
-        """Set all profiles for calculation to None"""
-        for profile in self.get_necessary_profiles_for_calc_list():
-            setattr(self, profile.name, None)
-
-    def clear_profile(self, profile: pd.Series) -> None:
-        """Set a specific profile for calculation to None"""
-        setattr(self, profile.name, None)
-    
-    def update_profile(self, name: str, value: pd.Series) -> None:
-        """Update a specific profile for calculation with a new value."""
-        setattr(self, name, value)
-
-    def is_ready_for_calculation(self) -> bool:
-        """Check if the necessary data for KPI calculation is available."""
-        necessary_series = self.get_necessary_profiles_for_calc_list()
-        return all(series is not None for series in necessary_series)
+        return all(profile is not None for profile in required_profiles)

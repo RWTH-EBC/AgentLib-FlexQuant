@@ -3,6 +3,7 @@ import tempfile
 import json
 import logging
 from copy import deepcopy
+from pathlib import Path
 
 from agentlib.utils.multi_agent_system import LocalMASAgency
 
@@ -44,10 +45,10 @@ def update_configs(flex_config, flex_event_duration):
 def run_example(flex_event_duration, until=until):
     """Runs MAS simulation with specified flex event duration."""
     
-    mpc_config = "mpc_and_sim/simple_building.json"
-    sim_config = "mpc_and_sim/fmu_config.json" 
-    predictor_config = "predictor/predictor_config.json"
-    flex_config = "flex_configs/flexibility_agent_config.json"
+    mpc_config = Path(__file__).parent / "mpc_and_sim" / "simple_building.json"
+    sim_config = Path(__file__).parent / "mpc_and_sim" / "fmu_config.json" 
+    predictor_config = Path(__file__).parent / "predictor" / "predictor_config.json"
+    flex_config = Path(__file__).parent / "flex_configs" / "flexibility_agent_config.json"
 
     updated_flex_config_path = update_configs(
         flex_config, flex_event_duration)

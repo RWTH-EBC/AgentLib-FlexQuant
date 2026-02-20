@@ -27,50 +27,6 @@ from agentlib_flexquant.data_structures.flex_offer import FlexOffer
 from dataclasses import dataclass
 
 
-class CallBackHandler: 
-    """Helper class to manage callback handling for flexibility indicator module.
-    
-    Adapter, der self.data schreibt 
-
-    """
-    necessary_callback_variables: list[pd.Series] 
-
-    def __init__(self, data: FlexibilityData, config: FlexibilityIndicatorModuleConfig): 
-        """Load general settings"""
-        # set collocation time grid 
-        self.collocation_time_grid = config.get(glbs.COLLOCATION_TIME_GRID).value
-
-        # get the necessary variables for the calculation of KPIs from the data class 
-        self.necessary_callback_variables = data.get_necessary_profiles_for_calc_list()
-
-
-    def initialize_callback_variables(self, data: FlexibilityData, config: FlexibilityIndicatorModuleConfig) -> FlexibilityData:
-        # check, whether the electricity price is constant. If yes, remove from callback list 
-        if config.calculate_costs.use_constant_electricity_price:
-            self.necessary_callback_variables = [var for var in self.necessary_callback_variables if var is not data.electricity_price_series]
-            data.electricity_price_series = pd.Series(data=config.calculate_costs.const_electricity_price, index=self.collocation_time_grid)
-        if config.calculate_costs.use_constant_feed_in_price:
-            self.necessary_callback_variables = [var for var in self.necessary_callback_variables if var is not data.feed_in_price_series]
-            data.feed_in_price_series = pd.Series(data=config.calculate_costs.const_feed_in_price, index=self.collocation_time_grid)
-
-        # check, whether the correction of energy costs is enabled. If yes, remove stored energy profiles from callback list
-        if config.correct_costs.enable_energy_costs_correction:
-            self.necessary_callback_variables = [var for var in self.necessary_callback_variables if var not in [data.stored_energy_profile_base, data.stored_energy_profile_flex_neg, data.stored_energy_profile_flex_pos]]
-            data.stored_energy_profile_base = pd.Series(data=0, index=self.collocation_time_grid)
-            data.stored_energy_profile_flex_neg = pd.Series(data=0, index=self.collocation_time_grid)
-            data.stored_energy_profile_flex_pos = pd.Series(data=0, index=self.collocation_time_grid)
-
-    def clear_callback_variables(self, data: FlexibilityData) -> FlexibilityData:
-        """Clear the values of the callback variables after processing."""
-        for var in self.necessary_callback_variables:
-            data.clear_profile(var)
-        return data
-
-    def update_input(self, data: FlexibilityData, name: str, value: pd.Series) -> FlexibilityData: 
-        """Update the incoming value"""
-        if name in [var.name for var in self.necessary_callback_variables]:
-            data.update_profile(name, value)
-        return data
 
 
 class InputsForCorrectFlexCosts(BaseModel):
@@ -397,6 +353,58 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
             )
         return self
 
+class CallBackHandler: 
+    """Helper class to manage callback handling for flexibility indicator module.
+    
+    Adapter, der self.data schreibt 
+
+    """
+    necessary_callback_variables: dict[str,str] = {
+        glbs.POWER_ALIAS_BASE: "power_profile_base",
+        glbs.POWER_ALIAS_NEG: "power_profile_flex_neg",
+        glbs.POWER_ALIAS_POS: "power_profile_flex_pos",
+    }
+
+    def __init__(self,config: FlexibilityIndicatorModuleConfig): 
+        """Load general settings"""
+        # set collocation time grid 
+        def get_param(cfg, name: str):
+            return next(v for v in cfg.parameters if v.name == name)
+        self.collocation_time_grid = get_param(config, glbs.COLLOCATION_TIME_GRID).value
+
+    def initialize_callback_variables(self, data: FlexibilityData, config: FlexibilityIndicatorModuleConfig) -> FlexibilityData:
+        if config.calculate_costs.use_constant_electricity_price:
+            data.electricity_price_series = pd.Series(data=config.calculate_costs.const_electricity_price, index=self.collocation_time_grid)
+        else:
+            self.necessary_callback_variables.update({config.price_variable: "electricity_price_series"})
+        
+        if config.calculate_costs.use_constant_feed_in_price:
+            data.feed_in_price_series = pd.Series(data=config.calculate_costs.const_feed_in_price, index=self.collocation_time_grid)
+        else:
+            self.necessary_callback_variables.update({config.price_variable_feed_in: "feed_in_price_series"})
+
+        if config.correct_costs.enable_energy_costs_correction:
+            self.necessary_callback_variables.update({
+                glbs.STORED_ENERGY_ALIAS_BASE: "stored_energy_profile_base",
+                glbs.STORED_ENERGY_ALIAS_NEG: "stored_energy_profile_flex_neg",
+                glbs.STORED_ENERGY_ALIAS_POS: "stored_energy_profile_flex_pos",
+            })
+            
+        return data
+    
+    def set_all_callback_variables_to_none(self, data: FlexibilityData) -> FlexibilityData: # clear kann missverstanden werden 
+        """Clear the values of the callback variables after processing."""
+        for alias, var  in self.necessary_callback_variables.items():
+            data.update_profile(var, None)
+        return data
+
+    def update_input(self, data: FlexibilityData, name: str, value: pd.Series) -> FlexibilityData: 
+        """Update the incoming value"""
+        variable_name = self.necessary_callback_variables.get(name, None)
+        if variable_name is not None:
+            data.update_profile(variable_name, value)
+        return data
+
 
 class FlexibilityIndicatorModule(agentlib.BaseModule):
     """Module for calculating flexibility KPIs and generating flexibility offers
@@ -416,6 +424,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         self.time = []
         self.in_provision = False
         self.offer_count = 0
+        self.df = pd.DataFrame(columns=pd.Series(self.var_list))
         self.data = FlexibilityData(
             prep_time=self.get(glbs.PREP_TIME).value,
             market_time=self.get(glbs.MARKET_TIME).value,
@@ -423,8 +432,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             time_step=self.get(glbs.TIME_STEP).value,
             prediction_horizon=self.get(glbs.PREDICTION_HORIZON).value,
         )
-        self.df = pd.DataFrame(columns=pd.Series(self.var_list))
-        self.callback_handler = CallBackHandler(data=self.data, config=self.config)
+        self.callback_handler = CallBackHandler(config=self.config)
         self.data = self.callback_handler.initialize_callback_variables(data=self.data, config=self.config)
 
     def register_callbacks(self):
@@ -442,7 +450,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         """Yield control to the simulation environment and wait for events."""
         yield self.env.event()
 
-    def callback(self, inp: pd.Series, name: str): # todo self.data expects pd.Series -> check
+    def callback(self, inp, name):
         """Handle incoming data by storing power/energy/price profiles and triggering
         flexibility calculations when all required inputs are available.
         """
