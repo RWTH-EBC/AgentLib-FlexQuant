@@ -404,6 +404,11 @@ class CallBackHandler:
         if variable_name is not None:
             data.update_profile(variable_name, value)
         return data
+    
+    def is_ready_for_calculation(self, data: FlexibilityData) -> bool:
+        """Check if all necessary profiles and parameters are set for KPI calculation."""
+        required_profiles = [getattr(data,name) for key,name in self.necessary_callback_variables.items()]
+        return all(profile is not None for profile in required_profiles)
 
 class FlexibilityIndicatorModule(agentlib.BaseModule):
     """Module for calculating flexibility KPIs and generating flexibility offers
@@ -453,18 +458,20 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         """Handle incoming data by storing power/energy/price profiles and triggering
         flexibility calculations when all required inputs are available.
         """ 
-        if name == glbs.PROVISION_VAR_NAME:
-            self.in_provision = bool(inp)
         
+        if name == glbs.PROVISION_VAR_NAME:
+            self.in_provision = inp.value
+
         if self.in_provision:
             self.data = self.callback_handler.set_all_callback_variables_to_none(data=self.data)
         else: 
-            self.data = self.callback_handler.update_input(data=self.data, name=name, value=inp)
-        
-        if self.data.is_ready_for_calculation():
+            self.data = self.callback_handler.update_input(data=self.data, name=name, value=inp.value)
+            
+
+        if self.callback_handler.is_ready_for_calculation(data=self.data):
             self.calc_and_send_offer()
             self.data = self.callback_handler.clear_callback_variables(data=self.data)
-
+        
     def get_results(self) -> Optional[pd.DataFrame]:
         """Open results file of flexibility_indicator.py."""
         results_file = self.config.results_file

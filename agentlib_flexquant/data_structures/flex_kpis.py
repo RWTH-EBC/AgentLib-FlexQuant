@@ -684,15 +684,4 @@ class FlexibilityData(pydantic.BaseModel):
         """Update a specific profile for calculation with a new value."""
         setattr(self, name, value)
 
-    def is_ready_for_calculation(self) -> bool:
-        """Check if all necessary profiles and parameters are set for KPI calculation."""
-        required_profiles = [
-            self.power_profile_base,
-            self.power_profile_flex_neg,
-            self.power_profile_flex_pos,
-            self.stored_energy_profile_base,
-            self.stored_energy_profile_flex_neg,
-            self.stored_energy_profile_flex_pos,
-            self.electricity_price_series,
-        ]
-        return all(profile is not None for profile in required_profiles)
+    
