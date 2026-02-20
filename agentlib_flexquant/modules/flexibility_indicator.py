@@ -401,7 +401,6 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             self.in_provision = inp.value
             if self.in_provision:
                 self._set_inputs_to_none()
-            return
 
         if self.in_provision:
             return
