@@ -682,3 +682,35 @@ class FlexibilityData(pydantic.BaseModel):
         This should be called between different flexibility calculations.
         """
         self._common_time_grid = None
+
+    def get_necessary_profiles_for_calc_list(self) -> list[pd.Series]:
+        """returns the list of necessary profiles for the calculation of the KPIs. 
+        This can be used to check if all necessary data is available before performing the calculation. (callback)"""
+        return [
+            self.power_profile_base,
+            self.power_profile_flex_neg,
+            self.power_profile_flex_pos,
+            self.stored_energy_profile_base,
+            self.stored_energy_profile_flex_neg,
+            self.stored_energy_profile_flex_pos,
+            self.electricity_price_series,
+            self.feed_in_price_series,
+        ]
+
+    def clear_profiles(self) -> None:
+        """Set all profiles for calculation to None"""
+        for profile in self.get_necessary_profiles_for_calc_list():
+            setattr(self, profile.name, None)
+
+    def clear_profile(self, profile: pd.Series) -> None:
+        """Set a specific profile for calculation to None"""
+        setattr(self, profile.name, None)
+    
+    def update_profile(self, name: str, value: pd.Series) -> None:
+        """Update a specific profile for calculation with a new value."""
+        setattr(self, name, value)
+
+    def is_ready_for_calculation(self) -> bool:
+        """Check if the necessary data for KPI calculation is available."""
+        necessary_series = self.get_necessary_profiles_for_calc_list()
+        return all(series is not None for series in necessary_series)
