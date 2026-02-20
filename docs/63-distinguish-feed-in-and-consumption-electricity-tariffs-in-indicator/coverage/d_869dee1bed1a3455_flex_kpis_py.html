@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Coverage for agentlib_flexquant/data_structures/flex_kpis.py: 44%</title>
+    <title>Coverage for agentlib_flexquant/data_structures/flex_kpis.py: 43%</title>
     <link rel="icon" sizes="32x32" href="favicon_32.png">
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="coverage_html.js" defer></script>
@@ -12,7 +12,7 @@
     <div class="content">
         <h1>
             <span class="text">Coverage for </span><b>agentlib_flexquant/data_structures/flex_kpis.py</b>:
-            <span class="pc_cov">44%</span>
+            <span class="pc_cov">43%</span>
         </h1>
         <aside id="help_panel_wrapper">
             <input id="help_panel_state" type="checkbox">
@@ -55,8 +55,8 @@
         </aside>
         <h2>
             <span class="text">202 statements &nbsp;</span>
-            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">89<span class="text"> run</span></button>
-            <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">113<span class="text"> missing</span></button>
+            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">86<span class="text"> run</span></button>
+            <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">116<span class="text"> missing</span></button>
             <button type="button" class="exc show_exc button_toggle_exc" value="exc" data-shortcut="x" title="Toggle lines excluded">0<span class="text"> excluded</span></button>
         </h2>
         <p class="text">
@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="d_869dee1bed1a3455_flex_offer_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.4.4">coverage.py v7.4.4</a>,
-            created at 2026-02-20 15:49 +0000
+            created at 2026-02-20 16:13 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"/>
@@ -302,7 +302,7 @@
     <p class="pln"><span class="n"><a id="t220" href="#t220">220</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t221" href="#t221">221</a></span><span class="t"><span class="str">        """</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t222" href="#t222">222</a></span><span class="t">        <span class="com"># Power / energy KPIs</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t223" href="#t223">223</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">_calculate_power_flex</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t223" href="#t223">223</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">_calculate_power_flex</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t224" href="#t224">224</a></span><span class="t">            <span class="nam">power_profile_base</span><span class="op">=</span><span class="nam">power_profile_base</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t225" href="#t225">225</a></span><span class="t">            <span class="nam">power_profile_shadow</span><span class="op">=</span><span class="nam">power_profile_shadow</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t226" href="#t226">226</a></span><span class="t">            <span class="nam">flex_offer_time_grid</span><span class="op">=</span><span class="nam">flex_offer_time_grid</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
@@ -353,7 +353,7 @@
     <p class="pln"><span class="n"><a id="t271" href="#t271">271</a></span><span class="t"><span class="str">            and shadow mpc to set the power flexibility to zero</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t272" href="#t272">272</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t273" href="#t273">273</a></span><span class="t"><span class="str">        """</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t274" href="#t274">274</a></span><span class="t">        <span class="key">if</span> <span class="key">not</span> <span class="nam">power_profile_shadow</span><span class="op">.</span><span class="nam">index</span><span class="op">.</span><span class="nam">equals</span><span class="op">(</span><span class="nam">power_profile_base</span><span class="op">.</span><span class="nam">index</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t274" href="#t274">274</a></span><span class="t">        <span class="key">if</span> <span class="key">not</span> <span class="nam">power_profile_shadow</span><span class="op">.</span><span class="nam">index</span><span class="op">.</span><span class="nam">equals</span><span class="op">(</span><span class="nam">power_profile_base</span><span class="op">.</span><span class="nam">index</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t275" href="#t275">275</a></span><span class="t">            <span class="key">raise</span> <span class="nam">ValueError</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t276" href="#t276">276</a></span><span class="t">                <span class="str">f"Indices of power profiles do not match.\n"</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t277" href="#t277">277</a></span><span class="t">                <span class="str">f"Baseline: {power_profile_base.index}\n"</span>&nbsp;</span><span class="r"></span></p>
@@ -717,7 +717,7 @@
     <p class="pln"><span class="n"><a id="t635" href="#t635">635</a></span><span class="t"><span class="str">            collocation_time_grid: Time grid of the mpc output with collocation discretization</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t636" href="#t636">636</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t637" href="#t637">637</a></span><span class="t"><span class="str">        """</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t638" href="#t638">638</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">kpis_pos</span><span class="op">.</span><span class="nam">calculate</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t638" href="#t638">638</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">kpis_pos</span><span class="op">.</span><span class="nam">calculate</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t639" href="#t639">639</a></span><span class="t">            <span class="nam">power_profile_base</span><span class="op">=</span><span class="nam">self</span><span class="op">.</span><span class="nam">power_profile_base</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t640" href="#t640">640</a></span><span class="t">            <span class="nam">power_profile_shadow</span><span class="op">=</span><span class="nam">self</span><span class="op">.</span><span class="nam">power_profile_flex_pos</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t641" href="#t641">641</a></span><span class="t">            <span class="nam">electricity_price_series</span><span class="op">=</span><span class="nam">self</span><span class="op">.</span><span class="nam">electricity_price_series</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
@@ -787,7 +787,7 @@
             <a id="nextFileLink" class="nav" href="d_869dee1bed1a3455_flex_offer_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.4.4">coverage.py v7.4.4</a>,
-            created at 2026-02-20 15:49 +0000
+            created at 2026-02-20 16:13 +0000
         </p>
     </div>
 </footer>
