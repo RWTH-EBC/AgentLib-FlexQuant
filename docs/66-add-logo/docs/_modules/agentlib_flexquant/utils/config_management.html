@@ -91,7 +91,7 @@
 <span class="n">all_module_types</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;agentlib_mpc.ann_trainer&quot;</span><span class="p">)</span>
 <span class="n">all_module_types</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;agentlib_mpc.gpr_trainer&quot;</span><span class="p">)</span>
 <span class="n">all_module_types</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;agentlib_mpc.linreg_trainer&quot;</span><span class="p">)</span>
-<span class="n">all_module_types</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;agentlib_mpc.ann_simulator&quot;</span><span class="p">)</span>
+<span class="n">all_module_types</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;agentlib_mpc.ml_simulator&quot;</span><span class="p">)</span>
 <span class="n">all_module_types</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;agentlib_mpc.set_point_generator&quot;</span><span class="p">)</span>
 <span class="c1"># remove clone since not used</span>
 <span class="n">all_module_types</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;clonemap&quot;</span><span class="p">)</span>
@@ -186,7 +186,13 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a flexquant module config from an original agentlib module config.&quot;&quot;&quot;</span>
     <span class="n">config_dict</span> <span class="o">=</span> <span class="n">module_config</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span>
     <span class="n">config_dict</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">module_type</span>
-    <span class="k">return</span> <span class="n">MODULE_TYPE_DICT</span><span class="p">[</span><span class="n">module_type</span><span class="p">](</span><span class="o">**</span><span class="n">config_dict</span><span class="p">,</span> <span class="n">_agent_id</span><span class="o">=</span><span class="n">agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
+    <span class="n">flex_config_dict</span> <span class="o">=</span> <span class="n">MODULE_TYPE_DICT</span><span class="p">[</span><span class="n">module_type</span><span class="p">](</span><span class="o">**</span><span class="n">config_dict</span><span class="p">,</span>
+                                                     <span class="n">_agent_id</span><span class="o">=</span><span class="n">agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+    <span class="c1"># HOTFIX due to AgentLib-MPC bug. Needs to be adapted after Objectives</span>
+    <span class="c1"># in AgentLib-MPC are fixed.</span>
+    <span class="k">if</span> <span class="n">flex_config_dict</span><span class="o">.</span><span class="n">r_del_u</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">flex_config_dict</span> <span class="o">=</span> <span class="n">flex_config_dict</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;r_del_u&quot;</span><span class="p">:</span> <span class="p">{}})</span>
+    <span class="k">return</span> <span class="n">flex_config_dict</span></div>
 
 
 <div class="viewcode-block" id="to_dict_and_remove_unnecessary_fields"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.config_management.to_dict_and_remove_unnecessary_fields">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">to_dict_and_remove_unnecessary_fields</span><span class="p">(</span><span class="n">module</span><span class="p">:</span> <span class="n">BaseModuleConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
