@@ -359,11 +359,11 @@ class CallBackHandler:
     Adapter, der self.data schreibt 
 
     """
-    necessary_callback_variables: dict[str,str] = {
-        glbs.POWER_ALIAS_BASE: "power_profile_base",
-        glbs.POWER_ALIAS_NEG: "power_profile_flex_neg",
-        glbs.POWER_ALIAS_POS: "power_profile_flex_pos",
-    }
+    necessary_callback_variables: dict[str,tuple] = {
+        glbs.POWER_ALIAS_BASE: ("power_profile_base", True),
+        glbs.POWER_ALIAS_NEG: ("power_profile_flex_neg", True),
+        glbs.POWER_ALIAS_POS: ("power_profile_flex_pos", True),
+    } # global alias: (variablename in data, True if MPCVariable else False)
 
     def __init__(self,config: FlexibilityIndicatorModuleConfig): 
         """Load general settings"""
@@ -376,18 +376,18 @@ class CallBackHandler:
         if config.calculate_costs.use_constant_electricity_price:
             data.electricity_price_series = pd.Series(data=config.calculate_costs.const_electricity_price, index=self.collocation_time_grid)
         else:
-            self.necessary_callback_variables.update({config.price_variable: "electricity_price_series"})
+            self.necessary_callback_variables.update({config.price_variable: ("electricity_price_series", False)})
         
         if config.calculate_costs.use_constant_feed_in_price:
             data.feed_in_price_series = pd.Series(data=config.calculate_costs.const_feed_in_price, index=self.collocation_time_grid)
         else:
-            self.necessary_callback_variables.update({config.price_variable_feed_in: "feed_in_price_series"})
+            self.necessary_callback_variables.update({config.price_variable_feed_in: ("feed_in_price_series", False)})
 
         if config.correct_costs.enable_energy_costs_correction:
             self.necessary_callback_variables.update({
-                glbs.STORED_ENERGY_ALIAS_BASE: "stored_energy_profile_base",
-                glbs.STORED_ENERGY_ALIAS_NEG: "stored_energy_profile_flex_neg",
-                glbs.STORED_ENERGY_ALIAS_POS: "stored_energy_profile_flex_pos",
+                glbs.STORED_ENERGY_ALIAS_BASE: ("stored_energy_profile_base", True),
+                glbs.STORED_ENERGY_ALIAS_NEG: ("stored_energy_profile_flex_neg", True),
+                glbs.STORED_ENERGY_ALIAS_POS: ("stored_energy_profile_flex_pos", True),
             })
             
         return data
@@ -395,19 +395,20 @@ class CallBackHandler:
     def set_all_callback_variables_to_none(self, data: FlexibilityData) -> FlexibilityData: # clear kann missverstanden werden 
         """Clear the values of the callback variables after processing."""
         for alias, var  in self.necessary_callback_variables.items():
-            data.update_profile(var, None)
+            data.update_profile(var[0], None, mpc=var[1])
         return data
 
     def update_input(self, data: FlexibilityData, name: str, value: pd.Series) -> FlexibilityData: 
         """Update the incoming value"""
-        variable_name = self.necessary_callback_variables.get(name, None)
-        if variable_name is not None:
-            data.update_profile(variable_name, value)
+        var_tuple = self.necessary_callback_variables.get(name, None)
+        if var_tuple is not None: 
+            variable_name, mpc = var_tuple
+            data.update_profile(variable_name, value, mpc=mpc)
         return data
     
     def is_ready_for_calculation(self, data: FlexibilityData) -> bool:
         """Check if all necessary profiles and parameters are set for KPI calculation."""
-        required_profiles = [getattr(data,name) for key,name in self.necessary_callback_variables.items()]
+        required_profiles = [getattr(data,name[0]) for key,name in self.necessary_callback_variables.items()]
         return all(profile is not None for profile in required_profiles)
 
 class FlexibilityIndicatorModule(agentlib.BaseModule):
@@ -470,7 +471,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
 
         if self.callback_handler.is_ready_for_calculation(data=self.data):
             self.calc_and_send_offer()
-            self.data = self.callback_handler.clear_callback_variables(data=self.data)
+            self.data = self.callback_handler.set_all_callback_variables_to_none(data=self.data)
         
     def get_results(self) -> Optional[pd.DataFrame]:
         """Open results file of flexibility_indicator.py."""

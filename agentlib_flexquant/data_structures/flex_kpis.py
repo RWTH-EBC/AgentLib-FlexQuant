@@ -680,8 +680,10 @@ class FlexibilityData(pydantic.BaseModel):
         """
         self._common_time_grid = None
 
-    def update_profile(self, name: str, value: pd.Series) -> None:
+    def update_profile(self, name: str, value: pd.Series, mpc:bool) -> None:
         """Update a specific profile for calculation with a new value."""
+        if value is not None: 
+            value = self.unify_inputs(series=value, mpc= mpc)
         setattr(self, name, value)
 
     
