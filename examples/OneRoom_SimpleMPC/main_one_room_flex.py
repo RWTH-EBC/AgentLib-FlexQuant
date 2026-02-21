@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 from agentlib_flexquant.generate_flex_agents import FlexAgentGenerator
 from agentlib_flexquant.utils.interactive import Dashboard, CustomBound
 from agentlib.utils.multi_agent_system import LocalMASAgency
@@ -68,4 +69,6 @@ def run_example(until=until, with_plots=False, with_dashboard=False):
 
 
 if __name__ == "__main__":
+    import os 
+    os.chdir(Path(__file__).parent)
     run_example(until, with_plots=False, with_dashboard=True)

@@ -80,4 +80,6 @@ if __name__ == "__main__":
         # For an example with single run, see: examples\SimpleBuilding\main_single_run.py
         # For plotting of results generated from this main file, 
         # see: examples\SimpleBuilding\plot_results_mult.py
+        import os 
+        os.chdir(Path(__file__).parent)
         run_example(flex_event_duration, until)

@@ -39,5 +39,5 @@ if __name__ == "__main__":
     # For plotting of results generated from this main file, 
     # see: examples\SimpleBuilding\plot_results_single.py
     import os 
-    os.chdir(Path(__file__).parent) # set working directory to the location of this file, so that generated files are stored here.
+    os.chdir(Path(__file__).parent)
     run_example(until)
