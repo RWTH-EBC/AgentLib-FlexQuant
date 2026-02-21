@@ -123,6 +123,7 @@
 <span class="sd">        and the KPI name.&quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">return</span> <span class="n">name</span></div></div>
+    
 
 <div class="viewcode-block" id="KPISeries"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.KPISeries">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">KPISeries</span><span class="p">(</span><span class="n">KPI</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class defining extra attributes of the indicator KPISeries in addition to KPI.&quot;&quot;&quot;</span>
@@ -188,6 +189,7 @@
                 <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">values</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_dt</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
                 <span class="o">/</span> <span class="n">TIME_CONVERSION</span><span class="p">[</span><span class="n">time_unit</span><span class="p">]</span>
             <span class="p">)</span></div></div>
+        
 
 <div class="viewcode-block" id="FlexibilityKPIs"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityKPIs</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class defining the indicator KPIs.&quot;&quot;&quot;</span>
@@ -557,6 +559,7 @@
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">kpi</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kpi_dict</span><span class="p">(</span><span class="n">identifier</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">name_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">kpi</span><span class="o">.</span><span class="n">get_kpi_identifier</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">name_dict</span></div></div>
+
 
 <div class="viewcode-block" id="FlexibilityData"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityData</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class containing the data for the calculation of the flexibility.&quot;&quot;&quot;</span>
