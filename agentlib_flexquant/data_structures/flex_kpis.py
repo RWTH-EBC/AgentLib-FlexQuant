@@ -49,6 +49,7 @@ class KPI(pydantic.BaseModel):
         and the KPI name."""
         name = f"{self.direction}_{self.name}"
         return name
+    
 
 class KPISeries(KPI):
     """Class defining extra attributes of the indicator KPISeries in addition to KPI."""
@@ -114,6 +115,7 @@ class KPISeries(KPI):
                 np.sum(self.value.values[:-1] * self._get_dt().iloc[:-1])
                 / TIME_CONVERSION[time_unit]
             )
+        
 
 class FlexibilityKPIs(pydantic.BaseModel):
     """Class defining the indicator KPIs."""
@@ -483,6 +485,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         for name, kpi in self.get_kpi_dict(identifier=False).items():
             name_dict[name] = kpi.get_kpi_identifier()
         return name_dict
+
 
 class FlexibilityData(pydantic.BaseModel):
     """Class containing the data for the calculation of the flexibility."""
