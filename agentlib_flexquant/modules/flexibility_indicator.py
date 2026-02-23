@@ -369,15 +369,16 @@ class CallBackHandler:
         self.collocation_time_grid = get_param(config, glbs.COLLOCATION_TIME_GRID).value
 
     def initialize_callback_variables(self, data: FlexibilityData, config: FlexibilityIndicatorModuleConfig) -> FlexibilityData:
-        if config.calculate_costs.use_constant_electricity_price:
-            data.electricity_price_series = pd.Series(data=config.calculate_costs.const_electricity_price, index=self.collocation_time_grid)
-        else:
-            self.necessary_callback_variables.update({config.price_variable: ("electricity_price_series", False)})
-        
-        if config.calculate_costs.use_constant_feed_in_price:
-            data.feed_in_price_series = pd.Series(data=config.calculate_costs.const_feed_in_price, index=self.collocation_time_grid)
-        else:
-            self.necessary_callback_variables.update({config.price_variable_feed_in: ("feed_in_price_series", False)})
+        if config.calculate_costs.calculate_flex_costs:
+            if config.calculate_costs.use_constant_electricity_price:
+                data.electricity_price_series = pd.Series(data=config.calculate_costs.const_electricity_price, index=self.collocation_time_grid)
+            else:
+                self.necessary_callback_variables.update({config.price_variable: ("electricity_price_series", False)})
+            
+            if config.calculate_costs.use_constant_feed_in_price:
+                data.feed_in_price_series = pd.Series(data=config.calculate_costs.const_feed_in_price, index=self.collocation_time_grid)
+            else:
+                self.necessary_callback_variables.update({config.price_variable_feed_in: ("feed_in_price_series", False)})
 
         if config.correct_costs.enable_energy_costs_correction:
             self.necessary_callback_variables.update({
