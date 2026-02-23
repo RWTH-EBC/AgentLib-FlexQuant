@@ -460,10 +460,10 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         if name == glbs.PROVISION_VAR_NAME:
             self.in_provision = inp.value
 
-        if self.in_provision:
-            self.data = self.callback_handler.set_all_callback_variables_to_none(data=self.data)
-        else: 
-            self.data = self.callback_handler.update_input(data=self.data, name=name, value=inp.value)
+            if self.in_provision:
+                self.data = self.callback_handler.set_all_callback_variables_to_none(data=self.data)
+        # else: 
+        self.data = self.callback_handler.update_input(data=self.data, name=name, value=inp.value)
             
 
         if self.callback_handler.is_ready_for_calculation(data=self.data):
