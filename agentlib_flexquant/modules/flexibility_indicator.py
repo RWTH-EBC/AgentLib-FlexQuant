@@ -355,7 +355,7 @@ class CallBackHandler:
     Adapter, der self.data schreibt 
 
     """
-    necessary_callback_variables: dict[str,tuple] = {
+    _BASE_CALLBACK_VARS: dict[str,tuple] = {
         glbs.POWER_ALIAS_BASE: ("power_profile_base", True),
         glbs.POWER_ALIAS_NEG: ("power_profile_flex_neg", True),
         glbs.POWER_ALIAS_POS: ("power_profile_flex_pos", True),
@@ -367,6 +367,7 @@ class CallBackHandler:
         def get_param(cfg, name: str):
             return next(v for v in cfg.parameters if v.name == name)
         self.collocation_time_grid = get_param(config, glbs.COLLOCATION_TIME_GRID).value
+        self.necessary_callback_variables = self._BASE_CALLBACK_VARS.copy()
 
     def initialize_callback_variables(self, data: FlexibilityData, config: FlexibilityIndicatorModuleConfig) -> FlexibilityData:
         if config.calculate_costs.calculate_flex_costs:
@@ -460,10 +461,10 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         if name == glbs.PROVISION_VAR_NAME:
             self.in_provision = inp.value
 
-            if self.in_provision:
-                self.data = self.callback_handler.set_all_callback_variables_to_none(data=self.data)
-        # else: 
-        self.data = self.callback_handler.update_input(data=self.data, name=name, value=inp.value)
+        if self.in_provision:
+            self.data = self.callback_handler.set_all_callback_variables_to_none(data=self.data)
+        else: 
+            self.data = self.callback_handler.update_input(data=self.data, name=name, value=inp.value)
             
 
         if self.callback_handler.is_ready_for_calculation(data=self.data):
