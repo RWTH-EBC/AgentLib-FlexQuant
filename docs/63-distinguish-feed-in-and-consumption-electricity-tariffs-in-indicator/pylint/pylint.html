@@ -28,9 +28,9 @@
 
         
         <h2>Score</h2>
-        7.29 / 10
+        7.28 / 10
             
-            (previous score: 7.29 / 10)
+            (previous score: 7.28 / 10)
             
         
 
@@ -1516,15 +1516,13 @@
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model
-                # can&#39;t deal with iterable
+                # change the type of iterable input, since casadi model can&#39;t deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time
-            # will not be exceeded
+            # reduce the simulation time step so that the total horizon time will not be exceeded
             if current_sim_time + sim_time_step &lt;= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -1568,8 +1566,8 @@
     def _initialize_flex_results(
         self, n_simulation_steps, horizon_length, sim_time_step, result_df
     ):
-        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension
-        and index and fill with existing results from optimization
+        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension and index
+        and fill with existing results from optimization
 
         &#34;&#34;&#34;
 
@@ -1748,15 +1746,13 @@
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model
-                # can&#39;t deal with iterable
+                # change the type of iterable input, since casadi model can&#39;t deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time
-            # will not be exceeded
+            # reduce the simulation time step so that the total horizon time will not be exceeded
             if current_sim_time + sim_time_step &lt;= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -1767,9 +1763,7 @@
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value
-
-</pre></td>
+                ] = self.flex_model.get_output(output).value</pre></td>
             </tr>
             
             <tr>
@@ -1835,8 +1829,8 @@
 
     def _update_model_parameters(self):
         &#34;&#34;&#34;update the value of module parameters with value from config,
-        since creating a model just reads the value in the model class
-        but not the config.
+        since creating a model just reads the value in the model class but
+        not the config
 
         &#34;&#34;&#34;
 
@@ -1853,7 +1847,8 @@
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
         &#34;&#34;&#34;simulate with flex model over the prediction horizon
 
@@ -2036,7 +2031,6 @@ excluded_fields = [
         &#34;interpolation_method&#34;,
         &#34;allowed_values&#34;,
     ]
-
 </pre></td>
             </tr>
             
@@ -2063,9 +2057,12 @@ excluded_fields = [
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
-        &#34;&#34;&#34;simulate with flex model over the prediction horizon&#34;&#34;&#34;
+        &#34;&#34;&#34;simulate with flex model over the prediction horizon
+
+        &#34;&#34;&#34;
 
         # get control and input values from the mpc optimization result
         control_values = result_df.variable[
@@ -2173,7 +2170,7 @@ excluded_fields = [
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.flexibility_indicator:[474:497]
+==agentlib_flexquant.modules.flexibility_indicator:[475:498]
 ==agentlib_flexquant.modules.flexibility_market:[88:97]
         results_file = self.config.results_file
         try:
@@ -2228,12 +2225,9 @@ excluded_fields = [
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
-            total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
     ):
-        &#34;&#34;&#34;simulate with flex model over the prediction horizon
-
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;simulate with flex model over the prediction horizon&#34;&#34;&#34;
 
         # get control and input values from the mpc optimization result</pre></td>
             </tr>
@@ -2637,7 +2631,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>371</td>
+                <td>372</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2647,7 +2641,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>371</td>
+                <td>372</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -2657,7 +2651,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>374</td>
+                <td>375</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2667,7 +2661,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>376</td>
+                <td>377</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2677,7 +2671,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>377</td>
+                <td>378</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2687,7 +2681,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>379</td>
+                <td>380</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2697,7 +2691,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>381</td>
+                <td>382</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2707,17 +2701,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>389</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>trailing-whitespace</code></td>
-                <td>C0303</td>
-                <td></td>
-                <td><pre>Trailing whitespace</pre></td>
-            </tr>
-            
-            <tr>
-                <td>391</td>
+                <td>390</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2728,6 +2712,16 @@ excluded_fields = [
             
             <tr>
                 <td>392</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>393</td>
                 <td>126</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2737,7 +2731,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>392</td>
+                <td>393</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2747,7 +2741,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>394</td>
+                <td>395</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>unused-variable</code></td>
@@ -2757,7 +2751,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>398</td>
+                <td>399</td>
                 <td>98</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2767,7 +2761,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>401</td>
+                <td>402</td>
                 <td>33</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2777,7 +2771,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>405</td>
+                <td>406</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2787,7 +2781,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>408</td>
+                <td>409</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2797,7 +2791,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>429</td>
+                <td>430</td>
                 <td>8</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2807,7 +2801,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>438</td>
+                <td>439</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -2817,7 +2811,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>440</td>
+                <td>441</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -2827,7 +2821,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>458</td>
+                <td>459</td>
                 <td>11</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2837,7 +2831,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>459</td>
+                <td>460</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2847,8 +2841,8 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>465</td>
-                <td>15</td>
+                <td>466</td>
+                <td>13</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
                 <td>C0303</td>
@@ -2860,14 +2854,14 @@ excluded_fields = [
                 <td>467</td>
                 <td>0</td>
                 <td>convention</td>
-                <td><code>trailing-whitespace</code></td>
-                <td>C0303</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
                 <td></td>
-                <td><pre>Trailing whitespace</pre></td>
+                <td><pre>Line too long (102/100)</pre></td>
             </tr>
             
             <tr>
-                <td>472</td>
+                <td>468</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2877,7 +2871,17 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>483</td>
+                <td>473</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>trailing-whitespace</code></td>
+                <td>C0303</td>
+                <td></td>
+                <td><pre>Trailing whitespace</pre></td>
+            </tr>
+            
+            <tr>
+                <td>484</td>
                 <td>28</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2887,7 +2891,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>483</td>
+                <td>484</td>
                 <td>46</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2897,7 +2901,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>483</td>
+                <td>484</td>
                 <td>57</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2907,7 +2911,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>483</td>
+                <td>484</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-locals</code></td>
@@ -2917,7 +2921,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>483</td>
+                <td>484</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-branches</code></td>
@@ -2927,7 +2931,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>543</td>
+                <td>544</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>unused-variable</code></td>
@@ -2937,7 +2941,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>644</td>
+                <td>645</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
@@ -2947,7 +2951,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>722</td>
+                <td>723</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-newlines</code></td>
@@ -4444,7 +4448,7 @@ excluded_fields = [
             
             <tr>
                 <td>convention</td>
-                <td>153</td>
+                <td>154</td>
             </tr>
             
             <tr>
@@ -4474,7 +4478,7 @@ excluded_fields = [
             
             <tr>
                 <td>line-too-long</td>
-                <td>23</td>
+                <td>24</td>
             </tr>
             
             <tr>
@@ -4794,7 +4798,7 @@ excluded_fields = [
             
             <tr>
                 <td>agentlib_flexquant.modules.flexibility_indicator</td>
-                <td>42</td>
+                <td>43</td>
             </tr>
             
             <tr>
@@ -4899,7 +4903,7 @@ excluded_fields = [
             
             <tr>
                 <td>agentlib_flexquant/modules/flexibility_indicator.py</td>
-                <td>42</td>
+                <td>43</td>
             </tr>
             
             <tr>
