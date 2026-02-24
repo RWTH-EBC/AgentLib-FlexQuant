@@ -20,6 +20,12 @@ def run_example(until=until, with_plots=False, with_dashboard=False):
     fully follow offer. When using constant it does. Reason is the fast inertia of the
     system.
 
+    This examples also introduces the flex_cost_function_appendix field, which allows
+    for custom cost function terms. These terms are added to the standard objective
+    of the corresponding shadow MPC (the filed does not exist for the Baseline, as
+    here you would change the base MPC used for creating the shadow MPCs). You can
+    change the field in the flexibility_agent_config to see its impact.
+
     The time delay in the prediction plots (power profiles do not follow predictions)
     is caused by the collocation points and is only a visual effect.
 

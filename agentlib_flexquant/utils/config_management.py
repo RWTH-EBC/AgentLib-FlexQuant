@@ -112,7 +112,13 @@ def get_flex_mpc_module_config(
     """Get a flexquant module config from an original agentlib module config."""
     config_dict = module_config.model_dump()
     config_dict["type"] = module_type
-    return MODULE_TYPE_DICT[module_type](**config_dict, _agent_id=agent_config.id)
+    flex_config_dict = MODULE_TYPE_DICT[module_type](**config_dict,
+                                                     _agent_id=agent_config.id)
+    # HOTFIX due to AgentLib-MPC bug. Needs to be adapted after Objectives
+    # in AgentLib-MPC are fixed.
+    if flex_config_dict.r_del_u is None:
+        flex_config_dict = flex_config_dict.model_copy(update={"r_del_u": {}})
+    return flex_config_dict
 
 
 def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig) -> dict:

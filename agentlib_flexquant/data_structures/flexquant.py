@@ -38,6 +38,10 @@ class ShadowMPCConfigGeneratorConfig(BaseModel):
     weights: list[MPCVariable] = Field(
         default=[], description="Name and value of weights",
     )
+    custom_inputs: list[MPCVariable] = Field(
+        default=[], description="Additional Inputs for the Shadow-MPCs. E.g. the baseline power prediction P_el_base"
+    )
+
     pos_flex: PFMPCData = Field(default=None, description="Data for PF-MPC")
     neg_flex: NFMPCData = Field(default=None, description="Data for NF-MPC")
 
@@ -55,11 +59,16 @@ class ShadowMPCConfigGeneratorConfig(BaseModel):
                 "cost function."
             )
         if self.weights:
-            self.pos_flex.weights = self.weights
-            self.neg_flex.weights = self.weights
+            self.pos_flex.config_parameters_appendix.extend(self.weights)
+            self.neg_flex.config_parameters_appendix.extend(self.weights)
+                
+        if self.custom_inputs:
+            self.pos_flex.config_inputs_appendix.extend(self.custom_inputs)
+            self.neg_flex.config_inputs_appendix.extend(self.custom_inputs)
+        
         return self
 
-    @field_serializer('weights')
+    @field_serializer('weights', 'custom_inputs')
     def serialize_mpc_variables(self, variables: list[MPCVariable], _info):
         return [v.dict(exclude=excluded_fields) for v in variables]
 

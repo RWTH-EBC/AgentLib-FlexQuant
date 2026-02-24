@@ -1,8 +1,6 @@
 """
 Defines shadow MPC and MINLP-MPC for positive/negative flexibility quantification.
 """
-from typing import Dict, Union
-
 import os
 import math
 import numpy as np
@@ -11,19 +9,22 @@ from pydantic import Field
 from typing import Dict, Union, Optional
 from collections.abc import Iterable
 from agentlib.core.datamodels import AgentVariable, Source
-from agentlib_mpc.modules import mpc_full, minlp_mpc
+from agentlib_mpc.modules.mpc import mpc_full, minlp_mpc
 from agentlib_mpc.data_structures.mpc_datamodels import Results
 from agentlib_flexquant.utils.data_handling import fill_nans, MEAN
 from agentlib_flexquant.data_structures.globals import (full_trajectory_suffix,
                                                         base_vars_to_communicate_suffix)
 import agentlib_flexquant.data_structures.globals as glbs
+from agentlib_flexquant.optimization_backends.constrained_cia import ConstrainedCasADiCIABackend
 
 
 class FlexibilityShadowMPCConfig(mpc_full.MPCConfig):
 
     baseline_input_names: list[str] = Field(default=[])
+    custom_input_names: list[Dict] = Field(default=[])
     baseline_state_names: list[str] = Field(default=[])
     full_control_names: list[str] = Field(default=[])
+
 
     baseline_agent_id: str = ""
 
@@ -55,13 +56,15 @@ class FlexibilityShadowMPC(mpc_full.MPC):
 
         # setup look up dict to track incoming inputs and states
         # (maps name as str to actual AgentVariable)
+        input_names_list = [var["name"] for var in self.config.custom_input_names]
         self._track_base_comm_vars_dict: Dict[str, Union[AgentVariable, None]] = {}
         for comm_var in self.config.inputs + self.config.states:
             if (comm_var.name in self.config.full_control_names or
                     comm_var.name + base_vars_to_communicate_suffix in
                     self.config.baseline_input_names or
                     comm_var.name + base_vars_to_communicate_suffix in
-                    self.config.baseline_state_names):
+                    self.config.baseline_state_names or
+                    comm_var.name in input_names_list):
                 comm_var.value = None
                 self._track_base_comm_vars_dict[comm_var.name] = comm_var.copy(deep=True)
         # set up necessary components if simulation is enabled
@@ -105,18 +108,6 @@ class FlexibilityShadowMPC(mpc_full.MPC):
             for output in self.var_ref.outputs:
                 series = df.variable[output]
                 self.set(output, series)
-
-    def set_actuation(self, solution: Results):
-        """Takes the solution from optimization backend and sends the first
-        step to AgentVariables."""
-        self.logger.info("Sending optimal control values to data_broker.")
-        tolerance = 1e-5
-        for control in self.var_ref.controls:
-            ub = self.get(control).ub
-            lb = self.get(control).lb
-            # take the first entry of the control trajectory
-            actuation = solution.df.variable[control].dropna()
-            self.set(control, actuation)
 
     def sim_flex_model(self, solution):
         """simulate the flex model over the preditcion horizon and save results"""
@@ -178,6 +169,12 @@ class FlexibilityShadowMPC(mpc_full.MPC):
                 callback=self.calc_flex_callback,
                 source=Source(agent_id=self.config.baseline_agent_id, module_id=None)
             )
+        for custom_inputs in self.config.custom_input_names:
+            self.agent.data_broker.register_callback(
+                name=custom_inputs["name"],
+                alias=custom_inputs["alias"],
+                callback=self.calc_flex_callback
+            )
         for base_states in self.config.baseline_state_names:
             self.agent.data_broker.register_callback(
                 name=base_states.removesuffix(base_vars_to_communicate_suffix),  # update MPC variable
@@ -206,9 +203,12 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         if inp.name in self.config.full_control_names:
             if vals.isna().any():
                 vals = fill_nans(series=vals, method=MEAN)
-            # add time shift env.now to the mpc prediction index if it starts at t=0
-            if vals.index[0] == 0:
-                vals.index += self.env.time
+        # add time shift env.time to the incoming variable to adapt to mpc output,
+        # which starts at t=0
+        if vals.index[0] == 0:
+            self.logger.info(f"The incoming variable {inp.name} starts with a time "
+                             f"index of 0. Adding the current environment time.")
+            vals.index += self.env.time
 
         # update value in the tracking dictionary
         self._track_base_comm_vars_dict[name].value = vals
@@ -340,6 +340,7 @@ class FlexibilityShadowMPC(mpc_full.MPC):
 class FlexibilityShadowMINLPMPCConfig(minlp_mpc.MINLPMPCConfig):
 
     baseline_input_names: list[str] = Field(default=[])
+    custom_input_names: list[Dict] = Field(default=[])
     baseline_state_names: list[str] = Field(default=[])
     full_control_names: list[str] = Field(default=[])
 
@@ -375,13 +376,15 @@ class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
 
         # setup look up dict to track incoming inputs and states
         # (maps name as str to actual AgentVariable)
+        input_names_list = [var["name"] for var in self.config.custom_input_names]
         self._track_base_comm_vars_dict: Dict[str, Union[AgentVariable, None]] = {}
         for comm_var in self.config.inputs + self.config.states:
             if (comm_var.name in self.config.full_control_names or
                     comm_var.name + base_vars_to_communicate_suffix in
                     self.config.baseline_input_names or
                     comm_var.name + base_vars_to_communicate_suffix in
-                    self.config.baseline_state_names):
+                    self.config.baseline_state_names or
+                    comm_var.name in input_names_list):
                 comm_var.value = None
                 self._track_base_comm_vars_dict[comm_var.name] = comm_var.copy(deep=True)
         # set up necessary components if simulation is enabled
@@ -414,6 +417,12 @@ class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
                 callback=self.calc_flex_callback,
                 source=Source(agent_id=self.config.baseline_agent_id, module_id=None)
             )
+        for custom_inputs in self.config.custom_input_names:
+            self.agent.data_broker.register_callback(
+                name=custom_inputs["name"],
+                alias=custom_inputs["alias"],
+                callback=self.calc_flex_callback
+            )
         for base_states in self.config.baseline_state_names:
             self.agent.data_broker.register_callback(
                 name=base_states.removesuffix(base_vars_to_communicate_suffix),  # update MPC variable
@@ -443,9 +452,12 @@ class FlexibilityShadowMINLPMPC(minlp_mpc.MINLPMPC):
         if inp.name in self.config.full_control_names:
             if vals.isna().any():
                 vals = fill_nans(series=vals, method=MEAN)
-            # add time shift env.now to the mpc prediction index if it starts at t=0
-            if vals.index[0] == 0:
-                vals.index += self.env.time
+            # set full controls to custom cia backend to constrain during market time
+            if isinstance(self.optimization_backend, ConstrainedCasADiCIABackend):
+                self.optimization_backend.config.full_controls_dict[inp.name] = vals
+        # add time shift env.now to the mpc prediction index if it starts at t=0
+        if vals.index[0] == 0:
+            vals.index += self.env.time
 
         # update value in the tracking dictionary
         self._track_base_comm_vars_dict[name].value = vals
