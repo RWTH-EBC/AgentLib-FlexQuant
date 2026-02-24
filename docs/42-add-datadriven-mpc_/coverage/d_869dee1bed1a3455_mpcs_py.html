@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Coverage for agentlib_flexquant/data_structures/mpcs.py: 96%</title>
+    <title>Coverage for agentlib_flexquant/data_structures/mpcs.py: 99%</title>
     <link rel="icon" sizes="32x32" href="favicon_32.png">
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="coverage_html.js" defer></script>
@@ -12,7 +12,7 @@
     <div class="content">
         <h1>
             <span class="text">Coverage for </span><b>agentlib_flexquant/data_structures/mpcs.py</b>:
-            <span class="pc_cov">96%</span>
+            <span class="pc_cov">99%</span>
         </h1>
         <aside id="help_panel_wrapper">
             <input id="help_panel_state" type="checkbox">
@@ -55,17 +55,17 @@
         </aside>
         <h2>
             <span class="text">101 statements &nbsp;</span>
-            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">97<span class="text"> run</span></button>
-            <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">4<span class="text"> missing</span></button>
+            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">100<span class="text"> run</span></button>
+            <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">1<span class="text"> missing</span></button>
             <button type="button" class="exc show_exc button_toggle_exc" value="exc" data-shortcut="x" title="Toggle lines excluded">0<span class="text"> excluded</span></button>
         </h2>
         <p class="text">
             <a id="prevFileLink" class="nav" href="d_869dee1bed1a3455_market_py.html">&#xab; prev</a> &nbsp; &nbsp;
             <a id="indexLink" class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
-            <a id="nextFileLink" class="nav" href="d_adb463408970a82b___init___py.html">&#xbb; next</a>
+            <a id="nextFileLink" class="nav" href="d_8cd2e9f911125d9e_generate_flex_agents_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.4.4">coverage.py v7.4.4</a>,
-            created at 2026-02-24 13:00 +0000
+            created at 2026-02-24 14:35 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"/>
@@ -243,7 +243,7 @@
     <p class="pln"><span class="n"><a id="t161" href="#t161">161</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t162" href="#t162">162</a></span><span class="t">    <span class="op">@</span><span class="nam">field_serializer</span><span class="op">(</span><span class="str">'config_inputs_appendix'</span><span class="op">,</span> <span class="str">'config_parameters_appendix'</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t163" href="#t163">163</a></span><span class="t">    <span class="key">def</span> <span class="nam">serialize_mpc_variables</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">variables</span><span class="op">:</span> <span class="nam">list</span><span class="op">[</span><span class="nam">MPCVariable</span><span class="op">]</span><span class="op">,</span> <span class="nam">_info</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t164" href="#t164">164</a></span><span class="t">        <span class="key">return</span> <span class="op">[</span><span class="nam">v</span><span class="op">.</span><span class="nam">dict</span><span class="op">(</span><span class="nam">exclude</span><span class="op">=</span><span class="nam">excluded_fields</span><span class="op">)</span> <span class="key">for</span> <span class="nam">v</span> <span class="key">in</span> <span class="nam">variables</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t164" href="#t164">164</a></span><span class="t">        <span class="key">return</span> <span class="op">[</span><span class="nam">v</span><span class="op">.</span><span class="nam">dict</span><span class="op">(</span><span class="nam">exclude</span><span class="op">=</span><span class="nam">excluded_fields</span><span class="op">)</span> <span class="key">for</span> <span class="nam">v</span> <span class="key">in</span> <span class="nam">variables</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t165" href="#t165">165</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t166" href="#t166">166</a></span><span class="t">    <span class="op">@</span><span class="nam">model_validator</span><span class="op">(</span><span class="nam">mode</span><span class="op">=</span><span class="str">"after"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t167" href="#t167">167</a></span><span class="t">    <span class="key">def</span> <span class="nam">update_config_parameters_appendix</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span> <span class="op">-></span> <span class="str">"BaselineMPCData"</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -309,7 +309,7 @@
     <p class="pln"><span class="n"><a id="t227" href="#t227">227</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t228" href="#t228">228</a></span><span class="t">    <span class="op">@</span><span class="nam">field_serializer</span><span class="op">(</span><span class="str">'config_inputs_appendix'</span><span class="op">,</span> <span class="str">'config_parameters_appendix'</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t229" href="#t229">229</a></span><span class="t">    <span class="key">def</span> <span class="nam">serialize_mpc_variables</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">variables</span><span class="op">:</span> <span class="nam">list</span><span class="op">[</span><span class="nam">MPCVariable</span><span class="op">]</span><span class="op">,</span> <span class="nam">_info</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t230" href="#t230">230</a></span><span class="t">        <span class="key">return</span> <span class="op">[</span><span class="nam">v</span><span class="op">.</span><span class="nam">dict</span><span class="op">(</span><span class="nam">exclude</span><span class="op">=</span><span class="nam">excluded_fields</span><span class="op">)</span> <span class="key">for</span> <span class="nam">v</span> <span class="key">in</span> <span class="nam">variables</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t230" href="#t230">230</a></span><span class="t">        <span class="key">return</span> <span class="op">[</span><span class="nam">v</span><span class="op">.</span><span class="nam">dict</span><span class="op">(</span><span class="nam">exclude</span><span class="op">=</span><span class="nam">excluded_fields</span><span class="op">)</span> <span class="key">for</span> <span class="nam">v</span> <span class="key">in</span> <span class="nam">variables</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t231" href="#t231">231</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t232" href="#t232">232</a></span><span class="t">    <span class="op">@</span><span class="nam">model_validator</span><span class="op">(</span><span class="nam">mode</span><span class="op">=</span><span class="str">"before"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t233" href="#t233">233</a></span><span class="t">    <span class="op">@</span><span class="nam">classmethod</span>&nbsp;</span><span class="r"></span></p>
@@ -367,7 +367,7 @@
     <p class="pln"><span class="n"><a id="t285" href="#t285">285</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t286" href="#t286">286</a></span><span class="t">    <span class="op">@</span><span class="nam">field_serializer</span><span class="op">(</span><span class="str">'config_inputs_appendix'</span><span class="op">,</span> <span class="str">'config_parameters_appendix'</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t287" href="#t287">287</a></span><span class="t">    <span class="key">def</span> <span class="nam">serialize_mpc_variables</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">variables</span><span class="op">:</span> <span class="nam">list</span><span class="op">[</span><span class="nam">MPCVariable</span><span class="op">]</span><span class="op">,</span> <span class="nam">_info</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t288" href="#t288">288</a></span><span class="t">        <span class="key">return</span> <span class="op">[</span><span class="nam">v</span><span class="op">.</span><span class="nam">dict</span><span class="op">(</span><span class="nam">exclude</span><span class="op">=</span><span class="nam">excluded_fields</span><span class="op">)</span> <span class="key">for</span> <span class="nam">v</span> <span class="key">in</span> <span class="nam">variables</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t288" href="#t288">288</a></span><span class="t">        <span class="key">return</span> <span class="op">[</span><span class="nam">v</span><span class="op">.</span><span class="nam">dict</span><span class="op">(</span><span class="nam">exclude</span><span class="op">=</span><span class="nam">excluded_fields</span><span class="op">)</span> <span class="key">for</span> <span class="nam">v</span> <span class="key">in</span> <span class="nam">variables</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t289" href="#t289">289</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t290" href="#t290">290</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t291" href="#t291">291</a></span><span class="t">    <span class="op">@</span><span class="nam">model_validator</span><span class="op">(</span><span class="nam">mode</span><span class="op">=</span><span class="str">"before"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -398,10 +398,10 @@
         <p>
             <a id="prevFileLink" class="nav" href="d_869dee1bed1a3455_market_py.html">&#xab; prev</a> &nbsp; &nbsp;
             <a id="indexLink" class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
-            <a id="nextFileLink" class="nav" href="d_adb463408970a82b___init___py.html">&#xbb; next</a>
+            <a id="nextFileLink" class="nav" href="d_8cd2e9f911125d9e_generate_flex_agents_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.4.4">coverage.py v7.4.4</a>,
-            created at 2026-02-24 13:00 +0000
+            created at 2026-02-24 14:35 +0000
         </p>
     </div>
 </footer>

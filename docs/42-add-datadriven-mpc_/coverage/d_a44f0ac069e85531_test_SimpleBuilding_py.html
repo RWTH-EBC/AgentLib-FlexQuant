@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Coverage for tests/test_SimpleBuilding.py: 54%</title>
+    <title>Coverage for tests/test_SimpleBuilding.py: 60%</title>
     <link rel="icon" sizes="32x32" href="favicon_32.png">
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="coverage_html.js" defer></script>
@@ -12,7 +12,7 @@
     <div class="content">
         <h1>
             <span class="text">Coverage for </span><b>tests/test_SimpleBuilding.py</b>:
-            <span class="pc_cov">54%</span>
+            <span class="pc_cov">60%</span>
         </h1>
         <aside id="help_panel_wrapper">
             <input id="help_panel_state" type="checkbox">
@@ -55,8 +55,8 @@
         </aside>
         <h2>
             <span class="text">57 statements &nbsp;</span>
-            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">31<span class="text"> run</span></button>
-            <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">26<span class="text"> missing</span></button>
+            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">34<span class="text"> run</span></button>
+            <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">23<span class="text"> missing</span></button>
             <button type="button" class="exc show_exc button_toggle_exc" value="exc" data-shortcut="x" title="Toggle lines excluded">0<span class="text"> excluded</span></button>
         </h2>
         <p class="text">
@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="d_a44f0ac069e85531_test_dashboard_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.4.4">coverage.py v7.4.4</a>,
-            created at 2026-02-24 13:00 +0000
+            created at 2026-02-24 14:35 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"/>
@@ -194,14 +194,14 @@
     <p class="run"><span class="n"><a id="t112" href="#t112">112</a></span><span class="t">        <span class="nam">sys</span><span class="op">.</span><span class="nam">modules</span><span class="op">[</span><span class="nam">module_name</span><span class="op">]</span> <span class="op">=</span> <span class="nam">run_module</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t113" href="#t113">113</a></span><span class="t">        <span class="nam">spec</span><span class="op">.</span><span class="nam">loader</span><span class="op">.</span><span class="nam">exec_module</span><span class="op">(</span><span class="nam">run_module</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t114" href="#t114">114</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t115" href="#t115">115</a></span><span class="t">        <span class="key">if</span> <span class="key">not</span> <span class="nam">hasattr</span><span class="op">(</span><span class="nam">run_module</span><span class="op">,</span> <span class="str">'run_example'</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t115" href="#t115">115</a></span><span class="t">        <span class="key">if</span> <span class="key">not</span> <span class="nam">hasattr</span><span class="op">(</span><span class="nam">run_module</span><span class="op">,</span> <span class="str">'run_example'</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t116" href="#t116">116</a></span><span class="t">            <span class="key">raise</span> <span class="nam">AttributeError</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t117" href="#t117">117</a></span><span class="t">                <span class="str">"The 'run.py' script must contain a 'run_example' function."</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t118" href="#t118">118</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t119" href="#t119">119</a></span><span class="t">        <span class="nam">run_module</span><span class="op">.</span><span class="nam">sim_config</span> <span class="op">=</span> <span class="str">"mpc_and_sim/fmu_config_linux.json"</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t119" href="#t119">119</a></span><span class="t">        <span class="nam">run_module</span><span class="op">.</span><span class="nam">sim_config</span> <span class="op">=</span> <span class="str">"mpc_and_sim/fmu_config_linux.json"</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t120" href="#t120">120</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t121" href="#t121">121</a></span><span class="t">        <span class="com"># Execute the function and get the results</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t122" href="#t122">122</a></span><span class="t">        <span class="nam">results</span> <span class="op">=</span> <span class="nam">run_module</span><span class="op">.</span><span class="nam">run_example</span><span class="op">(</span><span class="nam">until</span><span class="op">=</span><span class="num">3600</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t122" href="#t122">122</a></span><span class="t">        <span class="nam">results</span> <span class="op">=</span> <span class="nam">run_module</span><span class="op">.</span><span class="nam">run_example</span><span class="op">(</span><span class="nam">until</span><span class="op">=</span><span class="num">3600</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t123" href="#t123">123</a></span><span class="t">        <span class="key">return</span> <span class="nam">results</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t124" href="#t124">124</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t125" href="#t125">125</a></span><span class="t">    <span class="key">finally</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -263,7 +263,7 @@
             <a id="nextFileLink" class="nav" href="d_a44f0ac069e85531_test_dashboard_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.4.4">coverage.py v7.4.4</a>,
-            created at 2026-02-24 13:00 +0000
+            created at 2026-02-24 14:35 +0000
         </p>
     </div>
 </footer>
