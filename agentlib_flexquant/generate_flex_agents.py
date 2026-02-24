@@ -749,15 +749,13 @@ class FlexAgentGenerator:
         opt_backend = self.orig_mpc_module_config.optimization_backend["model"]["type"]
 
         # Extract the config class of the casadi model to check cost functions
-		config_class = inspect.get_annotations(custom_injection(opt_backend))["config"]
-		# Get custom module fields provided by the user and add them
+        config_class = inspect.get_annotations(custom_injection(opt_backend))["config"]
+        # Get custom module fields provided by the user and add them
         model_fields = self.baseline_mpc_module_config.optimization_backend["model"]
         _ = model_fields.pop("type")
-		if self.orig_mpc_module_config.optimization_backend["type"] == "casadi_ml":
-			ml_model_sources = self.orig_mpc_module_config.optimization_backend["model"]["ml_model_sources"]
-			config_instance = config_class(**model_fields, ml_model_sources=ml_model_sources)
-		else:
-        	config_instance = config_class(**model_fields)
+
+        config_instance = config_class(**model_fields)
+
         self.check_variables_in_casadi_config(
             config_instance,
             self.flex_config.shadow_mpc_config_generator_data.neg_flex.flex_cost_function +

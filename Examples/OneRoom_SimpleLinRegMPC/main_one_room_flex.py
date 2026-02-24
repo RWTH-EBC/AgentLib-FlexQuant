@@ -1,18 +1,17 @@
 import logging
-from flexibility_quantification.generate_flex_agents import FlexAgentGenerator
+from agentlib_flexquant.generate_flex_agents import FlexAgentGenerator
 from agentlib.utils.multi_agent_system import LocalMASAgency
-from flexibility_quantification.utils.interactive import Dashboard, CustomBound
+from agentlib_flexquant.utils.interactive import Dashboard, CustomBound
 from plot_results import plot_results
 
 # Set the log-level
 logging.basicConfig(level=logging.WARN)
-until = 21600
+until = 7200
 
-ENV_CONFIG = {"rt": False, "factor": 0.01, "t_sample": 60}
+ENV_CONFIG = {"rt": False, "factor": 0.01, "t_sample": 900}
 
 
-def run_example(until=until):
-    results = []
+def run_example(until=until, with_dashboard=False):
     mpc_config = "mpc_and_sim/simple_model.json"
     sim_config = "mpc_and_sim/simple_sim.json"
     predictor_config = "predictor/predictor_config.json"
@@ -32,19 +31,20 @@ def run_example(until=until):
     results = mas.get_results(cleanup=False)
 
     plot_results(results_data=results)    # Alternative plotscript using matplotlib,
-    Dashboard(
-        flex_config="flex_configs/flexibility_agent_config.json",
-        simulator_agent_config="mpc_and_sim/simple_sim.json",
-        results=results
-    ).show(
-        custom_bounds=CustomBound(
-            for_variable="T",
-            lb_name="T_lower",
-            ub_name="T_upper"
+    if with_dashboard:
+        Dashboard(
+            flex_config="flex_configs/flexibility_agent_config.json",
+            simulator_agent_config="mpc_and_sim/simple_sim.json",
+            results=results
+        ).show(
+            custom_bounds=CustomBound(
+                for_variable="T",
+                lb_name="T_lower",
+                ub_name="T_upper"
+            )
         )
-    )
     return results
 
 
 if __name__ == "__main__":
-    run_example(until)
+    run_example(until, with_dashboard=True)

@@ -12,7 +12,7 @@
                 },
                 {
                     "module_id": "FlexibilityIndicator",
-                    "type": "flexibility_quantification.flexibility_indicator",
+                    "type": "agentlib_flexquant.flexibility_indicator",
                     "price_variable": "r_pel",
                     "parameters": [
                         {
@@ -35,12 +35,6 @@
                             "name": "prediction_horizon",
                             "value": 48
                         }
-                    ],
-                    "inputs": [
-                        {
-                            "name": "r_pel",
-                            "alias": "r_pel"
-                        }
                     ]
                 }
             ]
@@ -62,7 +56,6 @@
             "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, -self.s_P * self.P_el])"
         }
     },
-    "path_to_flex_files": "created_flex_files",
     "delete_files": false,
     "overwrite_files": true
 }

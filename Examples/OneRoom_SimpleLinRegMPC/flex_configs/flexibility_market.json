@@ -8,14 +8,13 @@
         },
         {
           "module_id": "FlexibilityMarket",
-          "type": "flexibility_quantification.flexibility_market",
-          "time_step": 900,
+          "type": "agentlib_flexquant.flexibility_market",
           "market_specs": {
             "type": "single",
             "cooldown": 10,
             "minimum_average_flex": 0,
             "options": {
-              "start_time": 9000,
+              "offer_acceptance_time": 9000,
               "direction": "positive"
             }
           }

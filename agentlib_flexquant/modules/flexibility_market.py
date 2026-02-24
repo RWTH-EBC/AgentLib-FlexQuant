@@ -183,10 +183,10 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                         self.config.market_specs.accepted_offer_sample_points)
                     if flex_power_feedback_method == glbs.COLLOCATION:
                         profile = profile.reindex(
-                            self.get(glbs.TIME_GRID_INFO).value)
+                            self.get(glbs.TIME_GRID_INFO).value['grid'])
                     elif flex_power_feedback_method == glbs.CONSTANT:
                         index_to_keep = ~np.isin(
-                            profile.index, self.get(glbs.TIME_GRID_INFO).value)
+                            profile.index, self.get(glbs.TIME_GRID_INFO).value['grid'])
                         profile = profile.get(index_to_keep)
                         helper_indices = [i - 1 for i in profile.index[1:]]
                         new_index = sorted(set(profile.index.tolist() +
@@ -242,11 +242,10 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                 flex_power_feedback_method = (
                     self.config.market_specs.accepted_offer_sample_points)
                 if flex_power_feedback_method == glbs.COLLOCATION:
-                    profile = profile.reindex(self.get(
-                        glbs.TIME_GRID_INFO).value)
+                    profile = profile.reindex(self.get(glbs.TIME_GRID_INFO).value['grid'])
                 elif flex_power_feedback_method == glbs.CONSTANT:
                     index_to_keep = ~np.isin(profile.index,
-                                             self.get(glbs.TIME_GRID_INFO).value)
+                                             self.get(glbs.TIME_GRID_INFO).value['grid'])
                     profile = profile.get(index_to_keep)
                     helper_indices = [i - 1 for i in profile.index[1:]]
                     new_index = sorted(set(profile.index.tolist() +
