@@ -1,19 +1,15 @@
 """Generate agents for flexibility quantification.
-
-This module provides the FlexAgentGenerator class that creates and configures flexibility agents.
+This module provides the FlexAgentGenerator class that creates and configures
+flexibility agents.
 The agents created include the baseline, positive and negative flexibility agents,
-the flexibility indicator and market agents. The agents are created based on the flex config and
-the MPC config.
+the flexibility indicator and market agents. The agents are created based on the
+flex config and the MPC config.
 """
 import ast
 import atexit
 import inspect
-import json
 import logging
 import os
-from copy import deepcopy
-from pathlib import Path
-from typing import Union
 
 import astor
 import black
@@ -21,7 +17,7 @@ import json
 import numpy as np
 from copy import deepcopy
 from pathlib import Path
-from typing import List, Union
+from typing import Union
 from pydantic import FilePath
 from agentlib.core.agent import AgentConfig
 from agentlib.core.datamodels import AgentVariable
@@ -30,7 +26,7 @@ from agentlib.core.module import BaseModuleConfig
 from agentlib.utils import custom_injection, load_config
 from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from agentlib_mpc.models.casadi_model import CasadiModelConfig
-from agentlib_mpc.modules.mpc.mpc_full import MPCConfig
+from agentlib_mpc.modules.mpc_full import MPCConfig
 
 from agentlib_mpc.optimization_backends.casadi_.basic import DirectCollocation
 from agentlib_mpc.data_structures.casadi_utils import CasadiDiscretizationOptions
