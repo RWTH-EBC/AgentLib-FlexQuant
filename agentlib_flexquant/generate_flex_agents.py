@@ -1032,7 +1032,7 @@ class FlexAgentGenerator:
             with open(Path(str(simulator_agent_config.stem) + save_name_suffix + ".json"),
                       "w", encoding="utf-8") as f:
                 json.dump(sim_config, f, indent=4)
-            return simulator_agent_config
+            return Path(str(simulator_agent_config.stem) + save_name_suffix + ".json")
         except Exception as e:
             raise Exception(f"Could not adapt and create a new simulation config "
                             f"due to: {e}. "
