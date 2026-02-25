@@ -374,15 +374,14 @@ class FlexAgentGenerator:
             self.flex_config.baseline_config_generator_data.power_variable)
         module_config_flex_dict["storage_variable_name"] = (
             self.indicator_module_config.correct_costs.stored_energy_variable)
-        del module_config_flex_dict['r_del_u']
         module_config_flex = cmng.MODULE_TYPE_DICT[module_config.type](
             **module_config_flex_dict, _agent_id=agent_id
         )
 
         # HOTFIX due to AgentLib-MPC bug. Needs to be adapted after Objectives
         # in AgentLib-MPC are fixed.
-        #if module_config_flex.r_del_u is None:
-        #    module_config_flex = module_config_flex.model_copy(update={"r_del_u": {}})
+        if module_config_flex.r_del_u is None:
+           module_config_flex = module_config_flex.model_copy(update={"r_del_u": {}})
 
         # allow the module config to be changed
         module_config_flex.model_config["frozen"] = False
