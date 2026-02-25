@@ -2,13 +2,14 @@
 agentlib_flexquant/__init__.py:3:0: E0401: Unable to import 'agentlib.utils.plugin_import' (import-error)
 agentlib_flexquant/__init__.py:4:0: E0401: Unable to import 'agentlib_mpc.optimization_backends' (import-error)
 ************* Module agentlib_flexquant.generate_flex_agents
-agentlib_flexquant/generate_flex_agents.py:763:0: C0301: Line too long (110/100) (line-too-long)
-agentlib_flexquant/generate_flex_agents.py:764:0: C0301: Line too long (115/100) (line-too-long)
-agentlib_flexquant/generate_flex_agents.py:773:0: C0301: Line too long (110/100) (line-too-long)
-agentlib_flexquant/generate_flex_agents.py:774:0: C0301: Line too long (115/100) (line-too-long)
-agentlib_flexquant/generate_flex_agents.py:927:0: C0303: Trailing whitespace (trailing-whitespace)
-agentlib_flexquant/generate_flex_agents.py:1059:0: C0304: Final newline missing (missing-final-newline)
-agentlib_flexquant/generate_flex_agents.py:1:0: C0302: Too many lines in module (1059/1000) (too-many-lines)
+agentlib_flexquant/generate_flex_agents.py:384:0: W0311: Bad indentation. Found 11 spaces, expected 12 (bad-indentation)
+agentlib_flexquant/generate_flex_agents.py:762:0: C0301: Line too long (110/100) (line-too-long)
+agentlib_flexquant/generate_flex_agents.py:763:0: C0301: Line too long (115/100) (line-too-long)
+agentlib_flexquant/generate_flex_agents.py:772:0: C0301: Line too long (110/100) (line-too-long)
+agentlib_flexquant/generate_flex_agents.py:773:0: C0301: Line too long (115/100) (line-too-long)
+agentlib_flexquant/generate_flex_agents.py:926:0: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/generate_flex_agents.py:1058:0: C0304: Final newline missing (missing-final-newline)
+agentlib_flexquant/generate_flex_agents.py:1:0: C0302: Too many lines in module (1058/1000) (too-many-lines)
 agentlib_flexquant/generate_flex_agents.py:16:0: E0401: Unable to import 'astor' (import-error)
 agentlib_flexquant/generate_flex_agents.py:17:0: E0401: Unable to import 'black' (import-error)
 agentlib_flexquant/generate_flex_agents.py:19:0: E0401: Unable to import 'numpy' (import-error)
@@ -27,25 +28,25 @@ agentlib_flexquant/generate_flex_agents.py:50:0: R0902: Too many instance attrib
 agentlib_flexquant/generate_flex_agents.py:240:28: W0108: Lambda may not be necessary (unnecessary-lambda)
 agentlib_flexquant/generate_flex_agents.py:283:17: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
 agentlib_flexquant/generate_flex_agents.py:336:4: R0914: Too many local variables (22/15) (too-many-locals)
-agentlib_flexquant/generate_flex_agents.py:460:19: W0622: Redefining built-in 'input' (redefined-builtin)
-agentlib_flexquant/generate_flex_agents.py:571:16: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-agentlib_flexquant/generate_flex_agents.py:336:4: R0912: Too many branches (26/12) (too-many-branches)
-agentlib_flexquant/generate_flex_agents.py:336:4: R0915: Too many statements (72/50) (too-many-statements)
-agentlib_flexquant/generate_flex_agents.py:656:16: C2801: Unnecessarily calls dunder method __setattr__. Set attribute directly or use setattr built-in function. (unnecessary-dunder-call)
-agentlib_flexquant/generate_flex_agents.py:704:46: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/generate_flex_agents.py:722:8: R1705: Unnecessary "else" after "return", remove the "else" and de-indent the code inside it (no-else-return)
-agentlib_flexquant/generate_flex_agents.py:732:33: W0212: Access to a protected member _collocation_polynomial of a client class (protected-access)
-agentlib_flexquant/generate_flex_agents.py:742:4: R0914: Too many local variables (18/15) (too-many-locals)
-agentlib_flexquant/generate_flex_agents.py:779:65: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/generate_flex_agents.py:829:57: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/generate_flex_agents.py:861:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-agentlib_flexquant/generate_flex_agents.py:865:4: R0914: Too many local variables (17/15) (too-many-locals)
-agentlib_flexquant/generate_flex_agents.py:865:4: R0912: Too many branches (19/12) (too-many-branches)
-agentlib_flexquant/generate_flex_agents.py:1038:68: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/generate_flex_agents.py:1052:48: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/generate_flex_agents.py:1055:8: C0103: Variable name "e" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/generate_flex_agents.py:1056:12: W0707: Consider explicitly re-raising using 'raise Exception(f"Could not adapt and create a new simulation config due to: {e}. Please check {simulator_agent_config} and '{save_name_suffix}'") from e' (raise-missing-from)
-agentlib_flexquant/generate_flex_agents.py:1056:12: W0719: Raising too general exception: Exception (broad-exception-raised)
+agentlib_flexquant/generate_flex_agents.py:459:19: W0622: Redefining built-in 'input' (redefined-builtin)
+agentlib_flexquant/generate_flex_agents.py:570:16: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+agentlib_flexquant/generate_flex_agents.py:336:4: R0912: Too many branches (27/12) (too-many-branches)
+agentlib_flexquant/generate_flex_agents.py:336:4: R0915: Too many statements (73/50) (too-many-statements)
+agentlib_flexquant/generate_flex_agents.py:655:16: C2801: Unnecessarily calls dunder method __setattr__. Set attribute directly or use setattr built-in function. (unnecessary-dunder-call)
+agentlib_flexquant/generate_flex_agents.py:703:46: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/generate_flex_agents.py:721:8: R1705: Unnecessary "else" after "return", remove the "else" and de-indent the code inside it (no-else-return)
+agentlib_flexquant/generate_flex_agents.py:731:33: W0212: Access to a protected member _collocation_polynomial of a client class (protected-access)
+agentlib_flexquant/generate_flex_agents.py:741:4: R0914: Too many local variables (18/15) (too-many-locals)
+agentlib_flexquant/generate_flex_agents.py:778:65: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/generate_flex_agents.py:828:57: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/generate_flex_agents.py:860:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+agentlib_flexquant/generate_flex_agents.py:864:4: R0914: Too many local variables (17/15) (too-many-locals)
+agentlib_flexquant/generate_flex_agents.py:864:4: R0912: Too many branches (19/12) (too-many-branches)
+agentlib_flexquant/generate_flex_agents.py:1037:68: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/generate_flex_agents.py:1051:48: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/generate_flex_agents.py:1054:8: C0103: Variable name "e" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/generate_flex_agents.py:1055:12: W0707: Consider explicitly re-raising using 'raise Exception(f"Could not adapt and create a new simulation config due to: {e}. Please check {simulator_agent_config} and '{save_name_suffix}'") from e' (raise-missing-from)
+agentlib_flexquant/generate_flex_agents.py:1055:12: W0719: Raising too general exception: Exception (broad-exception-raised)
 agentlib_flexquant/generate_flex_agents.py:18:0: C0411: standard import "import json" should be placed before "import astor" (wrong-import-order)
 agentlib_flexquant/generate_flex_agents.py:20:0: C0411: standard import "from copy import deepcopy" should be placed before "import astor" (wrong-import-order)
 agentlib_flexquant/generate_flex_agents.py:21:0: C0411: standard import "from pathlib import Path" should be placed before "import astor" (wrong-import-order)
@@ -396,8 +397,8 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
     def _initialize_flex_results(
         self, n_simulation_steps, horizon_length, sim_time_step, result_df
     ):
-        """Initialize the flex results dataframe with the correct dimension
-        and index and fill with existing results from optimization
+        """Initialize the flex results dataframe with the correct dimension and index
+        and fill with existing results from optimization
 
         """
 
@@ -538,15 +539,13 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model
-                # can't deal with iterable
+                # change the type of iterable input, since casadi model can't deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time
-            # will not be exceeded
+            # reduce the simulation time step so that the total horizon time will not be exceeded
             if current_sim_time + sim_time_step <= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -557,9 +556,7 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value
-
- (duplicate-code)
+                ] = self.flex_model.get_output(output).value (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[664:687]
 ==agentlib_flexquant.modules.shadow_mpc:[315:338]
@@ -607,8 +604,8 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 
     def _update_model_parameters(self):
         """update the value of module parameters with value from config,
-        since creating a model just reads the value in the model class but
-        not the config
+        since creating a model just reads the value in the model class
+        but not the config.
 
         """
 
@@ -625,8 +622,7 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
-            total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
     ):
         """simulate with flex model over the prediction horizon
 
@@ -755,7 +751,6 @@ excluded_fields = [
         "interpolation_method",
         "allowed_values",
     ]
-
  (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[612:639]
@@ -848,21 +843,7 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             self.logger.error("Results file %s was not found.", results_file)
             return None
 
-    def write_results(self, df: pd.DataFrame, ts: float, n: int) -> pd.DataFrame:
-        """Write every data of variables in self.var_list in an DataFrame.
-
-        DataFrame will be updated every time step
-
-        Args:
-            df: DataFrame which is initialised as an empty DataFrame with columns
-            according to self.var_list
-            ts: time step
-            n: number of time steps during prediction horizon
-
-        Returns:
-            DataFrame with results of every variable in self.var_list
-
-        """ (duplicate-code)
+    def register_callbacks(self): (duplicate-code)
 agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.flexibility_indicator:[334:342]
 ==agentlib_flexquant.modules.flexibility_market:[62:70]
@@ -890,12 +871,15 @@ agentlib_flexquant/modules/__init__.py:1:0: R0801: Similar lines in 2 files
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
-        """simulate with flex model over the prediction horizon"""
+        """simulate with flex model over the prediction horizon
+
+        """
 
         # get control and input values from the mpc optimization result (duplicate-code)
 
 -----------------------------------
-Your code has been rated at 7.37/10
+Your code has been rated at 7.36/10
 

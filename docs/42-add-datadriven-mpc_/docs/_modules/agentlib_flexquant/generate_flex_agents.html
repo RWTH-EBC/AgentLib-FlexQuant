@@ -448,15 +448,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">baseline_config_generator_data</span><span class="o">.</span><span class="n">power_variable</span><span class="p">)</span>
         <span class="n">module_config_flex_dict</span><span class="p">[</span><span class="s2">&quot;storage_variable_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">indicator_module_config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">stored_energy_variable</span><span class="p">)</span>
-        <span class="k">del</span> <span class="n">module_config_flex_dict</span><span class="p">[</span><span class="s1">&#39;r_del_u&#39;</span><span class="p">]</span>
         <span class="n">module_config_flex</span> <span class="o">=</span> <span class="n">cmng</span><span class="o">.</span><span class="n">MODULE_TYPE_DICT</span><span class="p">[</span><span class="n">module_config</span><span class="o">.</span><span class="n">type</span><span class="p">](</span>
             <span class="o">**</span><span class="n">module_config_flex_dict</span><span class="p">,</span> <span class="n">_agent_id</span><span class="o">=</span><span class="n">agent_id</span>
         <span class="p">)</span>
 
         <span class="c1"># HOTFIX due to AgentLib-MPC bug. Needs to be adapted after Objectives</span>
         <span class="c1"># in AgentLib-MPC are fixed.</span>
-        <span class="c1">#if module_config_flex.r_del_u is None:</span>
-        <span class="c1">#    module_config_flex = module_config_flex.model_copy(update={&quot;r_del_u&quot;: {}})</span>
+        <span class="k">if</span> <span class="n">module_config_flex</span><span class="o">.</span><span class="n">r_del_u</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+           <span class="n">module_config_flex</span> <span class="o">=</span> <span class="n">module_config_flex</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;r_del_u&quot;</span><span class="p">:</span> <span class="p">{}})</span>
 
         <span class="c1"># allow the module config to be changed</span>
         <span class="n">module_config_flex</span><span class="o">.</span><span class="n">model_config</span><span class="p">[</span><span class="s2">&quot;frozen&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
