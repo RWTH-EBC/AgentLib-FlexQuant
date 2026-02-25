@@ -1,4 +1,4 @@
-""""
+"""
 Flexibility indicator module for calculating and distributing energy flexibility offers.
 
 This module processes power and energy profiles from baseline and shadow MPCs to
@@ -15,7 +15,7 @@ import agentlib
 import numpy as np
 import pandas as pd
 from pydantic import BaseModel, ConfigDict, Field, model_validator
-from agentlib_flexquant.utils.data_handling import fill_nans, MEAN, INTERPOLATE
+from agentlib_flexquant.utils.data_handling import fill_nans, MEAN
 
 import agentlib_flexquant.data_structures.globals as glbs
 from agentlib_flexquant.data_structures.flex_kpis import (

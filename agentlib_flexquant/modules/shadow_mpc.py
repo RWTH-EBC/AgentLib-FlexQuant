@@ -10,7 +10,6 @@ from typing import Dict, Union, Optional
 from collections.abc import Iterable
 from agentlib.core.datamodels import AgentVariable, Source
 from agentlib_mpc.modules.mpc import mpc_full, minlp_mpc
-from agentlib_mpc.data_structures.mpc_datamodels import Results
 from agentlib_flexquant.utils.data_handling import fill_nans, MEAN
 from agentlib_flexquant.data_structures.globals import (full_trajectory_suffix,
                                                         base_vars_to_communicate_suffix)

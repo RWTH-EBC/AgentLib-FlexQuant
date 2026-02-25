@@ -1,4 +1,4 @@
-""""
+"""
 Module for representing and calculating flexibility KPIs. It defines Pydantic models
 for scalar and time-series KPIs, and provides methods to compute power, energy,
 and cost metrics for positive and negative flexibility scenarios.

@@ -42,12 +42,6 @@ SHADOW_MPC_COST_FUNCTION = (
     "self.market_time.sym), obj_flex, obj_std))"
 )
 
-SHADOW_MPC_COST_FUNCTION = ("return ca.if_else(self.time < self.prep_time.sym + "
-                            "self.market_time.sym, obj_std, ca.if_else(self.time < "
-                            "(self.prep_time.sym + self.flex_event_duration.sym + "
-                            "self.market_time.sym), obj_flex, obj_std))")
-
-
 
 def return_baseline_cost_function(power_variable: str, comfort_variable: str) -> str:
     """Return baseline cost function

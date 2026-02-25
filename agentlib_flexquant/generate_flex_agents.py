@@ -764,6 +764,8 @@ class FlexAgentGenerator:
                 if self.flex_config.shadow_mpc_config_generator_data.neg_flex.flex_cost_function_appendix else ""),
             shadow_mpc_type="neg_flex"
         )
+        # The " + " is just there to simplify the validation, it does not affect
+        # the generated code
         self.check_variables_in_casadi_config(
             config_instance,
             self.flex_config.shadow_mpc_config_generator_data.pos_flex.flex_cost_function +
@@ -1049,7 +1051,7 @@ class FlexAgentGenerator:
             with open(Path(str(simulator_agent_config.stem) + save_name_suffix + ".json"),
                       "w", encoding="utf-8") as f:
                 json.dump(sim_config, f, indent=4)
-            return simulator_agent_config
+            return Path(str(simulator_agent_config.stem) + save_name_suffix + ".json")
         except Exception as e:
             raise Exception(f"Could not adapt and create a new simulation config "
                             f"due to: {e}. "
