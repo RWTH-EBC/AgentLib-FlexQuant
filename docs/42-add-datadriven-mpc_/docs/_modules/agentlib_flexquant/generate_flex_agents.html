@@ -838,6 +838,8 @@
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">neg_flex</span><span class="o">.</span><span class="n">flex_cost_function_appendix</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
             <span class="n">shadow_mpc_type</span><span class="o">=</span><span class="s2">&quot;neg_flex&quot;</span>
         <span class="p">)</span>
+        <span class="c1"># The &quot; + &quot; is just there to simplify the validation, it does not affect</span>
+        <span class="c1"># the generated code</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">check_variables_in_casadi_config</span><span class="p">(</span>
             <span class="n">config_instance</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">shadow_mpc_config_generator_data</span><span class="o">.</span><span class="n">pos_flex</span><span class="o">.</span><span class="n">flex_cost_function</span> <span class="o">+</span>
@@ -1123,7 +1125,7 @@
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">simulator_agent_config</span><span class="o">.</span><span class="n">stem</span><span class="p">)</span> <span class="o">+</span> <span class="n">save_name_suffix</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span><span class="p">),</span>
                       <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">sim_config</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">simulator_agent_config</span>
+            <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">simulator_agent_config</span><span class="o">.</span><span class="n">stem</span><span class="p">)</span> <span class="o">+</span> <span class="n">save_name_suffix</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not adapt and create a new simulation config &quot;</span>
                             <span class="sa">f</span><span class="s2">&quot;due to: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">. &quot;</span>

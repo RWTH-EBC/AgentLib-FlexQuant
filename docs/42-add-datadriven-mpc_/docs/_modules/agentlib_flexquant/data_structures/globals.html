@@ -116,12 +116,6 @@
     <span class="s2">&quot;self.market_time.sym), obj_flex, obj_std))&quot;</span>
 <span class="p">)</span>
 
-<span class="n">SHADOW_MPC_COST_FUNCTION</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;return ca.if_else(self.time &lt; self.prep_time.sym + &quot;</span>
-                            <span class="s2">&quot;self.market_time.sym, obj_std, ca.if_else(self.time &lt; &quot;</span>
-                            <span class="s2">&quot;(self.prep_time.sym + self.flex_event_duration.sym + &quot;</span>
-                            <span class="s2">&quot;self.market_time.sym), obj_flex, obj_std))&quot;</span><span class="p">)</span>
-
-
 
 <div class="viewcode-block" id="return_baseline_cost_function"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.globals.return_baseline_cost_function">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">return_baseline_cost_function</span><span class="p">(</span><span class="n">power_variable</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">comfort_variable</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return baseline cost function</span>
