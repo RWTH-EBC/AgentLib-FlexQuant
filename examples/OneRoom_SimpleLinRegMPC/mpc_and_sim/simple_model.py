@@ -84,8 +84,7 @@ class BaselineMPCModelConfig(CasadiMLModelConfig):
             name="P_el",
             unit="W",
             description="The power input to the system",
-        ),
-        CasadiOutput(name="Time", unit="s", description="Test casadi time")
+        )
     ]
 
 class BaselineMPCModel(CasadiMLModel):
@@ -95,7 +94,6 @@ class BaselineMPCModel(CasadiMLModel):
         # Define ode
         self.T_out.alg = self.T
         self.P_el.alg = self.cp * self.mDot * (self.T - self.T_in) / 1000
-        self.Time.alg = self.time
 
         # Constraints: List[(lower bound, function, upper bound)]
         self.constraints = [

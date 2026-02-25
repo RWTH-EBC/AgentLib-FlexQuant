@@ -6,6 +6,12 @@ from pathlib import Path
 import importlib.util
 import json
 from util import module_cleanup, round_floats_in_structure
+from agentlib.core.errors import OptionalDependencyError
+
+try:
+    import keras  #check ML dependency
+except ImportError:
+    raise OptionalDependencyError(used_object='agentlib_mpc[ml]', dependency_name="agentlib_mpc[ml]", dependency_install="pip install 'agentlib_mpc[ml] @ git+https://github.com/RWTH-EBC/AgentLib-MPC.git@quickfix-custom-objectives'")
 
 # Add the project root to the Python path to allow for absolute imports
 # This helps in locating the agentlib_flexquant package if needed
@@ -144,3 +150,25 @@ def test_oneroom_simple_mpc(snapshot, module_cleanup):
     df_pos_flex_res = res["PosFlexMPC"]["PosFlexMPC"]
     df_baseline_res = res["Baseline"]["Baseline"]
     df_indicator_res = res["FlexibilityIndicator"]["FlexibilityIndicator"]
+
+    # Assert that a summary of each result DataFrame matches its snapshot
+    assert_frame_matches_summary_snapshot(
+        snapshot,
+        df_neg_flex_res,
+        'oneroom_simpleMPC_neg_flex_summary.json'
+    )
+    assert_frame_matches_summary_snapshot(
+        snapshot,
+        df_pos_flex_res,
+        'oneroom_simpleMPC_pos_flex_summary.json'
+    )
+    assert_frame_matches_summary_snapshot(
+        snapshot,
+        df_baseline_res,
+        'oneroom_simpleMPC_baseline_summary.json'
+    )
+    assert_frame_matches_summary_snapshot(
+        snapshot,
+        df_indicator_res,
+        'oneroom_simpleMPC_indicator_summary.json'
+    )

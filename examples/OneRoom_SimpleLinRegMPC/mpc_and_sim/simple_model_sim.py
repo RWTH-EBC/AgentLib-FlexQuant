@@ -8,7 +8,6 @@ from agentlib_mpc.models.casadi_model import (
 )
 from typing import List
 from math import inf
-from agentlib_mpc.models.casadi_ml_model import CasadiMLModel, CasadiMLModelConfig
 
 
 class BaselineMPCModelConfig(CasadiModelConfig):
@@ -88,8 +87,7 @@ class BaselineMPCModelConfig(CasadiModelConfig):
             name="P_el",
             unit="W",
             description="The power input to the system",
-        ),
-        CasadiOutput(name="Time", unit="s", description="Test casadi time")
+        )
     ]
 
 class BaselineMPCModel(CasadiModel):
@@ -101,25 +99,10 @@ class BaselineMPCModel(CasadiModel):
             self.cp * self.mDot / self.C * (self.T_in - self.T) + self.load / self.C
         )
         self.P_el.alg = self.cp * self.mDot * (self.T - self.T_in)/1000
-        self.Time.alg = self.time
 
         # Define ae
         self.T_out.alg = self.T  # math operation to get the symbolic variable
-        # Constraints: List[(lower bound, function, upper bound)]
-        self.constraints = [
-            # soft constraints
-            (self.T_lower, self.T + self.T_slack, inf),
-            (-inf, self.T - self.T_slack, self.T_upper),
-            (0, self.T_slack, inf)
-        ]
-        # Objective function
-        objective = sum(
-                [
-                    self.r_mDot * self.mDot,
-                    self.s_T * self.T_slack**2,
-                ]
-            )
-        return objective
+
 
 
 
