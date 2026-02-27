@@ -84,10 +84,10 @@ agentlib_flexquant/data_structures/flex_results.py:48:4: C0103: Variable name "d
 agentlib_flexquant/data_structures/flex_results.py:62:4: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
 agentlib_flexquant/data_structures/flex_results.py:66:0: R0902: Too many instance attributes (29/7) (too-many-instance-attributes)
 agentlib_flexquant/data_structures/flex_results.py:113:4: R0913: Too many arguments (6/5) (too-many-arguments)
-agentlib_flexquant/data_structures/flex_results.py:177:65: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/data_structures/flex_results.py:277:12: C0415: Import outside toplevel (warnings) (import-outside-toplevel)
-agentlib_flexquant/data_structures/flex_results.py:293:72: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
-agentlib_flexquant/data_structures/flex_results.py:522:12: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/data_structures/flex_results.py:178:65: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/data_structures/flex_results.py:278:12: C0415: Import outside toplevel (warnings) (import-outside-toplevel)
+agentlib_flexquant/data_structures/flex_results.py:294:72: C0103: Variable name "f" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/data_structures/flex_results.py:523:12: C0103: Variable name "df" doesn't conform to snake_case naming style (invalid-name)
 ************* Module agentlib_flexquant.data_structures.flex_kpis
 agentlib_flexquant/data_structures/flex_kpis.py:8:0: E0401: Unable to import 'numpy' (import-error)
 agentlib_flexquant/data_structures/flex_kpis.py:9:0: E0401: Unable to import 'pandas' (import-error)
@@ -422,8 +422,8 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
 
     def _update_model_parameters(self):
         """update the value of module parameters with value from config,
-        since creating a model just reads the value in the model class
-        but not the config.
+        since creating a model just reads the value in the model class but
+        not the config
 
         """
 
@@ -440,7 +440,8 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
         """simulate with flex model over the prediction horizon
 
@@ -590,8 +591,8 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
 
     def _update_model_parameters(self):
         """update the value of module parameters with value from config,
-        since creating a model just reads the value in the model class
-        but not the config.
+        since creating a model just reads the value in the model class but
+        not the config
 
         """
 
@@ -608,7 +609,8 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
         """simulate with flex model over the prediction horizon
 
@@ -837,7 +839,21 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
             self.logger.error("Results file %s was not found.", results_file)
             return None
 
-    def register_callbacks(self): (duplicate-code)
+    def write_results(self, df: pd.DataFrame, ts: float, n: int) -> pd.DataFrame:
+        """Write every data of variables in self.var_list in an DataFrame.
+
+        DataFrame will be updated every time step
+
+        Args:
+            df: DataFrame which is initialised as an empty DataFrame with columns
+            according to self.var_list
+            ts: time step
+            n: number of time steps during prediction horizon
+
+        Returns:
+            DataFrame with results of every variable in self.var_list
+
+        """ (duplicate-code)
 agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.flexibility_indicator:[334:342]
 ==agentlib_flexquant.modules.flexibility_market:[62:70]
@@ -865,12 +881,9 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
-            total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
     ):
-        """simulate with flex model over the prediction horizon
-
-        """
+        """simulate with flex model over the prediction horizon"""
 
         # get control and input values from the mpc optimization result (duplicate-code)
 
