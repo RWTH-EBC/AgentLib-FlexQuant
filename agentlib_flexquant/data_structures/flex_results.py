@@ -151,7 +151,8 @@ class Results:
         This enables the Results object to be used with multiprocessing.
         The model field contains CDLL references that cannot be serialized.
         """
-        if self.simulator_module_config is not None:
+        if (hasattr(self, 'simulator_module_config') and
+                self.simulator_module_config is not None):
             if hasattr(self.simulator_module_config, 'model'):
                 object.__setattr__(self.simulator_module_config, 'model', None)
 
