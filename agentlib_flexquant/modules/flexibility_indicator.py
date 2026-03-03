@@ -355,11 +355,7 @@ class CallBackHandler:
     Adapter, der self.data schreibt 
 
     """
-    _BASE_CALLBACK_VARS: dict[str,tuple] = {
-        glbs.POWER_ALIAS_BASE: ("power_profile_base", True),
-        glbs.POWER_ALIAS_NEG: ("power_profile_flex_neg", True),
-        glbs.POWER_ALIAS_POS: ("power_profile_flex_pos", True),
-    } # global alias: (variablename in data, True if MPCVariable else False)
+    necessary_callback_variables: dict[str,dict[str, bool]]
 
     def __init__(self,config: FlexibilityIndicatorModuleConfig): 
         """Load general settings"""
@@ -367,46 +363,53 @@ class CallBackHandler:
         def get_param(cfg, name: str):
             return next(v for v in cfg.parameters if v.name == name)
         self.collocation_time_grid = get_param(config, glbs.COLLOCATION_TIME_GRID).value
-        self.necessary_callback_variables = self._BASE_CALLBACK_VARS.copy()
+        self.necessary_callback_variables = {
+            glbs.POWER_ALIAS_BASE: {"name":"power_profile_base", "is_mpc":True},
+            glbs.POWER_ALIAS_NEG: {"name":"power_profile_flex_neg", "is_mpc":True},
+            glbs.POWER_ALIAS_POS: {"name":"power_profile_flex_pos", "is_mpc":True},
+            }
 
-    def initialize_callback_variables(self, data: FlexibilityData, config: FlexibilityIndicatorModuleConfig) -> FlexibilityData:
+    def update_price_variables(self, config: FlexibilityIndicatorModuleConfig, data: FlexibilityData):
         if config.calculate_costs.calculate_flex_costs:
             if config.calculate_costs.use_constant_electricity_price:
                 data.electricity_price_series = pd.Series(data=config.calculate_costs.const_electricity_price, index=self.collocation_time_grid)
             else:
-                self.necessary_callback_variables.update({config.price_variable: ("electricity_price_series", False)})
+                self.necessary_callback_variables.update({config.price_variable: {"name":"electricity_price_series", "is_mpc":False}})
             
             if config.calculate_costs.use_constant_feed_in_price:
                 data.feed_in_price_series = pd.Series(data=config.calculate_costs.const_feed_in_price, index=self.collocation_time_grid)
             else:
-                self.necessary_callback_variables.update({config.price_variable_feed_in: ("feed_in_price_series", False)})
-
+                self.necessary_callback_variables.update({config.price_variable_feed_in: {"name":"feed_in_price_series", "is_mpc":False}})
+        return data
+    
+    def initialize_callback_variables(self, data: FlexibilityData, config: FlexibilityIndicatorModuleConfig) -> FlexibilityData:
+        data = self.update_price_variables(config=config, data=data)
         if config.correct_costs.enable_energy_costs_correction:
             self.necessary_callback_variables.update({
-                glbs.STORED_ENERGY_ALIAS_BASE: ("stored_energy_profile_base", True),
-                glbs.STORED_ENERGY_ALIAS_NEG: ("stored_energy_profile_flex_neg", True),
-                glbs.STORED_ENERGY_ALIAS_POS: ("stored_energy_profile_flex_pos", True),
+                glbs.STORED_ENERGY_ALIAS_BASE: {"name":"stored_energy_profile_base", "is_mpc":True},
+                glbs.STORED_ENERGY_ALIAS_NEG: {"name":"stored_energy_profile_flex_neg", "is_mpc":True},
+                glbs.STORED_ENERGY_ALIAS_POS: {"name":"stored_energy_profile_flex_pos", "is_mpc":True},
             })
             
         return data
     
-    def set_all_callback_variables_to_none(self, data: FlexibilityData) -> FlexibilityData: # clear kann missverstanden werden 
+    def set_all_callback_variables_to_none(self, data: FlexibilityData) -> FlexibilityData:
         """Clear the values of the callback variables after processing."""
         for alias, var  in self.necessary_callback_variables.items():
-            data.update_profile(var[0], None, mpc=var[1])
+            data.update_profile(var["name"], None, mpc=var["is_mpc"])
         return data
 
     def update_input(self, data: FlexibilityData, name: str, value: pd.Series) -> FlexibilityData: 
         """Update the incoming value"""
         var_tuple = self.necessary_callback_variables.get(name, None)
         if var_tuple is not None: 
-            variable_name, mpc = var_tuple
+            variable_name, mpc = var_tuple["name"], var_tuple["is_mpc"]
             data.update_profile(variable_name, value, mpc=mpc)
         return data
     
     def is_ready_for_calculation(self, data: FlexibilityData) -> bool:
         """Check if all necessary profiles and parameters are set for KPI calculation."""
-        required_profiles = [getattr(data,name[0]) for key,name in self.necessary_callback_variables.items()]
+        required_profiles = [getattr(data, var["name"]) for key, var in self.necessary_callback_variables.items()]
         return all(profile is not None for profile in required_profiles)
 
 class FlexibilityIndicatorModule(agentlib.BaseModule):
@@ -464,9 +467,9 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         if self.in_provision:
             self.data = self.callback_handler.set_all_callback_variables_to_none(data=self.data)
         else: 
+            self.data = self.callback_handler.update_price_variables(config=self.config, data=self.data)
             self.data = self.callback_handler.update_input(data=self.data, name=name, value=inp.value)
             
-
         if self.callback_handler.is_ready_for_calculation(data=self.data):
             self.calc_and_send_offer()
             self.data = self.callback_handler.set_all_callback_variables_to_none(data=self.data)

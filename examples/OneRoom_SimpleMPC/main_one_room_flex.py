@@ -90,4 +90,7 @@ def run_example(until=until, with_plots=False, with_dashboard=False):
 
 
 if __name__ == "__main__":
+    import os 
+    from pathlib import Path
+    os.chdir(Path(__file__).parent)
     run_example(until, with_plots=False, with_dashboard=True)
