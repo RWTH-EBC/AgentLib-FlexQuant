@@ -151,23 +151,36 @@
         <span class="n">default</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;constant feed-in price in ct/kWh&quot;</span>
     <span class="p">)</span>
 
-<div class="viewcode-block" id="InputsForCalculateFlexCosts.validate_constant_price"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">validate_constant_price</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate that a valid constant electricity price is provided</span>
-<span class="sd">        when constant pricing is enabled.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_constant_electricity_price</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">const_electricity_price</span>
-        <span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Constant electricity price must have a valid value in &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;float if it is to be used for calculation. &quot;</span>
-                    <span class="sa">f</span><span class="s1">&#39;Received &quot;use_constant_electricity_price&quot;: true, &#39;</span>
-                    <span class="sa">f</span><span class="s1">&#39;&quot;const_electricity_price&quot;: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">const_electricity_price</span><span class="si">}</span><span class="s1">. &#39;</span>
-                    <span class="sa">f</span><span class="s1">&#39;Please specify them correctly in &quot;calculate_costs&quot; &#39;</span>
-                    <span class="sa">f</span><span class="s1">&#39;field in flex config.&#39;</span>
+<div class="viewcode-block" id="InputsForCalculateFlexCosts.validate_constant_prices"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_prices">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_constant_prices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate that valid constant prices are provided when enabled.&quot;&quot;&quot;</span>
+
+        <span class="n">price_settings</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;use_constant_electricity_price&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;const_electricity_price&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;electricity&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;use_constant_feed_in_price&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;const_feed_in_price&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;feed-in&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">use_flag</span><span class="p">,</span> <span class="n">price_field</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">price_settings</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use_flag</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">price_field</span><span class="p">)):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="p">(</span>
+                        <span class="sa">f</span><span class="s1">&#39;Constant </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s1"> price must be a valid float if it is used &#39;</span>
+                        <span class="sa">f</span><span class="s1">&#39;for calculation. &#39;</span>
+                        <span class="sa">f</span><span class="s1">&#39;Received &quot;</span><span class="si">{</span><span class="n">use_flag</span><span class="si">}</span><span class="s1">&quot;: true, &#39;</span>
+                        <span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">price_field</span><span class="si">}</span><span class="s1">&quot;: </span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">price_field</span><span class="p">)</span><span class="si">}</span><span class="s1">. &#39;</span>
+                        <span class="s1">&#39;Please specify them correctly in the &quot;calculate_costs&quot; &#39;</span>
+                        <span class="s2">&quot;field in the flex config.&quot;</span>
+                    <span class="p">)</span>
                 <span class="p">)</span>
-            <span class="p">)</span>
+
         <span class="k">return</span> <span class="bp">self</span></div></div>
 
 
@@ -446,12 +459,14 @@
 <div class="viewcode-block" id="CallBackHandler.update_price_variables"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.CallBackHandler.update_price_variables">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">update_price_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">FlexibilityIndicatorModuleConfig</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">FlexibilityData</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">calculate_flex_costs</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">use_constant_electricity_price</span><span class="p">:</span>
-                <span class="n">data</span><span class="o">.</span><span class="n">electricity_price_series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">const_electricity_price</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">collocation_time_grid</span><span class="p">)</span>
+                <span class="n">electricity_price_series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">const_electricity_price</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">collocation_time_grid</span><span class="p">)</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">update_profile</span><span class="p">(</span><span class="s2">&quot;electricity_price_series&quot;</span><span class="p">,</span> <span class="n">electricity_price_series</span><span class="p">,</span> <span class="n">mpc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">necessary_callback_variables</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">config</span><span class="o">.</span><span class="n">price_variable</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;electricity_price_series&quot;</span><span class="p">,</span> <span class="s2">&quot;is_mpc&quot;</span><span class="p">:</span><span class="kc">False</span><span class="p">}})</span>
             
             <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">use_constant_feed_in_price</span><span class="p">:</span>
-                <span class="n">data</span><span class="o">.</span><span class="n">feed_in_price_series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">const_feed_in_price</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">collocation_time_grid</span><span class="p">)</span>
+                <span class="n">feed_in_price_series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">const_feed_in_price</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">collocation_time_grid</span><span class="p">)</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">update_profile</span><span class="p">(</span><span class="s2">&quot;feed_in_price_series&quot;</span><span class="p">,</span> <span class="n">feed_in_price_series</span><span class="p">,</span> <span class="n">mpc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">necessary_callback_variables</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">config</span><span class="o">.</span><span class="n">price_variable_feed_in</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;feed_in_price_series&quot;</span><span class="p">,</span> <span class="s2">&quot;is_mpc&quot;</span><span class="p">:</span><span class="kc">False</span><span class="p">}})</span>
         <span class="k">return</span> <span class="n">data</span></div>
@@ -545,6 +560,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">callback_handler</span><span class="o">.</span><span class="n">update_input</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
             
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">callback_handler</span><span class="o">.</span><span class="n">is_ready_for_calculation</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">):</span>
+            <span class="c1"># check the power profile end deviation</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">enable_energy_costs_correction</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">check_power_end_deviation</span><span class="p">(</span>
+                    <span class="n">tol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">absolute_power_deviation_tolerance</span>
+                <span class="p">)</span>
+            <span class="c1"># calculate and send the offer and reset the callback variables </span>
             <span class="bp">self</span><span class="o">.</span><span class="n">calc_and_send_offer</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">callback_handler</span><span class="o">.</span><span class="n">set_all_callback_variables_to_none</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div>
         
