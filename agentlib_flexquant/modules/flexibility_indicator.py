@@ -78,22 +78,35 @@ class InputsForCalculateFlexCosts(BaseModel):
     )
 
     @model_validator(mode="after")
-    def validate_constant_price(self):
-        """Validate that a valid constant electricity price is provided
-        when constant pricing is enabled."""
-        if self.use_constant_electricity_price and np.isnan(
-            self.const_electricity_price
-        ):
-            raise ValueError(
-                (
-                    f"Constant electricity price must have a valid value in "
-                    f"float if it is to be used for calculation. "
-                    f'Received "use_constant_electricity_price": true, '
-                    f'"const_electricity_price": {self.const_electricity_price}. '
-                    f'Please specify them correctly in "calculate_costs" '
-                    f'field in flex config.'
+    def validate_constant_prices(self):
+        """Validate that valid constant prices are provided when enabled."""
+
+        price_settings = [
+            (
+                "use_constant_electricity_price",
+                "const_electricity_price",
+                "electricity",
+            ),
+            (
+                "use_constant_feed_in_price",
+                "const_feed_in_price",
+                "feed-in",
+            ),
+        ]
+
+        for use_flag, price_field, label in price_settings:
+            if getattr(self, use_flag) and np.isnan(getattr(self, price_field)):
+                raise ValueError(
+                    (
+                        f'Constant {label} price must be a valid float if it is used '
+                        f'for calculation. '
+                        f'Received "{use_flag}": true, '
+                        f'"{price_field}": {getattr(self, price_field)}. '
+                        'Please specify them correctly in the "calculate_costs" '
+                        "field in the flex config."
+                    )
                 )
-            )
+
         return self
 
 
@@ -372,12 +385,14 @@ class CallBackHandler:
     def update_price_variables(self, config: FlexibilityIndicatorModuleConfig, data: FlexibilityData):
         if config.calculate_costs.calculate_flex_costs:
             if config.calculate_costs.use_constant_electricity_price:
-                data.electricity_price_series = pd.Series(data=config.calculate_costs.const_electricity_price, index=self.collocation_time_grid)
+                electricity_price_series = pd.Series(data=config.calculate_costs.const_electricity_price, index=self.collocation_time_grid)
+                data.update_profile("electricity_price_series", electricity_price_series, mpc=False)
             else:
                 self.necessary_callback_variables.update({config.price_variable: {"name":"electricity_price_series", "is_mpc":False}})
             
             if config.calculate_costs.use_constant_feed_in_price:
-                data.feed_in_price_series = pd.Series(data=config.calculate_costs.const_feed_in_price, index=self.collocation_time_grid)
+                feed_in_price_series = pd.Series(data=config.calculate_costs.const_feed_in_price, index=self.collocation_time_grid)
+                data.update_profile("feed_in_price_series", feed_in_price_series, mpc=False)
             else:
                 self.necessary_callback_variables.update({config.price_variable_feed_in: {"name":"feed_in_price_series", "is_mpc":False}})
         return data
@@ -471,6 +486,12 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             self.data = self.callback_handler.update_input(data=self.data, name=name, value=inp.value)
             
         if self.callback_handler.is_ready_for_calculation(data=self.data):
+            # check the power profile end deviation
+            if not self.config.correct_costs.enable_energy_costs_correction:
+                self.check_power_end_deviation(
+                    tol=self.config.correct_costs.absolute_power_deviation_tolerance
+                )
+            # calculate and send the offer and reset the callback variables 
             self.calc_and_send_offer()
             self.data = self.callback_handler.set_all_callback_variables_to_none(data=self.data)
         
