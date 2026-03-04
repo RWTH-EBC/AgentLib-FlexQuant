@@ -461,8 +461,8 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
 
     def _update_model_parameters(self):
         """update the value of module parameters with value from config,
-        since creating a model just reads the value in the model class
-        but not the config.
+        since creating a model just reads the value in the model class but
+        not the config
 
         """
 
@@ -479,7 +479,8 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
         """simulate with flex model over the prediction horizon
 
@@ -631,8 +632,8 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
 
     def _update_model_parameters(self):
         """update the value of module parameters with value from config,
-        since creating a model just reads the value in the model class but
-        not the config
+        since creating a model just reads the value in the model class
+        but not the config.
 
         """
 
@@ -649,8 +650,7 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
-            total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
     ):
         """simulate with flex model over the prediction horizon
 
@@ -842,7 +842,7 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
 agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.data_structures.mpcs:[15:23]
 ==agentlib_flexquant.utils.config_management:[125:133]
-excluded_fields = [
+    excluded_fields = [
         "rdf_class",
         "source",
         "type",
@@ -899,12 +899,9 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
-            total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
     ):
-        """simulate with flex model over the prediction horizon
-
-        """
+        """simulate with flex model over the prediction horizon"""
 
         # get control and input values from the mpc optimization result (duplicate-code)
 

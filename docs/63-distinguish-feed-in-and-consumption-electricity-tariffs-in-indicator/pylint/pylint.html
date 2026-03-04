@@ -2728,7 +2728,10 @@
         # simulate with the casadi simulator
         self.sim_flex_model(solution)
 
+        # extract solution DataFrama
         df = solution.df
+
+        # send the outputs
         if self.flex_results is not None:
             for output in self.var_ref.outputs:
                 if output not in [
@@ -3040,7 +3043,6 @@ excluded_fields = [
         &#34;interpolation_method&#34;,
         &#34;allowed_values&#34;,
     ]
-
 </pre></td>
             </tr>
             
@@ -3150,7 +3152,7 @@ excluded_fields = [
                 <td><pre>Similar lines in 2 files
 ==agentlib_flexquant.data_structures.mpcs:[15:23]
 ==agentlib_flexquant.utils.config_management:[125:133]
-excluded_fields = [
+    excluded_fields = [
         &#34;rdf_class&#34;,
         &#34;source&#34;,
         &#34;type&#34;,
@@ -3199,21 +3201,7 @@ excluded_fields = [
             self.logger.error(&#34;Results file %s was not found.&#34;, results_file)
             return None
 
-    def write_results(self, df: pd.DataFrame, ts: float, n: int) -&gt; pd.DataFrame:
-        &#34;&#34;&#34;Write every data of variables in self.var_list in an DataFrame.
-
-        DataFrame will be updated every time step
-
-        Args:
-            df: DataFrame which is initialised as an empty DataFrame with columns
-            according to self.var_list
-            ts: time step
-            n: number of time steps during prediction horizon
-
-        Returns:
-            DataFrame with results of every variable in self.var_list
-
-        &#34;&#34;&#34;</pre></td>
+    def register_callbacks(self):</pre></td>
             </tr>
             
             <tr>
@@ -3232,7 +3220,6 @@ excluded_fields = [
                 f&#34;Expected a &#39;.csv&#39; file.&#34;
             )
         return self
-
 </pre></td>
             </tr>
             
