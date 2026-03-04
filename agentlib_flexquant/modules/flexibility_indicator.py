@@ -385,13 +385,19 @@ class CallBackHandler:
     def update_price_variables(self, config: FlexibilityIndicatorModuleConfig, data: FlexibilityData):
         if config.calculate_costs.calculate_flex_costs:
             if config.calculate_costs.use_constant_electricity_price:
-                electricity_price_series = pd.Series(data=config.calculate_costs.const_electricity_price, index=self.collocation_time_grid)
+                electricity_price_series = pd.Series(
+                    data=config.calculate_costs.const_electricity_price,
+                    index=data.mpc_time_grid,
+                )
                 data.update_profile("electricity_price_series", electricity_price_series, mpc=False)
             else:
                 self.necessary_callback_variables.update({config.price_variable: {"name":"electricity_price_series", "is_mpc":False}})
             
             if config.calculate_costs.use_constant_feed_in_price:
-                feed_in_price_series = pd.Series(data=config.calculate_costs.const_feed_in_price, index=self.collocation_time_grid)
+                feed_in_price_series = pd.Series(
+                    data=config.calculate_costs.const_feed_in_price,
+                    index=data.mpc_time_grid,
+                )
                 data.update_profile("feed_in_price_series", feed_in_price_series, mpc=False)
             else:
                 self.necessary_callback_variables.update({config.price_variable_feed_in: {"name":"feed_in_price_series", "is_mpc":False}})

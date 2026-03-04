@@ -418,19 +418,58 @@ class FlexibilityKPIs(pydantic.BaseModel):
         if feed_in_price_signal is None:
             feed_in_price_signal = electricity_price_signal
 
-        # Effective cost profiles depending on wheter power is consumed from or fed into the grid
-        cost_profile_base = (power_profile_base * electricity_price_signal).where(
+        # Align all series to the MPC time grid and drop collocation points
+        power_profile_base = power_profile_base.reindex(mpc_time_grid)
+        power_profile_shadow = power_profile_shadow.reindex(mpc_time_grid)
+        electricity_price_signal = electricity_price_signal.reindex(mpc_time_grid)
+        feed_in_price_signal = feed_in_price_signal.reindex(mpc_time_grid)
+
+        if collocation_time_grid is not None:
+            power_profile_base = power_profile_base.drop(collocation_time_grid, errors="ignore")
+            power_profile_shadow = power_profile_shadow.drop(collocation_time_grid, errors="ignore")
+            electricity_price_signal = electricity_price_signal.drop(collocation_time_grid, errors="ignore")
+            feed_in_price_signal = feed_in_price_signal.drop(collocation_time_grid, errors="ignore")
+
+        # Select tariff based on the sign of each profile
+        effective_price_base = electricity_price_signal.where(
             power_profile_base > 0,
-            power_profile_base * feed_in_price_signal
+            feed_in_price_signal,
+        )
+        effective_price_shadow = electricity_price_signal.where(
+            power_profile_shadow > 0,
+            feed_in_price_signal,
         )
 
-        cost_profile_shadow = (power_profile_shadow * electricity_price_signal).where(
-            power_profile_shadow > 0,
-            power_profile_shadow * feed_in_price_signal
+        if collocation_time_grid is not None:
+            effective_price_base = effective_price_base.drop(
+                collocation_time_grid, errors="ignore"
+            )
+            effective_price_shadow = effective_price_shadow.drop(
+                collocation_time_grid, errors="ignore"
+            )
+            power_profile_base = power_profile_base.drop(
+                collocation_time_grid, errors="ignore"
+            )
+            power_profile_shadow = power_profile_shadow.drop(
+                collocation_time_grid, errors="ignore"
+            )
+
+        cost_profile_base = power_profile_base * effective_price_base
+        cost_profile_shadow = power_profile_shadow * effective_price_shadow
+
+        # Get the series for integration before calculating
+        power_flex_full_integration = self._get_series_for_integration(
+            series=self.power_flex_full, mpc_time_grid=mpc_time_grid
+        )
+        power_flex_full_integration.value = power_flex_full_integration.value.drop(
+            collocation_time_grid, errors="ignore"
         )
 
         # Difference in costs between shadow and baseline mpc
-        self.electricity_costs_series.value = (cost_profile_shadow - cost_profile_base).dropna()
+        delta_cost = cost_profile_shadow - cost_profile_base
+        delta_cost = delta_cost.reindex(power_flex_full_integration.value.index)
+        delta_cost = delta_cost.where(power_flex_full_integration.value != 0, 0)
+        self.electricity_costs_series.value = delta_cost.dropna()
 
         # Calculate the costs and stores the original value
         costs = self.electricity_costs_series.integrate(time_unit="hours")
