@@ -33,7 +33,7 @@ class ShadowMPCConfigGeneratorConfig(BaseModel):
     """Class defining the options to initialize the shadow mpc config generation."""
 
     model_config = ConfigDict(
-        json_encoders={MPCVariable: lambda v: v.dict()}, extra="forbid"
+        json_encoders={MPCVariable: lambda v: v.dict(), AgentVariable: lambda v: v.dict()}, extra="forbid"
     )
     weights: list[MPCVariable] = Field(
         default=[], description="Name and value of weights",
