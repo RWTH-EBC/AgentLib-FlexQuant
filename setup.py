@@ -1,7 +1,7 @@
 import setuptools
 
 requirements = [
-    "agentlib[full] @ git+https://github.com/RWTH-EBC/AgentLib.git@27af08d",
+    "agentlib[full] @ git+https://github.com/RWTH-EBC/AgentLib.git@1ed7b4d",
     "agentlib_mpc[fmu, interactive] @ git+https://github.com/RWTH-EBC/AgentLib-MPC.git@quickfix-custom-objectives",
     "pycombina @ git+https://github.com/adbuerger/pycombina.git",
     "pathlib",
