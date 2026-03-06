@@ -514,20 +514,6 @@
             <span class="n">feed_in_price_signal</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">collocation_time_grid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">effective_price_base</span> <span class="o">=</span> <span class="n">effective_price_base</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
-                <span class="n">collocation_time_grid</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span>
-            <span class="p">)</span>
-            <span class="n">effective_price_shadow</span> <span class="o">=</span> <span class="n">effective_price_shadow</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
-                <span class="n">collocation_time_grid</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span>
-            <span class="p">)</span>
-            <span class="n">power_profile_base</span> <span class="o">=</span> <span class="n">power_profile_base</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
-                <span class="n">collocation_time_grid</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span>
-            <span class="p">)</span>
-            <span class="n">power_profile_shadow</span> <span class="o">=</span> <span class="n">power_profile_shadow</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
-                <span class="n">collocation_time_grid</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span>
-            <span class="p">)</span>
-
         <span class="n">cost_profile_base</span> <span class="o">=</span> <span class="n">power_profile_base</span> <span class="o">*</span> <span class="n">effective_price_base</span>
         <span class="n">cost_profile_shadow</span> <span class="o">=</span> <span class="n">power_profile_shadow</span> <span class="o">*</span> <span class="n">effective_price_shadow</span>
 
