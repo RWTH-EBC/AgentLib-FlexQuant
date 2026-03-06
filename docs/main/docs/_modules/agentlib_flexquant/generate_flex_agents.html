@@ -688,6 +688,14 @@
                 <span class="n">description</span><span class="o">=</span><span class="s2">&quot;electricity price&quot;</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="p">)</span>
+        <span class="n">module_config</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">AgentVariable</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">module_config</span><span class="o">.</span><span class="n">price_variable_feed_in</span><span class="p">,</span>
+                <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;ct/kWh&quot;</span><span class="p">,</span>
+                <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;pd.Series&quot;</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;electricity feed-in price&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
         <span class="c1"># allow the module config to be changed</span>
         <span class="n">module_config</span><span class="o">.</span><span class="n">model_config</span><span class="p">[</span><span class="s2">&quot;frozen&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">for</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="n">module_config</span><span class="o">.</span><span class="n">parameters</span><span class="p">:</span>

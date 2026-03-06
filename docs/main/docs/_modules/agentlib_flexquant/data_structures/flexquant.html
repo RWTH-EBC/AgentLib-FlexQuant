@@ -82,7 +82,7 @@
                       <span class="n">field_serializer</span><span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.core.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentConfig</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigurationError</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.data_structures.mpc_datamodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPCVariable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.data_structures.mpc_datamodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentVariable</span><span class="p">,</span> <span class="n">MPCVariable</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.mpcs</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">BaselineMPCData</span><span class="p">,</span>
@@ -107,12 +107,12 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class defining the options to initialize the shadow mpc config generation.&quot;&quot;&quot;</span>
 
     <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span>
-        <span class="n">json_encoders</span><span class="o">=</span><span class="p">{</span><span class="n">MPCVariable</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">dict</span><span class="p">()},</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span>
+        <span class="n">json_encoders</span><span class="o">=</span><span class="p">{</span><span class="n">MPCVariable</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">dict</span><span class="p">(),</span> <span class="n">AgentVariable</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">dict</span><span class="p">()},</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span>
     <span class="p">)</span>
     <span class="n">weights</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MPCVariable</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="p">[],</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name and value of weights&quot;</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">custom_inputs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MPCVariable</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+    <span class="n">custom_inputs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AgentVariable</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="p">[],</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Additional Inputs for the Shadow-MPCs. E.g. the baseline power prediction P_el_base&quot;</span>
     <span class="p">)</span>
 

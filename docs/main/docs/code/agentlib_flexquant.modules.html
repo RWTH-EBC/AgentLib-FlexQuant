@@ -348,6 +348,47 @@ calculate flexibility KPIs, validate profile consistency, and generate flexibili
 offers for energy markets. It handles both positive and negative flexibility with
 optional cost calculations and energy storage corrections.</p>
 <dl class="py class">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.CallBackHandler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.modules.flexibility_indicator.</span></span><span class="sig-name descname"><span class="pre">CallBackHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig"><span class="pre">FlexibilityIndicatorModuleConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#CallBackHandler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.CallBackHandler" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Helper class to manage callback handling for flexibility indicator module.</p>
+<p>Adapter, der self.data schreibt</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.CallBackHandler.initialize_callback_variables">
+<span class="sig-name descname"><span class="pre">initialize_callback_variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData" title="agentlib_flexquant.data_structures.flex_kpis.FlexibilityData"><span class="pre">FlexibilityData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig"><span class="pre">FlexibilityIndicatorModuleConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData" title="agentlib_flexquant.data_structures.flex_kpis.FlexibilityData"><span class="pre">FlexibilityData</span></a></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#CallBackHandler.initialize_callback_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.CallBackHandler.initialize_callback_variables" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.CallBackHandler.is_ready_for_calculation">
+<span class="sig-name descname"><span class="pre">is_ready_for_calculation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData" title="agentlib_flexquant.data_structures.flex_kpis.FlexibilityData"><span class="pre">FlexibilityData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#CallBackHandler.is_ready_for_calculation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.CallBackHandler.is_ready_for_calculation" title="Permalink to this definition"></a></dt>
+<dd><p>Check if all necessary profiles and parameters are set for KPI calculation.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.CallBackHandler.necessary_callback_variables">
+<span class="sig-name descname"><span class="pre">necessary_callback_variables</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.CallBackHandler.necessary_callback_variables" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.CallBackHandler.set_all_callback_variables_to_none">
+<span class="sig-name descname"><span class="pre">set_all_callback_variables_to_none</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData" title="agentlib_flexquant.data_structures.flex_kpis.FlexibilityData"><span class="pre">FlexibilityData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData" title="agentlib_flexquant.data_structures.flex_kpis.FlexibilityData"><span class="pre">FlexibilityData</span></a></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#CallBackHandler.set_all_callback_variables_to_none"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.CallBackHandler.set_all_callback_variables_to_none" title="Permalink to this definition"></a></dt>
+<dd><p>Clear the values of the callback variables after processing.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.CallBackHandler.update_input">
+<span class="sig-name descname"><span class="pre">update_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData" title="agentlib_flexquant.data_structures.flex_kpis.FlexibilityData"><span class="pre">FlexibilityData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData" title="agentlib_flexquant.data_structures.flex_kpis.FlexibilityData"><span class="pre">FlexibilityData</span></a></span></span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#CallBackHandler.update_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.CallBackHandler.update_input" title="Permalink to this definition"></a></dt>
+<dd><p>Update the incoming value</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.CallBackHandler.update_price_variables">
+<span class="sig-name descname"><span class="pre">update_price_variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig"><span class="pre">FlexibilityIndicatorModuleConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData" title="agentlib_flexquant.data_structures.flex_kpis.FlexibilityData"><span class="pre">FlexibilityData</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#CallBackHandler.update_price_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.CallBackHandler.update_price_variables" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">agentlib_flexquant.modules.flexibility_indicator.</span></span><span class="sig-name descname"><span class="pre">FlexibilityIndicatorModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#FlexibilityIndicatorModule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModule</span></code></p>
@@ -363,9 +404,14 @@ and set the outputs, write and save the results.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.callback">
 <span class="sig-name descname"><span class="pre">callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#FlexibilityIndicatorModule.callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.callback" title="Permalink to this definition"></a></dt>
-<dd><p>Handle incoming data by storing power/energy profiles and triggering
+<dd><p>Handle incoming data by storing power/energy/price profiles and triggering
 flexibility calculations when all required inputs are available.</p>
 </dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.callback_handler">
+<span class="sig-name descname"><span class="pre">callback_handler</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.CallBackHandler" title="agentlib_flexquant.modules.flexibility_indicator.CallBackHandler"><span class="pre">CallBackHandler</span></a></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.callback_handler" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.check_power_end_deviation">
@@ -472,6 +518,7 @@ KPI outputs, and cost calculation settings.</p>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.parameters" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameters</span> <span class="pre">(list[agentlib.core.datamodels.AgentVariable])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.power_unit" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.power_unit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">power_unit</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.price_variable" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.price_variable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">price_variable</span> <span class="pre">(str)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.price_variable_feed_in" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.price_variable_feed_in"><code class="xref py py-obj docutils literal notranslate"><span class="pre">price_variable_feed_in</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.results_file" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.results_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">results_file</span> <span class="pre">(pathlib.Path</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.save_results" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.save_results"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_results</span> <span class="pre">(bool</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.shared_variable_fields" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.shared_variable_fields"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shared_variable_fields</span> <span class="pre">(list[str])</span></code></a></p></li>
@@ -486,7 +533,7 @@ KPI outputs, and cost calculation settings.</p>
 </dl>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.calculate_costs">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calculate_costs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts"><span class="pre">InputsForCalculateFlexCosts</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">InputsForCalculateFlexCosts(use_constant_electricity_price=False,</span> <span class="pre">calculate_flex_costs=True,</span> <span class="pre">const_electricity_price=nan)</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.calculate_costs" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calculate_costs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts"><span class="pre">InputsForCalculateFlexCosts</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">InputsForCalculateFlexCosts(use_constant_electricity_price=False,</span> <span class="pre">use_constant_feed_in_price=False,</span> <span class="pre">calculate_flex_costs=True,</span> <span class="pre">const_electricity_price=nan,</span> <span class="pre">const_feed_in_price=nan)</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.calculate_costs" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -584,6 +631,19 @@ KPI outputs, and cost calculation settings.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.price_variable_feed_in">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">price_variable_feed_in</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'c_pel_feed_in'</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.price_variable_feed_in" title="Permalink to this definition"></a></dt>
+<dd><p>Name of the feed-in price variable sent by a predictor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.results_file">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">results_file</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">PosixPath('flexibility_indicator.csv')</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.results_file" title="Permalink to this definition"></a></dt>
 <dd><p>User specified results file name</p>
@@ -655,12 +715,14 @@ pricing.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.calculate_flex_costs" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.calculate_flex_costs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_flex_costs</span> <span class="pre">(bool)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.const_electricity_price" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.const_electricity_price"><code class="xref py py-obj docutils literal notranslate"><span class="pre">const_electricity_price</span> <span class="pre">(float)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.const_feed_in_price" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.const_feed_in_price"><code class="xref py py-obj docutils literal notranslate"><span class="pre">const_feed_in_price</span> <span class="pre">(float)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.use_constant_electricity_price" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.use_constant_electricity_price"><code class="xref py py-obj docutils literal notranslate"><span class="pre">use_constant_electricity_price</span> <span class="pre">(bool)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.use_constant_feed_in_price" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.use_constant_feed_in_price"><code class="xref py py-obj docutils literal notranslate"><span class="pre">use_constant_feed_in_price</span> <span class="pre">(bool)</span></code></a></p></li>
 </ul>
 </dd>
 <dt class="field-even">Validators<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_constant_price</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_prices" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_prices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_constant_prices</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
 </ul>
 </dd>
 </dl>
@@ -671,7 +733,7 @@ pricing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_constant_price</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_prices" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_prices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_constant_prices</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -684,7 +746,20 @@ pricing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_constant_price</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_prices" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_prices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_constant_prices</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.const_feed_in_price">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">const_feed_in_price</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">nan</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.const_feed_in_price" title="Permalink to this definition"></a></dt>
+<dd><p>constant feed-in price in ct/kWh</p>
+<dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_prices" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_prices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_constant_prices</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -697,17 +772,29 @@ pricing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_constant_price</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_prices" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_prices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_constant_prices</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.use_constant_feed_in_price">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">use_constant_feed_in_price</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.use_constant_feed_in_price" title="Permalink to this definition"></a></dt>
+<dd><p>Use constant feed-in price</p>
+<dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_prices" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_prices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_constant_prices</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method pydantic_validator">
-<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price">
-<em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate_constant_price</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#InputsForCalculateFlexCosts.validate_constant_price"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price" title="Permalink to this definition"></a></dt>
-<dd><p>Validate that a valid constant electricity price is provided
-when constant pricing is enabled.</p>
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_prices">
+<em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate_constant_prices</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#InputsForCalculateFlexCosts.validate_constant_prices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_prices" title="Permalink to this definition"></a></dt>
+<dd><p>Validate that valid constant prices are provided when enabled.</p>
 </dd></dl>
 
 </dd></dl>
