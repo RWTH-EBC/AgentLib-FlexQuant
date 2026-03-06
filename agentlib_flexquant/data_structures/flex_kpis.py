@@ -440,20 +440,6 @@ class FlexibilityKPIs(pydantic.BaseModel):
             feed_in_price_signal,
         )
 
-        if collocation_time_grid is not None:
-            effective_price_base = effective_price_base.drop(
-                collocation_time_grid, errors="ignore"
-            )
-            effective_price_shadow = effective_price_shadow.drop(
-                collocation_time_grid, errors="ignore"
-            )
-            power_profile_base = power_profile_base.drop(
-                collocation_time_grid, errors="ignore"
-            )
-            power_profile_shadow = power_profile_shadow.drop(
-                collocation_time_grid, errors="ignore"
-            )
-
         cost_profile_base = power_profile_base * effective_price_base
         cost_profile_shadow = power_profile_shadow * effective_price_shadow
 
