@@ -28,9 +28,9 @@
 
         
         <h2>Score</h2>
-        7.30 / 10
+        7.29 / 10
             
-            (previous score: 7.30 / 10)
+            (previous score: 7.29 / 10)
             
         
 
@@ -293,17 +293,7 @@
             </tr>
             
             <tr>
-                <td>430</td>
-                <td>0</td>
-                <td>convention</td>
-                <td><code>line-too-long</code></td>
-                <td>C0301</td>
-                <td></td>
-                <td><pre>Line too long (108/100)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>576</td>
+                <td>564</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -313,7 +303,7 @@
             </tr>
             
             <tr>
-                <td>582</td>
+                <td>570</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
@@ -323,7 +313,7 @@
             </tr>
             
             <tr>
-                <td>610</td>
+                <td>598</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>self-assigning-variable</code></td>
@@ -333,7 +323,7 @@
             </tr>
             
             <tr>
-                <td>713</td>
+                <td>701</td>
                 <td>29</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -343,7 +333,7 @@
             </tr>
             
             <tr>
-                <td>717</td>
+                <td>705</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2720,10 +2710,7 @@
         # simulate with the casadi simulator
         self.sim_flex_model(solution)
 
-        # extract solution DataFrama
         df = solution.df
-
-        # send the outputs
         if self.flex_results is not None:
             for output in self.var_ref.outputs:
                 if output not in [
@@ -3162,7 +3149,8 @@ excluded_fields = [
             opti_outputs.values,
             index=index_coll,
         )
-        # fill the output value at the time step where it already exists in optimization output
+        # fill the output value at the time step where it already exists
+        # in optimization output
         for idx in fixed_opti_output.index:
             if idx in self.flex_results.index:</pre></td>
             </tr>
@@ -3230,12 +3218,9 @@ excluded_fields = [
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
-            total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
     ):
-        &#34;&#34;&#34;simulate with flex model over the prediction horizon
-
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;simulate with flex model over the prediction horizon&#34;&#34;&#34;
 
         # get control and input values from the mpc optimization result</pre></td>
             </tr>
@@ -4480,7 +4465,7 @@ excluded_fields = [
             
             <tr>
                 <td>convention</td>
-                <td>159</td>
+                <td>158</td>
             </tr>
             
             <tr>
@@ -4510,7 +4495,7 @@ excluded_fields = [
             
             <tr>
                 <td>line-too-long</td>
-                <td>27</td>
+                <td>26</td>
             </tr>
             
             <tr>
@@ -4775,7 +4760,7 @@ excluded_fields = [
             
             <tr>
                 <td>agentlib_flexquant.data_structures.flex_kpis</td>
-                <td>27</td>
+                <td>26</td>
             </tr>
             
             <tr>
@@ -4875,7 +4860,7 @@ excluded_fields = [
             
             <tr>
                 <td>agentlib_flexquant/data_structures/flex_kpis.py</td>
-                <td>27</td>
+                <td>26</td>
             </tr>
             
             <tr>

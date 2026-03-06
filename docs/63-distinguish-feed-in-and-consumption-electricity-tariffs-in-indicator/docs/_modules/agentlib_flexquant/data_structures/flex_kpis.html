@@ -492,18 +492,6 @@
         <span class="k">if</span> <span class="n">feed_in_price_signal</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">feed_in_price_signal</span> <span class="o">=</span> <span class="n">electricity_price_signal</span>
 
-        <span class="c1"># Align all series to the MPC time grid and drop collocation points</span>
-        <span class="n">power_profile_base</span> <span class="o">=</span> <span class="n">power_profile_base</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">mpc_time_grid</span><span class="p">)</span>
-        <span class="n">power_profile_shadow</span> <span class="o">=</span> <span class="n">power_profile_shadow</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">mpc_time_grid</span><span class="p">)</span>
-        <span class="n">electricity_price_signal</span> <span class="o">=</span> <span class="n">electricity_price_signal</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">mpc_time_grid</span><span class="p">)</span>
-        <span class="n">feed_in_price_signal</span> <span class="o">=</span> <span class="n">feed_in_price_signal</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">mpc_time_grid</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">collocation_time_grid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">power_profile_base</span> <span class="o">=</span> <span class="n">power_profile_base</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">collocation_time_grid</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
-            <span class="n">power_profile_shadow</span> <span class="o">=</span> <span class="n">power_profile_shadow</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">collocation_time_grid</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
-            <span class="n">electricity_price_signal</span> <span class="o">=</span> <span class="n">electricity_price_signal</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">collocation_time_grid</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
-            <span class="n">feed_in_price_signal</span> <span class="o">=</span> <span class="n">feed_in_price_signal</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">collocation_time_grid</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
-
         <span class="c1"># Select tariff based on the sign of each profile</span>
         <span class="n">effective_price_base</span> <span class="o">=</span> <span class="n">electricity_price_signal</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
             <span class="n">power_profile_base</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
