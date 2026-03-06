@@ -488,7 +488,6 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         if self.in_provision:
             self.data = self.callback_handler.set_all_callback_variables_to_none(data=self.data)
         else: 
-            self.data = self.callback_handler.update_price_variables(config=self.config, data=self.data)
             self.data = self.callback_handler.update_input(data=self.data, name=name, value=inp.value)
             
         if self.callback_handler.is_ready_for_calculation(data=self.data):
