@@ -418,18 +418,6 @@ class FlexibilityKPIs(pydantic.BaseModel):
         if feed_in_price_signal is None:
             feed_in_price_signal = electricity_price_signal
 
-        # Align all series to the MPC time grid and drop collocation points
-        power_profile_base = power_profile_base.reindex(mpc_time_grid)
-        power_profile_shadow = power_profile_shadow.reindex(mpc_time_grid)
-        electricity_price_signal = electricity_price_signal.reindex(mpc_time_grid)
-        feed_in_price_signal = feed_in_price_signal.reindex(mpc_time_grid)
-
-        if collocation_time_grid is not None:
-            power_profile_base = power_profile_base.drop(collocation_time_grid, errors="ignore")
-            power_profile_shadow = power_profile_shadow.drop(collocation_time_grid, errors="ignore")
-            electricity_price_signal = electricity_price_signal.drop(collocation_time_grid, errors="ignore")
-            feed_in_price_signal = feed_in_price_signal.drop(collocation_time_grid, errors="ignore")
-
         # Select tariff based on the sign of each profile
         effective_price_base = electricity_price_signal.where(
             power_profile_base > 0,
