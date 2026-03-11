@@ -85,12 +85,6 @@ class ModuleHandler:
             get_module_type_matching_dict(self.MODULE_NAME_DICT)
         )
 
-        print(self.MODULE_TYPE_DICT)
-        print("BASELINE_MODULE_TYPE_DICT:")
-        print(self.BASELINE_MODULE_TYPE_DICT)
-        print("SHADOW_MODULE_TYPE_DICT:")
-        print(self.SHADOW_MODULE_TYPE_DICT)
-
     def get_module(self, config: AgentConfig, module_type: str) -> T:
         """Extracts a module from a config based on its name."""
         for module in config.modules:
