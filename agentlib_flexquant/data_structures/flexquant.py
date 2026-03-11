@@ -87,6 +87,10 @@ class FlexibilityMarketConfig(BaseModel):
         default=None, # default value could be set here instead of validator?
         description="Module type or dict with type and path for local files",
     )
+    custom_plugins: Union[dict, str] = Field(
+        default=None, 
+        description="Add custom AgentLib plugin to be loaded",
+    )
 
     @model_validator(mode="after")
     def check_file_extension(self):
@@ -134,6 +138,10 @@ class FlexibilityIndicatorConfig(BaseModel):
     module_type: Union[dict, str] = Field(
         default=None, # default value could be set here instead of validator?
         description="Module type or dict with type and path for local files",
+    )
+    custom_plugins: Union[dict, str] = Field(
+        default=None, 
+        description="Add custom AgentLib plugin to be loaded",
     )
 
     @model_validator(mode="after")
