@@ -9,6 +9,7 @@ from pydantic import (field_validator, ConfigDict, model_validator, Field, BaseM
 from agentlib.core.agent import AgentConfig
 from agentlib.core.errors import ConfigurationError
 from agentlib_mpc.data_structures.mpc_datamodels import AgentVariable, MPCVariable
+import agentlib_flexquant.utils.config_management as cmng
 
 from agentlib_flexquant.data_structures.mpcs import (
     BaselineMPCData,
@@ -82,6 +83,10 @@ class FlexibilityMarketConfig(BaseModel):
         default="flexibility_market.json",
         description="Name of the config that is created by the generator",
     )
+    module_type: Union[dict, str] = Field(
+        default=None, # default value could be set here instead of validator?
+        description="Module type or dict with type and path for local files",
+    )
 
     @model_validator(mode="after")
     def check_file_extension(self):
@@ -94,6 +99,24 @@ class FlexibilityMarketConfig(BaseModel):
                     f"name_of_created_file: '{self.name_of_created_file}'. "
                     f"Expected a '.json' file."
                 )
+        return self
+    
+    @model_validator(mode="after")
+    def validate_module_type(self):
+        """Ensure module_type is str or dict and set default if None."""
+        print("Validation market module: called on value " + str(self.module_type) ) # ! ToDo REMOVE
+
+        if self.module_type is None:
+            self.module_type = cmng.MARKET_CONFIG_TYPE
+            return self
+
+        if not isinstance(self.module_type, (str, dict)):
+            raise ConfigurationError(
+                f"Invalid module_type: {self.module_type!r} "
+                f"(type: {type(self.module_type).__name__}). "
+                "Expected a string or a dictionary."
+            )
+
         return self
 
 
@@ -108,6 +131,10 @@ class FlexibilityIndicatorConfig(BaseModel):
         default="indicator.json",
         description="Name of the config that is created by the generator",
     )
+    module_type: Union[dict, str] = Field(
+        default=None, # default value could be set here instead of validator?
+        description="Module type or dict with type and path for local files",
+    )
 
     @model_validator(mode="after")
     def check_file_extension(self):
@@ -120,6 +147,24 @@ class FlexibilityIndicatorConfig(BaseModel):
                     f"name_of_created_file: '{self.name_of_created_file}'. "
                     f"Expected a '.json' file."
                 )
+        return self
+    
+    @model_validator(mode="after")
+    def validate_module_type(self):
+        """Ensure module_type is str or dict and set default if None."""
+        print("Validation indicator module: called on value " + str(self.module_type) ) # ! ToDo REMOVE
+
+        if self.module_type is None:
+            self.module_type = cmng.INDICATOR_CONFIG_TYPE
+            return self
+
+        if not isinstance(self.module_type, (str, dict)):
+            raise ConfigurationError(
+                f"Invalid module_type: {self.module_type!r} "
+                f"(type: {type(self.module_type).__name__}). "
+                "Expected a string or a dictionary."
+            )
+
         return self
 
 
