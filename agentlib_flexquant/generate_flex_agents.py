@@ -86,6 +86,11 @@ class FlexAgentGenerator:
         # load configs
         self.flex_config = load_config.load_config(flex_config,
                                                    config_type=FlexQuantConfig)
+        
+        # populate flex generator module_types
+        self.flex_config.baseline_config_generator_data.module_types = self.module_handler.BASELINE_MODULE_TYPE_DICT
+        self.flex_config.shadow_mpc_config_generator_data.neg_flex.module_types = self.module_handler.SHADOW_MODULE_TYPE_DICT
+        self.flex_config.shadow_mpc_config_generator_data.pos_flex.module_types = self.module_handler.SHADOW_MODULE_TYPE_DICT
 
         # original mpc agent
         self.orig_mpc_agent_config = load_config.load_config(
@@ -121,7 +126,9 @@ class FlexAgentGenerator:
         self.baseline_mpc_module_config = self.module_handler.get_flex_mpc_module_config(
             agent_config=self.baseline_mpc_agent_config,
             module_config=self.baseline_mpc_module_config,
-            module_type=self.flex_config.baseline_config_generator_data.module_types
+            module_type=self.flex_config.baseline_config_generator_data.module_types[
+                self.baseline_mpc_module_config.type
+            ]
         )
         # pos module
         self.pos_flex_mpc_module_config = self.module_handler.get_module(
@@ -137,6 +144,9 @@ class FlexAgentGenerator:
         self.indicator_config = load_config.load_config(
             self.flex_config.indicator_config, config_type=FlexibilityIndicatorConfig
         )
+        # load custom agents for indicator if specified
+        if self.indicator_config.custom_plugins:
+            self.module_handler.add_custom_plugins(self.indicator_config.custom_plugins)
         # load indicator module config
         self.indicator_agent_config = load_config.load_config(
             self.indicator_config.agent_config, config_type=AgentConfig
@@ -149,13 +159,16 @@ class FlexAgentGenerator:
             self.market_config = load_config.load_config(
                 self.flex_config.market_config, config_type=FlexibilityMarketConfig
             )
+
+            # load custom agents if specified
+            if self.market_config.custom_plugins:
+                self.module_handler.add_custom_plugins(self.market_config.custom_plugins)
+
             # load market module config
             self.market_agent_config = load_config.load_config(
                 self.market_config.agent_config, config_type=AgentConfig
             )
-            # ToDo load custom plugins here
-            self.module_handler.add_custom_plugins("agents")
-
+         
             self.market_module_config = self.module_handler.get_module(
                 config=self.market_agent_config, module_type=self.market_config.module_type
             )
