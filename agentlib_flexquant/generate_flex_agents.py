@@ -90,9 +90,9 @@ class FlexAgentGenerator:
         self.module_handler = ModuleHandler(extra_plugins=self.flex_config.custom_plugins)
         
         # populate flex generator module_types
-        self.flex_config.baseline_config_generator_data.module_types = self.module_handler.BASELINE_MODULE_TYPE_DICT
-        self.flex_config.shadow_mpc_config_generator_data.neg_flex.module_types = self.module_handler.SHADOW_MODULE_TYPE_DICT
-        self.flex_config.shadow_mpc_config_generator_data.pos_flex.module_types = self.module_handler.SHADOW_MODULE_TYPE_DICT
+        self.flex_config.baseline_config_generator_data.module_types = self.module_handler.baseline_module_type_dict
+        self.flex_config.shadow_mpc_config_generator_data.neg_flex.module_types = self.module_handler.shadow_module_type_dict
+        self.flex_config.shadow_mpc_config_generator_data.pos_flex.module_types = self.module_handler.shadow_module_type_dict
 
         # original mpc agent
         self.orig_mpc_agent_config = load_config.load_config(
@@ -274,7 +274,7 @@ class FlexAgentGenerator:
         module_dict = cmng.to_dict_and_remove_unnecessary_fields(module=module)
         # write given module to agent config
         for i, agent_module in enumerate(agent.modules):
-            if self.module_handler.MODULE_TYPE_DICT[module_type] is self.module_handler.MODULE_TYPE_DICT[
+            if self.module_handler.module_type_dict[module_type] is self.module_handler.module_type_dict[
                 agent_module["type"]]:
                 agent.modules[i] = module_dict
 
@@ -384,7 +384,7 @@ class FlexAgentGenerator:
             self.flex_config.baseline_config_generator_data.power_variable)
         module_config_flex_dict["storage_variable_name"] = (
             self.indicator_module_config.correct_costs.stored_energy_variable)
-        module_config_flex = self.module_handler.MODULE_TYPE_DICT[module_config.type](
+        module_config_flex = self.module_handler.module_type_dict[module_config.type](
             **module_config_flex_dict, _agent_id=agent_id
         )
 

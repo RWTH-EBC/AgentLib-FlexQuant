@@ -38,10 +38,10 @@ class ModuleHandler:
         self.exclude_ml_plugins = exclude_ml_plugins
         self.exclude_clonemap_plugin = exclude_clonemap_plugin
 
-        self.MODULE_TYPE_DICT = {}
-        self.MODULE_NAME_DICT = {}
-        self.BASELINE_MODULE_TYPE_DICT = {}
-        self.SHADOW_MODULE_TYPE_DICT = {}
+        self.module_type_dict = {}
+        self.module_name_dict = {}
+        self.baseline_module_type_dict = {}
+        self.shadow_module_type_dict = {}
 
         self.generate_module_dicts()
 
@@ -61,16 +61,16 @@ class ModuleHandler:
             all_module_types.pop("clonemap", None)
 
         # dictionary mapping the module name to the module config (ModelMetaclass)
-        self.MODULE_TYPE_DICT = {
+        self.module_type_dict = {
             name: inspect.get_annotations(class_type.import_class())["config"]
             for name, class_type in all_module_types.items()
         }
         # dictionary mapping the module name to the module (ModuleImport)
-        self.MODULE_NAME_DICT = all_module_types
+        self.module_name_dict = all_module_types
 
         # get baseline and shadow module types # toDo no longer necessary?
-        self.BASELINE_MODULE_TYPE_DICT, self.SHADOW_MODULE_TYPE_DICT = (
-            get_module_type_matching_dict(self.MODULE_NAME_DICT)
+        self.baseline_module_type_dict, self.shadow_module_type_dict = (
+            get_module_type_matching_dict(self.module_name_dict)
         )
 
     def get_module(self, config: AgentConfig, module_type: str) -> T:
@@ -82,7 +82,7 @@ class ModuleHandler:
                 # because the simulator module exceeds the recursion limit
                 config_id = deepcopy(config.id)
                 mod = deepcopy(module)
-                return self.MODULE_TYPE_DICT[mod["type"]](**mod, _agent_id=config_id)
+                return self.module_type_dict[mod["type"]](**mod, _agent_id=config_id)
         else:
             raise ModuleNotFoundError(
                 f"Module type {module_type} not found in "
@@ -98,7 +98,7 @@ class ModuleHandler:
         """Get a flexquant module config from an original agentlib module config."""
         config_dict = module_config.model_dump()
         config_dict["type"] = module_type
-        flex_config_dict = self.MODULE_TYPE_DICT[module_type](
+        flex_config_dict = self.module_type_dict[module_type](
             **config_dict, _agent_id=agent_config.id
         )
         # HOTFIX due to AgentLib-MPC bug. Needs to be adapted after Objectives
@@ -112,7 +112,7 @@ def get_module_type_matching_dict(dictionary: dict) -> (dict, dict):
     """Create two dictionaries, which map the modules types of the agentlib_mpc modules
     to those of the flexquant modules.
 
-    This is done by using the MODULE_NAME_DICT.
+    This is done by using the module_name_dict.
 
     """
     # Create dictionaries to store keys grouped by values
