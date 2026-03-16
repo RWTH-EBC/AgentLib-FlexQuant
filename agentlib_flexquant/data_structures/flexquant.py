@@ -153,7 +153,7 @@ class FlexibilityIndicatorConfig(BaseModel):
         """Ensure module_type is str or dict and set default if None."""
 
         if self.module_type is None:
-            self.module_type = cmng.MARKET_CONFIG_TYPE
+            self.module_type = cmng.INDICATOR_CONFIG_TYPE
             return self
         
         if isinstance(self.module_type, dict):
@@ -221,9 +221,9 @@ class FlexQuantConfig(BaseModel):
         default=False,
         description="If generated files should be overwritten by new files",
     )
-    custom_plugins: Union[dict, str] = Field(
+    custom_plugins: list[str] = Field(
         default=None, 
-        description="Add custom AgentLib plugin to be loaded",
+        description="Custom AgentLib plugins to be loaded",
     )
 
     @model_validator(mode="after")
@@ -287,4 +287,21 @@ class FlexQuantConfig(BaseModel):
         self.flex_base_directory_path.mkdir(parents=True, exist_ok=True)
         self.flex_files_directory.mkdir(parents=True, exist_ok=True)
         self.results_directory.mkdir(parents=True, exist_ok=True)
+        return self
+    
+    @model_validator(mode="after")
+    def validate_custom_plugins(self):
+        """Ensure custom_plugins is a list of strings (or None)."""
+        if self.custom_plugins is None:
+            return self
+
+        if not isinstance(self.custom_plugins, list) or not all(
+            isinstance(p, str) for p in self.custom_plugins
+        ):
+            raise ConfigurationError(
+                f"Invalid custom_plugins: {self.custom_plugins!r} "
+                f"(type: {type(self.custom_plugins).__name__}). "
+                "Expected a list of strings."
+            )
+
         return self
