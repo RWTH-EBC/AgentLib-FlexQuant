@@ -76,7 +76,6 @@ class FlexAgentGenerator:
             mpc_agent_config: Union[str, FilePath, AgentConfig],
     ):
         self.logger = logging.getLogger(__name__)
-        self.module_handler = ModuleHandler()
 
         if isinstance(flex_config, str or FilePath):
             self.flex_config_file_name = os.path.basename(flex_config)
@@ -86,6 +85,9 @@ class FlexAgentGenerator:
         # load configs
         self.flex_config = load_config.load_config(flex_config,
                                                    config_type=FlexQuantConfig)
+        
+        # initialize module handler class and load custom plugins if specified
+        self.module_handler = ModuleHandler(extra_plugins=self.flex_config.custom_plugins)
         
         # populate flex generator module_types
         self.flex_config.baseline_config_generator_data.module_types = self.module_handler.BASELINE_MODULE_TYPE_DICT
@@ -144,9 +146,6 @@ class FlexAgentGenerator:
         self.indicator_config = load_config.load_config(
             self.flex_config.indicator_config, config_type=FlexibilityIndicatorConfig
         )
-        # load custom agents for indicator if specified
-        if self.indicator_config.custom_plugins:
-            self.module_handler.add_custom_plugins(self.indicator_config.custom_plugins)
         # load indicator module config
         self.indicator_agent_config = load_config.load_config(
             self.indicator_config.agent_config, config_type=AgentConfig
@@ -159,10 +158,6 @@ class FlexAgentGenerator:
             self.market_config = load_config.load_config(
                 self.flex_config.market_config, config_type=FlexibilityMarketConfig
             )
-
-            # load custom agents if specified
-            if self.market_config.custom_plugins:
-                self.module_handler.add_custom_plugins(self.market_config.custom_plugins)
 
             # load market module config
             self.market_agent_config = load_config.load_config(

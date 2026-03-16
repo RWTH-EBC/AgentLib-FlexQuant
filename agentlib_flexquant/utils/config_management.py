@@ -25,13 +25,16 @@ SIMULATOR_CONFIG_TYPE: str = "simulator"
 
 class ModuleHandler:
     def __init__(
-        self, extra_plugins=None, exclude_ml_plugins=True, exclude_clonemap_plugin=True
+        self, extra_plugins: Optional[list[str]] = None, exclude_ml_plugins: bool = True, exclude_clonemap_plugin: bool = True
     ):
 
         default_plugins = ["agentlib_mpc", "agentlib_flexquant"]
         extra_plugins = extra_plugins or []
-
-        self.plugin_modules = default_plugins + extra_plugins
+        self.plugin_modules = []
+        for p in default_plugins + extra_plugins:
+            if p not in self.plugin_modules:
+                self.plugin_modules.append(p)        
+        
         self.exclude_ml_plugins = exclude_ml_plugins
         self.exclude_clonemap_plugin = exclude_clonemap_plugin
 
@@ -39,21 +42,6 @@ class ModuleHandler:
         self.MODULE_NAME_DICT = {}
         self.BASELINE_MODULE_TYPE_DICT = {}
         self.SHADOW_MODULE_TYPE_DICT = {}
-
-        self.generate_module_dicts()
-
-    def add_custom_plugins(self, plugins: Optional[Union[str, list[str]]]):
-        """Add custom AgentLib plugin to be loaded"""
-
-        if plugins is None:
-            return
-
-        if isinstance(plugins, str):
-            plugins_list = [plugins]
-        else:
-            plugins_list = plugins
-
-        self.plugin_modules = list(set(self.plugin_modules + plugins_list))
 
         self.generate_module_dicts()
 
@@ -97,7 +85,7 @@ class ModuleHandler:
                 return self.MODULE_TYPE_DICT[mod["type"]](**mod, _agent_id=config_id)
         else:
             raise ModuleNotFoundError(
-                f"Module type {module['type']} not found in "
+                f"Module type {module_type} not found in "
                 f"agentlib and its plug ins."
             )
 
