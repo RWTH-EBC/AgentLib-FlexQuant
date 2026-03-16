@@ -27,6 +27,28 @@ class ModuleHandler:
     def __init__(
         self, extra_plugins: Optional[list[str]] = None, exclude_ml_plugins: bool = True, exclude_clonemap_plugin: bool = True
     ):
+        """
+        Manages discovery and lookup of AgentLib module types and their configuration models.
+
+        The handler builds registries of available modules from a set of plugin packages,
+        optionally excluding slow-to-import modules (e.g., ML trainers).
+        The get_module() function provided allows to get the corresponding module from a config based on its name.
+
+        Args:
+            extra_plugins: Optional list of additional plugin package names to include in
+                module discovery (in addition to the default plugins).
+            exclude_ml_plugins: If True, excludes ML-related agentlib_mpc modules that are
+                expensive/slow to import.
+            exclude_clonemap_plugin: If True, excludes the "clonemap" module type (not used
+                by FlexQuant).
+
+        ModuleHandler registries/mappings:
+         - module_type_dict: module_type string -> corresponding agent config from loaded plugins.
+         - module_name_dict: module_type string -> corresponding module
+         - baseline_module_type_dict: agentlib_mpc type -> FlexQuant baseline type mapping
+         - shadow_module_type_dict: agentlib_mpc type -> FlexQuant shadow-MPC type mapping
+
+        """
 
         default_plugins = ["agentlib_mpc", "agentlib_flexquant"]
         extra_plugins = extra_plugins or []
@@ -56,7 +78,7 @@ class ModuleHandler:
             all_module_types.pop("agentlib_mpc.ml_simulator", None)
             all_module_types.pop("agentlib_mpc.set_point_generator", None)
 
-        # remove clone since not used
+        # remove clonemap since not used
         if self.exclude_clonemap_plugin:
             all_module_types.pop("clonemap", None)
 
