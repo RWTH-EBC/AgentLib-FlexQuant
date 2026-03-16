@@ -18,6 +18,7 @@ from agentlib_mpc.utils import TimeConversionTypes
 from agentlib_mpc.utils.analysis import load_mpc, load_mpc_stats, load_sim
 
 import agentlib_flexquant.utils.config_management as cmng
+from agentlib_flexquant.utils.config_management import ModuleHandler
 from agentlib_flexquant.data_structures.flexquant import (
     FlexQuantConfig,
     FlexibilityMarketConfig,
@@ -214,11 +215,12 @@ class Results:
         for file_path in Path(self.flex_config.flex_files_directory).rglob(
             "*.json"
         ):
+            module_handler = ModuleHandler(extra_plugins=self.flex_config.custom_plugins)
             if file_path.name in self.config_filename_baseline:
                 self.baseline_agent_config = load_config.load_config(
                     config=file_path, config_type=AgentConfig
                 )
-                self.baseline_module_config = cmng.get_module(
+                self.baseline_module_config = module_handler.get_module(
                     config=self.baseline_agent_config,
                     module_type=
                     self._get_flexquant_mpc_module_type(self.baseline_agent_config),
@@ -229,7 +231,7 @@ class Results:
                 self.pos_flex_agent_config = load_config.load_config(
                     config=file_path, config_type=AgentConfig
                 )
-                self.pos_flex_module_config = cmng.get_module(
+                self.pos_flex_module_config = module_handler.get_module(
                     config=self.pos_flex_agent_config,
                     module_type=
                     self._get_flexquant_mpc_module_type(self.pos_flex_agent_config),
@@ -240,7 +242,7 @@ class Results:
                 self.neg_flex_agent_config = load_config.load_config(
                     config=file_path, config_type=AgentConfig
                 )
-                self.neg_flex_module_config = cmng.get_module(
+                self.neg_flex_module_config = module_handler.get_module(
                     config=self.neg_flex_agent_config,
                     module_type=
                     self._get_flexquant_mpc_module_type(self.neg_flex_agent_config),
@@ -251,7 +253,7 @@ class Results:
                 self.indicator_agent_config = load_config.load_config(
                     config=file_path, config_type=AgentConfig
                 )
-                self.indicator_module_config = cmng.get_module(
+                self.indicator_module_config = module_handler.get_module(
                     config=self.indicator_agent_config,
                     module_type=cmng.INDICATOR_CONFIG_TYPE,
                 )
@@ -264,7 +266,7 @@ class Results:
                 self.market_agent_config = load_config.load_config(
                     config=file_path, config_type=AgentConfig
                 )
-                self.market_module_config = cmng.get_module(
+                self.market_module_config = module_handler.get_module(
                     config=self.market_agent_config, module_type=cmng.MARKET_CONFIG_TYPE
                 )
                 files_found.append(self.config_filename_market)
