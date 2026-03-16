@@ -274,8 +274,7 @@ class FlexAgentGenerator:
         module_dict = cmng.to_dict_and_remove_unnecessary_fields(module=module)
         # write given module to agent config
         for i, agent_module in enumerate(agent.modules):
-            if self.module_handler.module_type_dict[module_type] is self.module_handler.module_type_dict[
-                agent_module["type"]]:
+            if module_type == agent_module["type"]:
                 agent.modules[i] = module_dict
 
         # dump agent config
