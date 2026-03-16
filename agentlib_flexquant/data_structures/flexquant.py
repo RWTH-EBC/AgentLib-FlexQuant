@@ -84,12 +84,8 @@ class FlexibilityMarketConfig(BaseModel):
         description="Name of the config that is created by the generator",
     )
     module_type: Union[dict, str] = Field(
-        default=None, # default value could be set here instead of validator?
+        default=None,
         description="Module type or dict with type and path for local files",
-    )
-    custom_plugins: Union[dict, str] = Field(
-        default=None, 
-        description="Add custom AgentLib plugin to be loaded",
     )
 
     @model_validator(mode="after")
@@ -108,19 +104,18 @@ class FlexibilityMarketConfig(BaseModel):
     @model_validator(mode="after")
     def validate_module_type(self):
         """Ensure module_type is str or dict and set default if None."""
-        print("Validation market module: called on value " + str(self.module_type) ) # ! ToDo REMOVE
 
         if self.module_type is None:
             self.module_type = cmng.MARKET_CONFIG_TYPE
             return self
-
-        if not isinstance(self.module_type, (str, dict)):
-            raise ConfigurationError(
-                f"Invalid module_type: {self.module_type!r} "
-                f"(type: {type(self.module_type).__name__}). "
-                "Expected a string or a dictionary."
-            )
-
+        
+        if isinstance(self.module_type, dict):
+            if 'file' not in self.module_type or 'class_name' not in self.module_type:
+                raise ConfigurationError("module_type dict must contain 'file' and 'class_name' keys")
+        
+        elif not isinstance(self.module_type, str):
+            raise TypeError("module_type must be either a string or a dictionary")
+    
         return self
 
 
@@ -136,12 +131,8 @@ class FlexibilityIndicatorConfig(BaseModel):
         description="Name of the config that is created by the generator",
     )
     module_type: Union[dict, str] = Field(
-        default=None, # default value could be set here instead of validator?
+        default=None,
         description="Module type or dict with type and path for local files",
-    )
-    custom_plugins: Union[dict, str] = Field(
-        default=None, 
-        description="Add custom AgentLib plugin to be loaded",
     )
 
     @model_validator(mode="after")
@@ -160,19 +151,18 @@ class FlexibilityIndicatorConfig(BaseModel):
     @model_validator(mode="after")
     def validate_module_type(self):
         """Ensure module_type is str or dict and set default if None."""
-        print("Validation indicator module: called on value " + str(self.module_type) ) # ! ToDo REMOVE
 
         if self.module_type is None:
-            self.module_type = cmng.INDICATOR_CONFIG_TYPE
+            self.module_type = cmng.MARKET_CONFIG_TYPE
             return self
-
-        if not isinstance(self.module_type, (str, dict)):
-            raise ConfigurationError(
-                f"Invalid module_type: {self.module_type!r} "
-                f"(type: {type(self.module_type).__name__}). "
-                "Expected a string or a dictionary."
-            )
-
+        
+        if isinstance(self.module_type, dict):
+            if 'file' not in self.module_type or 'class_name' not in self.module_type:
+                raise ConfigurationError("module_type dict must contain 'file' and 'class_name' keys")
+        
+        elif not isinstance(self.module_type, str):
+            raise TypeError("module_type must be either a string or a dictionary")
+    
         return self
 
 
@@ -230,6 +220,10 @@ class FlexQuantConfig(BaseModel):
     overwrite_files: bool = Field(
         default=False,
         description="If generated files should be overwritten by new files",
+    )
+    custom_plugins: Union[dict, str] = Field(
+        default=None, 
+        description="Add custom AgentLib plugin to be loaded",
     )
 
     @model_validator(mode="after")
