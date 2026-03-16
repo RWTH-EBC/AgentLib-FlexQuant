@@ -11,7 +11,6 @@ from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from pydantic import model_validator, field_serializer, Field
 
 import agentlib_flexquant.data_structures.globals as glbs
-import agentlib_flexquant.utils.config_management as cmng
 
 excluded_fields = [
         "rdf_class",
