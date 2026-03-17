@@ -250,12 +250,16 @@ class Results:
                 files_found.append(self.config_filename_neg_flex)
 
             elif file_path.name in self.config_filename_indicator:
+                _indicator_config = load_config.load_config(
+                    self.flex_config.indicator_config, config_type=FlexibilityIndicatorConfig
+                )
+
                 self.indicator_agent_config = load_config.load_config(
                     config=file_path, config_type=AgentConfig
                 )
                 self.indicator_module_config = module_handler.get_module(
                     config=self.indicator_agent_config,
-                    module_type=cmng.INDICATOR_CONFIG_TYPE,
+                    module_type=_indicator_config.module_type,
                 )
                 files_found.append(self.config_filename_indicator)
 
@@ -267,7 +271,7 @@ class Results:
                     config=file_path, config_type=AgentConfig
                 )
                 self.market_module_config = module_handler.get_module(
-                    config=self.market_agent_config, module_type=cmng.MARKET_CONFIG_TYPE
+                    config=self.market_agent_config, module_type=self.flex_config.market_config.module_type
                 )
                 files_found.append(self.config_filename_market)
         files_needed = [self.config_filename_baseline,
