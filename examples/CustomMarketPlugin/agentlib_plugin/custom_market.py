@@ -5,7 +5,7 @@ from pydantic import Field
 class CustomMarketConfig(flexibility_market.FlexibilityMarketModuleConfig):
     custom_string: str = Field(
         title="Custom String",
-        description="Just an example of a custom Strin.",
+        description="Just an example of a custom String.",
     )
 
 class CustomMarketModule(flexibility_market.FlexibilityMarketModule):
