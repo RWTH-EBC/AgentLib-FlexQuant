@@ -6,7 +6,7 @@ To implement a custom plugin following steps are needed:
 
 ### 1) Create a new plugin package for the AgentLib plugin
 
-In this case the folder `agentlib_plugin` and `__init__.py` inside was created. Important: The plugin package directory name needs to be lowercase, else this will cause issues while importing the plugin.
+In this case the folder `agentlib_plugin` and `__init__.py` inside was created. Important: The plugin package directory name needs to be lowercase, else this will cause issues while importing the plugin. For further information take a look at the [AgentLib plugin example](https://github.com/RWTH-EBC/AgentLib/tree/main/examples/plugin).
 
 ### 2) Create custom logic (in this case market logic)
 The custom market logic is implemented in `agentlib_plugin/custom_market.py` by creating a new class that is inheriting from the default FlexibilityMarket. In here we add a custom config option and overwrite the custom_flexibility_callback function to add our own logic. 
