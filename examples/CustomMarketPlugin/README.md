@@ -38,4 +38,4 @@ Next `market.json` needs to be adapted to use the new custom market agent. For t
 
 
 ### 5) Test custom plugin
-To test if all works correctly, run `main_single_run.py`. You should now see the custom string we set and the flex offers printed.
+To test if all works correctly, run `main.py`. You should now see the custom string we set and the flex offers printed.
