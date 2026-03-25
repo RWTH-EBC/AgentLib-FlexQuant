@@ -250,16 +250,12 @@ class Results:
                 files_found.append(self.config_filename_neg_flex)
 
             elif file_path.name in self.config_filename_indicator:
-                _indicator_config = load_config.load_config(
-                    self.flex_config.indicator_config, config_type=FlexibilityIndicatorConfig
-                )
-
                 self.indicator_agent_config = load_config.load_config(
                     config=file_path, config_type=AgentConfig
                 )
                 self.indicator_module_config = module_handler.get_module(
                     config=self.indicator_agent_config,
-                    module_type=_indicator_config.module_type,
+                    module_type=self.flex_config.indicator_config.module_type,
                 )
                 files_found.append(self.config_filename_indicator)
 
