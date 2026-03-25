@@ -90,7 +90,7 @@ class ModuleHandler:
         # dictionary mapping the module name to the module (ModuleImport)
         self.module_name_dict = all_module_types
 
-        # get baseline and shadow module types # toDo no longer necessary?
+        # get baseline and shadow module types
         self.baseline_module_type_dict, self.shadow_module_type_dict = (
             get_module_type_matching_dict(self.module_name_dict)
         )
