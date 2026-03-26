@@ -5,6 +5,7 @@
 [![pylint](https://rwth-ebc.github.io/AgentLib-FlexQuant/main/pylint/pylint.svg)](https://rwth-ebc.github.io/AgentLib-FlexQuant/main/pylint/pylint.html)
 [![coverage](https://rwth-ebc.github.io/AgentLib-FlexQuant/main/coverage/badge.svg)](https://rwth-ebc.github.io/AgentLib-FlexQuant/main/coverage)
 [![documentation](https://rwth-ebc.github.io/AgentLib-FlexQuant/main/docs/doc.svg)](https://rwth-ebc.github.io/AgentLib-FlexQuant/main/docs/index.html)
+[![DOI](https://zenodo.org/badge/1027640404.svg)](https://doi.org/10.5281/zenodo.19232175)
 
 This project is a plugin for the [AgentLib](https://github.com/RWTH-EBC/AgentLib). This agent-based framework employs model predictive control (MPC) to quantify flexibility offers of electricity usage of building energy systems (BES) during operation.
 
