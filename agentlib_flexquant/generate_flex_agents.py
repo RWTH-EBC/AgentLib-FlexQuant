@@ -381,7 +381,7 @@ class FlexAgentGenerator:
         # HOTFIX due to AgentLib-MPC bug. Needs to be adapted after Objectives
         # in AgentLib-MPC are fixed.
         if module_config_flex.r_del_u is None:
-           module_config_flex = module_config_flex.model_copy(update={"r_del_u": {}})
+            module_config_flex = module_config_flex.model_copy(update={"r_del_u": {}})
 
         # allow the module config to be changed
         module_config_flex.model_config["frozen"] = False
@@ -716,11 +716,6 @@ class FlexAgentGenerator:
         if discretization_options.get("method") == "multiple_shooting":
             grid = np.arange(0, (prediction_horizon + 1) * time_step, time_step)
             return {"type": "multiple_shooting", "grid": grid.tolist()}
-
-        # For collocation, compute the time grid
-        if "collocation_method" not in discretization_options:
-            return {"type": "none", "grid": []}
-
         else:
             collocation_method = discretization_options["collocation_method"]
             collocation_order = discretization_options["collocation_order"]
@@ -923,26 +918,12 @@ class FlexAgentGenerator:
                     f"if the correction of costs is enabled."
                 )
 
-  
-		# validate discretization method (collocation or multiple shooting)
+        # validate discretization method (collocation or multiple shooting)
         discretization_options = self.baseline_mpc_module_config.optimization_backend.get(
-            "discretization_options", {}
-        )
-
-        # Check if using multiple shooting or collocation
-        # Multiple shooting typically doesn't require collocation_method
-        is_multiple_shooting = discretization_options.get("method") == "multiple_shooting"
-        has_collocation_method = "collocation_method" in discretization_options
-
-        if not is_multiple_shooting and not has_collocation_method:
-            raise ConfigurationError(
-                "Please specify a valid discretization method. Either use multiple shooting "
-                "(set method='multiple_shooting' in discretization_options) or use collocation "
-                "with a defined collocation_method in the mpc config."
-            )
+            "discretization_options", {})
 
         # If using collocation, validate the collocation method
-        if has_collocation_method:
+        if "collocation_method" in discretization_options:
             collocation_method = discretization_options["collocation_method"]
             if collocation_method != "legendre":
                 self.logger.warning(

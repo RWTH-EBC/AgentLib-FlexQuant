@@ -588,7 +588,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         is_collocation = time_grid_info and time_grid_info.get("type") == "collocation"
 
         if is_collocation:
-            full_index = np.sort(np.unique(np.concatenate([time_grid,self.data.mpc_time_grid])))
+            full_index = np.sort(np.concatenate([time_grid,self.data.mpc_time_grid]))
         else:
             full_index = self.data.mpc_time_grid
             
