@@ -455,7 +455,7 @@
         <span class="c1"># HOTFIX due to AgentLib-MPC bug. Needs to be adapted after Objectives</span>
         <span class="c1"># in AgentLib-MPC are fixed.</span>
         <span class="k">if</span> <span class="n">module_config_flex</span><span class="o">.</span><span class="n">r_del_u</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-           <span class="n">module_config_flex</span> <span class="o">=</span> <span class="n">module_config_flex</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;r_del_u&quot;</span><span class="p">:</span> <span class="p">{}})</span>
+            <span class="n">module_config_flex</span> <span class="o">=</span> <span class="n">module_config_flex</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;r_del_u&quot;</span><span class="p">:</span> <span class="p">{}})</span>
 
         <span class="c1"># allow the module config to be changed</span>
         <span class="n">module_config_flex</span><span class="o">.</span><span class="n">model_config</span><span class="p">[</span><span class="s2">&quot;frozen&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
@@ -790,11 +790,6 @@
         <span class="k">if</span> <span class="n">discretization_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;method&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;multiple_shooting&quot;</span><span class="p">:</span>
             <span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">prediction_horizon</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">time_step</span><span class="p">,</span> <span class="n">time_step</span><span class="p">)</span>
             <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;multiple_shooting&quot;</span><span class="p">,</span> <span class="s2">&quot;grid&quot;</span><span class="p">:</span> <span class="n">grid</span><span class="o">.</span><span class="n">tolist</span><span class="p">()}</span>
-
-        <span class="c1"># For collocation, compute the time grid</span>
-        <span class="k">if</span> <span class="s2">&quot;collocation_method&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">discretization_options</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="s2">&quot;grid&quot;</span><span class="p">:</span> <span class="p">[]}</span>
-
         <span class="k">else</span><span class="p">:</span>
             <span class="n">collocation_method</span> <span class="o">=</span> <span class="n">discretization_options</span><span class="p">[</span><span class="s2">&quot;collocation_method&quot;</span><span class="p">]</span>
             <span class="n">collocation_order</span> <span class="o">=</span> <span class="n">discretization_options</span><span class="p">[</span><span class="s2">&quot;collocation_order&quot;</span><span class="p">]</span>
@@ -997,26 +992,12 @@
                     <span class="sa">f</span><span class="s2">&quot;if the correction of costs is enabled.&quot;</span>
                 <span class="p">)</span>
 
-  
-		<span class="c1"># validate discretization method (collocation or multiple shooting)</span>
+        <span class="c1"># validate discretization method (collocation or multiple shooting)</span>
         <span class="n">discretization_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-            <span class="s2">&quot;discretization_options&quot;</span><span class="p">,</span> <span class="p">{}</span>
-        <span class="p">)</span>
-
-        <span class="c1"># Check if using multiple shooting or collocation</span>
-        <span class="c1"># Multiple shooting typically doesn&#39;t require collocation_method</span>
-        <span class="n">is_multiple_shooting</span> <span class="o">=</span> <span class="n">discretization_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;method&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;multiple_shooting&quot;</span>
-        <span class="n">has_collocation_method</span> <span class="o">=</span> <span class="s2">&quot;collocation_method&quot;</span> <span class="ow">in</span> <span class="n">discretization_options</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_multiple_shooting</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">has_collocation_method</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span>
-                <span class="s2">&quot;Please specify a valid discretization method. Either use multiple shooting &quot;</span>
-                <span class="s2">&quot;(set method=&#39;multiple_shooting&#39; in discretization_options) or use collocation &quot;</span>
-                <span class="s2">&quot;with a defined collocation_method in the mpc config.&quot;</span>
-            <span class="p">)</span>
+            <span class="s2">&quot;discretization_options&quot;</span><span class="p">,</span> <span class="p">{})</span>
 
         <span class="c1"># If using collocation, validate the collocation method</span>
-        <span class="k">if</span> <span class="n">has_collocation_method</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;collocation_method&quot;</span> <span class="ow">in</span> <span class="n">discretization_options</span><span class="p">:</span>
             <span class="n">collocation_method</span> <span class="o">=</span> <span class="n">discretization_options</span><span class="p">[</span><span class="s2">&quot;collocation_method&quot;</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">collocation_method</span> <span class="o">!=</span> <span class="s2">&quot;legendre&quot;</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
