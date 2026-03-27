@@ -456,7 +456,6 @@ class FlexibilityKPIs(pydantic.BaseModel):
 
         # Calculate the costs and stores the original value
         costs = self.electricity_costs_series.integrate(time_unit="hours")
-
         # correct the costs
         corrected_costs = costs - stored_energy_diff * np.mean(electricity_price_signal)
 

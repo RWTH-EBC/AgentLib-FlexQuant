@@ -1,4 +1,7 @@
 {
+    "prep_time": 900,
+    "flex_event_duration": 7200,
+    "market_time": 900,
     "indicator_config": {
         "agent_config": {
             "id": "FlexibilityIndicator",
@@ -12,18 +15,6 @@
                     "type": "agentlib_flexquant.flexibility_indicator",
                     "price_variable": "r_pel",
                     "parameters": [
-                        {
-                            "name": "prep_time",
-                            "value": 900
-                        },
-                        {
-                            "name": "market_time",
-                            "value": 900
-                        },
-                        {
-                            "name": "flex_event_duration",
-                            "value": 7200
-                        },
                         {
                             "name": "time_step",
                             "value": 900
