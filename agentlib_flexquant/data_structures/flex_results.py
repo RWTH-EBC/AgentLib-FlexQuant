@@ -142,6 +142,20 @@ class Results:
         # Convert the time in the dataframes to the desired timescale
         self.convert_timescale_of_dataframe_index(to_timescale=to_timescale)
 
+        # Clear unpicklable model reference to enable multiprocessing
+        self._clear_unpicklable_references()
+
+    def _clear_unpicklable_references(self):
+        """Remove references to objects that cannot be pickled.
+
+        This enables the Results object to be used with multiprocessing.
+        The model field contains CDLL references that cannot be serialized.
+        """
+        if (hasattr(self, 'simulator_module_config') and
+                self.simulator_module_config is not None):
+            if hasattr(self.simulator_module_config, 'model'):
+                object.__setattr__(self.simulator_module_config, 'model', None)
+
     def _load_flex_config(
         self,
         flex_config: Optional[Union[str, FilePath, dict]],

@@ -12,7 +12,6 @@ import inspect
 import logging
 import os
 
-
 import astor
 import black
 import json
@@ -615,6 +614,14 @@ class FlexAgentGenerator:
                 description="electricity price",
             )
         )
+        module_config.inputs.append(
+            AgentVariable(
+                name=module_config.price_variable_feed_in,
+                unit="ct/kWh",
+                type="pd.Series",
+                description="electricity feed-in price",
+            )
+        )
         # allow the module config to be changed
         module_config.model_config["frozen"] = False
         for parameter in module_config.parameters:
@@ -747,7 +754,6 @@ class FlexAgentGenerator:
         # Get custom module fields provided by the user and add them
         model_fields = self.baseline_mpc_module_config.optimization_backend["model"]
         _ = model_fields.pop("type")
-
         config_instance = config_class(**model_fields)
 
         self.check_variables_in_casadi_config(
@@ -917,7 +923,6 @@ class FlexAgentGenerator:
                     f"It must be defined in the base MPC model and config as output "
                     f"if the correction of costs is enabled."
                 )
-
         # validate discretization method (collocation or multiple shooting)
         discretization_options = self.baseline_mpc_module_config.optimization_backend.get(
             "discretization_options", {})
@@ -1028,10 +1033,12 @@ class FlexAgentGenerator:
             self.flex_config.results_directory / sim_file_name
         )
         try:
-            with open(Path(str(simulator_agent_config.stem) + save_name_suffix + ".json"),
+            with open(Path(str(simulator_agent_config.parent) + "\\" +
+                           str(simulator_agent_config.stem) + save_name_suffix + ".json"),
                       "w", encoding="utf-8") as f:
                 json.dump(sim_config, f, indent=4)
-            return Path(str(simulator_agent_config.stem) + save_name_suffix + ".json")
+            return Path(str(simulator_agent_config.parent) + "\\" +
+                        str(simulator_agent_config.stem) + save_name_suffix + ".json")
         except Exception as e:
             raise Exception(f"Could not adapt and create a new simulation config "
                             f"due to: {e}. "

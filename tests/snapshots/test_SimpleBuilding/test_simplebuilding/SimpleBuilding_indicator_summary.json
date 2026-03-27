@@ -7,6 +7,7 @@
     "_E_stored_neg",
     "_E_stored_pos",
     "r_pel",
+    "c_pel_feed_in",
     "negative_power_flex_full",
     "positive_power_flex_full",
     "negative_power_flex_offer",
@@ -33,7 +34,7 @@
     "market_time",
     "flex_event_duration",
     "prediction_horizon",
-    "time_grid_info",
+    "collocation_time_grid",
     "time_step_mpc"
   ],
   "head_5_rows": {
@@ -45,6 +46,7 @@
       "_E_stored_neg",
       "_E_stored_pos",
       "r_pel",
+      "c_pel_feed_in",
       "negative_power_flex_full",
       "positive_power_flex_full",
       "negative_power_flex_offer",
@@ -71,7 +73,7 @@
       "market_time",
       "flex_event_duration",
       "prediction_horizon",
-      "time_grid_info",
+      "collocation_time_grid",
       "time_step_mpc"
     ],
     "data": [
@@ -83,6 +85,7 @@
         NaN,
         NaN,
         1.0,
+        0.0,
         0.0,
         0.0,
         NaN,
@@ -116,6 +119,7 @@
         22.30528,
         22.30528,
         22.30528,
+        NaN,
         NaN,
         NaN,
         NaN,
@@ -157,6 +161,7 @@
         NaN,
         NaN,
         NaN,
+        NaN,
         0.0,
         0.0,
         NaN,
@@ -194,6 +199,7 @@
         NaN,
         NaN,
         1.0,
+        0.0,
         -7.29429,
         -140.5363,
         NaN,
@@ -227,6 +233,7 @@
         59.4637,
         52.16941,
         200.0,
+        NaN,
         NaN,
         NaN,
         NaN,
@@ -288,7 +295,7 @@
   "index_start": "(0.0, 0.0)",
   "shape": [
     580,
-    35
+    36
   ],
   "statistics": {
     "_E_stored_base": {
@@ -350,6 +357,26 @@
       "mean": 52.38021,
       "min": 0.0,
       "std": 24.10322
+    },
+    "c_pel_feed_in": {
+      "25%": 0.0,
+      "50%": 0.0,
+      "75%": 0.0,
+      "count": 196.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "std": 0.0
+    },
+    "collocation_time_grid": {
+      "25%": 10895.09619,
+      "50%": 21600.0,
+      "75%": 32304.90381,
+      "count": 384.0,
+      "max": 43009.80762,
+      "mean": 21600.0,
+      "min": 190.19238,
+      "std": 12487.03557
     },
     "flex_event_duration": {
       "25%": 7200.0,
@@ -601,16 +628,6 @@
       "min": 1.0,
       "std": 0.0
     },
-    "time_grid_info": {
-      "25%": 10895.09619,
-      "50%": 21600.0,
-      "75%": 32304.90381,
-      "count": 384.0,
-      "max": 43009.80762,
-      "mean": 21600.0,
-      "min": 190.19238,
-      "std": 12487.03557
-    },
     "time_step_mpc": {
       "25%": 900.0,
       "50%": 900.0,
@@ -631,6 +648,7 @@
       "_E_stored_neg",
       "_E_stored_pos",
       "r_pel",
+      "c_pel_feed_in",
       "negative_power_flex_full",
       "positive_power_flex_full",
       "negative_power_flex_offer",
@@ -657,7 +675,7 @@
       "market_time",
       "flex_event_duration",
       "prediction_horizon",
-      "time_grid_info",
+      "collocation_time_grid",
       "time_step_mpc"
     ],
     "data": [
@@ -665,6 +683,7 @@
         63.59694,
         63.59694,
         63.59694,
+        NaN,
         NaN,
         NaN,
         NaN,
@@ -708,6 +727,7 @@
         1.0,
         0.0,
         0.0,
+        0.0,
         NaN,
         NaN,
         NaN,
@@ -739,6 +759,7 @@
         64.04473,
         64.04473,
         64.04473,
+        NaN,
         NaN,
         NaN,
         NaN,
@@ -780,6 +801,7 @@
         NaN,
         NaN,
         NaN,
+        NaN,
         0.0,
         0.0,
         NaN,
@@ -817,6 +839,7 @@
         NaN,
         NaN,
         1.0,
+        0.0,
         0.0,
         0.0,
         NaN,
