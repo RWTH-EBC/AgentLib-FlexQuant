@@ -184,6 +184,11 @@ class Results:
             config=flex_config, config_type=FlexQuantConfig
         )
 
+        if isinstance(self.flex_config.market_config, Path):
+            self.flex_config.market_config  = load_config.load_config(
+                self.flex_config.market_config, config_type=FlexibilityMarketConfig
+            )
+
     def _get_config_filenames(self):
         """Get filenames of configs to load agents and modules."""
         self.config_filename_baseline = BaselineMPCData.model_validate(
