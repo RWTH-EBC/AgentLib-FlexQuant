@@ -127,7 +127,6 @@ def run_example_from_path(example_path: Path):
         os.chdir(original_cwd)
         sys.path[:] = original_sys_path  # Restore the original sys.path
 
-@pytest.mark.order("last")
 def test_custommarketplugin(snapshot, module_cleanup):
     """
     Unit test for the CustomMarketPlugin example using snapshot testing.
