@@ -236,7 +236,7 @@ class FlexAgentGenerator:
             self.append_module_and_dump_agent(
                 module=market_module_config,
                 agent=self.market_agent_config,
-                module_type=cmng.MARKET_CONFIG_TYPE,
+                module_type=self.market_config.module_type,
                 config_name=self.market_config.name_of_created_file,
             )
         # generate python files for the shadow mpcs
