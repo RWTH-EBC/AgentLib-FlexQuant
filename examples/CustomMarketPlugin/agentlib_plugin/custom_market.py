@@ -14,6 +14,8 @@ class CustomMarketModule(flexibility_market.FlexibilityMarketModule):
     def custom_flexibility_callback(self, inp: AgentVariable, name: str):
         """Placeholder for a custom flexibility callback."""
         offer = inp.value
+        offer.status = "Custom status"
+        self.write_results(offer=offer)
 
         print("My custom string is: " + self.config.custom_string)
         print("Recieved offer: " + str(offer))

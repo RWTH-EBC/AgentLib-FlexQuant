@@ -145,6 +145,7 @@ def test_custommarketplugin(snapshot, module_cleanup):
     df_pos_flex_res = res["PosFlexMPC"]["PosFlexMPC"]
     df_baseline_res = res["Baseline"]["Baseline"]
     df_indicator_res = res["FlexibilityIndicator"]["FlexibilityIndicator"]
+    df_market_res = res['FlexibilityMarket']['CustomMarketModule']
 
     # Assert that a summary of each result DataFrame matches its snapshot
     assert_frame_matches_summary_snapshot(
@@ -166,6 +167,11 @@ def test_custommarketplugin(snapshot, module_cleanup):
         snapshot,
         df_indicator_res,
         'CustomMarketPlugin_indicator_summary.json'
+    )
+    assert_frame_matches_summary_snapshot(
+        snapshot,
+        df_market_res,
+        'CustomMarketPlugin_market_summary.json'
     )
 
 
