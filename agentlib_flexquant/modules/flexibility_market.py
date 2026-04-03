@@ -234,6 +234,10 @@ class FlexibilityMarketModule(agentlib.BaseModule):
                 np.average(offer.neg_diff_profile)
                 > self.config.market_specs.minimum_average_flex
             ):
+                # if self.env.now < 190000:
+                #     profile = offer.base_power_profile + offer.neg_diff_profile * 0.5
+                # else:
+                #     profile = offer.base_power_profile + offer.neg_diff_profile
                 profile = offer.base_power_profile + offer.neg_diff_profile
                 offer.status = OfferStatus.ACCEPTED_NEGATIVE.value
 
@@ -262,7 +266,66 @@ class FlexibilityMarketModule(agentlib.BaseModule):
 
     def custom_flexibility_callback(self, inp: AgentVariable, name: str):
         """Placeholder for a custom flexibility callback."""
-        pass
+        offer = inp.value
+        profile = None
+        t_sample = self.get(glbs.TIME_STEP).value
+        start_time = (
+                self.env.config.offset +
+                self.config.market_specs.options.offer_acceptance_time
+        )
+
+        # Intervall in Sekunden (4,75h)
+        interval = 4.75 * 3600
+
+        events = [
+            (0, "positive"),
+            (interval, "positive"),
+            (interval * 2, "negative"),
+            (interval * 3, "negative")
+        ]
+
+        # Prüfen, ob wir uns aktuell in einem der Zeitfenster befinden
+        current_event_type = None
+        for offset, direction in events:
+            target_time = start_time + offset
+            if target_time <= self.env.now < (target_time + t_sample):
+                current_event_type = direction
+                break
+
+        # Falls ein Event fällig ist und wir nicht gerade in einer Bereitstellung (Provision) sind
+        if current_event_type and not self.get(glbs.PROVISION_VAR_NAME).value:
+            if current_event_type == "positive":
+                if np.average(offer.pos_diff_profile) > self.config.market_specs.minimum_average_flex:
+                    profile = offer.base_power_profile - offer.pos_diff_profile
+                    offer.status = OfferStatus.ACCEPTED_POSITIVE.value
+            else:  # negative
+                if np.average(offer.neg_diff_profile) > self.config.market_specs.minimum_average_flex:
+                    # profile = offer.base_power_profile + offer.neg_diff_profile
+                    if 38700 < self.env.now < 54900:
+                        profile = offer.base_power_profile + offer.neg_diff_profile * 0.5
+                    else:
+                        profile = offer.base_power_profile + offer.neg_diff_profile
+                    offer.status = OfferStatus.ACCEPTED_NEGATIVE.value
+
+            if profile is not None:
+                # Reindexing Logik (beibehalten aus Original)
+                flex_power_feedback_method = self.config.market_specs.accepted_offer_sample_points
+                if flex_power_feedback_method == glbs.COLLOCATION:
+                    profile = profile.reindex(self.get(glbs.COLLOCATION_TIME_GRID).value)
+                elif flex_power_feedback_method == glbs.CONSTANT:
+                    index_to_keep = ~np.isin(profile.index, self.get(glbs.COLLOCATION_TIME_GRID).value)
+                    profile = profile.get(index_to_keep)
+                    helper_indices = [i - 1 for i in profile.index[1:]]
+                    new_index = sorted(set(profile.index.tolist() + helper_indices))[:-1]
+                    profile = profile.reindex(new_index).ffill()
+
+                profile = profile.dropna()
+                profile.index += self.env.time
+                self.set(glbs.ACCEPTED_POWER_VAR_NAME, profile)
+                self.abs_flex_event_end = profile.index[-1]
+                self.set(glbs.PROVISION_VAR_NAME, True)
+
+        self.write_results(offer)
 
     def dummy_callback(self, inp: AgentVariable, name: str):
         """Dummy function that is included, when market type is not specified."""

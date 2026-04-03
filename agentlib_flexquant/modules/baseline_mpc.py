@@ -416,24 +416,28 @@ class FlexibilityBaselineMINLPMPC(minlp_mpc.MINLPMPC):
         """
         Performs an MPC step.
         """
-        if not self.init_status == InitStatus.ready:
-            self.logger.warning("Skipping step, optimization_backend is not ready.")
-            return
+        if self.env.now >= -259200:
+            if not self.init_status == InitStatus.ready:
+                self.logger.warning("Skipping step, optimization_backend is not ready.")
+                return
 
-        self.pre_computation_hook()
+            self.pre_computation_hook()
 
-        # get new values from data_broker
-        updated_vars = self.collect_variables_for_optimization()
+            # get new values from data_broker
+            updated_vars = self.collect_variables_for_optimization()
 
-        # solve optimization problem with up-to-date values from data_broker
-        result = self.optimization_backend.solve(self.env.time, updated_vars)
+            # solve optimization problem with up-to-date values from data_broker
+            result = self.optimization_backend.solve(self.env.time, updated_vars)
 
-        # Set variables in data_broker
-        self.set_actuation(result)
-        # Set variables, so that shadow MPCs are initialized
-        # with the same values as the Baseline
-        self.set_vars_for_shadow(result)
-        self.set_output(result)
+            # Set variables in data_broker
+            self.set_actuation(result)
+            # Set variables, so that shadow MPCs are initialized
+            # with the same values as the Baseline
+            self.set_vars_for_shadow(result)
+            self.set_output(result)
+        else:
+            timestep=self.env.now
+            print(f"Heatcurve active, {timestep}")
 
     def pre_computation_hook(self):
         """Calculate relative start and end times for flexibility provision.
@@ -443,8 +447,7 @@ class FlexibilityBaselineMINLPMPC(minlp_mpc.MINLPMPC):
         environment time.
         """
         if self.get(glbs.PROVISION_VAR_NAME).value:
-            timestep = (self.get(glbs.ACCEPTED_POWER_VAR_NAME).value.index[1] -
-                        self.get(glbs.ACCEPTED_POWER_VAR_NAME).value.index[0])
+
             self.set(glbs.RELATIVE_EVENT_START_TIME_VAR_NAME,
                      self.get(glbs.ACCEPTED_POWER_VAR_NAME).value.index[0] -
                      self.env.time)
@@ -452,7 +455,7 @@ class FlexibilityBaselineMINLPMPC(minlp_mpc.MINLPMPC):
             # For the end of the flex interval add time step!
             self.set(glbs.RELATIVE_EVENT_END_TIME_VAR_NAME,
                      self.get(glbs.ACCEPTED_POWER_VAR_NAME).value.index[-1] -
-                     self.env.time + timestep,)
+                     self.env.time)
 
     def set_vars_for_shadow(self, solution):
         """Sets the variables of the Baseline MPC needed by the shadow MPCs

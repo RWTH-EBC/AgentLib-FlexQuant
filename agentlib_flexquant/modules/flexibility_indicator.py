@@ -510,6 +510,96 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             self.logger.error("Results file %s was not found.", results_file)
             return None
 
+    # def write_results(self, df: pd.DataFrame, ts: float, n: int) -> pd.DataFrame:
+    #     """Write every data of variables in self.var_list in an DataFrame.
+    #
+    #     DataFrame will be updated every time step
+    #
+    #     Args:
+    #         df: DataFrame which is initialised as an empty DataFrame with columns
+    #         according to self.var_list
+    #         ts: time step
+    #         n: number of time steps during prediction horizon
+    #
+    #     Returns:
+    #         DataFrame with results of every variable in self.var_list
+    #
+    #     """
+    #     results = []
+    #     now = self.env.now
+    #
+    #     # First, collect all series and their indices
+    #     all_series = []
+    #     for name in self.var_list:
+    #         # Get the appropriate values based on name
+    #         if name == glbs.POWER_ALIAS_BASE:
+    #             values = self.data.power_profile_base
+    #         elif name == glbs.POWER_ALIAS_NEG:
+    #             values = self.data.power_profile_flex_neg
+    #         elif name == glbs.POWER_ALIAS_POS:
+    #             values = self.data.power_profile_flex_pos
+    #         elif name == glbs.STORED_ENERGY_ALIAS_BASE:
+    #             values = self.data.stored_energy_profile_base
+    #         elif name == glbs.STORED_ENERGY_ALIAS_NEG:
+    #             values = self.data.stored_energy_profile_flex_neg
+    #         elif name == glbs.STORED_ENERGY_ALIAS_POS:
+    #             values = self.data.stored_energy_profile_flex_pos
+    #         elif name == self.config.price_variable:
+    #             values = self.data.electricity_price_series
+    #         elif name == self.config.price_variable_feed_in:
+    #             values = self.data.feed_in_price_series
+    #         elif name == glbs.COLLOCATION_TIME_GRID:
+    #             value = self.get(name).value
+    #             values = pd.Series(index=value, data=value)
+    #         else:
+    #             values = self.get(name).value
+    #
+    #         # Convert to Series if not already
+    #         if not isinstance(values, pd.Series):
+    #             values = pd.Series(values)
+    #
+    #         all_series.append((name, values))
+    #
+    #     # Create the standard grid for reference
+    #     standard_grid = np.arange(0, n * ts, ts)
+    #
+    #     # Find the union of all indices to create a comprehensive grid
+    #     all_indices = set(standard_grid)
+    #     for _, series in all_series:
+    #         all_indices.update(series.index)
+    #     combined_index = sorted(all_indices)
+    #
+    #     # Reindex all series to the combined grid
+    #     for i, (name, series) in enumerate(all_series):
+    #         # Reindex to the comprehensive grid
+    #         reindexed = series.reindex(combined_index)
+    #         results.append(reindexed)
+    #
+    #     # if not now % ts:
+    #     tolerance = 0.5
+    #     if (now % ts) < tolerance or (ts - (now % ts)) < tolerance:
+    #         self.time.append(now)
+    #         new_df = pd.DataFrame(results).T
+    #         new_df.columns = self.var_list
+    #         # Rename time_step variable column
+    #         new_df.rename(
+    #             columns={glbs.TIME_STEP: f"{glbs.TIME_STEP}_mpc"}, inplace=True
+    #         )
+    #         new_df.index.direction = "time"
+    #         new_df[glbs.TIME_STEP] = now
+    #         new_df.set_index([glbs.TIME_STEP, new_df.index], inplace=True)
+    #         df = pd.concat([df, new_df])
+    #         # set the indices once again as concat cant handle indices properly
+    #         indices = pd.MultiIndex.from_tuples(
+    #             df.index, names=[glbs.TIME_STEP, "time"]
+    #         )
+    #         df.set_index(indices, inplace=True)
+    #         # Drop column time_step and keep it as an index only
+    #         if glbs.TIME_STEP in df.columns:
+    #             df.drop(columns=[glbs.TIME_STEP], inplace=True)
+    #
+    #     return df
+
     def write_results(self, df: pd.DataFrame, ts: float, n: int) -> pd.DataFrame:
         """Write every data of variables in self.var_list in an DataFrame.
 
@@ -517,6 +607,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
 
         Args:
             df: DataFrame which is initialised as an empty DataFrame with columns
+            according to self.var_list
             according to self.var_list
             ts: time step
             n: number of time steps during prediction horizon
@@ -546,22 +637,18 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 values = self.data.stored_energy_profile_flex_pos
             elif name == self.config.price_variable:
                 values = self.data.electricity_price_series
-            elif name == self.config.price_variable_feed_in:
-                values = self.data.feed_in_price_series
             elif name == glbs.COLLOCATION_TIME_GRID:
                 value = self.get(name).value
                 values = pd.Series(index=value, data=value)
             else:
                 values = self.get(name).value
 
-            # Convert to Series if not already
-            if not isinstance(values, pd.Series):
-                values = pd.Series(values)
+            # Get the time grid for this variable
+            time_grid = self.get(glbs.COLLOCATION_TIME_GRID).value
+            series = pd.Series(values, index=time_grid)
+            all_series.append((name, series))
 
-            all_series.append((name, values))
-
-        # Create the standard grid for reference
-        standard_grid = np.arange(0, n * ts, ts)
+        standard_grid = np.round(np.linspace(now, now + ts * n, n + 1), decimals=10)
 
         # Find the union of all indices to create a comprehensive grid
         all_indices = set(standard_grid)
@@ -575,26 +662,22 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             reindexed = series.reindex(combined_index)
             results.append(reindexed)
 
-        if not now % ts:
-            self.time.append(now)
-            new_df = pd.DataFrame(results).T
-            new_df.columns = self.var_list
-            # Rename time_step variable column
-            new_df.rename(
-                columns={glbs.TIME_STEP: f"{glbs.TIME_STEP}_mpc"}, inplace=True
-            )
-            new_df.index.direction = "time"
-            new_df[glbs.TIME_STEP] = now
-            new_df.set_index([glbs.TIME_STEP, new_df.index], inplace=True)
-            df = pd.concat([df, new_df])
-            # set the indices once again as concat cant handle indices properly
-            indices = pd.MultiIndex.from_tuples(
-                df.index, names=[glbs.TIME_STEP, "time"]
-            )
-            df.set_index(indices, inplace=True)
-            # Drop column time_step and keep it as an index only
-            if glbs.TIME_STEP in df.columns:
-                df.drop(columns=[glbs.TIME_STEP], inplace=True)
+        # Option C: immer schreiben (kein hartes ts-Raster, robust in (scaled) realtime)
+        self.time.append(now)
+        new_df = pd.DataFrame(results).T
+        new_df.columns = self.var_list
+        # Rename time_step variable column
+        new_df.rename(columns={glbs.TIME_STEP: f"{glbs.TIME_STEP}_mpc"}, inplace=True)
+        new_df.index.direction = "time"
+        new_df[glbs.TIME_STEP] = now
+        new_df.set_index([glbs.TIME_STEP, new_df.index], inplace=True)
+        df = pd.concat([df, new_df])
+        # set the indices once again as concat cant handle indices properly
+        indices = pd.MultiIndex.from_tuples(df.index, names=[glbs.TIME_STEP, "time"])
+        df.set_index(indices, inplace=True)
+        # Drop column time_step and keep it as an index only
+        if glbs.TIME_STEP in df.columns:
+            df.drop(columns=[glbs.TIME_STEP], inplace=True)
 
         return df
 
