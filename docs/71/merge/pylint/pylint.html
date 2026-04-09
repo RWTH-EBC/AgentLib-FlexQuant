@@ -28,9 +28,9 @@
 
         
         <h2>Score</h2>
-        7.26 / 10
+        7.25 / 10
             
-            (previous score: 7.26 / 10)
+            (previous score: 7.25 / 10)
             
         
 
@@ -203,7 +203,7 @@
             </tr>
             
             <tr>
-                <td>164</td>
+                <td>168</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -213,7 +213,7 @@
             </tr>
             
             <tr>
-                <td>191</td>
+                <td>195</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
@@ -223,7 +223,7 @@
             </tr>
             
             <tr>
-                <td>258</td>
+                <td>262</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
@@ -233,7 +233,17 @@
             </tr>
             
             <tr>
-                <td>363</td>
+                <td>326</td>
+                <td>41</td>
+                <td>convention</td>
+                <td><code>unnecessary-dunder-call</code></td>
+                <td>C2801</td>
+                <td>FlexibilityKPIs._calculate_power_flex_stats</td>
+                <td><pre>Unnecessarily calls dunder method __deepcopy__. Use copy.deepcopy function.</pre></td>
+            </tr>
+            
+            <tr>
+                <td>364</td>
                 <td>8</td>
                 <td>refactor</td>
                 <td><code>no-else-return</code></td>
@@ -243,7 +253,7 @@
             </tr>
             
             <tr>
-                <td>364</td>
+                <td>365</td>
                 <td>21</td>
                 <td>convention</td>
                 <td><code>unnecessary-dunder-call</code></td>
@@ -253,7 +263,7 @@
             </tr>
             
             <tr>
-                <td>368</td>
+                <td>369</td>
                 <td>19</td>
                 <td>convention</td>
                 <td><code>unnecessary-dunder-call</code></td>
@@ -263,7 +273,7 @@
             </tr>
             
             <tr>
-                <td>370</td>
+                <td>371</td>
                 <td>52</td>
                 <td>warning</td>
                 <td><code>unused-argument</code></td>
@@ -273,7 +283,7 @@
             </tr>
             
             <tr>
-                <td>393</td>
+                <td>394</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
@@ -283,7 +293,7 @@
             </tr>
             
             <tr>
-                <td>393</td>
+                <td>394</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-locals</code></td>
@@ -293,17 +303,7 @@
             </tr>
             
             <tr>
-                <td>402</td>
-                <td>8</td>
-                <td>warning</td>
-                <td><code>unused-argument</code></td>
-                <td>W0613</td>
-                <td>FlexibilityKPIs._calculate_costs</td>
-                <td><pre>Unused argument &#39;time_grid_info&#39;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>430</td>
+                <td>431</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -313,7 +313,7 @@
             </tr>
             
             <tr>
-                <td>572</td>
+                <td>578</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -323,7 +323,7 @@
             </tr>
             
             <tr>
-                <td>578</td>
+                <td>584</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
@@ -333,7 +333,7 @@
             </tr>
             
             <tr>
-                <td>606</td>
+                <td>612</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>self-assigning-variable</code></td>
@@ -343,7 +343,7 @@
             </tr>
             
             <tr>
-                <td>710</td>
+                <td>716</td>
                 <td>29</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -1047,7 +1047,7 @@
                 <td><code>too-many-lines</code></td>
                 <td>C0302</td>
                 <td></td>
-                <td><pre>Too many lines in module (1046/1000)</pre></td>
+                <td><pre>Too many lines in module (1057/1000)</pre></td>
             </tr>
             
             <tr>
@@ -1434,14 +1434,64 @@
                 <td>865</td>
                 <td>4</td>
                 <td>refactor</td>
-                <td><code>too-many-branches</code></td>
-                <td>R0912</td>
+                <td><code>too-many-locals</code></td>
+                <td>R0914</td>
                 <td>FlexAgentGenerator.run_config_validations</td>
-                <td><pre>Too many branches (18/12)</pre></td>
+                <td><pre>Too many local variables (19/15)</pre></td>
             </tr>
             
             <tr>
-                <td>1023</td>
+                <td>865</td>
+                <td>4</td>
+                <td>refactor</td>
+                <td><code>too-many-branches</code></td>
+                <td>R0912</td>
+                <td>FlexAgentGenerator.run_config_validations</td>
+                <td><pre>Too many branches (19/12)</pre></td>
+            </tr>
+            
+            <tr>
+                <td>911</td>
+                <td>19</td>
+                <td>warning</td>
+                <td><code>broad-exception-caught</code></td>
+                <td>W0718</td>
+                <td>FlexAgentGenerator.run_config_validations</td>
+                <td><pre>Catching too general exception Exception</pre></td>
+            </tr>
+            
+            <tr>
+                <td>911</td>
+                <td>12</td>
+                <td>convention</td>
+                <td><code>invalid-name</code></td>
+                <td>C0103</td>
+                <td>FlexAgentGenerator.run_config_validations</td>
+                <td><pre>Variable name &#34;e&#34; doesn&#39;t conform to snake_case naming style</pre></td>
+            </tr>
+            
+            <tr>
+                <td>911</td>
+                <td>12</td>
+                <td>warning</td>
+                <td><code>unused-variable</code></td>
+                <td>W0612</td>
+                <td>FlexAgentGenerator.run_config_validations</td>
+                <td><pre>Unused variable &#39;e&#39;</pre></td>
+            </tr>
+            
+            <tr>
+                <td>912</td>
+                <td>16</td>
+                <td>warning</td>
+                <td><code>logging-fstring-interpolation</code></td>
+                <td>W1203</td>
+                <td>FlexAgentGenerator.run_config_validations</td>
+                <td><pre>Use lazy % formatting in logging functions</pre></td>
+            </tr>
+            
+            <tr>
+                <td>1034</td>
                 <td>68</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1451,7 +1501,7 @@
             </tr>
             
             <tr>
-                <td>1038</td>
+                <td>1049</td>
                 <td>48</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1461,7 +1511,7 @@
             </tr>
             
             <tr>
-                <td>1042</td>
+                <td>1053</td>
                 <td>8</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -1471,7 +1521,7 @@
             </tr>
             
             <tr>
-                <td>1043</td>
+                <td>1054</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>raise-missing-from</code></td>
@@ -1481,7 +1531,7 @@
             </tr>
             
             <tr>
-                <td>1043</td>
+                <td>1054</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>broad-exception-raised</code></td>
@@ -1491,7 +1541,7 @@
             </tr>
             
             <tr>
-                <td>1046</td>
+                <td>1057</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-final-newline</code></td>
@@ -3126,15 +3176,13 @@
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model
-                # can&#39;t deal with iterable
+                # change the type of iterable input, since casadi model can&#39;t deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time
-            # will not be exceeded
+            # reduce the simulation time step so that the total horizon time will not be exceeded
             if current_sim_time + sim_time_step &lt;= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -3178,8 +3226,8 @@
     def _initialize_flex_results(
         self, n_simulation_steps, horizon_length, sim_time_step, result_df
     ):
-        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension
-        and index and fill with existing results from optimization
+        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension and index
+        and fill with existing results from optimization
 
         &#34;&#34;&#34;
 
@@ -3230,8 +3278,8 @@
 
     def _update_model_parameters(self):
         &#34;&#34;&#34;update the value of module parameters with value from config,
-        since creating a model just reads the value in the model class
-        but not the config.
+        since creating a model just reads the value in the model class but
+        not the config
 
         &#34;&#34;&#34;
 
@@ -3248,7 +3296,8 @@
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
         &#34;&#34;&#34;simulate with flex model over the prediction horizon
 
@@ -3290,15 +3339,13 @@
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model can&#39;t
-                # deal with iterable
+                # change the type of iterable input, since casadi model can&#39;t deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time
-            # will not be exceeded
+            # reduce the simulation time step so that the total horizon time will not be exceeded
             if current_sim_time + sim_time_step &lt;= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -3618,6 +3665,7 @@ excluded_fields = [
         &#34;interpolation_method&#34;,
         &#34;allowed_values&#34;,
     ]
+
 </pre></td>
             </tr>
             
@@ -3694,7 +3742,7 @@ excluded_fields = [
                 <td><pre>Similar lines in 2 files
 ==agentlib_flexquant.data_structures.mpcs:[15:23]
 ==agentlib_flexquant.utils.config_management:[125:133]
-excluded_fields = [
+    excluded_fields = [
         &#34;rdf_class&#34;,
         &#34;source&#34;,
         &#34;type&#34;,
@@ -3810,7 +3858,6 @@ excluded_fields = [
                 f&#34;Expected a &#39;.csv&#39; file.&#34;
             )
         return self
-
 </pre></td>
             </tr>
             
@@ -3837,12 +3884,9 @@ excluded_fields = [
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
-            total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
     ):
-        &#34;&#34;&#34;simulate with flex model over the prediction horizon
-
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;simulate with flex model over the prediction horizon&#34;&#34;&#34;
 
         # get control and input values from the mpc optimization result</pre></td>
             </tr>
@@ -4569,17 +4613,17 @@ excluded_fields = [
             
             <tr>
                 <td>convention</td>
-                <td>164</td>
+                <td>166</td>
             </tr>
             
             <tr>
                 <td>refactor</td>
-                <td>90</td>
+                <td>91</td>
             </tr>
             
             <tr>
                 <td>warning</td>
-                <td>39</td>
+                <td>41</td>
             </tr>
             
         </table>
@@ -4624,12 +4668,12 @@ excluded_fields = [
             
             <tr>
                 <td>invalid-name</td>
-                <td>35</td>
+                <td>36</td>
             </tr>
             
             <tr>
                 <td>too-many-locals</td>
-                <td>9</td>
+                <td>10</td>
             </tr>
             
             <tr>
@@ -4639,7 +4683,7 @@ excluded_fields = [
             
             <tr>
                 <td>logging-fstring-interpolation</td>
-                <td>2</td>
+                <td>3</td>
             </tr>
             
             <tr>
@@ -4654,7 +4698,7 @@ excluded_fields = [
             
             <tr>
                 <td>unnecessary-dunder-call</td>
-                <td>3</td>
+                <td>4</td>
             </tr>
             
             <tr>
@@ -4665,6 +4709,16 @@ excluded_fields = [
             <tr>
                 <td>protected-access</td>
                 <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>broad-exception-caught</td>
+                <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>unused-variable</td>
+                <td>4</td>
             </tr>
             
             <tr>
@@ -4734,7 +4788,7 @@ excluded_fields = [
             
             <tr>
                 <td>unused-argument</td>
-                <td>10</td>
+                <td>9</td>
             </tr>
             
             <tr>
@@ -4750,11 +4804,6 @@ excluded_fields = [
             <tr>
                 <td>trailing-whitespace</td>
                 <td>37</td>
-            </tr>
-            
-            <tr>
-                <td>unused-variable</td>
-                <td>3</td>
             </tr>
             
             <tr>
@@ -4844,7 +4893,7 @@ excluded_fields = [
             
             <tr>
                 <td>agentlib_flexquant.generate_flex_agents</td>
-                <td>46</td>
+                <td>51</td>
             </tr>
             
             <tr>
@@ -4944,7 +4993,7 @@ excluded_fields = [
             
             <tr>
                 <td>agentlib_flexquant/generate_flex_agents.py</td>
-                <td>46</td>
+                <td>51</td>
             </tr>
             
             <tr>

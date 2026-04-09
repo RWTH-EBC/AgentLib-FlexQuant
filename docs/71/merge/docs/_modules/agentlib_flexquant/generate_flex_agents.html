@@ -976,8 +976,19 @@
             <span class="n">class_name</span> <span class="o">=</span> <span class="n">mod_type</span><span class="p">[</span><span class="s2">&quot;class_name&quot;</span><span class="p">]</span>
             <span class="c1"># Get the class</span>
             <span class="n">dynamic_class</span> <span class="o">=</span> <span class="n">cmng</span><span class="o">.</span><span class="n">get_class_from_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">class_name</span><span class="p">)</span>
+
+            <span class="n">model_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="n">model_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">model_config</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s2">&quot;type&quot;</span><span class="p">}</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">model_instance</span> <span class="o">=</span> <span class="n">dynamic_class</span><span class="p">(</span><span class="o">**</span><span class="n">model_kwargs</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Could not instantiate model class </span><span class="si">{</span><span class="n">class_name</span><span class="si">}</span><span class="s2"> with full config &quot;</span>
+                <span class="p">)</span>
+
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">baseline_config_generator_data</span><span class="o">.</span><span class="n">comfort_variable</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span>
-                <span class="n">state</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">dynamic_class</span><span class="p">()</span><span class="o">.</span><span class="n">states</span>
+                <span class="n">state</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">model_instance</span><span class="o">.</span><span class="n">states</span>
             <span class="p">]:</span>
                 <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;Given comfort variable &quot;</span>

@@ -208,6 +208,10 @@
         <span class="n">default</span><span class="o">=</span><span class="n">KPISeries</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;power_flex_offer&quot;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;kW&quot;</span><span class="p">,</span> <span class="n">integration_method</span><span class="o">=</span><span class="n">LINEAR</span><span class="p">),</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Power flexibility&quot;</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">power_flex_offer_prepared</span><span class="p">:</span> <span class="n">KPISeries</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">KPISeries</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;power_flex_offer_prepared&quot;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;kW&quot;</span><span class="p">,</span> <span class="n">integration_method</span><span class="o">=</span><span class="n">LINEAR</span><span class="p">),</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Power flexibility Series prepared for integration&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="n">power_flex_offer_max</span><span class="p">:</span> <span class="n">KPI</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="n">KPI</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;power_flex_offer_max&quot;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;kW&quot;</span><span class="p">),</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Maximum power flexibility&quot;</span><span class="p">,</span>
@@ -367,10 +371,6 @@
         <span class="c1"># Set values to zero if the difference is small</span>
         <span class="n">relative_difference</span> <span class="o">=</span> <span class="p">(</span><span class="n">power_flex</span> <span class="o">/</span> <span class="n">power_profile_base</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
         <span class="n">power_flex</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">relative_difference</span> <span class="o">&lt;</span> <span class="n">relative_error_acceptance</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="c1"># Set the first value of power_flex to zero, since it comes from the measurement/simulator</span>
-        <span class="c1"># and is the same for baseline and shadow mpcs.</span>
-        <span class="c1"># For quantification of flexibility, only power difference is of interest.</span>
-        <span class="n">power_flex</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="c1"># Set values</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">power_flex_full</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">power_flex</span>
@@ -397,13 +397,14 @@
         <span class="c1"># Calculate characteristic values</span>
         <span class="c1"># max and min of power flex offer</span>
 
-        <span class="n">power_flex_offer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_flex_offer</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">power_flex_offer_prepared</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_flex_offer</span><span class="o">.</span><span class="n">__deepcopy__</span><span class="p">()</span>
 
         <span class="c1"># Only drop collocation points if using collocation method</span>
         <span class="k">if</span> <span class="n">time_grid_info</span> <span class="ow">and</span> <span class="n">time_grid_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;collocation&quot;</span><span class="p">:</span>
-            <span class="n">power_flex_offer</span> <span class="o">=</span> <span class="n">power_flex_offer</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">power_flex_offer_prepared</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_flex_offer_prepared</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
                 <span class="n">time_grid_info</span><span class="p">[</span><span class="s2">&quot;grid&quot;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span>
             <span class="p">)</span>
+        <span class="n">power_flex_offer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_flex_offer_prepared</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="n">power_flex_offer_max</span> <span class="o">=</span> <span class="n">power_flex_offer</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
         <span class="n">power_flex_offer_min</span> <span class="o">=</span> <span class="n">power_flex_offer</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
@@ -411,9 +412,9 @@
         <span class="c1"># Average of the power flex offer</span>
         <span class="c1"># Get the series for integration before calculating average</span>
         <span class="n">power_flex_offer_integration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_series_for_integration</span><span class="p">(</span>
-            <span class="n">series</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">power_flex_offer</span><span class="p">,</span> <span class="n">mpc_time_grid</span><span class="o">=</span><span class="n">mpc_time_grid</span>
+            <span class="n">series</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">power_flex_offer_prepared</span><span class="p">,</span> <span class="n">mpc_time_grid</span><span class="o">=</span><span class="n">mpc_time_grid</span>
         <span class="p">)</span>
-        <span class="c1"># Calculate the average and stores the original value</span>
+
         <span class="n">power_flex_offer_avg</span> <span class="o">=</span> <span class="n">power_flex_offer_integration</span><span class="o">.</span><span class="n">avg</span><span class="p">()</span>
 
         <span class="c1"># Set values</span>
@@ -455,7 +456,7 @@
         <span class="c1"># Calculate flexibility</span>
         <span class="c1"># Get the series for integration before calculating average</span>
         <span class="n">power_flex_offer_integration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_series_for_integration</span><span class="p">(</span>
-            <span class="n">series</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">power_flex_offer</span><span class="p">,</span> <span class="n">mpc_time_grid</span><span class="o">=</span><span class="n">mpc_time_grid</span>
+            <span class="n">series</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">power_flex_offer_prepared</span><span class="p">,</span> <span class="n">mpc_time_grid</span><span class="o">=</span><span class="n">mpc_time_grid</span>
         <span class="p">)</span>
 
         <span class="c1"># Calculate the energy flex and stores the original value</span>
@@ -522,6 +523,11 @@
         <span class="n">power_flex_full_integration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_series_for_integration</span><span class="p">(</span>
             <span class="n">series</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">power_flex_full</span><span class="p">,</span> <span class="n">mpc_time_grid</span><span class="o">=</span><span class="n">mpc_time_grid</span>
         <span class="p">)</span>
+        <span class="k">if</span> <span class="n">time_grid_info</span> <span class="ow">and</span> <span class="n">time_grid_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;collocation&quot;</span><span class="p">:</span>
+            <span class="n">power_flex_full_integration</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">power_flex_full_integration</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
+                <span class="n">time_grid_info</span><span class="p">[</span><span class="s2">&quot;grid&quot;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span>
+            <span class="p">)</span>
+
         <span class="c1"># Difference in costs between shadow and baseline mpc</span>
         <span class="n">delta_cost</span> <span class="o">=</span> <span class="n">cost_profile_shadow</span> <span class="o">-</span> <span class="n">cost_profile_base</span>
         <span class="n">delta_cost</span> <span class="o">=</span> <span class="n">delta_cost</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">power_flex_full_integration</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
