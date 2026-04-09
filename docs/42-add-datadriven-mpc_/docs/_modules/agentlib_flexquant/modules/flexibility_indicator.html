@@ -138,30 +138,50 @@
     <span class="n">use_constant_electricity_price</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Use constant electricity price&quot;</span>
     <span class="p">)</span>
+    <span class="n">use_constant_feed_in_price</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Use constant feed-in price&quot;</span>
+    <span class="p">)</span>
     <span class="n">calculate_flex_costs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Calculate the flexibility cost&quot;</span>
     <span class="p">)</span>
     <span class="n">const_electricity_price</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;constant electricity price in ct/kWh&quot;</span>
     <span class="p">)</span>
+    <span class="n">const_feed_in_price</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;constant feed-in price in ct/kWh&quot;</span>
+    <span class="p">)</span>
 
-<div class="viewcode-block" id="InputsForCalculateFlexCosts.validate_constant_price"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_price">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">validate_constant_price</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate that a valid constant electricity price is provided</span>
-<span class="sd">        when constant pricing is enabled.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_constant_electricity_price</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">const_electricity_price</span>
-        <span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Constant electricity price must have a valid value in &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;float if it is to be used for calculation. &quot;</span>
-                    <span class="sa">f</span><span class="s1">&#39;Received &quot;use_constant_electricity_price&quot;: true, &#39;</span>
-                    <span class="sa">f</span><span class="s1">&#39;&quot;const_electricity_price&quot;: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">const_electricity_price</span><span class="si">}</span><span class="s1">. &#39;</span>
-                    <span class="sa">f</span><span class="s1">&#39;Please specify them correctly in &quot;calculate_costs&quot; &#39;</span>
-                    <span class="sa">f</span><span class="s1">&#39;field in flex config.&#39;</span>
+<div class="viewcode-block" id="InputsForCalculateFlexCosts.validate_constant_prices"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_prices">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_constant_prices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate that valid constant prices are provided when enabled.&quot;&quot;&quot;</span>
+
+        <span class="n">price_settings</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;use_constant_electricity_price&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;const_electricity_price&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;electricity&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;use_constant_feed_in_price&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;const_feed_in_price&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;feed-in&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">use_flag</span><span class="p">,</span> <span class="n">price_field</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">price_settings</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use_flag</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">price_field</span><span class="p">)):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="p">(</span>
+                        <span class="sa">f</span><span class="s1">&#39;Constant </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s1"> price must be a valid float if it is used &#39;</span>
+                        <span class="sa">f</span><span class="s1">&#39;for calculation. &#39;</span>
+                        <span class="sa">f</span><span class="s1">&#39;Received &quot;</span><span class="si">{</span><span class="n">use_flag</span><span class="si">}</span><span class="s1">&quot;: true, &#39;</span>
+                        <span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">price_field</span><span class="si">}</span><span class="s1">&quot;: </span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">price_field</span><span class="p">)</span><span class="si">}</span><span class="s1">. &#39;</span>
+                        <span class="s1">&#39;Please specify them correctly in the &quot;calculate_costs&quot; &#39;</span>
+                        <span class="s2">&quot;field in the flex config.&quot;</span>
+                    <span class="p">)</span>
                 <span class="p">)</span>
-            <span class="p">)</span>
+            
+
         <span class="k">return</span> <span class="bp">self</span></div></div>
 
 
@@ -390,6 +410,10 @@
     <span class="n">price_variable</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;c_pel&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the price variable sent by a predictor&quot;</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">price_variable_feed_in</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;c_pel_feed_in&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the feed-in price variable sent by a predictor&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="n">power_unit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;kW&quot;</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unit of the power variable&quot;</span>
@@ -413,6 +437,76 @@
             <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div></div>
 
+<div class="viewcode-block" id="CallBackHandler"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.CallBackHandler">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">CallBackHandler</span><span class="p">:</span> 
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper class to manage callback handling for flexibility indicator module.</span>
+<span class="sd">    </span>
+<span class="sd">    Adapter, der self.data schreibt </span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">necessary_callback_variables</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">config</span><span class="p">:</span> <span class="n">FlexibilityIndicatorModuleConfig</span><span class="p">):</span> 
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load general settings&quot;&quot;&quot;</span>
+        <span class="c1"># set collocation time grid </span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">get_param</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">parameters</span> <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_grid_info</span> <span class="o">=</span> <span class="n">get_param</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">glbs</span><span class="o">.</span><span class="n">TIME_GRID_INFO</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">necessary_callback_variables</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">glbs</span><span class="o">.</span><span class="n">POWER_ALIAS_BASE</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;power_profile_base&quot;</span><span class="p">,</span> <span class="s2">&quot;is_mpc&quot;</span><span class="p">:</span><span class="kc">True</span><span class="p">},</span>
+            <span class="n">glbs</span><span class="o">.</span><span class="n">POWER_ALIAS_NEG</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;power_profile_flex_neg&quot;</span><span class="p">,</span> <span class="s2">&quot;is_mpc&quot;</span><span class="p">:</span><span class="kc">True</span><span class="p">},</span>
+            <span class="n">glbs</span><span class="o">.</span><span class="n">POWER_ALIAS_POS</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;power_profile_flex_pos&quot;</span><span class="p">,</span> <span class="s2">&quot;is_mpc&quot;</span><span class="p">:</span><span class="kc">True</span><span class="p">},</span>
+            <span class="p">}</span>
+
+<div class="viewcode-block" id="CallBackHandler.update_price_variables"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.CallBackHandler.update_price_variables">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">update_price_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">FlexibilityIndicatorModuleConfig</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">FlexibilityData</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">calculate_flex_costs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">use_constant_electricity_price</span><span class="p">:</span>
+                <span class="n">electricity_price_series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+                    <span class="n">data</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">const_electricity_price</span><span class="p">,</span>
+                    <span class="n">index</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">mpc_time_grid</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">update_profile</span><span class="p">(</span><span class="s2">&quot;electricity_price_series&quot;</span><span class="p">,</span> <span class="n">electricity_price_series</span><span class="p">,</span> <span class="n">mpc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">necessary_callback_variables</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">config</span><span class="o">.</span><span class="n">price_variable</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;electricity_price_series&quot;</span><span class="p">,</span> <span class="s2">&quot;is_mpc&quot;</span><span class="p">:</span><span class="kc">False</span><span class="p">}})</span>
+            
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">use_constant_feed_in_price</span><span class="p">:</span>
+                <span class="n">feed_in_price_series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+                    <span class="n">data</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">const_feed_in_price</span><span class="p">,</span>
+                    <span class="n">index</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">mpc_time_grid</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">update_profile</span><span class="p">(</span><span class="s2">&quot;feed_in_price_series&quot;</span><span class="p">,</span> <span class="n">feed_in_price_series</span><span class="p">,</span> <span class="n">mpc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">necessary_callback_variables</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">config</span><span class="o">.</span><span class="n">price_variable_feed_in</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;feed_in_price_series&quot;</span><span class="p">,</span> <span class="s2">&quot;is_mpc&quot;</span><span class="p">:</span><span class="kc">False</span><span class="p">}})</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+    
+<div class="viewcode-block" id="CallBackHandler.initialize_callback_variables"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.CallBackHandler.initialize_callback_variables">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">initialize_callback_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">FlexibilityData</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">FlexibilityIndicatorModuleConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FlexibilityData</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_price_variables</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">enable_energy_costs_correction</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">necessary_callback_variables</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+                <span class="n">glbs</span><span class="o">.</span><span class="n">STORED_ENERGY_ALIAS_BASE</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;stored_energy_profile_base&quot;</span><span class="p">,</span> <span class="s2">&quot;is_mpc&quot;</span><span class="p">:</span><span class="kc">True</span><span class="p">},</span>
+                <span class="n">glbs</span><span class="o">.</span><span class="n">STORED_ENERGY_ALIAS_NEG</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;stored_energy_profile_flex_neg&quot;</span><span class="p">,</span> <span class="s2">&quot;is_mpc&quot;</span><span class="p">:</span><span class="kc">True</span><span class="p">},</span>
+                <span class="n">glbs</span><span class="o">.</span><span class="n">STORED_ENERGY_ALIAS_POS</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;stored_energy_profile_flex_pos&quot;</span><span class="p">,</span> <span class="s2">&quot;is_mpc&quot;</span><span class="p">:</span><span class="kc">True</span><span class="p">},</span>
+            <span class="p">})</span>
+            
+        <span class="k">return</span> <span class="n">data</span></div>
+    
+<div class="viewcode-block" id="CallBackHandler.set_all_callback_variables_to_none"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.CallBackHandler.set_all_callback_variables_to_none">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_all_callback_variables_to_none</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">FlexibilityData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FlexibilityData</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear the values of the callback variables after processing.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">alias</span><span class="p">,</span> <span class="n">var</span>  <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">necessary_callback_variables</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">update_profile</span><span class="p">(</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="kc">None</span><span class="p">,</span> <span class="n">mpc</span><span class="o">=</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;is_mpc&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+
+<div class="viewcode-block" id="CallBackHandler.update_input"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.CallBackHandler.update_input">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">update_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">FlexibilityData</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FlexibilityData</span><span class="p">:</span> 
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the incoming value&quot;&quot;&quot;</span>
+        <span class="n">var_tuple</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">necessary_callback_variables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">var_tuple</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> 
+            <span class="n">variable_name</span><span class="p">,</span> <span class="n">mpc</span> <span class="o">=</span> <span class="n">var_tuple</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">var_tuple</span><span class="p">[</span><span class="s2">&quot;is_mpc&quot;</span><span class="p">]</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">update_profile</span><span class="p">(</span><span class="n">variable_name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">mpc</span><span class="o">=</span><span class="n">mpc</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+    
+<div class="viewcode-block" id="CallBackHandler.is_ready_for_calculation"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.CallBackHandler.is_ready_for_calculation">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_ready_for_calculation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">FlexibilityData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if all necessary profiles and parameters are set for KPI calculation.&quot;&quot;&quot;</span>
+        <span class="n">required_profiles</span> <span class="o">=</span> <span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">var</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">necessary_callback_variables</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">profile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">profile</span> <span class="ow">in</span> <span class="n">required_profiles</span><span class="p">)</span></div></div>
 
 <div class="viewcode-block" id="FlexibilityIndicatorModule"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityIndicatorModule</span><span class="p">(</span><span class="n">agentlib</span><span class="o">.</span><span class="n">BaseModule</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Module for calculating flexibility KPIs and generating flexibility offers</span>
@@ -420,6 +514,7 @@
 
     <span class="n">config</span><span class="p">:</span> <span class="n">FlexibilityIndicatorModuleConfig</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">FlexibilityData</span>
+    <span class="n">callback_handler</span><span class="p">:</span> <span class="n">CallBackHandler</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -431,6 +526,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">in_provision</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">offer_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_list</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">FlexibilityData</span><span class="p">(</span>
             <span class="n">prep_time</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">PREP_TIME</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
             <span class="n">market_time</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">MARKET_TIME</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
@@ -438,7 +534,8 @@
             <span class="n">time_step</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">TIME_STEP</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
             <span class="n">prediction_horizon</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">PREDICTION_HORIZON</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_list</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">callback_handler</span> <span class="o">=</span> <span class="n">CallBackHandler</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">callback_handler</span><span class="o">.</span><span class="n">initialize_callback_variables</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
 
 <div class="viewcode-block" id="FlexibilityIndicatorModule.register_callbacks"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.register_callbacks">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">register_callbacks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">inputs</span>
@@ -456,88 +553,27 @@
         <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">event</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="FlexibilityIndicatorModule.callback"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.callback">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle incoming data by storing power/energy profiles and triggering</span>
-<span class="sd">        flexibility calculations when all required inputs are available.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle incoming data by storing power/energy/price profiles and triggering</span>
+<span class="sd">        flexibility calculations when all required inputs are available.</span>
+<span class="sd">        &quot;&quot;&quot;</span> 
+        
         <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">PROVISION_VAR_NAME</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">in_provision</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">value</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_provision</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_set_inputs_to_none</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_provision</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">POWER_ALIAS_BASE</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">unify_inputs</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">POWER_ALIAS_NEG</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_flex_neg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">unify_inputs</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">POWER_ALIAS_POS</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_flex_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">unify_inputs</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">STORED_ENERGY_ALIAS_BASE</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">unify_inputs</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">STORED_ENERGY_ALIAS_NEG</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_flex_neg</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">unify_inputs</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
-            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">STORED_ENERGY_ALIAS_POS</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_flex_pos</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">unify_inputs</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
-            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">price_variable</span><span class="p">:</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">use_constant_electricity_price</span><span class="p">:</span>
-                    <span class="c1"># price comes from predictor</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">electricity_price_series</span> <span class="o">=</span> <span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">unify_inputs</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">mpc</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
-
-            <span class="c1"># set the constant electricity price series if given</span>
-            <span class="k">if</span> <span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">use_constant_electricity_price</span>
-                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">electricity_price_series</span> <span class="ow">is</span> <span class="kc">None</span>
-            <span class="p">):</span>
-                <span class="c1"># get the index for the electricity price series</span>
-                <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">PREDICTION_HORIZON</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
-                <span class="n">ts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">TIME_STEP</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
-                <span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">*</span> <span class="n">ts</span> <span class="o">+</span> <span class="n">ts</span><span class="p">,</span> <span class="n">ts</span><span class="p">)</span>
-                <span class="c1"># fill the electricity_price_series with values</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">electricity_price_series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
-                    <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">const_electricity_price</span>
-                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">grid</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">grid</span><span class="p">)</span>
-
-            <span class="n">necessary_input_for_calc_flex</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_base</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_flex_neg</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_flex_pos</span><span class="p">,</span>
-            <span class="p">]</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">calculate_costs</span><span class="o">.</span><span class="n">calculate_flex_costs</span><span class="p">:</span>
-                <span class="n">necessary_input_for_calc_flex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">electricity_price_series</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="p">(</span><span class="nb">all</span><span class="p">(</span><span class="n">var</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">necessary_input_for_calc_flex</span><span class="p">)</span> <span class="ow">and</span>
-                    <span class="nb">len</span><span class="p">(</span><span class="n">necessary_input_for_calc_flex</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">):</span>
-                <span class="c1"># align the index of price variable to the index of inputs from mpc;</span>
-                <span class="c1"># electricity price signal is usually steps</span>
-                <span class="n">necessary_input_for_calc_flex</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">electricity_price_series</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_base</span><span class="o">.</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">ffill</span><span class="p">())</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">enable_energy_costs_correction</span><span class="p">:</span>
-                <span class="n">necessary_input_for_calc_flex</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
-                    <span class="p">[</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_base</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_flex_neg</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_flex_pos</span><span class="p">,</span>
-                    <span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_provision</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">callback_handler</span><span class="o">.</span><span class="n">set_all_callback_variables_to_none</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">callback_handler</span><span class="o">.</span><span class="n">update_input</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">inp</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+            
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">callback_handler</span><span class="o">.</span><span class="n">is_ready_for_calculation</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">):</span>
+            <span class="c1"># check the power profile end deviation</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">enable_energy_costs_correction</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">check_power_end_deviation</span><span class="p">(</span>
+                    <span class="n">tol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">absolute_power_deviation_tolerance</span>
                 <span class="p">)</span>
-
-            <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">var</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">necessary_input_for_calc_flex</span><span class="p">):</span>
-
-                <span class="c1"># check the power profile end deviation</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">enable_energy_costs_correction</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">check_power_end_deviation</span><span class="p">(</span>
-                        <span class="n">tol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">absolute_power_deviation_tolerance</span>
-                    <span class="p">)</span>
-
-                <span class="c1"># Calculate the flexibility, send the offer, write and save the results</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">calc_and_send_offer</span><span class="p">()</span>
-
-                <span class="c1"># set the values to None to reset the callback</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_set_inputs_to_none</span><span class="p">()</span></div>
-
+            <span class="c1"># calculate and send the offer and reset the callback variables </span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">calc_and_send_offer</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">callback_handler</span><span class="o">.</span><span class="n">set_all_callback_variables_to_none</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div>
+        
 <div class="viewcode-block" id="FlexibilityIndicatorModule.get_results"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.get_results">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_results</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Open results file of flexibility_indicator.py.&quot;&quot;&quot;</span>
         <span class="n">results_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">results_file</span>
@@ -584,6 +620,8 @@
                 <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_flex_pos</span>
             <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">price_variable</span><span class="p">:</span>
                 <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">electricity_price_series</span>
+            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">price_variable_feed_in</span><span class="p">:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">feed_in_price_series</span>
             <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">TIME_GRID_INFO</span><span class="p">:</span>
                 <span class="n">time_grid_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
                 <span class="c1"># Store the grid as a series for results</span>
@@ -761,14 +799,6 @@
             <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">offer_count</span> <span class="o">+=</span> <span class="mi">1</span></div>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_set_inputs_to_none</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_base</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_flex_neg</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">power_profile_flex_pos</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">electricity_price_series</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_base</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_flex_neg</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_flex_pos</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="FlexibilityIndicatorModule.check_power_end_deviation"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.check_power_end_deviation">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">check_power_end_deviation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the deviation of the final value of the power profiles</span>

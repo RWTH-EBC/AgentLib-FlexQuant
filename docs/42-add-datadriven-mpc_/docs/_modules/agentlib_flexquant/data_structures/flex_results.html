@@ -216,6 +216,20 @@
         <span class="c1"># Convert the time in the dataframes to the desired timescale</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">convert_timescale_of_dataframe_index</span><span class="p">(</span><span class="n">to_timescale</span><span class="o">=</span><span class="n">to_timescale</span><span class="p">)</span>
 
+        <span class="c1"># Clear unpicklable model reference to enable multiprocessing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clear_unpicklable_references</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_clear_unpicklable_references</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove references to objects that cannot be pickled.</span>
+
+<span class="sd">        This enables the Results object to be used with multiprocessing.</span>
+<span class="sd">        The model field contains CDLL references that cannot be serialized.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;simulator_module_config&#39;</span><span class="p">)</span> <span class="ow">and</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">simulator_module_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simulator_module_config</span><span class="p">,</span> <span class="s1">&#39;model&#39;</span><span class="p">):</span>
+                <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simulator_module_config</span><span class="p">,</span> <span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">_load_flex_config</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">flex_config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FilePath</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]],</span>

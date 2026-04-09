@@ -123,7 +123,7 @@
 <span class="sd">        and the KPI name.&quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">return</span> <span class="n">name</span></div></div>
-
+    
 
 <div class="viewcode-block" id="KPISeries"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.KPISeries">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">KPISeries</span><span class="p">(</span><span class="n">KPI</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class defining extra attributes of the indicator KPISeries in addition to KPI.&quot;&quot;&quot;</span>
@@ -189,7 +189,7 @@
                 <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">values</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_dt</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
                 <span class="o">/</span> <span class="n">TIME_CONVERSION</span><span class="p">[</span><span class="n">time_unit</span><span class="p">]</span>
             <span class="p">)</span></div></div>
-
+        
 
 <div class="viewcode-block" id="FlexibilityKPIs"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityKPIs">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexibilityKPIs</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class defining the indicator KPIs.&quot;&quot;&quot;</span>
@@ -207,6 +207,10 @@
     <span class="n">power_flex_offer</span><span class="p">:</span> <span class="n">KPISeries</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="n">KPISeries</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;power_flex_offer&quot;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;kW&quot;</span><span class="p">,</span> <span class="n">integration_method</span><span class="o">=</span><span class="n">LINEAR</span><span class="p">),</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Power flexibility&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">power_flex_offer_prepared</span><span class="p">:</span> <span class="n">KPISeries</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">KPISeries</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;power_flex_offer_prepared&quot;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;kW&quot;</span><span class="p">,</span> <span class="n">integration_method</span><span class="o">=</span><span class="n">LINEAR</span><span class="p">),</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Power flexibility Series prepared for integration&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">power_flex_offer_max</span><span class="p">:</span> <span class="n">KPI</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="n">KPI</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;power_flex_offer_max&quot;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;kW&quot;</span><span class="p">),</span>
@@ -235,7 +239,7 @@
     <span class="c1"># Costs KPIs</span>
     <span class="n">electricity_costs_series</span><span class="p">:</span> <span class="n">KPISeries</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="n">KPISeries</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;electricity_costs_series&quot;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;ct/h&quot;</span><span class="p">,</span> <span class="n">integration_method</span><span class="o">=</span><span class="n">LINEAR</span><span class="p">),</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Costs of flexibility&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Difference in electricity costs between shadow and baseline mpc over full prediction horizon&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">costs</span><span class="p">:</span> <span class="n">KPI</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="n">KPI</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;costs&quot;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;ct&quot;</span><span class="p">),</span>
@@ -267,6 +271,7 @@
         <span class="n">power_profile_base</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
         <span class="n">power_profile_shadow</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
         <span class="n">electricity_price_series</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
+        <span class="n">feed_in_price_series</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
         <span class="n">mpc_time_grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">flex_offer_time_grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">stored_energy_base</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
@@ -282,6 +287,7 @@
 <span class="sd">            power_profile_base: power profile from baseline mpc</span>
 <span class="sd">            power_profile_shadow: power profile from shadow mpc</span>
 <span class="sd">            electricity_price_series: time series of electricity prices</span>
+<span class="sd">            feed_in_price_series: time series of electricity feed-in prices</span>
 <span class="sd">            flex_offer_time_grid: time grid over which the flexibility offer is calculated,</span>
 <span class="sd">            for indexing of the power flexibility profiles</span>
 <span class="sd">            stored_energy_base: time series of stored energy from baseline mpc</span>
@@ -317,6 +323,9 @@
         <span class="k">if</span> <span class="n">calculate_flex_cost</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_costs</span><span class="p">(</span>
                 <span class="n">electricity_price_signal</span><span class="o">=</span><span class="n">electricity_price_series</span><span class="p">,</span>
+                <span class="n">feed_in_price_signal</span><span class="o">=</span><span class="n">feed_in_price_series</span><span class="p">,</span>
+                <span class="n">power_profile_base</span><span class="o">=</span><span class="n">power_profile_base</span><span class="p">,</span>
+                <span class="n">power_profile_shadow</span><span class="o">=</span><span class="n">power_profile_shadow</span><span class="p">,</span>
                 <span class="n">stored_energy_diff</span><span class="o">=</span><span class="n">stored_energy_diff</span><span class="p">,</span>
                 <span class="n">integration_method</span><span class="o">=</span><span class="n">integration_method</span><span class="p">,</span>
                 <span class="n">mpc_time_grid</span><span class="o">=</span><span class="n">mpc_time_grid</span><span class="p">,</span>
@@ -362,10 +371,6 @@
         <span class="c1"># Set values to zero if the difference is small</span>
         <span class="n">relative_difference</span> <span class="o">=</span> <span class="p">(</span><span class="n">power_flex</span> <span class="o">/</span> <span class="n">power_profile_base</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
         <span class="n">power_flex</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">relative_difference</span> <span class="o">&lt;</span> <span class="n">relative_error_acceptance</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="c1"># Set the first value of power_flex to zero, since it comes from the measurement/simulator</span>
-        <span class="c1"># and is the same for baseline and shadow mpcs.</span>
-        <span class="c1"># For quantification of flexibility, only power difference is of interest.</span>
-        <span class="n">power_flex</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="c1"># Set values</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">power_flex_full</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">power_flex</span>
@@ -391,13 +396,15 @@
 
         <span class="c1"># Calculate characteristic values</span>
         <span class="c1"># max and min of power flex offer</span>
-        <span class="n">power_flex_offer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_flex_offer</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">power_flex_offer_prepared</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_flex_offer</span><span class="o">.</span><span class="n">__deepcopy__</span><span class="p">()</span>
 
         <span class="c1"># Only drop collocation points if using collocation method</span>
         <span class="k">if</span> <span class="n">time_grid_info</span> <span class="ow">and</span> <span class="n">time_grid_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;collocation&quot;</span><span class="p">:</span>
-            <span class="n">power_flex_offer</span> <span class="o">=</span> <span class="n">power_flex_offer</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">power_flex_offer_prepared</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_flex_offer_prepared</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
                 <span class="n">time_grid_info</span><span class="p">[</span><span class="s2">&quot;grid&quot;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span>
             <span class="p">)</span>
+        <span class="n">power_flex_offer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_flex_offer_prepared</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="n">power_flex_offer_max</span> <span class="o">=</span> <span class="n">power_flex_offer</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
         <span class="n">power_flex_offer_min</span> <span class="o">=</span> <span class="n">power_flex_offer</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
@@ -405,16 +412,9 @@
         <span class="c1"># Average of the power flex offer</span>
         <span class="c1"># Get the series for integration before calculating average</span>
         <span class="n">power_flex_offer_integration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_series_for_integration</span><span class="p">(</span>
-            <span class="n">series</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">power_flex_offer</span><span class="p">,</span> <span class="n">mpc_time_grid</span><span class="o">=</span><span class="n">mpc_time_grid</span>
+            <span class="n">series</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">power_flex_offer_prepared</span><span class="p">,</span> <span class="n">mpc_time_grid</span><span class="o">=</span><span class="n">mpc_time_grid</span>
         <span class="p">)</span>
 
-        <span class="c1"># Only drop collocation points if using collocation method</span>
-        <span class="k">if</span> <span class="n">time_grid_info</span> <span class="ow">and</span> <span class="n">time_grid_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;collocation&quot;</span><span class="p">:</span>
-            <span class="n">power_flex_offer_integration</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">power_flex_offer_integration</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
-                <span class="n">time_grid_info</span><span class="p">[</span><span class="s2">&quot;grid&quot;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span>
-            <span class="p">)</span>
-
-        <span class="c1"># Calculate the average and stores the original value</span>
         <span class="n">power_flex_offer_avg</span> <span class="o">=</span> <span class="n">power_flex_offer_integration</span><span class="o">.</span><span class="n">avg</span><span class="p">()</span>
 
         <span class="c1"># Set values</span>
@@ -423,7 +423,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">power_flex_offer_avg</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">power_flex_offer_avg</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_series_for_integration</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">series</span><span class="p">:</span> <span class="n">KPISeries</span><span class="p">,</span> <span class="n">mpc_time_grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">series</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">KPISeries</span><span class="p">],</span> <span class="n">mpc_time_grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KPISeries</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the KPISeries value sampled on the MPC time grid when the integration</span>
 <span class="sd">        method is constant.</span>
@@ -456,14 +456,8 @@
         <span class="c1"># Calculate flexibility</span>
         <span class="c1"># Get the series for integration before calculating average</span>
         <span class="n">power_flex_offer_integration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_series_for_integration</span><span class="p">(</span>
-            <span class="n">series</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">power_flex_offer</span><span class="p">,</span> <span class="n">mpc_time_grid</span><span class="o">=</span><span class="n">mpc_time_grid</span>
+            <span class="n">series</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">power_flex_offer_prepared</span><span class="p">,</span> <span class="n">mpc_time_grid</span><span class="o">=</span><span class="n">mpc_time_grid</span>
         <span class="p">)</span>
-
-        <span class="c1"># Only drop collocation points if using collocation method</span>
-        <span class="k">if</span> <span class="n">time_grid_info</span> <span class="ow">and</span> <span class="n">time_grid_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;collocation&quot;</span><span class="p">:</span>
-            <span class="n">power_flex_offer_integration</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">power_flex_offer_integration</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
-                <span class="n">time_grid_info</span><span class="p">[</span><span class="s2">&quot;grid&quot;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span>
-            <span class="p">)</span>
 
         <span class="c1"># Calculate the energy flex and stores the original value</span>
         <span class="n">energy_flex</span> <span class="o">=</span> <span class="n">power_flex_offer_integration</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="n">time_unit</span><span class="o">=</span><span class="s2">&quot;hours&quot;</span><span class="p">)</span>
@@ -474,6 +468,9 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_costs</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">electricity_price_signal</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
+        <span class="n">feed_in_price_signal</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
+        <span class="n">power_profile_base</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
+        <span class="n">power_profile_shadow</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
         <span class="n">stored_energy_diff</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">integration_method</span><span class="p">:</span> <span class="n">INTEGRATION_METHOD</span><span class="p">,</span>
         <span class="n">mpc_time_grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -484,6 +481,9 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            electricity_price_signal: time series of the electricity price signal</span>
+<span class="sd">            feed_in_price_signal: time series of the feed-in price signal</span>
+<span class="sd">            power_profile_base: baseline power profile used to select tariff by sign</span>
+<span class="sd">            power_profile_shadow: shadow mpc power profile used to select tariff by sign</span>
 <span class="sd">            stored_energy_diff: the difference of the stored energy between baseline and shadow mpc</span>
 <span class="sd">            integration_method: the integration method used to integrate KPISeries</span>
 <span class="sd">            mpc_time_grid: the MPC time grid over the horizon</span>
@@ -491,34 +491,51 @@
 
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># based on direction, define sign of cost calculation</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">==</span> <span class="s2">&quot;positive&quot;</span><span class="p">:</span>
-            <span class="n">cost_coeff</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">==</span> <span class="s2">&quot;negative&quot;</span><span class="p">:</span>
-            <span class="n">cost_coeff</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">power_profile_shadow</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">power_profile_base</span><span class="o">.</span><span class="n">index</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Indices of power profiles do not match.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Baseline: </span><span class="si">{</span><span class="n">power_profile_base</span><span class="o">.</span><span class="n">index</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Shadow: </span><span class="si">{</span><span class="n">power_profile_shadow</span><span class="o">.</span><span class="n">index</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
         <span class="c1"># Set integration method</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">power_flex_full</span><span class="o">.</span><span class="n">integration_method</span> <span class="o">=</span> <span class="n">integration_method</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">electricity_costs_series</span><span class="o">.</span><span class="n">integration_method</span> <span class="o">=</span> <span class="n">integration_method</span>
+
+        <span class="c1"># if there is no feed-in tariff provided, the electricity price signal is used for both consumption and feed-in</span>
+        <span class="k">if</span> <span class="n">feed_in_price_signal</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">feed_in_price_signal</span> <span class="o">=</span> <span class="n">electricity_price_signal</span>
+
+        <span class="c1"># Select tariff based on the sign of each profile</span>
+        <span class="n">effective_price_base</span> <span class="o">=</span> <span class="n">electricity_price_signal</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+            <span class="n">power_profile_base</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">feed_in_price_signal</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">effective_price_shadow</span> <span class="o">=</span> <span class="n">electricity_price_signal</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+            <span class="n">power_profile_shadow</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">feed_in_price_signal</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">cost_profile_base</span> <span class="o">=</span> <span class="n">power_profile_base</span> <span class="o">*</span> <span class="n">effective_price_base</span>
+        <span class="n">cost_profile_shadow</span> <span class="o">=</span> <span class="n">power_profile_shadow</span> <span class="o">*</span> <span class="n">effective_price_shadow</span>
 
         <span class="c1"># Get the series for integration before calculating</span>
         <span class="n">power_flex_full_integration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_series_for_integration</span><span class="p">(</span>
             <span class="n">series</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">power_flex_full</span><span class="p">,</span> <span class="n">mpc_time_grid</span><span class="o">=</span><span class="n">mpc_time_grid</span>
         <span class="p">)</span>
-
-        <span class="c1"># Only drop collocation points if using collocation method</span>
         <span class="k">if</span> <span class="n">time_grid_info</span> <span class="ow">and</span> <span class="n">time_grid_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;collocation&quot;</span><span class="p">:</span>
             <span class="n">power_flex_full_integration</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">power_flex_full_integration</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
                 <span class="n">time_grid_info</span><span class="p">[</span><span class="s2">&quot;grid&quot;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span>
             <span class="p">)</span>
 
-        <span class="c1"># Calculate series</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">electricity_costs_series</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">electricity_price_signal</span> <span class="o">*</span> <span class="n">power_flex_full_integration</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="n">cost_coeff</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+        <span class="c1"># Difference in costs between shadow and baseline mpc</span>
+        <span class="n">delta_cost</span> <span class="o">=</span> <span class="n">cost_profile_shadow</span> <span class="o">-</span> <span class="n">cost_profile_base</span>
+        <span class="n">delta_cost</span> <span class="o">=</span> <span class="n">delta_cost</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">power_flex_full_integration</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+        <span class="n">delta_cost</span> <span class="o">=</span> <span class="n">delta_cost</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">power_flex_full_integration</span><span class="o">.</span><span class="n">value</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">electricity_costs_series</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">delta_cost</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
 
         <span class="c1"># Calculate the costs and stores the original value</span>
         <span class="n">costs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">electricity_costs_series</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="n">time_unit</span><span class="o">=</span><span class="s2">&quot;hours&quot;</span><span class="p">)</span>
-
         <span class="c1"># correct the costs</span>
         <span class="n">corrected_costs</span> <span class="o">=</span> <span class="n">costs</span> <span class="o">-</span> <span class="n">stored_energy_diff</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">electricity_price_signal</span><span class="p">)</span>
 
@@ -616,6 +633,10 @@
     <span class="n">electricity_price_series</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Profile of the electricity price&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">feed_in_price_series</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Profile of the electricity feed-in price&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="c1"># KPIs</span>
@@ -723,6 +744,7 @@
             <span class="n">power_profile_base</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">power_profile_base</span><span class="p">,</span>
             <span class="n">power_profile_shadow</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">power_profile_flex_pos</span><span class="p">,</span>
             <span class="n">electricity_price_series</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">electricity_price_series</span><span class="p">,</span>
+            <span class="n">feed_in_price_series</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">feed_in_price_series</span><span class="p">,</span>
             <span class="n">mpc_time_grid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mpc_time_grid</span><span class="p">,</span>
             <span class="n">flex_offer_time_grid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_offer_time_grid</span><span class="p">,</span>
             <span class="n">stored_energy_base</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stored_energy_profile_base</span><span class="p">,</span>
@@ -736,6 +758,7 @@
             <span class="n">power_profile_base</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">power_profile_base</span><span class="p">,</span>
             <span class="n">power_profile_shadow</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">power_profile_flex_neg</span><span class="p">,</span>
             <span class="n">electricity_price_series</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">electricity_price_series</span><span class="p">,</span>
+            <span class="n">feed_in_price_series</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">feed_in_price_series</span><span class="p">,</span>
             <span class="n">mpc_time_grid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mpc_time_grid</span><span class="p">,</span>
             <span class="n">flex_offer_time_grid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_offer_time_grid</span><span class="p">,</span>
             <span class="n">stored_energy_base</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stored_energy_profile_base</span><span class="p">,</span>
@@ -760,7 +783,13 @@
 <span class="sd">        Reset the common time grid.</span>
 <span class="sd">        This should be called between different flexibility calculations.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_common_time_grid</span> <span class="o">=</span> <span class="kc">None</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_common_time_grid</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="FlexibilityData.update_profile"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_kpis.FlexibilityData.update_profile">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">update_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">mpc</span><span class="p">:</span><span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update a specific profile for calculation with a new value.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> 
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unify_inputs</span><span class="p">(</span><span class="n">series</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">mpc</span><span class="o">=</span> <span class="n">mpc</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>
