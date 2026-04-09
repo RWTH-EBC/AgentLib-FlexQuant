@@ -902,8 +902,19 @@ class FlexAgentGenerator:
             class_name = mod_type["class_name"]
             # Get the class
             dynamic_class = cmng.get_class_from_file(file_path, class_name)
+
+            model_config = self.baseline_mpc_module_config.optimization_backend.get("model", {})
+            model_kwargs = {k: v for k, v in model_config.items() if k != "type"}
+
+            try:
+                model_instance = dynamic_class(**model_kwargs)
+            except Exception as e:
+                self.logger.warning(
+                    f"Could not instantiate model class {class_name} with full config "
+                )
+
             if self.flex_config.baseline_config_generator_data.comfort_variable not in [
-                state.name for state in dynamic_class().states
+                state.name for state in model_instance.states
             ]:
                 raise ConfigurationError(
                     f"Given comfort variable "

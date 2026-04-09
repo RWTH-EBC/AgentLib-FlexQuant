@@ -134,6 +134,10 @@ class FlexibilityKPIs(pydantic.BaseModel):
         default=KPISeries(name="power_flex_offer", unit="kW", integration_method=LINEAR),
         description="Power flexibility",
     )
+    power_flex_offer_prepared: KPISeries = pydantic.Field(
+        default=KPISeries(name="power_flex_offer_prepared", unit="kW", integration_method=LINEAR),
+        description="Power flexibility Series prepared for integration",
+    )
     power_flex_offer_max: KPI = pydantic.Field(
         default=KPI(name="power_flex_offer_max", unit="kW"),
         description="Maximum power flexibility",
@@ -293,10 +297,6 @@ class FlexibilityKPIs(pydantic.BaseModel):
         # Set values to zero if the difference is small
         relative_difference = (power_flex / power_profile_base).abs()
         power_flex.loc[relative_difference < relative_error_acceptance] = 0
-        # Set the first value of power_flex to zero, since it comes from the measurement/simulator
-        # and is the same for baseline and shadow mpcs.
-        # For quantification of flexibility, only power difference is of interest.
-        power_flex.iloc[0] = 0
 
         # Set values
         self.power_flex_full.value = power_flex
@@ -323,13 +323,14 @@ class FlexibilityKPIs(pydantic.BaseModel):
         # Calculate characteristic values
         # max and min of power flex offer
 
-        power_flex_offer = self.power_flex_offer.value.iloc[:-1]
+        self.power_flex_offer_prepared = self.power_flex_offer.__deepcopy__()
 
         # Only drop collocation points if using collocation method
         if time_grid_info and time_grid_info.get("type") == "collocation":
-            power_flex_offer = power_flex_offer.drop(
+            self.power_flex_offer_prepared.value = self.power_flex_offer_prepared.value.drop(
                 time_grid_info["grid"], errors="ignore"
             )
+        power_flex_offer = self.power_flex_offer_prepared.value.iloc[:-1]
 
         power_flex_offer_max = power_flex_offer.max()
         power_flex_offer_min = power_flex_offer.min()
@@ -337,9 +338,9 @@ class FlexibilityKPIs(pydantic.BaseModel):
         # Average of the power flex offer
         # Get the series for integration before calculating average
         power_flex_offer_integration = self._get_series_for_integration(
-            series=self.power_flex_offer, mpc_time_grid=mpc_time_grid
+            series=self.power_flex_offer_prepared, mpc_time_grid=mpc_time_grid
         )
-        # Calculate the average and stores the original value
+
         power_flex_offer_avg = power_flex_offer_integration.avg()
 
         # Set values
@@ -381,7 +382,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         # Calculate flexibility
         # Get the series for integration before calculating average
         power_flex_offer_integration = self._get_series_for_integration(
-            series=self.power_flex_offer, mpc_time_grid=mpc_time_grid
+            series=self.power_flex_offer_prepared, mpc_time_grid=mpc_time_grid
         )
 
         # Calculate the energy flex and stores the original value
@@ -448,6 +449,11 @@ class FlexibilityKPIs(pydantic.BaseModel):
         power_flex_full_integration = self._get_series_for_integration(
             series=self.power_flex_full, mpc_time_grid=mpc_time_grid
         )
+        if time_grid_info and time_grid_info.get("type") == "collocation":
+            power_flex_full_integration.value = power_flex_full_integration.value.drop(
+                time_grid_info["grid"], errors="ignore"
+            )
+
         # Difference in costs between shadow and baseline mpc
         delta_cost = cost_profile_shadow - cost_profile_base
         delta_cost = delta_cost.reindex(power_flex_full_integration.value.index)
