@@ -85,7 +85,6 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">model_validator</span><span class="p">,</span> <span class="n">field_serializer</span><span class="p">,</span> <span class="n">Field</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.globals</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">glbs</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">agentlib_flexquant.utils.config_management</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cmng</span>
 
 <span class="n">excluded_fields</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s2">&quot;rdf_class&quot;</span><span class="p">,</span>
@@ -163,7 +162,7 @@
     <span class="n">name_of_created_file</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">results_suffix</span><span class="p">:</span> <span class="nb">str</span>
     <span class="c1"># modules</span>
-    <span class="n">module_types</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="n">module_types</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">class_name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">module_id</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span>
@@ -191,7 +190,6 @@
     <span class="n">results_suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_base.csv&quot;</span>
     <span class="n">name_of_created_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;baseline.json&quot;</span>
     <span class="c1"># modules</span>
-    <span class="n">module_types</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">cmng</span><span class="o">.</span><span class="n">BASELINE_MODULE_TYPE_DICT</span>
     <span class="n">class_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;BaselineMPCModel&quot;</span>
     <span class="n">module_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Baseline&quot;</span>
     <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Baseline&quot;</span>
@@ -276,7 +274,6 @@
     <span class="n">results_suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_pos_flex.csv&quot;</span>
     <span class="n">name_of_created_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;pos_flex.json&quot;</span>
     <span class="c1"># modules</span>
-    <span class="n">module_types</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">cmng</span><span class="o">.</span><span class="n">SHADOW_MODULE_TYPE_DICT</span>
     <span class="n">class_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;PosFlexModel&quot;</span>
     <span class="n">module_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;PosFlexMPC&quot;</span>
     <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;PosFlexMPC&quot;</span>
@@ -334,7 +331,6 @@
     <span class="n">results_suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_neg_flex.csv&quot;</span>
     <span class="n">name_of_created_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;neg_flex.json&quot;</span>
     <span class="c1"># modules</span>
-    <span class="n">module_types</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">cmng</span><span class="o">.</span><span class="n">SHADOW_MODULE_TYPE_DICT</span>
     <span class="n">class_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;NegFlexModel&quot;</span>
     <span class="n">module_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;NegFlexMPC&quot;</span>
     <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;NegFlexMPC&quot;</span>

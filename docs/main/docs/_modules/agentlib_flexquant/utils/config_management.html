@@ -78,31 +78,14 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABCMeta</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeVar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.core.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentConfig</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.core.module</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModuleConfig</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.modules</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_all_module_types</span>
 
+
 <span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">BaseModuleConfig</span><span class="p">)</span>
-
-<span class="n">all_module_types</span> <span class="o">=</span> <span class="n">get_all_module_types</span><span class="p">([</span><span class="s2">&quot;agentlib_mpc&quot;</span><span class="p">,</span> <span class="s2">&quot;agentlib_flexquant&quot;</span><span class="p">])</span>
-<span class="c1"># remove ML models, since import takes ages</span>
-<span class="n">all_module_types</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;agentlib_mpc.ann_trainer&quot;</span><span class="p">)</span>
-<span class="n">all_module_types</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;agentlib_mpc.gpr_trainer&quot;</span><span class="p">)</span>
-<span class="n">all_module_types</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;agentlib_mpc.linreg_trainer&quot;</span><span class="p">)</span>
-<span class="n">all_module_types</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;agentlib_mpc.ml_simulator&quot;</span><span class="p">)</span>
-<span class="n">all_module_types</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;agentlib_mpc.set_point_generator&quot;</span><span class="p">)</span>
-<span class="c1"># remove clone since not used</span>
-<span class="n">all_module_types</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;clonemap&quot;</span><span class="p">)</span>
-
-<span class="c1"># dictionary mapping the module name to the module config (ModelMetaclass)</span>
-<span class="n">MODULE_TYPE_DICT</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="n">name</span><span class="p">:</span> <span class="n">inspect</span><span class="o">.</span><span class="n">get_annotations</span><span class="p">(</span><span class="n">class_type</span><span class="o">.</span><span class="n">import_class</span><span class="p">())[</span><span class="s2">&quot;config&quot;</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">class_type</span> <span class="ow">in</span> <span class="n">all_module_types</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-<span class="p">}</span>
-<span class="c1"># dictionary mapping the module name to the module (ModuleImport)</span>
-<span class="n">MODULE_NAME_DICT</span> <span class="o">=</span> <span class="n">all_module_types</span>
 
 <span class="n">MPC_CONFIG_TYPE</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;agentlib_mpc.mpc&quot;</span>
 <span class="n">BASELINEMPC_CONFIG_TYPE</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;agentlib_flexquant.baseline_mpc&quot;</span>
@@ -114,11 +97,118 @@
 <span class="n">SIMULATOR_CONFIG_TYPE</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;simulator&quot;</span>
 
 
+<div class="viewcode-block" id="ModuleHandler"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.config_management.ModuleHandler">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ModuleHandler</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">extra_plugins</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">exclude_ml_plugins</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">exclude_clonemap_plugin</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Manages discovery and lookup of AgentLib module types and their configuration models.</span>
+
+<span class="sd">        The handler builds registries of available modules from a set of plugin packages,</span>
+<span class="sd">        optionally excluding slow-to-import modules (e.g., ML trainers).</span>
+<span class="sd">        The get_module() function provided allows to get the corresponding module from a config based on its name.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            extra_plugins: Optional list of additional plugin package names to include in</span>
+<span class="sd">                module discovery (in addition to the default plugins).</span>
+<span class="sd">            exclude_ml_plugins: If True, excludes ML-related agentlib_mpc modules that are</span>
+<span class="sd">                expensive/slow to import.</span>
+<span class="sd">            exclude_clonemap_plugin: If True, excludes the &quot;clonemap&quot; module type (not used</span>
+<span class="sd">                by FlexQuant).</span>
+
+<span class="sd">        ModuleHandler registries/mappings:</span>
+<span class="sd">         - module_type_dict: module_type string -&gt; corresponding agent config from loaded plugins.</span>
+<span class="sd">         - module_name_dict: module_type string -&gt; corresponding module</span>
+<span class="sd">         - baseline_module_type_dict: agentlib_mpc type -&gt; FlexQuant baseline type mapping</span>
+<span class="sd">         - shadow_module_type_dict: agentlib_mpc type -&gt; FlexQuant shadow-MPC type mapping</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">default_plugins</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;agentlib_mpc&quot;</span><span class="p">,</span> <span class="s2">&quot;agentlib_flexquant&quot;</span><span class="p">]</span>
+        <span class="n">extra_plugins</span> <span class="o">=</span> <span class="n">extra_plugins</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plugin_modules</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">default_plugins</span> <span class="o">+</span> <span class="n">extra_plugins</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">p</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plugin_modules</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">plugin_modules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>        
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">exclude_ml_plugins</span> <span class="o">=</span> <span class="n">exclude_ml_plugins</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exclude_clonemap_plugin</span> <span class="o">=</span> <span class="n">exclude_clonemap_plugin</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">module_type_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">module_name_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">baseline_module_type_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shadow_module_type_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">generate_module_dicts</span><span class="p">()</span>
+
+<div class="viewcode-block" id="ModuleHandler.generate_module_dicts"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.config_management.ModuleHandler.generate_module_dicts">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">generate_module_dicts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">all_module_types</span> <span class="o">=</span> <span class="n">get_all_module_types</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plugin_modules</span><span class="p">)</span>
+
+        <span class="c1"># remove ML models, since import takes ages</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exclude_ml_plugins</span><span class="p">:</span>
+            <span class="n">all_module_types</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;agentlib_mpc.ann_trainer&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">all_module_types</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;agentlib_mpc.gpr_trainer&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">all_module_types</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;agentlib_mpc.linreg_trainer&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">all_module_types</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;agentlib_mpc.ml_simulator&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">all_module_types</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;agentlib_mpc.set_point_generator&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="c1"># remove clonemap since not used</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exclude_clonemap_plugin</span><span class="p">:</span>
+            <span class="n">all_module_types</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;clonemap&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="c1"># dictionary mapping the module name to the module config (ModelMetaclass)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">module_type_dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">name</span><span class="p">:</span> <span class="n">inspect</span><span class="o">.</span><span class="n">get_annotations</span><span class="p">(</span><span class="n">class_type</span><span class="o">.</span><span class="n">import_class</span><span class="p">())[</span><span class="s2">&quot;config&quot;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">class_type</span> <span class="ow">in</span> <span class="n">all_module_types</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span>
+        <span class="c1"># dictionary mapping the module name to the module (ModuleImport)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">module_name_dict</span> <span class="o">=</span> <span class="n">all_module_types</span>
+
+        <span class="c1"># get baseline and shadow module types</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">baseline_module_type_dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shadow_module_type_dict</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">get_module_type_matching_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module_name_dict</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="ModuleHandler.get_module"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.config_management.ModuleHandler.get_module">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">AgentConfig</span><span class="p">,</span> <span class="n">module_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts a module from a config based on its name.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">module</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">module_type</span><span class="p">:</span>
+                <span class="c1"># deepcopy -&gt; avoid changing the original config, when editing the module</span>
+                <span class="c1"># deepcopy the args of the constructor instead of the module object,</span>
+                <span class="c1"># because the simulator module exceeds the recursion limit</span>
+                <span class="n">config_id</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                <span class="n">mod</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_type_dict</span><span class="p">[</span><span class="n">mod</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]](</span><span class="o">**</span><span class="n">mod</span><span class="p">,</span> <span class="n">_agent_id</span><span class="o">=</span><span class="n">config_id</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ModuleNotFoundError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Module type </span><span class="si">{</span><span class="n">module_type</span><span class="si">}</span><span class="s2"> not found in &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;agentlib and its plug ins.&quot;</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="ModuleHandler.get_flex_mpc_module_config"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.config_management.ModuleHandler.get_flex_mpc_module_config">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_flex_mpc_module_config</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">agent_config</span><span class="p">:</span> <span class="n">AgentConfig</span><span class="p">,</span>
+        <span class="n">module_config</span><span class="p">:</span> <span class="n">BaseModuleConfig</span><span class="p">,</span>
+        <span class="n">module_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a flexquant module config from an original agentlib module config.&quot;&quot;&quot;</span>
+        <span class="n">config_dict</span> <span class="o">=</span> <span class="n">module_config</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span>
+        <span class="n">config_dict</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">module_type</span>
+        <span class="n">flex_config_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_type_dict</span><span class="p">[</span><span class="n">module_type</span><span class="p">](</span>
+            <span class="o">**</span><span class="n">config_dict</span><span class="p">,</span> <span class="n">_agent_id</span><span class="o">=</span><span class="n">agent_config</span><span class="o">.</span><span class="n">id</span>
+        <span class="p">)</span>
+        <span class="c1"># HOTFIX due to AgentLib-MPC bug. Needs to be adapted after Objectives</span>
+        <span class="c1"># in AgentLib-MPC are fixed.</span>
+        <span class="k">if</span> <span class="n">flex_config_dict</span><span class="o">.</span><span class="n">r_del_u</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">flex_config_dict</span> <span class="o">=</span> <span class="n">flex_config_dict</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;r_del_u&quot;</span><span class="p">:</span> <span class="p">{}})</span>
+        <span class="k">return</span> <span class="n">flex_config_dict</span></div></div>
+
+
 <div class="viewcode-block" id="get_module_type_matching_dict"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.config_management.get_module_type_matching_dict">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_module_type_matching_dict</span><span class="p">(</span><span class="n">dictionary</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create two dictionaries, which map the modules types of the agentlib_mpc modules</span>
 <span class="sd">    to those of the flexquant modules.</span>
 
-<span class="sd">    This is done by using the MODULE_NAME_DICT.</span>
+<span class="sd">    This is done by using the module_name_dict.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Create dictionaries to store keys grouped by values</span>
@@ -152,48 +242,11 @@
 
     <span class="k">return</span> <span class="n">baseline_matches</span><span class="p">,</span> <span class="n">shadow_matches</span></div>
 
-
-<span class="n">BASELINE_MODULE_TYPE_DICT</span><span class="p">,</span> <span class="n">SHADOW_MODULE_TYPE_DICT</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">get_module_type_matching_dict</span><span class="p">(</span><span class="n">MODULE_NAME_DICT</span><span class="p">))</span>
-
-
 <div class="viewcode-block" id="get_orig_module_type"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.config_management.get_orig_module_type">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_orig_module_type</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">AgentConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the config type of the original MPC.&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">module</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;agentlib_mpc&quot;</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">module</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span></div>
-
-
-<div class="viewcode-block" id="get_module"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.config_management.get_module">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_module</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">AgentConfig</span><span class="p">,</span> <span class="n">module_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts a module from a config based on its name.&quot;&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">module</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">module_type</span><span class="p">:</span>
-            <span class="c1"># deepcopy -&gt; avoid changing the original config, when editing the module</span>
-            <span class="c1"># deepcopy the args of the constructor instead of the module object,</span>
-            <span class="c1"># because the simulator module exceeds the recursion limit</span>
-            <span class="n">config_id</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-            <span class="n">mod</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">MODULE_TYPE_DICT</span><span class="p">[</span><span class="n">mod</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]](</span><span class="o">**</span><span class="n">mod</span><span class="p">,</span> <span class="n">_agent_id</span><span class="o">=</span><span class="n">config_id</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ModuleNotFoundError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Module type </span><span class="si">{</span><span class="n">module</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> not found in &quot;</span> <span class="sa">f</span><span class="s2">&quot;agentlib and its plug ins.&quot;</span>
-        <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="get_flex_mpc_module_config"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.config_management.get_flex_mpc_module_config">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_flex_mpc_module_config</span><span class="p">(</span>
-    <span class="n">agent_config</span><span class="p">:</span> <span class="n">AgentConfig</span><span class="p">,</span> <span class="n">module_config</span><span class="p">:</span> <span class="n">BaseModuleConfig</span><span class="p">,</span> <span class="n">module_type</span><span class="p">:</span> <span class="nb">str</span>
-<span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a flexquant module config from an original agentlib module config.&quot;&quot;&quot;</span>
-    <span class="n">config_dict</span> <span class="o">=</span> <span class="n">module_config</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span>
-    <span class="n">config_dict</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">module_type</span>
-    <span class="n">flex_config_dict</span> <span class="o">=</span> <span class="n">MODULE_TYPE_DICT</span><span class="p">[</span><span class="n">module_type</span><span class="p">](</span><span class="o">**</span><span class="n">config_dict</span><span class="p">,</span>
-                                                     <span class="n">_agent_id</span><span class="o">=</span><span class="n">agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-    <span class="c1"># HOTFIX due to AgentLib-MPC bug. Needs to be adapted after Objectives</span>
-    <span class="c1"># in AgentLib-MPC are fixed.</span>
-    <span class="k">if</span> <span class="n">flex_config_dict</span><span class="o">.</span><span class="n">r_del_u</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">flex_config_dict</span> <span class="o">=</span> <span class="n">flex_config_dict</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;r_del_u&quot;</span><span class="p">:</span> <span class="p">{}})</span>
-    <span class="k">return</span> <span class="n">flex_config_dict</span></div>
-
 
 <div class="viewcode-block" id="to_dict_and_remove_unnecessary_fields"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.config_management.to_dict_and_remove_unnecessary_fields">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">to_dict_and_remove_unnecessary_fields</span><span class="p">(</span><span class="n">module</span><span class="p">:</span> <span class="n">BaseModuleConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove unnecessary fields from the module to keep the created json simple.&quot;&quot;&quot;</span>
@@ -262,7 +315,6 @@
         <span class="p">]</span>
 
     <span class="k">return</span> <span class="n">parent_dict</span></div>
-
 
 <div class="viewcode-block" id="get_class_from_file"><a class="viewcode-back" href="../../../code/agentlib_flexquant.utils.html#agentlib_flexquant.utils.config_management.get_class_from_file">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_class_from_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">class_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ABCMeta</span><span class="p">:</span>
     <span class="c1"># Get the absolute path if needed</span>

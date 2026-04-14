@@ -917,6 +917,7 @@ Value: {module id: variable name}</p>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.baseline_config_generator_data" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.baseline_config_generator_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">baseline_config_generator_data</span> <span class="pre">(agentlib_flexquant.data_structures.mpcs.BaselineMPCData)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.casadi_sim_time_step" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.casadi_sim_time_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">casadi_sim_time_step</span> <span class="pre">(int)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.custom_plugins" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.custom_plugins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">custom_plugins</span> <span class="pre">(list[str])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.delete_files" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.delete_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_files</span> <span class="pre">(bool)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.flex_base_directory_path" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.flex_base_directory_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flex_base_directory_path</span> <span class="pre">(pathlib.Path</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.flex_event_duration" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.flex_event_duration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flex_event_duration</span> <span class="pre">(int)</span></code></a></p></li>
@@ -935,6 +936,7 @@ Value: {module id: variable name}</p>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">adapt_paths_and_create_directory</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_config_file_extension</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.is_none_negative_integer" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.is_none_negative_integer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_none_negative_integer</span></code></a> » <a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.casadi_sim_time_step" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.casadi_sim_time_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">casadi_sim_time_step</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_custom_plugins</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
 </ul>
 </dd>
 </dl>
@@ -947,6 +949,7 @@ Value: {module id: variable name}</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">adapt_paths_and_create_directory</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_config_file_extension</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_custom_plugins</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -962,6 +965,22 @@ Value: {module id: variable name}</p>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">adapt_paths_and_create_directory</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_config_file_extension</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.is_none_negative_integer" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.is_none_negative_integer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_none_negative_integer</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_custom_plugins</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.custom_plugins">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">custom_plugins</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.custom_plugins" title="Permalink to this definition"></a></dt>
+<dd><p>Custom AgentLib plugins to be loaded</p>
+<dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">adapt_paths_and_create_directory</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_config_file_extension</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_custom_plugins</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -976,6 +995,7 @@ Value: {module id: variable name}</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">adapt_paths_and_create_directory</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_config_file_extension</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_custom_plugins</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -990,6 +1010,7 @@ Value: {module id: variable name}</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">adapt_paths_and_create_directory</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_config_file_extension</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_custom_plugins</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -1009,6 +1030,7 @@ Value: {module id: variable name}</p>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">adapt_paths_and_create_directory</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_config_file_extension</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_custom_plugins</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -1023,6 +1045,7 @@ Value: {module id: variable name}</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">adapt_paths_and_create_directory</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_config_file_extension</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_custom_plugins</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -1037,6 +1060,7 @@ Value: {module id: variable name}</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">adapt_paths_and_create_directory</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_config_file_extension</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_custom_plugins</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -1051,6 +1075,7 @@ Value: {module id: variable name}</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">adapt_paths_and_create_directory</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_config_file_extension</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_custom_plugins</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -1070,6 +1095,7 @@ Value: {module id: variable name}</p>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">adapt_paths_and_create_directory</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_config_file_extension</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_custom_plugins</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -1084,6 +1110,7 @@ Value: {module id: variable name}</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">adapt_paths_and_create_directory</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_config_file_extension</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_custom_plugins</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -1103,6 +1130,7 @@ Value: {module id: variable name}</p>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">adapt_paths_and_create_directory</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_config_file_extension</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_custom_plugins</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -1117,6 +1145,7 @@ Value: {module id: variable name}</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">adapt_paths_and_create_directory</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_config_file_extension</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_custom_plugins</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -1131,6 +1160,7 @@ Value: {module id: variable name}</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.adapt_paths_and_create_directory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">adapt_paths_and_create_directory</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_config_file_extension</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_custom_plugins</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -1167,6 +1197,12 @@ extension.</p>
 <em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_none_negative_integer</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.casadi_sim_time_step" title="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.casadi_sim_time_step"><em class="xref py py-obj"><span class="pre">casadi_sim_time_step</span></em></a><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flexquant.html#FlexQuantConfig.is_none_negative_integer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.is_none_negative_integer" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
+<dl class="py method pydantic_validator">
+<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins">
+<em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate_custom_plugins</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flexquant.html#FlexQuantConfig.validate_custom_plugins"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins" title="Permalink to this definition"></a></dt>
+<dd><p>Ensure custom_plugins is a list of strings (or None).</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class pydantic_model">
@@ -1177,19 +1213,21 @@ extension.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘pathlib.Path’&gt;: &lt;class ‘str’&gt;, &lt;class ‘agentlib.core.agent.AgentConfig’&gt;: &lt;function FlexibilityIndicatorConfig.&lt;lambda&gt; at 0x7f2fbfda9b20&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘pathlib.Path’&gt;: &lt;class ‘str’&gt;, &lt;class ‘agentlib.core.agent.AgentConfig’&gt;: &lt;function FlexibilityIndicatorConfig.&lt;lambda&gt; at 0x7fab459c8ea0&gt;}</em></p></li>
 <li><p><strong>extra</strong>: <em>str = forbid</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.agent_config" title="agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.agent_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">agent_config</span> <span class="pre">(agentlib.core.agent.AgentConfig</span> <span class="pre">|</span> <span class="pre">pathlib.Path</span> <span class="pre">|</span> <span class="pre">str)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.module_type" title="agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.module_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">module_type</span> <span class="pre">(dict</span> <span class="pre">|</span> <span class="pre">str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.name_of_created_file" title="agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.name_of_created_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_of_created_file</span> <span class="pre">(str)</span></code></a></p></li>
 </ul>
 </dd>
 <dt class="field-odd">Validators<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.check_file_extension" title="agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.check_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_file_extension</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.validate_module_type" title="agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.validate_module_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_module_type</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
 </ul>
 </dd>
 </dl>
@@ -1200,6 +1238,21 @@ extension.</p>
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.check_file_extension" title="agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.check_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_file_extension</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.validate_module_type" title="agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.validate_module_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_module_type</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.module_type">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">module_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.module_type" title="Permalink to this definition"></a></dt>
+<dd><p>Module type or dict with type and path for local files</p>
+<dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.check_file_extension" title="agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.check_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_file_extension</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.validate_module_type" title="agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.validate_module_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_module_type</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -1213,6 +1266,7 @@ extension.</p>
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.check_file_extension" title="agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.check_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_file_extension</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.validate_module_type" title="agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.validate_module_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_module_type</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -1222,6 +1276,12 @@ extension.</p>
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.check_file_extension">
 <em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_file_extension</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flexquant.html#FlexibilityIndicatorConfig.check_file_extension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.check_file_extension" title="Permalink to this definition"></a></dt>
 <dd><p>Validate that name_of_created_file has a .json extension.</p>
+</dd></dl>
+
+<dl class="py method pydantic_validator">
+<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.validate_module_type">
+<em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate_module_type</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flexquant.html#FlexibilityIndicatorConfig.validate_module_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.validate_module_type" title="Permalink to this definition"></a></dt>
+<dd><p>Ensure module_type is str or dict and set default if None.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1240,12 +1300,14 @@ extension.</p>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.agent_config" title="agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.agent_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">agent_config</span> <span class="pre">(agentlib.core.agent.AgentConfig</span> <span class="pre">|</span> <span class="pre">pathlib.Path</span> <span class="pre">|</span> <span class="pre">str)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.module_type" title="agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.module_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">module_type</span> <span class="pre">(dict</span> <span class="pre">|</span> <span class="pre">str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.name_of_created_file" title="agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.name_of_created_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_of_created_file</span> <span class="pre">(str)</span></code></a></p></li>
 </ul>
 </dd>
 <dt class="field-odd">Validators<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.check_file_extension" title="agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.check_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_file_extension</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.validate_module_type" title="agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.validate_module_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_module_type</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
 </ul>
 </dd>
 </dl>
@@ -1256,6 +1318,21 @@ extension.</p>
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.check_file_extension" title="agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.check_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_file_extension</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.validate_module_type" title="agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.validate_module_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_module_type</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.module_type">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">module_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.module_type" title="Permalink to this definition"></a></dt>
+<dd><p>Module type or dict with type and path for local files</p>
+<dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.check_file_extension" title="agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.check_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_file_extension</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.validate_module_type" title="agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.validate_module_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_module_type</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -1269,6 +1346,7 @@ extension.</p>
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.check_file_extension" title="agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.check_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_file_extension</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.validate_module_type" title="agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.validate_module_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_module_type</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -1278,6 +1356,12 @@ extension.</p>
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.check_file_extension">
 <em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_file_extension</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flexquant.html#FlexibilityMarketConfig.check_file_extension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.check_file_extension" title="Permalink to this definition"></a></dt>
 <dd><p>Validate that name_of_created_file has a .json extension.</p>
+</dd></dl>
+
+<dl class="py method pydantic_validator">
+<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.validate_module_type">
+<em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate_module_type</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/data_structures/flexquant.html#FlexibilityMarketConfig.validate_module_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.validate_module_type" title="Permalink to this definition"></a></dt>
+<dd><p>Ensure module_type is str or dict and set default if None.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1290,7 +1374,7 @@ extension.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function ShadowMPCConfigGeneratorConfig.&lt;lambda&gt; at 0x7f2fbfda9580&gt;, &lt;class ‘agentlib.core.datamodels.AgentVariable’&gt;: &lt;function ShadowMPCConfigGeneratorConfig.&lt;lambda&gt; at 0x7f2fbfda9620&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;class ‘agentlib_mpc.data_structures.mpc_datamodels.MPCVariable’&gt;: &lt;function ShadowMPCConfigGeneratorConfig.&lt;lambda&gt; at 0x7fab459c9b20&gt;, &lt;class ‘agentlib.core.datamodels.AgentVariable’&gt;: &lt;function ShadowMPCConfigGeneratorConfig.&lt;lambda&gt; at 0x7fab459c9440&gt;}</em></p></li>
 <li><p><strong>extra</strong>: <em>str = forbid</em></p></li>
 </ul>
 </dd>
@@ -1702,7 +1786,7 @@ of the different mpcs</p>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.BaseMPCData.module_types">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">module_types</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.BaseMPCData.module_types" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">module_types</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.BaseMPCData.module_types" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute pydantic_field">
@@ -1746,7 +1830,6 @@ of the different mpcs</p>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.config_inputs_appendix" title="agentlib_flexquant.data_structures.mpcs.BaselineMPCData.config_inputs_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">config_inputs_appendix</span> <span class="pre">(list[agentlib_mpc.data_structures.mpc_datamodels.MPCVariable])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.config_parameters_appendix" title="agentlib_flexquant.data_structures.mpcs.BaselineMPCData.config_parameters_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">config_parameters_appendix</span> <span class="pre">(list[agentlib_mpc.data_structures.mpc_datamodels.MPCVariable])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.module_id" title="agentlib_flexquant.data_structures.mpcs.BaselineMPCData.module_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">module_id</span> <span class="pre">(str)</span></code></a></p></li>
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.module_types" title="agentlib_flexquant.data_structures.mpcs.BaselineMPCData.module_types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">module_types</span> <span class="pre">(dict)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.name_of_created_file" title="agentlib_flexquant.data_structures.mpcs.BaselineMPCData.name_of_created_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_of_created_file</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.power_alias" title="agentlib_flexquant.data_structures.mpcs.BaselineMPCData.power_alias"><code class="xref py py-obj docutils literal notranslate"><span class="pre">power_alias</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.power_unit" title="agentlib_flexquant.data_structures.mpcs.BaselineMPCData.power_unit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">power_unit</span> <span class="pre">(str)</span></code></a></p></li>
@@ -1827,18 +1910,6 @@ of the different mpcs</p>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.BaselineMPCData.module_id">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">module_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Baseline'</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.module_id" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Validated by<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.update_config_parameters_appendix" title="agentlib_flexquant.data_structures.mpcs.BaselineMPCData.update_config_parameters_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_config_parameters_appendix</span></code></a></p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.BaselineMPCData.module_types">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">module_types</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'agentlib_mpc.minlp_mpc':</span> <span class="pre">'agentlib_flexquant.baseline_minlp_mpc',</span> <span class="pre">'agentlib_mpc.mpc':</span> <span class="pre">'agentlib_flexquant.baseline_mpc'}</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.BaselineMPCData.module_types" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1980,7 +2051,6 @@ config_parameters_appendix list as MPCVariable instances.</p>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.flex_cost_function" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.flex_cost_function"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flex_cost_function</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.flex_cost_function_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.flex_cost_function_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flex_cost_function_appendix</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.module_id" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.module_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">module_id</span> <span class="pre">(str)</span></code></a></p></li>
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.module_types" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.module_types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">module_types</span> <span class="pre">(dict)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.name_of_created_file" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.name_of_created_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_of_created_file</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.power_alias" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.power_alias"><code class="xref py py-obj docutils literal notranslate"><span class="pre">power_alias</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.results_suffix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.results_suffix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">results_suffix</span> <span class="pre">(str)</span></code></a></p></li>
@@ -2082,18 +2152,6 @@ config_parameters_appendix list as MPCVariable instances.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.NFMPCData.module_types">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">module_types</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'agentlib_mpc.minlp_mpc':</span> <span class="pre">'agentlib_flexquant.shadow_minlp_mpc',</span> <span class="pre">'agentlib_mpc.mpc':</span> <span class="pre">'agentlib_flexquant.shadow_mpc'}</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.module_types" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Validated by<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.add_defaults_to_appendix" title="agentlib_flexquant.data_structures.mpcs.NFMPCData.add_defaults_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_defaults_to_appendix</span></code></a></p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.NFMPCData.name_of_created_file">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name_of_created_file</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'neg_flex.json'</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.NFMPCData.name_of_created_file" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
@@ -2172,7 +2230,6 @@ to the corresponding list.</p>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.flex_cost_function" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.flex_cost_function"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flex_cost_function</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.flex_cost_function_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.flex_cost_function_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flex_cost_function_appendix</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.module_id" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.module_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">module_id</span> <span class="pre">(str)</span></code></a></p></li>
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.module_types" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.module_types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">module_types</span> <span class="pre">(dict)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.name_of_created_file" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.name_of_created_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_of_created_file</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.power_alias" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.power_alias"><code class="xref py py-obj docutils literal notranslate"><span class="pre">power_alias</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.results_suffix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.results_suffix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">results_suffix</span> <span class="pre">(str)</span></code></a></p></li>
@@ -2264,18 +2321,6 @@ to the corresponding list.</p>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.PFMPCData.module_id">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">module_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'PosFlexMPC'</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.module_id" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Validated by<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.add_defaults_to_appendix" title="agentlib_flexquant.data_structures.mpcs.PFMPCData.add_defaults_to_appendix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_defaults_to_appendix</span></code></a></p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="agentlib_flexquant.data_structures.mpcs.PFMPCData.module_types">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">module_types</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'agentlib_mpc.minlp_mpc':</span> <span class="pre">'agentlib_flexquant.shadow_minlp_mpc',</span> <span class="pre">'agentlib_mpc.mpc':</span> <span class="pre">'agentlib_flexquant.shadow_mpc'}</span></em><a class="headerlink" href="#agentlib_flexquant.data_structures.mpcs.PFMPCData.module_types" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
