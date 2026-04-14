@@ -33,6 +33,7 @@ from agentlib_mpc.optimization_backends.casadi_.basic import DirectCollocation
 from agentlib_mpc.data_structures.casadi_utils import CasadiDiscretizationOptions
 import agentlib_flexquant.data_structures.globals as glbs
 import agentlib_flexquant.utils.config_management as cmng
+from agentlib_flexquant.utils.config_management import ModuleHandler
 from agentlib_flexquant.utils.parsing import SetupSystemModifier
 from agentlib_flexquant.data_structures.flexquant import (
     FlexibilityIndicatorConfig,
@@ -84,6 +85,14 @@ class FlexAgentGenerator:
         # load configs
         self.flex_config = load_config.load_config(flex_config,
                                                    config_type=FlexQuantConfig)
+        
+        # initialize module handler class and load custom plugins if specified
+        self.module_handler = ModuleHandler(extra_plugins=self.flex_config.custom_plugins)
+        
+        # populate flex generator module_types
+        self.flex_config.baseline_config_generator_data.module_types = self.module_handler.baseline_module_type_dict
+        self.flex_config.shadow_mpc_config_generator_data.neg_flex.module_types = self.module_handler.shadow_module_type_dict
+        self.flex_config.shadow_mpc_config_generator_data.pos_flex.module_types = self.module_handler.shadow_module_type_dict
 
         # original mpc agent
         self.orig_mpc_agent_config = load_config.load_config(
@@ -105,18 +114,18 @@ class FlexAgentGenerator:
                                              neg_flex.agent_id)
 
         # original mpc module
-        self.orig_mpc_module_config = cmng.get_module(
+        self.orig_mpc_module_config = self.module_handler.get_module(
             config=self.orig_mpc_agent_config,
             module_type=cmng.get_orig_module_type(self.orig_mpc_agent_config),
         )
         # baseline module
-        self.baseline_mpc_module_config = cmng.get_module(
+        self.baseline_mpc_module_config = self.module_handler.get_module(
             config=self.baseline_mpc_agent_config,
             module_type=cmng.get_orig_module_type(self.orig_mpc_agent_config),
         )
         # convert agentlib_mpc’s ModuleConfig to flexquant’s ModuleConfig to include additional
         # fields not present in the original
-        self.baseline_mpc_module_config = cmng.get_flex_mpc_module_config(
+        self.baseline_mpc_module_config = self.module_handler.get_flex_mpc_module_config(
             agent_config=self.baseline_mpc_agent_config,
             module_config=self.baseline_mpc_module_config,
             module_type=self.flex_config.baseline_config_generator_data.module_types[
@@ -124,12 +133,12 @@ class FlexAgentGenerator:
             ]
         )
         # pos module
-        self.pos_flex_mpc_module_config = cmng.get_module(
+        self.pos_flex_mpc_module_config = self.module_handler.get_module(
             config=self.pos_flex_mpc_agent_config,
             module_type=cmng.get_orig_module_type(self.orig_mpc_agent_config),
         )
         # neg module
-        self.neg_flex_mpc_module_config = cmng.get_module(
+        self.neg_flex_mpc_module_config = self.module_handler.get_module(
             config=self.neg_flex_mpc_agent_config,
             module_type=cmng.get_orig_module_type(self.orig_mpc_agent_config),
         )
@@ -141,20 +150,22 @@ class FlexAgentGenerator:
         self.indicator_agent_config = load_config.load_config(
             self.indicator_config.agent_config, config_type=AgentConfig
         )
-        self.indicator_module_config = cmng.get_module(
-            config=self.indicator_agent_config, module_type=cmng.INDICATOR_CONFIG_TYPE
+        self.indicator_module_config = self.module_handler.get_module(
+            config=self.indicator_agent_config, module_type=self.indicator_config.module_type
         )
         # load market config
         if self.flex_config.market_config:
             self.market_config = load_config.load_config(
                 self.flex_config.market_config, config_type=FlexibilityMarketConfig
             )
+
             # load market module config
             self.market_agent_config = load_config.load_config(
                 self.market_config.agent_config, config_type=AgentConfig
             )
-            self.market_module_config = cmng.get_module(
-                config=self.market_agent_config, module_type=cmng.MARKET_CONFIG_TYPE
+         
+            self.market_module_config = self.module_handler.get_module(
+                config=self.market_agent_config, module_type=self.market_config.module_type
             )
         else:
             self.flex_config.market_time = 0
@@ -225,7 +236,7 @@ class FlexAgentGenerator:
             self.append_module_and_dump_agent(
                 module=market_module_config,
                 agent=self.market_agent_config,
-                module_type=cmng.MARKET_CONFIG_TYPE,
+                module_type=self.market_config.module_type,
                 config_name=self.market_config.name_of_created_file,
             )
         # generate python files for the shadow mpcs
@@ -263,8 +274,7 @@ class FlexAgentGenerator:
         module_dict = cmng.to_dict_and_remove_unnecessary_fields(module=module)
         # write given module to agent config
         for i, agent_module in enumerate(agent.modules):
-            if cmng.MODULE_TYPE_DICT[module_type] is cmng.MODULE_TYPE_DICT[
-                agent_module["type"]]:
+            if module_type == agent_module["type"]:
                 agent.modules[i] = module_dict
 
         # dump agent config
@@ -373,7 +383,7 @@ class FlexAgentGenerator:
             self.flex_config.baseline_config_generator_data.power_variable)
         module_config_flex_dict["storage_variable_name"] = (
             self.indicator_module_config.correct_costs.stored_energy_variable)
-        module_config_flex = cmng.MODULE_TYPE_DICT[module_config.type](
+        module_config_flex = self.module_handler.module_type_dict[module_config.type](
             **module_config_flex_dict, _agent_id=agent_id
         )
 

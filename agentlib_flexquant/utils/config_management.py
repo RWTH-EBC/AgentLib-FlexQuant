@@ -4,31 +4,14 @@ import math
 import os
 from abc import ABCMeta
 from copy import deepcopy
-from typing import TypeVar
+from typing import TypeVar, Union, Optional
 
 from agentlib.core.agent import AgentConfig
 from agentlib.core.module import BaseModuleConfig
 from agentlib.modules import get_all_module_types
 
+
 T = TypeVar("T", bound=BaseModuleConfig)
-
-all_module_types = get_all_module_types(["agentlib_mpc", "agentlib_flexquant"])
-# remove ML models, since import takes ages
-all_module_types.pop("agentlib_mpc.ann_trainer")
-all_module_types.pop("agentlib_mpc.gpr_trainer")
-all_module_types.pop("agentlib_mpc.linreg_trainer")
-all_module_types.pop("agentlib_mpc.ml_simulator")
-all_module_types.pop("agentlib_mpc.set_point_generator")
-# remove clone since not used
-all_module_types.pop("clonemap")
-
-# dictionary mapping the module name to the module config (ModelMetaclass)
-MODULE_TYPE_DICT = {
-    name: inspect.get_annotations(class_type.import_class())["config"]
-    for name, class_type in all_module_types.items()
-}
-# dictionary mapping the module name to the module (ModuleImport)
-MODULE_NAME_DICT = all_module_types
 
 MPC_CONFIG_TYPE: str = "agentlib_mpc.mpc"
 BASELINEMPC_CONFIG_TYPE: str = "agentlib_flexquant.baseline_mpc"
@@ -40,11 +23,118 @@ MARKET_CONFIG_TYPE: str = "agentlib_flexquant.flexibility_market"
 SIMULATOR_CONFIG_TYPE: str = "simulator"
 
 
+class ModuleHandler:
+    def __init__(
+        self, extra_plugins: Optional[list[str]] = None, exclude_ml_plugins: bool = True, exclude_clonemap_plugin: bool = True
+    ):
+        """
+        Manages discovery and lookup of AgentLib module types and their configuration models.
+
+        The handler builds registries of available modules from a set of plugin packages,
+        optionally excluding slow-to-import modules (e.g., ML trainers).
+        The get_module() function provided allows to get the corresponding module from a config based on its name.
+
+        Args:
+            extra_plugins: Optional list of additional plugin package names to include in
+                module discovery (in addition to the default plugins).
+            exclude_ml_plugins: If True, excludes ML-related agentlib_mpc modules that are
+                expensive/slow to import.
+            exclude_clonemap_plugin: If True, excludes the "clonemap" module type (not used
+                by FlexQuant).
+
+        ModuleHandler registries/mappings:
+         - module_type_dict: module_type string -> corresponding agent config from loaded plugins.
+         - module_name_dict: module_type string -> corresponding module
+         - baseline_module_type_dict: agentlib_mpc type -> FlexQuant baseline type mapping
+         - shadow_module_type_dict: agentlib_mpc type -> FlexQuant shadow-MPC type mapping
+
+        """
+
+        default_plugins = ["agentlib_mpc", "agentlib_flexquant"]
+        extra_plugins = extra_plugins or []
+        self.plugin_modules = []
+        for p in default_plugins + extra_plugins:
+            if p not in self.plugin_modules:
+                self.plugin_modules.append(p)        
+        
+        self.exclude_ml_plugins = exclude_ml_plugins
+        self.exclude_clonemap_plugin = exclude_clonemap_plugin
+
+        self.module_type_dict = {}
+        self.module_name_dict = {}
+        self.baseline_module_type_dict = {}
+        self.shadow_module_type_dict = {}
+
+        self.generate_module_dicts()
+
+    def generate_module_dicts(self):
+        all_module_types = get_all_module_types(self.plugin_modules)
+
+        # remove ML models, since import takes ages
+        if self.exclude_ml_plugins:
+            all_module_types.pop("agentlib_mpc.ann_trainer", None)
+            all_module_types.pop("agentlib_mpc.gpr_trainer", None)
+            all_module_types.pop("agentlib_mpc.linreg_trainer", None)
+            all_module_types.pop("agentlib_mpc.ml_simulator", None)
+            all_module_types.pop("agentlib_mpc.set_point_generator", None)
+
+        # remove clonemap since not used
+        if self.exclude_clonemap_plugin:
+            all_module_types.pop("clonemap", None)
+
+        # dictionary mapping the module name to the module config (ModelMetaclass)
+        self.module_type_dict = {
+            name: inspect.get_annotations(class_type.import_class())["config"]
+            for name, class_type in all_module_types.items()
+        }
+        # dictionary mapping the module name to the module (ModuleImport)
+        self.module_name_dict = all_module_types
+
+        # get baseline and shadow module types
+        self.baseline_module_type_dict, self.shadow_module_type_dict = (
+            get_module_type_matching_dict(self.module_name_dict)
+        )
+
+    def get_module(self, config: AgentConfig, module_type: str) -> T:
+        """Extracts a module from a config based on its name."""
+        for module in config.modules:
+            if module["type"] == module_type:
+                # deepcopy -> avoid changing the original config, when editing the module
+                # deepcopy the args of the constructor instead of the module object,
+                # because the simulator module exceeds the recursion limit
+                config_id = deepcopy(config.id)
+                mod = deepcopy(module)
+                return self.module_type_dict[mod["type"]](**mod, _agent_id=config_id)
+        else:
+            raise ModuleNotFoundError(
+                f"Module type {module_type} not found in "
+                f"agentlib and its plug ins."
+            )
+
+    def get_flex_mpc_module_config(
+        self,
+        agent_config: AgentConfig,
+        module_config: BaseModuleConfig,
+        module_type: str,
+    ):
+        """Get a flexquant module config from an original agentlib module config."""
+        config_dict = module_config.model_dump()
+        config_dict["type"] = module_type
+        flex_config_dict = self.module_type_dict[module_type](
+            **config_dict, _agent_id=agent_config.id
+        )
+        # HOTFIX due to AgentLib-MPC bug. Needs to be adapted after Objectives
+        # in AgentLib-MPC are fixed.
+        if flex_config_dict.r_del_u is None:
+            flex_config_dict = flex_config_dict.model_copy(update={"r_del_u": {}})
+        return flex_config_dict
+
+
 def get_module_type_matching_dict(dictionary: dict) -> (dict, dict):
     """Create two dictionaries, which map the modules types of the agentlib_mpc modules
     to those of the flexquant modules.
 
-    This is done by using the MODULE_NAME_DICT.
+    This is done by using the module_name_dict.
 
     """
     # Create dictionaries to store keys grouped by values
@@ -78,48 +168,11 @@ def get_module_type_matching_dict(dictionary: dict) -> (dict, dict):
 
     return baseline_matches, shadow_matches
 
-
-BASELINE_MODULE_TYPE_DICT, SHADOW_MODULE_TYPE_DICT = (
-    get_module_type_matching_dict(MODULE_NAME_DICT))
-
-
 def get_orig_module_type(config: AgentConfig) -> str:
     """Return the config type of the original MPC."""
     for module in config.modules:
         if module["type"].startswith("agentlib_mpc"):
             return module["type"]
-
-
-def get_module(config: AgentConfig, module_type: str) -> T:
-    """Extracts a module from a config based on its name."""
-    for module in config.modules:
-        if module["type"] == module_type:
-            # deepcopy -> avoid changing the original config, when editing the module
-            # deepcopy the args of the constructor instead of the module object,
-            # because the simulator module exceeds the recursion limit
-            config_id = deepcopy(config.id)
-            mod = deepcopy(module)
-            return MODULE_TYPE_DICT[mod["type"]](**mod, _agent_id=config_id)
-    else:
-        raise ModuleNotFoundError(
-            f"Module type {module['type']} not found in " f"agentlib and its plug ins."
-        )
-
-
-def get_flex_mpc_module_config(
-    agent_config: AgentConfig, module_config: BaseModuleConfig, module_type: str
-):
-    """Get a flexquant module config from an original agentlib module config."""
-    config_dict = module_config.model_dump()
-    config_dict["type"] = module_type
-    flex_config_dict = MODULE_TYPE_DICT[module_type](**config_dict,
-                                                     _agent_id=agent_config.id)
-    # HOTFIX due to AgentLib-MPC bug. Needs to be adapted after Objectives
-    # in AgentLib-MPC are fixed.
-    if flex_config_dict.r_del_u is None:
-        flex_config_dict = flex_config_dict.model_copy(update={"r_del_u": {}})
-    return flex_config_dict
-
 
 def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig) -> dict:
     """Remove unnecessary fields from the module to keep the created json simple."""
@@ -188,7 +241,6 @@ def to_dict_and_remove_unnecessary_fields(module: BaseModuleConfig) -> dict:
         ]
 
     return parent_dict
-
 
 def get_class_from_file(file_path: str, class_name: str) -> ABCMeta:
     # Get the absolute path if needed
