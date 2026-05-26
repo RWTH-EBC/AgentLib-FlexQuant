@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="d_869dee1bed1a3455_flex_offer_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.4.4">coverage.py v7.4.4</a>,
-            created at 2026-05-26 14:13 +0000
+            created at 2026-05-26 14:16 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"/>
@@ -541,7 +541,7 @@
     <p class="run"><span class="n"><a id="t459" href="#t459">459</a></span><span class="t">        <span class="nam">costs</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">electricity_costs_series</span><span class="op">.</span><span class="nam">integrate</span><span class="op">(</span><span class="nam">time_unit</span><span class="op">=</span><span class="str">"hours"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t460" href="#t460">460</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t461" href="#t461">461</a></span><span class="t">        <span class="com"># correct the costs</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t462" href="#t462">462</a></span><span class="t">        <span class="nam">corrected_costs</span> <span class="op">=</span> <span class="nam">costs</span> <span class="op">-</span> <span class="nam">stored_energy_diff</span> <span class="op">*</span> <span class="nam">np</span><span class="op">.</span><span class="nam">mean</span><span class="op">(</span><span class="nam">electricity_price_signal</span><span class="op">)</span> <span class="op">*</span> <span class="nam">eta_thermal_base_avg</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t462" href="#t462">462</a></span><span class="t">        <span class="nam">corrected_costs</span> <span class="op">=</span> <span class="nam">costs</span> <span class="op">-</span> <span class="nam">stored_energy_diff</span> <span class="op">*</span> <span class="nam">np</span><span class="op">.</span><span class="nam">mean</span><span class="op">(</span><span class="nam">electricity_price_signal</span><span class="op">)</span> <span class="op">/</span> <span class="nam">eta_thermal_base_avg</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t463" href="#t463">463</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t464" href="#t464">464</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">costs</span><span class="op">.</span><span class="nam">value</span> <span class="op">=</span> <span class="nam">costs</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t465" href="#t465">465</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">corrected_costs</span><span class="op">.</span><span class="nam">value</span> <span class="op">=</span> <span class="nam">corrected_costs</span>&nbsp;</span><span class="r"></span></p>
@@ -808,7 +808,7 @@
             <a id="nextFileLink" class="nav" href="d_869dee1bed1a3455_flex_offer_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.4.4">coverage.py v7.4.4</a>,
-            created at 2026-05-26 14:13 +0000
+            created at 2026-05-26 14:16 +0000
         </p>
     </div>
 </footer>

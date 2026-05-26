@@ -3520,6 +3520,7 @@ excluded_fields = [
         &#34;interpolation_method&#34;,
         &#34;allowed_values&#34;,
     ]
+
 </pre></td>
             </tr>
             
@@ -3618,7 +3619,7 @@ excluded_fields = [
                 <td><pre>Similar lines in 2 files
 ==agentlib_flexquant.data_structures.mpcs:[14:22]
 ==agentlib_flexquant.utils.config_management:[178:186]
-excluded_fields = [
+    excluded_fields = [
         &#34;rdf_class&#34;,
         &#34;source&#34;,
         &#34;type&#34;,
@@ -3646,7 +3647,21 @@ excluded_fields = [
             self.logger.error(&#34;Results file %s was not found.&#34;, results_file)
             return None
 
-    def register_callbacks(self):</pre></td>
+    def write_results(self, df: pd.DataFrame, ts: float, n: int) -&gt; pd.DataFrame:
+        &#34;&#34;&#34;Write every data of variables in self.var_list in an DataFrame.
+
+        DataFrame will be updated every time step
+
+        Args:
+            df: DataFrame which is initialised as an empty DataFrame with columns
+            according to self.var_list
+            ts: time step
+            n: number of time steps during prediction horizon
+
+        Returns:
+            DataFrame with results of every variable in self.var_list
+
+        &#34;&#34;&#34;</pre></td>
             </tr>
             
             <tr>
