@@ -370,12 +370,12 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
     def add_eta_thermal_input(self):
         """Add the eta_thermal_base variable to inputs after instantiation."""
         eta_var = agentlib.AgentVariable(
-            name=self.eta_thermal_base,
+            name=self.correct_costs.eta_thermal_base,
             unit="-",
             type="pd.Series",
             description="Efficiency of the thermal generator",
         )
-        if not any(v.name == self.eta_thermal_base for v in self.inputs):
+        if not any(v.name == self.correct_costs.eta_thermal_base for v in self.inputs):
             # bypass frozen via setattr
             object.__setattr__(self, 'inputs', list(self.inputs) + [eta_var])
         return self
@@ -429,9 +429,9 @@ class CallBackHandler:
                 glbs.STORED_ENERGY_ALIAS_NEG: {"name":"stored_energy_profile_flex_neg", "is_mpc":True},
                 glbs.STORED_ENERGY_ALIAS_POS: {"name":"stored_energy_profile_flex_pos", "is_mpc":True},
             })
-            if config.eta_thermal_base:
+            if config.correct_costs.eta_thermal_base:
                 self.necessary_callback_variables.update({
-                    config.eta_thermal_base: {"name": "eta_thermal_base", "is_mpc": True}
+                    config.correct_costs.eta_thermal_base: {"name": "eta_thermal_base", "is_mpc": True}
                 })
 
             
@@ -567,7 +567,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 values = self.data.stored_energy_profile_flex_neg
             elif name == glbs.STORED_ENERGY_ALIAS_POS:
                 values = self.data.stored_energy_profile_flex_pos
-            elif name == self.config.eta_thermal_base:
+            elif name == self.config.correct_costs.eta_thermal_base:
                 values = self.data.eta_thermal_base
             elif name == self.config.price_variable:
                 values = self.data.electricity_price_series
