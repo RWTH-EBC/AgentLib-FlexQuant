@@ -54,6 +54,11 @@ class InputsForCorrectFlexCosts(BaseModel):
                     "in the baseline config"
     )
 
+    eta_thermal_base: str = Field(
+        default=None,
+        description="Name of the efficiency variable of the thermal generation unit",
+    )
+
 
 class InputsForCalculateFlexCosts(BaseModel):
     """Configuration for flexibility cost calculation with optional constant

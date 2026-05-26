@@ -81,7 +81,7 @@ class BaselineMPCModelConfig(CasadiModelConfig):
     outputs: list[CasadiOutput] = [
         CasadiOutput(name="T_out", unit="K", description="Temperature of zone"),
         CasadiOutput(name="E_out", unit="kWh", description="Stored energy in the zone w.r.t. 0K"),
-        CasadiOutput(name="eta_heater", value=1, unit="kWh",
+        CasadiOutput(name="eta_heater", unit="kWh", value=1,
                      description="Efficiency of electrical heater"),
         CasadiOutput(name="P_el", unit="W", description="The power input to the system",
         ),
