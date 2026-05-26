@@ -459,7 +459,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         costs = self.electricity_costs_series.integrate(time_unit="hours")
 
         # correct the costs
-        corrected_costs = costs - stored_energy_diff * np.mean(electricity_price_signal) * eta_thermal_base_avg
+        corrected_costs = costs - stored_energy_diff * np.mean(electricity_price_signal) / eta_thermal_base_avg
 
         self.costs.value = costs
         self.corrected_costs.value = corrected_costs
