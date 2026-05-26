@@ -110,6 +110,10 @@
     ],
     [
       "variable",
+      "eta_heater"
+    ],
+    [
+      "variable",
       "P_el"
     ],
     [
@@ -122,6 +126,10 @@
     ],
     [
       "upper",
+      "eta_heater"
+    ],
+    [
+      "upper",
       "P_el"
     ],
     [
@@ -131,6 +139,10 @@
     [
       "lower",
       "E_out"
+    ],
+    [
+      "lower",
+      "eta_heater"
     ],
     [
       "lower",
@@ -249,6 +261,10 @@
       ],
       [
         "variable",
+        "eta_heater"
+      ],
+      [
+        "variable",
         "P_el"
       ],
       [
@@ -261,6 +277,10 @@
       ],
       [
         "upper",
+        "eta_heater"
+      ],
+      [
+        "upper",
         "P_el"
       ],
       [
@@ -270,6 +290,10 @@
       [
         "lower",
         "E_out"
+      ],
+      [
+        "lower",
+        "eta_heater"
       ],
       [
         "lower",
@@ -311,6 +335,9 @@
         NaN,
         NaN,
         NaN,
+        NaN,
+        NaN,
+        NaN,
         NaN
       ],
       [
@@ -341,12 +368,15 @@
         -Infinity,
         296.8067,
         -8.2446,
+        1.0,
         0.8328,
         Infinity,
         Infinity,
+        25.0,
         Infinity,
         -Infinity,
         -Infinity,
+        0.0,
         -Infinity
       ],
       [
@@ -372,17 +402,20 @@
         NaN,
         NaN,
         NaN,
-        0.0001,
+        0.0,
         Infinity,
         -Infinity,
         293.6665,
         -8.1574,
+        1.0,
         0.6758,
         Infinity,
         Infinity,
+        25.0,
         Infinity,
         -Infinity,
         -Infinity,
+        0.0,
         -Infinity
       ],
       [
@@ -419,6 +452,9 @@
         NaN,
         NaN,
         NaN,
+        NaN,
+        NaN,
+        NaN,
         NaN
       ],
       [
@@ -444,17 +480,20 @@
         NaN,
         NaN,
         NaN,
-        0.0001,
+        0.0,
         Infinity,
         -Infinity,
         292.5591,
         -8.1266,
+        1.0,
         0.2337,
         Infinity,
         Infinity,
+        25.0,
         Infinity,
         -Infinity,
         -Infinity,
+        0.0,
         -Infinity
       ]
     ],
@@ -485,7 +524,7 @@
   "index_start": "(0.0, 0.0)",
   "shape": [
     580,
-    34
+    37
   ],
   "statistics": {
     "lower.E_out": {
@@ -538,6 +577,16 @@
       "min": -Infinity,
       "std": NaN
     },
+    "lower.eta_heater": {
+      "25%": 0.0,
+      "50%": 0.0,
+      "75%": 0.0,
+      "count": 384.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "std": 0.0
+    },
     "lower.mDot": {
       "25%": 0.0,
       "50%": 0.0,
@@ -559,14 +608,14 @@
       "std": 0.0
     },
     "parameter.T": {
-      "25%": 293.6201,
-      "50%": 294.0496,
+      "25%": 293.6193,
+      "50%": 294.0493,
       "75%": 295.1697,
       "count": 4.0,
       "max": 298.16,
-      "mean": 294.7402,
-      "min": 292.7014,
-      "std": 2.369
+      "mean": 294.7398,
+      "min": 292.7006,
+      "std": 2.3693
     },
     "parameter.T_in": {
       "25%": 280.15,
@@ -758,6 +807,16 @@
       "min": Infinity,
       "std": NaN
     },
+    "upper.eta_heater": {
+      "25%": 25.0,
+      "50%": 25.0,
+      "75%": 25.0,
+      "count": 384.0,
+      "max": 25.0,
+      "mean": 25.0,
+      "min": 25.0,
+      "std": 0.0
+    },
     "upper.mDot": {
       "25%": 0.05,
       "50%": 0.05,
@@ -794,29 +853,39 @@
       "75%": 294.15,
       "count": 580.0,
       "max": 298.16,
-      "mean": 293.9297,
+      "mean": 293.9296,
       "min": 291.8603,
-      "std": 0.5134
+      "std": 0.5135
     },
     "variable.T_out": {
-      "25%": 294.0614,
+      "25%": 294.0613,
       "50%": 294.15,
       "75%": 294.15,
       "count": 384.0,
       "max": 296.8067,
-      "mean": 293.9243,
+      "mean": 293.9242,
       "min": 292.1445,
-      "std": 0.4726
+      "std": 0.4727
     },
     "variable.T_slack": {
       "25%": 0.0,
       "50%": 0.0,
-      "75%": 0.0001,
+      "75%": 0.0,
       "count": 384.0,
       "max": 2.6566,
       "mean": 0.007,
       "min": 0.0,
       "std": 0.1356
+    },
+    "variable.eta_heater": {
+      "25%": 1.0,
+      "50%": 1.0,
+      "75%": 1.0,
+      "count": 384.0,
+      "max": 1.0,
+      "mean": 1.0,
+      "min": 1.0,
+      "std": 0.0
     },
     "variable.mDot": {
       "25%": 0.0107,
@@ -941,6 +1010,10 @@
       ],
       [
         "variable",
+        "eta_heater"
+      ],
+      [
+        "variable",
         "P_el"
       ],
       [
@@ -953,6 +1026,10 @@
       ],
       [
         "upper",
+        "eta_heater"
+      ],
+      [
+        "upper",
         "P_el"
       ],
       [
@@ -962,6 +1039,10 @@
       [
         "lower",
         "E_out"
+      ],
+      [
+        "lower",
+        "eta_heater"
       ],
       [
         "lower",
@@ -997,12 +1078,15 @@
         -Infinity,
         293.2944,
         -8.1471,
+        1.0,
         0.2622,
         Infinity,
         Infinity,
+        25.0,
         Infinity,
         -Infinity,
         -Infinity,
+        0.0,
         -Infinity
       ],
       [
@@ -1028,6 +1112,9 @@
         0.0,
         0.05,
         0.0,
+        NaN,
+        NaN,
+        NaN,
         NaN,
         NaN,
         NaN,
@@ -1069,12 +1156,15 @@
         -Infinity,
         293.3706,
         -8.1492,
+        1.0,
         0.0,
         Infinity,
         Infinity,
+        25.0,
         Infinity,
         -Infinity,
         -Infinity,
+        0.0,
         -Infinity
       ],
       [
@@ -1105,12 +1195,15 @@
         -Infinity,
         294.15,
         -8.1708,
+        1.0,
         0.0,
         Infinity,
         Infinity,
+        25.0,
         Infinity,
         -Infinity,
         -Infinity,
+        0.0,
         -Infinity
       ],
       [
@@ -1133,6 +1226,9 @@
         294.4353,
         303.15,
         288.15,
+        NaN,
+        NaN,
+        NaN,
         NaN,
         NaN,
         NaN,
