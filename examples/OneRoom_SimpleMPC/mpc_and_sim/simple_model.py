@@ -81,10 +81,9 @@ class BaselineMPCModelConfig(CasadiModelConfig):
     outputs: list[CasadiOutput] = [
         CasadiOutput(name="T_out", unit="K", description="Temperature of zone"),
         CasadiOutput(name="E_out", unit="kWh", description="Stored energy in the zone w.r.t. 0K"),
-        CasadiOutput(
-            name="P_el",
-            unit="W",
-            description="The power input to the system",
+        CasadiOutput(name="eta_heater", value=1, unit="kWh",
+                     description="Efficiency of electrical heater"),
+        CasadiOutput(name="P_el", unit="W", description="The power input to the system",
         ),
     ]
 
@@ -99,7 +98,8 @@ class BaselineMPCModel(CasadiModel):
         )
 
         # Define ae
-        self.P_el.alg = self.cp * self.mDot * (self.T - self.T_in) / 1000
+        self.P_el.alg = self.cp * self.mDot * (self.T - self.T_in) / 1000 / self.eta_heater
+        self.eta_heater.alg = 1
         self.T_out.alg = self.T  # math operation to get the symbolic variable
         self.E_out.alg = - self.T * self.C / (3600*1000)  # stored electrical energy in kWh
 

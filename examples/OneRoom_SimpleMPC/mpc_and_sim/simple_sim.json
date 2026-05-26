@@ -19,7 +19,12 @@
             "overwrite_result_file": true,
             "outputs": [
                 {"name": "T_out", "alias": "T"},
-                {"name": "P_el","alias": "P_el_sim"}
+                {"name": "P_el","alias": "P_el_sim"},
+                {
+                    "name": "eta_heater",
+                    "alias": "eta_heater",
+                    "value": 1
+                }
             ],
             "inputs": [
                 {"name": "mDot", "value": 0.02, "alias": "mDot"}
