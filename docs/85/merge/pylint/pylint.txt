@@ -224,6 +224,7 @@ agentlib_flexquant/modules/flexibility_indicator.py:423:0: C0303: Trailing white
 agentlib_flexquant/modules/flexibility_indicator.py:424:0: C0301: Line too long (128/100) (line-too-long)
 agentlib_flexquant/modules/flexibility_indicator.py:429:0: C0301: Line too long (103/100) (line-too-long)
 agentlib_flexquant/modules/flexibility_indicator.py:430:0: C0301: Line too long (103/100) (line-too-long)
+agentlib_flexquant/modules/flexibility_indicator.py:434:0: C0301: Line too long (103/100) (line-too-long)
 agentlib_flexquant/modules/flexibility_indicator.py:437:0: C0303: Trailing whitespace (trailing-whitespace)
 agentlib_flexquant/modules/flexibility_indicator.py:439:0: C0303: Trailing whitespace (trailing-whitespace)
 agentlib_flexquant/modules/flexibility_indicator.py:446:98: C0303: Trailing whitespace (trailing-whitespace)
@@ -439,8 +440,8 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
     def _initialize_flex_results(
         self, n_simulation_steps, horizon_length, sim_time_step, result_df
     ):
-        """Initialize the flex results dataframe with the correct dimension
-        and index and fill with existing results from optimization
+        """Initialize the flex results dataframe with the correct dimension and index
+        and fill with existing results from optimization
 
         """
 
@@ -584,34 +585,6 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model
-                # can't deal with iterable
-                if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
-                    self.flex_model.get(input_var).type = type(value).__name__
-                self.flex_model.set(input_var, value)
-
-            # do integration
-            # reduce the simulation time step so that the total horizon time
-            # will not be exceeded
-            if current_sim_time + sim_time_step <= total_horizon_time:
-                t_sample = sim_time_step
-            else:
-                t_sample = total_horizon_time - current_sim_time
-            self.flex_model.do_step(t_start=0, t_sample=t_sample)
-
-            # save output
-            for output in self.var_ref.outputs:
-                self.flex_results.loc[
-                    (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value
-
- (duplicate-code)
-agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[664:687]
-==agentlib_flexquant.modules.shadow_mpc:[315:338]
-            for input_var, value in zip(
-                self.var_ref.inputs, input_values_full.loc[current_sim_time]
-            ):
                 # change the type of iterable input, since casadi model can't deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
@@ -629,9 +602,33 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value
+                ] = self.flex_model.get_output(output).value (duplicate-code)
+agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
+==agentlib_flexquant.modules.baseline_mpc:[664:687]
+==agentlib_flexquant.modules.shadow_mpc:[315:338]
+            for input_var, value in zip(
+                self.var_ref.inputs, input_values_full.loc[current_sim_time]
+            ):
+                # change the type of iterable input, since casadi model can't
+                # deal with iterable
+                if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
+                    self.flex_model.get(input_var).type = type(value).__name__
+                self.flex_model.set(input_var, value)
 
- (duplicate-code)
+            # do integration
+            # reduce the simulation time step so that the total horizon time
+            # will not be exceeded
+            if current_sim_time + sim_time_step <= total_horizon_time:
+                t_sample = sim_time_step
+            else:
+                t_sample = total_horizon_time - current_sim_time
+            self.flex_model.do_step(t_start=0, t_sample=t_sample)
+
+            # save output
+            for output in self.var_ref.outputs:
+                self.flex_results.loc[
+                    (self.env.now, current_sim_time + t_sample), output
+                ] = self.flex_model.get_output(output).value (duplicate-code)
 agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[589:633]
 ==agentlib_flexquant.modules.shadow_mpc:[253:296]
@@ -847,7 +844,15 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
         # set the flex results format same as mpc result while updating Agentvariable
         self.flex_results.index = self.flex_results.index.get_level_values(1)
 
-    def register_callbacks(self): (duplicate-code)
+    def _initialize_flex_results(
+        self, n_simulation_steps, horizon_length, sim_time_step, result_df
+    ):
+        """Initialize the flex results dataframe with the correct dimension and index
+        and fill with existing results from optimization
+
+        """
+
+        # create MultiIndex for collocation points (duplicate-code)
 agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[492:501]
 ==agentlib_flexquant.modules.shadow_mpc:[91:100]
@@ -905,7 +910,8 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
             opti_outputs.values,
             index=index_coll,
         )
-        # fill the output value at the time step where it already exists in optimization output
+        # fill the output value at the time step where it already exists
+        # in optimization output
         for idx in fixed_opti_output.index:
             if idx in self.flex_results.index: (duplicate-code)
 agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
@@ -944,5 +950,5 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
         # get control and input values from the mpc optimization result (duplicate-code)
 
 -----------------------------------
-Your code has been rated at 7.28/10
+Your code has been rated at 7.27/10
 
