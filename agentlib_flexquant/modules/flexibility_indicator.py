@@ -572,7 +572,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 values = self.data.stored_energy_profile_flex_neg
             elif name == glbs.STORED_ENERGY_ALIAS_POS:
                 values = self.data.stored_energy_profile_flex_pos
-            elif name == self.config.correct_costs.eta_thermal_base:
+            elif self.config.correct_costs.eta_thermal_base and name == self.config.correct_costs.eta_thermal_base:
                 values = self.data.eta_thermal_base
             elif name == self.config.price_variable:
                 values = self.data.electricity_price_series
