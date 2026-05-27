@@ -28,9 +28,9 @@
 
         
         <h2>Score</h2>
-        7.28 / 10
+        7.27 / 10
             
-            (previous score: 7.28 / 10)
+            (previous score: 7.27 / 10)
             
         
 
@@ -2379,6 +2379,16 @@
             </tr>
             
             <tr>
+                <td>575</td>
+                <td>0</td>
+                <td>convention</td>
+                <td><code>line-too-long</code></td>
+                <td>C0301</td>
+                <td></td>
+                <td><pre>Line too long (115/100)</pre></td>
+            </tr>
+            
+            <tr>
                 <td>603</td>
                 <td>12</td>
                 <td>warning</td>
@@ -3062,8 +3072,8 @@
     def _initialize_flex_results(
         self, n_simulation_steps, horizon_length, sim_time_step, result_df
     ):
-        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension
-        and index and fill with existing results from optimization
+        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension and index
+        and fill with existing results from optimization
 
         &#34;&#34;&#34;
 
@@ -3213,7 +3223,10 @@
         # simulate with the casadi simulator
         self.sim_flex_model(solution)
 
+        # extract solution DataFrama
         df = solution.df
+
+        # send the outputs
         if self.flex_results is not None:
             for output in self.var_ref.outputs:
                 if output not in [
@@ -3638,7 +3651,7 @@ excluded_fields = [
                 <td><pre>Similar lines in 2 files
 ==agentlib_flexquant.data_structures.mpcs:[14:22]
 ==agentlib_flexquant.utils.config_management:[178:186]
-    excluded_fields = [
+excluded_fields = [
         &#34;rdf_class&#34;,
         &#34;source&#34;,
         &#34;type&#34;,
@@ -3684,7 +3697,8 @@ excluded_fields = [
             opti_outputs.values,
             index=index_coll,
         )
-        # fill the output value at the time step where it already exists in optimization output
+        # fill the output value at the time step where it already exists
+        # in optimization output
         for idx in fixed_opti_output.index:
             if idx in self.flex_results.index:</pre></td>
             </tr>
@@ -3706,9 +3720,7 @@ excluded_fields = [
             )
         return self
 
-    @model_validator(mode=&#34;after&#34;)
-    def add_eta_thermal_input(self):
-        &#34;&#34;&#34;Add the eta_thermal_base variable to inputs after instantiation.&#34;&#34;&#34;</pre></td>
+</pre></td>
             </tr>
             
             <tr>
@@ -3734,12 +3746,9 @@ excluded_fields = [
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
-            total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
     ):
-        &#34;&#34;&#34;simulate with flex model over the prediction horizon
-
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;simulate with flex model over the prediction horizon&#34;&#34;&#34;
 
         # get control and input values from the mpc optimization result</pre></td>
             </tr>
@@ -4720,7 +4729,7 @@ excluded_fields = [
             
             <tr>
                 <td>convention</td>
-                <td>183</td>
+                <td>184</td>
             </tr>
             
             <tr>
@@ -4755,7 +4764,7 @@ excluded_fields = [
             
             <tr>
                 <td>line-too-long</td>
-                <td>35</td>
+                <td>36</td>
             </tr>
             
             <tr>
@@ -5045,7 +5054,7 @@ excluded_fields = [
             
             <tr>
                 <td>agentlib_flexquant.modules.flexibility_indicator</td>
-                <td>44</td>
+                <td>45</td>
             </tr>
             
             <tr>
@@ -5145,7 +5154,7 @@ excluded_fields = [
             
             <tr>
                 <td>agentlib_flexquant/modules/flexibility_indicator.py</td>
-                <td>44</td>
+                <td>45</td>
             </tr>
             
             <tr>
