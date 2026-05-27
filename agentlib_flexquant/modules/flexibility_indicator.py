@@ -475,7 +475,8 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         for variable in self.variables:
             if variable.name in [glbs.FLEXIBILITY_OFFER]:
                 continue
-            self.var_list.append(variable.name)
+            if variable.name:
+                self.var_list.append(variable.name)
         self.time = []
         self.in_provision = False
         self.offer_count = 0
