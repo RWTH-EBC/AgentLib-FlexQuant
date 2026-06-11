@@ -2,23 +2,27 @@
     "id": "myPredictorAgent",
     "modules": [
         {
-            "module_id": "Ag4Com",
+            "module_id": "Ag3Com", 
             "type": "local_broadcast"
         },
         {
             "module_id": "MyPredictor",
             "type": {
-                "file": "predictor/simple_predictor.py",
+                "file": "predictor/simple_predictor.py", 
                 "class_name": "PredictorModule"
             },
             "parameters": [
                 {
-                    "name": "time_step",
+                    "name": "sampling_time", 
+                    "value": 10
+                },
+                {
+                    "name": "prediction_sampling_time",
                     "value": 900
                 },
                 {
-                    "name": "prediction_horizon",
-                    "value": 48
+                    "name": "prediction_horizon", 
+                    "value": 49
                 }
             ]
         }

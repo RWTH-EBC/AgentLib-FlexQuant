@@ -47,8 +47,8 @@ def create_dataframe_summary(df: pd.DataFrame, precision: int = 6) -> dict:
     summary = {
         "shape": df.shape,
         "columns": df.columns.tolist(),
-        "index_start": str(df.index.min()),
-        "index_end": str(df.index.max()),
+        "index_start": str(tuple(float(x) for x in df.index.min())),
+        "index_end": str(tuple(float(x) for x in df.index.max())),
         "statistics": stats_dict_clean,
         "head_5_rows": df.head(5).round(precision).to_dict(orient='split'),
         "tail_5_rows": df.tail(5).round(precision).to_dict(orient='split'),
@@ -116,7 +116,8 @@ def run_example_from_path(example_path: Path):
                 "The 'run.py' script must contain a 'run_example' function.")
 
         # Execute the function and get the results
-        results = run_module.run_example(until=3600)
+        results = run_module.run_example(until=3600, with_plots=True,
+                                         with_dashboard=False)
         return results
 
     finally:
@@ -141,7 +142,7 @@ def test_oneroom_cia(snapshot, module_cleanup):
     # Extract the full resulting dataframes as requested
     df_neg_flex_res = res["NegFlexMPC"]["NegFlexMPC"]
     df_pos_flex_res = res["PosFlexMPC"]["PosFlexMPC"]
-    df_baseline_res = res["myMPCAgent"]["Baseline"]
+    df_baseline_res = res["Baseline"]["Baseline"]
     df_indicator_res = res["FlexibilityIndicator"]["FlexibilityIndicator"]
 
     # Assert that a summary of each result DataFrame matches its snapshot

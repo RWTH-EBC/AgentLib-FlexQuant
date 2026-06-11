@@ -1,0 +1,164 @@
+{
+  "prep_time": 900,
+  "indicator_config": {
+    "agent_config": "tests/sample_files/configs/indicator.json"
+  },
+  "market_config": {
+    "agent_config": "tests/sample_files/configs/market.json"
+  },
+  "baseline_config_generator_data": {
+    "config_inputs_appendix": [
+      {
+        "alias": "_P_external",
+        "name": "_P_external",
+        "lb": null,
+        "value": 0,
+        "ub": null
+      },
+      {
+        "alias": "in_provision",
+        "name": "in_provision",
+        "lb": null,
+        "value": false,
+        "ub": null
+      },
+      {
+        "alias": "rel_start",
+        "name": "rel_start",
+        "lb": null,
+        "value": 0,
+        "ub": null
+      },
+      {
+        "alias": "rel_end",
+        "name": "rel_end",
+        "lb": null,
+        "value": 0,
+        "ub": null
+      }
+    ],
+    "config_parameters_appendix": [
+      {
+        "alias": "profile_deviation_weight",
+        "name": "profile_deviation_weight",
+        "lb": null,
+        "value": 100.0,
+        "ub": null
+      },
+      {
+        "alias": "profile_comfort_weight",
+        "name": "profile_comfort_weight",
+        "lb": null,
+        "value": 1.0,
+        "ub": null
+      }
+    ],
+    "weights": [],
+    "profile_deviation_weight": 100.0,
+    "comfort_variable": "T_slack"
+  },
+  "shadow_mpc_config_generator_data": {
+    "weights": [
+      {
+        "alias": "s_P",
+        "name": "s_P",
+        "lb": null,
+        "value": 10,
+        "ub": null
+      }
+    ],
+    "pos_flex": {
+      "config_inputs_appendix": [
+        {
+          "alias": "in_provision",
+          "name": "in_provision",
+          "lb": null,
+          "value": false,
+          "ub": null
+        }
+      ],
+      "config_parameters_appendix": [
+        {
+          "alias": "prep_time",
+          "name": "prep_time",
+          "lb": null,
+          "value": 900,
+          "ub": null
+        },
+        {
+          "alias": "market_time",
+          "name": "market_time",
+          "lb": null,
+          "value": 900,
+          "ub": null
+        },
+        {
+          "alias": "flex_event_duration",
+          "name": "flex_event_duration",
+          "lb": null,
+          "value": 7200,
+          "ub": null
+        }
+      ],
+      "weights": [
+        {
+          "alias": "s_P",
+          "name": "s_P",
+          "lb": null,
+          "value": 10,
+          "ub": null
+        }
+      ],
+      "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, self.s_P * self.P_el])"
+    },
+    "neg_flex": {
+      "config_inputs_appendix": [
+        {
+          "alias": "in_provision",
+          "name": "in_provision",
+          "lb": null,
+          "value": false,
+          "ub": null
+        }
+      ],
+      "config_parameters_appendix": [
+        {
+          "alias": "prep_time",
+          "name": "prep_time",
+          "lb": null,
+          "value": 900,
+          "ub": null
+        },
+        {
+          "alias": "market_time",
+          "name": "market_time",
+          "lb": null,
+          "value": 900,
+          "ub": null
+        },
+        {
+          "alias": "flex_event_duration",
+          "name": "flex_event_duration",
+          "lb": null,
+          "value": 7200,
+          "ub": null
+        }
+      ],
+      "weights": [
+        {
+          "alias": "s_P",
+          "name": "s_P",
+          "lb": null,
+          "value": 10,
+          "ub": null
+        }
+      ],
+      "flex_cost_function": "sum([self.s_T * self.T_slack ** 2, -self.s_P * self.P_el])"
+    }
+  },
+  "flex_files_directory": "configs",
+  "results_directory": "results",
+  "flex_base_directory_path": "tests/sample_files",
+  "delete_files": false,
+  "overwrite_files": true
+}

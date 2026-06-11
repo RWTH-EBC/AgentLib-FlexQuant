@@ -1,6 +1,7 @@
 import pytest
 import sys
 
+
 @pytest.fixture
 def module_cleanup():
     """

@@ -1,15 +1,15 @@
 """
 Pydantic data models for FlexQuant configuration and validation.
 """
-# from enum import Enum
 from pathlib import Path
 from typing import Optional, Union
 
-import pydantic
-from pydantic import field_validator, ConfigDict, model_validator, Field, BaseModel
+from pydantic import (field_validator, ConfigDict, model_validator, Field, BaseModel,
+                      field_serializer)
 from agentlib.core.agent import AgentConfig
 from agentlib.core.errors import ConfigurationError
-from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
+from agentlib_mpc.data_structures.mpc_datamodels import AgentVariable, MPCVariable
+import agentlib_flexquant.utils.config_management as cmng
 
 from agentlib_flexquant.data_structures.mpcs import (
     BaselineMPCData,
@@ -17,21 +17,32 @@ from agentlib_flexquant.data_structures.mpcs import (
     PFMPCData,
 )
 
-
-# class ForcedOffers(Enum):
-#     positive = "positive"
-#     negative = "negative"
+excluded_fields = [
+        "rdf_class",
+        "source",
+        "type",
+        "timestamp",
+        "description",
+        "unit",
+        "clip",
+        "interpolation_method",
+        "allowed_values",
+    ]
 
 
 class ShadowMPCConfigGeneratorConfig(BaseModel):
     """Class defining the options to initialize the shadow mpc config generation."""
 
     model_config = ConfigDict(
-        json_encoders={MPCVariable: lambda v: v.dict()}, extra="forbid"
+        json_encoders={MPCVariable: lambda v: v.dict(), AgentVariable: lambda v: v.dict()}, extra="forbid"
     )
     weights: list[MPCVariable] = Field(
         default=[], description="Name and value of weights",
     )
+    custom_inputs: list[AgentVariable] = Field(
+        default=[], description="Additional Inputs for the Shadow-MPCs. E.g. the baseline power prediction P_el_base"
+    )
+
     pos_flex: PFMPCData = Field(default=None, description="Data for PF-MPC")
     neg_flex: NFMPCData = Field(default=None, description="Data for NF-MPC")
 
@@ -40,39 +51,41 @@ class ShadowMPCConfigGeneratorConfig(BaseModel):
         """Validate flexibility cost function fields and assign weights to them."""
         if self.pos_flex is None:
             raise ValueError(
-                "Missing required field: 'pos_flex' specifying the pos flex cost function."
+                "Missing required field: 'pos_flex' specifying the pos flex "
+                "cost function."
             )
         if self.neg_flex is None:
             raise ValueError(
-                "Missing required field: 'neg_flex' specifying the neg flex cost function."
+                "Missing required field: 'neg_flex' specifying the neg flex "
+                "cost function."
             )
         if self.weights:
-            self.pos_flex.weights = self.weights
-            self.neg_flex.weights = self.weights
+            self.pos_flex.config_parameters_appendix.extend(self.weights)
+            self.neg_flex.config_parameters_appendix.extend(self.weights)
+                
+        if self.custom_inputs:
+            self.pos_flex.config_inputs_appendix.extend(self.custom_inputs)
+            self.neg_flex.config_inputs_appendix.extend(self.custom_inputs)
+        
         return self
+
+    @field_serializer('weights', 'custom_inputs')
+    def serialize_mpc_variables(self, variables: list[MPCVariable], _info):
+        return [v.dict(exclude=excluded_fields) for v in variables]
 
 
 class FlexibilityMarketConfig(BaseModel):
     """Class defining the options to initialize the market."""
 
     model_config = ConfigDict(extra="forbid")
-    agent_config: AgentConfig
+    agent_config: Union[AgentConfig, Path, str]
     name_of_created_file: str = Field(
         default="flexibility_market.json",
         description="Name of the config that is created by the generator",
     )
-
-
-class FlexibilityIndicatorConfig(BaseModel):
-    """Class defining the options for the flexibility indicators."""
-
-    model_config = ConfigDict(
-        json_encoders={Path: str, AgentConfig: lambda v: v.model_dump()}, extra="forbid"
-    )
-    agent_config: AgentConfig
-    name_of_created_file: str = Field(
-        default="indicator.json",
-        description="Name of the config that is created by the generator",
+    module_type: Union[dict, str] = Field(
+        default=None,
+        description="Module type or dict with type and path for local files",
     )
 
     @model_validator(mode="after")
@@ -82,10 +95,74 @@ class FlexibilityIndicatorConfig(BaseModel):
             file_path = Path(self.name_of_created_file)
             if file_path.suffix != ".json":
                 raise ConfigurationError(
-                    f"Invalid file extension for "
+                    f"Invalid file extension in market_config for "
                     f"name_of_created_file: '{self.name_of_created_file}'. "
                     f"Expected a '.json' file."
                 )
+        return self
+    
+    @model_validator(mode="after")
+    def validate_module_type(self):
+        """Ensure module_type is str or dict and set default if None."""
+
+        if self.module_type is None:
+            self.module_type = cmng.MARKET_CONFIG_TYPE
+            return self
+        
+        if isinstance(self.module_type, dict):
+            if 'file' not in self.module_type or 'class_name' not in self.module_type:
+                raise ConfigurationError("module_type dict must contain 'file' and 'class_name' keys")
+        
+        elif not isinstance(self.module_type, str):
+            raise TypeError("module_type must be either a string or a dictionary")
+    
+        return self
+
+
+class FlexibilityIndicatorConfig(BaseModel):
+    """Class defining the options for the flexibility indicators."""
+
+    model_config = ConfigDict(
+        json_encoders={Path: str, AgentConfig: lambda v: v.model_dump()}, extra="forbid"
+    )
+    agent_config: Union[AgentConfig, Path, str]
+    name_of_created_file: str = Field(
+        default="indicator.json",
+        description="Name of the config that is created by the generator",
+    )
+    module_type: Union[dict, str] = Field(
+        default=None,
+        description="Module type or dict with type and path for local files",
+    )
+
+    @model_validator(mode="after")
+    def check_file_extension(self):
+        """Validate that name_of_created_file has a .json extension."""
+        if self.name_of_created_file:
+            file_path = Path(self.name_of_created_file)
+            if file_path.suffix != ".json":
+                raise ConfigurationError(
+                    f"Invalid file extension for indicator config "
+                    f"name_of_created_file: '{self.name_of_created_file}'. "
+                    f"Expected a '.json' file."
+                )
+        return self
+    
+    @model_validator(mode="after")
+    def validate_module_type(self):
+        """Ensure module_type is str or dict and set default if None."""
+
+        if self.module_type is None:
+            self.module_type = cmng.INDICATOR_CONFIG_TYPE
+            return self
+        
+        if isinstance(self.module_type, dict):
+            if 'file' not in self.module_type or 'class_name' not in self.module_type:
+                raise ConfigurationError("module_type dict must contain 'file' and 'class_name' keys")
+        
+        elif not isinstance(self.module_type, str):
+            raise TypeError("module_type must be either a string or a dictionary")
+    
         return self
 
 
@@ -119,10 +196,10 @@ class FlexQuantConfig(BaseModel):
     )
     casadi_sim_time_step: int = Field(
         default=0,
-        description="Simulate over the prediction horizon with a defined resolution using Casadi "
-                    "simulator. "
-                    "Only use it when the power depends on the states. Don't use it when power "
-                    "itself is the control variable."
+        description="Simulate over the prediction horizon with a defined resolution "
+                    "using Casadi simulator. "
+                    "Only use it when the power depends on the states. "
+                    "Don't use it when power itself is the control variable."
                     "Set to 0 to skip simulation",
     )
     flex_base_directory_path: Optional[Path] = Field(
@@ -144,10 +221,15 @@ class FlexQuantConfig(BaseModel):
         default=False,
         description="If generated files should be overwritten by new files",
     )
+    custom_plugins: list[str] = Field(
+        default=None, 
+        description="Custom AgentLib plugins to be loaded",
+    )
 
     @model_validator(mode="after")
     def check_config_file_extension(self):
-        """Validate that the indicator and market config file paths have a '.json' extension.
+        """Validate that the indicator and market config file paths have a '.json'
+        extension.
 
         Raises:
             ValueError: If either file does not have the expected '.json' extension.
@@ -158,7 +240,8 @@ class FlexQuantConfig(BaseModel):
             and self.indicator_config.suffix != ".json"
         ):
             raise ValueError(
-                f"Invalid file extension for indicator config: '{self.indicator_config}'. "
+                f"Invalid file extension for indicator "
+                f"config: '{self.indicator_config}'. "
                 f"Expected a '.json' file."
             )
         if (
@@ -166,7 +249,8 @@ class FlexQuantConfig(BaseModel):
             and self.market_config.suffix != ".json"
         ):
             raise ValueError(
-                f"Invalid file extension for market config: '{self.market_config}'. "
+                f"Invalid file extension for market "
+                f"config: '{self.market_config}'. "
                 f"Expected a '.json' file."
             )
         return self
@@ -180,12 +264,16 @@ class FlexQuantConfig(BaseModel):
 
     @model_validator(mode="after")
     def adapt_paths_and_create_directory(self):
-        """Adjust and ensure the directory structure for flex file generation and results storage.
+        """Adjust and ensure the directory structure for flex file generation and
+        results storage.
 
         This method:
-        - Updates `flex_files_directory` and `results_directory` paths, so they are relative to
-        the base flex directory, using only the directory names (ignoring any user-supplied paths).
-        - Creates the base, flex files, and results directories if they do not already exist.
+        - Updates `flex_files_directory` and `results_directory` paths, so they are
+        relative to
+        the base flex directory, using only the directory names (ignoring any
+        user-supplied paths).
+        - Creates the base, flex files, and results directories if they do not
+        already exist.
 
         """
         # adapt paths and use only names for user supplied data
@@ -199,4 +287,21 @@ class FlexQuantConfig(BaseModel):
         self.flex_base_directory_path.mkdir(parents=True, exist_ok=True)
         self.flex_files_directory.mkdir(parents=True, exist_ok=True)
         self.results_directory.mkdir(parents=True, exist_ok=True)
+        return self
+    
+    @model_validator(mode="after")
+    def validate_custom_plugins(self):
+        """Ensure custom_plugins is a list of strings (or None)."""
+        if self.custom_plugins is None:
+            return self
+
+        if not isinstance(self.custom_plugins, list) or not all(
+            isinstance(p, str) for p in self.custom_plugins
+        ):
+            raise ConfigurationError(
+                f"Invalid custom_plugins: {self.custom_plugins!r} "
+                f"(type: {type(self.custom_plugins).__name__}). "
+                "Expected a list of strings."
+            )
+
         return self

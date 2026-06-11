@@ -1,22 +1,25 @@
 import setuptools
 
 requirements = [
-    "setuptools",
-    "agentlib[full]==0.8.7",
-    "agentlib_mpc[fmu, interactive] @ git+https://github.com/RWTH-EBC/AgentLib-MPC.git",
+    "agentlib[full] @ git+https://github.com/RWTH-EBC/AgentLib.git@1ed7b4d",
+    "agentlib_mpc[fmu, interactive] @ git+https://github.com/RWTH-EBC/AgentLib-MPC.git@quickfix-custom-objectives",
     "pycombina @ git+https://github.com/adbuerger/pycombina.git",
     "pathlib",
     "astor==0.8.1",
     "black",
     "pre-commit",
-    "pytest",
-    "pytest-snapshot"
+    # Building the docs
+    "sphinx>=6.1.3",
+    "m2r2",
+    "myst-parser",
+    "autodoc_pydantic>=1.8.0",
+    "sphinx-material",
 ]
 
 
 setuptools.setup(
-    name="flexquant",
-    version="0.1.0",
+    name="agentlib_flexquant",
+    version="0.2.0",
     author="",
     author_email="",
     description="Flexibility quantification setup based on agentlib_mpc",

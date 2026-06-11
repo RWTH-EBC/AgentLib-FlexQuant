@@ -1,8 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
 import agentlib_mpc.utils.plotting.basic as mpcplot
 from agentlib_mpc.utils.analysis import mpc_at_time_step
 from agentlib_flexquant.data_structures.flex_results import Results
+matplotlib.use('Agg')
 
 
 def plot_results(results_data: dict = None):
@@ -26,10 +28,10 @@ def plot_results(results_data: dict = None):
     (ax1, ax2) = axs
     # load
     ax1.set_ylabel(r"$\dot{Q}_{Room}$ in W")
-    res.df_simulation["load"].plot(ax=ax1)
+    res.df_simulation["load"].dropna().plot(ax=ax1)
     # T_in
     ax2.set_ylabel("$T_{in}$ in K")
-    res.df_simulation["T_in"].plot(ax=ax2)
+    res.df_simulation["T_in"].dropna().plot(ax=ax2)
     x_ticks = np.arange(0, 3600 * 6 + 1, 3600)
     x_tick_labels = [int(tick / 3600) for tick in x_ticks]
     ax2.set_xticks(x_ticks)
@@ -44,9 +46,9 @@ def plot_results(results_data: dict = None):
     ax1 = axs[0]
     # T out
     ax1.set_ylabel("$T_{room}$ in K")
-    res.df_simulation["T_upper"].plot(ax=ax1, color="0.5")
-    res.df_simulation["T_lower"].plot(ax=ax1, color="0.5")
-    res.df_simulation["T_out"].plot(ax=ax1, color=mpcplot.EBCColors.dark_grey)
+    res.df_simulation["T_upper"].dropna().plot(ax=ax1, color="0.5")
+    res.df_simulation["T_lower"].dropna().plot(ax=ax1, color="0.5")
+    res.df_simulation["T_out"].dropna().plot(ax=ax1, color=mpcplot.EBCColors.dark_grey)
     mpc_at_time_step(
         data=res.df_neg_flex, time_step=9000, variable="T"
     ).plot(ax=ax1, label="neg", linestyle="--", color=mpcplot.EBCColors.red)
@@ -78,7 +80,7 @@ def plot_results(results_data: dict = None):
     (ax1, ax2) = axs
     # P_el
     ax1.set_ylabel("$P_{el}$ in kW")
-    res.df_simulation["P_el"].plot(ax=ax1, color=mpcplot.EBCColors.dark_grey)
+    res.df_simulation["P_el"].dropna().plot(ax=ax1, color=mpcplot.EBCColors.dark_grey)
     mpc_at_time_step(
         data=res.df_neg_flex, time_step=9000, variable="P_el"
     ).ffill().plot(
@@ -115,7 +117,7 @@ def plot_results(results_data: dict = None):
 
     # mdot
     ax2.set_ylabel(r"$\dot{m}$ in kg/s")
-    res.df_simulation["mDot"].plot(ax=ax2, color=mpcplot.EBCColors.dark_grey)
+    res.df_simulation["mDot"].dropna().plot(ax=ax2, color=mpcplot.EBCColors.dark_grey)
     mpc_at_time_step(
         data=res.df_neg_flex, time_step=9000, variable="mDot"
     ).ffill().plot(

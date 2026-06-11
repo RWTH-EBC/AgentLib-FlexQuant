@@ -1,6 +1,6 @@
 setuptools
-agentlib[full]==0.8.7
-agentlib_mpc[fmu, interactive] @ git+https://github.com/RWTH-EBC/AgentLib-MPC.git
+agentlib[full] @ git+https://github.com/RWTH-EBC/AgentLib.git@1ed7b4d
+agentlib_mpc[fmu, interactive] @ git+https://github.com/RWTH-EBC/AgentLib-MPC.git@quickfix-custom-objectives
 pycombina @ git+https://github.com/adbuerger/pycombina.git
 pathlib
 astor==0.8.1
@@ -13,3 +13,8 @@ m2r2
 myst-parser
 autodoc_pydantic>=1.8.0
 sphinx-material
+
+# development
+pre-commit>=2.17.0
+pytest>=7.0.1
+pytest-snapshot

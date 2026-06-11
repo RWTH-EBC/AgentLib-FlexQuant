@@ -49,7 +49,7 @@ class KPI(pydantic.BaseModel):
         and the KPI name."""
         name = f"{self.direction}_{self.name}"
         return name
-
+    
 
 class KPISeries(KPI):
     """Class defining extra attributes of the indicator KPISeries in addition to KPI."""
@@ -104,17 +104,18 @@ class KPISeries(KPI):
 
         """
         if self.integration_method == LINEAR:
-            # Linear integration: apply the trapezoidal rule, which assumes the function changes
-            # linearly between sample points
-            return np.trapz(self.value.values, self.value.index) / TIME_CONVERSION[time_unit]
+            # Linear integration: apply the trapezoidal rule, which assumes
+            # the function changes linearly between sample points
+            return np.trapezoid(self.value.values,
+                                self.value.index) / TIME_CONVERSION[time_unit]
         if self.integration_method == CONSTANT:
-            # Constant integration: use a step-wise constant approach by holding the value constant
-            # over each interval
+            # Constant integration: use a step-wise constant approach by
+            # holding the value constant over each interval
             return (
                 np.sum(self.value.values[:-1] * self._get_dt().iloc[:-1])
                 / TIME_CONVERSION[time_unit]
             )
-
+        
 
 class FlexibilityKPIs(pydantic.BaseModel):
     """Class defining the indicator KPIs."""
@@ -160,7 +161,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
     # Costs KPIs
     electricity_costs_series: KPISeries = pydantic.Field(
         default=KPISeries(name="electricity_costs_series", unit="ct/h", integration_method=LINEAR),
-        description="Costs of flexibility",
+        description="Difference in electricity costs between shadow and baseline mpc over full prediction horizon",
     )
     costs: KPI = pydantic.Field(
         default=KPI(name="costs", unit="ct"),
@@ -168,7 +169,8 @@ class FlexibilityKPIs(pydantic.BaseModel):
     )
     corrected_costs: KPI = pydantic.Field(
         default=KPI(name="corrected_costs", unit="ct"),
-        description="Corrected costs of flexibility considering the stored energy in the system",
+        description="Corrected costs of flexibility considering the stored "
+                    "energy in the system",
     )
     costs_rel: KPI = pydantic.Field(
         default=KPI(name="costs_rel", unit="ct/kWh"),
@@ -191,10 +193,12 @@ class FlexibilityKPIs(pydantic.BaseModel):
         power_profile_base: pd.Series,
         power_profile_shadow: pd.Series,
         electricity_price_series: pd.Series,
+        feed_in_price_series: pd.Series,
         mpc_time_grid: np.ndarray,
         flex_offer_time_grid: np.ndarray,
         stored_energy_base: pd.Series,
         stored_energy_shadow: pd.Series,
+        eta_thermal_base: pd.Series,
         enable_energy_costs_correction: bool,
         calculate_flex_cost: bool,
         integration_method: INTEGRATION_METHOD,
@@ -206,10 +210,12 @@ class FlexibilityKPIs(pydantic.BaseModel):
             power_profile_base: power profile from baseline mpc
             power_profile_shadow: power profile from shadow mpc
             electricity_price_series: time series of electricity prices
+            feed_in_price_series: time series of electricity feed-in prices
             flex_offer_time_grid: time grid over which the flexibility offer is calculated,
             for indexing of the power flexibility profiles
             stored_energy_base: time series of stored energy from baseline mpc
             stored_energy_shadow: time series of stored energy from shadow mpc
+            eta_thermal_base: time series of efficiency of thermal generation unit of baseline mpc
             enable_energy_costs_correction: whether the energy costs should be corrected
             calculate_flex_cost: whether the cost of the flexibility should be calculated
             integration_method: method used for integration of KPISeries e.g. linear, constant
@@ -234,13 +240,22 @@ class FlexibilityKPIs(pydantic.BaseModel):
         # Costs KPIs
         if enable_energy_costs_correction:
             stored_energy_diff = stored_energy_shadow.values[-1] - stored_energy_base.values[-1]
+            if eta_thermal_base is None:
+                eta_thermal_base_avg = 1
+            else:
+                eta_thermal_base_avg = eta_thermal_base.mean()
         else:
             stored_energy_diff = 0
+            eta_thermal_base_avg = 1
 
         if calculate_flex_cost:
             self._calculate_costs(
                 electricity_price_signal=electricity_price_series,
+                feed_in_price_signal=feed_in_price_series,
+                power_profile_base=power_profile_base,
+                power_profile_shadow=power_profile_shadow,
                 stored_energy_diff=stored_energy_diff,
+                eta_thermal_base_avg=eta_thermal_base_avg,
                 integration_method=integration_method,
                 mpc_time_grid=mpc_time_grid,
                 collocation_time_grid=collocation_time_grid,
@@ -273,13 +288,14 @@ class FlexibilityKPIs(pydantic.BaseModel):
                 f"Shadow: {power_profile_shadow.index}"
             )
 
-        # Calculate flexibility
+        # Calculate power flexibility trajectory
         if self.direction == "positive":
             power_flex = power_profile_base - power_profile_shadow
         elif self.direction == "negative":
             power_flex = power_profile_shadow - power_profile_base
         else:
-            raise ValueError(f"Direction of KPIs not properly defined: {self.direction}")
+            raise ValueError(
+                f"Direction of KPIs not properly defined: {self.direction}")
 
         # Set values to zero if the difference is small
         relative_difference = (power_flex / power_profile_base).abs()
@@ -315,10 +331,12 @@ class FlexibilityKPIs(pydantic.BaseModel):
         power_flex_offer_min = power_flex_offer.min()
         # Average of the power flex offer
         # Get the series for integration before calculating average
-        power_flex_offer_integration = self.power_flex_offer.__deepcopy__()
-        power_flex_offer_integration.value = self._get_series_for_integration(
-            series=power_flex_offer_integration, mpc_time_grid=mpc_time_grid
-        ).drop(collocation_time_grid, errors="ignore")
+        power_flex_offer_integration = self._get_series_for_integration(
+            series=self.power_flex_offer, mpc_time_grid=mpc_time_grid
+        )
+        power_flex_offer_integration.value = power_flex_offer_integration.value.drop(
+            collocation_time_grid, errors="ignore"
+        )
         # Calculate the average and stores the original value
         power_flex_offer_avg = power_flex_offer_integration.avg()
 
@@ -329,9 +347,9 @@ class FlexibilityKPIs(pydantic.BaseModel):
 
     def _get_series_for_integration(
         self, series: KPISeries, mpc_time_grid: np.ndarray
-    ) -> pd.Series:
-        """Return the KPISeries value sampled on the MPC time grid when the integration method is
-        constant.
+    ) -> KPISeries:
+        """Return the KPISeries value sampled on the MPC time grid when the integration
+        method is constant.
 
         Otherwise, the original value is returned.
 
@@ -341,9 +359,11 @@ class FlexibilityKPIs(pydantic.BaseModel):
 
         """
         if series.integration_method == CONSTANT:
-            return series.value.reindex(mpc_time_grid).dropna()
+            series = series.__deepcopy__()
+            series.value = series.value.reindex(mpc_time_grid).dropna()
+            return series
         else:
-            return series.value
+            return series.__deepcopy__()
 
     def _calculate_energy_flex(self, mpc_time_grid, collocation_time_grid: list = None):
         """Calculate the energy flexibility by integrating the power flexibility
@@ -353,10 +373,12 @@ class FlexibilityKPIs(pydantic.BaseModel):
 
         # Calculate flexibility
         # Get the series for integration before calculating average
-        power_flex_offer_integration = self.power_flex_offer.__deepcopy__()
-        power_flex_offer_integration.value = self._get_series_for_integration(
-            series=power_flex_offer_integration, mpc_time_grid=mpc_time_grid
-        ).drop(collocation_time_grid, errors="ignore")
+        power_flex_offer_integration = self._get_series_for_integration(
+            series=self.power_flex_offer, mpc_time_grid=mpc_time_grid
+        )
+        power_flex_offer_integration.value = power_flex_offer_integration.value.drop(
+            collocation_time_grid, errors="ignore"
+        )
         # Calculate the energy flex and stores the original value
         energy_flex = power_flex_offer_integration.integrate(time_unit="hours")
 
@@ -366,7 +388,11 @@ class FlexibilityKPIs(pydantic.BaseModel):
     def _calculate_costs(
         self,
         electricity_price_signal: pd.Series,
+        feed_in_price_signal: pd.Series,
+        power_profile_base: pd.Series,
+        power_profile_shadow: pd.Series,
         stored_energy_diff: float,
+        eta_thermal_base_avg: float,
         integration_method: INTEGRATION_METHOD,
         mpc_time_grid: np.ndarray,
         collocation_time_grid: list = None,
@@ -376,34 +402,64 @@ class FlexibilityKPIs(pydantic.BaseModel):
 
         Args:
             electricity_price_signal: time series of the electricity price signal
+            feed_in_price_signal: time series of the feed-in price signal
+            power_profile_base: baseline power profile used to select tariff by sign
+            power_profile_shadow: shadow mpc power profile used to select tariff by sign
             stored_energy_diff: the difference of the stored energy between baseline and shadow mpc
+            eta_thermal_base: average efficiency of thermal generation unit
             integration_method: the integration method used to integrate KPISeries
             mpc_time_grid: the MPC time grid over the horizon
             collocation_time_grid: Time grid of the mpc output with collocation discretization
 
 
         """
-        # Calculate series
-        self.electricity_costs_series.value = electricity_price_signal * self.power_flex_full.value
+        if not power_profile_shadow.index.equals(power_profile_base.index):
+            raise ValueError(
+                f"Indices of power profiles do not match.\n"
+                f"Baseline: {power_profile_base.index}\n"
+                f"Shadow: {power_profile_shadow.index}"
+            )
 
         # Set integration method
         self.power_flex_full.integration_method = integration_method
         self.electricity_costs_series.integration_method = integration_method
 
+        # if there is no feed-in tariff provided, the electricity price signal is used for both consumption and feed-in
+        if feed_in_price_signal is None:
+            feed_in_price_signal = electricity_price_signal
+
+        # Select tariff based on the sign of each profile
+        effective_price_base = electricity_price_signal.where(
+            power_profile_base > 0,
+            feed_in_price_signal,
+        )
+        effective_price_shadow = electricity_price_signal.where(
+            power_profile_shadow > 0,
+            feed_in_price_signal,
+        )
+
+        cost_profile_base = power_profile_base * effective_price_base
+        cost_profile_shadow = power_profile_shadow * effective_price_shadow
+
         # Get the series for integration before calculating
-        power_flex_full_integration = self.power_flex_full.__deepcopy__()
-        power_flex_full_integration.value = self._get_series_for_integration(
-            series=power_flex_full_integration, mpc_time_grid=mpc_time_grid
-        ).drop(collocation_time_grid, errors="ignore")
-        self.electricity_costs_series.value = (
-            electricity_price_signal * power_flex_full_integration.value
-        ).dropna()
+        power_flex_full_integration = self._get_series_for_integration(
+            series=self.power_flex_full, mpc_time_grid=mpc_time_grid
+        )
+        power_flex_full_integration.value = power_flex_full_integration.value.drop(
+            collocation_time_grid, errors="ignore"
+        )
+
+        # Difference in costs between shadow and baseline mpc
+        delta_cost = cost_profile_shadow - cost_profile_base
+        delta_cost = delta_cost.reindex(power_flex_full_integration.value.index)
+        delta_cost = delta_cost.where(power_flex_full_integration.value != 0, 0)
+        self.electricity_costs_series.value = delta_cost.dropna()
 
         # Calculate the costs and stores the original value
-        costs = abs(self.electricity_costs_series.integrate(time_unit="hours"))
+        costs = self.electricity_costs_series.integrate(time_unit="hours")
 
         # correct the costs
-        corrected_costs = costs - stored_energy_diff * np.mean(electricity_price_signal)
+        corrected_costs = costs - stored_energy_diff * np.mean(electricity_price_signal) / eta_thermal_base_avg
 
         self.costs.value = costs
         self.corrected_costs.value = corrected_costs
@@ -496,9 +552,17 @@ class FlexibilityData(pydantic.BaseModel):
         default=None,
         description="Profile of the stored elctrical energy for positive flexibility",
     )
+    eta_thermal_base: pd.Series = pydantic.Field(
+        default=None,
+        description="Efficiency of the thermal generation unit e.g. COP of heatpump",
+    )
     electricity_price_series: pd.Series = pydantic.Field(
         default=None,
         description="Profile of the electricity price",
+    )
+    feed_in_price_series: pd.Series = pydantic.Field(
+        default=None,
+        description="Profile of the electricity feed-in price",
     )
 
     # KPIs
@@ -605,10 +669,12 @@ class FlexibilityData(pydantic.BaseModel):
             power_profile_base=self.power_profile_base,
             power_profile_shadow=self.power_profile_flex_pos,
             electricity_price_series=self.electricity_price_series,
+            feed_in_price_series=self.feed_in_price_series,
             mpc_time_grid=self.mpc_time_grid,
             flex_offer_time_grid=self.flex_offer_time_grid,
             stored_energy_base=self.stored_energy_profile_base,
             stored_energy_shadow=self.stored_energy_profile_flex_pos,
+            eta_thermal_base=self.eta_thermal_base,
             enable_energy_costs_correction=enable_energy_costs_correction,
             calculate_flex_cost=calculate_flex_cost,
             integration_method=integration_method,
@@ -618,10 +684,12 @@ class FlexibilityData(pydantic.BaseModel):
             power_profile_base=self.power_profile_base,
             power_profile_shadow=self.power_profile_flex_neg,
             electricity_price_series=self.electricity_price_series,
+            feed_in_price_series=self.feed_in_price_series,
             mpc_time_grid=self.mpc_time_grid,
             flex_offer_time_grid=self.flex_offer_time_grid,
             stored_energy_base=self.stored_energy_profile_base,
             stored_energy_shadow=self.stored_energy_profile_flex_neg,
+            eta_thermal_base=self.eta_thermal_base,
             enable_energy_costs_correction=enable_energy_costs_correction,
             calculate_flex_cost=calculate_flex_cost,
             integration_method=integration_method,
@@ -643,3 +711,9 @@ class FlexibilityData(pydantic.BaseModel):
         This should be called between different flexibility calculations.
         """
         self._common_time_grid = None
+
+    def update_profile(self, name: str, value: pd.Series, mpc:bool) -> None:
+        """Update a specific profile for calculation with a new value."""
+        if value is not None: 
+            value = self.unify_inputs(series=value, mpc=mpc)
+        setattr(self, name, value)

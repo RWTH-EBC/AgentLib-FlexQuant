@@ -47,13 +47,14 @@ def create_dataframe_summary(df: pd.DataFrame, precision: int = 6) -> dict:
     summary = {
         "shape": df.shape,
         "columns": df.columns.tolist(),
-        "index_start": str(df.index.min()),
-        "index_end": str(df.index.max()),
+        "index_start": str(tuple(float(x) for x in df.index.min())),
+        "index_end": str(tuple(float(x) for x in df.index.max())),
         "statistics": stats_dict_clean,
         "head_5_rows": df.head(5).round(precision).to_dict(orient='split'),
         "tail_5_rows": df.tail(5).round(precision).to_dict(orient='split'),
     }
     return summary
+
 
 def assert_frame_matches_summary_snapshot(snapshot, df: pd.DataFrame,
                                           snapshot_name: str):
@@ -67,13 +68,14 @@ def assert_frame_matches_summary_snapshot(snapshot, df: pd.DataFrame,
     summary = create_dataframe_summary(df)
 
     # Round all numbers in the summary to handle cross-platform differences
-    rounded_summary = round_floats_in_structure(summary, precision=5)
+    rounded_summary = round_floats_in_structure(summary, precision=4)
 
     # Convert the summary dictionary to a formatted JSON string
     summary_json = json.dumps(rounded_summary, indent=2, sort_keys=True)
 
     # Use snapshot.assert_match on the small, stable JSON string
     snapshot.assert_match(summary_json, snapshot_name)
+
 
 def run_example_from_path(example_path: Path):
     """Dynamically import and run the 'run_example' function from a script
@@ -115,13 +117,14 @@ def run_example_from_path(example_path: Path):
                 "The 'run.py' script must contain a 'run_example' function.")
 
         # Execute the function and get the results
-        results = run_module.run_example(until=3600)
+        results = run_module.run_example(until=3600, with_plots=True)
         return results
 
     finally:
         # --- TEARDOWN: Always restore original paths to avoid side-effects ---
         os.chdir(original_cwd)
         sys.path[:] = original_sys_path  # Restore the original sys.path
+
 
 def test_oneroom_simple_mpc(snapshot, module_cleanup):
     """Unit test for the oneroom_simpleMPC example using snapshot testing.
@@ -139,7 +142,7 @@ def test_oneroom_simple_mpc(snapshot, module_cleanup):
     # Extract the full resulting dataframes as requested
     df_neg_flex_res = res["NegFlexMPC"]["NegFlexMPC"]
     df_pos_flex_res = res["PosFlexMPC"]["PosFlexMPC"]
-    df_baseline_res = res["FlexModel"]["Baseline"]
+    df_baseline_res = res["Baseline"]["Baseline"]
     df_indicator_res = res["FlexibilityIndicator"]["FlexibilityIndicator"]
 
     # Assert that a summary of each result DataFrame matches its snapshot

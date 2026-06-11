@@ -26,14 +26,17 @@ from agentlib_flexquant.data_structures.flex_offer import FlexOffer
 
 
 class InputsForCorrectFlexCosts(BaseModel):
-    """Configuration for flexibility cost correction."""
+    """Configuration for flexibility cost correction.
+
+    """
 
     enable_energy_costs_correction: bool = Field(
         name="enable_energy_costs_correction",
         description=(
-            "Variable determining whether to correct the costs of the flexible energy "
-            "Define the variable for stored electrical energy in the base MPC model and "
-            "config as output if the correction of costs is enabled"
+            "Variable determining whether to correct the costs of the "
+            "flexible energy. Define the variable for stored electrical "
+            "energy in the base MPC model and config as output if the "
+            "correction of costs is enabled"
         ),
         default=False,
     )
@@ -47,16 +50,27 @@ class InputsForCorrectFlexCosts(BaseModel):
     stored_energy_variable: Optional[str] = Field(
         name="stored_energy_variable",
         default=None,
-        description="Name of the variable representing the stored electrical energy in the "
-                    "baseline config"
+        description="Name of the variable representing the stored electrical energy "
+                    "in the baseline config"
+    )
+
+    eta_thermal_base: str = Field(
+        default=None,
+        description="Name of the efficiency variable of the thermal generation unit",
     )
 
 
 class InputsForCalculateFlexCosts(BaseModel):
-    """Configuration for flexibility cost calculation with optional constant pricing."""
+    """Configuration for flexibility cost calculation with optional constant
+    pricing.
+
+    """
 
     use_constant_electricity_price: bool = Field(
         default=False, description="Use constant electricity price"
+    )
+    use_constant_feed_in_price: bool = Field(
+        default=False, description="Use constant feed-in price"
     )
     calculate_flex_costs: bool = Field(
         default=True, description="Calculate the flexibility cost"
@@ -64,23 +78,40 @@ class InputsForCalculateFlexCosts(BaseModel):
     const_electricity_price: float = Field(
         default=np.nan, description="constant electricity price in ct/kWh"
     )
+    const_feed_in_price: float = Field(
+        default=np.nan, description="constant feed-in price in ct/kWh"
+    )
 
     @model_validator(mode="after")
-    def validate_constant_price(self):
-        """Validate that a valid constant electricity price is provided
-        when constant pricing is enabled."""
-        if self.use_constant_electricity_price and np.isnan(
-            self.const_electricity_price
-        ):
-            raise ValueError(
-                (
-                    f"Constant electricity price must have a valid value in float if it is "
-                    f"to be used for calculation. "
-                    f'Received "use_constant_electricity_price": true, '
-                    f'"const_electricity_price": {self.const_electricity_price}. '
-                    f'Please specify them correctly in "calculate_costs" field in flex config.'
+    def validate_constant_prices(self):
+        """Validate that valid constant prices are provided when enabled."""
+
+        price_settings = [
+            (
+                "use_constant_electricity_price",
+                "const_electricity_price",
+                "electricity",
+            ),
+            (
+                "use_constant_feed_in_price",
+                "const_feed_in_price",
+                "feed-in",
+            ),
+        ]
+
+        for use_flag, price_field, label in price_settings:
+            if getattr(self, use_flag) and np.isnan(getattr(self, price_field)):
+                raise ValueError(
+                    (
+                        f'Constant {label} price must be a valid float if it is used '
+                        f'for calculation. '
+                        f'Received "{use_flag}": true, '
+                        f'"{price_field}": {getattr(self, price_field)}. '
+                        'Please specify them correctly in the "calculate_costs" '
+                        "field in the flex config."
+                    )
                 )
-            )
+
         return self
 
 
@@ -91,7 +122,9 @@ kpis_neg = FlexibilityKPIs(direction="negative")
 
 class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
     """Configuration for flexibility indicator module with power/energy inputs,
-    KPI outputs, and cost calculation settings."""
+    KPI outputs, and cost calculation settings.
+
+    """
 
     model_config = ConfigDict(extra="forbid")
 
@@ -291,7 +324,8 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
                                description="timestep of the mpc solution"),
         agentlib.AgentVariable(name=glbs.PREDICTION_HORIZON, unit="-",
                                description="prediction horizon of the mpc solution"),
-        agentlib.AgentVariable(name=glbs.COLLOCATION_TIME_GRID, alias=glbs.COLLOCATION_TIME_GRID,
+        agentlib.AgentVariable(name=glbs.COLLOCATION_TIME_GRID,
+                               alias=glbs.COLLOCATION_TIME_GRID,
                                description="Time grid of the mpc model output")
     ]
 
@@ -305,6 +339,14 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
     )
     price_variable: str = Field(
         default="c_pel", description="Name of the price variable sent by a predictor",
+    )
+    price_variable_feed_in: str = Field(
+        default="c_pel_feed_in",
+        description="Name of the feed-in price variable sent by a predictor",
+    )
+    eta_thermal_base: str = Field(
+        default=None,
+        description="Name of the efficiency variable of the thermal generation unit",
     )
     power_unit: str = Field(
         default="kW",
@@ -329,6 +371,95 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
             )
         return self
 
+    @model_validator(mode="after")
+    def add_eta_thermal_input(self):
+        """Add the eta_thermal_base variable to inputs after instantiation."""
+        eta_var = agentlib.AgentVariable(
+            name=self.correct_costs.eta_thermal_base,
+            unit="-",
+            type="pd.Series",
+            description="Efficiency of the thermal generator",
+        )
+        if not any(v.name == self.correct_costs.eta_thermal_base for v in self.inputs):
+            # bypass frozen via setattr
+            object.__setattr__(self, 'inputs', list(self.inputs) + [eta_var])
+        return self
+
+class CallBackHandler: 
+    """Helper class to manage callback handling for flexibility indicator module.
+    
+    Adapter, der self.data schreibt 
+
+    """
+    necessary_callback_variables: dict[str,dict[str, bool]]
+
+    def __init__(self,config: FlexibilityIndicatorModuleConfig): 
+        """Load general settings"""
+        # set collocation time grid 
+        def get_param(cfg, name: str):
+            return next(v for v in cfg.parameters if v.name == name)
+        self.collocation_time_grid = get_param(config, glbs.COLLOCATION_TIME_GRID).value
+        self.necessary_callback_variables = {
+            glbs.POWER_ALIAS_BASE: {"name":"power_profile_base", "is_mpc":True},
+            glbs.POWER_ALIAS_NEG: {"name":"power_profile_flex_neg", "is_mpc":True},
+            glbs.POWER_ALIAS_POS: {"name":"power_profile_flex_pos", "is_mpc":True},
+            }
+
+    def update_price_variables(self, config: FlexibilityIndicatorModuleConfig, data: FlexibilityData):
+        if config.calculate_costs.calculate_flex_costs:
+            if config.calculate_costs.use_constant_electricity_price:
+                electricity_price_series = pd.Series(
+                    data=config.calculate_costs.const_electricity_price,
+                    index=data.mpc_time_grid,
+                )
+                data.update_profile("electricity_price_series", electricity_price_series, mpc=False)
+            else:
+                self.necessary_callback_variables.update({config.price_variable: {"name":"electricity_price_series", "is_mpc":False}})
+            
+            if config.calculate_costs.use_constant_feed_in_price:
+                feed_in_price_series = pd.Series(
+                    data=config.calculate_costs.const_feed_in_price,
+                    index=data.mpc_time_grid,
+                )
+                data.update_profile("feed_in_price_series", feed_in_price_series, mpc=False)
+            else:
+                self.necessary_callback_variables.update({config.price_variable_feed_in: {"name":"feed_in_price_series", "is_mpc":False}})
+        return data
+    
+    def initialize_callback_variables(self, data: FlexibilityData, config: FlexibilityIndicatorModuleConfig) -> FlexibilityData:
+        data = self.update_price_variables(config=config, data=data)
+        if config.correct_costs.enable_energy_costs_correction:
+            self.necessary_callback_variables.update({
+                glbs.STORED_ENERGY_ALIAS_BASE: {"name":"stored_energy_profile_base", "is_mpc":True},
+                glbs.STORED_ENERGY_ALIAS_NEG: {"name":"stored_energy_profile_flex_neg", "is_mpc":True},
+                glbs.STORED_ENERGY_ALIAS_POS: {"name":"stored_energy_profile_flex_pos", "is_mpc":True},
+            })
+            if config.correct_costs.eta_thermal_base:
+                self.necessary_callback_variables.update({
+                    config.correct_costs.eta_thermal_base: {"name": "eta_thermal_base", "is_mpc": True}
+                })
+
+            
+        return data
+    
+    def set_all_callback_variables_to_none(self, data: FlexibilityData) -> FlexibilityData:
+        """Clear the values of the callback variables after processing."""
+        for alias, var  in self.necessary_callback_variables.items():
+            data.update_profile(var["name"], None, mpc=var["is_mpc"])
+        return data
+
+    def update_input(self, data: FlexibilityData, name: str, value: pd.Series) -> FlexibilityData: 
+        """Update the incoming value"""
+        var_tuple = self.necessary_callback_variables.get(name, None)
+        if var_tuple is not None: 
+            variable_name, mpc = var_tuple["name"], var_tuple["is_mpc"]
+            data.update_profile(variable_name, value, mpc=mpc)
+        return data
+    
+    def is_ready_for_calculation(self, data: FlexibilityData) -> bool:
+        """Check if all necessary profiles and parameters are set for KPI calculation."""
+        required_profiles = [getattr(data, var["name"]) for key, var in self.necessary_callback_variables.items()]
+        return all(profile is not None for profile in required_profiles)
 
 class FlexibilityIndicatorModule(agentlib.BaseModule):
     """Module for calculating flexibility KPIs and generating flexibility offers
@@ -336,6 +467,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
 
     config: FlexibilityIndicatorModuleConfig
     data: FlexibilityData
+    callback_handler: CallBackHandler
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -343,10 +475,12 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         for variable in self.variables:
             if variable.name in [glbs.FLEXIBILITY_OFFER]:
                 continue
-            self.var_list.append(variable.name)
+            if variable.name:
+                self.var_list.append(variable.name)
         self.time = []
         self.in_provision = False
         self.offer_count = 0
+        self.df = pd.DataFrame(columns=pd.Series(self.var_list))
         self.data = FlexibilityData(
             prep_time=self.get(glbs.PREP_TIME).value,
             market_time=self.get(glbs.MARKET_TIME).value,
@@ -354,7 +488,8 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             time_step=self.get(glbs.TIME_STEP).value,
             prediction_horizon=self.get(glbs.PREDICTION_HORIZON).value,
         )
-        self.df = pd.DataFrame(columns=pd.Series(self.var_list))
+        self.callback_handler = CallBackHandler(config=self.config)
+        self.data = self.callback_handler.initialize_callback_variables(data=self.data, config=self.config)
 
     def register_callbacks(self):
         inputs = self.config.inputs
@@ -363,7 +498,8 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 name=var.name, alias=var.name, callback=self.callback
             )
         self.agent.data_broker.register_callback(
-            name="in_provision", alias="in_provision", callback=self.callback
+            name=glbs.PROVISION_VAR_NAME, alias=glbs.PROVISION_VAR_NAME,
+            callback=self.callback
         )
 
     def process(self):
@@ -371,84 +507,28 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         yield self.env.event()
 
     def callback(self, inp, name):
-        """Handle incoming data by storing power/energy profiles and triggering
-        flexibility calculations when all required inputs are available."""
-        if name == "in_provision":
+        """Handle incoming data by storing power/energy/price profiles and triggering
+        flexibility calculations when all required inputs are available.
+        """ 
+        
+        if name == glbs.PROVISION_VAR_NAME:
             self.in_provision = inp.value
-            if self.in_provision:
-                self._set_inputs_to_none()
 
-        if not self.in_provision:
-            if name == glbs.POWER_ALIAS_BASE:
-                self.data.power_profile_base = self.data.unify_inputs(inp.value)
-            elif name == glbs.POWER_ALIAS_NEG:
-                self.data.power_profile_flex_neg = self.data.unify_inputs(inp.value)
-            elif name == glbs.POWER_ALIAS_POS:
-                self.data.power_profile_flex_pos = self.data.unify_inputs(inp.value)
-            elif name == glbs.STORED_ENERGY_ALIAS_BASE:
-                self.data.stored_energy_profile_base = self.data.unify_inputs(inp.value)
-            elif name == glbs.STORED_ENERGY_ALIAS_NEG:
-                self.data.stored_energy_profile_flex_neg = self.data.unify_inputs(inp.value)
-            elif name == glbs.STORED_ENERGY_ALIAS_POS:
-                self.data.stored_energy_profile_flex_pos = self.data.unify_inputs(inp.value)
-            elif name == self.config.price_variable:
-                if not self.config.calculate_costs.use_constant_electricity_price:
-                    # price comes from predictor
-                    self.data.electricity_price_series = self.data.unify_inputs(inp.value,
-                                                                                mpc=False)
-
-            # set the constant electricity price series if given
-            if (
-                self.config.calculate_costs.use_constant_electricity_price
-                and self.data.electricity_price_series is None
-            ):
-                # get the index for the electricity price series
-                n = self.get(glbs.PREDICTION_HORIZON).value
-                ts = self.get(glbs.TIME_STEP).value
-                grid = np.arange(0, n * ts + ts, ts)
-                # fill the electricity_price_series with values
-                self.data.electricity_price_series = pd.Series(
-                    [self.config.calculate_costs.const_electricity_price for i in grid], index=grid)
-
-            necessary_input_for_calc_flex = [
-                self.data.power_profile_base,
-                self.data.power_profile_flex_neg,
-                self.data.power_profile_flex_pos,
-            ]
-
-            if self.config.calculate_costs.calculate_flex_costs:
-                necessary_input_for_calc_flex.append(self.data.electricity_price_series)
-
-            if (all(var is not None for var in necessary_input_for_calc_flex) and
-                    len(necessary_input_for_calc_flex) == 4):
-                # align the index of price variable to the index of inputs from mpc;
-                # electricity price signal is usually steps
-                necessary_input_for_calc_flex[-1] = self.data.electricity_price_series.reindex(
-                    self.data.power_profile_base.index).ffill()
-
-            if self.config.correct_costs.enable_energy_costs_correction:
-                necessary_input_for_calc_flex.extend(
-                    [
-                        self.data.stored_energy_profile_base,
-                        self.data.stored_energy_profile_flex_neg,
-                        self.data.stored_energy_profile_flex_pos,
-                    ]
+        if self.in_provision:
+            self.data = self.callback_handler.set_all_callback_variables_to_none(data=self.data)
+        else: 
+            self.data = self.callback_handler.update_input(data=self.data, name=name, value=inp.value)
+            
+        if self.callback_handler.is_ready_for_calculation(data=self.data):
+            # check the power profile end deviation
+            if not self.config.correct_costs.enable_energy_costs_correction:
+                self.check_power_end_deviation(
+                    tol=self.config.correct_costs.absolute_power_deviation_tolerance
                 )
-
-            if all(var is not None for var in necessary_input_for_calc_flex):
-
-                # check the power profile end deviation
-                if not self.config.correct_costs.enable_energy_costs_correction:
-                    self.check_power_end_deviation(
-                        tol=self.config.correct_costs.absolute_power_deviation_tolerance
-                    )
-
-                # Calculate the flexibility, send the offer, write and save the results
-                self.calc_and_send_offer()
-
-                # set the values to None to reset the callback
-                self._set_inputs_to_none()
-
+            # calculate and send the offer and reset the callback variables 
+            self.calc_and_send_offer()
+            self.data = self.callback_handler.set_all_callback_variables_to_none(data=self.data)
+        
     def get_results(self) -> Optional[pd.DataFrame]:
         """Open results file of flexibility_indicator.py."""
         results_file = self.config.results_file
@@ -493,8 +573,12 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 values = self.data.stored_energy_profile_flex_neg
             elif name == glbs.STORED_ENERGY_ALIAS_POS:
                 values = self.data.stored_energy_profile_flex_pos
+            elif self.config.correct_costs.eta_thermal_base and name == self.config.correct_costs.eta_thermal_base:
+                values = self.data.eta_thermal_base
             elif name == self.config.price_variable:
                 values = self.data.electricity_price_series
+            elif name == self.config.price_variable_feed_in:
+                values = self.data.feed_in_price_series
             elif name == glbs.COLLOCATION_TIME_GRID:
                 value = self.get(name).value
                 values = pd.Series(index=value, data=value)
@@ -558,12 +642,13 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         # Calculate the flexibility KPIs for current predictions
         collocation_time_grid = self.get(glbs.COLLOCATION_TIME_GRID).value
         self.data.calculate(
-            enable_energy_costs_correction=self.config.correct_costs.enable_energy_costs_correction,
+            enable_energy_costs_correction=
+            self.config.correct_costs.enable_energy_costs_correction,
             calculate_flex_cost=self.config.calculate_costs.calculate_flex_costs,
             integration_method=self.config.integration_method,
             collocation_time_grid=collocation_time_grid)
 
-        # get the full index during flex enevt including mpc_time_grid index and the
+        # get the full index during flex event including mpc_time_grid index and the
         # collocation index
         # full_index = np.sort(np.concatenate([collocation_time_grid, self.data.mpc_time_grid]))
         # flex_begin = self.get(glbs.MARKET_TIME).value + self.get(glbs.PREP_TIME).value
@@ -655,15 +740,6 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 variable=var.copy(update={"source": self.source}), copy=False,
             )
         self.offer_count += 1
-
-    def _set_inputs_to_none(self):
-        self.data.power_profile_base = None
-        self.data.power_profile_flex_neg = None
-        self.data.power_profile_flex_pos = None
-        self.data.electricity_price_series = None
-        self.data.stored_energy_profile_base = None
-        self.data.stored_energy_profile_flex_neg = None
-        self.data.stored_energy_profile_flex_pos = None
 
     def check_power_end_deviation(self, tol: float):
         """Calculate the deviation of the final value of the power profiles

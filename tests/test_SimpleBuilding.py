@@ -47,13 +47,14 @@ def create_dataframe_summary(df: pd.DataFrame, precision: int = 6) -> dict:
     summary = {
         "shape": df.shape,
         "columns": df.columns.tolist(),
-        "index_start": str(df.index.min()),
-        "index_end": str(df.index.max()),
+        "index_start": str(tuple(float(x) for x in df.index.min())),
+        "index_end": str(tuple(float(x) for x in df.index.max())),
         "statistics": stats_dict_clean,
         "head_5_rows": df.head(5).round(precision).to_dict(orient='split'),
         "tail_5_rows": df.tail(5).round(precision).to_dict(orient='split'),
     }
     return summary
+
 
 def assert_frame_matches_summary_snapshot(snapshot, df: pd.DataFrame,
                                           snapshot_name: str):
@@ -74,6 +75,7 @@ def assert_frame_matches_summary_snapshot(snapshot, df: pd.DataFrame,
 
     # Use snapshot.assert_match on the small, stable JSON string
     snapshot.assert_match(summary_json, snapshot_name)
+
 
 def run_example_from_path(example_path: Path):
     """
@@ -125,6 +127,7 @@ def run_example_from_path(example_path: Path):
         os.chdir(original_cwd)
         sys.path[:] = original_sys_path  # Restore the original sys.path
 
+
 def test_simplebuilding(snapshot, module_cleanup):
     """
     Unit test for the SimpleBuilding example using snapshot testing.
@@ -141,7 +144,7 @@ def test_simplebuilding(snapshot, module_cleanup):
     # Extract the full resulting dataframes as requested
     df_neg_flex_res = res["NegFlexMPC"]["NegFlexMPC"]
     df_pos_flex_res = res["PosFlexMPC"]["PosFlexMPC"]
-    df_baseline_res = res["FlexModel"]["Baseline"]
+    df_baseline_res = res["Baseline"]["Baseline"]
     df_indicator_res = res["FlexibilityIndicator"]["FlexibilityIndicator"]
 
     # Assert that a summary of each result DataFrame matches its snapshot
@@ -165,6 +168,7 @@ def test_simplebuilding(snapshot, module_cleanup):
         df_indicator_res,
         'SimpleBuilding_indicator_summary.json'
     )
+
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
