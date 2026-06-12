@@ -1,0 +1,420 @@
+{
+  "id": "Building_1_flex_FlexibilityIndicator",
+  "modules": [
+    {
+      "module_id": "Ag1Com",
+      "type": "local_broadcast"
+    },
+    {
+      "type": "agentlib_flexquant.flexibility_indicator",
+      "module_id": "FlexibilityIndicator",
+      "inputs": [
+        {
+          "value": null,
+          "name": "_P_el_base",
+          "alias": "Building_1_flex__P_el_base"
+        },
+        {
+          "value": null,
+          "name": "_P_el_neg",
+          "alias": "Building_1_flex__P_el_neg"
+        },
+        {
+          "value": null,
+          "name": "_P_el_pos",
+          "alias": "Building_1_flex__P_el_pos"
+        },
+        {
+          "value": null,
+          "name": "_E_stored_base",
+          "alias": "Building_1_flex__E_stored_base"
+        },
+        {
+          "value": null,
+          "name": "_E_stored_neg",
+          "alias": "Building_1_flex__E_stored_neg"
+        },
+        {
+          "value": null,
+          "name": "_E_stored_pos",
+          "alias": "Building_1_flex__E_stored_pos"
+        },
+        {
+          "value": null,
+          "name": "COP",
+          "alias": "Building_1_flex_COP"
+        },
+        {
+          "value": null,
+          "name": "c_grid_prediction",
+          "alias": "Building_1_flex_c_grid_prediction"
+        },
+        {
+          "value": null,
+          "name": "c_pel_feed_in",
+          "alias": "Building_1_flex_c_pel_feed_in"
+        },
+        {
+          "name": "in_provision",
+          "alias": "Building_1_flex_in_provision"
+        }
+      ],
+      "outputs": [
+        {
+          "value": null,
+          "name": "FlexibilityOffer",
+          "alias": "Building_1_flex_FlexibilityOffer"
+        },
+        {
+          "value": null,
+          "name": "negative_power_flex_full",
+          "alias": "Building_1_flex_negative_power_flex_full"
+        },
+        {
+          "value": null,
+          "name": "positive_power_flex_full",
+          "alias": "Building_1_flex_positive_power_flex_full"
+        },
+        {
+          "value": null,
+          "name": "negative_power_flex_offer",
+          "alias": "Building_1_flex_negative_power_flex_offer"
+        },
+        {
+          "value": null,
+          "name": "positive_power_flex_offer",
+          "alias": "Building_1_flex_positive_power_flex_offer"
+        },
+        {
+          "value": null,
+          "name": "negative_power_flex_offer_min",
+          "alias": "Building_1_flex_negative_power_flex_offer_min"
+        },
+        {
+          "value": null,
+          "name": "positive_power_flex_offer_min",
+          "alias": "Building_1_flex_positive_power_flex_offer_min"
+        },
+        {
+          "value": null,
+          "name": "negative_power_flex_offer_max",
+          "alias": "Building_1_flex_negative_power_flex_offer_max"
+        },
+        {
+          "value": null,
+          "name": "positive_power_flex_offer_max",
+          "alias": "Building_1_flex_positive_power_flex_offer_max"
+        },
+        {
+          "value": null,
+          "name": "negative_power_flex_offer_avg",
+          "alias": "Building_1_flex_negative_power_flex_offer_avg"
+        },
+        {
+          "value": null,
+          "name": "positive_power_flex_offer_avg",
+          "alias": "Building_1_flex_positive_power_flex_offer_avg"
+        },
+        {
+          "value": null,
+          "name": "negative_power_flex_within_boundary",
+          "alias": "Building_1_flex_negative_power_flex_within_boundary"
+        },
+        {
+          "value": null,
+          "name": "positive_power_flex_within_boundary",
+          "alias": "Building_1_flex_positive_power_flex_within_boundary"
+        },
+        {
+          "value": null,
+          "name": "negative_energy_flex",
+          "alias": "Building_1_flex_negative_energy_flex"
+        },
+        {
+          "value": null,
+          "name": "positive_energy_flex",
+          "alias": "Building_1_flex_positive_energy_flex"
+        },
+        {
+          "value": null,
+          "name": "negative_costs",
+          "alias": "Building_1_flex_negative_costs"
+        },
+        {
+          "value": null,
+          "name": "positive_costs",
+          "alias": "Building_1_flex_positive_costs"
+        },
+        {
+          "value": null,
+          "name": "negative_corrected_costs",
+          "alias": "Building_1_flex_negative_corrected_costs"
+        },
+        {
+          "value": null,
+          "name": "positive_corrected_costs",
+          "alias": "Building_1_flex_positive_corrected_costs"
+        },
+        {
+          "value": null,
+          "name": "negative_costs_rel",
+          "alias": "Building_1_flex_negative_costs_rel"
+        },
+        {
+          "value": null,
+          "name": "positive_costs_rel",
+          "alias": "Building_1_flex_positive_costs_rel"
+        },
+        {
+          "value": null,
+          "name": "negative_corrected_costs_rel",
+          "alias": "Building_1_flex_negative_corrected_costs_rel"
+        },
+        {
+          "value": null,
+          "name": "positive_corrected_costs_rel",
+          "alias": "Building_1_flex_positive_corrected_costs_rel"
+        }
+      ],
+      "parameters": [
+        {
+          "value": 3600,
+          "name": "prep_time",
+          "alias": "Building_1_flex_prep_time"
+        },
+        {
+          "value": 0,
+          "name": "market_time",
+          "alias": "Building_1_flex_market_time"
+        },
+        {
+          "value": 14400,
+          "name": "flex_event_duration",
+          "alias": "Building_1_flex_flex_event_duration"
+        },
+        {
+          "value": 900.0,
+          "name": "time_step",
+          "alias": "Building_1_flex_time_step"
+        },
+        {
+          "value": 96,
+          "name": "prediction_horizon",
+          "alias": "Building_1_flex_prediction_horizon"
+        },
+        {
+          "value": [
+            190.19237886466843,
+            709.8076211353316,
+            1090.1923788646684,
+            1609.8076211353316,
+            1990.1923788646684,
+            2509.807621135332,
+            2890.1923788646686,
+            3409.807621135332,
+            3790.1923788646686,
+            4309.807621135332,
+            4690.192378864668,
+            5209.807621135332,
+            5590.192378864668,
+            6109.807621135332,
+            6490.192378864668,
+            7009.807621135332,
+            7390.192378864668,
+            7909.807621135332,
+            8290.192378864669,
+            8809.807621135331,
+            9190.192378864669,
+            9709.807621135331,
+            10090.192378864669,
+            10609.807621135331,
+            10990.192378864669,
+            11509.807621135331,
+            11890.192378864669,
+            12409.807621135331,
+            12790.192378864669,
+            13309.807621135331,
+            13690.192378864669,
+            14209.807621135331,
+            14590.192378864669,
+            15109.807621135331,
+            15490.192378864669,
+            16009.807621135331,
+            16390.192378864667,
+            16909.807621135333,
+            17290.192378864667,
+            17809.807621135333,
+            18190.192378864667,
+            18709.807621135333,
+            19090.192378864667,
+            19609.807621135333,
+            19990.192378864667,
+            20509.807621135333,
+            20890.192378864667,
+            21409.807621135333,
+            21790.192378864667,
+            22309.807621135333,
+            22690.192378864667,
+            23209.807621135333,
+            23590.192378864667,
+            24109.807621135333,
+            24490.192378864667,
+            25009.807621135333,
+            25390.192378864667,
+            25909.807621135333,
+            26290.192378864667,
+            26809.807621135333,
+            27190.192378864667,
+            27709.807621135333,
+            28090.192378864667,
+            28609.807621135333,
+            28990.192378864667,
+            29509.807621135333,
+            29890.192378864667,
+            30409.807621135333,
+            30790.192378864667,
+            31309.807621135333,
+            31690.192378864667,
+            32209.807621135333,
+            32590.192378864667,
+            33109.80762113533,
+            33490.19237886467,
+            34009.80762113533,
+            34390.19237886467,
+            34909.80762113533,
+            35290.19237886467,
+            35809.80762113533,
+            36190.19237886467,
+            36709.80762113533,
+            37090.19237886467,
+            37609.80762113533,
+            37990.19237886467,
+            38509.80762113533,
+            38890.19237886467,
+            39409.80762113533,
+            39790.19237886467,
+            40309.80762113533,
+            40690.19237886467,
+            41209.80762113533,
+            41590.19237886467,
+            42109.80762113533,
+            42490.19237886467,
+            43009.80762113533,
+            43390.19237886467,
+            43909.80762113533,
+            44290.19237886467,
+            44809.80762113533,
+            45190.19237886467,
+            45709.80762113533,
+            46090.19237886467,
+            46609.80762113533,
+            46990.19237886467,
+            47509.80762113533,
+            47890.19237886467,
+            48409.80762113533,
+            48790.19237886467,
+            49309.80762113533,
+            49690.19237886467,
+            50209.80762113533,
+            50590.19237886467,
+            51109.80762113533,
+            51490.19237886467,
+            52009.80762113533,
+            52390.19237886467,
+            52909.80762113533,
+            53290.19237886467,
+            53809.80762113533,
+            54190.19237886467,
+            54709.80762113533,
+            55090.19237886467,
+            55609.80762113533,
+            55990.19237886467,
+            56509.80762113533,
+            56890.19237886467,
+            57409.80762113533,
+            57790.19237886467,
+            58309.80762113533,
+            58690.19237886467,
+            59209.80762113533,
+            59590.19237886467,
+            60109.80762113533,
+            60490.19237886467,
+            61009.80762113533,
+            61390.19237886467,
+            61909.80762113533,
+            62290.19237886467,
+            62809.80762113533,
+            63190.19237886467,
+            63709.80762113533,
+            64090.19237886467,
+            64609.80762113533,
+            64990.19237886467,
+            65509.80762113533,
+            65890.19237886467,
+            66409.80762113533,
+            66790.19237886467,
+            67309.80762113533,
+            67690.19237886467,
+            68209.80762113533,
+            68590.19237886467,
+            69109.80762113533,
+            69490.19237886467,
+            70009.80762113533,
+            70390.19237886467,
+            70909.80762113533,
+            71290.19237886467,
+            71809.80762113533,
+            72190.19237886467,
+            72709.80762113533,
+            73090.19237886467,
+            73609.80762113533,
+            73990.19237886467,
+            74509.80762113533,
+            74890.19237886467,
+            75409.80762113533,
+            75790.19237886467,
+            76309.80762113533,
+            76690.19237886467,
+            77209.80762113533,
+            77590.19237886467,
+            78109.80762113533,
+            78490.19237886467,
+            79009.80762113533,
+            79390.19237886467,
+            79909.80762113533,
+            80290.19237886467,
+            80809.80762113533,
+            81190.19237886467,
+            81709.80762113533,
+            82090.19237886467,
+            82609.80762113533,
+            82990.19237886467,
+            83509.80762113533,
+            83890.19237886467,
+            84409.80762113533,
+            84790.19237886467,
+            85309.80762113533,
+            85690.19237886467,
+            86209.80762113533
+          ],
+          "name": "collocation_time_grid",
+          "alias": "Building_1_flex_collocation_time_grid"
+        }
+      ],
+      "results_file": "Building_1_flex\\indicator.csv",
+      "price_variable": "c_grid_prediction",
+      "integration_method": "constant",
+      "correct_costs": {
+        "enable_energy_costs_correction": true,
+        "absolute_power_deviation_tolerance": 0.05,
+        "stored_energy_variable": "E_stored",
+        "eta_thermal_base": "COP"
+      },
+      "calculate_costs": {
+        "use_constant_feed_in_price": true,
+        "const_electricity_price": 0.0,
+        "const_feed_in_price": 0.0
+      }
+    }
+  ]
+}

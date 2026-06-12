@@ -1,0 +1,271 @@
+{
+  "id": "Building_1_flex_simulator",
+  "modules": [
+    {
+      "type": "local_broadcast"
+    },
+    {
+      "module_id": "SimulatorAgent",
+      "type": "simulator",
+      "model": {
+        "type": {
+          "file": "Building_1_flex\\flex_agents.py",
+          "class_name": "BaselineMPCModel"
+        },
+        "prediction_horizon": 96,
+        "time_step": 900,
+        "bes_parameters_path": "D:\\01_Git\\02_Python\\flexmod-merge\\flexmod\\use_cases\\ADMM\\Building_1_flex\\PotsdamTRY2015av_B1994_std_SiDwCoVe_NoDHW_sto4_rad5_hp_buh\\TBiv_264_VPerQFlow_30_setpoint_preference_20\\bes_parameters.json",
+        "mpc_modifiers": [
+          {
+            "modifier_type": "distribution",
+            "use_storage": true,
+            "volume": 30.0,
+            "n_layer": 4
+          },
+          {
+            "modifier_type": "building",
+            "year_of_construction": "1994",
+            "construction_data": "standard",
+            "base_infiltration": 0.5,
+            "has_floor": true
+          },
+          {
+            "modifier_type": "transfer",
+            "transfer_type": "radiator",
+            "n_ele": 5,
+            "dis": 5,
+            "include_ground_losses": 1
+          },
+          {
+            "modifier_type": "generation",
+            "hp_cycling": false,
+            "use_ele_buh": false,
+            "use_obj_std_t_sup_regularization": false,
+            "t_biv": 264.15,
+            "force_t_biv": true
+          },
+          {
+            "modifier_type": "electrical",
+            "use_pv": false,
+            "use_bat": false,
+            "f_design": 1.0,
+            "timezone": 1,
+            "e_bat": 20160000.0,
+            "eta": 0.92,
+            "c_rate": 0.5,
+            "a_mcr": 0.0013888888888888892
+          },
+          {
+            "modifier_type": "user",
+            "shift_upper_bound": 0.0,
+            "shift_lower_bound": 0.0,
+            "setpoint_preference": 20.0,
+            "schedule_type": 0,
+            "year": 2019
+          },
+          {
+            "modifier_type": "price",
+            "grid_fee_type": 0,
+            "dynamic_price": false,
+            "only_wholesale_price": false,
+            "year": 2019
+          },
+          {
+            "modifier_type": "weather",
+            "region_name": "Potsdam",
+            "condition": "Jahr"
+          }
+        ]
+      },
+      "save_results": true,
+      "shared_variable_fields": [
+        "outputs",
+        "states"
+      ],
+      "result_filename": "D:\\01_Git\\02_Python\\flexmod-merge\\flexmod\\use_cases\\ADMM\\Building_1_flex\\PotsdamTRY2015av_B1994_std_SiDwCoVe_NoDHW_sto4_rad5_hp_buh\\TBiv_264_VPerQFlow_30_setpoint_preference_20\\results\\simulator.csv",
+      "overwrite_result_file": true,
+      "result_causalities": [
+        "input",
+        "output",
+        "local"
+      ],
+      "parameters": [],
+      "inputs": [
+        {
+          "name": "T_amb",
+          "value": 273.15,
+          "alias": "Building_1_flex_T_amb_measurement"
+        },
+        {
+          "name": "Q_RadSol_or_1",
+          "value": 150,
+          "alias": "Building_1_flex_Q_RadSol_or_1_measurement"
+        },
+        {
+          "name": "Q_RadSol_or_2",
+          "value": 150,
+          "alias": "Building_1_flex_Q_RadSol_or_2_measurement"
+        },
+        {
+          "name": "Q_RadSol_or_3",
+          "value": 150,
+          "alias": "Building_1_flex_Q_RadSol_or_3_measurement"
+        },
+        {
+          "name": "Q_RadSol_or_4",
+          "value": 150,
+          "alias": "Building_1_flex_Q_RadSol_or_4_measurement"
+        },
+        {
+          "name": "T_preTemWin",
+          "value": 273.15,
+          "alias": "Building_1_flex_T_preTemWin_measurement"
+        },
+        {
+          "name": "T_preTemWall",
+          "value": 273.15,
+          "alias": "Building_1_flex_T_preTemWall_measurement"
+        },
+        {
+          "name": "T_preTemRoof",
+          "value": 273.15,
+          "alias": "Building_1_flex_T_preTemRoof_measurement"
+        },
+        {
+          "name": "schedule_human",
+          "value": 1,
+          "alias": "Building_1_flex_schedule_human_measurement"
+        },
+        {
+          "name": "schedule_dev",
+          "value": 0.1,
+          "alias": "Building_1_flex_schedule_dev_measurement"
+        },
+        {
+          "name": "schedule_light",
+          "value": 0,
+          "alias": "Building_1_flex_schedule_light_measurement"
+        },
+        {
+          "name": "building.thermalZone[1].preTemFloor.T",
+          "alias": "Building_1_flex_sim_T_preTemFloor",
+          "shared": false
+        },
+        {
+          "name": "valve_opening",
+          "value": 0.6,
+          "lb": 1e-08,
+          "ub": 1,
+          "alias": "Building_1_flex_valve_opening"
+        },
+        {
+          "name": "nSet_HP",
+          "value": 0.3,
+          "lb": 0,
+          "ub": 1,
+          "alias": "Building_1_flex_nSet_HP"
+        }
+      ],
+      "states": [
+        {
+          "name": "T_TES_1",
+          "value": 330,
+          "shared": true,
+          "alias": "Building_1_flex_T_TES_1"
+        },
+        {
+          "name": "T_TES_2",
+          "value": 330,
+          "shared": true,
+          "alias": "Building_1_flex_T_TES_2"
+        },
+        {
+          "name": "T_TES_3",
+          "value": 330,
+          "shared": true,
+          "alias": "Building_1_flex_T_TES_3"
+        },
+        {
+          "name": "T_TES_4",
+          "value": 330,
+          "shared": true,
+          "alias": "Building_1_flex_T_TES_4"
+        },
+        {
+          "name": "T_Air",
+          "value": 293.15,
+          "shared": true,
+          "alias": "Building_1_flex_T_Air"
+        },
+        {
+          "name": "T_Roof",
+          "value": 293.15,
+          "shared": true,
+          "alias": "Building_1_flex_T_Roof"
+        },
+        {
+          "name": "T_ExtWall",
+          "value": 293.15,
+          "shared": true,
+          "alias": "Building_1_flex_T_ExtWall"
+        },
+        {
+          "name": "T_IntWall",
+          "value": 293.15,
+          "shared": true,
+          "alias": "Building_1_flex_T_IntWall"
+        },
+        {
+          "name": "T_Floor",
+          "value": 293.15,
+          "shared": true,
+          "alias": "Building_1_flex_T_Floor"
+        },
+        {
+          "name": "T_transfer_out_1",
+          "value": 320,
+          "alias": "Building_1_flex_T_transfer_out_1",
+          "shared": true
+        },
+        {
+          "name": "T_transfer_out_2",
+          "value": 320,
+          "alias": "Building_1_flex_T_transfer_out_2",
+          "shared": true
+        },
+        {
+          "name": "T_transfer_out_3",
+          "value": 320,
+          "alias": "Building_1_flex_T_transfer_out_3",
+          "shared": true
+        },
+        {
+          "name": "T_transfer_out_4",
+          "value": 320,
+          "alias": "Building_1_flex_T_transfer_out_4",
+          "shared": true
+        },
+        {
+          "name": "T_transfer_out_5",
+          "value": 320,
+          "alias": "Building_1_flex_T_transfer_out_5",
+          "shared": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "T_sup_generation",
+          "value": 293.15,
+          "alias": "Building_1_flex_T_sup_generation"
+        },
+        {
+          "name": "COP",
+          "value": 3,
+          "alias": "Building_1_flex_T_sup_generation"
+        }
+      ],
+      "t_sample_communication": 60,
+      "t_sample_simulation": 10
+    }
+  ]
+}

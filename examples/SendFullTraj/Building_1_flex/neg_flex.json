@@ -1,0 +1,405 @@
+{
+  "id": "Building_1_flex_NegFlexMPC",
+  "modules": [
+    {
+      "type": "local_broadcast"
+    },
+    {
+      "type": "agentlib_flexquant.shadow_mpc",
+      "module_id": "NegFlexMPC",
+      "shared_variable_fields": [
+        "outputs"
+      ],
+      "optimization_backend": {
+        "type": "casadi",
+        "model": {
+          "type": {
+            "file": "Building_1_flex\\flex_agents.py",
+            "class_name": "NegFlexModel"
+          },
+          "prediction_horizon": 96,
+          "time_step": 900,
+          "bes_parameters_path": "Building_1_flex\\bes_parameters.json",
+          "mpc_modifiers": [
+            {
+              "modifier_type": "distribution",
+              "use_storage": true,
+              "volume": 30.0,
+              "n_layer": 4
+            },
+            {
+              "modifier_type": "building",
+              "year_of_construction": "1994",
+              "construction_data": "standard",
+              "base_infiltration": 0.5,
+              "has_floor": true
+            },
+            {
+              "modifier_type": "transfer",
+              "transfer_type": "radiator",
+              "n_ele": 5,
+              "dis": 5,
+              "include_ground_losses": 1
+            },
+            {
+              "modifier_type": "generation",
+              "hp_cycling": false,
+              "use_ele_buh": false,
+              "use_obj_std_t_sup_regularization": false,
+              "t_biv": 264.15,
+              "force_t_biv": true
+            },
+            {
+              "modifier_type": "electrical",
+              "use_pv": false,
+              "use_bat": false,
+              "f_design": 1.0,
+              "timezone": 1,
+              "e_bat": 20160000.0,
+              "eta": 0.92,
+              "c_rate": 0.5,
+              "a_mcr": 0.0013888888888888892
+            },
+            {
+              "modifier_type": "user",
+              "shift_upper_bound": 0.0,
+              "shift_lower_bound": 0.0,
+              "setpoint_preference": 20.0,
+              "schedule_type": 0,
+              "year": 2019
+            },
+            {
+              "modifier_type": "price",
+              "grid_fee_type": 0,
+              "dynamic_price": false,
+              "only_wholesale_price": false,
+              "year": 2019
+            },
+            {
+              "modifier_type": "weather",
+              "region_name": "Potsdam",
+              "condition": "Jahr"
+            }
+          ]
+        },
+        "results_file": "Building_1_flex\\mpc_agent_neg_flex.csv",
+        "save_results": true,
+        "build_batch_bat": "solver_lib\\compile_nlp.bat",
+        "do_jit": true,
+        "overwrite_result_file": true,
+        "discretization_options": {
+          "collocation_order": 2,
+          "collocation_method": "legendre"
+        },
+        "solver": {
+          "name": "ipopt",
+          "options": {
+            "ipopt": {
+              "max_iter": 500,
+              "tol": 1e-06,
+              "acceptable_tol": 1e-05,
+              "acceptable_constr_viol_tol": 0.01,
+              "acceptable_iter": 30,
+              "acceptable_compl_inf_tol": 0.01,
+              "nlp_scaling_method": "gradient-based",
+              "nlp_scaling_max_gradient": 100,
+              "nlp_scaling_min_value": 1e-08,
+              "obj_scaling_factor": 0.01,
+              "print_level": 5
+            }
+          }
+        },
+        "name": "TBiv_264_VPerQFlow_30_setpoint_preference_20"
+      },
+      "time_step": 900.0,
+      "prediction_horizon": 96,
+      "sampling_time": 900.0,
+      "parameters": [
+        {
+          "value": 3600,
+          "name": "prep_time",
+          "alias": "Building_1_flex_prep_time"
+        },
+        {
+          "value": 14400,
+          "name": "flex_event_duration",
+          "alias": "Building_1_flex_flex_event_duration"
+        },
+        {
+          "value": 0,
+          "name": "market_time",
+          "alias": "Building_1_flex_market_time"
+        },
+        {
+          "value": 10,
+          "name": "s_P_pos",
+          "alias": "Building_1_flex_s_P_pos"
+        },
+        {
+          "value": 1,
+          "name": "s_P_neg",
+          "alias": "Building_1_flex_s_P_neg"
+        },
+        {
+          "value": 250,
+          "name": "s_T",
+          "alias": "Building_1_flex_s_T"
+        }
+      ],
+      "inputs": [
+        {
+          "value": 273.15,
+          "name": "T_amb",
+          "alias": "Building_1_flex_T_amb_base"
+        },
+        {
+          "value": 150,
+          "name": "Q_RadSol_or_1",
+          "alias": "Building_1_flex_Q_RadSol_or_1_base"
+        },
+        {
+          "value": 150,
+          "name": "Q_RadSol_or_2",
+          "alias": "Building_1_flex_Q_RadSol_or_2_base"
+        },
+        {
+          "value": 150,
+          "name": "Q_RadSol_or_3",
+          "alias": "Building_1_flex_Q_RadSol_or_3_base"
+        },
+        {
+          "value": 150,
+          "name": "Q_RadSol_or_4",
+          "alias": "Building_1_flex_Q_RadSol_or_4_base"
+        },
+        {
+          "value": 273.15,
+          "name": "T_preTemWin",
+          "alias": "Building_1_flex_T_preTemWin_base"
+        },
+        {
+          "value": 273.15,
+          "name": "T_preTemWall",
+          "alias": "Building_1_flex_T_preTemWall_base"
+        },
+        {
+          "value": 273.15,
+          "name": "T_preTemRoof",
+          "alias": "Building_1_flex_T_preTemRoof_base"
+        },
+        {
+          "value": 1,
+          "name": "schedule_human",
+          "alias": "Building_1_flex_schedule_human_base"
+        },
+        {
+          "value": 0.1,
+          "name": "schedule_dev",
+          "alias": "Building_1_flex_schedule_dev_base"
+        },
+        {
+          "value": 0,
+          "name": "schedule_light",
+          "alias": "Building_1_flex_schedule_light_base"
+        },
+        {
+          "value": 273.15,
+          "name": "T_preTemFloor",
+          "alias": "Building_1_flex_T_preTemFloor_base"
+        },
+        {
+          "value": 294.15,
+          "name": "T_Air_lb",
+          "alias": "Building_1_flex_T_Air_lb_base"
+        },
+        {
+          "value": 294.15,
+          "name": "T_Air_ub",
+          "alias": "Building_1_flex_T_Air_ub_base"
+        },
+        {
+          "value": 31,
+          "name": "c_grid",
+          "alias": "Building_1_flex_c_grid_base"
+        },
+        {
+          "value": 7,
+          "name": "c_feed_in",
+          "alias": "Building_1_flex_c_feed_in_base"
+        },
+        {
+          "value": null,
+          "name": "valve_opening_full",
+          "alias": "Building_1_flex_valve_opening_full"
+        },
+        {
+          "value": null,
+          "name": "nSet_HP_full",
+          "alias": "Building_1_flex_nSet_HP_full"
+        },
+        {
+          "value": false,
+          "name": "in_provision",
+          "alias": "Building_1_flex_in_provision"
+        }
+      ],
+      "outputs": [
+        {
+          "value": null,
+          "name": "E_stored",
+          "alias": "Building_1_flex__E_stored_neg"
+        },
+        {
+          "value": null,
+          "name": "P_el",
+          "alias": "Building_1_flex__P_el_neg"
+        },
+        {
+          "lb": 290.15,
+          "ub": 348.15,
+          "value": 293.15,
+          "name": "T_sup_generation",
+          "alias": "Building_1_flex_T_sup_generation"
+        },
+        {
+          "lb": 0,
+          "ub": 25,
+          "value": 3,
+          "name": "COP",
+          "alias": "Building_1_flex_COP"
+        }
+      ],
+      "controls": [
+        {
+          "lb": 1e-08,
+          "ub": 1,
+          "value": 0.6,
+          "name": "valve_opening",
+          "alias": "Building_1_flex_valve_opening_shadow"
+        },
+        {
+          "lb": 0,
+          "ub": 1,
+          "value": 0.3,
+          "name": "nSet_HP",
+          "alias": "Building_1_flex_nSet_HP_shadow"
+        }
+      ],
+      "states": [
+        {
+          "value": 330,
+          "name": "T_TES_1",
+          "alias": "Building_1_flex_T_TES_1_base"
+        },
+        {
+          "value": 330,
+          "name": "T_TES_2",
+          "alias": "Building_1_flex_T_TES_2_base"
+        },
+        {
+          "value": 330,
+          "name": "T_TES_3",
+          "alias": "Building_1_flex_T_TES_3_base"
+        },
+        {
+          "value": 330,
+          "name": "T_TES_4",
+          "alias": "Building_1_flex_T_TES_4_base"
+        },
+        {
+          "value": 293.15,
+          "name": "T_Air",
+          "alias": "Building_1_flex_T_Air_base"
+        },
+        {
+          "value": 293.15,
+          "name": "T_Roof",
+          "alias": "Building_1_flex_T_Roof_base"
+        },
+        {
+          "value": 293.15,
+          "name": "T_ExtWall",
+          "alias": "Building_1_flex_T_ExtWall_base"
+        },
+        {
+          "value": 293.15,
+          "name": "T_IntWall",
+          "alias": "Building_1_flex_T_IntWall_base"
+        },
+        {
+          "value": 293.15,
+          "name": "T_Floor",
+          "alias": "Building_1_flex_T_Floor_base"
+        },
+        {
+          "value": 320,
+          "name": "T_transfer_out_1",
+          "alias": "Building_1_flex_T_transfer_out_1_base"
+        },
+        {
+          "value": 320,
+          "name": "T_transfer_out_2",
+          "alias": "Building_1_flex_T_transfer_out_2_base"
+        },
+        {
+          "value": 320,
+          "name": "T_transfer_out_3",
+          "alias": "Building_1_flex_T_transfer_out_3_base"
+        },
+        {
+          "value": 320,
+          "name": "T_transfer_out_4",
+          "alias": "Building_1_flex_T_transfer_out_4_base"
+        },
+        {
+          "value": 320,
+          "name": "T_transfer_out_5",
+          "alias": "Building_1_flex_T_transfer_out_5_base"
+        }
+      ],
+      "set_outputs": true,
+      "baseline_input_names": [
+        "Building_1_flex_T_amb_base",
+        "Building_1_flex_Q_RadSol_or_1_base",
+        "Building_1_flex_Q_RadSol_or_2_base",
+        "Building_1_flex_Q_RadSol_or_3_base",
+        "Building_1_flex_Q_RadSol_or_4_base",
+        "Building_1_flex_T_preTemWin_base",
+        "Building_1_flex_T_preTemWall_base",
+        "Building_1_flex_T_preTemRoof_base",
+        "Building_1_flex_schedule_human_base",
+        "Building_1_flex_schedule_dev_base",
+        "Building_1_flex_schedule_light_base",
+        "Building_1_flex_T_preTemFloor_base",
+        "Building_1_flex_T_Air_lb_base",
+        "Building_1_flex_T_Air_ub_base",
+        "Building_1_flex_c_grid_base",
+        "Building_1_flex_c_feed_in_base"
+      ],
+      "baseline_state_names": [
+        "Building_1_flex_T_TES_1_base",
+        "Building_1_flex_T_TES_2_base",
+        "Building_1_flex_T_TES_3_base",
+        "Building_1_flex_T_TES_4_base",
+        "Building_1_flex_T_Air_base",
+        "Building_1_flex_T_Roof_base",
+        "Building_1_flex_T_ExtWall_base",
+        "Building_1_flex_T_IntWall_base",
+        "Building_1_flex_T_Floor_base",
+        "Building_1_flex_T_transfer_out_1_base",
+        "Building_1_flex_T_transfer_out_2_base",
+        "Building_1_flex_T_transfer_out_3_base",
+        "Building_1_flex_T_transfer_out_4_base",
+        "Building_1_flex_T_transfer_out_5_base"
+      ],
+      "full_control_names": [
+        "Building_1_flex_valve_opening_full",
+        "Building_1_flex_nSet_HP_full"
+      ],
+      "baseline_agent_id": "Building_1_flex_Baseline",
+      "power_variable_name": "P_el",
+      "storage_variable_name": "E_stored",
+      "alias_prefix": "Building_1_flex"
+    }
+  ]
+}

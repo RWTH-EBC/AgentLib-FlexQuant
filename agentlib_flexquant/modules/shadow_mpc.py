@@ -26,6 +26,7 @@ class FlexibilityShadowMPCConfig(mpc_full.MPCConfig):
 
 
     baseline_agent_id: str = ""
+    alias_prefix: str = ""
 
     casadi_sim_time_step: int = Field(
         default=0,
@@ -66,6 +67,15 @@ class FlexibilityShadowMPC(mpc_full.MPC):
                     comm_var.name in input_names_list):
                 comm_var.value = None
                 self._track_base_comm_vars_dict[comm_var.name] = comm_var.copy(deep=True)
+
+            if (comm_var.alias in self.config.full_control_names or
+                    comm_var.alias in
+                    self.config.baseline_input_names or
+                    comm_var.alias in
+                    self.config.baseline_state_names or
+                    comm_var.alias in input_names_list):
+                comm_var.value = None
+                self._track_base_comm_vars_dict[comm_var.alias] = comm_var.copy(deep=True)
         # set up necessary components if simulation is enabled
         if self.config.casadi_sim_time_step > 0:
             # generate a separate simulation model for integration to ensure
@@ -157,13 +167,13 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         for control_var in self.config.controls:
             self.agent.data_broker.register_callback(
                 name=control_var.name + full_trajectory_suffix,
-                alias=control_var.name + full_trajectory_suffix,
+                alias=self.config.alias_prefix + "_" + control_var.name + full_trajectory_suffix,
                 callback=self.calc_flex_callback,
                 source=Source(agent_id=self.config.baseline_agent_id, module_id=None)
             )
         for base_inputs in self.config.baseline_input_names:
             self.agent.data_broker.register_callback(
-                name=base_inputs.removesuffix(base_vars_to_communicate_suffix),  # update MPC variable
+                name=base_inputs.removesuffix(base_vars_to_communicate_suffix).removeprefix(self.config.alias_prefix + "_"),  # update MPC variable
                 alias=base_inputs,
                 callback=self.calc_flex_callback,
                 source=Source(agent_id=self.config.baseline_agent_id, module_id=None)
@@ -176,7 +186,7 @@ class FlexibilityShadowMPC(mpc_full.MPC):
             )
         for base_states in self.config.baseline_state_names:
             self.agent.data_broker.register_callback(
-                name=base_states.removesuffix(base_vars_to_communicate_suffix),  # update MPC variable
+                name=base_states.removesuffix(base_vars_to_communicate_suffix).removeprefix(self.config.alias_prefix + "_"),  # update MPC variable
                 alias=base_states,
                 callback=self.calc_flex_callback,
                 source=Source(agent_id=self.config.baseline_agent_id, module_id=None)
@@ -199,7 +209,7 @@ class FlexibilityShadowMPC(mpc_full.MPC):
         # get the value of the input
         vals = inp.value
 
-        if inp.name in self.config.full_control_names:
+        if inp.alias in self.config.full_control_names:
             if vals.isna().any():
                 vals = fill_nans(series=vals, method=MEAN)
         # add time shift env.time to the incoming variable to adapt to mpc output,
@@ -210,7 +220,8 @@ class FlexibilityShadowMPC(mpc_full.MPC):
             vals.index += self.env.time
 
         # update value in the tracking dictionary
-        self._track_base_comm_vars_dict[name].value = vals
+        # self._track_base_comm_vars_dict[name].value = vals
+        self._track_base_comm_vars_dict[inp.alias].value = vals
         # set value
         self.set(name, vals)
 

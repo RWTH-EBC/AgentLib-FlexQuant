@@ -303,7 +303,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         # Set the first value of power_flex to zero, since it comes from the measurement/simulator
         # and is the same for baseline and shadow mpcs.
         # For quantification of flexibility, only power difference is of interest.
-        power_flex.iloc[0] = 0
+        # power_flex.iloc[0] = 0
 
         # Set values
         self.power_flex_full.value = power_flex

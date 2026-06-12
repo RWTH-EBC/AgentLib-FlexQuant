@@ -495,12 +495,15 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         inputs = self.config.inputs
         for var in inputs:
             self.agent.data_broker.register_callback(
-                name=var.name, alias=var.name, callback=self.callback
+                name=var.name, alias=var.alias, callback=self.callback
             )
-        self.agent.data_broker.register_callback(
-            name=glbs.PROVISION_VAR_NAME, alias=glbs.PROVISION_VAR_NAME,
-            callback=self.callback
-        )
+        if not (glbs.PROVISION_VAR_NAME in [i.name for i in
+                                            inputs] or glbs.PROVISION_VAR_NAME in [
+                    i.alias for i in inputs]):
+            self.agent.data_broker.register_callback(
+                name=glbs.PROVISION_VAR_NAME, alias=glbs.PROVISION_VAR_NAME,
+                callback=self.callback
+            )
 
     def process(self):
         """Yield control to the simulation environment and wait for events."""
@@ -733,6 +736,18 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 neg_diff_profile=neg_diff_profile,
                 neg_price=neg_price,
             )
+            print("hohohoho")
+            print("hohohoho")
+            print("hohohoho")
+            print("hohohoho")
+            print("hohohoho")
+            print("hohohoho")
+            print(var.value)
+            print("hohohoho")
+            print("hohohoho")
+            print("hohohoho")
+            print("hohohoho")
+            print("hohohoho")
             if timestamp is None:
                 timestamp = self.env.time
             var.timestamp = timestamp

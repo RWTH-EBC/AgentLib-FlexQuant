@@ -1,0 +1,59 @@
+{
+  "id": "Building_1_flex_user",
+  "modules": [
+    {
+      "type": "local_broadcast"
+    },
+    {
+      "module_id": "UserAgent",
+      "type": {
+        "file": "modules\\user.py",
+        "class_name": "UserModule"
+      },
+      "outputs": [
+        {
+          "name": "T_Air_lb",
+          "alias": "Building_1_flex_T_Air_lb"
+        },
+        {
+          "name": "T_Air_lb_sim",
+          "alias": "Building_1_flex_T_Air_lb_sim"
+        },
+        {
+          "name": "T_Air_lb_shadow",
+          "alias": "Building_1_flex_T_Air_lb_shadow"
+        },
+        {
+          "name": "T_Air_ub",
+          "alias": "Building_1_flex_T_Air_ub"
+        },
+        {
+          "name": "T_Air_ub_sim",
+          "alias": "Building_1_flex_T_Air_ub_sim"
+        },
+        {
+          "name": "T_Air_ub_shadow",
+          "alias": "Building_1_flex_T_Air_ub_shadow"
+        }
+      ],
+      "shared_variable_fields": [
+        "outputs"
+      ],
+      "simulation": {
+        "year": 2019,
+        "time_step": 60
+      },
+      "flexibility": {
+        "market_time": 900,
+        "prep_time": 3600,
+        "flexibility_event_duration": 14400
+      },
+      "comfort": {
+        "schedule_type": "constant_setpoint",
+        "shift_upper_bound": 0.0,
+        "shift_lower_bound": 0.0,
+        "setpoint_preference": 20.0
+      }
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "id": "Building_1_flex_predictor",
+  "modules": [
+    {
+      "type": "local_broadcast"
+    },
+    {
+      "module_id": "PredictorAgent",
+      "type": {
+        "file": "modules\\predictor.py",
+        "class_name": "PredictorModule"
+      },
+      "outputs": [],
+      "shared_variable_fields": [
+        "outputs"
+      ],
+      "time_step_mpc": 900,
+      "prediction_horizon": 96,
+      "sampling_time_predictor": 60,
+      "disturbances_path": "Building_1_flex\\disturbance.csv",
+      "prefix": "Building_1_flex"
+    }
+  ]
+}
