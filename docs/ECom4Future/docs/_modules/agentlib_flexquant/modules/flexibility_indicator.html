@@ -569,12 +569,15 @@
         <span class="n">inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">inputs</span>
         <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">data_broker</span><span class="o">.</span><span class="n">register_callback</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="n">var</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="n">var</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">callback</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">var</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="n">var</span><span class="o">.</span><span class="n">alias</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">callback</span>
             <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">data_broker</span><span class="o">.</span><span class="n">register_callback</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">PROVISION_VAR_NAME</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">PROVISION_VAR_NAME</span><span class="p">,</span>
-            <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">callback</span>
-        <span class="p">)</span></div>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">glbs</span><span class="o">.</span><span class="n">PROVISION_VAR_NAME</span> <span class="ow">in</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span>
+                                            <span class="n">inputs</span><span class="p">]</span> <span class="ow">or</span> <span class="n">glbs</span><span class="o">.</span><span class="n">PROVISION_VAR_NAME</span> <span class="ow">in</span> <span class="p">[</span>
+                    <span class="n">i</span><span class="o">.</span><span class="n">alias</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">]):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">data_broker</span><span class="o">.</span><span class="n">register_callback</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">PROVISION_VAR_NAME</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="n">glbs</span><span class="o">.</span><span class="n">PROVISION_VAR_NAME</span><span class="p">,</span>
+                <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">callback</span>
+            <span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlexibilityIndicatorModule.process"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModule.process">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Yield control to the simulation environment and wait for events.&quot;&quot;&quot;</span>
@@ -807,6 +810,18 @@
                 <span class="n">neg_diff_profile</span><span class="o">=</span><span class="n">neg_diff_profile</span><span class="p">,</span>
                 <span class="n">neg_price</span><span class="o">=</span><span class="n">neg_price</span><span class="p">,</span>
             <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;hohohoho&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;hohohoho&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;hohohoho&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;hohohoho&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;hohohoho&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;hohohoho&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;hohohoho&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;hohohoho&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;hohohoho&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;hohohoho&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;hohohoho&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">timestamp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">timestamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">time</span>
             <span class="n">var</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">timestamp</span>
