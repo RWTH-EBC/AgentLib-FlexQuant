@@ -8,7 +8,7 @@ from agentlib.utils.multi_agent_system import LocalMASAgency, RayMAS
 
 # Set the log-level
 logging.basicConfig(level=logging.WARN)
-until = 27900
+until = 9900
 
 ENV_CONFIG = {"rt": False, "factor": 0.01, "t_sample": 60}
 

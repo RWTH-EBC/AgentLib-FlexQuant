@@ -292,7 +292,7 @@ class PosFlexModelConfig(CasadiModelConfig):
         ),
         CasadiParameter(
             name="market_time",
-            value=0,
+            value=900,
             unit="s",
             description="Market time associated with the objective switch",
         ),
@@ -538,7 +538,7 @@ class NegFlexModelConfig(CasadiModelConfig):
         ),
         CasadiParameter(
             name="market_time",
-            value=0,
+            value=900,
             unit="s",
             description="Market time associated with the objective switch",
         ),

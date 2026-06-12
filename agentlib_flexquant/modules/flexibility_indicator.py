@@ -736,18 +736,6 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 neg_diff_profile=neg_diff_profile,
                 neg_price=neg_price,
             )
-            print("hohohoho")
-            print("hohohoho")
-            print("hohohoho")
-            print("hohohoho")
-            print("hohohoho")
-            print("hohohoho")
-            print(var.value)
-            print("hohohoho")
-            print("hohohoho")
-            print("hohohoho")
-            print("hohohoho")
-            print("hohohoho")
             if timestamp is None:
                 timestamp = self.env.time
             var.timestamp = timestamp

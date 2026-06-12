@@ -34,7 +34,7 @@
             {
               "modifier_type": "transfer",
               "transfer_type": "radiator",
-              "n_ele": 5,
+              "n_ele": 2,
               "dis": 5,
               "include_ground_losses": 1
             },
@@ -93,15 +93,14 @@
           "options": {
             "ipopt": {
               "max_iter": 500,
-              "tol": 1e-06,
-              "acceptable_tol": 1e-05,
-              "acceptable_constr_viol_tol": 0.01,
-              "acceptable_iter": 30,
-              "acceptable_compl_inf_tol": 0.01,
+              "tol": 1e-09,
+              "acceptable_tol": 1e-06,
+              "acceptable_constr_viol_tol": 0.0001,
+              "acceptable_iter": 20,
+              "acceptable_compl_inf_tol": 0.0001,
               "nlp_scaling_method": "gradient-based",
-              "nlp_scaling_max_gradient": 100,
               "nlp_scaling_min_value": 1e-08,
-              "obj_scaling_factor": 0.01,
+              "mu_strategy": "adaptive",
               "print_level": 5
             }
           }
@@ -317,21 +316,6 @@
           "value": 320,
           "name": "T_transfer_out_2",
           "alias": "Building_1_flex_T_transfer_out_2"
-        },
-        {
-          "value": 320,
-          "name": "T_transfer_out_3",
-          "alias": "Building_1_flex_T_transfer_out_3"
-        },
-        {
-          "value": 320,
-          "name": "T_transfer_out_4",
-          "alias": "Building_1_flex_T_transfer_out_4"
-        },
-        {
-          "value": 320,
-          "name": "T_transfer_out_5",
-          "alias": "Building_1_flex_T_transfer_out_5"
         }
       ],
       "set_outputs": true,
@@ -511,24 +495,6 @@
           "value": null,
           "name": "T_transfer_out_2_base",
           "alias": "Building_1_flex_T_transfer_out_2_base"
-        },
-        {
-          "shared": true,
-          "value": null,
-          "name": "T_transfer_out_3_base",
-          "alias": "Building_1_flex_T_transfer_out_3_base"
-        },
-        {
-          "shared": true,
-          "value": null,
-          "name": "T_transfer_out_4_base",
-          "alias": "Building_1_flex_T_transfer_out_4_base"
-        },
-        {
-          "shared": true,
-          "value": null,
-          "name": "T_transfer_out_5_base",
-          "alias": "Building_1_flex_T_transfer_out_5_base"
         }
       ],
       "power_variable_name": "P_el",
