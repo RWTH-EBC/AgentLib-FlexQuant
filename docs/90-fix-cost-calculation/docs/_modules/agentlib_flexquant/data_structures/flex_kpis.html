@@ -374,10 +374,6 @@
         <span class="c1"># Set values to zero if the difference is small</span>
         <span class="n">relative_difference</span> <span class="o">=</span> <span class="p">(</span><span class="n">power_flex</span> <span class="o">/</span> <span class="n">power_profile_base</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
         <span class="n">power_flex</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">relative_difference</span> <span class="o">&lt;</span> <span class="n">relative_error_acceptance</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="c1"># Set the first value of power_flex to zero, since it comes from the measurement/simulator</span>
-        <span class="c1"># and is the same for baseline and shadow mpcs.</span>
-        <span class="c1"># For quantification of flexibility, only power difference is of interest.</span>
-        <span class="n">power_flex</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="c1"># Set values</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">power_flex_full</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">power_flex</span>
@@ -703,9 +699,6 @@
             <span class="c1"># only fill NaN if there is NaN except for the first value</span>
             <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">series</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">1</span><span class="p">:])):</span>
                 <span class="n">series</span> <span class="o">=</span> <span class="n">fill_nans</span><span class="p">(</span><span class="n">series</span><span class="o">=</span><span class="n">series</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">MEAN</span><span class="p">)</span>
-            <span class="c1"># ensure the first value is nan, since it is calculated with the state from the</span>
-            <span class="c1"># controlled system and thus the same for baseline and shadow mpcs</span>
-            <span class="n">series</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">mpc</span><span class="p">:</span>
             <span class="n">series</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span>  <span class="c1"># price signals are typically steps</span>
