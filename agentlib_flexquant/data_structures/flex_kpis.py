@@ -300,10 +300,6 @@ class FlexibilityKPIs(pydantic.BaseModel):
         # Set values to zero if the difference is small
         relative_difference = (power_flex / power_profile_base).abs()
         power_flex.loc[relative_difference < relative_error_acceptance] = 0
-        # Set the first value of power_flex to zero, since it comes from the measurement/simulator
-        # and is the same for baseline and shadow mpcs.
-        # For quantification of flexibility, only power difference is of interest.
-        power_flex.iloc[0] = 0
 
         # Set values
         self.power_flex_full.value = power_flex
@@ -629,9 +625,6 @@ class FlexibilityData(pydantic.BaseModel):
             # only fill NaN if there is NaN except for the first value
             if any(np.isnan(series.loc[1:])):
                 series = fill_nans(series=series, method=MEAN)
-            # ensure the first value is nan, since it is calculated with the state from the
-            # controlled system and thus the same for baseline and shadow mpcs
-            series.iloc[0] = np.nan
 
         if not mpc:
             series = series.ffill()  # price signals are typically steps
