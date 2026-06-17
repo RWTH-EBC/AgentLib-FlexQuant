@@ -482,8 +482,8 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
 
     def _update_model_parameters(self):
         """update the value of module parameters with value from config,
-        since creating a model just reads the value in the model class
-        but not the config.
+        since creating a model just reads the value in the model class but
+        not the config
 
         """
 
@@ -500,7 +500,8 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
         """simulate with flex model over the prediction horizon
 
@@ -648,8 +649,8 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
 
     def _update_model_parameters(self):
         """update the value of module parameters with value from config,
-        since creating a model just reads the value in the model class
-        but not the config.
+        since creating a model just reads the value in the model class but
+        not the config
 
         """
 
@@ -666,7 +667,8 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
         """simulate with flex model over the prediction horizon
 
@@ -813,12 +815,9 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
-            total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
     ):
-        """simulate with flex model over the prediction horizon
-
-        """
+        """simulate with flex model over the prediction horizon"""
 
         # get control and input values from the mpc optimization result
         control_values = result_df.variable[
@@ -845,15 +844,7 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
         # set the flex results format same as mpc result while updating Agentvariable
         self.flex_results.index = self.flex_results.index.get_level_values(1)
 
-    def _initialize_flex_results(
-        self, n_simulation_steps, horizon_length, sim_time_step, result_df
-    ):
-        """Initialize the flex results dataframe with the correct dimension and index
-        and fill with existing results from optimization
-
-        """
-
-        # create MultiIndex for collocation points (duplicate-code)
+    def register_callbacks(self): (duplicate-code)
 agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[492:501]
 ==agentlib_flexquant.modules.shadow_mpc:[91:100]
@@ -869,7 +860,7 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
 agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.data_structures.mpcs:[14:22]
 ==agentlib_flexquant.utils.config_management:[178:186]
-    excluded_fields = [
+excluded_fields = [
         "rdf_class",
         "source",
         "type",
@@ -885,8 +876,7 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
             opti_outputs.values,
             index=index_coll,
         )
-        # fill the output value at the time step where it already exists
-        # in optimization output
+        # fill the output value at the time step where it already exists in optimization output
         for idx in fixed_opti_output.index:
             if idx in self.flex_results.index: (duplicate-code)
 agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
@@ -925,9 +915,7 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
             )
         return self
 
-    @model_validator(mode="after")
-    def add_eta_thermal_input(self):
-        """Add the eta_thermal_base variable to inputs after instantiation.""" (duplicate-code)
+ (duplicate-code)
 agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[281:302]
 ==agentlib_flexquant.modules.shadow_mpc:[599:617]
@@ -944,9 +932,12 @@ agentlib_flexquant/optimization_backends/constrained_cia.py:1:0: R0801: Similar 
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
-        """simulate with flex model over the prediction horizon"""
+        """simulate with flex model over the prediction horizon
+
+        """
 
         # get control and input values from the mpc optimization result (duplicate-code)
 
