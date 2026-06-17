@@ -76,10 +76,10 @@ class InputsForCalculateFlexCosts(BaseModel):
         default=True, description="Calculate the flexibility cost"
     )
     const_electricity_price: float = Field(
-        default=np.nan, description="constant electricity price in ct/kWh"
+        default=None, description="constant electricity price in ct/kWh"
     )
     const_feed_in_price: float = Field(
-        default=np.nan, description="constant feed-in price in ct/kWh"
+        default=None, description="constant feed-in price in ct/kWh"
     )
 
     @model_validator(mode="after")
