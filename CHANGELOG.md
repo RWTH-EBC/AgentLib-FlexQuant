@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1
+
+- Fixed cost calculation
+
 ## 0.2.0
 
 ### New Features

@@ -19,7 +19,7 @@ requirements = [
 
 setuptools.setup(
     name="agentlib_flexquant",
-    version="0.2.0",
+    version="0.2.1",
     author="",
     author_email="",
     description="Flexibility quantification setup based on agentlib_mpc",
