@@ -167,8 +167,6 @@ class FlexAgentGenerator:
             self.market_module_config = self.module_handler.get_module(
                 config=self.market_agent_config, module_type=self.market_config.module_type
             )
-        else:
-            self.flex_config.market_time = 0
 
         self.run_config_validations()
 
