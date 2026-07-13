@@ -126,6 +126,11 @@
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the variable representing the stored electrical energy &quot;</span>
                     <span class="s2">&quot;in the baseline config&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">eta_thermal_base</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the efficiency variable of the thermal generation unit&quot;</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
@@ -145,10 +150,10 @@
         <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Calculate the flexibility cost&quot;</span>
     <span class="p">)</span>
     <span class="n">const_electricity_price</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;constant electricity price in ct/kWh&quot;</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;constant electricity price in ct/kWh&quot;</span>
     <span class="p">)</span>
     <span class="n">const_feed_in_price</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;constant feed-in price in ct/kWh&quot;</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;constant feed-in price in ct/kWh&quot;</span>
     <span class="p">)</span>
 
 <div class="viewcode-block" id="InputsForCalculateFlexCosts.validate_constant_prices"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.validate_constant_prices">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
@@ -414,6 +419,10 @@
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;c_pel_feed_in&quot;</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the feed-in price variable sent by a predictor&quot;</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">eta_thermal_base</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the efficiency variable of the thermal generation unit&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="n">power_unit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;kW&quot;</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unit of the power variable&quot;</span>
@@ -435,6 +444,20 @@
                 <span class="sa">f</span><span class="s2">&quot;Invalid file extension for &#39;results_file&#39;: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">results_file</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;Expected a &#39;.csv&#39; file.&quot;</span>
             <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_eta_thermal_input</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add the eta_thermal_base variable to inputs after instantiation.&quot;&quot;&quot;</span>
+        <span class="n">eta_var</span> <span class="o">=</span> <span class="n">agentlib</span><span class="o">.</span><span class="n">AgentVariable</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">eta_thermal_base</span><span class="p">,</span>
+            <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;pd.Series&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Efficiency of the thermal generator&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">eta_thermal_base</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">):</span>
+            <span class="c1"># bypass frozen via setattr</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;inputs&#39;</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">eta_var</span><span class="p">])</span>
         <span class="k">return</span> <span class="bp">self</span></div></div>
 
 <div class="viewcode-block" id="CallBackHandler"><a class="viewcode-back" href="../../../code/agentlib_flexquant.modules.html#agentlib_flexquant.modules.flexibility_indicator.CallBackHandler">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">CallBackHandler</span><span class="p">:</span> 
@@ -486,6 +509,11 @@
                 <span class="n">glbs</span><span class="o">.</span><span class="n">STORED_ENERGY_ALIAS_NEG</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;stored_energy_profile_flex_neg&quot;</span><span class="p">,</span> <span class="s2">&quot;is_mpc&quot;</span><span class="p">:</span><span class="kc">True</span><span class="p">},</span>
                 <span class="n">glbs</span><span class="o">.</span><span class="n">STORED_ENERGY_ALIAS_POS</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;stored_energy_profile_flex_pos&quot;</span><span class="p">,</span> <span class="s2">&quot;is_mpc&quot;</span><span class="p">:</span><span class="kc">True</span><span class="p">},</span>
             <span class="p">})</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">eta_thermal_base</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">necessary_callback_variables</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+                    <span class="n">config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">eta_thermal_base</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;eta_thermal_base&quot;</span><span class="p">,</span> <span class="s2">&quot;is_mpc&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+                <span class="p">})</span>
+
             
         <span class="k">return</span> <span class="n">data</span></div>
     
@@ -522,7 +550,8 @@
         <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">variable</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="n">glbs</span><span class="o">.</span><span class="n">FLEXIBILITY_OFFER</span><span class="p">]:</span>
                 <span class="k">continue</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">var_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">variable</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">variable</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">var_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">variable</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">in_provision</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">offer_count</span> <span class="o">=</span> <span class="mi">0</span>
@@ -618,6 +647,8 @@
                 <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_flex_neg</span>
             <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">STORED_ENERGY_ALIAS_POS</span><span class="p">:</span>
                 <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">stored_energy_profile_flex_pos</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">eta_thermal_base</span> <span class="ow">and</span> <span class="n">name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">eta_thermal_base</span><span class="p">:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">eta_thermal_base</span>
             <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">price_variable</span><span class="p">:</span>
                 <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">electricity_price_series</span>
             <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">price_variable_feed_in</span><span class="p">:</span>

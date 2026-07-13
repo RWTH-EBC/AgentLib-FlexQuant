@@ -204,7 +204,7 @@ for optimization to the Shadow MPC, ensuring synchronisation.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.model_post_init">
 <span class="sig-name descname"><span class="pre">model_post_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.model_post_init" title="Permalink to this definition"></a></dt>
-<dd><p>This function is meant to behave like a BaseModel method to initialise private attributes.</p>
+<dd><p>This function is meant to behave like a BaseModel method to initialize private attributes.</p>
 <p>It takes context as an argument since that’s what pydantic-core passes when calling it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -325,7 +325,7 @@ for optimization to the Shadow MPC, ensuring synchronisation.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.model_post_init">
 <span class="sig-name descname"><span class="pre">model_post_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.model_post_init" title="Permalink to this definition"></a></dt>
-<dd><p>This function is meant to behave like a BaseModel method to initialise private attributes.</p>
+<dd><p>This function is meant to behave like a BaseModel method to initialize private attributes.</p>
 <p>It takes context as an argument since that’s what pydantic-core passes when calling it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -512,6 +512,7 @@ KPI outputs, and cost calculation settings.</p>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.calculate_costs" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.calculate_costs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_costs</span> <span class="pre">(agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.correct_costs" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.correct_costs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">correct_costs</span> <span class="pre">(agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.eta_thermal_base" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.eta_thermal_base"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eta_thermal_base</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.inputs" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.inputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span> <span class="pre">(list[agentlib.core.datamodels.AgentVariable])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.integration_method" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.integration_method"><code class="xref py py-obj docutils literal notranslate"><span class="pre">integration_method</span> <span class="pre">(Literal['linear',</span> <span class="pre">'constant'])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.outputs" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.outputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">outputs</span> <span class="pre">(list[agentlib.core.datamodels.AgentVariable])</span></code></a></p></li>
@@ -526,6 +527,7 @@ KPI outputs, and cost calculation settings.</p>
 </dd>
 <dt class="field-odd">Validators<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_valid_fields</span></code> » <a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.shared_variable_fields" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.shared_variable_fields"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shared_variable_fields</span></code></a></p></li>
 </ul>
@@ -533,10 +535,11 @@ KPI outputs, and cost calculation settings.</p>
 </dl>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.calculate_costs">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calculate_costs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts"><span class="pre">InputsForCalculateFlexCosts</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">InputsForCalculateFlexCosts(use_constant_electricity_price=False,</span> <span class="pre">use_constant_feed_in_price=False,</span> <span class="pre">calculate_flex_costs=True,</span> <span class="pre">const_electricity_price=nan,</span> <span class="pre">const_feed_in_price=nan)</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.calculate_costs" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calculate_costs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts"><span class="pre">InputsForCalculateFlexCosts</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">InputsForCalculateFlexCosts(use_constant_electricity_price=False,</span> <span class="pre">use_constant_feed_in_price=False,</span> <span class="pre">calculate_flex_costs=True,</span> <span class="pre">const_electricity_price=None,</span> <span class="pre">const_feed_in_price=None)</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.calculate_costs" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
 </ul>
 </dd>
@@ -545,10 +548,25 @@ KPI outputs, and cost calculation settings.</p>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.correct_costs">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">correct_costs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts"><span class="pre">InputsForCorrectFlexCosts</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">InputsForCorrectFlexCosts(enable_energy_costs_correction=False,</span> <span class="pre">absolute_power_deviation_tolerance=0.1,</span> <span class="pre">stored_energy_variable=None)</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.correct_costs" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">correct_costs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts"><span class="pre">InputsForCorrectFlexCosts</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">InputsForCorrectFlexCosts(enable_energy_costs_correction=False,</span> <span class="pre">absolute_power_deviation_tolerance=0.1,</span> <span class="pre">stored_energy_variable=None,</span> <span class="pre">eta_thermal_base=None)</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.correct_costs" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.eta_thermal_base">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">eta_thermal_base</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.eta_thermal_base" title="Permalink to this definition"></a></dt>
+<dd><p>Name of the efficiency variable of the thermal generation unit</p>
+<dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
 </ul>
 </dd>
@@ -561,6 +579,7 @@ KPI outputs, and cost calculation settings.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
 </ul>
 </dd>
@@ -574,6 +593,7 @@ KPI outputs, and cost calculation settings.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
 </ul>
 </dd>
@@ -586,6 +606,7 @@ KPI outputs, and cost calculation settings.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
 </ul>
 </dd>
@@ -598,6 +619,7 @@ KPI outputs, and cost calculation settings.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
 </ul>
 </dd>
@@ -611,6 +633,7 @@ KPI outputs, and cost calculation settings.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
 </ul>
 </dd>
@@ -624,6 +647,7 @@ KPI outputs, and cost calculation settings.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
 </ul>
 </dd>
@@ -637,6 +661,7 @@ KPI outputs, and cost calculation settings.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
 </ul>
 </dd>
@@ -650,6 +675,7 @@ KPI outputs, and cost calculation settings.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
 </ul>
 </dd>
@@ -662,6 +688,7 @@ KPI outputs, and cost calculation settings.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
 </ul>
 </dd>
@@ -674,11 +701,18 @@ KPI outputs, and cost calculation settings.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_valid_fields</span></code></p></li>
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method pydantic_validator">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input">
+<em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_eta_thermal_input</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="Permalink to this definition"></a></dt>
+<dd><p>Add the eta_thermal_base variable to inputs after instantiation.</p>
 </dd></dl>
 
 <dl class="py method pydantic_validator">
@@ -690,7 +724,7 @@ KPI outputs, and cost calculation settings.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.model_post_init">
 <span class="sig-name descname"><span class="pre">model_post_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.model_post_init" title="Permalink to this definition"></a></dt>
-<dd><p>This function is meant to behave like a BaseModel method to initialise private attributes.</p>
+<dd><p>This function is meant to behave like a BaseModel method to initialize private attributes.</p>
 <p>It takes context as an argument since that’s what pydantic-core passes when calling it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -741,7 +775,7 @@ pricing.</p>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.const_electricity_price">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">const_electricity_price</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">nan</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.const_electricity_price" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">const_electricity_price</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.const_electricity_price" title="Permalink to this definition"></a></dt>
 <dd><p>constant electricity price in ct/kWh</p>
 <dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
@@ -754,7 +788,7 @@ pricing.</p>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.const_feed_in_price">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">const_feed_in_price</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">nan</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.const_feed_in_price" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">const_feed_in_price</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCalculateFlexCosts.const_feed_in_price" title="Permalink to this definition"></a></dt>
 <dd><p>constant feed-in price in ct/kWh</p>
 <dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
@@ -809,6 +843,7 @@ pricing.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.absolute_power_deviation_tolerance" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.absolute_power_deviation_tolerance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">absolute_power_deviation_tolerance</span> <span class="pre">(float)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.enable_energy_costs_correction" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.enable_energy_costs_correction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">enable_energy_costs_correction</span> <span class="pre">(bool)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.eta_thermal_base" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.eta_thermal_base"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eta_thermal_base</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.stored_energy_variable" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.stored_energy_variable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stored_energy_variable</span> <span class="pre">(str</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
 </ul>
 </dd>
@@ -823,6 +858,12 @@ pricing.</p>
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.enable_energy_costs_correction">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">enable_energy_costs_correction</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.enable_energy_costs_correction" title="Permalink to this definition"></a></dt>
 <dd><p>Variable determining whether to correct the costs of the flexible energy. Define the variable for stored electrical energy in the base MPC model and config as output if the correction of costs is enabled</p>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.eta_thermal_base">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">eta_thermal_base</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.eta_thermal_base" title="Permalink to this definition"></a></dt>
+<dd><p>Name of the efficiency variable of the thermal generation unit</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
@@ -1049,7 +1090,7 @@ to account for the model error</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.model_post_init">
 <span class="sig-name descname"><span class="pre">model_post_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_market.FlexibilityMarketModuleConfig.model_post_init" title="Permalink to this definition"></a></dt>
-<dd><p>This function is meant to behave like a BaseModel method to initialise private attributes.</p>
+<dd><p>This function is meant to behave like a BaseModel method to initialize private attributes.</p>
 <p>It takes context as an argument since that’s what pydantic-core passes when calling it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1182,7 +1223,7 @@ it to AgentVariables.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.model_post_init">
 <span class="sig-name descname"><span class="pre">model_post_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.model_post_init" title="Permalink to this definition"></a></dt>
-<dd><p>This function is meant to behave like a BaseModel method to initialise private attributes.</p>
+<dd><p>This function is meant to behave like a BaseModel method to initialize private attributes.</p>
 <p>It takes context as an argument since that’s what pydantic-core passes when calling it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1310,7 +1351,7 @@ cannot be changed without recreating the optimization problem.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.model_post_init">
 <span class="sig-name descname"><span class="pre">model_post_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.model_post_init" title="Permalink to this definition"></a></dt>
-<dd><p>This function is meant to behave like a BaseModel method to initialise private attributes.</p>
+<dd><p>This function is meant to behave like a BaseModel method to initialize private attributes.</p>
 <p>It takes context as an argument since that’s what pydantic-core passes when calling it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

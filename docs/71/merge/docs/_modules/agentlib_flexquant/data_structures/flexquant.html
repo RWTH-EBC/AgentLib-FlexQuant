@@ -83,6 +83,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.core.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentConfig</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigurationError</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_mpc.data_structures.mpc_datamodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentVariable</span><span class="p">,</span> <span class="n">MPCVariable</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">agentlib_flexquant.utils.config_management</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cmng</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">agentlib_flexquant.data_structures.mpcs</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">BaselineMPCData</span><span class="p">,</span>
@@ -156,6 +157,10 @@
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;flexibility_market.json&quot;</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the config that is created by the generator&quot;</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">module_type</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Module type or dict with type and path for local files&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
 
 <div class="viewcode-block" id="FlexibilityMarketConfig.check_file_extension"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.check_file_extension">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">check_file_extension</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -168,6 +173,23 @@
                     <span class="sa">f</span><span class="s2">&quot;name_of_created_file: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name_of_created_file</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;Expected a &#39;.json&#39; file.&quot;</span>
                 <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+    
+<div class="viewcode-block" id="FlexibilityMarketConfig.validate_module_type"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexibilityMarketConfig.validate_module_type">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_module_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensure module_type is str or dict and set default if None.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">module_type</span> <span class="o">=</span> <span class="n">cmng</span><span class="o">.</span><span class="n">MARKET_CONFIG_TYPE</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module_type</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s1">&#39;file&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_type</span> <span class="ow">or</span> <span class="s1">&#39;class_name&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_type</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span><span class="s2">&quot;module_type dict must contain &#39;file&#39; and &#39;class_name&#39; keys&quot;</span><span class="p">)</span>
+        
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module_type</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;module_type must be either a string or a dictionary&quot;</span><span class="p">)</span>
+    
         <span class="k">return</span> <span class="bp">self</span></div></div>
 
 
@@ -182,6 +204,10 @@
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;indicator.json&quot;</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the config that is created by the generator&quot;</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">module_type</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Module type or dict with type and path for local files&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
 
 <div class="viewcode-block" id="FlexibilityIndicatorConfig.check_file_extension"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.check_file_extension">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">check_file_extension</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -194,6 +220,23 @@
                     <span class="sa">f</span><span class="s2">&quot;name_of_created_file: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name_of_created_file</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;Expected a &#39;.json&#39; file.&quot;</span>
                 <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+    
+<div class="viewcode-block" id="FlexibilityIndicatorConfig.validate_module_type"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexibilityIndicatorConfig.validate_module_type">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_module_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensure module_type is str or dict and set default if None.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">module_type</span> <span class="o">=</span> <span class="n">cmng</span><span class="o">.</span><span class="n">INDICATOR_CONFIG_TYPE</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module_type</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s1">&#39;file&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_type</span> <span class="ow">or</span> <span class="s1">&#39;class_name&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_type</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span><span class="s2">&quot;module_type dict must contain &#39;file&#39; and &#39;class_name&#39; keys&quot;</span><span class="p">)</span>
+        
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module_type</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;module_type must be either a string or a dictionary&quot;</span><span class="p">)</span>
+    
         <span class="k">return</span> <span class="bp">self</span></div></div>
 
 
@@ -251,6 +294,10 @@
     <span class="n">overwrite_files</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;If generated files should be overwritten by new files&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">custom_plugins</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Custom AgentLib plugins to be loaded&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
 <div class="viewcode-block" id="FlexQuantConfig.check_config_file_extension"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.check_config_file_extension">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
@@ -314,6 +361,23 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">flex_base_directory_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">flex_files_directory</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">results_directory</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+    
+<div class="viewcode-block" id="FlexQuantConfig.validate_custom_plugins"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flexquant.FlexQuantConfig.validate_custom_plugins">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_custom_plugins</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensure custom_plugins is a list of strings (or None).&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_plugins</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">custom_plugins</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_plugins</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid custom_plugins: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">custom_plugins</span><span class="si">!r}</span><span class="s2"> &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;(type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">custom_plugins</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">). &quot;</span>
+                <span class="s2">&quot;Expected a list of strings.&quot;</span>
+            <span class="p">)</span>
+
         <span class="k">return</span> <span class="bp">self</span></div></div>
 </pre></div>
 
