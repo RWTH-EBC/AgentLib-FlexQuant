@@ -11,7 +11,6 @@ from agentlib_mpc.data_structures.mpc_datamodels import MPCVariable
 from pydantic import model_validator, field_serializer, Field
 
 import agentlib_flexquant.data_structures.globals as glbs
-import agentlib_flexquant.utils.config_management as cmng
 
 excluded_fields = [
         "rdf_class",
@@ -89,7 +88,7 @@ class BaseMPCData(pydantic.BaseModel):
     name_of_created_file: str
     results_suffix: str
     # modules
-    module_types: dict
+    module_types: dict = {}
     class_name: str
     module_id: str
     agent_id: str
@@ -117,7 +116,6 @@ class BaselineMPCData(BaseMPCData):
     results_suffix: str = "_base.csv"
     name_of_created_file: str = "baseline.json"
     # modules
-    module_types: dict = cmng.BASELINE_MODULE_TYPE_DICT
     class_name: str = "BaselineMPCModel"
     module_id: str = "Baseline"
     agent_id: str = "Baseline"
@@ -202,7 +200,6 @@ class PFMPCData(BaseMPCData):
     results_suffix: str = "_pos_flex.csv"
     name_of_created_file: str = "pos_flex.json"
     # modules
-    module_types: dict = cmng.SHADOW_MODULE_TYPE_DICT
     class_name: str = "PosFlexModel"
     module_id: str = "PosFlexMPC"
     agent_id: str = "PosFlexMPC"
@@ -260,7 +257,6 @@ class NFMPCData(BaseMPCData):
     results_suffix: str = "_neg_flex.csv"
     name_of_created_file: str = "neg_flex.json"
     # modules
-    module_types: dict = cmng.SHADOW_MODULE_TYPE_DICT
     class_name: str = "NegFlexModel"
     module_id: str = "NegFlexMPC"
     agent_id: str = "NegFlexMPC"

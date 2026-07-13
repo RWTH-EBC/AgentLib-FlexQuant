@@ -54,6 +54,11 @@ class InputsForCorrectFlexCosts(BaseModel):
                     "in the baseline config"
     )
 
+    eta_thermal_base: str = Field(
+        default=None,
+        description="Name of the efficiency variable of the thermal generation unit",
+    )
+
 
 class InputsForCalculateFlexCosts(BaseModel):
     """Configuration for flexibility cost calculation with optional constant
@@ -71,10 +76,10 @@ class InputsForCalculateFlexCosts(BaseModel):
         default=True, description="Calculate the flexibility cost"
     )
     const_electricity_price: float = Field(
-        default=np.nan, description="constant electricity price in ct/kWh"
+        default=None, description="constant electricity price in ct/kWh"
     )
     const_feed_in_price: float = Field(
-        default=np.nan, description="constant feed-in price in ct/kWh"
+        default=None, description="constant feed-in price in ct/kWh"
     )
 
     @model_validator(mode="after")
@@ -340,6 +345,10 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
         default="c_pel_feed_in",
         description="Name of the feed-in price variable sent by a predictor",
     )
+    eta_thermal_base: str = Field(
+        default=None,
+        description="Name of the efficiency variable of the thermal generation unit",
+    )
     power_unit: str = Field(
         default="kW",
         description="Unit of the power variable"
@@ -361,6 +370,20 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
                 f"Invalid file extension for 'results_file': '{self.results_file}'. "
                 f"Expected a '.csv' file."
             )
+        return self
+
+    @model_validator(mode="after")
+    def add_eta_thermal_input(self):
+        """Add the eta_thermal_base variable to inputs after instantiation."""
+        eta_var = agentlib.AgentVariable(
+            name=self.correct_costs.eta_thermal_base,
+            unit="-",
+            type="pd.Series",
+            description="Efficiency of the thermal generator",
+        )
+        if not any(v.name == self.correct_costs.eta_thermal_base for v in self.inputs):
+            # bypass frozen via setattr
+            object.__setattr__(self, 'inputs', list(self.inputs) + [eta_var])
         return self
 
 class CallBackHandler: 
@@ -412,6 +435,11 @@ class CallBackHandler:
                 glbs.STORED_ENERGY_ALIAS_NEG: {"name":"stored_energy_profile_flex_neg", "is_mpc":True},
                 glbs.STORED_ENERGY_ALIAS_POS: {"name":"stored_energy_profile_flex_pos", "is_mpc":True},
             })
+            if config.correct_costs.eta_thermal_base:
+                self.necessary_callback_variables.update({
+                    config.correct_costs.eta_thermal_base: {"name": "eta_thermal_base", "is_mpc": True}
+                })
+
             
         return data
     
@@ -448,7 +476,8 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         for variable in self.variables:
             if variable.name in [glbs.FLEXIBILITY_OFFER]:
                 continue
-            self.var_list.append(variable.name)
+            if variable.name:
+                self.var_list.append(variable.name)
         self.time = []
         self.in_provision = False
         self.offer_count = 0
@@ -544,6 +573,8 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 values = self.data.stored_energy_profile_flex_neg
             elif name == glbs.STORED_ENERGY_ALIAS_POS:
                 values = self.data.stored_energy_profile_flex_pos
+            elif self.config.correct_costs.eta_thermal_base and name == self.config.correct_costs.eta_thermal_base:
+                values = self.data.eta_thermal_base
             elif name == self.config.price_variable:
                 values = self.data.electricity_price_series
             elif name == self.config.price_variable_feed_in:

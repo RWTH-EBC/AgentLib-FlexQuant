@@ -9,6 +9,7 @@ from pydantic import (field_validator, ConfigDict, model_validator, Field, BaseM
 from agentlib.core.agent import AgentConfig
 from agentlib.core.errors import ConfigurationError
 from agentlib_mpc.data_structures.mpc_datamodels import AgentVariable, MPCVariable
+import agentlib_flexquant.utils.config_management as cmng
 
 from agentlib_flexquant.data_structures.mpcs import (
     BaselineMPCData,
@@ -82,6 +83,10 @@ class FlexibilityMarketConfig(BaseModel):
         default="flexibility_market.json",
         description="Name of the config that is created by the generator",
     )
+    module_type: Union[dict, str] = Field(
+        default=None,
+        description="Module type or dict with type and path for local files",
+    )
 
     @model_validator(mode="after")
     def check_file_extension(self):
@@ -94,6 +99,23 @@ class FlexibilityMarketConfig(BaseModel):
                     f"name_of_created_file: '{self.name_of_created_file}'. "
                     f"Expected a '.json' file."
                 )
+        return self
+    
+    @model_validator(mode="after")
+    def validate_module_type(self):
+        """Ensure module_type is str or dict and set default if None."""
+
+        if self.module_type is None:
+            self.module_type = cmng.MARKET_CONFIG_TYPE
+            return self
+        
+        if isinstance(self.module_type, dict):
+            if 'file' not in self.module_type or 'class_name' not in self.module_type:
+                raise ConfigurationError("module_type dict must contain 'file' and 'class_name' keys")
+        
+        elif not isinstance(self.module_type, str):
+            raise TypeError("module_type must be either a string or a dictionary")
+    
         return self
 
 
@@ -108,6 +130,10 @@ class FlexibilityIndicatorConfig(BaseModel):
         default="indicator.json",
         description="Name of the config that is created by the generator",
     )
+    module_type: Union[dict, str] = Field(
+        default=None,
+        description="Module type or dict with type and path for local files",
+    )
 
     @model_validator(mode="after")
     def check_file_extension(self):
@@ -120,6 +146,23 @@ class FlexibilityIndicatorConfig(BaseModel):
                     f"name_of_created_file: '{self.name_of_created_file}'. "
                     f"Expected a '.json' file."
                 )
+        return self
+    
+    @model_validator(mode="after")
+    def validate_module_type(self):
+        """Ensure module_type is str or dict and set default if None."""
+
+        if self.module_type is None:
+            self.module_type = cmng.INDICATOR_CONFIG_TYPE
+            return self
+        
+        if isinstance(self.module_type, dict):
+            if 'file' not in self.module_type or 'class_name' not in self.module_type:
+                raise ConfigurationError("module_type dict must contain 'file' and 'class_name' keys")
+        
+        elif not isinstance(self.module_type, str):
+            raise TypeError("module_type must be either a string or a dictionary")
+    
         return self
 
 
@@ -177,6 +220,10 @@ class FlexQuantConfig(BaseModel):
     overwrite_files: bool = Field(
         default=False,
         description="If generated files should be overwritten by new files",
+    )
+    custom_plugins: list[str] = Field(
+        default=None, 
+        description="Custom AgentLib plugins to be loaded",
     )
 
     @model_validator(mode="after")
@@ -240,4 +287,21 @@ class FlexQuantConfig(BaseModel):
         self.flex_base_directory_path.mkdir(parents=True, exist_ok=True)
         self.flex_files_directory.mkdir(parents=True, exist_ok=True)
         self.results_directory.mkdir(parents=True, exist_ok=True)
+        return self
+    
+    @model_validator(mode="after")
+    def validate_custom_plugins(self):
+        """Ensure custom_plugins is a list of strings (or None)."""
+        if self.custom_plugins is None:
+            return self
+
+        if not isinstance(self.custom_plugins, list) or not all(
+            isinstance(p, str) for p in self.custom_plugins
+        ):
+            raise ConfigurationError(
+                f"Invalid custom_plugins: {self.custom_plugins!r} "
+                f"(type: {type(self.custom_plugins).__name__}). "
+                "Expected a list of strings."
+            )
+
         return self

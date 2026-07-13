@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.4.0
+
+- Fixed cost calculation
+
+## 0.3.1
+
+- Add DOI badge to README
+- Implement custom AgentLib plugin loading for custom agents in market and indicator
+- Add average thermal efficiency to corrected costs
+
+## 0.3.0
+
+- Zenodo release
+
 ## 0.2.0
 
 ### New Features
