@@ -15,7 +15,9 @@ LINEAR = 'linear'
 CONSTANT = 'constant'
 COLLOCATION = 'collocation'
 INTEGRATION_METHOD = Literal[LINEAR, CONSTANT]
+
 FlexibilityDirections = Literal["positive", "negative"]
+
 POWER_ALIAS_BASE = "_P_el_base"
 POWER_ALIAS_NEG = "_P_el_neg"
 POWER_ALIAS_POS = "_P_el_pos"
@@ -25,7 +27,7 @@ STORED_ENERGY_ALIAS_POS = "_E_stored_pos"
 full_trajectory_suffix: str = "_full"
 base_vars_to_communicate_suffix: str = "_base"
 shadow_suffix: str = "_shadow"
-COLLOCATION_TIME_GRID = 'collocation_time_grid'
+TIME_GRID_INFO = 'time_grid_info'
 PROVISION_VAR_NAME = "in_provision"
 ACCEPTED_POWER_VAR_NAME = "_P_external"
 RELATIVE_EVENT_START_TIME_VAR_NAME = "rel_start"
@@ -43,11 +45,9 @@ SHADOW_MPC_COST_FUNCTION = (
 
 def return_baseline_cost_function(power_variable: str, comfort_variable: str) -> str:
     """Return baseline cost function
-
     Args:
         power_variable: name of the power variable
         comfort_variable: name of the comfort variable
-
     Returns:
         Cost function in the baseline mpc, obj_std is to be evaluated according to
         user definition

@@ -21,6 +21,8 @@ def fill_nans(series: pd.Series, method: FillNansMethods) -> pd.Series:
         A pd.Series with nan filled.
 
     """
+    # ignore lags from casadi_ml models
+    series = series[series.index >= 0]
     if method == MEAN:
         series = _set_mean_values(series=series)
     elif method == INTERPOLATE:

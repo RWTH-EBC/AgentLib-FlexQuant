@@ -55,6 +55,7 @@ def create_ast_element(template_string: str) -> ast.expr:
     return ast.parse(template_string).body[0].value
 
 
+
 def add_input(
     name: str, value: Union[bool, str, int], unit: str, description: str, type: str
 ) -> ast.expr:
@@ -83,6 +84,7 @@ def add_input(
     )
 
 
+
 def add_parameter(
     name: str, value: Union[int, float], unit: str, description: str
 ) -> ast.expr:
@@ -108,6 +110,7 @@ def add_parameter(
             description=description,
         )
     )
+
 
 
 def add_output(
@@ -165,6 +168,7 @@ class SetupSystemModifier(ast.NodeTransformer):
     This class traverses the AST of the input file, identifies the relevant classes and methods,
     and performs the necessary modifications.
 
+
     """
 
     def __init__(
@@ -187,15 +191,19 @@ class SetupSystemModifier(ast.NodeTransformer):
             self.modify_config_class = self.modify_config_class_baseline
             self.modify_setup_system = self.modify_setup_system_baseline
 
+
     def visit_Module(self, module: ast.Module) -> ast.Module:
         """Visit a module definition in the AST.
+
 
         Append or delete the import statements at the top of the module.
 
         Args:
+
             module: The module definition node in the AST.
 
         Returns:
+
             The possibly modified module definition node.
 
         """
@@ -210,6 +218,7 @@ class SetupSystemModifier(ast.NodeTransformer):
         self.generic_visit(module)
         return module
 
+
     def visit_ClassDef(self, node: ast.ClassDef) -> ast.ClassDef:
         """Visit a class definition in the AST.
 
@@ -217,20 +226,22 @@ class SetupSystemModifier(ast.NodeTransformer):
         BaselineMPCModelConfig and BaselineMPCModel classes and performs the necessary actions.
 
         Args:
+
             node: The class definition node in the AST.
 
         Returns:
+
             The possibly modified class definition node.
 
         """
         for base in node.bases:
-            if isinstance(base, ast.Name) and base.id == "CasadiModelConfig":
+            if isinstance(base, ast.Name) and (base.id == "CasadiModelConfig" or base.id == "CasadiMLModelConfig"):
                 # get ast object and trigger modification
                 self.config_obj = node
                 self.modify_config_class(node)
                 # change class name
                 node.name = self.mpc_data.class_name + "Config"
-            if isinstance(base, ast.Name) and base.id == "CasadiModel":
+            if isinstance(base, ast.Name) and (base.id == "CasadiModel" or base.id == "CasadiMLModel"):
                 # get ast object and trigger modification
                 self.model_obj = node
                 for item in node.body:
@@ -274,10 +285,12 @@ class SetupSystemModifier(ast.NodeTransformer):
         # If we get here, we couldn't find a list
         return None
 
+
     def modify_config_class_shadow(self, node: ast.ClassDef):
         """Modify the config class of the shadow mpc.
 
         Args:
+
             node: The class definition node of the config.
 
         """
@@ -340,6 +353,7 @@ class SetupSystemModifier(ast.NodeTransformer):
         """Modify the config class of the baseline mpc.
 
         Args:
+
             node: The class definition node of the config.
 
         """
@@ -372,7 +386,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                 ):
                     # Complex case with concatenated lists or tuple
                     value_list = self.get_leftmost_list(body.value)
-
+               
             # add the flexibility inputs
             if body.target.id == "inputs":
                 if isinstance(body.value, ast.List):
@@ -474,6 +488,7 @@ class SetupSystemModifier(ast.NodeTransformer):
                             .value
                         )
                         item.value.elts.append(new_element)
+                    
                     break
         # loop through setup_system function to find return statement
         for i, stmt in enumerate(node.body):

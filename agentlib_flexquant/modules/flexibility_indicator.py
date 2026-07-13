@@ -111,6 +111,7 @@ class InputsForCalculateFlexCosts(BaseModel):
                         "field in the flex config."
                     )
                 )
+            
 
         return self
 
@@ -324,9 +325,9 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
                                description="timestep of the mpc solution"),
         agentlib.AgentVariable(name=glbs.PREDICTION_HORIZON, unit="-",
                                description="prediction horizon of the mpc solution"),
-        agentlib.AgentVariable(name=glbs.COLLOCATION_TIME_GRID,
-                               alias=glbs.COLLOCATION_TIME_GRID,
-                               description="Time grid of the mpc model output")
+        agentlib.AgentVariable(name=glbs.TIME_GRID_INFO,
+                               alias=glbs.TIME_GRID_INFO,
+                               description="Time grid info with 'type' and 'grid' keys")
     ]
 
     results_file: Optional[Path] = Field(
@@ -398,7 +399,7 @@ class CallBackHandler:
         # set collocation time grid 
         def get_param(cfg, name: str):
             return next(v for v in cfg.parameters if v.name == name)
-        self.collocation_time_grid = get_param(config, glbs.COLLOCATION_TIME_GRID).value
+        self.time_grid_info = get_param(config, glbs.TIME_GRID_INFO).value
         self.necessary_callback_variables = {
             glbs.POWER_ALIAS_BASE: {"name":"power_profile_base", "is_mpc":True},
             glbs.POWER_ALIAS_NEG: {"name":"power_profile_flex_neg", "is_mpc":True},
@@ -513,7 +514,6 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         
         if name == glbs.PROVISION_VAR_NAME:
             self.in_provision = inp.value
-
         if self.in_provision:
             self.data = self.callback_handler.set_all_callback_variables_to_none(data=self.data)
         else: 
@@ -579,9 +579,11 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 values = self.data.electricity_price_series
             elif name == self.config.price_variable_feed_in:
                 values = self.data.feed_in_price_series
-            elif name == glbs.COLLOCATION_TIME_GRID:
-                value = self.get(name).value
-                values = pd.Series(index=value, data=value)
+            elif name == glbs.TIME_GRID_INFO:
+                time_grid_info = self.get(name).value
+                # Store the grid as a series for results
+                grid = time_grid_info.get("grid", []) if time_grid_info else []
+                values = pd.Series(index=grid, data=grid) if grid else pd.Series()
             else:
                 values = self.get(name).value
 
@@ -640,18 +642,25 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         """Calculate the flexibility KPIs for current predictions, send the flex offer
         and set the outputs, write and save the results."""
         # Calculate the flexibility KPIs for current predictions
-        collocation_time_grid = self.get(glbs.COLLOCATION_TIME_GRID).value
+        time_grid_info = self.get(glbs.TIME_GRID_INFO).value
         self.data.calculate(
             enable_energy_costs_correction=
             self.config.correct_costs.enable_energy_costs_correction,
             calculate_flex_cost=self.config.calculate_costs.calculate_flex_costs,
             integration_method=self.config.integration_method,
-            collocation_time_grid=collocation_time_grid)
+            time_grid_info=time_grid_info)
+
+        # get the grid from time_grid_info
+        time_grid = time_grid_info.get("grid", []) if time_grid_info else []
 
         # get the full index during flex event including mpc_time_grid index and the
-        # collocation index
-        full_index = np.sort(np.concatenate([collocation_time_grid,
-                                             self.data.mpc_time_grid]))
+        is_collocation = time_grid_info and time_grid_info.get("type") == "collocation"
+
+        if is_collocation:
+            full_index = np.sort(np.concatenate([time_grid,self.data.mpc_time_grid]))
+        else:
+            full_index = self.data.mpc_time_grid
+            
         flex_begin = self.get(glbs.MARKET_TIME).value + self.get(glbs.PREP_TIME).value
         flex_end = flex_begin + self.get(glbs.FLEX_EVENT_DURATION).value
         full_flex_offer_index = full_index[(full_index >= flex_begin) &
@@ -660,16 +669,17 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         # reindex the power profiles to not send the simulation points to the market,
         # but only the values on the collocation points and the forward mean of them
         base_power_profile = self.data.power_profile_base.reindex(
-            collocation_time_grid).reindex(full_flex_offer_index)
+            time_grid).reindex(full_flex_offer_index)
         pos_diff_profile = self.data.kpis_pos.power_flex_offer.value.reindex(
-            collocation_time_grid).reindex(full_flex_offer_index)
+            time_grid).reindex(full_flex_offer_index)
         neg_diff_profile = self.data.kpis_neg.power_flex_offer.value.reindex(
-            collocation_time_grid).reindex(full_flex_offer_index)
+            time_grid).reindex(full_flex_offer_index)
 
-        # fill the mpc_time_grid with forward mean
-        base_power_profile = fill_nans(base_power_profile, method=MEAN)
-        pos_diff_profile = fill_nans(pos_diff_profile, method=MEAN)
-        neg_diff_profile = fill_nans(neg_diff_profile, method=MEAN)
+        if is_collocation:
+            # fill the mpc_time_grid with forward mean
+            base_power_profile = fill_nans(base_power_profile, method=MEAN)
+            pos_diff_profile = fill_nans(pos_diff_profile, method=MEAN)
+            neg_diff_profile = fill_nans(neg_diff_profile, method=MEAN)
 
         # Send flex offer
         self.send_flex_offer(
@@ -745,6 +755,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 variable=var.copy(update={"source": self.source}), copy=False,
             )
         self.offer_count += 1
+
 
     def check_power_end_deviation(self, tol: float):
         """Calculate the deviation of the final value of the power profiles

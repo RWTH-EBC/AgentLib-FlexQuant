@@ -643,11 +643,11 @@ class FlexAgentGenerator:
                 parameter.value = self.baseline_mpc_module_config.time_step
             if parameter.name == glbs.PREDICTION_HORIZON:
                 parameter.value = self.baseline_mpc_module_config.prediction_horizon
-            if parameter.name == glbs.COLLOCATION_TIME_GRID:
+            if parameter.name == glbs.TIME_GRID_INFO:
                 dis_op = self.baseline_mpc_module_config.optimization_backend[
                     "discretization_options"
                 ]
-                parameter.value = self.get_collocation_time_grid(
+                parameter.value = self.get_time_grid(
                     discretization_options=dis_op
                 )
         # set power unit
@@ -673,11 +673,11 @@ class FlexAgentGenerator:
                 self.flex_config.results_directory / module_config.results_file.name
         )
         for parameter in module_config.parameters:
-            if parameter.name == glbs.COLLOCATION_TIME_GRID:
+            if parameter.name == glbs.TIME_GRID_INFO:
                 dis_op = self.baseline_mpc_module_config.optimization_backend[
                     "discretization_options"
                 ]
-                parameter.value = self.get_collocation_time_grid(
+                parameter.value = self.get_time_grid(
                     discretization_options=dis_op
                 )
             if parameter.name == glbs.TIME_STEP:
@@ -719,31 +719,35 @@ class FlexAgentGenerator:
             config_json = self.flex_config.model_dump_json(exclude_defaults=True)
             f.write(config_json)
 
-    def get_collocation_time_grid(self, discretization_options: dict):
-        """Get the mpc output collocation grid over the horizon"""
-        # get the mpc time grid configuration
+    def get_time_grid(self, discretization_options: dict):
+        """Get the mpc output collocation grid over the horizon.
+
+        Returns a dict with 'type' and 'grid' keys.
+        """
         time_step = self.baseline_mpc_module_config.time_step
         prediction_horizon = self.baseline_mpc_module_config.prediction_horizon
-        # get the collocation configuration
-        collocation_method = discretization_options["collocation_method"]
-        collocation_order = discretization_options["collocation_order"]
-        # get the collocation points
-        options = CasadiDiscretizationOptions(
-            collocation_order=collocation_order, collocation_method=collocation_method
-        )
-        collocation_points = DirectCollocation(options=
-                                               options)._collocation_polynomial().root
-        # compute the mpc output collocation grid
-        discretization_points = np.arange(0, time_step * prediction_horizon, time_step)
-        collocation_time_grid = (
-                discretization_points[:, None] + collocation_points * time_step
-        ).ravel()
-        collocation_time_grid = collocation_time_grid[
-            ~np.isin(collocation_time_grid, discretization_points)
-        ]
-        collocation_time_grid = collocation_time_grid.tolist()
-        return collocation_time_grid
 
+        # Check if using multiple shooting
+        if discretization_options.get("method") == "multiple_shooting":
+            grid = np.arange(0, (prediction_horizon + 1) * time_step, time_step)
+            return {"type": "multiple_shooting", "grid": grid.tolist()}
+        else:
+            collocation_method = discretization_options["collocation_method"]
+            collocation_order = discretization_options["collocation_order"]
+            # get the collocation points
+            options = CasadiDiscretizationOptions(
+                collocation_order=collocation_order, collocation_method=collocation_method
+            )
+            collocation_points = DirectCollocation(options=options)._collocation_polynomial().root
+            # compute the mpc output collocation grid
+            discretization_points = np.arange(0, time_step * prediction_horizon, time_step)
+            time_grid = (
+                    discretization_points[:, None] + collocation_points * time_step
+            ).ravel()
+            time_grid = time_grid[
+                ~np.isin(time_grid, discretization_points)
+            ]
+            return {"type": "collocation", "grid": time_grid.tolist()}
     def _generate_flex_model_definition(self):
         """Generate a python module for negative and positive flexibility agents
         from the Baseline MPC model."""
@@ -759,8 +763,7 @@ class FlexAgentGenerator:
         model_fields = self.baseline_mpc_module_config.optimization_backend["model"]
         _ = model_fields.pop("type")
         config_instance = config_class(**model_fields)
-        # The " + " is just there to simplify the validation, it does not affect
-        # the generated code
+
         self.check_variables_in_casadi_config(
             config_instance,
             self.flex_config.shadow_mpc_config_generator_data.neg_flex.flex_cost_function +
@@ -769,6 +772,8 @@ class FlexAgentGenerator:
                 if self.flex_config.shadow_mpc_config_generator_data.neg_flex.flex_cost_function_appendix else ""),
             shadow_mpc_type="neg_flex"
         )
+        # The " + " is just there to simplify the validation, it does not affect
+        # the generated code
         self.check_variables_in_casadi_config(
             config_instance,
             self.flex_config.shadow_mpc_config_generator_data.pos_flex.flex_cost_function +
@@ -869,7 +874,7 @@ class FlexAgentGenerator:
         """Function to validate integrity of user-supplied flex config.
 
         Since the validation depends on interactions between multiple configurations,
-        it is performed within this function rather than using Pydantic’s built-in
+        it is performed within this function rather than using Pydantic's built-in
         validators for individual configurations.
 
         The following checks are performed:
@@ -877,8 +882,8 @@ class FlexAgentGenerator:
         2. Ensures the specified comfort variable exists in the MPC model states.
         3. Validates that the stored energy variable exists in MPC outputs if
         energy cost correction is enabled.
-        4. Verifies the supported collocation method is used; otherwise,
-        switches to 'legendre' and raises a warning.
+        4. Verifies a supported discretization method is used (collocation or multiple shooting);
+        if collocation is used, validates the collocation method.
         5. Ensures that the sum of prep time, market time, and flex event duration
         does not exceed the prediction horizon.
         6. Ensures market time equals the MPC model time step if market config is
@@ -905,8 +910,19 @@ class FlexAgentGenerator:
             class_name = mod_type["class_name"]
             # Get the class
             dynamic_class = cmng.get_class_from_file(file_path, class_name)
+
+            model_config = self.baseline_mpc_module_config.optimization_backend.get("model", {})
+            model_kwargs = {k: v for k, v in model_config.items() if k != "type"}
+
+            try:
+                model_instance = dynamic_class(**model_kwargs)
+            except Exception as e:
+                self.logger.warning(
+                    f"Could not instantiate model class {class_name} with full config "
+                )
+
             if self.flex_config.baseline_config_generator_data.comfort_variable not in [
-                state.name for state in dynamic_class().states
+                state.name for state in model_instance.states
             ]:
                 raise ConfigurationError(
                     f"Given comfort variable "
@@ -926,22 +942,13 @@ class FlexAgentGenerator:
                     f"It must be defined in the base MPC model and config as output "
                     f"if the correction of costs is enabled."
                 )
+        # validate discretization method (collocation or multiple shooting)
+        discretization_options = self.baseline_mpc_module_config.optimization_backend.get(
+            "discretization_options", {})
 
-        # raise warning if unsupported collocation method is used and change
-        # to supported method
-        if (
-                "collocation_method"
-                not in self.baseline_mpc_module_config.optimization_backend[
-            "discretization_options"]
-        ):
-            raise ConfigurationError(
-                "Please use collocation as discretization method and define the "
-                "collocation_method in the mpc config"
-            )
-        else:
-            collocation_method = self.baseline_mpc_module_config.optimization_backend[
-                "discretization_options"
-            ]["collocation_method"]
+        # If using collocation, validate the collocation method
+        if "collocation_method" in discretization_options:
+            collocation_method = discretization_options["collocation_method"]
             if collocation_method != "legendre":
                 self.logger.warning(
                     "Collocation method %s is not supported. Switching to "
