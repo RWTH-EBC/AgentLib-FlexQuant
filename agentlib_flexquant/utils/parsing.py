@@ -452,7 +452,8 @@ class SetupSystemModifier(ast.NodeTransformer):
                             ast.parse(
                                 f"{control.name}_upper = ca.if_else(self.time < "
                                 f"self.market_time.sym, "
-                                f"self.{control.name}{full_trajectory_suffix}.sym, "
+                                f"self.{control.name}{full_trajectory_suffix}.sym + "
+                                f"1e-3*self.{control.name}{full_trajectory_suffix}.sym, "
                                 f"self.{control.name}.ub)"
                             ).body[0],
                         )
@@ -461,7 +462,8 @@ class SetupSystemModifier(ast.NodeTransformer):
                             ast.parse(
                                 f"{control.name}_lower = ca.if_else(self.time < "
                                 f"self.market_time.sym, "
-                                f"self.{control.name}{full_trajectory_suffix}.sym, "
+                                f"self.{control.name}{full_trajectory_suffix}.sym - "
+                                f"1e-3*self.{control.name}{full_trajectory_suffix}.sym, "
                                 f"self.{control.name}.lb)"
                             ).body[0],
                         )
