@@ -28,9 +28,9 @@
 
         
         <h2>Score</h2>
-        7.22 / 10
+        7.24 / 10
             
-            (previous score: 7.22 / 10)
+            (previous score: 7.24 / 10)
             
         
 
@@ -994,7 +994,7 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[315:349]
+==agentlib_flexquant.modules.baseline_mpc:[327:361]
 ==agentlib_flexquant.modules.shadow_mpc:[306:338]
         for i in range(0, n_simulation_steps):
             current_sim_time = i * sim_time_step
@@ -1040,7 +1040,7 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[217:257]
+==agentlib_flexquant.modules.baseline_mpc:[229:269]
 ==agentlib_flexquant.modules.shadow_mpc:[540:580]
         )
 
@@ -1060,8 +1060,8 @@
     def _initialize_flex_results(
         self, n_simulation_steps, horizon_length, sim_time_step, result_df
     ):
-        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension and index
-        and fill with existing results from optimization
+        &#34;&#34;&#34;Initialize the flex results dataframe with the correct dimension
+        and index and fill with existing results from optimization
 
         &#34;&#34;&#34;
 
@@ -1092,7 +1092,7 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[258:306]
+==agentlib_flexquant.modules.baseline_mpc:[270:318]
 ==agentlib_flexquant.modules.shadow_mpc:[253:300]
                                          columns=self.var_ref.outputs)
 
@@ -1112,8 +1112,8 @@
 
     def _update_model_parameters(self):
         &#34;&#34;&#34;update the value of module parameters with value from config,
-        since creating a model just reads the value in the model class
-        but not the config.
+        since creating a model just reads the value in the model class but
+        not the config
 
         &#34;&#34;&#34;
 
@@ -1130,7 +1130,8 @@
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
         &#34;&#34;&#34;simulate with flex model over the prediction horizon
 
@@ -1151,7 +1152,7 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[648:687]
+==agentlib_flexquant.modules.baseline_mpc:[672:711]
 ==agentlib_flexquant.modules.shadow_mpc:[629:666]
         for i in range(0, n_simulation_steps):
             current_sim_time = i * sim_time_step
@@ -1202,7 +1203,7 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[151:174]
+==agentlib_flexquant.modules.baseline_mpc:[163:186]
 ==agentlib_flexquant.modules.shadow_mpc:[481:501]
         if not self.config.set_outputs:
             return
@@ -1237,20 +1238,18 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[664:687]
+==agentlib_flexquant.modules.baseline_mpc:[688:711]
 ==agentlib_flexquant.modules.shadow_mpc:[315:338]
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model can&#39;t
-                # deal with iterable
+                # change the type of iterable input, since casadi model can&#39;t deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time
-            # will not be exceeded
+            # reduce the simulation time step so that the total horizon time will not be exceeded
             if current_sim_time + sim_time_step &lt;= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -1261,7 +1260,9 @@
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value</pre></td>
+                ] = self.flex_model.get_output(output).value
+
+</pre></td>
             </tr>
             
             <tr>
@@ -1272,7 +1273,7 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[324:349]
+==agentlib_flexquant.modules.baseline_mpc:[336:361]
 ==agentlib_flexquant.modules.shadow_mpc:[645:666]
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
@@ -1309,7 +1310,7 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[589:633]
+==agentlib_flexquant.modules.baseline_mpc:[613:657]
 ==agentlib_flexquant.modules.shadow_mpc:[253:296]
                                          columns=self.var_ref.outputs)
 
@@ -1329,8 +1330,8 @@
 
     def _update_model_parameters(self):
         &#34;&#34;&#34;update the value of module parameters with value from config,
-        since creating a model just reads the value in the model class but
-        not the config
+        since creating a model just reads the value in the model class
+        but not the config.
 
         &#34;&#34;&#34;
 
@@ -1347,8 +1348,7 @@
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
-            total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
     ):
         &#34;&#34;&#34;simulate with flex model over the prediction horizon
 
@@ -1365,7 +1365,7 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[484:501]
+==agentlib_flexquant.modules.baseline_mpc:[508:525]
 ==agentlib_flexquant.modules.shadow_mpc:[481:498]
         if not self.config.set_outputs:
             return
@@ -1394,7 +1394,7 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[241:257]
+==agentlib_flexquant.modules.baseline_mpc:[253:269]
 ==agentlib_flexquant.modules.shadow_mpc:[235:251]
         index_coll = pd.MultiIndex.from_arrays(
             [[self.env.now] * len(result_df.index), result_df.index],
@@ -1422,7 +1422,7 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[522:546]
+==agentlib_flexquant.modules.baseline_mpc:[546:570]
 ==agentlib_flexquant.modules.shadow_mpc:[515:539]
             return
 
@@ -1458,7 +1458,7 @@
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[191:215]
+==agentlib_flexquant.modules.baseline_mpc:[203:227]
 ==agentlib_flexquant.modules.shadow_mpc:[115:139]
             return
 
@@ -1518,7 +1518,7 @@ excluded_fields = [
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[162:174]
+==agentlib_flexquant.modules.baseline_mpc:[174:186]
 ==agentlib_flexquant.modules.shadow_mpc:[91:103]
         if self.flex_results is not None:
             for output in self.var_ref.outputs:
@@ -1542,7 +1542,7 @@ excluded_fields = [
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[612:639]
+==agentlib_flexquant.modules.baseline_mpc:[636:663]
 ==agentlib_flexquant.modules.shadow_mpc:[599:623]
         for par in self.config.parameters:
             self.flex_model.set(par.name, par.value)
@@ -1578,7 +1578,7 @@ excluded_fields = [
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[217:241]
+==agentlib_flexquant.modules.baseline_mpc:[229:253]
 ==agentlib_flexquant.modules.shadow_mpc:[140:156]
         )
 
@@ -1614,7 +1614,7 @@ excluded_fields = [
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[492:501]
+==agentlib_flexquant.modules.baseline_mpc:[516:525]
 ==agentlib_flexquant.modules.shadow_mpc:[91:100]
         if self.flex_results is not None:
             for output in self.var_ref.outputs:
@@ -1676,7 +1676,7 @@ excluded_fields = [
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[262:271]
+==agentlib_flexquant.modules.baseline_mpc:[274:283]
 ==agentlib_flexquant.modules.shadow_mpc:[584:592]
         opti_outputs = result_df.variable[self.config.power_variable_name]
         fixed_opti_output = pd.Series(
@@ -1718,7 +1718,7 @@ excluded_fields = [
                 <td>R0801</td>
                 <td></td>
                 <td><pre>Similar lines in 2 files
-==agentlib_flexquant.modules.baseline_mpc:[281:302]
+==agentlib_flexquant.modules.baseline_mpc:[293:314]
 ==agentlib_flexquant.modules.shadow_mpc:[599:617]
         for par in self.config.parameters:
             self.flex_model.set(par.name, par.value)
@@ -1733,9 +1733,12 @@ excluded_fields = [
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
-        &#34;&#34;&#34;simulate with flex model over the prediction horizon&#34;&#34;&#34;
+        &#34;&#34;&#34;simulate with flex model over the prediction horizon
+
+        &#34;&#34;&#34;
 
         # get control and input values from the mpc optimization result</pre></td>
             </tr>
@@ -2639,7 +2642,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>138</td>
+                <td>145</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -2649,7 +2652,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>160</td>
+                <td>172</td>
                 <td>8</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2659,7 +2662,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>294</td>
+                <td>306</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
@@ -2669,7 +2672,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>294</td>
+                <td>306</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-locals</code></td>
@@ -2679,7 +2682,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>295</td>
+                <td>307</td>
                 <td>49</td>
                 <td>warning</td>
                 <td><code>unused-argument</code></td>
@@ -2689,7 +2692,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>330</td>
+                <td>342</td>
                 <td>30</td>
                 <td>warning</td>
                 <td><code>eval-used</code></td>
@@ -2699,7 +2702,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>350</td>
+                <td>362</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>missing-class-docstring</code></td>
@@ -2709,7 +2712,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>350</td>
+                <td>362</td>
                 <td>0</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -2719,7 +2722,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>471</td>
+                <td>490</td>
                 <td>4</td>
                 <td>convention</td>
                 <td><code>missing-function-docstring</code></td>
@@ -2729,7 +2732,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>492</td>
+                <td>516</td>
                 <td>8</td>
                 <td>convention</td>
                 <td><code>invalid-name</code></td>
@@ -2739,7 +2742,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>625</td>
+                <td>649</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
@@ -2749,7 +2752,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>625</td>
+                <td>649</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-locals</code></td>
@@ -2759,7 +2762,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>626</td>
+                <td>650</td>
                 <td>49</td>
                 <td>warning</td>
                 <td><code>unused-argument</code></td>
@@ -2769,7 +2772,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>670</td>
+                <td>694</td>
                 <td>30</td>
                 <td>warning</td>
                 <td><code>eval-used</code></td>
