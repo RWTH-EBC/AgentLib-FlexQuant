@@ -127,21 +127,33 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
         This essentially sends the same inputs and states the Baseline used
         for optimization to the Shadow MPC, ensuring synchronisation.
         """
+        current_time = self.env.now
+
         for vars_to_com in self.config.vars_to_communicate:
             vars_name = self._vars_to_com_name_mapping[vars_to_com.name]
             if vars_name in solution.df.variable:
                 vars_value = solution.df.variable[vars_name]
             else:  # parameter
                 vars_value = solution.df.parameter[vars_name]
+            # fix communication of lags for datadriven mpc
+            if vars_value.index[0] <= 0:
+                vars_value = vars_value.copy()
+                vars_value.index = vars_value.index + current_time
+
             self.set(vars_to_com.name, vars_value)
 
     def set_actuation(self, solution: Results):
         super().set_actuation(solution)
+        current_time = self.env.now
         for full_control in self.config.full_controls:
             # get the corresponding control name
             control = self._controls_name_mapping[full_control.name]
+            values = solution.df.variable[control].ffill().copy()
+            # fix communication of lags for datadriven mpc
+            if values.index[0] <= 0:
+                values.index = values.index + current_time
             # set value to full_control
-            self.set(full_control.name, solution.df.variable[control].ffill())
+            self.set(full_control.name, values)
 
     def set_output(self, solution):
         """Takes the solution from optimization backend and sends it
@@ -460,21 +472,33 @@ class FlexibilityBaselineMINLPMPC(minlp_mpc.MINLPMPC):
         This essentially sends the same inputs and states the Baseline used
         for optimization to the Shadow MPC, ensuring synchronisation.
         """
+        current_time = self.env.now
+
         for vars_to_com in self.config.vars_to_communicate:
             vars_name = self._vars_to_com_name_mapping[vars_to_com.name]
             if vars_name in solution.df.variable:
                 vars_value = solution.df.variable[vars_name]
             else:  # parameter
                 vars_value = solution.df.parameter[vars_name]
+            # fix communication of lags for datadriven mpc
+            if vars_value.index[0] <= 0:
+                vars_value = vars_value.copy()
+                vars_value.index = vars_value.index + current_time
+
             self.set(vars_to_com.name, vars_value)
 
     def set_actuation(self, solution: Results):
         super().set_actuation(solution)
+        current_time = self.env.now
         for full_control in self.config.full_controls:
             # get the corresponding control name
             control = self._controls_name_mapping[full_control.name]
+            values = solution.df.variable[control].ffill().copy()
+            # fix communication of lags for datadriven mpc
+            if values.index[0] <= 0:
+                values.index = values.index + current_time
             # set value to full_control
-            self.set(full_control.name, solution.df.variable[control].ffill())
+            self.set(full_control.name, values)
 
     def set_output(self, solution):
         """Takes the solution from optimization backend and sends it
