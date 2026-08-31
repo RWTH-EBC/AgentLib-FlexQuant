@@ -5,7 +5,7 @@ from agentlib_mpc.optimization_backends import BackendImport, backend_types
 
 from .modules import baseline_mpc, flexibility_indicator, flexibility_market, shadow_mpc
 
-__version__ = "0.1.0"
+__version__ = "0.4.1"
 
 MODULE_TYPES = {
     "shadow_mpc": ModuleImport(
