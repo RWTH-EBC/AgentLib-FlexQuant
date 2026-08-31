@@ -478,6 +478,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             if variable.name:
                 self.var_list.append(variable.name)
         self.time = []
+        self._input_timestamp = None
         self.in_provision = False
         self.offer_count = 0
         self.df = pd.DataFrame(columns=pd.Series(self.var_list))
@@ -511,6 +512,9 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         flexibility calculations when all required inputs are available.
         """ 
         
+        if inp.timestamp is not None:
+            self._input_timestamp = inp.timestamp
+
         if name == glbs.PROVISION_VAR_NAME:
             self.in_provision = inp.value
 
@@ -555,7 +559,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
 
         """
         results = []
-        now = self.env.now
+        now = self._input_timestamp if self._input_timestamp is not None else self.env.now
 
         # First, collect all series and their indices
         all_series = []
@@ -606,7 +610,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             reindexed = series.reindex(combined_index)
             results.append(reindexed)
 
-        if not now % ts:
+        if not self.time or now > self.time[-1]:
             self.time.append(now)
             new_df = pd.DataFrame(results).T
             new_df.columns = self.var_list
