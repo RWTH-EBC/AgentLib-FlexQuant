@@ -586,7 +586,8 @@
 <span class="sd">        flexibility calculations when all required inputs are available.</span>
 <span class="sd">        """</span> 
         
-        <span class="k">if</span> <span class="n">inp</span><span class="o">.</span><span class="n">timestamp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">callback_handler</span><span class="o">.</span><span class="n">necessary_callback_variables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">var</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">var</span><span class="p">[</span><span class="s2">"is_mpc"</span><span class="p">]</span> <span class="ow">and</span> <span class="n">inp</span><span class="o">.</span><span class="n">timestamp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_input_timestamp</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">timestamp</span>
 
         <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">glbs</span><span class="o">.</span><span class="n">PROVISION_VAR_NAME</span><span class="p">:</span>
@@ -704,6 +705,12 @@
             <span class="c1"># Drop column time_step and keep it as an index only</span>
             <span class="k">if</span> <span class="n">glbs</span><span class="o">.</span><span class="n">TIME_STEP</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
                 <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">glbs</span><span class="o">.</span><span class="n">TIME_STEP</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">"Skipped results for </span><span class="si">%s</span><span class="s2">, not newer than the last written </span><span class="si">%s</span><span class="s2">."</span><span class="p">,</span>
+                <span class="n">now</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+            <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">df</span></div>
 
