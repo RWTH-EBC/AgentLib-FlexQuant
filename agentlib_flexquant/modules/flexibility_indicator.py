@@ -512,7 +512,8 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         flexibility calculations when all required inputs are available.
         """ 
         
-        if inp.timestamp is not None:
+        var = self.callback_handler.necessary_callback_variables.get(name)
+        if var is not None and var["is_mpc"] and inp.timestamp is not None:
             self._input_timestamp = inp.timestamp
 
         if name == glbs.PROVISION_VAR_NAME:
@@ -630,6 +631,12 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             # Drop column time_step and keep it as an index only
             if glbs.TIME_STEP in df.columns:
                 df.drop(columns=[glbs.TIME_STEP], inplace=True)
+        else:
+            self.logger.debug(
+                "Skipped results for %s, not newer than the last written %s.",
+                now,
+                self.time[-1],
+            )
 
         return df
 
