@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>agentlib_flexquant.data_structures.flex_offer &mdash; agentlib_flexquant 0.1.0 documentation</title>
+  <title>agentlib_flexquant.data_structures.flex_offer &mdash; agentlib_flexquant 0.4.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
@@ -72,14 +72,14 @@
            <div itemprop="articleBody">
              
   <h1>Source code for agentlib_flexquant.data_structures.flex_offer</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">Data models for flexibility offers.</span>
 
 <span class="sd">This module defines data structures for representing flexibility offers in energy markets,</span>
 <span class="sd">including baseline power profiles, positive and negative flexibility pricing, and offer</span>
 <span class="sd">status tracking. The FlexOffer class encapsulates all information needed to represent</span>
 <span class="sd">a flexibility bid, including power differences from baseline and acceptance status.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
@@ -90,72 +90,72 @@
 
 
 <div class="viewcode-block" id="OfferStatus"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.OfferStatus">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">OfferStatus</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Status of the FlexOffer&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Status of the FlexOffer"""</span>
 
-    <span class="n">NOT_ACCEPTED</span> <span class="o">=</span> <span class="s2">&quot;Not Accepted&quot;</span>
-    <span class="n">ACCEPTED_POSITIVE</span> <span class="o">=</span> <span class="s2">&quot;Accepted Positive&quot;</span>
-    <span class="n">ACCEPTED_NEGATIVE</span> <span class="o">=</span> <span class="s2">&quot;Accepted Negative&quot;</span></div>
+    <span class="n">NOT_ACCEPTED</span> <span class="o">=</span> <span class="s2">"Not Accepted"</span>
+    <span class="n">ACCEPTED_POSITIVE</span> <span class="o">=</span> <span class="s2">"Accepted Positive"</span>
+    <span class="n">ACCEPTED_NEGATIVE</span> <span class="o">=</span> <span class="s2">"Accepted Negative"</span></div>
 
 
 <div class="viewcode-block" id="FlexOffer"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.FlexOffer">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FlexOffer</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Data class for the flexibility offer.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Data class for the flexibility offer."""</span>
 
     <span class="n">base_power_profile</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;W&quot;</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">"W"</span><span class="p">,</span>
         <span class="n">scalar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Power profile of the baseline MPC&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Power profile of the baseline MPC"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">pos_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;ct&quot;</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">"ct"</span><span class="p">,</span>
         <span class="n">scalar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Price for positive flexibility&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Price for positive flexibility"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">pos_diff_profile</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;W&quot;</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">"W"</span><span class="p">,</span>
         <span class="n">scalar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Power profile for the positive difference&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Power profile for the positive difference"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">neg_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;ct&quot;</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">"ct"</span><span class="p">,</span>
         <span class="n">scalar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Price for negative flexibility&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Price for negative flexibility"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">neg_diff_profile</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;W&quot;</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">"W"</span><span class="p">,</span>
         <span class="n">scalar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Power profile for the negative difference&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Power profile for the negative difference"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">status</span><span class="p">:</span> <span class="n">OfferStatus</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="n">OfferStatus</span><span class="o">.</span><span class="n">NOT_ACCEPTED</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
         <span class="n">scalar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Status of the FlexOffer&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Status of the FlexOffer"</span><span class="p">,</span>
     <span class="p">)</span>
 
 <div class="viewcode-block" id="FlexOffer.Config"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.FlexOffer.Config">[docs]</a>    <span class="k">class</span><span class="w"> </span><span class="nc">Config</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Allow arbitrary (non-Pydantic) types such as pandas.Series or numpy.ndarray</span>
-<span class="sd">        in model fields without requiring custom validators.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Allow arbitrary (non-Pydantic) types such as pandas.Series or numpy.ndarray</span>
+<span class="sd">        in model fields without requiring custom validators."""</span>
 
         <span class="n">arbitrary_types_allowed</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="FlexOffer.as_dataframe"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_offer.FlexOffer.as_dataframe">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">as_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store the flexibility offer in a pd.DataFrame</span>
+<span class="w">        </span><span class="sd">"""Store the flexibility offer in a pd.DataFrame</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            DataFrame containing the flexibility offer.</span>
 <span class="sd">            Scalar values are written on the first timestep.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">cols</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="c1"># append scalar values</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_fields</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">json_schema_extra</span><span class="p">[</span><span class="s2">&quot;scalar&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">json_schema_extra</span><span class="p">[</span><span class="s2">"scalar"</span><span class="p">]:</span>
                 <span class="n">ser</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
                 <span class="n">ser</span><span class="o">.</span><span class="n">index</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_power_profile</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ser</span><span class="p">)</span>
@@ -167,7 +167,7 @@
 
 
 <span class="c1"># add the offer type to agent variables</span>
-<span class="n">_TYPE_MAP</span><span class="p">[</span><span class="s2">&quot;FlexOffer&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">FlexOffer</span>
+<span class="n">_TYPE_MAP</span><span class="p">[</span><span class="s2">"FlexOffer"</span><span class="p">]</span> <span class="o">=</span> <span class="n">FlexOffer</span>
 </pre></div>
 
            </div>

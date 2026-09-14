@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>agentlib_flexquant.data_structures.flex_results &mdash; agentlib_flexquant 0.1.0 documentation</title>
+  <title>agentlib_flexquant.data_structures.flex_results &mdash; agentlib_flexquant 0.4.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
@@ -72,11 +72,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for agentlib_flexquant.data_structures.flex_results</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">Module for generating and managing results dataframes for flexibility analysis.</span>
 <span class="sd">Results include baseline, positive and negative flexibility data,</span>
 <span class="sd">the indicator, market and simulator results/data.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -111,7 +111,7 @@
 
 
 <div class="viewcode-block" id="load_indicator"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.load_indicator">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_indicator</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FilePath</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load the flexibility indicator results from the given file path.</span>
+<span class="w">    </span><span class="sd">"""Load the flexibility indicator results from the given file path.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        file_path: the file path of the indicator results file</span>
@@ -119,13 +119,13 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        DataFrame containing the indicator results</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">df</span></div>
 
 
 <div class="viewcode-block" id="load_market"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.load_market">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_market</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FilePath</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load the market results from the given file path.</span>
+<span class="w">    </span><span class="sd">"""Load the market results from the given file path.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        file_path: the file path of the market results file</span>
@@ -133,13 +133,13 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        DataFrame containing the market results</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">df</span></div>
 
 
 <div class="viewcode-block" id="Results"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Results</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Loads the results for the baseline, positive and negative flexibility,</span>
 <span class="sd">    the indicator, market and simulator results/data. Additionally the MPC stats</span>
 <span class="sd">    are loaded.</span>
@@ -149,7 +149,7 @@
 
 <span class="sd">    Loaded results are stored in pandas DataFrames which can be used for further</span>
 <span class="sd">    processing,  e.g. plotting and analysis.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># Configs:</span>
     <span class="c1"># Generator</span>
@@ -183,7 +183,7 @@
     <span class="n">df_neg_flex_stats</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
 
     <span class="c1"># time conversion</span>
-    <span class="n">current_timescale_of_data</span><span class="p">:</span> <span class="n">TimeConversionTypes</span> <span class="o">=</span> <span class="s2">&quot;seconds&quot;</span>
+    <span class="n">current_timescale_of_data</span><span class="p">:</span> <span class="n">TimeConversionTypes</span> <span class="o">=</span> <span class="s2">"seconds"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -191,9 +191,9 @@
         <span class="n">simulator_agent_config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FilePath</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]],</span>
         <span class="n">generated_flex_files_base_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FilePath</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">results</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span>
-            <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FilePath</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]],</span> <span class="s2">&quot;Results&quot;</span><span class="p">]</span>
+            <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FilePath</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]],</span> <span class="s2">"Results"</span><span class="p">]</span>
         <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">to_timescale</span><span class="p">:</span> <span class="n">TimeConversionTypes</span> <span class="o">=</span> <span class="s2">&quot;seconds&quot;</span><span class="p">,</span>
+        <span class="n">to_timescale</span><span class="p">:</span> <span class="n">TimeConversionTypes</span> <span class="o">=</span> <span class="s2">"seconds"</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="c1"># Already a Results instance — copy over its data</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">Results</span><span class="p">):</span>
@@ -221,24 +221,24 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_clear_unpicklable_references</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_clear_unpicklable_references</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove references to objects that cannot be pickled.</span>
+<span class="w">        </span><span class="sd">"""Remove references to objects that cannot be pickled.</span>
 
 <span class="sd">        This enables the Results object to be used with multiprocessing.</span>
 <span class="sd">        The model field contains CDLL references that cannot be serialized.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;simulator_module_config&#39;</span><span class="p">)</span> <span class="ow">and</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">'simulator_module_config'</span><span class="p">)</span> <span class="ow">and</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">simulator_module_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simulator_module_config</span><span class="p">,</span> <span class="s1">&#39;model&#39;</span><span class="p">):</span>
-                <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simulator_module_config</span><span class="p">,</span> <span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simulator_module_config</span><span class="p">,</span> <span class="s1">'model'</span><span class="p">):</span>
+                <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simulator_module_config</span><span class="p">,</span> <span class="s1">'model'</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_load_flex_config</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">flex_config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FilePath</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]],</span>
         <span class="n">custom_base_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FilePath</span><span class="p">]],</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load the flex config and optionally override the base directory path.</span>
+<span class="w">        </span><span class="sd">"""Load the flex config and optionally override the base directory path.</span>
 
-<span class="sd">        If a custom base path is provided, it overwrites the &quot;flex_base_directory_path&quot;</span>
+<span class="sd">        If a custom base path is provided, it overwrites the "flex_base_directory_path"</span>
 <span class="sd">        in the given config. This is useful when the generated flex files are saved</span>
 <span class="sd">        to a custom directory instead of the default (current working directory).</span>
 
@@ -247,12 +247,12 @@
 <span class="sd">            custom_base_path: The custom directory for saving the generated flex files</span>
 <span class="sd">            defined by user.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">custom_base_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">flex_config</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">)):</span>
-                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">flex_config</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">flex_config</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                     <span class="n">flex_config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-            <span class="n">flex_config</span><span class="p">[</span><span class="s2">&quot;flex_base_directory_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">custom_base_path</span><span class="p">)</span>
+            <span class="n">flex_config</span><span class="p">[</span><span class="s2">"flex_base_directory_path"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">custom_base_path</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span> <span class="o">=</span> <span class="n">load_config</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">flex_config</span><span class="p">,</span> <span class="n">config_type</span><span class="o">=</span><span class="n">FlexQuantConfig</span>
@@ -264,7 +264,7 @@
             <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_config_filenames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get filenames of configs to load agents and modules.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get filenames of configs to load agents and modules."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config_filename_baseline</span> <span class="o">=</span> <span class="n">BaselineMPCData</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">baseline_config_generator_data</span>
         <span class="p">)</span><span class="o">.</span><span class="n">name_of_created_file</span>
@@ -289,10 +289,10 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">market_config</span><span class="p">)</span><span class="o">.</span><span class="n">name_of_created_file</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_load_agent_module_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load agent and module configs.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Load agent and module configs."""</span>
         <span class="n">files_found</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">flex_files_directory</span><span class="p">)</span><span class="o">.</span><span class="n">rglob</span><span class="p">(</span>
-            <span class="s2">&quot;*.json&quot;</span>
+            <span class="s2">"*.json"</span>
         <span class="p">):</span>
             <span class="n">module_handler</span> <span class="o">=</span> <span class="n">ModuleHandler</span><span class="p">(</span><span class="n">extra_plugins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">custom_plugins</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">file_path</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_filename_baseline</span><span class="p">:</span>
@@ -357,30 +357,30 @@
         <span class="n">difference</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">files_needed</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">files_found</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">difference</span><span class="p">:</span>
             <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The files </span><span class="si">{</span><span class="n">difference</span><span class="si">}</span><span class="s2"> have not been found in the &quot;</span>
-                          <span class="sa">f</span><span class="s2">&quot;given Path.  This will most likely cause problems &quot;</span>
-                          <span class="sa">f</span><span class="s2">&quot;later on.  Please check the filenames.&quot;</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">"The files </span><span class="si">{</span><span class="n">difference</span><span class="si">}</span><span class="s2"> have not been found in the "</span>
+                          <span class="sa">f</span><span class="s2">"given Path.  This will most likely cause problems "</span>
+                          <span class="sa">f</span><span class="s2">"later on.  Please check the filenames."</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_load_simulator_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">simulator_agent_config</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load simulator agent and module config separately.</span>
+<span class="w">        </span><span class="sd">"""Load simulator agent and module config separately.</span>
 
 <span class="sd">        Separate loading is required to skip pydantic validation for specific field(s).</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># check config type: with results path adaptation -&gt; dict; without -&gt; str/Path</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">simulator_agent_config</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">simulator_agent_config</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">return</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">simulator_agent_config</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">)):</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">simulator_agent_config</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">simulator_agent_config</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">sim_config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># is dict</span>
             <span class="n">sim_config</span> <span class="o">=</span> <span class="n">simulator_agent_config</span>
         <span class="n">sim_module_config</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
             <span class="p">(</span>
                 <span class="n">module</span>
-                <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">sim_config</span><span class="p">[</span><span class="s2">&quot;modules&quot;</span><span class="p">]</span>
-                <span class="k">if</span> <span class="n">module</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;simulator&quot;</span>
+                <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">sim_config</span><span class="p">[</span><span class="s2">"modules"</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">module</span><span class="p">[</span><span class="s2">"type"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"simulator"</span>
             <span class="p">),</span>
             <span class="kc">None</span><span class="p">,</span>
         <span class="p">)</span>
@@ -392,11 +392,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">create_simulator_config_with_skipped_validation</span><span class="p">(</span>
                 <span class="n">sim_config_class</span><span class="o">=</span><span class="n">SimulatorConfig</span><span class="p">,</span>
                 <span class="n">sim_config</span><span class="o">=</span><span class="n">sim_module_config</span><span class="p">,</span>
-                <span class="n">skip_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;result_filename&quot;</span><span class="p">],</span>
+                <span class="n">skip_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">"result_filename"</span><span class="p">],</span>
             <span class="p">))</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_flexquant_mpc_module_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_config</span><span class="p">:</span> <span class="n">AgentConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the mpc module type from agent_config.</span>
+<span class="w">        </span><span class="sd">"""Get the mpc module type from agent_config.</span>
 
 <span class="sd">        The module type is defined in agentlib_flexquant.</span>
 
@@ -406,22 +406,22 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            The type of the mpc module</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">agent_config</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">module</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="n">cmng</span><span class="o">.</span><span class="n">BASELINEMPC_CONFIG_TYPE</span><span class="p">,</span>
+            <span class="k">if</span> <span class="n">module</span><span class="p">[</span><span class="s1">'type'</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="n">cmng</span><span class="o">.</span><span class="n">BASELINEMPC_CONFIG_TYPE</span><span class="p">,</span>
                                   <span class="n">cmng</span><span class="o">.</span><span class="n">BASELINEMINLPMPC_CONFIG_TYPE</span><span class="p">,</span>
                                   <span class="n">cmng</span><span class="o">.</span><span class="n">SHADOWMPC_CONFIG_TYPE</span><span class="p">,</span>
                                   <span class="n">cmng</span><span class="o">.</span><span class="n">SHADOWMINLPMPC_CONFIG_TYPE</span><span class="p">]:</span>
-                <span class="k">return</span> <span class="n">module</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span>
+                <span class="k">return</span> <span class="n">module</span><span class="p">[</span><span class="s1">'type'</span><span class="p">]</span>
 
-        <span class="k">raise</span> <span class="ne">ModuleNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;There is no matching mpc module type in &#39;</span>
-                                  <span class="sa">f</span><span class="s1">&#39;Agentlib_FlexQuant for modules in agent &#39;</span>
-                                  <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">agent_config</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ModuleNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'There is no matching mpc module type in '</span>
+                                  <span class="sa">f</span><span class="s1">'Agentlib_FlexQuant for modules in agent '</span>
+                                  <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">agent_config</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s1">.'</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_resolve_sim_results_path</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">sim_result_filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">results_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Resolve simulator results path with fallback strategy.</span>
 
 <span class="sd">        Tries multiple strategies to locate the simulator results file:</span>
@@ -439,15 +439,15 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            FileNotFoundError: If file cannot be found using any strategy</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">sim_results_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">sim_result_filename</span><span class="p">)</span>
         <span class="n">results_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">results_path</span><span class="p">)</span>
 
-        <span class="c1"># Strategy 1: If it&#39;s an absolute path and exists, use it</span>
+        <span class="c1"># Strategy 1: If it's an absolute path and exists, use it</span>
         <span class="k">if</span> <span class="n">sim_results_path</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">()</span> <span class="ow">and</span> <span class="n">sim_results_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
             <span class="k">return</span> <span class="n">sim_results_path</span>
 
-        <span class="c1"># Strategy 2: If it&#39;s a relative path, try it as-is from current directory</span>
+        <span class="c1"># Strategy 2: If it's a relative path, try it as-is from current directory</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">sim_results_path</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">()</span> <span class="ow">and</span> <span class="n">sim_results_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
             <span class="k">return</span> <span class="n">sim_results_path</span>
 
@@ -458,13 +458,13 @@
             <span class="k">return</span> <span class="n">results_dir_path</span>
 
         <span class="c1"># If none of the strategies worked, raise an error</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;Could not locate simulator results file.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">"Could not locate simulator results file."</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_load_results</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">results</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]],</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load dict with results for mpc, indicator, market and sim</span>
-<span class="sd">        from specified results path.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Load dict with results for mpc, indicator, market and sim</span>
+<span class="sd">        from specified results path."""</span>
         <span class="c1"># load results</span>
         <span class="k">if</span> <span class="n">results</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">res_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">results_directory</span>
@@ -473,7 +473,7 @@
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="n">res_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">results_directory</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;results must be a path or dict&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"results must be a path or dict"</span><span class="p">)</span>
 
         <span class="n">res</span> <span class="o">=</span> <span class="p">{</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">baseline_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="p">{</span>
@@ -482,7 +482,7 @@
                         <span class="n">res_path</span><span class="p">,</span>
                         <span class="n">Path</span><span class="p">(</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">baseline_module_config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span>
-                                <span class="s2">&quot;results_file&quot;</span>
+                                <span class="s2">"results_file"</span>
                             <span class="p">]</span>
                         <span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
                     <span class="p">)</span>
@@ -494,7 +494,7 @@
                         <span class="n">res_path</span><span class="p">,</span>
                         <span class="n">Path</span><span class="p">(</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">pos_flex_module_config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span>
-                                <span class="s2">&quot;results_file&quot;</span>
+                                <span class="s2">"results_file"</span>
                             <span class="p">]</span>
                         <span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
                     <span class="p">)</span>
@@ -506,7 +506,7 @@
                         <span class="n">res_path</span><span class="p">,</span>
                         <span class="n">Path</span><span class="p">(</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">neg_flex_module_config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span>
-                                <span class="s2">&quot;results_file&quot;</span>
+                                <span class="s2">"results_file"</span>
                             <span class="p">]</span>
                         <span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
                     <span class="p">)</span>
@@ -525,7 +525,7 @@
             <span class="n">resolved_sim_results_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_sim_results_path</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">simulator_module_config</span><span class="o">.</span><span class="n">result_filename</span><span class="p">,</span> <span class="n">res_path</span>
             <span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sim results extracted from: </span><span class="si">{</span><span class="n">resolved_sim_results_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Sim results extracted from: </span><span class="si">{</span><span class="n">resolved_sim_results_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="n">res</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">simulator_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">simulator_module_config</span><span class="o">.</span><span class="n">module_id</span><span class="p">:</span> <span class="n">load_sim</span><span class="p">(</span>
                     <span class="n">resolved_sim_results_path</span><span class="p">,</span>
@@ -543,7 +543,7 @@
         <span class="k">return</span> <span class="n">res</span><span class="p">,</span> <span class="n">res_path</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_load_results_dataframes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">results_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load results dataframes for mpc, indicator, market and sim.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Load results dataframes for mpc, indicator, market and sim."""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulator_agent_config</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">df_simulation</span> <span class="o">=</span> <span class="n">results_dict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">simulator_agent_config</span><span class="o">.</span><span class="n">id</span><span class="p">][</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">simulator_module_config</span><span class="o">.</span><span class="n">module_id</span>
@@ -568,12 +568,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">df_market</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_load_stats_dataframes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">results_path</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load dataframes for mpc stats.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Load dataframes for mpc stats."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">df_baseline_stats</span> <span class="o">=</span> <span class="n">load_mpc_stats</span><span class="p">(</span>
             <span class="n">Path</span><span class="p">(</span>
                 <span class="n">results_path</span><span class="p">,</span>
                 <span class="n">Path</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">baseline_module_config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;results_file&quot;</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">baseline_module_config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">"results_file"</span><span class="p">]</span>
                 <span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="p">)</span>
@@ -581,7 +581,7 @@
             <span class="n">Path</span><span class="p">(</span>
                 <span class="n">results_path</span><span class="p">,</span>
                 <span class="n">Path</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">pos_flex_module_config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;results_file&quot;</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pos_flex_module_config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">"results_file"</span><span class="p">]</span>
                 <span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="p">)</span>
@@ -589,18 +589,18 @@
             <span class="n">Path</span><span class="p">(</span>
                 <span class="n">results_path</span><span class="p">,</span>
                 <span class="n">Path</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">neg_flex_module_config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">&quot;results_file&quot;</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">neg_flex_module_config</span><span class="o">.</span><span class="n">optimization_backend</span><span class="p">[</span><span class="s2">"results_file"</span><span class="p">]</span>
                 <span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="p">)</span>
 
 <div class="viewcode-block" id="Results.convert_timescale_of_dataframe_index"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.convert_timescale_of_dataframe_index">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">convert_timescale_of_dataframe_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to_timescale</span><span class="p">:</span> <span class="n">TimeConversionTypes</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert the time in the dataframes to the desired timescale</span>
+<span class="w">        </span><span class="sd">"""Convert the time in the dataframes to the desired timescale</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            to_timescale: The timescale to convert the data to</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">for</span> <span class="n">df</span> <span class="ow">in</span> <span class="p">(</span>
             <span class="p">[</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">df_baseline</span><span class="p">,</span>
@@ -622,14 +622,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">current_timescale_of_data</span> <span class="o">=</span> <span class="n">to_timescale</span></div>
 
 <div class="viewcode-block" id="Results.get_intersection_mpcs_sim"><a class="viewcode-back" href="../../../code/agentlib_flexquant.data_structures.html#agentlib_flexquant.data_structures.flex_results.Results.get_intersection_mpcs_sim">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_intersection_mpcs_sim</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the intersection of the MPCs and the simulator variables.</span>
+<span class="w">        </span><span class="sd">"""Get the intersection of the MPCs and the simulator variables.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">             dictionary with the following structure:</span>
 <span class="sd">             Key: variable alias  (from baseline)</span>
 <span class="sd">             Value: {module id: variable name}</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">id_alias_name_dict</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">get_id_alias_name_dict_element</span><span class="p">(</span><span class="n">alias</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
@@ -664,10 +664,10 @@
         <span class="n">sim_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
         <span class="n">skip_fields</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SimulatorConfig</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a Pydantic model instance while skipping validation for</span>
+<span class="w">        </span><span class="sd">"""Create a Pydantic model instance while skipping validation for</span>
 <span class="sd">        specified fields.</span>
 
-<span class="sd">        This function allows partial validation of a model&#39;s config dictionary</span>
+<span class="sd">        This function allows partial validation of a model's config dictionary</span>
 <span class="sd">        by validating all fields except those listed in `skip_fields`.</span>
 <span class="sd">        Skipped fields are set on the instance after construction without</span>
 <span class="sd">        triggering their validators.</span>
@@ -682,7 +682,7 @@
 <span class="sd">            SimulatorConfig: An instance of the model_class with validated and</span>
 <span class="sd">             skipped fields assigned.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">skip_fields</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">skip_fields</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1"># Separate data into validated and skipped fields</span>
@@ -706,29 +706,29 @@
             <span class="c1"># bypass pydantic immutability to directly set attribute value</span>
             <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="c1"># Store metadata about bypassed fields for deepcopy compatibility</span>
-        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s2">&quot;_bypassed_fields&quot;</span><span class="p">,</span> <span class="n">skip_fields</span><span class="p">)</span>
-        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s2">&quot;_original_config&quot;</span><span class="p">,</span> <span class="n">sim_config</span><span class="p">)</span>
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s2">"_bypassed_fields"</span><span class="p">,</span> <span class="n">skip_fields</span><span class="p">)</span>
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s2">"_original_config"</span><span class="p">,</span> <span class="n">sim_config</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">instance</span></div>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">__deepcopy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memo</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;Results&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Custom deepcopy implementation that handles Pydantic models with bypassed</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__deepcopy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memo</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">"Results"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Custom deepcopy implementation that handles Pydantic models with bypassed</span>
 <span class="sd">        validation.</span>
 <span class="sd">        Needed, if a Results object should be copied with copy.deepcopy, without</span>
 <span class="sd">        deleting the simulator results due to its pydantic validators.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Create a new instance of the same class</span>
         <span class="n">new_instance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
         <span class="c1"># Add to memo immediately to prevent circular reference issues</span>
         <span class="n">memo</span><span class="p">[</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)]</span> <span class="o">=</span> <span class="n">new_instance</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;simulator_module_config&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span>
-                <span class="n">value</span><span class="p">,</span> <span class="s2">&quot;_original_config&quot;</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"simulator_module_config"</span><span class="p">]</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span>
+                <span class="n">value</span><span class="p">,</span> <span class="s2">"_original_config"</span>
             <span class="p">):</span>
                 <span class="c1"># Reconstruct the specific problematic object instead of deep copying</span>
                 <span class="n">new_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_simulator_config_with_skipped_validation</span><span class="p">(</span>
                     <span class="n">sim_config_class</span><span class="o">=</span><span class="n">value</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span>
                     <span class="n">sim_config</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">_original_config</span><span class="p">,</span> <span class="n">memo</span><span class="p">),</span>
-                    <span class="n">skip_fields</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;_bypassed_fields&quot;</span><span class="p">,</span> <span class="p">[]),</span>
+                    <span class="n">skip_fields</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">"_bypassed_fields"</span><span class="p">,</span> <span class="p">[]),</span>
                 <span class="p">)</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="n">new_instance</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">new_value</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
