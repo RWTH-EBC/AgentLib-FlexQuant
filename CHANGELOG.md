@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.1
+
+- Fix FlexibilityIndicator writing no results when using a realtime environment
+
 ## 0.4.0
 
 - Fixed cost calculation

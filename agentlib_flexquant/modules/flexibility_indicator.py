@@ -478,6 +478,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             if variable.name:
                 self.var_list.append(variable.name)
         self.time = []
+        self._input_timestamp = None
         self.in_provision = False
         self.offer_count = 0
         self.df = pd.DataFrame(columns=pd.Series(self.var_list))
@@ -511,6 +512,10 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
         flexibility calculations when all required inputs are available.
         """ 
         
+        var = self.callback_handler.necessary_callback_variables.get(name)
+        if var is not None and var["is_mpc"] and inp.timestamp is not None:
+            self._input_timestamp = inp.timestamp
+
         if name == glbs.PROVISION_VAR_NAME:
             self.in_provision = inp.value
 
@@ -555,7 +560,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
 
         """
         results = []
-        now = self.env.now
+        now = self._input_timestamp if self._input_timestamp is not None else self.env.now
 
         # First, collect all series and their indices
         all_series = []
@@ -606,7 +611,7 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             reindexed = series.reindex(combined_index)
             results.append(reindexed)
 
-        if not now % ts:
+        if not self.time or now > self.time[-1]:
             self.time.append(now)
             new_df = pd.DataFrame(results).T
             new_df.columns = self.var_list
@@ -626,6 +631,12 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
             # Drop column time_step and keep it as an index only
             if glbs.TIME_STEP in df.columns:
                 df.drop(columns=[glbs.TIME_STEP], inplace=True)
+        else:
+            self.logger.debug(
+                "Skipped results for %s, not newer than the last written %s.",
+                now,
+                self.time[-1],
+            )
 
         return df
 
