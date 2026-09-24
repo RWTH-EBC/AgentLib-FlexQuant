@@ -23,6 +23,9 @@ setuptools.setup(
     author="",
     author_email="",
     description="Flexibility quantification setup based on agentlib_mpc",
+    extras_require={
+        'ml': ['agentlib_mpc[ml] @ git+https://github.com/RWTH-EBC/AgentLib-MPC.git@quickfix-custom-objectives'],
+    },
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3.8",

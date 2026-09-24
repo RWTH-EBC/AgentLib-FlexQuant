@@ -51,7 +51,7 @@ class BaselineMPCModelConfig(CasadiModelConfig):
             unit="K",
             description="Slack variable of temperature of zone",
         ),
-        
+
     ]
 
     parameters: list[CasadiParameter] = [
@@ -84,24 +84,24 @@ class BaselineMPCModelConfig(CasadiModelConfig):
         CasadiOutput(name="eta_heater", unit="-", value=1,
                      description="Efficiency of electrical heater"),
         CasadiOutput(name="P_el", unit="W", description="The power input to the system",
-        ),
+        )
     ]
 
 
 class BaselineMPCModel(CasadiModel):
-    config: BaselineMPCModelConfig
-                
+    config: BaselineMPCModelConfig               
+
     def setup_system(self):
         # Define ode
         self.T.ode = (
-            self.cp * self.mDot / self.C * (self.T_in - self.T) + self.load / self.C
+                self.cp * self.mDot / self.C * (self.T_in - self.T) + self.load / self.C
         )
 
         # Define ae
         self.P_el.alg = self.cp * self.mDot * (self.T - self.T_in) / 1000 / self.eta_heater
         self.eta_heater.alg = 1
         self.T_out.alg = self.T  # math operation to get the symbolic variable
-        self.E_out.alg = - self.T * self.C / (3600*1000)  # stored electrical energy in kWh
+        self.E_out.alg = - self.T * self.C / (3600 * 1000)  # stored electrical energy in kWh
 
         # Constraints: list[(lower bound, function, upper bound)]
         self.constraints = [
@@ -113,9 +113,9 @@ class BaselineMPCModel(CasadiModel):
 
         # Objective function
         objective = sum(
-                [
-                    self.r_mDot * self.mDot,
-                    self.s_T * self.T_slack**2,
-                ]
-            )
+            [
+                self.r_mDot * self.mDot,
+                self.s_T * self.T_slack ** 2,
+            ]
+        )
         return objective
