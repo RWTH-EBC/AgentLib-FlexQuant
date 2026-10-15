@@ -1,5 +1,3 @@
-************* Module agentlib_flexquant.data_structures.flex_kpis
-agentlib_flexquant/data_structures/flex_kpis.py:300:10: E0001: Parsing failed: 'invalid syntax (<unknown>, line 300)' (syntax-error)
 ************* Module agentlib_flexquant
 agentlib_flexquant/__init__.py:3:0: E0401: Unable to import 'agentlib.utils.plugin_import' (import-error)
 agentlib_flexquant/__init__.py:4:0: E0401: Unable to import 'agentlib_mpc.optimization_backends' (import-error)
@@ -148,6 +146,36 @@ agentlib_flexquant/data_structures/flexquant.py:10:0: E0401: Unable to import 'a
 agentlib_flexquant/data_structures/flexquant.py:11:0: E0401: Unable to import 'agentlib_mpc.data_structures.mpc_datamodels' (import-error)
 agentlib_flexquant/data_structures/flexquant.py:73:4: C0116: Missing function or method docstring (missing-function-docstring)
 agentlib_flexquant/data_structures/flexquant.py:260:4: C0116: Missing function or method docstring (missing-function-docstring)
+************* Module agentlib_flexquant.data_structures.flex_kpis
+agentlib_flexquant/data_structures/flex_kpis.py:52:0: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/data_structures/flex_kpis.py:118:0: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/data_structures/flex_kpis.py:164:0: C0301: Line too long (115/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:422:0: C0301: Line too long (119/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:457:0: C0301: Line too long (111/100) (line-too-long)
+agentlib_flexquant/data_structures/flex_kpis.py:709:29: C0303: Trailing whitespace (trailing-whitespace)
+agentlib_flexquant/data_structures/flex_kpis.py:8:0: E0401: Unable to import 'numpy' (import-error)
+agentlib_flexquant/data_structures/flex_kpis.py:9:0: E0401: Unable to import 'pandas' (import-error)
+agentlib_flexquant/data_structures/flex_kpis.py:10:0: E0401: Unable to import 'pydantic' (import-error)
+agentlib_flexquant/data_structures/flex_kpis.py:11:0: E0401: Unable to import 'agentlib_mpc.utils' (import-error)
+agentlib_flexquant/data_structures/flex_kpis.py:41:4: R0903: Too few public methods (0/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/flex_kpis.py:22:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/flex_kpis.py:76:8: C0103: Attribute name "dt" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/data_structures/flex_kpis.py:72:8: C0103: Variable name "dt" doesn't conform to snake_case naming style (invalid-name)
+agentlib_flexquant/data_structures/flex_kpis.py:95:4: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+agentlib_flexquant/data_structures/flex_kpis.py:191:4: R0913: Too many arguments (14/5) (too-many-arguments)
+agentlib_flexquant/data_structures/flex_kpis.py:191:4: R0914: Too many local variables (16/15) (too-many-locals)
+agentlib_flexquant/data_structures/flex_kpis.py:265:4: R0913: Too many arguments (6/5) (too-many-arguments)
+agentlib_flexquant/data_structures/flex_kpis.py:301:42: E0602: Undefined variable 'absolute_error_acceptance' (undefined-variable)
+agentlib_flexquant/data_structures/flex_kpis.py:271:8: W0613: Unused argument 'relative_error_acceptance' (unused-argument)
+agentlib_flexquant/data_structures/flex_kpis.py:356:8: R1705: Unnecessary "else" after "return", remove the "else" and de-indent the code inside it (no-else-return)
+agentlib_flexquant/data_structures/flex_kpis.py:357:21: C2801: Unnecessarily calls dunder method __deepcopy__. Use copy.deepcopy function. (unnecessary-dunder-call)
+agentlib_flexquant/data_structures/flex_kpis.py:361:19: C2801: Unnecessarily calls dunder method __deepcopy__. Use copy.deepcopy function. (unnecessary-dunder-call)
+agentlib_flexquant/data_structures/flex_kpis.py:383:4: R0913: Too many arguments (10/5) (too-many-arguments)
+agentlib_flexquant/data_structures/flex_kpis.py:383:4: R0914: Too many local variables (18/15) (too-many-locals)
+agentlib_flexquant/data_structures/flex_kpis.py:573:4: R0903: Too few public methods (0/2) (too-few-public-methods)
+agentlib_flexquant/data_structures/flex_kpis.py:579:4: R0913: Too many arguments (6/5) (too-many-arguments)
+agentlib_flexquant/data_structures/flex_kpis.py:607:12: W0127: Assigning the same variable 'series' to itself (self-assigning-variable)
+agentlib_flexquant/data_structures/flex_kpis.py:19:0: W0611: Unused strip_multi_index imported from agentlib_flexquant.utils.data_handling (unused-import)
 ************* Module agentlib_flexquant.data_structures.flex_offer
 agentlib_flexquant/data_structures/flex_offer.py:12:0: E0401: Unable to import 'pandas' (import-error)
 agentlib_flexquant/data_structures/flex_offer.py:13:0: E0401: Unable to import 'pydantic' (import-error)
@@ -167,8 +195,6 @@ agentlib_flexquant/utils/interactive.py:9:0: E0401: Unable to import 'dash' (imp
 agentlib_flexquant/utils/interactive.py:10:0: E0401: Unable to import 'plotly' (import-error)
 agentlib_flexquant/utils/interactive.py:11:0: E0401: Unable to import 'pydantic' (import-error)
 agentlib_flexquant/utils/interactive.py:13:0: R0402: Use 'from agentlib_flexquant.data_structures import flex_results' instead (consider-using-from-import)
-agentlib_flexquant/utils/interactive.py:15:0: E0001: Cannot import 'agentlib_flexquant.data_structures.flex_kpis' due to 'invalid syntax (<unknown>, line 300)' (syntax-error)
-agentlib_flexquant/utils/interactive.py:15:0: E0611: No name 'flex_kpis' in module 'agentlib_flexquant.data_structures' (no-name-in-module)
 agentlib_flexquant/utils/interactive.py:20:0: R0903: Too few public methods (0/2) (too-few-public-methods)
 agentlib_flexquant/utils/interactive.py:88:8: C0103: Attribute name "LINE_PROPERTIES" doesn't conform to snake_case naming style (invalid-name)
 agentlib_flexquant/utils/interactive.py:46:0: R0902: Too many instance attributes (8/7) (too-many-instance-attributes)
@@ -262,8 +288,6 @@ agentlib_flexquant/modules/flexibility_indicator.py:14:0: E0401: Unable to impor
 agentlib_flexquant/modules/flexibility_indicator.py:15:0: E0401: Unable to import 'numpy' (import-error)
 agentlib_flexquant/modules/flexibility_indicator.py:16:0: E0401: Unable to import 'pandas' (import-error)
 agentlib_flexquant/modules/flexibility_indicator.py:17:0: E0401: Unable to import 'pydantic' (import-error)
-agentlib_flexquant/modules/flexibility_indicator.py:21:0: E0001: Cannot import 'agentlib_flexquant.data_structures.flex_kpis' due to 'invalid syntax (<unknown>, line 300)' (syntax-error)
-agentlib_flexquant/modules/flexibility_indicator.py:21:0: E0611: No name 'flex_kpis' in module 'agentlib_flexquant.data_structures' (no-name-in-module)
 agentlib_flexquant/modules/flexibility_indicator.py:28:0: R0903: Too few public methods (0/2) (too-few-public-methods)
 agentlib_flexquant/modules/flexibility_indicator.py:63:0: R0903: Too few public methods (1/2) (too-few-public-methods)
 agentlib_flexquant/modules/flexibility_indicator.py:408:4: C0116: Missing function or method docstring (missing-function-docstring)
@@ -378,15 +402,13 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model
-                # can't deal with iterable
+                # change the type of iterable input, since casadi model can't deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time
-            # will not be exceeded
+            # reduce the simulation time step so that the total horizon time will not be exceeded
             if current_sim_time + sim_time_step <= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -464,8 +486,8 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
 
     def _update_model_parameters(self):
         """update the value of module parameters with value from config,
-        since creating a model just reads the value in the model class
-        but not the config.
+        since creating a model just reads the value in the model class but
+        not the config
 
         """
 
@@ -482,7 +504,8 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
         """simulate with flex model over the prediction horizon
 
@@ -515,15 +538,13 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model can't
-                # deal with iterable
+                # change the type of iterable input, since casadi model can't deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time
-            # will not be exceeded
+            # reduce the simulation time step so that the total horizon time will not be exceeded
             if current_sim_time + sim_time_step <= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -545,7 +566,10 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
         # simulate with the casadi simulator
         self.sim_flex_model(solution)
 
+        # extract solution DataFrama
         df = solution.df
+
+        # send the outputs
         if self.flex_results is not None:
             for output in self.var_ref.outputs:
                 if output not in [
@@ -590,13 +614,15 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model can't deal with iterable
+                # change the type of iterable input, since casadi model
+                # can't deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time will not be exceeded
+            # reduce the simulation time step so that the total horizon time
+            # will not be exceeded
             if current_sim_time + sim_time_step <= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -607,7 +633,9 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value (duplicate-code)
+                ] = self.flex_model.get_output(output).value
+
+ (duplicate-code)
 agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[589:633]
 ==agentlib_flexquant.modules.shadow_mpc:[253:296]
@@ -629,8 +657,8 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
 
     def _update_model_parameters(self):
         """update the value of module parameters with value from config,
-        since creating a model just reads the value in the model class but
-        not the config
+        since creating a model just reads the value in the model class
+        but not the config.
 
         """
 
@@ -647,8 +675,7 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
-            total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
     ):
         """simulate with flex model over the prediction horizon
 
@@ -777,7 +804,6 @@ excluded_fields = [
         "interpolation_method",
         "allowed_values",
     ]
-
  (duplicate-code)
 agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[612:639]
@@ -795,12 +821,9 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
-            total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
     ):
-        """simulate with flex model over the prediction horizon
-
-        """
+        """simulate with flex model over the prediction horizon"""
 
         # get control and input values from the mpc optimization result
         control_values = result_df.variable[
@@ -873,21 +896,7 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
             self.logger.error("Results file %s was not found.", results_file)
             return None
 
-    def write_results(self, df: pd.DataFrame, ts: float, n: int) -> pd.DataFrame:
-        """Write every data of variables in self.var_list in an DataFrame.
-
-        DataFrame will be updated every time step
-
-        Args:
-            df: DataFrame which is initialised as an empty DataFrame with columns
-            according to self.var_list
-            ts: time step
-            n: number of time steps during prediction horizon
-
-        Returns:
-            DataFrame with results of every variable in self.var_list
-
-        """ (duplicate-code)
+    def register_callbacks(self): (duplicate-code)
 agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.flexibility_indicator:[366:376]
 ==agentlib_flexquant.modules.flexibility_market:[62:70]
@@ -898,9 +907,7 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
             )
         return self
 
-    @model_validator(mode="after")
-    def add_eta_thermal_input(self):
-        """Add the eta_thermal_base variable to inputs after instantiation.""" (duplicate-code)
+ (duplicate-code)
 agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
 ==agentlib_flexquant.modules.baseline_mpc:[281:302]
 ==agentlib_flexquant.modules.shadow_mpc:[599:617]
@@ -917,12 +924,15 @@ agentlib_flexquant/modules/shadow_mpc.py:1:0: R0801: Similar lines in 2 files
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
-        """simulate with flex model over the prediction horizon"""
+        """simulate with flex model over the prediction horizon
+
+        """
 
         # get control and input values from the mpc optimization result (duplicate-code)
 
 -----------------------------------
-Your code has been rated at 7.10/10
+Your code has been rated at 7.24/10
 
