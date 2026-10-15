@@ -14,6 +14,7 @@ requirements = [
     "myst-parser",
     "autodoc_pydantic>=1.8.0",
     "sphinx-material",
+    "casadi==3.7.2"
 ]
 
 
