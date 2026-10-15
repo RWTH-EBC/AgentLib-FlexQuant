@@ -243,7 +243,7 @@
             </tr>
             
             <tr>
-                <td>357</td>
+                <td>356</td>
                 <td>8</td>
                 <td>refactor</td>
                 <td><code>no-else-return</code></td>
@@ -253,7 +253,7 @@
             </tr>
             
             <tr>
-                <td>358</td>
+                <td>357</td>
                 <td>21</td>
                 <td>convention</td>
                 <td><code>unnecessary-dunder-call</code></td>
@@ -263,7 +263,7 @@
             </tr>
             
             <tr>
-                <td>362</td>
+                <td>361</td>
                 <td>19</td>
                 <td>convention</td>
                 <td><code>unnecessary-dunder-call</code></td>
@@ -273,7 +273,7 @@
             </tr>
             
             <tr>
-                <td>384</td>
+                <td>383</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
@@ -283,7 +283,7 @@
             </tr>
             
             <tr>
-                <td>384</td>
+                <td>383</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-locals</code></td>
@@ -293,7 +293,7 @@
             </tr>
             
             <tr>
-                <td>423</td>
+                <td>422</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -303,7 +303,7 @@
             </tr>
             
             <tr>
-                <td>458</td>
+                <td>457</td>
                 <td>0</td>
                 <td>convention</td>
                 <td><code>line-too-long</code></td>
@@ -313,7 +313,7 @@
             </tr>
             
             <tr>
-                <td>574</td>
+                <td>573</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-few-public-methods</code></td>
@@ -323,7 +323,7 @@
             </tr>
             
             <tr>
-                <td>580</td>
+                <td>579</td>
                 <td>4</td>
                 <td>refactor</td>
                 <td><code>too-many-arguments</code></td>
@@ -333,7 +333,7 @@
             </tr>
             
             <tr>
-                <td>608</td>
+                <td>607</td>
                 <td>12</td>
                 <td>warning</td>
                 <td><code>self-assigning-variable</code></td>
@@ -343,7 +343,7 @@
             </tr>
             
             <tr>
-                <td>710</td>
+                <td>709</td>
                 <td>29</td>
                 <td>convention</td>
                 <td><code>trailing-whitespace</code></td>
@@ -2800,8 +2800,8 @@
 
     def _update_model_parameters(self):
         &#34;&#34;&#34;update the value of module parameters with value from config,
-        since creating a model just reads the value in the model class
-        but not the config.
+        since creating a model just reads the value in the model class but
+        not the config
 
         &#34;&#34;&#34;
 
@@ -2818,7 +2818,8 @@
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
         &#34;&#34;&#34;simulate with flex model over the prediction horizon
 
@@ -2930,15 +2931,13 @@
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model can&#39;t
-                # deal with iterable
+                # change the type of iterable input, since casadi model can&#39;t deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time
-            # will not be exceeded
+            # reduce the simulation time step so that the total horizon time will not be exceeded
             if current_sim_time + sim_time_step &lt;= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -2949,7 +2948,9 @@
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value</pre></td>
+                ] = self.flex_model.get_output(output).value
+
+</pre></td>
             </tr>
             
             <tr>
@@ -2965,15 +2966,13 @@
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model
-                # can&#39;t deal with iterable
+                # change the type of iterable input, since casadi model can&#39;t deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time
-            # will not be exceeded
+            # reduce the simulation time step so that the total horizon time will not be exceeded
             if current_sim_time + sim_time_step &lt;= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -2984,9 +2983,7 @@
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value
-
-</pre></td>
+                ] = self.flex_model.get_output(output).value</pre></td>
             </tr>
             
             <tr>
@@ -3245,9 +3242,12 @@ excluded_fields = [
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
-        &#34;&#34;&#34;simulate with flex model over the prediction horizon&#34;&#34;&#34;
+        &#34;&#34;&#34;simulate with flex model over the prediction horizon
+
+        &#34;&#34;&#34;
 
         # get control and input values from the mpc optimization result
         control_values = result_df.variable[
@@ -3317,7 +3317,7 @@ excluded_fields = [
                 <td><pre>Similar lines in 2 files
 ==agentlib_flexquant.data_structures.mpcs:[14:22]
 ==agentlib_flexquant.utils.config_management:[178:186]
-excluded_fields = [
+    excluded_fields = [
         &#34;rdf_class&#34;,
         &#34;source&#34;,
         &#34;type&#34;,
@@ -3426,9 +3426,12 @@ excluded_fields = [
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
-        &#34;&#34;&#34;simulate with flex model over the prediction horizon&#34;&#34;&#34;
+        &#34;&#34;&#34;simulate with flex model over the prediction horizon
+
+        &#34;&#34;&#34;
 
         # get control and input values from the mpc optimization result</pre></td>
             </tr>
@@ -4937,11 +4940,6 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>eval-used</td>
-                <td>5</td>
-            </tr>
-            
-            <tr>
                 <td>consider-using-from-import</td>
                 <td>1</td>
             </tr>
@@ -4964,6 +4962,11 @@ excluded_fields = [
             <tr>
                 <td>f-string-without-interpolation</td>
                 <td>1</td>
+            </tr>
+            
+            <tr>
+                <td>eval-used</td>
+                <td>5</td>
             </tr>
             
             <tr>
@@ -5037,12 +5040,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>agentlib_flexquant.data_structures.flex_offer</td>
-                <td>7</td>
-            </tr>
-            
-            <tr>
-                <td>agentlib_flexquant.data_structures.mpcs</td>
+                <td>agentlib_flexquant.data_structures.flex_results</td>
                 <td>17</td>
             </tr>
             
@@ -5052,18 +5050,8 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>agentlib_flexquant.data_structures.flex_results</td>
+                <td>agentlib_flexquant.data_structures.mpcs</td>
                 <td>17</td>
-            </tr>
-            
-            <tr>
-                <td>agentlib_flexquant.data_structures.flex_kpis</td>
-                <td>27</td>
-            </tr>
-            
-            <tr>
-                <td>agentlib_flexquant.data_structures.flexquant</td>
-                <td>22</td>
             </tr>
             
             <tr>
@@ -5072,13 +5060,28 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>agentlib_flexquant.utils.data_handling</td>
-                <td>8</td>
+                <td>agentlib_flexquant.data_structures.flexquant</td>
+                <td>22</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.data_structures.flex_kpis</td>
+                <td>27</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.data_structures.flex_offer</td>
+                <td>7</td>
             </tr>
             
             <tr>
                 <td>agentlib_flexquant.utils.interactive</td>
                 <td>24</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant.utils.data_handling</td>
+                <td>8</td>
             </tr>
             
             <tr>
@@ -5092,8 +5095,8 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>agentlib_flexquant.modules.flexibility_market</td>
-                <td>22</td>
+                <td>agentlib_flexquant.modules.flexibility_indicator</td>
+                <td>47</td>
             </tr>
             
             <tr>
@@ -5102,8 +5105,8 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>agentlib_flexquant.modules.flexibility_indicator</td>
-                <td>47</td>
+                <td>agentlib_flexquant.modules.flexibility_market</td>
+                <td>22</td>
             </tr>
             
             <tr>
@@ -5137,12 +5140,7 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>agentlib_flexquant/data_structures/flex_offer.py</td>
-                <td>7</td>
-            </tr>
-            
-            <tr>
-                <td>agentlib_flexquant/data_structures/mpcs.py</td>
+                <td>agentlib_flexquant/data_structures/flex_results.py</td>
                 <td>17</td>
             </tr>
             
@@ -5152,18 +5150,8 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>agentlib_flexquant/data_structures/flex_results.py</td>
+                <td>agentlib_flexquant/data_structures/mpcs.py</td>
                 <td>17</td>
-            </tr>
-            
-            <tr>
-                <td>agentlib_flexquant/data_structures/flex_kpis.py</td>
-                <td>27</td>
-            </tr>
-            
-            <tr>
-                <td>agentlib_flexquant/data_structures/flexquant.py</td>
-                <td>22</td>
             </tr>
             
             <tr>
@@ -5172,13 +5160,28 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>agentlib_flexquant/utils/data_handling.py</td>
-                <td>8</td>
+                <td>agentlib_flexquant/data_structures/flexquant.py</td>
+                <td>22</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/data_structures/flex_kpis.py</td>
+                <td>27</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/data_structures/flex_offer.py</td>
+                <td>7</td>
             </tr>
             
             <tr>
                 <td>agentlib_flexquant/utils/interactive.py</td>
                 <td>24</td>
+            </tr>
+            
+            <tr>
+                <td>agentlib_flexquant/utils/data_handling.py</td>
+                <td>8</td>
             </tr>
             
             <tr>
@@ -5192,8 +5195,8 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>agentlib_flexquant/modules/flexibility_market.py</td>
-                <td>22</td>
+                <td>agentlib_flexquant/modules/flexibility_indicator.py</td>
+                <td>47</td>
             </tr>
             
             <tr>
@@ -5202,8 +5205,8 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>agentlib_flexquant/modules/flexibility_indicator.py</td>
-                <td>47</td>
+                <td>agentlib_flexquant/modules/flexibility_market.py</td>
+                <td>22</td>
             </tr>
             
             <tr>

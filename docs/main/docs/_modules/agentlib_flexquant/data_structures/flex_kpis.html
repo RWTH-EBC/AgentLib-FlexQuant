@@ -342,7 +342,7 @@
         <span class="n">power_profile_shadow</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
         <span class="n">flex_offer_time_grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">integration_method</span><span class="p">:</span> <span class="n">INTEGRATION_METHOD</span><span class="p">,</span>
-        <span class="n">relative_error_acceptance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
+        <span class="n">absolute_error_acceptance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-5</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">"""Calculate the power flexibility based on the base and flexibility power profiles.</span>
 
@@ -351,7 +351,7 @@
 <span class="sd">            power_profile_shadow: power profile from the shadow mpc</span>
 <span class="sd">            flex_offer_time_grid: time grid over which the flexibility offer is calculated</span>
 <span class="sd">            integration_method: method used for integration of KPISeries e.g. linear, constant</span>
-<span class="sd">            relative_error_acceptance: threshold for the relative error between the baseline</span>
+<span class="sd">            absolute_error_acceptance: threshold for the absolute error between the baseline</span>
 <span class="sd">            and shadow mpc to set the power flexibility to zero</span>
 
 <span class="sd">        """</span>
@@ -371,9 +371,8 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">"Direction of KPIs not properly defined: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-        <span class="c1"># Set values to zero if the difference is small</span>
-        <span class="n">relative_difference</span> <span class="o">=</span> <span class="p">(</span><span class="n">power_flex</span> <span class="o">/</span> <span class="n">power_profile_base</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
-        <span class="n">power_flex</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">relative_difference</span> <span class="o">&lt;</span> <span class="n">relative_error_acceptance</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Set values to zero if the difference is solver noise</span>
+        <span class="n">power_flex</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">power_flex</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">absolute_error_acceptance</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="c1"># Set values</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">power_flex_full</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">power_flex</span>
