@@ -268,7 +268,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
         power_profile_shadow: pd.Series,
         flex_offer_time_grid: np.ndarray,
         integration_method: INTEGRATION_METHOD,
-        relative_error_acceptance: float = 0.01,
+        relative_error_acceptance: float = 1e-5,
     ):
         """Calculate the power flexibility based on the base and flexibility power profiles.
 
@@ -297,9 +297,8 @@ class FlexibilityKPIs(pydantic.BaseModel):
             raise ValueError(
                 f"Direction of KPIs not properly defined: {self.direction}")
 
-        # Set values to zero if the difference is small
-        relative_difference = (power_flex / power_profile_base).abs()
-        power_flex.loc[relative_difference < relative_error_acceptance] = 0
++        # Set values to zero if the difference is solver noise
++        power_flex.loc[power_flex.abs() < absolute_error_acceptance] = 0
 
         # Set values
         self.power_flex_full.value = power_flex
