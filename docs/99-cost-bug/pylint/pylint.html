@@ -28,9 +28,9 @@
 
         
         <h2>Score</h2>
-        7.24 / 10
+        7.27 / 10
             
-            (previous score: 7.24 / 10)
+            (previous score: 7.27 / 10)
             
         
 
@@ -240,26 +240,6 @@
                 <td>R0913</td>
                 <td>FlexibilityKPIs._calculate_power_flex</td>
                 <td><pre>Too many arguments (6/5)</pre></td>
-            </tr>
-            
-            <tr>
-                <td>271</td>
-                <td>8</td>
-                <td>warning</td>
-                <td><code>unused-argument</code></td>
-                <td>W0613</td>
-                <td>FlexibilityKPIs._calculate_power_flex</td>
-                <td><pre>Unused argument &#39;relative_error_acceptance&#39;</pre></td>
-            </tr>
-            
-            <tr>
-                <td>301</td>
-                <td>42</td>
-                <td>error</td>
-                <td><code>undefined-variable</code></td>
-                <td>E0602</td>
-                <td>FlexibilityKPIs._calculate_power_flex</td>
-                <td><pre>Undefined variable &#39;absolute_error_acceptance&#39;</pre></td>
             </tr>
             
             <tr>
@@ -2881,13 +2861,15 @@
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model can&#39;t deal with iterable
+                # change the type of iterable input, since casadi model can&#39;t
+                # deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time will not be exceeded
+            # reduce the simulation time step so that the total horizon time
+            # will not be exceeded
             if current_sim_time + sim_time_step &lt;= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -2949,15 +2931,13 @@
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model can&#39;t
-                # deal with iterable
+                # change the type of iterable input, since casadi model can&#39;t deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time
-            # will not be exceeded
+            # reduce the simulation time step so that the total horizon time will not be exceeded
             if current_sim_time + sim_time_step &lt;= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -2968,7 +2948,9 @@
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value</pre></td>
+                ] = self.flex_model.get_output(output).value
+
+</pre></td>
             </tr>
             
             <tr>
@@ -2984,15 +2966,13 @@
             for input_var, value in zip(
                 self.var_ref.inputs, input_values_full.loc[current_sim_time]
             ):
-                # change the type of iterable input, since casadi model
-                # can&#39;t deal with iterable
+                # change the type of iterable input, since casadi model can&#39;t deal with iterable
                 if issubclass(eval(self.flex_model.get(input_var).type), Iterable):
                     self.flex_model.get(input_var).type = type(value).__name__
                 self.flex_model.set(input_var, value)
 
             # do integration
-            # reduce the simulation time step so that the total horizon time
-            # will not be exceeded
+            # reduce the simulation time step so that the total horizon time will not be exceeded
             if current_sim_time + sim_time_step &lt;= total_horizon_time:
                 t_sample = sim_time_step
             else:
@@ -3003,9 +2983,7 @@
             for output in self.var_ref.outputs:
                 self.flex_results.loc[
                     (self.env.now, current_sim_time + t_sample), output
-                ] = self.flex_model.get_output(output).value
-
-</pre></td>
+                ] = self.flex_model.get_output(output).value</pre></td>
             </tr>
             
             <tr>
@@ -3036,8 +3014,8 @@
 
     def _update_model_parameters(self):
         &#34;&#34;&#34;update the value of module parameters with value from config,
-        since creating a model just reads the value in the model class
-        but not the config.
+        since creating a model just reads the value in the model class but
+        not the config
 
         &#34;&#34;&#34;
 
@@ -3054,7 +3032,8 @@
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
         &#34;&#34;&#34;simulate with flex model over the prediction horizon
 
@@ -3237,7 +3216,6 @@ excluded_fields = [
         &#34;interpolation_method&#34;,
         &#34;allowed_values&#34;,
     ]
-
 </pre></td>
             </tr>
             
@@ -3447,9 +3425,12 @@ excluded_fields = [
             self.flex_model.set(state, value)
 
     def _run_simulation(
-        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df, total_horizon_time
+        self, n_simulation_steps, sim_time_step, mpc_time_step, result_df,
+            total_horizon_time
     ):
-        &#34;&#34;&#34;simulate with flex model over the prediction horizon&#34;&#34;&#34;
+        &#34;&#34;&#34;simulate with flex model over the prediction horizon
+
+        &#34;&#34;&#34;
 
         # get control and input values from the mpc optimization result</pre></td>
             </tr>
@@ -4769,7 +4750,7 @@ excluded_fields = [
             
             <tr>
                 <td>error</td>
-                <td>82</td>
+                <td>81</td>
             </tr>
             
             <tr>
@@ -4784,7 +4765,7 @@ excluded_fields = [
             
             <tr>
                 <td>warning</td>
-                <td>39</td>
+                <td>38</td>
             </tr>
             
         </table>
@@ -4943,16 +4924,6 @@ excluded_fields = [
             </tr>
             
             <tr>
-                <td>undefined-variable</td>
-                <td>1</td>
-            </tr>
-            
-            <tr>
-                <td>unused-argument</td>
-                <td>9</td>
-            </tr>
-            
-            <tr>
                 <td>no-else-return</td>
                 <td>3</td>
             </tr>
@@ -5023,6 +4994,11 @@ excluded_fields = [
             </tr>
             
             <tr>
+                <td>unused-argument</td>
+                <td>8</td>
+            </tr>
+            
+            <tr>
                 <td>unnecessary-pass</td>
                 <td>1</td>
             </tr>
@@ -5089,7 +5065,7 @@ excluded_fields = [
             
             <tr>
                 <td>agentlib_flexquant.data_structures.flex_kpis</td>
-                <td>29</td>
+                <td>27</td>
             </tr>
             
             <tr>
@@ -5189,7 +5165,7 @@ excluded_fields = [
             
             <tr>
                 <td>agentlib_flexquant/data_structures/flex_kpis.py</td>
-                <td>29</td>
+                <td>27</td>
             </tr>
             
             <tr>

@@ -342,7 +342,7 @@
         <span class="n">power_profile_shadow</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
         <span class="n">flex_offer_time_grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">integration_method</span><span class="p">:</span> <span class="n">INTEGRATION_METHOD</span><span class="p">,</span>
-        <span class="n">relative_error_acceptance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-5</span><span class="p">,</span>
+        <span class="n">absolute_error_acceptance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-5</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">"""Calculate the power flexibility based on the base and flexibility power profiles.</span>
 
@@ -351,7 +351,7 @@
 <span class="sd">            power_profile_shadow: power profile from the shadow mpc</span>
 <span class="sd">            flex_offer_time_grid: time grid over which the flexibility offer is calculated</span>
 <span class="sd">            integration_method: method used for integration of KPISeries e.g. linear, constant</span>
-<span class="sd">            relative_error_acceptance: threshold for the relative error between the baseline</span>
+<span class="sd">            absolute_error_acceptance: threshold for the absolute error between the baseline</span>
 <span class="sd">            and shadow mpc to set the power flexibility to zero</span>
 
 <span class="sd">        """</span>
