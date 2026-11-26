@@ -373,7 +373,12 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
 
     @model_validator(mode="after")
     def add_eta_thermal_input(self):
-        """Add the eta_thermal_base variable to inputs after instantiation."""
+        """Add the eta_thermal_base variable to inputs after instantiation.
+
+        The generator sets its alias to the one the Baseline MPC sends it with.
+        """
+        if not self.correct_costs.eta_thermal_base:
+            return self
         eta_var = agentlib.AgentVariable(
             name=self.correct_costs.eta_thermal_base,
             unit="-",
@@ -495,8 +500,10 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
     def register_callbacks(self):
         inputs = self.config.inputs
         for var in inputs:
+            # subscribe by alias (defaults to the name): the efficiency input keeps its
+            # name but listens to the alias the Baseline MPC sends it with
             self.agent.data_broker.register_callback(
-                name=var.name, alias=var.name, callback=self.callback
+                name=var.name, alias=var.alias, callback=self.callback
             )
         self.agent.data_broker.register_callback(
             name=glbs.PROVISION_VAR_NAME, alias=glbs.PROVISION_VAR_NAME,

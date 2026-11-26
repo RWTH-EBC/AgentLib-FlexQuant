@@ -567,6 +567,12 @@ class FlexAgentGenerator:
             output_dict[
                 self.indicator_module_config.correct_costs.stored_energy_variable
             ].alias = mpc_dataclass.stored_energy_alias
+            # the Baseline sends the efficiency of the thermal generation unit under
+            # its own alias. The Shadow MPCs share an output of the same name, so
+            # the indicator would otherwise keep the value of whichever MPC sent last
+            eta_name = self.indicator_module_config.correct_costs.eta_thermal_base
+            if eta_name and isinstance(mpc_dataclass, BaselineMPCData):
+                output_dict[eta_name].alias = glbs.ETA_THERMAL_ALIAS_BASE
 
         # add extra inputs needed for activation of flex or custom cost functions
         existing_input_names = {inp.name: idx for idx, inp in
@@ -632,6 +638,14 @@ class FlexAgentGenerator:
         )
         # allow the module config to be changed
         module_config.model_config["frozen"] = False
+        # receive the efficiency of the thermal generation unit from the Baseline
+        # MPC only (see adapt_mpc_module_config). The input keeps its name, so the
+        # column in the results file keeps the name of the efficiency variable
+        eta_name = module_config.correct_costs.eta_thermal_base
+        if module_config.correct_costs.enable_energy_costs_correction and eta_name:
+            for inp in module_config.inputs:
+                if inp.name == eta_name:
+                    inp.alias = glbs.ETA_THERMAL_ALIAS_BASE
         for parameter in module_config.parameters:
             if parameter.name == glbs.PREP_TIME:
                 parameter.value = self.flex_config.prep_time
@@ -925,6 +939,16 @@ class FlexAgentGenerator:
                     f"is not defined in baseline mpc config. "
                     f"It must be defined in the base MPC model and config as output "
                     f"if the correction of costs is enabled."
+                )
+            eta_name = self.indicator_module_config.correct_costs.eta_thermal_base
+            if eta_name and eta_name not in [
+                output.name for output in self.baseline_mpc_module_config.outputs
+            ]:
+                raise ConfigurationError(
+                    f"The efficiency variable {eta_name} (eta_thermal_base) is not "
+                    f"defined in baseline mpc config. It must be defined in the base "
+                    f"MPC model and config as output if it is used for the "
+                    f"correction of costs."
                 )
 
         # raise warning if unsupported collocation method is used and change
