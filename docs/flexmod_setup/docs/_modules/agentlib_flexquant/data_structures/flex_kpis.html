@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>agentlib_flexquant.data_structures.flex_kpis &mdash; agentlib_flexquant 0.4.1 documentation</title>
+  <title>agentlib_flexquant.data_structures.flex_kpis &mdash; agentlib_flexquant 0.4.1+flexmod.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
@@ -277,6 +277,8 @@
         <span class="n">calculate_flex_cost</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
         <span class="n">integration_method</span><span class="p">:</span> <span class="n">INTEGRATION_METHOD</span><span class="p">,</span>
         <span class="n">collocation_time_grid</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">stored_el_energy_base</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">stored_el_energy_shadow</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">"""Calculate the KPIs based on the power and electricity price input profiles.</span>
 
@@ -287,13 +289,17 @@
 <span class="sd">            feed_in_price_series: time series of electricity feed-in prices</span>
 <span class="sd">            flex_offer_time_grid: time grid over which the flexibility offer is calculated,</span>
 <span class="sd">            for indexing of the power flexibility profiles</span>
-<span class="sd">            stored_energy_base: time series of stored energy from baseline mpc</span>
-<span class="sd">            stored_energy_shadow: time series of stored energy from shadow mpc</span>
+<span class="sd">            stored_energy_base: time series of stored thermal energy from baseline mpc</span>
+<span class="sd">            stored_energy_shadow: time series of stored thermal energy from shadow mpc</span>
 <span class="sd">            eta_thermal_base: time series of efficiency of thermal generation unit of baseline mpc</span>
 <span class="sd">            enable_energy_costs_correction: whether the energy costs should be corrected</span>
 <span class="sd">            calculate_flex_cost: whether the cost of the flexibility should be calculated</span>
 <span class="sd">            integration_method: method used for integration of KPISeries e.g. linear, constant</span>
 <span class="sd">            collocation_time_grid: Time grid of the mpc output with collocation discretization</span>
+<span class="sd">            stored_el_energy_base: time series of stored electrical energy (e.g. battery)</span>
+<span class="sd">            from baseline mpc. Optional, enters the correction without eta_thermal_base</span>
+<span class="sd">            stored_el_energy_shadow: time series of stored electrical energy from shadow</span>
+<span class="sd">            mpc. Optional, like stored_el_energy_base</span>
 
 
 <span class="sd">        """</span>
@@ -318,9 +324,15 @@
                 <span class="n">eta_thermal_base_avg</span> <span class="o">=</span> <span class="mi">1</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">eta_thermal_base_avg</span> <span class="o">=</span> <span class="n">eta_thermal_base</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">stored_el_energy_base</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">stored_el_energy_shadow</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">stored_el_energy_diff</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">stored_el_energy_diff</span> <span class="o">=</span> <span class="p">(</span><span class="n">stored_el_energy_shadow</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                                         <span class="o">-</span> <span class="n">stored_el_energy_base</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">stored_energy_diff</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">eta_thermal_base_avg</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">stored_el_energy_diff</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="k">if</span> <span class="n">calculate_flex_cost</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_costs</span><span class="p">(</span>
@@ -333,6 +345,7 @@
                 <span class="n">integration_method</span><span class="o">=</span><span class="n">integration_method</span><span class="p">,</span>
                 <span class="n">mpc_time_grid</span><span class="o">=</span><span class="n">mpc_time_grid</span><span class="p">,</span>
                 <span class="n">collocation_time_grid</span><span class="o">=</span><span class="n">collocation_time_grid</span><span class="p">,</span>
+                <span class="n">stored_el_energy_diff</span><span class="o">=</span><span class="n">stored_el_energy_diff</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_costs_rel</span><span class="p">()</span></div>
 
@@ -465,20 +478,29 @@
         <span class="n">integration_method</span><span class="p">:</span> <span class="n">INTEGRATION_METHOD</span><span class="p">,</span>
         <span class="n">mpc_time_grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">collocation_time_grid</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">stored_el_energy_diff</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">"""Calculate the costs of the flexibility event based on the electricity costs profile,</span>
 <span class="sd">        the power flexibility profile and difference of stored energy.</span>
+
+<span class="sd">        The corrected costs subtract the value of the energy that the shadow mpc stores in</span>
+<span class="sd">        addition to the baseline at the end of the horizon, priced with the mean electricity</span>
+<span class="sd">        price: thermal energy is converted to electrical energy with the mean efficiency</span>
+<span class="sd">        of the thermal generation unit, stored electrical energy enters directly.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            electricity_price_signal: time series of the electricity price signal</span>
 <span class="sd">            feed_in_price_signal: time series of the feed-in price signal</span>
 <span class="sd">            power_profile_base: baseline power profile used to select tariff by sign</span>
 <span class="sd">            power_profile_shadow: shadow mpc power profile used to select tariff by sign</span>
-<span class="sd">            stored_energy_diff: the difference of the stored energy between baseline and shadow mpc</span>
-<span class="sd">            eta_thermal_base: average efficiency of thermal generation unit</span>
+<span class="sd">            stored_energy_diff: the difference of the stored thermal energy between shadow</span>
+<span class="sd">            and baseline mpc</span>
+<span class="sd">            eta_thermal_base_avg: average efficiency of thermal generation unit</span>
 <span class="sd">            integration_method: the integration method used to integrate KPISeries</span>
 <span class="sd">            mpc_time_grid: the MPC time grid over the horizon</span>
 <span class="sd">            collocation_time_grid: Time grid of the mpc output with collocation discretization</span>
+<span class="sd">            stored_el_energy_diff: the difference of the stored electrical energy between</span>
+<span class="sd">            shadow and baseline mpc</span>
 
 
 <span class="sd">        """</span>
@@ -528,7 +550,13 @@
         <span class="n">costs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">electricity_costs_series</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="n">time_unit</span><span class="o">=</span><span class="s2">"hours"</span><span class="p">)</span>
 
         <span class="c1"># correct the costs</span>
-        <span class="n">corrected_costs</span> <span class="o">=</span> <span class="n">costs</span> <span class="o">-</span> <span class="n">stored_energy_diff</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">electricity_price_signal</span><span class="p">)</span> <span class="o">/</span> <span class="n">eta_thermal_base_avg</span>
+        <span class="c1"># (the electrical term is subtracted separately, so that the result without stored</span>
+        <span class="c1"># electrical energy is identical to that of earlier versions)</span>
+        <span class="n">corrected_costs</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">costs</span>
+            <span class="o">-</span> <span class="n">stored_energy_diff</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">electricity_price_signal</span><span class="p">)</span> <span class="o">/</span> <span class="n">eta_thermal_base_avg</span>
+            <span class="o">-</span> <span class="n">stored_el_energy_diff</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">electricity_price_signal</span><span class="p">)</span>
+        <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">costs</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">costs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">corrected_costs</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">corrected_costs</span>
@@ -611,15 +639,29 @@
     <span class="p">)</span>
     <span class="n">stored_energy_profile_base</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">"Base profile of the stored electrical energy"</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Base profile of the stored thermal energy"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">stored_energy_profile_flex_neg</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">"Profile of the stored electrical energy for negative flexibility"</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Profile of the stored thermal energy for negative flexibility"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">stored_energy_profile_flex_pos</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">"Profile of the stored elctrical energy for positive flexibility"</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Profile of the stored thermal energy for positive flexibility"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">stored_el_energy_profile_base</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Base profile of the stored electrical energy (optional)"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">stored_el_energy_profile_flex_neg</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Profile of the stored electrical energy for negative flexibility "</span>
+                    <span class="s2">"(optional)"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">stored_el_energy_profile_flex_pos</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Profile of the stored electrical energy for positive flexibility "</span>
+                    <span class="s2">"(optional)"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">eta_thermal_base</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -745,6 +787,8 @@
             <span class="n">calculate_flex_cost</span><span class="o">=</span><span class="n">calculate_flex_cost</span><span class="p">,</span>
             <span class="n">integration_method</span><span class="o">=</span><span class="n">integration_method</span><span class="p">,</span>
             <span class="n">collocation_time_grid</span><span class="o">=</span><span class="n">collocation_time_grid</span><span class="p">,</span>
+            <span class="n">stored_el_energy_base</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stored_el_energy_profile_base</span><span class="p">,</span>
+            <span class="n">stored_el_energy_shadow</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stored_el_energy_profile_flex_pos</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">kpis_neg</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span>
             <span class="n">power_profile_base</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">power_profile_base</span><span class="p">,</span>
@@ -760,6 +804,8 @@
             <span class="n">calculate_flex_cost</span><span class="o">=</span><span class="n">calculate_flex_cost</span><span class="p">,</span>
             <span class="n">integration_method</span><span class="o">=</span><span class="n">integration_method</span><span class="p">,</span>
             <span class="n">collocation_time_grid</span><span class="o">=</span><span class="n">collocation_time_grid</span><span class="p">,</span>
+            <span class="n">stored_el_energy_base</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stored_el_energy_profile_base</span><span class="p">,</span>
+            <span class="n">stored_el_energy_shadow</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stored_el_energy_profile_flex_neg</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reset_time_grid</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">kpis_pos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">kpis_neg</span></div>

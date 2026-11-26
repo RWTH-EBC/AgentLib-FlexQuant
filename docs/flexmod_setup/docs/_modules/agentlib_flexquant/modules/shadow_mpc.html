@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>agentlib_flexquant.modules.shadow_mpc &mdash; agentlib_flexquant 0.4.1 documentation</title>
+  <title>agentlib_flexquant.modules.shadow_mpc &mdash; agentlib_flexquant 0.4.1+flexmod.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
@@ -113,6 +113,10 @@
     <span class="n">storage_variable_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Name of the storage variable in the "</span>
                                   <span class="s2">"shadow mpc model."</span>
+    <span class="p">)</span>
+    <span class="n">electrical_storage_variable_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Name of the variable of the stored electrical "</span>
+                                  <span class="s2">"energy in the shadow mpc model."</span>
     <span class="p">)</span></div>
 
 
@@ -168,6 +172,7 @@
                 <span class="k">if</span> <span class="n">output</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">power_variable_name</span><span class="p">,</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage_variable_name</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">electrical_storage_variable_name</span><span class="p">,</span>
                 <span class="p">]:</span>
                     <span class="n">series</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">variable</span><span class="p">[</span><span class="n">output</span><span class="p">]</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">series</span><span class="p">)</span>
@@ -177,6 +182,11 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage_variable_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">upsampled_output_storage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage_variable_name</span><span class="p">]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage_variable_name</span><span class="p">,</span> <span class="n">upsampled_output_storage</span><span class="o">.</span><span class="n">dropna</span><span class="p">())</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">electrical_storage_variable_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">upsampled_output_el_storage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="p">[</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">electrical_storage_variable_name</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">electrical_storage_variable_name</span><span class="p">,</span>
+                         <span class="n">upsampled_output_el_storage</span><span class="o">.</span><span class="n">dropna</span><span class="p">())</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span>
                 <span class="n">series</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">variable</span><span class="p">[</span><span class="n">output</span><span class="p">]</span>
@@ -431,6 +441,10 @@
     <span class="n">storage_variable_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Name of the storage variable in the "</span>
                                   <span class="s2">"shadow mpc model."</span>
+    <span class="p">)</span>
+    <span class="n">electrical_storage_variable_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Name of the variable of the stored electrical "</span>
+                                  <span class="s2">"energy in the shadow mpc model."</span>
     <span class="p">)</span></div>
 
 
@@ -566,6 +580,7 @@
                 <span class="k">if</span> <span class="n">output</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">power_variable_name</span><span class="p">,</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage_variable_name</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">electrical_storage_variable_name</span><span class="p">,</span>
                 <span class="p">]:</span>
                     <span class="n">series</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">variable</span><span class="p">[</span><span class="n">output</span><span class="p">]</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">series</span><span class="p">)</span>
@@ -575,6 +590,11 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage_variable_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">upsampled_output_storage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage_variable_name</span><span class="p">]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage_variable_name</span><span class="p">,</span> <span class="n">upsampled_output_storage</span><span class="o">.</span><span class="n">dropna</span><span class="p">())</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">electrical_storage_variable_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">upsampled_output_el_storage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flex_results</span><span class="p">[</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">electrical_storage_variable_name</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">electrical_storage_variable_name</span><span class="p">,</span>
+                         <span class="n">upsampled_output_el_storage</span><span class="o">.</span><span class="n">dropna</span><span class="p">())</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_ref</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span>
                 <span class="n">series</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">variable</span><span class="p">[</span><span class="n">output</span><span class="p">]</span>

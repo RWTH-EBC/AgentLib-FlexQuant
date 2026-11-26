@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>agentlib_flexquant.generate_flex_agents &mdash; agentlib_flexquant 0.4.1 documentation</title>
+  <title>agentlib_flexquant.generate_flex_agents &mdash; agentlib_flexquant 0.4.1+flexmod.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
@@ -455,6 +455,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">flex_config</span><span class="o">.</span><span class="n">baseline_config_generator_data</span><span class="o">.</span><span class="n">power_variable</span><span class="p">)</span>
         <span class="n">module_config_flex_dict</span><span class="p">[</span><span class="s2">"storage_variable_name"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">indicator_module_config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">stored_energy_variable</span><span class="p">)</span>
+        <span class="n">module_config_flex_dict</span><span class="p">[</span><span class="s2">"electrical_storage_variable_name"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">indicator_module_config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">stored_electrical_energy_variable</span><span class="p">)</span>
         <span class="n">module_config_flex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_handler</span><span class="o">.</span><span class="n">module_type_dict</span><span class="p">[</span><span class="n">module_config</span><span class="o">.</span><span class="n">type</span><span class="p">](</span>
             <span class="o">**</span><span class="n">module_config_flex_dict</span><span class="p">,</span> <span class="n">_agent_id</span><span class="o">=</span><span class="n">agent_id</span>
         <span class="p">)</span>
@@ -641,6 +643,11 @@
             <span class="n">output_dict</span><span class="p">[</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">indicator_module_config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">stored_energy_variable</span>
             <span class="p">]</span><span class="o">.</span><span class="n">alias</span> <span class="o">=</span> <span class="n">mpc_dataclass</span><span class="o">.</span><span class="n">stored_energy_alias</span>
+            <span class="c1"># the stored electrical energy (optional) is sent by all three MPCs</span>
+            <span class="n">el_storage_name</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">indicator_module_config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">stored_electrical_energy_variable</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">el_storage_name</span><span class="p">:</span>
+                <span class="n">output_dict</span><span class="p">[</span><span class="n">el_storage_name</span><span class="p">]</span><span class="o">.</span><span class="n">alias</span> <span class="o">=</span> <span class="n">mpc_dataclass</span><span class="o">.</span><span class="n">stored_el_energy_alias</span>
             <span class="c1"># the Baseline sends the efficiency of the thermal generation unit under</span>
             <span class="c1"># its own alias. The Shadow MPCs share an output of the same name, so</span>
             <span class="c1"># the indicator would otherwise keep the value of whichever MPC sent last</span>
@@ -964,7 +971,9 @@
 <span class="sd">        1. Ensures the specified power variable exists in the MPC model outputs.</span>
 <span class="sd">        2. Ensures the specified comfort variable exists in the MPC model states.</span>
 <span class="sd">        3. Validates that the stored energy variable exists in MPC outputs if</span>
-<span class="sd">        energy cost correction is enabled.</span>
+<span class="sd">        energy cost correction is enabled, and so do the efficiency and the stored</span>
+<span class="sd">        electrical energy variable if they are set. The stored electrical energy</span>
+<span class="sd">        variable must differ from the stored energy variable.</span>
 <span class="sd">        4. Verifies the supported collocation method is used; otherwise,</span>
 <span class="sd">        switches to 'legendre' and raises a warning.</span>
 <span class="sd">        5. Ensures that the sum of prep time, market time, and flex event duration</span>
@@ -1024,6 +1033,26 @@
                     <span class="sa">f</span><span class="s2">"MPC model and config as output if it is used for the "</span>
                     <span class="sa">f</span><span class="s2">"correction of costs."</span>
                 <span class="p">)</span>
+            <span class="n">el_storage_name</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">indicator_module_config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">stored_electrical_energy_variable</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">el_storage_name</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">el_storage_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span>
+                    <span class="n">output</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseline_mpc_module_config</span><span class="o">.</span><span class="n">outputs</span>
+                <span class="p">]:</span>
+                    <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">"The stored electrical energy variable </span><span class="si">{</span><span class="n">el_storage_name</span><span class="si">}</span><span class="s2"> is "</span>
+                        <span class="sa">f</span><span class="s2">"not defined in baseline mpc config. It must be defined in the "</span>
+                        <span class="sa">f</span><span class="s2">"base MPC model and config as output if it is used for the "</span>
+                        <span class="sa">f</span><span class="s2">"correction of costs."</span>
+                    <span class="p">)</span>
+                <span class="k">if</span> <span class="n">el_storage_name</span> <span class="o">==</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">indicator_module_config</span><span class="o">.</span><span class="n">correct_costs</span><span class="o">.</span><span class="n">stored_energy_variable</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">"The stored electrical energy variable </span><span class="si">{</span><span class="n">el_storage_name</span><span class="si">}</span><span class="s2"> must "</span>
+                        <span class="sa">f</span><span class="s2">"differ from the stored energy variable, since the stored "</span>
+                        <span class="sa">f</span><span class="s2">"thermal energy is divided by eta_thermal_base and the stored "</span>
+                        <span class="sa">f</span><span class="s2">"electrical energy is not."</span>
+                    <span class="p">)</span>
 
         <span class="c1"># raise warning if unsupported collocation method is used and change</span>
         <span class="c1"># to supported method</span>

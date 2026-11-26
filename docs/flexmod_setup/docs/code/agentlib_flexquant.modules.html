@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>agentlib_flexquant.modules package &mdash; agentlib_flexquant 0.4.1 documentation</title>
+  <title>agentlib_flexquant.modules package &mdash; agentlib_flexquant 0.4.1+flexmod.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
@@ -164,6 +164,7 @@ for optimization to the Shadow MPC, ensuring synchronisation.</p>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.casadi_sim_time_step" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.casadi_sim_time_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">casadi_sim_time_step</span> <span class="pre">(int)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.electrical_storage_variable_name" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.electrical_storage_variable_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">electrical_storage_variable_name</span> <span class="pre">(str</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.full_controls" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.full_controls"><code class="xref py py-obj docutils literal notranslate"><span class="pre">full_controls</span> <span class="pre">(list[agentlib.core.datamodels.AgentVariable])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.power_variable_name" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.power_variable_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">power_variable_name</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.storage_variable_name" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.storage_variable_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">storage_variable_name</span> <span class="pre">(str</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
@@ -177,6 +178,12 @@ for optimization to the Shadow MPC, ensuring synchronisation.</p>
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.casadi_sim_time_step">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">casadi_sim_time_step</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.casadi_sim_time_step" title="Permalink to this definition"></a></dt>
 <dd><p>Time step for simulation with Casadi simulator. Value is read from  FlexQuantConfig</p>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.electrical_storage_variable_name">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">electrical_storage_variable_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMINLPMPCConfig.electrical_storage_variable_name" title="Permalink to this definition"></a></dt>
+<dd><p>Name of the variable of the stored electrical energy in the baseline mpc model.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
@@ -285,6 +292,7 @@ for optimization to the Shadow MPC, ensuring synchronisation.</p>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.casadi_sim_time_step" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.casadi_sim_time_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">casadi_sim_time_step</span> <span class="pre">(int)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.electrical_storage_variable_name" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.electrical_storage_variable_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">electrical_storage_variable_name</span> <span class="pre">(str</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.full_controls" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.full_controls"><code class="xref py py-obj docutils literal notranslate"><span class="pre">full_controls</span> <span class="pre">(list[agentlib.core.datamodels.AgentVariable])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.power_variable_name" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.power_variable_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">power_variable_name</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.storage_variable_name" title="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.storage_variable_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">storage_variable_name</span> <span class="pre">(str</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
@@ -298,6 +306,12 @@ for optimization to the Shadow MPC, ensuring synchronisation.</p>
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.casadi_sim_time_step">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">casadi_sim_time_step</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.casadi_sim_time_step" title="Permalink to this definition"></a></dt>
 <dd><p>Time step for simulation with Casadisimulator. Value is read from FlexQuantConfig</p>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.electrical_storage_variable_name">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">electrical_storage_variable_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#agentlib_flexquant.modules.baseline_mpc.FlexibilityBaselineMPCConfig.electrical_storage_variable_name" title="Permalink to this definition"></a></dt>
+<dd><p>Name of the variable of the stored electrical energy in the baseline mpc model.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
@@ -528,6 +542,7 @@ KPI outputs, and cost calculation settings.</p>
 <dt class="field-odd">Validators<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_stored_el_energy_inputs</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_valid_fields</span></code> » <a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.shared_variable_fields" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.shared_variable_fields"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shared_variable_fields</span></code></a></p></li>
 </ul>
@@ -540,6 +555,7 @@ KPI outputs, and cost calculation settings.</p>
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_stored_el_energy_inputs</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
 </ul>
 </dd>
@@ -548,11 +564,12 @@ KPI outputs, and cost calculation settings.</p>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.correct_costs">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">correct_costs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts"><span class="pre">InputsForCorrectFlexCosts</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">InputsForCorrectFlexCosts(enable_energy_costs_correction=False,</span> <span class="pre">absolute_power_deviation_tolerance=0.1,</span> <span class="pre">stored_energy_variable=None,</span> <span class="pre">eta_thermal_base=None)</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.correct_costs" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">correct_costs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts"><span class="pre">InputsForCorrectFlexCosts</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">InputsForCorrectFlexCosts(enable_energy_costs_correction=False,</span> <span class="pre">absolute_power_deviation_tolerance=0.1,</span> <span class="pre">stored_energy_variable=None,</span> <span class="pre">stored_electrical_energy_variable=None,</span> <span class="pre">eta_thermal_base=None)</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.correct_costs" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_stored_el_energy_inputs</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
 </ul>
 </dd>
@@ -567,6 +584,7 @@ KPI outputs, and cost calculation settings.</p>
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_stored_el_energy_inputs</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
 </ul>
 </dd>
@@ -580,6 +598,7 @@ KPI outputs, and cost calculation settings.</p>
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_stored_el_energy_inputs</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
 </ul>
 </dd>
@@ -594,6 +613,7 @@ KPI outputs, and cost calculation settings.</p>
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_stored_el_energy_inputs</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
 </ul>
 </dd>
@@ -607,6 +627,7 @@ KPI outputs, and cost calculation settings.</p>
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_stored_el_energy_inputs</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
 </ul>
 </dd>
@@ -620,6 +641,7 @@ KPI outputs, and cost calculation settings.</p>
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_stored_el_energy_inputs</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
 </ul>
 </dd>
@@ -634,6 +656,7 @@ KPI outputs, and cost calculation settings.</p>
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_stored_el_energy_inputs</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
 </ul>
 </dd>
@@ -648,6 +671,7 @@ KPI outputs, and cost calculation settings.</p>
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_stored_el_energy_inputs</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
 </ul>
 </dd>
@@ -662,6 +686,7 @@ KPI outputs, and cost calculation settings.</p>
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_stored_el_energy_inputs</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
 </ul>
 </dd>
@@ -676,6 +701,7 @@ KPI outputs, and cost calculation settings.</p>
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_stored_el_energy_inputs</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
 </ul>
 </dd>
@@ -689,6 +715,7 @@ KPI outputs, and cost calculation settings.</p>
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_stored_el_energy_inputs</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
 </ul>
 </dd>
@@ -702,6 +729,7 @@ KPI outputs, and cost calculation settings.</p>
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_eta_thermal_input</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_stored_el_energy_inputs</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension" title="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.check_results_file_extension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_results_file_extension</span></code></a></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_valid_fields</span></code></p></li>
 </ul>
@@ -714,6 +742,14 @@ KPI outputs, and cost calculation settings.</p>
 <em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_eta_thermal_input</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#FlexibilityIndicatorModuleConfig.add_eta_thermal_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_eta_thermal_input" title="Permalink to this definition"></a></dt>
 <dd><p>Add the eta_thermal_base variable to inputs after instantiation.</p>
 <p>The generator sets its alias to the one the Baseline MPC sends it with.</p>
+</dd></dl>
+
+<dl class="py method pydantic_validator">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs">
+<em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_stored_el_energy_inputs</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><em class="xref py py-obj"><span class="pre">all</span> <span class="pre">fields</span></em><a class="reference internal" href="../_modules/agentlib_flexquant/modules/flexibility_indicator.html#FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.FlexibilityIndicatorModuleConfig.add_stored_el_energy_inputs" title="Permalink to this definition"></a></dt>
+<dd><p>Add the inputs of the stored electrical energy after instantiation.</p>
+<p>Only if the cost correction is enabled and a stored electrical energy variable
+is set, so that configurations without it keep their inputs and result columns.</p>
 </dd></dl>
 
 <dl class="py method pydantic_validator">
@@ -845,6 +881,7 @@ pricing.</p>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.absolute_power_deviation_tolerance" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.absolute_power_deviation_tolerance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">absolute_power_deviation_tolerance</span> <span class="pre">(float)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.enable_energy_costs_correction" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.enable_energy_costs_correction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">enable_energy_costs_correction</span> <span class="pre">(bool)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.eta_thermal_base" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.eta_thermal_base"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eta_thermal_base</span> <span class="pre">(str)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.stored_electrical_energy_variable" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.stored_electrical_energy_variable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stored_electrical_energy_variable</span> <span class="pre">(str</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.stored_energy_variable" title="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.stored_energy_variable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stored_energy_variable</span> <span class="pre">(str</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
 </ul>
 </dd>
@@ -858,7 +895,7 @@ pricing.</p>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.enable_energy_costs_correction">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">enable_energy_costs_correction</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.enable_energy_costs_correction" title="Permalink to this definition"></a></dt>
-<dd><p>Variable determining whether to correct the costs of the flexible energy. Define the variable for stored electrical energy in the base MPC model and config as output if the correction of costs is enabled</p>
+<dd><p>Variable determining whether to correct the costs of the flexible energy. Define the variable for stored energy in the base MPC model and config as output if the correction of costs is enabled</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
@@ -868,9 +905,15 @@ pricing.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.stored_electrical_energy_variable">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stored_electrical_energy_variable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.stored_electrical_energy_variable" title="Permalink to this definition"></a></dt>
+<dd><p>Name of the variable representing the stored electrical energy (e.g. of a battery) in the baseline config. Optional. It enters the correction directly, without eta_thermal_base</p>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.stored_energy_variable">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stored_energy_variable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#agentlib_flexquant.modules.flexibility_indicator.InputsForCorrectFlexCosts.stored_energy_variable" title="Permalink to this definition"></a></dt>
-<dd><p>Name of the variable representing the stored electrical energy in the baseline config</p>
+<dd><p>Name of the variable representing the stored thermal energy in the baseline config. The correction converts it to electrical energy with the mean of eta_thermal_base</p>
 </dd></dl>
 
 </dd></dl>
@@ -1170,6 +1213,7 @@ it to AgentVariables.</p>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.baseline_state_names" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.baseline_state_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">baseline_state_names</span> <span class="pre">(list[str])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.casadi_sim_time_step" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.casadi_sim_time_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">casadi_sim_time_step</span> <span class="pre">(int)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.custom_input_names" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.custom_input_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">custom_input_names</span> <span class="pre">(list[typing.Dict])</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.electrical_storage_variable_name" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.electrical_storage_variable_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">electrical_storage_variable_name</span> <span class="pre">(str</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.full_control_names" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.full_control_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">full_control_names</span> <span class="pre">(list[str])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.power_variable_name" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.power_variable_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">power_variable_name</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.storage_variable_name" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.storage_variable_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">storage_variable_name</span> <span class="pre">(str</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
@@ -1203,6 +1247,12 @@ it to AgentVariables.</p>
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.custom_input_names">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">custom_input_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.custom_input_names" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.electrical_storage_variable_name">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">electrical_storage_variable_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.electrical_storage_variable_name" title="Permalink to this definition"></a></dt>
+<dd><p>Name of the variable of the stored electrical energy in the shadow mpc model.</p>
+</dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMINLPMPCConfig.full_control_names">
@@ -1298,6 +1348,7 @@ cannot be changed without recreating the optimization problem.</p>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.baseline_state_names" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.baseline_state_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">baseline_state_names</span> <span class="pre">(list[str])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.casadi_sim_time_step" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.casadi_sim_time_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">casadi_sim_time_step</span> <span class="pre">(int)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.custom_input_names" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.custom_input_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">custom_input_names</span> <span class="pre">(list[typing.Dict])</span></code></a></p></li>
+<li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.electrical_storage_variable_name" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.electrical_storage_variable_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">electrical_storage_variable_name</span> <span class="pre">(str</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.full_control_names" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.full_control_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">full_control_names</span> <span class="pre">(list[str])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.power_variable_name" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.power_variable_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">power_variable_name</span> <span class="pre">(str)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.storage_variable_name" title="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.storage_variable_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">storage_variable_name</span> <span class="pre">(str</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
@@ -1331,6 +1382,12 @@ cannot be changed without recreating the optimization problem.</p>
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.custom_input_names">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">custom_input_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.custom_input_names" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.electrical_storage_variable_name">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">electrical_storage_variable_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.electrical_storage_variable_name" title="Permalink to this definition"></a></dt>
+<dd><p>Name of the variable of the stored electrical energy in the shadow mpc model.</p>
+</dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="agentlib_flexquant.modules.shadow_mpc.FlexibilityShadowMPCConfig.full_control_names">
