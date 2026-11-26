@@ -95,6 +95,7 @@ class BaseMPCData(pydantic.BaseModel):
     # variables
     power_alias: str
     stored_energy_alias: str
+    stored_el_energy_alias: str
     config_inputs_appendix: list[MPCVariable] = Field(
         default=[],
         description="Inputs, which are appended to the MPCs' config "
@@ -122,6 +123,7 @@ class BaselineMPCData(BaseMPCData):
     # variables
     power_alias: str = glbs.POWER_ALIAS_BASE
     stored_energy_alias: str = glbs.STORED_ENERGY_ALIAS_BASE
+    stored_el_energy_alias: str = glbs.STORED_EL_ENERGY_ALIAS_BASE
     power_variable: str = pydantic.Field(
         default="P_el",
         description=(
@@ -206,6 +208,7 @@ class PFMPCData(BaseMPCData):
     # variables
     power_alias: str = glbs.POWER_ALIAS_POS
     stored_energy_alias: str = glbs.STORED_ENERGY_ALIAS_POS
+    stored_el_energy_alias: str = glbs.STORED_EL_ENERGY_ALIAS_POS
     flex_cost_function: str = pydantic.Field(
         default=None, description="Cost function of the PF-MPC during the event",
     )
@@ -263,6 +266,7 @@ class NFMPCData(BaseMPCData):
     # variables
     power_alias: str = glbs.POWER_ALIAS_NEG
     stored_energy_alias: str = glbs.STORED_ENERGY_ALIAS_NEG
+    stored_el_energy_alias: str = glbs.STORED_EL_ENERGY_ALIAS_NEG
     flex_cost_function: str = pydantic.Field(
         default=None, description="Cost function of the NF-MPC during the event",
     )

@@ -203,6 +203,8 @@ class FlexibilityKPIs(pydantic.BaseModel):
         calculate_flex_cost: bool,
         integration_method: INTEGRATION_METHOD,
         collocation_time_grid: list = None,
+        stored_el_energy_base: pd.Series = None,
+        stored_el_energy_shadow: pd.Series = None,
     ):
         """Calculate the KPIs based on the power and electricity price input profiles.
 
@@ -213,13 +215,17 @@ class FlexibilityKPIs(pydantic.BaseModel):
             feed_in_price_series: time series of electricity feed-in prices
             flex_offer_time_grid: time grid over which the flexibility offer is calculated,
             for indexing of the power flexibility profiles
-            stored_energy_base: time series of stored energy from baseline mpc
-            stored_energy_shadow: time series of stored energy from shadow mpc
+            stored_energy_base: time series of stored thermal energy from baseline mpc
+            stored_energy_shadow: time series of stored thermal energy from shadow mpc
             eta_thermal_base: time series of efficiency of thermal generation unit of baseline mpc
             enable_energy_costs_correction: whether the energy costs should be corrected
             calculate_flex_cost: whether the cost of the flexibility should be calculated
             integration_method: method used for integration of KPISeries e.g. linear, constant
             collocation_time_grid: Time grid of the mpc output with collocation discretization
+            stored_el_energy_base: time series of stored electrical energy (e.g. battery)
+            from baseline mpc. Optional, enters the correction without eta_thermal_base
+            stored_el_energy_shadow: time series of stored electrical energy from shadow
+            mpc. Optional, like stored_el_energy_base
 
 
         """
@@ -244,9 +250,15 @@ class FlexibilityKPIs(pydantic.BaseModel):
                 eta_thermal_base_avg = 1
             else:
                 eta_thermal_base_avg = eta_thermal_base.mean()
+            if stored_el_energy_base is None or stored_el_energy_shadow is None:
+                stored_el_energy_diff = 0
+            else:
+                stored_el_energy_diff = (stored_el_energy_shadow.values[-1]
+                                         - stored_el_energy_base.values[-1])
         else:
             stored_energy_diff = 0
             eta_thermal_base_avg = 1
+            stored_el_energy_diff = 0
 
         if calculate_flex_cost:
             self._calculate_costs(
@@ -259,6 +271,7 @@ class FlexibilityKPIs(pydantic.BaseModel):
                 integration_method=integration_method,
                 mpc_time_grid=mpc_time_grid,
                 collocation_time_grid=collocation_time_grid,
+                stored_el_energy_diff=stored_el_energy_diff,
             )
             self._calculate_costs_rel()
 
@@ -391,20 +404,29 @@ class FlexibilityKPIs(pydantic.BaseModel):
         integration_method: INTEGRATION_METHOD,
         mpc_time_grid: np.ndarray,
         collocation_time_grid: list = None,
+        stored_el_energy_diff: float = 0,
     ):
         """Calculate the costs of the flexibility event based on the electricity costs profile,
         the power flexibility profile and difference of stored energy.
+
+        The corrected costs subtract the value of the energy that the shadow mpc stores in
+        addition to the baseline at the end of the horizon, priced with the mean electricity
+        price: thermal energy is converted to electrical energy with the mean efficiency
+        of the thermal generation unit, stored electrical energy enters directly.
 
         Args:
             electricity_price_signal: time series of the electricity price signal
             feed_in_price_signal: time series of the feed-in price signal
             power_profile_base: baseline power profile used to select tariff by sign
             power_profile_shadow: shadow mpc power profile used to select tariff by sign
-            stored_energy_diff: the difference of the stored energy between baseline and shadow mpc
-            eta_thermal_base: average efficiency of thermal generation unit
+            stored_energy_diff: the difference of the stored thermal energy between shadow
+            and baseline mpc
+            eta_thermal_base_avg: average efficiency of thermal generation unit
             integration_method: the integration method used to integrate KPISeries
             mpc_time_grid: the MPC time grid over the horizon
             collocation_time_grid: Time grid of the mpc output with collocation discretization
+            stored_el_energy_diff: the difference of the stored electrical energy between
+            shadow and baseline mpc
 
 
         """
@@ -454,7 +476,13 @@ class FlexibilityKPIs(pydantic.BaseModel):
         costs = self.electricity_costs_series.integrate(time_unit="hours")
 
         # correct the costs
-        corrected_costs = costs - stored_energy_diff * np.mean(electricity_price_signal) / eta_thermal_base_avg
+        # (the electrical term is subtracted separately, so that the result without stored
+        # electrical energy is identical to that of earlier versions)
+        corrected_costs = (
+            costs
+            - stored_energy_diff * np.mean(electricity_price_signal) / eta_thermal_base_avg
+            - stored_el_energy_diff * np.mean(electricity_price_signal)
+        )
 
         self.costs.value = costs
         self.corrected_costs.value = corrected_costs
@@ -537,15 +565,29 @@ class FlexibilityData(pydantic.BaseModel):
     )
     stored_energy_profile_base: pd.Series = pydantic.Field(
         default=None,
-        description="Base profile of the stored electrical energy",
+        description="Base profile of the stored thermal energy",
     )
     stored_energy_profile_flex_neg: pd.Series = pydantic.Field(
         default=None,
-        description="Profile of the stored electrical energy for negative flexibility",
+        description="Profile of the stored thermal energy for negative flexibility",
     )
     stored_energy_profile_flex_pos: pd.Series = pydantic.Field(
         default=None,
-        description="Profile of the stored elctrical energy for positive flexibility",
+        description="Profile of the stored thermal energy for positive flexibility",
+    )
+    stored_el_energy_profile_base: pd.Series = pydantic.Field(
+        default=None,
+        description="Base profile of the stored electrical energy (optional)",
+    )
+    stored_el_energy_profile_flex_neg: pd.Series = pydantic.Field(
+        default=None,
+        description="Profile of the stored electrical energy for negative flexibility "
+                    "(optional)",
+    )
+    stored_el_energy_profile_flex_pos: pd.Series = pydantic.Field(
+        default=None,
+        description="Profile of the stored electrical energy for positive flexibility "
+                    "(optional)",
     )
     eta_thermal_base: pd.Series = pydantic.Field(
         default=None,
@@ -671,6 +713,8 @@ class FlexibilityData(pydantic.BaseModel):
             calculate_flex_cost=calculate_flex_cost,
             integration_method=integration_method,
             collocation_time_grid=collocation_time_grid,
+            stored_el_energy_base=self.stored_el_energy_profile_base,
+            stored_el_energy_shadow=self.stored_el_energy_profile_flex_pos,
         )
         self.kpis_neg.calculate(
             power_profile_base=self.power_profile_base,
@@ -686,6 +730,8 @@ class FlexibilityData(pydantic.BaseModel):
             calculate_flex_cost=calculate_flex_cost,
             integration_method=integration_method,
             collocation_time_grid=collocation_time_grid,
+            stored_el_energy_base=self.stored_el_energy_profile_base,
+            stored_el_energy_shadow=self.stored_el_energy_profile_flex_neg,
         )
         self.reset_time_grid()
         return self.kpis_pos, self.kpis_neg

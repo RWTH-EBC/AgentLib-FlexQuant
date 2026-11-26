@@ -381,6 +381,8 @@ class FlexAgentGenerator:
             self.flex_config.baseline_config_generator_data.power_variable)
         module_config_flex_dict["storage_variable_name"] = (
             self.indicator_module_config.correct_costs.stored_energy_variable)
+        module_config_flex_dict["electrical_storage_variable_name"] = (
+            self.indicator_module_config.correct_costs.stored_electrical_energy_variable)
         module_config_flex = self.module_handler.module_type_dict[module_config.type](
             **module_config_flex_dict, _agent_id=agent_id
         )
@@ -567,6 +569,11 @@ class FlexAgentGenerator:
             output_dict[
                 self.indicator_module_config.correct_costs.stored_energy_variable
             ].alias = mpc_dataclass.stored_energy_alias
+            # the stored electrical energy (optional) is sent by all three MPCs
+            el_storage_name = (
+                self.indicator_module_config.correct_costs.stored_electrical_energy_variable)
+            if el_storage_name:
+                output_dict[el_storage_name].alias = mpc_dataclass.stored_el_energy_alias
             # the Baseline sends the efficiency of the thermal generation unit under
             # its own alias. The Shadow MPCs share an output of the same name, so
             # the indicator would otherwise keep the value of whichever MPC sent last
@@ -890,7 +897,9 @@ class FlexAgentGenerator:
         1. Ensures the specified power variable exists in the MPC model outputs.
         2. Ensures the specified comfort variable exists in the MPC model states.
         3. Validates that the stored energy variable exists in MPC outputs if
-        energy cost correction is enabled.
+        energy cost correction is enabled, and so do the efficiency and the stored
+        electrical energy variable if they are set. The stored electrical energy
+        variable must differ from the stored energy variable.
         4. Verifies the supported collocation method is used; otherwise,
         switches to 'legendre' and raises a warning.
         5. Ensures that the sum of prep time, market time, and flex event duration
@@ -950,6 +959,26 @@ class FlexAgentGenerator:
                     f"MPC model and config as output if it is used for the "
                     f"correction of costs."
                 )
+            el_storage_name = (
+                self.indicator_module_config.correct_costs.stored_electrical_energy_variable)
+            if el_storage_name:
+                if el_storage_name not in [
+                    output.name for output in self.baseline_mpc_module_config.outputs
+                ]:
+                    raise ConfigurationError(
+                        f"The stored electrical energy variable {el_storage_name} is "
+                        f"not defined in baseline mpc config. It must be defined in the "
+                        f"base MPC model and config as output if it is used for the "
+                        f"correction of costs."
+                    )
+                if el_storage_name == (
+                        self.indicator_module_config.correct_costs.stored_energy_variable):
+                    raise ConfigurationError(
+                        f"The stored electrical energy variable {el_storage_name} must "
+                        f"differ from the stored energy variable, since the stored "
+                        f"thermal energy is divided by eta_thermal_base and the stored "
+                        f"electrical energy is not."
+                    )
 
         # raise warning if unsupported collocation method is used and change
         # to supported method

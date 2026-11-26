@@ -22,6 +22,11 @@ POWER_ALIAS_POS = "_P_el_pos"
 STORED_ENERGY_ALIAS_BASE = "_E_stored_base"
 STORED_ENERGY_ALIAS_NEG = "_E_stored_neg"
 STORED_ENERGY_ALIAS_POS = "_E_stored_pos"
+# aliases of the stored electrical energy (e.g. of a battery). It enters the cost
+# correction directly, without the efficiency of the thermal generation unit
+STORED_EL_ENERGY_ALIAS_BASE = "_E_stored_el_base"
+STORED_EL_ENERGY_ALIAS_NEG = "_E_stored_el_neg"
+STORED_EL_ENERGY_ALIAS_POS = "_E_stored_el_pos"
 # alias of the efficiency of the thermal generation unit sent by the Baseline MPC only,
 # so that the indicator never receives the value of a Shadow MPC
 ETA_THERMAL_ALIAS_BASE = "_eta_thermal_base"

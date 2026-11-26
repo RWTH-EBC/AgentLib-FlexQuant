@@ -34,7 +34,7 @@ class InputsForCorrectFlexCosts(BaseModel):
         name="enable_energy_costs_correction",
         description=(
             "Variable determining whether to correct the costs of the "
-            "flexible energy. Define the variable for stored electrical "
+            "flexible energy. Define the variable for stored "
             "energy in the base MPC model and config as output if the "
             "correction of costs is enabled"
         ),
@@ -50,8 +50,17 @@ class InputsForCorrectFlexCosts(BaseModel):
     stored_energy_variable: Optional[str] = Field(
         name="stored_energy_variable",
         default=None,
+        description="Name of the variable representing the stored thermal energy "
+                    "in the baseline config. The correction converts it to electrical "
+                    "energy with the mean of eta_thermal_base"
+    )
+
+    stored_electrical_energy_variable: Optional[str] = Field(
+        name="stored_electrical_energy_variable",
+        default=None,
         description="Name of the variable representing the stored electrical energy "
-                    "in the baseline config"
+                    "(e.g. of a battery) in the baseline config. Optional. It enters the "
+                    "correction directly, without eta_thermal_base"
     )
 
     eta_thermal_base: str = Field(
@@ -390,6 +399,34 @@ class FlexibilityIndicatorModuleConfig(agentlib.BaseModuleConfig):
             object.__setattr__(self, 'inputs', list(self.inputs) + [eta_var])
         return self
 
+    @model_validator(mode="after")
+    def add_stored_el_energy_inputs(self):
+        """Add the inputs of the stored electrical energy after instantiation.
+
+        Only if the cost correction is enabled and a stored electrical energy variable
+        is set, so that configurations without it keep their inputs and result columns.
+        """
+        if not (self.correct_costs.enable_energy_costs_correction
+                and self.correct_costs.stored_electrical_energy_variable):
+            return self
+        existing = {v.name for v in self.inputs}
+        new_inputs = [
+            agentlib.AgentVariable(
+                name=alias,
+                unit="kWh",
+                type="pd.Series",
+                description="Stored electrical energy",
+            )
+            for alias in (glbs.STORED_EL_ENERGY_ALIAS_BASE,
+                          glbs.STORED_EL_ENERGY_ALIAS_NEG,
+                          glbs.STORED_EL_ENERGY_ALIAS_POS)
+            if alias not in existing
+        ]
+        if new_inputs:
+            # bypass frozen via setattr
+            object.__setattr__(self, 'inputs', list(self.inputs) + new_inputs)
+        return self
+
 class CallBackHandler: 
     """Helper class to manage callback handling for flexibility indicator module.
     
@@ -442,6 +479,12 @@ class CallBackHandler:
             if config.correct_costs.eta_thermal_base:
                 self.necessary_callback_variables.update({
                     config.correct_costs.eta_thermal_base: {"name": "eta_thermal_base", "is_mpc": True}
+                })
+            if config.correct_costs.stored_electrical_energy_variable:
+                self.necessary_callback_variables.update({
+                    glbs.STORED_EL_ENERGY_ALIAS_BASE: {"name": "stored_el_energy_profile_base", "is_mpc": True},
+                    glbs.STORED_EL_ENERGY_ALIAS_NEG: {"name": "stored_el_energy_profile_flex_neg", "is_mpc": True},
+                    glbs.STORED_EL_ENERGY_ALIAS_POS: {"name": "stored_el_energy_profile_flex_pos", "is_mpc": True},
                 })
 
             
@@ -585,6 +628,12 @@ class FlexibilityIndicatorModule(agentlib.BaseModule):
                 values = self.data.stored_energy_profile_flex_neg
             elif name == glbs.STORED_ENERGY_ALIAS_POS:
                 values = self.data.stored_energy_profile_flex_pos
+            elif name == glbs.STORED_EL_ENERGY_ALIAS_BASE:
+                values = self.data.stored_el_energy_profile_base
+            elif name == glbs.STORED_EL_ENERGY_ALIAS_NEG:
+                values = self.data.stored_el_energy_profile_flex_neg
+            elif name == glbs.STORED_EL_ENERGY_ALIAS_POS:
+                values = self.data.stored_el_energy_profile_flex_pos
             elif self.config.correct_costs.eta_thermal_base and name == self.config.correct_costs.eta_thermal_base:
                 values = self.data.eta_thermal_base
             elif name == self.config.price_variable:

@@ -37,6 +37,10 @@ class FlexibilityBaselineMPCConfig(mpc_full.MPCConfig):
         default=None, description="Name of the storage variable in the "
                                   "baseline mpc model."
     )
+    electrical_storage_variable_name: Optional[str] = Field(
+        default=None, description="Name of the variable of the stored electrical "
+                                  "energy in the baseline mpc model."
+    )
 
 
 class FlexibilityBaselineMPC(mpc_full.MPC):
@@ -165,6 +169,7 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
                 if output not in [
                     self.config.power_variable_name,
                     self.config.storage_variable_name,
+                    self.config.electrical_storage_variable_name,
                 ]:
                     series = df.variable[output]
                     self.set(output, series)
@@ -176,6 +181,11 @@ class FlexibilityBaselineMPC(mpc_full.MPC):
                     self.flex_results)[self.config.storage_variable_name]
                 self.set(self.config.storage_variable_name,
                          upsampled_output_storage.dropna())
+            if self.config.electrical_storage_variable_name is not None:
+                upsampled_output_el_storage = (
+                    self.flex_results)[self.config.electrical_storage_variable_name]
+                self.set(self.config.electrical_storage_variable_name,
+                         upsampled_output_el_storage.dropna())
         else:
             for output in self.var_ref.outputs:
                 series = df.variable[output]
@@ -367,6 +377,10 @@ class FlexibilityBaselineMINLPMPCConfig(minlp_mpc.MINLPMPCConfig):
         default=None, description="Name of the storage variable in the "
                                   "baseline mpc model."
     )
+    electrical_storage_variable_name: Optional[str] = Field(
+        default=None, description="Name of the variable of the stored electrical "
+                                  "energy in the baseline mpc model."
+    )
 
 
 class FlexibilityBaselineMINLPMPC(minlp_mpc.MINLPMPC):
@@ -495,6 +509,7 @@ class FlexibilityBaselineMINLPMPC(minlp_mpc.MINLPMPC):
                 if output not in [
                     self.config.power_variable_name,
                     self.config.storage_variable_name,
+                    self.config.electrical_storage_variable_name,
                 ]:
                     series = df.variable[output]
                     self.set(output, series)
@@ -507,6 +522,11 @@ class FlexibilityBaselineMINLPMPC(minlp_mpc.MINLPMPC):
                     self.flex_results)[self.config.storage_variable_name]
                 self.set(self.config.storage_variable_name,
                          upsampled_output_storage.dropna())
+            if self.config.electrical_storage_variable_name is not None:
+                upsampled_output_el_storage = (
+                    self.flex_results)[self.config.electrical_storage_variable_name]
+                self.set(self.config.electrical_storage_variable_name,
+                         upsampled_output_el_storage.dropna())
         else:
             for output in self.var_ref.outputs:
                 series = df.variable[output]
